@@ -10,8 +10,7 @@
 //    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
 // }
 
-
-grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
+grails.project.groupId = org.iisg.eca // change this to alter the default package name and Maven publishing destination
 grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
 grails.mime.use.accept.header = false
 grails.mime.types = [ html: ['text/html','application/xhtml+xml'],
@@ -33,7 +32,6 @@ grails.mime.types = [ html: ['text/html','application/xhtml+xml'],
 
 // What URL patterns should be processed by the resources plugin
 grails.resources.adhoc.patterns = ['/images/*', '/css/*', '/js/*', '/plugins/*']
-
 
 // The default codec used to encode data with ${}
 grails.views.default.codec = "none" // none, html, base64
@@ -58,6 +56,9 @@ grails.exceptionresolver.params.exclude = ['password']
 
 // enable query caching by default
 grails.hibernate.cache.queries = true
+
+// MySQL driver for reverse engineering
+grails.plugin.reveng.jdbcDriverJarDep = 'mysql:mysql-connector-java:5.1.18'
 
 // set per-environment serverURL stem for creating absolute links
 environments {
@@ -91,3 +92,28 @@ log4j = {
            'org.hibernate',
            'net.sf.ehcache.hibernate'
 }
+
+// Spring Security Core config:
+grails.plugins.springsecurity.userLookup.userDomainClassName = 'org.iisg.eca.User'
+grails.plugins.springsecurity.userLookup.usernamePropertyName = 'email'
+grails.plugins.springsecurity.userLookup.passwordPropertyName = 'encryptedPassword'
+grails.plugins.springsecurity.userLookup.authoritiesPropertyName = 'roles'
+grails.plugins.springsecurity.userLookup.enabledPropertyName = 'enabled'
+grails.plugins.springsecurity.userLookup.accountLockedPropertyName = 'deleted'
+grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'org.iisg.eca.UserRoles'
+
+grails.plugins.springsecurity.authority.className = 'org.iisg.eca.Role'
+grails.plugins.springsecurity.authority.nameField = 'role'
+
+grails.plugins.springsecurity.password.algorithm = 'SHA-512'
+grails.plugins.springsecurity.dao.reflectionSaltSourceProperty = 'salt'
+grails.plugins.springsecurity.successHandler.defaultTargetUrl = '/login/authSuccess'
+
+grails.plugins.springsecurity.roleHierarchy = '''
+        superAdmin > admin
+        admin > user
+'''
+grails.plugins.springsecurity.controllerAnnotations.staticRules = [
+        '/login/*':     ["permitAll"],
+        '/**':          ["hasRole('user')"]
+]

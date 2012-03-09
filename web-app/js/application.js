@@ -1,9 +1,9 @@
-if (typeof jQuery !== 'undefined') {
-	(function($) {
-		$('#spinner').ajaxStart(function() {
-			$(this).fadeIn();
-		}).ajaxStop(function() {
-			$(this).fadeOut();
-		});
-	})(jQuery);
-}
+$(document).ready(function() {
+    $('#lang').change(function() {
+        window.location = '?lang='+this.value
+    });
+
+    $('#nav .right img').click(function() {
+        $("#user_menu").toggle();
+    });
+});
