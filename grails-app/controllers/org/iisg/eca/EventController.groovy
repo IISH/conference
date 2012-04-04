@@ -35,7 +35,7 @@ class EventController {
             datesForEvent.add(date)
         }
 
-        [events: datesByEvent.keySet(), datesByEvent: datesByEvent, allEvents: allEvents]
+        [events: datesByEvent.keySet(), datesByEvent: datesByEvent, allEvents: allEvents, page: Page.findByControllerAndAction('event', 'list')]
     }
 
     def show() {

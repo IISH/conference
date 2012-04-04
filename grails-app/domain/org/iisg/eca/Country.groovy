@@ -20,14 +20,14 @@ class Country extends DefaultDomain {
         tld         column: 'tld'
         nameEnglish column: 'name_english'
         nameDutch   column: 'name_dutch'
-        remarks     column: 'remarks'
+        remarks     column: 'remarks',      type: 'text'
 	}
 
 	static constraints = {
-		tld         maxSize: 2,     blank: false,   unique: true
-		nameEnglish maxSize: 50,    blank: false
-		nameDutch   maxSize: 50,    blank: false
-        remarks     maxSize: 200,   nullable: true
+		tld         blank: false,   maxSize: 2,     unique: true
+		nameEnglish blank: false,   maxSize: 50
+		nameDutch   blank: false,   maxSize: 50
+        remarks     nullable: true
 	}
 
     @Override

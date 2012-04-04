@@ -1,4 +1,4 @@
-<%@ page import="org.springframework.validation.FieldError" %>
+<%@ page import="org.iisg.eca.Page; org.iisg.eca.DynamicPage; org.springframework.validation.FieldError" %>
 <!doctype html>
 <!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
 <!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
@@ -53,7 +53,18 @@
             <div class="clear"></div>
         </div>
         <div id="content" role="main">
-		    <g:layoutBody/>
+            <g:if test="${page?.class == Page}">
+                <h1>${page.toString()}</h1>
+            </g:if>
+		    <g:elseif test="${page?.class == DynamicPage}">
+                <h1>${page.page.toString()}</h1>
+		    </g:elseif>
+
+            <g:if test="${flash.message}">
+                <div class="message" role="status">${flash.message}</div>
+            </g:if>
+
+            <g:layoutBody />
 
             <g:hasErrors>
                 <ul class="errors" role="alert">

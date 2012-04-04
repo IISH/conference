@@ -15,7 +15,6 @@ class DynamicPageService {
      */
     def groovyPagesTemplateEngine
 
-    private static final TITLE =    'element:tile'
     private static final FORM =     'element:form'
     private static final TABLE =    'element:table'
     private static final OVERVIEW = 'element:overview'
@@ -37,7 +36,6 @@ class DynamicPageService {
         // Parse the xml content for the elements
         def dynamicPage = page.dynamicPages.toArray()[0]
         dynamicPage.elements = gePageElements(dynamicPage.xml, params)
-        dynamicPage.defaultPage = getDefaultPage(dynamicPage.xml, params)
         dynamicPage
     }
 
@@ -64,22 +62,6 @@ class DynamicPageService {
 
         tmpl.make([page: dynamicPage]).writeTo(out)
         out.toString()
-    }
-
-    /**
-     * Finds out where to redirect or link to after a successful transaction
-     * @param xml The xml represening the dynamic page
-     * @param params The parameters of the current request
-     * @return The page to link or redirect to; if not found, returns null
-     */
-    def private getDefaultPage(GPathResult xml, params) {
-        def defaultPage
-        xml."*:${FORM}".children().findAll { it.name() == BUTTON }.each { button ->
-            if (!button.@url.text().isEmpty()) {
-                defaultPage = button.@url.text()
-            }
-        }
-        defaultPage
     }
 
     /**
@@ -142,7 +124,7 @@ class DynamicPageService {
             // In case of a form or overview, get one instance back based on the parameters
             else if (element.name().equals(FORM) || element.name().equals(OVERVIEW)) {
                 type = (element.name().equals(FORM)) ? PageElement.Type.FORM : PageElement.Type.OVERVIEW
-                result = getInstanceWithCriteria(element, params)
+                result = getInstanceWithCriteria(mainDomainClass, columns, element, params)
                 elements.put(eid++, new PageElement(type, columns, result))
             }
         }
@@ -209,34 +191,37 @@ class DynamicPageService {
 
     /**
      * Returns an instance from the database, based on a specified element
+     * @param mainDomainClass The main domain class
+     * @param columns A map of all the columns
      * @param element The element in question
      * @param params The parameters of the current request
      * @return A list of instances, currently with only one result
      */
-    def private getInstanceWithCriteria(element, params) {
+    def private getInstanceWithCriteria(mainDomainClass, columns, element, params) {
         // In the future, we might need to return more instances
         def instances = []
-        def instance = grailsApplication.getDomainClass("org.iisg.eca.${element.@domain.text()}")
         def id = element.@id?.text()
 
-        // If there is an id specified, use that to obtain the data from the database
-        // Otherwise, simply create a new instance
+        // If the id is specified in the url, get it from the parameters
+        // Otherwise, assume it is a number
         if (id) {
-            // If the id is specified in the url, get it from the parameters
-            // Otherwise, assume it is a number
-            if (id == 'url') {
-                id = params.id
-            }
-            else {
-                id = id.asType(Long.class)
-            }
-            instance = instance.clazz.get(id)
-        }
-        else {
-            instance = instance.newInstance()
+            id = (id == 'url') ? params.long('id') : String.toLong(id)
         }
 
-        instances << instance
+        columns.keySet().each { domainClass ->
+            def instance = grailsApplication.getDomainClass("org.iisg.eca.${domainClass}")
+
+            if (domainClass == mainDomainClass) {
+                instance = (id) ? instance.clazz.get(id) : instance.newInstance()
+            }
+            else {
+                //def propName = instance.clazz.declaredFields[0].find { it.type.simpleName.equalsIgnoreCase(mainDomainClass) }
+                instance = /*(id) ? instance.clazz.find { "${propName}.id" == id } : */instance.newInstance()
+            }
+
+            instances << instance
+        }
+
         instances
     }
 }

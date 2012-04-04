@@ -94,10 +94,14 @@ class RenderEditor {
         "page.elements.get(${eid}).result[0]"
     }
 
+    private String getName(GrailsDomainClassProperty property) {
+        "${domainClass.propertyName}.${property.name}"
+    }
+
     private HashMap<String, String> createPropertiesMap(GrailsDomainClassProperty property) {
         Map props = new HashMap<String, String>()
 
-        props.put("name",   property.name)
+        props.put("name",   getName(property))
         props.put("value",  getValue(property))
 
         props
@@ -116,7 +120,7 @@ class RenderEditor {
 
     private void renderStringEditor(GrailsDomainClassProperty property, ConstrainedProperty cp) {
         if (!cp) {
-            builder.input(type: "text", name: property.name, value: getValue(property))
+            builder.input(type: "text", name: getName(property), value: getValue(property))
         }
         else {
             Map props = createPropertiesMap(property)
@@ -165,7 +169,7 @@ class RenderEditor {
     }
 
     private void renderByteArrayEditor(GrailsDomainClassProperty property) {
-        builder.input(type: "file", id: property.name, name: property.name)
+        builder.input(type: "file", id: property.name, name: getName(property))
     }
 
     private void renderManyToOne(GrailsDomainClassProperty property, ConstrainedProperty cp) {
@@ -226,10 +230,10 @@ class RenderEditor {
     private void renderNumberEditor(GrailsDomainClassProperty property, ConstrainedProperty cp) {
         if (!cp) {
             if (property.type == Byte) {
-                builder."g:select"(name: property.name, from: "\${-128..127}", class: "range", value: getValue(property))
+                builder."g:select"(name: getName(property), from: "\${-128..127}", class: "range", value: getValue(property))
             }
             else {
-                builder."g:field"(type: "number", name: property.name, value: getValue(property))
+                builder."g:field"(type: "number", name: getName(property), value: getValue(property))
             }
         }
         else {
@@ -264,7 +268,7 @@ class RenderEditor {
 
     private void renderBooleanEditor(GrailsDomainClassProperty property, ConstrainedProperty cp) {
         if (!cp) {
-            builder.input(type: "checkbox", name: property.name, value: getValue(property))
+            builder.input(type: "checkbox", name: getName(property), value: getValue(property))
         }
         else {
             Map props = createPropertiesMap(property)
@@ -283,7 +287,7 @@ class RenderEditor {
         String precision = (property.type == Date || property.type == java.sql.Date || property.type == Calendar) ? "day" : "minute"
 
         if (!cp) {
-            builder."g:datePicker"(name: property.name, precision: precision, value: getValue(property))
+            builder."g:datePicker"(name: getName(property), precision: precision, value: getValue(property))
         }
         else {
             if (!cp.editable) {
@@ -303,7 +307,7 @@ class RenderEditor {
 
     private void renderSelectTypeEditor(String type, GrailsDomainClassProperty property, ConstrainedProperty cp) {
         if (!cp) {
-            builder."g:${type}Select"(name: property.name, value: getValue(property))
+            builder."g:${type}Select"(name: getName(property), value: getValue(property))
         }
         else {
             Map props = createPropertiesMap(property)

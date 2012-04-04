@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta name="layout" content="main">
-		<title>${page.page.name}</title>
+		<title>${page.page.toString()}</title>
 	</head>
 	<body>
         ${content}

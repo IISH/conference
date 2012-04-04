@@ -25,8 +25,4 @@ class Setting {
         value       blank: false,   maxSize: 255
 		event       nullable: true
 	}
-
-    static hibernateFilters = {
-        onTenant(condition: ':id = event.dates.id', types: 'long')
-    }
 }

@@ -1,11 +1,18 @@
 package org.iisg.eca
 
+import org.codehaus.groovy.grails.plugins.web.taglib.ValidationTagLib
+
 /**
  * Domain class of table holding all pages of this application
  */
 class Page extends DefaultDomain {
-	String name
-	String url
+	private static final ValidationTagLib MESSAGES = new ValidationTagLib()
+
+    String titleCode
+    String titleArg
+    String titleDefault
+	String controller
+    String action
 	String description
     Page parent
 
@@ -18,19 +25,25 @@ class Page extends DefaultDomain {
 		table 'pages'
 		version false
 
-        id          column: 'page_id'
-        name        column: 'name'
-        url         column: 'url'
-        description column: 'description',      sqlType: 'tinytext'
-        parent      column: 'parent_page_id'
+        id              column: 'page_id'
+        titleCode       column: 'title_code'
+        titleArg        column: 'title_arg'
+        titleDefault    column: 'title_default'
+        controller      column: 'controller'
+        action          column: 'action'
+        description     column: 'description',      type: 'text'
+        parent          column: 'parent_page_id'
 	}
 
 	static constraints = {
-		name        blank: false,   maxSize: 30
-		url         blank: false,   maxSize: 30
-        description blank: false,   maxSize: 1000
-        parent      nullable: true
-        subPages    nullable: true
+		titleCode       nullable: true, maxSize: 50
+        titleArg        nullable: true, maxSize: 50
+        titleDefault    blank: false,   maxSize: 50
+		action          blank: false,   maxSize: 20
+        controller      blank: false,   maxSize: 20
+        description     nullable: true
+        parent          nullable: true
+        subPages        nullable: true
 	}
 
     Set<User> getUsers() {
@@ -43,6 +56,6 @@ class Page extends DefaultDomain {
 
     @Override
     def String toString() {
-        name
+        MESSAGES.message(code: titleCode, args: [MESSAGES.message(code: titleArg)], default: titleDefault).toString()
     }
 }

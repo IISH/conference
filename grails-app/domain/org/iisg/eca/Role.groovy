@@ -15,13 +15,13 @@ class Role {
 
         id          column: 'role_id'
         role        column: 'role'
-        description column: 'description',  sqlType: 'tinyText'
+        description column: 'description',  type: 'text'
         fullRights  column: 'full_rights'
 	}
 
 	static constraints = {
-        description maxSize: 200,   blank: false
-		role        maxSize: 20,    nullable: true
+        role        blank: false
+        description nullable: true
 	}
 
     Set<User> getUsers() {

@@ -2,15 +2,9 @@
 <html>
 	<head>
 		<meta name="layout" content="main">
-		<title><g:message code="event.list" /></title>
+		<title>${page.toString()}</title>
 	</head>
 	<body>
-        <h1><g:message code="event.list" /></h1>
-
-        <g:if test="${flash.message}">
-            <div class="message" role="status">${flash.message}</div>
-        </g:if>
-
         <div id="events">
             <g:each in="${events}" var="event">
                 <div class="event">

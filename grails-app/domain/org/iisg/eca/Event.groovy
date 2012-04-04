@@ -20,6 +20,7 @@ class Event extends DefaultDomain {
         shortName   column: 'short_name'
         longName    column: 'long_name'
         type        column: 'type'
+
         dates       sort: 'startDate',  order: 'desc'
 	}
 

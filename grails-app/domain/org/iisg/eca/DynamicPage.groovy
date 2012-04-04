@@ -10,11 +10,11 @@ class DynamicPage {
     String cache
     Page page
     EventDate date
+
     Map elements
-    String defaultPage
 
     static belongsTo = [Page, EventDate]
-    static transients = ['elements', 'defaultPage']
+    static transients = ['elements']
 
     static constraints = {
         content blank: false,   maxSize: 65540

@@ -18,10 +18,10 @@ class EventDate extends DefaultDomain {
     static constraints = {
         startDate       nullable: true
         endDate         nullable: true
-		yearCode        maxSize: 20,    blank: false
-		dateAsText      maxSize: 30,    blank: false
-        description     maxSize: 255,   blank: false
-		longDescription maxSize: 65535, nullable: true
+		yearCode        blank: false,   maxSize: 20
+		dateAsText      blank: false,   maxSize: 30
+        description     blank: false,   maxSize: 255
+		longDescription nullable: true
         days            nullable: true
 	}
 

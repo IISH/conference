@@ -7,6 +7,8 @@ import org.codehaus.groovy.grails.plugins.web.taglib.ValidationTagLib
  * Domain class of table holding all event days
  */
 class Day extends DefaultDomain {
+    private static final ValidationTagLib MESSAGES = new ValidationTagLib()
+
     Date day
     int dayNumber
     EventDate date
@@ -23,13 +25,13 @@ class Day extends DefaultDomain {
 
         id          column: 'day_id'
         day         column: 'day'
-        dayNumber   column: 'daynumber'
+        dayNumber   column: 'day_number'
         date        column: 'date_id'
 	}
 
     @Override
     def String toString() {
-        def dateFormat = new ValidationTagLib().message(code: 'default.date.format').toString()
+        def dateFormat = MESSAGES.message(code: 'default.date.format').toString()
         def sdf = new SimpleDateFormat(dateFormat)
         "${dayNumber}: ${sdf.format(day)}"
     }

@@ -24,22 +24,6 @@ class DynamicPageTagLib {
     }
 
     /**
-     * Creates a title based on the code
-     * @param code The code in question
-     */
-    def title = { attrs ->
-        def writer = new StringWriter()
-        def builder = new MarkupBuilder(writer)
-        builder.doubleQuotes = true
-
-        builder.h1 {
-            builder."g:message"(code: attrs.code)
-        }
-
-        out << writer.toString()
-    }
-
-    /**
      * Creates a new form, based on all the columns and buttons specified in the body
      * @param domain The main domain class to edit or save information to
      * @param id The id to query the database in order to fill out this form, 'url' is specified in the url
@@ -188,6 +172,8 @@ class DynamicPageTagLib {
      * @param domain If the data is to come from another domain class, it is specified here
      */
     def column = { attrs ->
+        // TODO: In case of another domain class....
+
         def p = pageScope.props.grep { it.name == attrs.name }[0]
         def cp = pageScope.domainClass.constrainedProperties[attrs.name]
         def display = (cp ? cp.display : true)
@@ -256,23 +242,9 @@ class DynamicPageTagLib {
                 if (attrs.name.equalsIgnoreCase("id")) {
                     builder.label(for: attrs.name, "#")
                 }
-                else if (attrs.name.equalsIgnoreCase("enabled") || attrs.name.equalsIgnoreCase("deleted")) {
-                    builder.label(for: attrs.name) {
-                        builder."g:message"(code: "default.${attrs.name.toLowerCase()}.label")
-                    }
-                }
-                else if (p.manyToOne || p.oneToOne || p.oneToMany || p.manyToMany) {
-                    builder.label(for: "${attrs.name}.id") {
-                        builder."g:message"(code: "${pageScope.domainClass.propertyName.toLowerCase()}.${attrs.name.toLowerCase()}.label")
-                    }
-
-                    if (required && !attrs.readonly?.equalsIgnoreCase("true") && !attrs.id) {
-                        builder.span(class: "required-indicator", "*")
-                    }
-                }
                 else {
                     builder.label(for: attrs.name) {
-                        builder."g:message"(code: "${pageScope.domainClass.propertyName.toLowerCase()}.${attrs.name.toLowerCase()}.label")
+                        builder."g:message"(code: getCode(p))
 
                         if (required && !attrs.readonly?.equalsIgnoreCase("true") && !attrs.id) {
                             builder.span(class: "required-indicator", "*")
@@ -323,7 +295,7 @@ class DynamicPageTagLib {
 
             builder.th(class: "sortable ${sorted} ${order}") {
                 builder.a(href: "#") {
-                    builder."g:message"(code: "${domainClass.propertyName.toLowerCase()}.${attrs.name.toLowerCase()}.label")
+                    builder."g:message"(code: getCode(p))
                 }
             }
         }
@@ -349,7 +321,7 @@ class DynamicPageTagLib {
                 builder.li(class: "fieldcontain") {
                     builder."g:if"(test: "\${i == 0}") {
                         builder.span(id: "${p.name}-label", class: "property-label") {
-                            builder."g:message"(code: "${pageScope.domainClass.propertyName.toLowerCase()}.${attrs.name.toLowerCase()}.label")
+                            builder."g:message"(code: getCode(p))
                         }
                         builder.span(class: "property-value", "arial-labelledby": "${p.name}-label", "\${element.encodeAsHTML()}")
                     }
@@ -364,14 +336,9 @@ class DynamicPageTagLib {
                 if (attrs.name.equalsIgnoreCase("id")) {
                     builder.span(id: "id-label", class: "property-label", "#")
                 }
-                else if (attrs.name == "enabled" || attrs.name == "deleted") {
-                    builder.span(id: "${p.name}-label", class: "property-label") {
-                        builder."g:message"(code: "default.${attrs.name.toLowerCase()}.label")
-                    }
-                }
                 else {
                     builder.span(id: "${p.name}-label", class: "property-label") {
-                        builder."g:message"(code: "${pageScope.domainClass.propertyName.toLowerCase()}.${attrs.name.toLowerCase()}.label")
+                        builder."g:message"(code: getCode(p))
                     }
                 }
                 
@@ -401,5 +368,17 @@ class DynamicPageTagLib {
         else {
             pageScope.builder.span(class: "property-value", "arial-labelledby": "${columnName}-label", value)
         } 
+    }
+
+    private getCode(property) {
+        if (property.name.equalsIgnoreCase("enabled") || property.name.equalsIgnoreCase("deleted")) {
+            return "default.${property.name.toLowerCase()}.label"
+        }
+        else if (property.manyToOne || property.oneToOne || property.oneToMany || property.manyToMany) {
+            return "${property.type.simpleName.toLowerCase()}.multiple.label"
+        }
+        else {
+            return "${pageScope.domainClass.propertyName.toLowerCase()}.${property.name.toLowerCase()}.label"
+        }
     }
 }
