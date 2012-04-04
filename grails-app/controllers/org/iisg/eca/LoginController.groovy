@@ -21,7 +21,6 @@ import org.springframework.security.core.context.SecurityContextHolder as SCH
  * Controller for login related actions
  */
 class LoginController {
-
 	/**
 	 * Dependency injection for the authenticationTrustResolver.
 	 */
@@ -181,7 +180,7 @@ class LoginController {
             return
         }
 
-        userInstance.encryptedPassword = newPassword
+        userInstance.password = newPassword
 
         if (!userInstance.save(flush: true)) {
             flash.message = message(code: 'springSecurity.forgot.error')

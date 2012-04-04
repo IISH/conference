@@ -1,47 +1,57 @@
 package org.iisg.eca
 
 import java.security.SecureRandom
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
 /**
  * Domain class of table holding all registered users
  */
-class User {
+class User extends DefaultDomain {
+    /**
+	 * The saltSource is responsible for the creation of salts
+	 */
     def saltSource
+
+    /**
+	 * Information about the currently logged in user
+     */
 	transient springSecurityService
 
-  	String email
+	String email
 	String fullName
 	String institute
-	String country
+	Country country
 	String language
-	String encryptedPassword
+	String password
 	String salt
-    boolean enabled = true
-	boolean deleted = false
 
-	static mapping = {
-		table 'cms_users'
+    static hasMany = [groups: Group]
+    static belongsTo = Country
+
+    static mapping = {
+		table 'users'
  		version false
 
-        email               column: 'email'
-        fullName            column: 'fullname'
-        institute           column: 'institute'
-        country             column: 'country'
-        language            column: 'language'
-        encryptedPassword   column: 'encryptedpassword'
-        salt                column: 'salt'
+        id          column: 'user_id'
+        email       column: 'email'
+        fullName    column: 'full_name'
+        institute   column: 'institute'
+        country     column: 'country_id'
+        language    column: 'language'
+        password    column: 'password'
+        salt        column: 'salt'
+
+        groups  joinTable: 'users_groups'
 	}
 
 	static constraints = {
-		email               maxSize: 30,    unique: true,   email: true
-		fullName            maxSize: 30,    blank: false
-		institute           maxSize: 50,    blank: false
-		country             maxSize: 5,     blank: false
-		language            maxSize: 10,    blank: false
-		encryptedPassword   maxSize: 128,   blank: false,   password: true
-		salt                maxSize: 26,    nullable: true
-        enabled             display: false
-        deleted             display: false
+		email       maxSize: 30,    blank: false,   unique: true,   email: true
+		fullName    maxSize: 30,    blank: false
+		institute   maxSize: 50,    blank: false
+		country                     blank: false
+		language    maxSize: 10,    blank: false
+		password    maxSize: 128,   blank: false,   display: false
+		salt        maxSize: 26,    nullable: true, display: false
     }
 
     /**
@@ -49,28 +59,24 @@ class User {
      * @return A set of roles assigned to this user
      */
     Set<Role> getRoles() {
-        UserRoles.findAllByUser(this).collect { it.role } as Set
+        UserRole.findAllByUser(this).collect { it.role } as Set
     }
 
     /**
-     * Returns all conferences this user has access to
-     * @return A set of all conferences this user has access to
+     * Returns all event dates this user can access
+     * @return A set of event dates this user can access
      */
-    Set<Conference> getConferences() {
-        UserRoles.findAllByUser(this).collect { it.conference } as Set
-    }
+    Set<EventDate> getDates() {
+        def roles = Role.findAllByFullRights(true)
 
-    /**
-     * Returns all conferences this user has access to, restricted to a particular role
-     * @param role A role assigned to this user
-     * @return A set of all conferences, restricted to the specified role of the user
-     */
-    Set<Conference> getConferencesByRole(Role role) {
-        UserRoles.findAllByUserAndRole(this, role).collect { it.conference } as Set
-    }
-
-    def enable(boolean enabled) {
-        this.enabled = enabled
+        // If the user is granted access to all events, just return a list of all event dates
+        // Otherwise, only return the event dates he/she is specifically given access to
+        if (SpringSecurityUtils.ifAnyGranted(roles*.role.join(','))) {
+            EventDate.list()
+        }
+        else {
+            UserRole.findAllByUser(this).collect { it.date } as Set
+        }
     }
 
     def beforeInsert() {
@@ -80,7 +86,7 @@ class User {
 
     def beforeUpdate() {
         // Make sure to hash the password if changed
-        if (isDirty('encryptedPassword')) {
+        if (isDirty('password')) {
             encodePassword()
         }
     }
@@ -94,17 +100,7 @@ class User {
     protected void encodePassword() {
         // Every time a new password is saved (and has to be hashed), also create a new user salt
         salt = createSecureRandomString()
-		encryptedPassword = springSecurityService.encodePassword(encryptedPassword, saltSource.getSalt(this))
-	}
-
-    @Override
-    def delete() {
-        deleted = true
-    }
-
-    @Override
-    def delete(Map props) {
-        deleted = true
+        password = springSecurityService.encodePassword(password, saltSource.getSalt(this))
     }
 
     @Override

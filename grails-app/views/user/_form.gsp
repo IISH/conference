@@ -1,5 +1,3 @@
-<%@ page import="org.iisg.eca.User" %>
-
 <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'fullName', 'error')} required">
 	<label for="fullName">
 		<g:message code="user.fullName.label" />
@@ -24,11 +22,11 @@
     <g:localeSelect name="language" required="" value="${userInstance?.language}" />
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: userInstance, field: 'encryptedPassword', 'error')}">
-	<label for="encryptedPassword">
-		<g:message code="user.encryptedPassword.label" />
+<div class="fieldcontain ${hasErrors(bean: userInstance, field: 'password', 'error')}">
+	<label for="password">
+		<g:message code="user.password.label" />
 	</label>
-	<g:field type="password" name="encryptedPassword" value="" />
+	<g:field type="password" name="password" value="" />
 </div>
 
 <div class="fieldcontain">

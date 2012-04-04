@@ -1,16 +1,316 @@
+-- phpMyAdmin SQL Dump
+-- version 2.11.10
+-- http://www.phpmyadmin.net
 --
--- Table structure for table `conferences`
+-- Host: localhost
+-- Generation Time: Apr 04, 2012 at 10:44 AM
+-- Server version: 5.0.86
+-- PHP Version: 5.2.10
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
+--
+-- Database: `eca`
 --
 
-CREATE TABLE IF NOT EXISTS `conferences` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `short_name` varchar(20) collate utf8_unicode_ci NOT NULL,
-  `long_name` varchar(50) collate utf8_unicode_ci NOT NULL,
-  `type` varchar(20) collate utf8_unicode_ci NOT NULL,
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admin_pages`
+--
+
+CREATE TABLE IF NOT EXISTS `admin_pages` (
+  `admin_page_id` bigint(20) NOT NULL auto_increment,
+  `page_id` bigint(20) NOT NULL,
+  `event_id` bigint(20) default NULL,
+  `show_in_menu` tinyint(1) NOT NULL default '1',
+  PRIMARY KEY  (`admin_page_id`),
+  KEY `admin_pages_page_id_idx` (`page_id`),
+  KEY `admin_pages_event_id_idx` (`event_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `admin_pages`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `countries`
+--
+
+CREATE TABLE IF NOT EXISTS `countries` (
+  `country_id` bigint(20) NOT NULL auto_increment,
+  `tld` varchar(2) collate utf8_unicode_ci NOT NULL,
+  `name_english` varchar(50) collate utf8_unicode_ci NOT NULL,
+  `name_dutch` varchar(50) collate utf8_unicode_ci NOT NULL,
+  `remarks` tinytext collate utf8_unicode_ci,
   `enabled` tinyint(1) NOT NULL default '1',
   `deleted` tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  PRIMARY KEY  (`country_id`),
+  UNIQUE KEY `tld` (`tld`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=255 ;
+
+--
+-- Dumping data for table `countries`
+--
+
+INSERT INTO `countries` (`country_id`, `tld`, `name_english`, `name_dutch`, `remarks`, `enabled`, `deleted`) VALUES
+(1, 'ac', 'Ascension Island', 'Ascension (eiland)', NULL, 1, 0),
+(2, 'ad', 'Andorra', 'Andorra', NULL, 1, 0),
+(3, 'ae', 'United Arab Emirates', 'Verenigde Arabische Emiraten (Abu Dhabi, Dubai)', NULL, 1, 0),
+(4, 'af', 'Afghanistan', 'Afghanistan', NULL, 1, 0),
+(5, 'ag', 'Antigua and Barbuda', 'Antigua en Barbuda', NULL, 1, 0),
+(6, 'ai', 'Anguilla', 'Anguilla', NULL, 1, 0),
+(7, 'al', 'Albania', 'Albanië', NULL, 1, 0),
+(8, 'am', 'Armenia', 'Armenië', NULL, 1, 0),
+(9, 'an', 'Netherlands Antilles', 'Nederlandse Antillen', NULL, 1, 0),
+(10, 'ao', 'Angola', 'Angola', NULL, 1, 0),
+(11, 'aq', 'Antarctica', 'Antarctica', NULL, 1, 0),
+(12, 'ar', 'Argentina', 'Argentinië', NULL, 1, 0),
+(13, 'as', 'American Samoa', 'Amerikaans Samoa', NULL, 1, 0),
+(14, 'at', 'Austria', 'Oostenrijk', NULL, 1, 0),
+(15, 'au', 'Australia', 'Australië', NULL, 1, 0),
+(16, 'aw', 'Aruba', 'Aruba', NULL, 1, 0),
+(17, 'ax', 'Åland Islands', 'Åland eilanden', NULL, 1, 0),
+(18, 'az', 'Azerbaijan', 'Azerbeidzjan', NULL, 1, 0),
+(19, 'ba', 'Bosnia and Herzegovina', 'Bosnië-Herzegovina', NULL, 1, 0),
+(20, 'bb', 'Barbados', 'Barbados', NULL, 1, 0),
+(21, 'bd', 'Bangladesh', 'Bangladesh', NULL, 1, 0),
+(22, 'be', 'Belgium', 'België', NULL, 1, 0),
+(23, 'bf', 'Burkina Faso', 'Burkina Faso', NULL, 1, 0),
+(24, 'bg', 'Bulgaria', 'Bulgarije', NULL, 1, 0),
+(25, 'bh', 'Bahrain', 'Bahrein', NULL, 1, 0),
+(26, 'bi', 'Burundi', 'Burundi', NULL, 1, 0),
+(27, 'bj', 'Benin', 'Benin', NULL, 1, 0),
+(28, 'bl', 'Saint Barthelemy', 'Sint Barthélemy', NULL, 1, 0),
+(29, 'bm', 'Bermuda', 'Bermuda', NULL, 1, 0),
+(30, 'bn', 'Brunei Darussalam', 'Brunei', NULL, 1, 0),
+(31, 'bo', 'Bolivia', 'Bolivia', NULL, 1, 0),
+(32, 'bq', 'Bonaire, Saint Eustatius, Saba', 'Bonaire, Sint Eustatius, Saba - Caribisch Nederlan', NULL, 1, 0),
+(33, 'br', 'Brazil', 'Brazilië', NULL, 1, 0),
+(34, 'bs', 'Bahamas', 'Bahama''s', NULL, 1, 0),
+(35, 'bt', 'Bhutan', 'Bhutan', NULL, 1, 0),
+(36, 'bv', 'Bouvet Island', 'Bouvet (eiland)', NULL, 1, 0),
+(37, 'bw', 'Botswana', 'Botswana', NULL, 1, 0),
+(38, 'by', 'Belarus', 'Wit-Rusland', NULL, 1, 0),
+(39, 'bz', 'Belize', 'Belize', NULL, 1, 0),
+(40, 'ca', 'Canada', 'Canada', NULL, 1, 0),
+(41, 'cc', 'Cocos (Keeling) Islands', 'Cocos (Keeling) eilanden', NULL, 1, 0),
+(42, 'cd', 'The Democratic Republic of the Congo', 'Democratische Republiek Congo (Kinshasa)', NULL, 1, 0),
+(43, 'cf', 'Central African Republic', 'Centraal-Afrikaanse Republiek', NULL, 1, 0),
+(44, 'cg', 'Republic of Congo', 'Congo (Brazzaville)', NULL, 1, 0),
+(45, 'ch', 'Switzerland', 'Zwitserland', NULL, 1, 0),
+(46, 'ci', 'Côte d''Ivoire', 'Ivoorkust', NULL, 1, 0),
+(47, 'ck', 'Cook Islands', 'Cookeilanden', NULL, 1, 0),
+(48, 'cl', 'Chile', 'Chili', NULL, 1, 0),
+(49, 'cm', 'Cameroon', 'Kameroen', NULL, 1, 0),
+(50, 'cn', 'China', 'China (Zhongguo)', NULL, 1, 0),
+(51, 'co', 'Colombia', 'Colombia', NULL, 1, 0),
+(52, 'cr', 'Costa Rica', 'Costa Rica', NULL, 1, 0),
+(53, 'cu', 'Cuba', 'Cuba', NULL, 1, 0),
+(54, 'cv', 'Cape Verde', 'Kaapverdië', NULL, 1, 0),
+(55, 'cw', 'Curacao', 'Curação', NULL, 1, 0),
+(56, 'cx', 'Christmas Island', 'Christmaseiland', NULL, 1, 0),
+(57, 'cy', 'Cyprus', 'Cyprus', NULL, 1, 0),
+(58, 'cz', 'Czech Republic', 'Tsjechië', NULL, 1, 0),
+(59, 'de', 'Germany', 'Duitsland', NULL, 1, 0),
+(60, 'dj', 'Djibouti', 'Djibouti', NULL, 1, 0),
+(61, 'dk', 'Denmark', 'Denemarken', NULL, 1, 0),
+(62, 'dm', 'Dominica', 'Dominica', NULL, 1, 0),
+(63, 'do', 'Dominican Republic', 'Dominicaanse Republiek', NULL, 1, 0),
+(64, 'dz', 'Algeria', 'Algerije', NULL, 1, 0),
+(65, 'ec', 'Ecuador', 'Ecuador', NULL, 1, 0),
+(66, 'ee', 'Estonia', 'Estland (Eesti)', NULL, 1, 0),
+(67, 'eg', 'Egypt', 'Egypte', NULL, 1, 0),
+(68, 'eh', 'Western Sahara', 'West-Sahara', NULL, 1, 0),
+(69, 'er', 'Eritrea', 'Eritrea', NULL, 1, 0),
+(70, 'es', 'Spain', 'Spanje', NULL, 1, 0),
+(71, 'et', 'Ethiopia', 'Ethiopië', NULL, 1, 0),
+(72, 'eu', 'European Union', 'Europese Unie', NULL, 1, 0),
+(73, 'fi', 'Finland', 'Finland (Suomi Finland)', NULL, 1, 0),
+(74, 'fj', 'Fiji', 'Fiji', NULL, 1, 0),
+(75, 'fk', 'Falkland Islands (Islas Malvinas)', 'Falklandeilanden', NULL, 1, 0),
+(76, 'fm', 'Federated States of Micronesia', 'Micronesië', NULL, 1, 0),
+(77, 'fo', 'Faroe Islands', 'Faeröer', NULL, 1, 0),
+(78, 'fr', 'France', 'Frankrijk', NULL, 1, 0),
+(79, 'ga', 'Gabon', 'Gabon', NULL, 1, 0),
+(80, 'gb', 'Great Britain', 'Groot-Brittannië', NULL, 1, 0),
+(81, 'gd', 'Grenada', 'Grenada', NULL, 1, 0),
+(82, 'ge', 'Georgia', 'Georgië', NULL, 1, 0),
+(83, 'gf', 'French Guiana', 'Frans-Guyana', NULL, 1, 0),
+(84, 'gg', 'Guernsey', 'Guernsey', NULL, 1, 0),
+(85, 'gh', 'Ghana', 'Ghana', NULL, 1, 0),
+(86, 'gi', 'Gibraltar', 'Gibraltar', NULL, 1, 0),
+(87, 'gl', 'Greenland', 'Groenland (Kalaallit Nunaat)', NULL, 1, 0),
+(88, 'gm', 'Gambia', 'Gambia', NULL, 1, 0),
+(89, 'gn', 'Guinea', 'Republiek Guinee', NULL, 1, 0),
+(90, 'gp', 'Guadeloupe', 'Guadeloupe', NULL, 1, 0),
+(91, 'gq', 'Equatorial Guinea', 'Equatoriaal-Guinea', NULL, 1, 0),
+(92, 'gr', 'Greece', 'Griekenland (Ellas, Hellas)', NULL, 1, 0),
+(93, 'gs', 'South Georgia and the South Sandwich Islands', 'Zuid-Georgia en de Zuidelijke Sandwicheilanden', NULL, 1, 0),
+(94, 'gt', 'Guatemala', 'Guatemala', NULL, 1, 0),
+(95, 'gu', 'Guam', 'Guam', NULL, 1, 0),
+(96, 'gw', 'Guinea-Bissau', 'Guinee-Bissau', NULL, 1, 0),
+(97, 'gy', 'Guyana', 'Guyana', NULL, 1, 0),
+(98, 'hk', 'Hong Kong', 'Hongkong (Xianggang)', NULL, 1, 0),
+(99, 'hm', 'Heard Island and McDonald Islands', 'Heard en McDonald (eilanden)', NULL, 1, 0),
+(100, 'hn', 'Honduras', 'Honduras', NULL, 1, 0),
+(101, 'hr', 'Croatia (Hrvatska)', 'Kroatië', NULL, 1, 0),
+(102, 'ht', 'Haiti', 'Haïti', NULL, 1, 0),
+(103, 'hu', 'Hungary', 'Hongarije (Magyar)', NULL, 1, 0),
+(104, 'id', 'Indonesia', 'Indonesië', NULL, 1, 0),
+(105, 'ie', 'Ireland', 'Ierland (Eire)', NULL, 1, 0),
+(106, 'il', 'Israel', 'Israël', NULL, 1, 0),
+(107, 'im', 'Isle of Man', 'Man (Ellan Vannin) (eiland)', NULL, 1, 0),
+(108, 'in', 'India', 'India', NULL, 1, 0),
+(109, 'io', 'British Indian Ocean Territory', 'Britse gebiedsdelen in de Indische Oceaan: Chagos ', NULL, 1, 0),
+(110, 'iq', 'Iraq', 'Irak', NULL, 1, 0),
+(111, 'ir', 'Islamic Republic of Iran', 'Iran', NULL, 1, 0),
+(112, 'is', 'Iceland', 'IJsland', NULL, 1, 0),
+(113, 'it', 'Italy', 'Italië', NULL, 1, 0),
+(114, 'je', 'Jersey', 'Jersey', NULL, 1, 0),
+(115, 'jm', 'Jamaica', 'Jamaica', NULL, 1, 0),
+(116, 'jo', 'Jordan', 'Jordanië', NULL, 1, 0),
+(117, 'jp', 'Japan', 'Japan (Nippon)', NULL, 1, 0),
+(118, 'ke', 'Kenya', 'Kenya', NULL, 1, 0),
+(119, 'kg', 'Kyrgyzstan', 'Kirgizië', NULL, 1, 0),
+(120, 'kh', 'Cambodia', 'Cambodja', NULL, 1, 0),
+(121, 'ki', 'Kiribati', 'Kiribati', NULL, 1, 0),
+(122, 'km', 'Comoros', 'Comoren', NULL, 1, 0),
+(123, 'kn', 'Saint Kitts and Nevis', 'Sint Kitts en Nevis', NULL, 1, 0),
+(124, 'kp', 'Democratic People''s Republic Korea', 'Noord Korea', NULL, 1, 0),
+(125, 'kr', 'Republic of Korea', 'Zuid Korea', NULL, 1, 0),
+(126, 'kw', 'Kuwait', 'Koeweit', NULL, 1, 0),
+(127, 'ky', 'Cayman Islands', 'Caymaneilanden', NULL, 1, 0),
+(128, 'kz', 'Kazakhstan', 'Kazachstan', NULL, 1, 0),
+(129, 'la', 'Lao People''s Democratic Republic', 'Laos', NULL, 1, 0),
+(130, 'lb', 'Lebanon', 'Libanon', NULL, 1, 0),
+(131, 'lc', 'Saint Lucia', 'Sint Lucia', NULL, 1, 0),
+(132, 'li', 'Liechtenstein', 'Liechtenstein', NULL, 1, 0),
+(133, 'lk', 'Sri Lanka', 'Sri Lanka', NULL, 1, 0),
+(134, 'lr', 'Liberia', 'Liberia', NULL, 1, 0),
+(135, 'ls', 'Lesotho', 'Lesotho', NULL, 1, 0),
+(136, 'lt', 'Lithuania', 'Litouwen (Lietuva)', NULL, 1, 0),
+(137, 'lu', 'Luxembourg', 'Luxemburg (Lëtzebuerg)', NULL, 1, 0),
+(138, 'lv', 'Latvia', 'Letland', NULL, 1, 0),
+(139, 'ly', 'Libyan Arab Jamahiriya', 'Libië', NULL, 1, 0),
+(140, 'ma', 'Morocco', 'Marokko', NULL, 1, 0),
+(141, 'mc', 'Monaco', 'Monaco', NULL, 1, 0),
+(142, 'md', 'Republic of Moldova', 'Moldavië', NULL, 1, 0),
+(143, 'me', 'Montenegro', 'Montenegro', NULL, 1, 0),
+(144, 'mf', 'Saint Martin', 'Sint Maarten', NULL, 1, 0),
+(145, 'mg', 'Madagascar', 'Madagaskar', NULL, 1, 0),
+(146, 'mh', 'Marshall Islands', 'Marshalleilanden', NULL, 1, 0),
+(147, 'mk', 'The former Yugoslav Republic of Macedonia', 'Macedonië', NULL, 1, 0),
+(148, 'ml', 'Mali', 'Mali', NULL, 1, 0),
+(149, 'mm', 'Myanmar', 'Myanmar', NULL, 1, 0),
+(150, 'mn', 'Mongolia', 'Mongolië', NULL, 1, 0),
+(151, 'mo', 'Macao', 'Macau (Aomen)', NULL, 1, 0),
+(152, 'mp', 'Northern Mariana Islands', 'Noordelijke Marianen-eilanden', NULL, 1, 0),
+(153, 'mq', 'Martinique', 'Martinique', NULL, 1, 0),
+(154, 'mr', 'Mauritania', 'Mauritanië', NULL, 1, 0),
+(155, 'ms', 'Montserrat', 'Montserrat', NULL, 1, 0),
+(156, 'mt', 'Malta', 'Malta', NULL, 1, 0),
+(157, 'mu', 'Mauritius', 'Mauritius', NULL, 1, 0),
+(158, 'mv', 'Maldives', 'Maldiven', NULL, 1, 0),
+(159, 'mw', 'Malawi', 'Malawi', NULL, 1, 0),
+(160, 'mx', 'Mexico', 'Mexico', NULL, 1, 0),
+(161, 'my', 'Malaysia', 'Maleisië', NULL, 1, 0),
+(162, 'mz', 'Mozambique', 'Mozambique', NULL, 1, 0),
+(163, 'na', 'Namibia', 'Namibië', NULL, 1, 0),
+(164, 'nc', 'New Caledonia', 'Nieuw-Caledonië', NULL, 1, 0),
+(165, 'ne', 'Niger', 'Niger', NULL, 1, 0),
+(166, 'nf', 'Norfolk Island', 'Norfolk (eiland)', NULL, 1, 0),
+(167, 'ng', 'Nigeria', 'Nigeria', NULL, 1, 0),
+(168, 'ni', 'Nicaragua', 'Nicaragua', NULL, 1, 0),
+(169, 'nl', 'Netherlands', 'Nederland', NULL, 1, 0),
+(170, 'no', 'Norway', 'Noorwegen (Norge)', NULL, 1, 0),
+(171, 'np', 'Nepal', 'Nepal', NULL, 1, 0),
+(172, 'nr', 'Nauru', 'Nauru', NULL, 1, 0),
+(173, 'nu', 'Niue', 'Niue', NULL, 1, 0),
+(174, 'nz', 'New Zealand', 'Nieuw-Zeeland', NULL, 1, 0),
+(175, 'om', 'Oman', 'Oman', NULL, 1, 0),
+(176, 'pa', 'Panama', 'Panama', NULL, 1, 0),
+(177, 'pe', 'Peru', 'Peru', NULL, 1, 0),
+(178, 'pf', 'French Polynesia', 'Frans Polynesië (Tahiti)', NULL, 1, 0),
+(179, 'pg', 'Papua New Guinea', 'Papua Nieuw-Guinea', NULL, 1, 0),
+(180, 'ph', 'Philippines', 'Filipijnen', NULL, 1, 0),
+(181, 'pk', 'Pakistan', 'Pakistan', NULL, 1, 0),
+(182, 'pl', 'Poland', 'Polen (Polska)', NULL, 1, 0),
+(183, 'pm', 'Saint Pierre and Miquelon', 'Sint Pierre en Miquelon', NULL, 1, 0),
+(184, 'pn', 'Pitcairn Island', 'Pitcairn (eiland)', NULL, 1, 0),
+(185, 'pr', 'Puerto Rico', 'Puerto Rico', NULL, 1, 0),
+(186, 'ps', 'Palestinian territory, occupied', 'Palestijnse bezette gebieden', NULL, 1, 0),
+(187, 'pt', 'Portugal', 'Portugal', NULL, 1, 0),
+(188, 'pw', 'Palau', 'Palau (Belau)', NULL, 1, 0),
+(189, 'py', 'Paraguay', 'Paraguay', NULL, 1, 0),
+(190, 'qa', 'Qatar', 'Qatar', NULL, 1, 0),
+(191, 're', 'Reunion Island', 'Réunion (eiland)', NULL, 1, 0),
+(192, 'ro', 'Romania', 'Roemenië (Rumania, Roumania)', NULL, 1, 0),
+(193, 'rs', 'Serbia', 'Servië', NULL, 1, 0),
+(194, 'ru', 'Russian Federation', 'Rusland', NULL, 1, 0),
+(195, 'rw', 'Rwanda', 'Rwanda', NULL, 1, 0),
+(196, 'sa', 'Saudi Arabia', 'Saoedi-Arabië', NULL, 1, 0),
+(197, 'sb', 'Solomon Islands', 'Salomonseilanden', NULL, 1, 0),
+(198, 'sc', 'Seychelles', 'Seychellen', NULL, 1, 0),
+(199, 'sd', 'Sudan', 'Soedan', NULL, 1, 0),
+(200, 'se', 'Sweden', 'Zweden (Sverige)', NULL, 1, 0),
+(201, 'sg', 'Singapore', 'Singapore', NULL, 1, 0),
+(202, 'sh', 'Saint Helena', 'Sint Helena', NULL, 1, 0),
+(203, 'si', 'Slovenia', 'Slovenië', NULL, 1, 0),
+(204, 'sj', 'Svalbard and Jan Mayen Islands', 'Svalbard en Jan Mayen (eilanden)', NULL, 1, 0),
+(205, 'sk', 'Slovak Republic', 'Slowakije', NULL, 1, 0),
+(206, 'sl', 'Sierra Leone', 'Sierra Leone', NULL, 1, 0),
+(207, 'sm', 'San Marino', 'San Marino', NULL, 1, 0),
+(208, 'sn', 'Senegal', 'Senegal', NULL, 1, 0),
+(209, 'so', 'Somalia', 'Somalië', NULL, 1, 0),
+(210, 'sr', 'Suriname', 'Suriname', NULL, 1, 0),
+(211, 'ss', 'South Sudan', 'Zuid Soedan', NULL, 1, 0),
+(212, 'st', 'Sao Tome and Principe', 'Sao Tomé en Principe (eilanden)', NULL, 1, 0),
+(213, 'sv', 'El Salvador', 'El Salvador', NULL, 1, 0),
+(214, 'sx', 'Saint Martin', 'Sint Maarten', NULL, 1, 0),
+(215, 'sy', 'Syrian Arab Republic', 'Syrië', NULL, 1, 0),
+(216, 'sz', 'Swaziland', 'Swaziland', NULL, 1, 0),
+(217, 'tc', 'Turks and Caicos Islands', 'Turks- en Caicoseilanden', NULL, 1, 0),
+(218, 'td', 'Chad', 'Tsjaad', NULL, 1, 0),
+(219, 'tf', 'French Southern Territories', 'Franse Zuidelijke gebieden (Terres Australes et An', NULL, 1, 0),
+(220, 'tg', 'Togo', 'Togo', NULL, 1, 0),
+(221, 'th', 'Thailand', 'Thailand', NULL, 1, 0),
+(222, 'tj', 'Tajikistan', 'Tadzjikistan', NULL, 1, 0),
+(223, 'tk', 'Tokelau', 'Tokelau', NULL, 1, 0),
+(224, 'tl', 'Timor-Leste', 'Oost-Timor', NULL, 1, 0),
+(225, 'tm', 'Turkmenistan', 'Turkmenistan', NULL, 1, 0),
+(226, 'tn', 'Tunisia', 'Tunesië', NULL, 1, 0),
+(227, 'to', 'Tonga', 'Tonga', NULL, 1, 0),
+(228, 'tp', 'East Timor', 'Oost-Timor (Timor Lorosae, Timor Leste)', NULL, 1, 0),
+(229, 'tr', 'Turkey', 'Turkije', NULL, 1, 0),
+(230, 'tt', 'Trinidad and Tobago', 'Trinidad en Tobago', NULL, 1, 0),
+(231, 'tv', 'Tuvalu', 'Tuvalu', NULL, 1, 0),
+(232, 'tw', 'Taiwan (Province of China)', 'Taiwan', NULL, 1, 0),
+(233, 'tz', 'Tanzania', 'Tanzania', NULL, 1, 0),
+(234, 'ua', 'Ukraine', 'Oekraïne', NULL, 1, 0),
+(235, 'ug', 'Uganda', 'Oeganda', NULL, 1, 0),
+(236, 'uk', 'United Kingdom', 'Verenigd Koninkrijk (Groot-Brittannië)', NULL, 1, 0),
+(237, 'um', 'United States Minor Outlying Islands', 'Verenigde Staten: kleine eilanden', NULL, 1, 0),
+(238, 'us', 'United States', 'Verenigde Staten', NULL, 1, 0),
+(239, 'uy', 'Uruguay', 'Uruguay', NULL, 1, 0),
+(240, 'uz', 'Uzbekistan', 'Oezbekistan', NULL, 1, 0),
+(241, 'va', 'Vatican City State', 'Vaticaanstad (Holy See, Santa Sede)', NULL, 1, 0),
+(242, 'vc', 'Saint Vincent and the Grenadines', 'Sint Vincent en de Grenadinen', NULL, 1, 0),
+(243, 've', 'Venezuela', 'Venezuela', NULL, 1, 0),
+(244, 'vg', 'Virgin Islands (British)', 'Britse Maagdeneilanden', NULL, 1, 0),
+(245, 'vi', 'Virgin Islands (US)', 'Amerikaanse Maagdeneilanden', NULL, 1, 0),
+(246, 'vn', 'Viet Nam', 'Vietnam', NULL, 1, 0),
+(247, 'vu', 'Vanuatu', 'Vanuatu', NULL, 1, 0),
+(248, 'wf', 'Wallis and Futuna Islands', 'Wallis en Futuna (eilanden)', NULL, 1, 0),
+(249, 'ws', 'Samoa', 'Samoa', NULL, 1, 0),
+(250, 'ye', 'Yemen', 'Jemen', NULL, 1, 0),
+(251, 'yt', 'Mayotte', 'Mayotte', NULL, 1, 0),
+(252, 'za', 'South Africa', 'Zuid-Afrika', NULL, 1, 0),
+(253, 'zm', 'Zambia', 'Zambia', NULL, 1, 0),
+(254, 'zw', 'Zimbabwe', 'Zimbabwe', NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -19,19 +319,219 @@ CREATE TABLE IF NOT EXISTS `conferences` (
 --
 
 CREATE TABLE IF NOT EXISTS `dates` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `conference_id` bigint(20) NOT NULL,
+  `date_id` bigint(20) NOT NULL auto_increment,
+  `event_id` bigint(20) NOT NULL,
   `year_code` varchar(20) collate utf8_unicode_ci NOT NULL,
   `start_date` date default NULL,
   `end_date` date default NULL,
-  `date_as_text` varchar(100) collate utf8_unicode_ci NOT NULL,
+  `date_as_text` varchar(30) collate utf8_unicode_ci NOT NULL,
   `description` varchar(255) collate utf8_unicode_ci NOT NULL,
-  `long_description` text collate utf8_unicode_ci NOT NULL,
+  `long_description` text collate utf8_unicode_ci,
   `enabled` tinyint(1) NOT NULL default '1',
   `deleted` tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `dates_conference_id_idx` (`conference_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  PRIMARY KEY  (`date_id`),
+  KEY `dates_event_id_idx` (`event_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=13 ;
+
+--
+-- Dumping data for table `dates`
+--
+
+INSERT INTO `dates` (`date_id`, `event_id`, `year_code`, `start_date`, `end_date`, `date_as_text`, `description`, `long_description`, `enabled`, `deleted`) VALUES
+(1, 1, '2012', '2012-04-11', '2012-04-14', '11 April - 14 April 2012', '9th European Social Science History Conference', '9th European Social Science History Conference\r\nGlasgow, Scotland, UK\r\nWednesday 11 - Saturday 14 April 2012', 1, 0),
+(2, 1, '2010', '2010-04-13', '2010-04-16', '13 April - 16 April 2010', '8th European Social Science History Conference', '8th European Social Science History Conference\r\nGhent, Belgium\r\nApril 2010', 1, 0),
+(3, 1, '2008', '2008-02-26', '2008-03-01', '26 February - 1 March 2008', '7th European Social Science History Conference', '7th European Social Science History Conference\r\nLisbon, Portugal\r\nMarch 2008', 1, 0),
+(4, 1, '2006', '2006-03-22', '2006-03-25', '22 - 25 March 2006', 'Sixth European Social Science History Conference', '', 1, 0),
+(5, 1, '2004', '2004-03-24', '2004-03-27', '24 - 27 March 2004', 'Fifth European Social Science History Conference', '', 1, 0),
+(6, 1, '2002', '2002-02-27', '2002-03-02', '27 February - 2 March 2002', 'Fourth European Social Science History Conference', '', 1, 0),
+(7, 1, '2000', '2000-04-12', '2000-04-15', '12 - 15 April 2000', 'Third European Social Science History Conference', '', 1, 0),
+(8, 1, '1998', '1998-03-05', '1998-03-07', '5 - 7 March 1998', 'Second European Social Science History Conference', '', 1, 0),
+(9, 1, '1996', '1996-05-09', '1996-05-11', '9 - 11 May 1996', 'First European Social Science History Conference', '', 1, 0),
+(10, 3, '2014', NULL, NULL, 'yyy-zzz 2014', 'First NEHA Conference', '', 1, 0),
+(11, 2, 'januari 2012', '2012-01-26', '2012-01-26', '26 januari 2012', 'IISG Vriendendag 26 januari 2012', '', 1, 0),
+(12, 2, 'juni 2011', '2011-06-23', '2011-06-23', '23 juni 2011', 'IISG Vriendendag 23 juni 2011', '', 1, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `days`
+--
+
+CREATE TABLE IF NOT EXISTS `days` (
+  `day_id` bigint(20) NOT NULL auto_increment,
+  `day` date NOT NULL,
+  `date_id` bigint(20) NOT NULL,
+  `daynumber` int(11) NOT NULL,
+  `enabled` tinyint(1) NOT NULL default '1',
+  `deleted` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`day_id`),
+  KEY `days_date_id_idx` (`date_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `days`
+--
+
+INSERT INTO `days` (`day_id`, `day`, `date_id`, `daynumber`, `enabled`, `deleted`) VALUES
+(1, '2012-04-11', 1, 1, 1, 0),
+(2, '2012-04-12', 1, 2, 1, 0),
+(3, '2012-04-13', 1, 3, 1, 0),
+(4, '2012-04-14', 1, 4, 1, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `dynamic_pages`
+--
+
+CREATE TABLE IF NOT EXISTS `dynamic_pages` (
+  `dynamic_page_id` bigint(20) NOT NULL auto_increment,
+  `content` longtext collate utf8_unicode_ci NOT NULL,
+  `cache` longtext collate utf8_unicode_ci,
+  `page_id` bigint(20) NOT NULL,
+  `date_id` bigint(20) default NULL,
+  PRIMARY KEY  (`dynamic_page_id`),
+  KEY `date_id` (`date_id`),
+  KEY `page_id` (`page_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=8 ;
+
+--
+-- Dumping data for table `dynamic_pages`
+--
+
+INSERT INTO `dynamic_pages` (`dynamic_page_id`, `content`, `cache`, `page_id`, `date_id`) VALUES
+(1, '<element:title code="event.label" />\r\n\r\n<element:overview domain="Event" id="url">\r\n	<element:column name="id" />\r\n	<element:column name="code" />\r\n	<element:column name="shortName" />\r\n	<element:column name="longName" />\r\n	<element:column name="enabled" />\r\n	<element:column name="dates" />    \r\n</element:overview>\r\n\r\n<element:buttons>\r\n	<element:button type="back" />\r\n	<element:button type="edit" url="/event/edit" />\r\n</element:buttons>', NULL, 1, NULL),
+(2, '<element:title code="event.label" />\r\n\r\n<element:form domain="Event" id="url">\r\n	<element:column name="id" />\r\n	<element:column name="code" />\r\n	<element:column name="shortName" />\r\n	<element:column name="longName" />\r\n	<element:column name="enabled" />\r\n	<element:column name="deleted" /> \r\n	\r\n	<element:button type="cancel" />\r\n	<element:button type="save" url="/event/show" />  \r\n</element:form>', NULL, 2, NULL),
+(3, '<element:title code="eventdate.label" />\r\n\r\n<element:overview domain="EventDate" id="url">\r\n   <element:column name="id" />\r\n   <element:column name="event" />\r\n   <element:column name="yearCode" />\r\n   <element:column name="startDate" />\r\n   <element:column name="endDate" />\r\n   <element:column name="dateAsText" /> \r\n   <element:column name="description" />   \r\n   <element:column name="longDescription" /> \r\n   <element:column name="enabled" />\r\n   <element:column name="days" />\r\n</element:overview>\r\n\r\n<element:buttons>\r\n   <element:button type="back" />\r\n   <element:button type="edit" url="/eventDate/edit" />\r\n</element:buttons>', NULL, 3, NULL),
+(4, '<element:title code="eventdate.label" />\r\n\r\n<element:form domain="EventDate" id="url">\r\n	<element:column name="id" />\r\n	<element:column name="event" readonly="true" />\r\n	<element:column name="yearCode" />\r\n	<element:column name="startDate" />\r\n	<element:column name="endDate" />\r\n	<element:column name="dateAsText" />\r\n	<element:column name="description" />  \r\n	<element:column name="longDescription" />\r\n	<element:column name="enabled" />\r\n	<element:column name="deleted" />\r\n  \r\n	<element:button type="cancel" />\r\n	<element:button type="save" url="/eventDate/show" />  \r\n </element:form>', NULL, 4, NULL),
+(5, '<element:title code="event.label" />\r\n\r\n<element:form domain="Event">\r\n   <element:column name="code" />\r\n   <element:column name="shortName" />\r\n   <element:column name="longName" />\r\n   <element:column name="enabled" />\r\n\r\n   <element:button type="cancel" />\r\n   <element:button type="save" url="/eventDate/create" />  \r\n</element:form>', NULL, 5, NULL),
+(6, '<element:title code="eventdate.label" />\r\n\r\n<element:form domain="EventDate">\r\n   <element:column name="event" id="url" />\r\n   <element:column name="yearCode" />\r\n   <element:column name="startDate" />\r\n   <element:column name="endDate" />\r\n   <element:column name="dateAsText" />\r\n   <element:column name="description" />  \r\n   <element:column name="longDescription" />\r\n   <element:column name="enabled" />\r\n \r\n   <element:button type="cancel" />\r\n   <element:button type="save" url="/event/list" />  \r\n</element:form>', NULL, 6, NULL),
+(7, '<element:title code="network.label" />\r\n\r\n<element:form domain="Network">\r\n	<element:column name="name" />\r\n	<element:column name="connectText" />\r\n	<element:column name="showOnline" />\r\n	<element:column name="showIntern" />\r\n	<element:column name="enabled" />\r\n\r\n	<element:button type="cancel" />\r\n	<element:button type="save" />  \r\n</element:form>', NULL, 7, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `events`
+--
+
+CREATE TABLE IF NOT EXISTS `events` (
+  `event_id` bigint(20) NOT NULL auto_increment,
+  `code` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `short_name` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `long_name` varchar(50) collate utf8_unicode_ci NOT NULL,
+  `type` varchar(20) collate utf8_unicode_ci default NULL,
+  `enabled` tinyint(1) NOT NULL default '1',
+  `deleted` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`event_id`),
+  UNIQUE KEY `code` (`code`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
+
+--
+-- Dumping data for table `events`
+--
+
+INSERT INTO `events` (`event_id`, `code`, `short_name`, `long_name`, `type`, `enabled`, `deleted`) VALUES
+(1, 'esshc', 'ESSHC', 'European Social Science History Conference', NULL, 1, 0),
+(2, 'iisgvriendendag', 'IISG Vriendendag', 'IISG Vriendendag', NULL, 1, 0),
+(3, 'neha', 'NEHA', 'Nederlandsch Economisch-Historisch Archief', NULL, 1, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `groups`
+--
+
+CREATE TABLE IF NOT EXISTS `groups` (
+  `group_id` bigint(20) NOT NULL auto_increment,
+  `name` varchar(30) collate utf8_unicode_ci NOT NULL,
+  `date_id` bigint(20) default NULL,
+  `enabled` tinyint(1) NOT NULL default '1',
+  `deleted` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`group_id`),
+  KEY `groups_date_id_idx` (`date_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `groups`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `groups_pages`
+--
+
+CREATE TABLE IF NOT EXISTS `groups_pages` (
+  `group_id` bigint(20) NOT NULL,
+  `page_id` bigint(20) NOT NULL,
+  `show_in_menu` tinyint(1) NOT NULL default '1',
+  `enabled` tinyint(1) NOT NULL default '1',
+  `deleted` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`group_id`,`page_id`),
+  KEY `groups_pages_page_id_fk` (`page_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `groups_pages`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `networks`
+--
+
+CREATE TABLE IF NOT EXISTS `networks` (
+  `network_id` bigint(20) NOT NULL auto_increment,
+  `date_id` bigint(20) default NULL,
+  `name` varchar(30) collate utf8_unicode_ci NOT NULL,
+  `connect_text` varchar(30) collate utf8_unicode_ci NOT NULL,
+  `show_online` tinyint(1) NOT NULL default '1',
+  `show_intern` tinyint(1) NOT NULL default '1',
+  `expoit` varchar(30) collate utf8_unicode_ci default NULL,
+  `enabled` tinyint(1) NOT NULL default '1',
+  `deleted` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`network_id`),
+  KEY `networks_date_id_idx` (`date_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `networks`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pages`
+--
+
+CREATE TABLE IF NOT EXISTS `pages` (
+  `page_id` bigint(20) NOT NULL auto_increment,
+  `name` varchar(30) collate utf8_unicode_ci NOT NULL,
+  `url` varchar(30) collate utf8_unicode_ci NOT NULL,
+  `description` tinytext collate utf8_unicode_ci,
+  `parent_page_id` bigint(20) default NULL,
+  `enabled` tinyint(1) NOT NULL default '1',
+  `deleted` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`page_id`),
+  KEY `pages_parent_page_id_idx` (`parent_page_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=8 ;
+
+--
+-- Dumping data for table `pages`
+--
+
+INSERT INTO `pages` (`page_id`, `name`, `url`, `description`, `parent_page_id`, `enabled`, `deleted`) VALUES
+(1, 'Event overview', '/event/show', NULL, NULL, 1, 0),
+(2, 'Edit event', '/event/edit', NULL, NULL, 1, 0),
+(3, 'Event date overview', '/eventdate/show', NULL, NULL, 1, 0),
+(4, 'Edit event date', '/eventdate/edit', NULL, NULL, 1, 0),
+(5, 'Create event', '/event/create', NULL, NULL, 1, 0),
+(6, 'Create event date', '/eventdate/create', NULL, NULL, 1, 0),
+(7, 'Create network', '/network/create', NULL, NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -40,28 +540,72 @@ CREATE TABLE IF NOT EXISTS `dates` (
 --
 
 CREATE TABLE IF NOT EXISTS `roles` (
-  `id` bigint(20) NOT NULL auto_increment,
+  `role_id` bigint(20) NOT NULL auto_increment,
   `role` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `description` tinytext collate utf8_unicode_ci,
   `full_rights` tinyint(1) NOT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  PRIMARY KEY  (`role_id`),
+  UNIQUE KEY `role` (`role`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `roles`
+--
+
+INSERT INTO `roles` (`role_id`, `role`, `description`, `full_rights`) VALUES
+(1, 'superAdmin', NULL, 1),
+(2, 'admin', NULL, 0),
+(3, 'user', NULL, 0),
+(4, 'participant', NULL, 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `type_auth`
+-- Table structure for table `settings`
 --
 
-CREATE TABLE IF NOT EXISTS `type_auth` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `shortcode` varchar(10) collate utf8_unicode_ci NOT NULL,
-  `connectiestring` varchar(30) collate utf8_unicode_ci default NULL,
-  `ww_bewaren` tinyint(1) NOT NULL default '0',
+CREATE TABLE IF NOT EXISTS `settings` (
+  `setting_id` bigint(20) NOT NULL auto_increment,
+  `property` varchar(50) collate utf8_unicode_ci NOT NULL,
+  `value` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `event_id` bigint(20) default NULL,
+  PRIMARY KEY  (`setting_id`),
+  KEY `settings_event_id_idx` (`event_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `settings`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `titles`
+--
+
+CREATE TABLE IF NOT EXISTS `titles` (
+  `title_id` bigint(20) NOT NULL auto_increment,
+  `date_id` bigint(20) default NULL,
+  `title` varchar(20) collate utf8_unicode_ci NOT NULL,
   `enabled` tinyint(1) NOT NULL default '1',
   `deleted` tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `shortcode` (`shortcode`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  PRIMARY KEY  (`title_id`),
+  KEY `titles_date_id_idx` (`date_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=8 ;
+
+--
+-- Dumping data for table `titles`
+--
+
+INSERT INTO `titles` (`title_id`, `date_id`, `title`, `enabled`, `deleted`) VALUES
+(1, 1, 'Mr.', 1, 0),
+(2, 1, 'Ms.', 1, 0),
+(3, 1, 'Drs.', 1, 0),
+(4, 1, 'Dr.', 1, 0),
+(5, 1, 'Prof. Dr.', 1, 0),
+(6, 1, 'Prof.', 1, 0),
+(7, 1, 'Mrs.', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -70,19 +614,65 @@ CREATE TABLE IF NOT EXISTS `type_auth` (
 --
 
 CREATE TABLE IF NOT EXISTS `users` (
-  `id` bigint(20) NOT NULL auto_increment,
+  `user_id` bigint(20) NOT NULL auto_increment,
   `email` varchar(30) collate utf8_unicode_ci NOT NULL,
   `full_name` varchar(30) collate utf8_unicode_ci NOT NULL,
   `institute` varchar(50) collate utf8_unicode_ci NOT NULL,
-  `country` varchar(5) collate utf8_unicode_ci NOT NULL,
+  `country_id` bigint(20) NOT NULL,
   `language` varchar(10) collate utf8_unicode_ci NOT NULL,
-  `encrypted_password` varchar(128) collate utf8_unicode_ci NOT NULL,
+  `password` varchar(128) collate utf8_unicode_ci NOT NULL,
   `salt` varchar(26) collate utf8_unicode_ci default NULL,
   `enabled` tinyint(1) NOT NULL default '1',
   `deleted` tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  PRIMARY KEY  (`user_id`),
+  UNIQUE KEY `email` (`email`),
+  KEY `users_country_id_idx` (`country_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `users`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users_groups`
+--
+
+CREATE TABLE IF NOT EXISTS `users_groups` (
+  `user_id` bigint(20) NOT NULL,
+  `group_id` bigint(20) NOT NULL,
+  PRIMARY KEY  (`user_id`,`group_id`),
+  KEY `users_groups_group_id_fk` (`group_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `users_groups`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users_pages`
+--
+
+CREATE TABLE IF NOT EXISTS `users_pages` (
+  `user_id` bigint(20) NOT NULL,
+  `page_id` bigint(20) NOT NULL,
+  `denied` tinyint(1) NOT NULL default '0',
+  `show_in_menu` tinyint(1) NOT NULL default '1',
+  `date_id` bigint(20) default NULL,
+  PRIMARY KEY  (`user_id`,`page_id`),
+  KEY `users_pages_date_id_idx` (`date_id`),
+  KEY `users_pages_page_id_idx` (`page_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `users_pages`
+--
+
 
 -- --------------------------------------------------------
 
@@ -91,52 +681,113 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 CREATE TABLE IF NOT EXISTS `users_roles` (
+  `user_role_id` bigint(20) NOT NULL,
   `user_id` bigint(20) NOT NULL,
   `role_id` bigint(20) NOT NULL,
-  `conference_id` bigint(20) default NULL,
-  PRIMARY KEY  (`user_id`,`role_id`),
+  `date_id` bigint(20) default NULL,
+  PRIMARY KEY  (`user_role_id`),
+  KEY `users_roles_user_id_idx` (`user_id`),
   KEY `users_roles_role_id_idx` (`role_id`),
-  KEY `users_roles_conference_id_idx` (`conference_id`)
+  KEY `users_roles_date_id_idx` (`date_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- --------------------------------------------------------
-
 --
--- Table structure for table `users_type_auth`
+-- Dumping data for table `users_roles`
 --
 
-CREATE TABLE IF NOT EXISTS `users_type_auth` (
-  `user_id` bigint(20) NOT NULL,
-  `type_auth_id` bigint(20) NOT NULL,
-  PRIMARY KEY  (`user_id`,`type_auth_id`),
-  KEY `users_type_auth_type_auth_id_idx` (`type_auth_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- --------------------------------------------------------
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `admin_pages`
+--
+ALTER TABLE `admin_pages`
+  ADD CONSTRAINT `admin_pages_event_id_fk` FOREIGN KEY (`event_id`) REFERENCES `events` (`event_id`),
+  ADD CONSTRAINT `admin_pages_page_id_fk` FOREIGN KEY (`page_id`) REFERENCES `pages` (`page_id`);
 
 --
 -- Constraints for table `dates`
 --
-
 ALTER TABLE `dates`
-  ADD CONSTRAINT `dates_conference_id_fk` FOREIGN KEY (`conference_id`) REFERENCES `conferences` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-  
--- --------------------------------------------------------
+  ADD CONSTRAINT `dates_event_id_fk` FOREIGN KEY (`event_id`) REFERENCES `events` (`event_id`);
+
+--
+-- Constraints for table `days`
+--
+ALTER TABLE `days`
+  ADD CONSTRAINT `days_date_id_fk` FOREIGN KEY (`date_id`) REFERENCES `dates` (`date_id`);
+
+--
+-- Constraints for table `dynamic_pages`
+--
+ALTER TABLE `dynamic_pages`
+  ADD CONSTRAINT `dynamic_pages_date_id_fk` FOREIGN KEY (`date_id`) REFERENCES `dates` (`date_id`),
+  ADD CONSTRAINT `dynamic_pages_page_id_fk` FOREIGN KEY (`page_id`) REFERENCES `pages` (`page_id`);
+
+--
+-- Constraints for table `groups`
+--
+ALTER TABLE `groups`
+  ADD CONSTRAINT `groups_date_id_fk` FOREIGN KEY (`date_id`) REFERENCES `dates` (`date_id`);
+
+--
+-- Constraints for table `groups_pages`
+--
+ALTER TABLE `groups_pages`
+  ADD CONSTRAINT `groups_pages_group_id_fk` FOREIGN KEY (`group_id`) REFERENCES `groups` (`group_id`),
+  ADD CONSTRAINT `groups_pages_page_id_fk` FOREIGN KEY (`page_id`) REFERENCES `pages` (`page_id`);
+
+--
+-- Constraints for table `networks`
+--
+ALTER TABLE `networks`
+  ADD CONSTRAINT `networks_date_id_fk` FOREIGN KEY (`date_id`) REFERENCES `dates` (`date_id`);
+
+--
+-- Constraints for table `pages`
+--
+ALTER TABLE `pages`
+  ADD CONSTRAINT `pages_parent_page_id_fk` FOREIGN KEY (`parent_page_id`) REFERENCES `pages` (`page_id`);
+
+--
+-- Constraints for table `settings`
+--
+ALTER TABLE `settings`
+  ADD CONSTRAINT `settings_event_id_fk` FOREIGN KEY (`event_id`) REFERENCES `events` (`event_id`);
+
+--
+-- Constraints for table `titles`
+--
+ALTER TABLE `titles`
+  ADD CONSTRAINT `titles_date_id_fk` FOREIGN KEY (`date_id`) REFERENCES `dates` (`date_id`);
+
+--
+-- Constraints for table `users`
+--
+ALTER TABLE `users`
+  ADD CONSTRAINT `users_country_id_fk` FOREIGN KEY (`country_id`) REFERENCES `countries` (`country_id`);
+
+--
+-- Constraints for table `users_groups`
+--
+ALTER TABLE `users_groups`
+  ADD CONSTRAINT `users_groups_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `users_groups_group_id_fk` FOREIGN KEY (`group_id`) REFERENCES `groups` (`group_id`);
+
+--
+-- Constraints for table `users_pages`
+--
+ALTER TABLE `users_pages`
+  ADD CONSTRAINT `users_pages_date_id_fk` FOREIGN KEY (`date_id`) REFERENCES `dates` (`date_id`),
+  ADD CONSTRAINT `users_pages_page_id_fk` FOREIGN KEY (`page_id`) REFERENCES `pages` (`page_id`),
+  ADD CONSTRAINT `users_pages_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
 
 --
 -- Constraints for table `users_roles`
 --
-
 ALTER TABLE `users_roles`
-  ADD CONSTRAINT `users_roles_conference_id_fk` FOREIGN KEY (`conference_id`) REFERENCES `conferences` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `users_roles_role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `users_roles_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- --------------------------------------------------------
-
---
--- Constraints for table `users_type_auth`
---
-
-ALTER TABLE `users_type_auth`
-  ADD CONSTRAINT `users_type_auth_type_auth_id_fk` FOREIGN KEY (`type_auth_id`) REFERENCES `type_auth` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `users_roles_date_id_fk` FOREIGN KEY (`date_id`) REFERENCES `dates` (`date_id`),
+  ADD CONSTRAINT `users_roles_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `users_roles_role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`);

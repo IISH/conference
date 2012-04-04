@@ -58,7 +58,7 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
-    <!-- The Groovy Server Pages servlet -->
+    <!-- The Groovy Server Page servlet -->
     <servlet>
         <servlet-name>gsp</servlet-name>
         <servlet-class>org.codehaus.groovy.grails.web.pages.GroovyPagesServlet</servlet-class>

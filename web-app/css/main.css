@@ -79,6 +79,14 @@ h1 {
     margin: 0.8em 0 0.3em 0;
 }
 
+h2 {
+    color: #48802c;
+    font-weight: normal;
+    font-size: 14pt;
+    margin: 0.8em 0 0.3em 0;
+    display: inline;
+}
+
 ul {
     padding: 0;
 }
@@ -96,8 +104,7 @@ img {
 
 #content h1 {
     border-bottom: 1px solid #CCCCCC;
-    margin: 0.8em 1em 0.3em;
-    padding: 0 0.25em;
+    margin-bottom: 30px;
 }
 
 #footer {
@@ -200,22 +207,21 @@ img {
 
 /* CREATE/EDIT FORMS AND SHOW PAGES */
 
-fieldset, .property-list, #content ul {
-    margin: 0.6em 1.25em 0 1.25em;
-    padding: 0.3em 1.8em 1.25em;
-    position: relative;
-    zoom: 1;
+fieldset {
     border: none;
 }
 
 .property-list .fieldcontain {
     list-style: none;
     overflow: hidden;
-    zoom: 1;
 }
 
 .fieldcontain {
     margin-top: 1em;
+}
+
+.fieldcontain:first-child {
+    margin-top: 0;
 }
 
 .fieldcontain label,
@@ -257,7 +263,6 @@ select[multiple] {
 
 textarea {
     width: 250px;
-    height: 150px;
     overflow: auto; /* IE always renders vertical scrollbar without this */
     vertical-align: top;
 }
@@ -360,6 +365,7 @@ fieldset.embedded legend {
 .message {
     background: transparent url(../images/skin/information.png) 0.5em 50% no-repeat;
     text-indent: 2.2em;
+    margin-bottom: 30px;
 }
 
 /* form fields with errors */
@@ -519,7 +525,9 @@ th:hover, tr:hover {
        -moz-box-shadow: 0 0 3px 1px #aaaaaa;
     -webkit-box-shadow: 0 0 3px 1px #aaaaaa;
             box-shadow: 0 0 3px 1px #aaaaaa;
-    margin: 0.1em 0 0 0;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-bottom: 20px;
     border: none;
 }
 
@@ -576,6 +584,11 @@ th:hover, tr:hover {
 a.skip {
     position: absolute;
     left: -9999px;
+}
+
+/* CONTENT PAGE */
+#content {
+    margin: 25px;
 }
 
 /* LOGIN PAGE */
@@ -661,15 +674,38 @@ a.skip {
     text-align: right;
 }
 
-/* CONFERENCE LIST */
-ul#conference-list {
+/* EVENTS PAGE */
+#events .event {
+    margin-bottom: 30px;
+}
+
+#events .event ul {
+    margin-left: 40px;
+    margin-top: 10px;
+}
+
+#events .event ul li {
+    display: inline;
     list-style: none;
-    margin-top: 50px;
-    line-height: 1.5;
-    font-size: 14pt;
+    margin-right: 20px;
+}
+
+/* DATEPICKER */
+
+div#ui-datepicker-div {
+    left: 25%;
+    margin-left: 26px;
 }
 
 /* EXTRA */
 .clear {
     clear: both;
+}
+
+.action {
+    display: inline;
+    color: #666666;
+    font-style: italic;
+    margin-left: 10px;
+    font-size: 8pt;
 }

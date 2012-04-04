@@ -33,6 +33,7 @@ grails.project.dependency.resolution = {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
 
         runtime 'mysql:mysql-connector-java:5.1.18'
+        //compile 'net.sourceforge.jexcelapi:jxl:2.6.12'
     }
 
     plugins {

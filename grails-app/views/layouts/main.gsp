@@ -1,3 +1,4 @@
+<%@ page import="org.springframework.validation.FieldError" %>
 <!doctype html>
 <!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
 <!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
@@ -11,10 +12,12 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="shortcut icon" href="${resource(dir: 'images', file: 'favicon.ico')}" type="image/x-icon">
 		<link rel="stylesheet" href="${resource(dir: 'css', file: 'main.css')}" type="text/css">
+        <link rel="stylesheet" href="${resource(dir: 'css', file: 'jquery-ui-1.8.18.custom.css')}" type="text/css">
         <g:javascript library="jquery" />
         <g:javascript library="application" />
 		<g:layoutHead/>
         <r:layoutResources />
+        <script src="${resource(dir: 'js', file: 'jquery-ui.js')}" type="text/javascript"></script>
 	</head>
 	<body>
 		<div id="header" role="banner">
@@ -30,21 +33,37 @@
             </div>
             <div class="right">
                 <ul>
-                    <sec:ifLoggedIn><li><div class="loggedin">
-                        <g:message code="springSecurity.loggedin.welcome" args="${[sec.loggedInUserInfo(field: 'fullName')]}" />
-                        <eca:roles />
-                        <g:img dir="images/skin" file="sorted_desc.gif" />
-                    </div></li></sec:ifLoggedIn>
+                    <sec:ifLoggedIn>
+                        <li>
+                            <div class="loggedin">
+                                <g:message code="springSecurity.loggedin.welcome" args="${[sec.loggedInUserInfo(field: 'fullName')]}" />
+                                <eca:roles />
+                                <g:img dir="images/skin" file="sorted_desc.gif" />
+                            </div>
+                        </li>
+                    </sec:ifLoggedIn>
 
-                    <sec:ifNotLoggedIn><li>
-                        <g:localeSelect name="lang" />
-                    </li></sec:ifNotLoggedIn>
+                    <sec:ifNotLoggedIn>
+                        <li>
+                            <g:localeSelect name="lang" />
+                        </li>
+                    </sec:ifNotLoggedIn>
                 </ul>
             </div>
             <div class="clear"></div>
         </div>
         <div id="content" role="main">
 		    <g:layoutBody/>
+
+            <g:hasErrors>
+                <ul class="errors" role="alert">
+                    <g:eachError var="error">
+                        <li <g:if test="${error in FieldError}">data-field-id="${error.field}"</g:if>>
+                            <g:message error="${error}" />
+                        </li>
+                    </g:eachError>
+                </ul>
+			</g:hasErrors>
         </div>
 		<div id="footer" role="contentinfo"></div>
         <div id="user_menu">

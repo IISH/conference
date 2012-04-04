@@ -1,6 +1,7 @@
 import org.iisg.eca.UserSaltSource
-
 import org.iisg.eca.UserDetailsService
+import org.iisg.eca.CustomPropertyEditorRegistrar
+
 import org.springframework.web.servlet.i18n.CookieLocaleResolver
 
 // Place your Spring DSL code here
@@ -16,4 +17,6 @@ beans = {
     localeResolver(CookieLocaleResolver) {
         cookieName = 'lang'
     }
+
+    customPropertyEditorRegistrar(CustomPropertyEditorRegistrar)
 }

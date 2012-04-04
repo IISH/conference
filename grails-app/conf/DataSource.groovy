@@ -3,6 +3,7 @@ dataSource {
     driverClassName = "com.mysql.jdbc.Driver"
     dialect = org.hibernate.dialect.MySQL5InnoDBDialect
     dbCreate = "validate"
+    configClass = HibernateFilterDomainConfiguration
 }
 hibernate {
     cache.use_second_level_cache = true
@@ -14,7 +15,7 @@ environments {
     development {
         dataSource {
             username = "eca"
-            password = "Ec0nfApp38"
+            password = "password"
             url = "jdbc:mysql://cottus.iisg.nl/eca"
         }
     }

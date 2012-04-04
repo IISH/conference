@@ -1,4 +1,3 @@
-<%@ page import="org.iisg.eca.User" %>
 <!doctype html>
 <html>
 	<head>

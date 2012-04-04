@@ -44,19 +44,19 @@ class UserController {
         def userInstance = User.get(springSecurityService.principal.id)
 
         // For a password update, the new password has to be typed twice and has to match
-        if (!params.encryptedPassword.equals(params.encryptedPasswordAgain)) {
-            userInstance.errors.rejectValue 'encryptedPassword', message(code: 'user.password.nomatch')
+        if (!params.password.equals(params.encryptedPasswordAgain)) {
+            userInstance.errors.rejectValue 'password', message(code: 'user.password.nomatch')
             render(view: "edit", model: [userInstance: userInstance])
             return
         }
 
         // If the password field is empty, the password should not be updated
         // If that is the case, make sure not to overwrite the password with an empty String
-        if (params.encryptedPassword?.isEmpty()) {
-            params.encryptedPassword = userInstance.encryptedPassword
+        if (params.password?.isEmpty()) {
+            params.password = userInstance.password
         }
 
-        bindData(userInstance, params, [include: ['fullName', 'institute', 'language', 'encryptedPassword']])
+        bindData(userInstance, params, [include: ['fullName', 'institute', 'language', 'password']])
 
         if (!userInstance.save(flush: true)) {
             render(view: "edit", model: [userInstance: userInstance])

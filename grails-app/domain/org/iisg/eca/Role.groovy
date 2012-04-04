@@ -4,21 +4,29 @@ package org.iisg.eca
  * Domain class of table holding all available user roles
  */
 class Role {
-  	String role
+	String role
+	String description
 	boolean fullRights = false
 
 	static mapping = {
-        table 'cms_type_of_user_roles'
+        table 'roles'
         version false
         cache true
 
+        id          column: 'role_id'
         role        column: 'role'
-        fullRights  column: 'fullRights'
+        description column: 'description',  sqlType: 'tinyText'
+        fullRights  column: 'full_rights'
 	}
 
 	static constraints = {
-		role    maxSize: 20, blank: false
+        description maxSize: 200,   blank: false
+		role        maxSize: 20,    nullable: true
 	}
+
+    Set<User> getUsers() {
+        UserRole.findAllByRole(this).collect { it.user } as Set
+    }
 
     @Override
     def String toString() {

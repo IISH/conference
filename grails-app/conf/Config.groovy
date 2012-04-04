@@ -96,24 +96,27 @@ log4j = {
 // Spring Security Core config:
 grails.plugins.springsecurity.userLookup.userDomainClassName = 'org.iisg.eca.User'
 grails.plugins.springsecurity.userLookup.usernamePropertyName = 'email'
-grails.plugins.springsecurity.userLookup.passwordPropertyName = 'encryptedPassword'
+grails.plugins.springsecurity.userLookup.passwordPropertyName = 'password'
 grails.plugins.springsecurity.userLookup.authoritiesPropertyName = 'roles'
 grails.plugins.springsecurity.userLookup.enabledPropertyName = 'enabled'
 grails.plugins.springsecurity.userLookup.accountLockedPropertyName = 'deleted'
-grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'org.iisg.eca.UserRoles'
+grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'org.iisg.eca.UserRole'
 
 grails.plugins.springsecurity.authority.className = 'org.iisg.eca.Role'
 grails.plugins.springsecurity.authority.nameField = 'role'
 
+grails.plugins.springsecurity.successHandler.alwaysUseDefault = true
+grails.plugins.springsecurity.successHandler.defaultTargetUrl = '/login/authSuccess'
+
 grails.plugins.springsecurity.password.algorithm = 'SHA-512'
 grails.plugins.springsecurity.dao.reflectionSaltSourceProperty = 'salt'
-grails.plugins.springsecurity.successHandler.defaultTargetUrl = '/login/authSuccess'
 
 grails.plugins.springsecurity.roleHierarchy = '''
         superAdmin > admin
         admin > user
+        user > participant
 '''
 grails.plugins.springsecurity.controllerAnnotations.staticRules = [
         '/login/*':     ["permitAll"],
-        '/**':          ["hasRole('user')"]
+        '/**':          ["hasRole('participant')"]
 ]

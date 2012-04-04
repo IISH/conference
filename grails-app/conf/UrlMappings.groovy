@@ -8,7 +8,7 @@ class UrlMappings {
 
 		"/" {
             constraints {
-                controller = 'conference'
+                controller = 'event'
                 action = 'list'
             }
         }
