@@ -15,7 +15,7 @@ environments {
     development {
         dataSource {
             username = "eca"
-            password = "password"
+            password = "Ec0nfApp38"
             url = "jdbc:mysql://cottus.iisg.nl/eca"
         }
     }
