@@ -31,15 +31,21 @@ class DynamicPageController {
         }
         else if (request.post) {
             // Get the element from which this action was called
-            def form = dynamicPage.elements.get(params.int('eid'))
+            PageElement form = dynamicPage.elements.get(params.int('eid'))
 
             // This element should be a form...
             if (form?.type == PageElement.Type.FORM) {
                 // Loop over all domain classes, binding the data from ONLY those columns specified in the dynamic page
-                form.result.each { result ->
-                    def domainClassName = result.class.simpleName
+                form.domainClassNames.each { domainClassName ->
                     def columns = form.getColumnsByDomainClassName(domainClassName)
-                    bindData(result, params, [include: columns], domainClassName)
+                    def result = form.getResultByDomainClassName(domainClassName)
+                    bindData(result, params, [include: columns], domainClassName[0].toLowerCase() + domainClassName.substring(1))
+
+                    // TODO: temp relationship fix
+                    if (params.controller == 'event' && params.action == 'create' && domainClassName == 'EventDate') {
+                        result.event = form.getResultByDomainClassName('Event')
+                    }
+
                     result.save(flush: true)
                 }
             }
@@ -49,7 +55,7 @@ class DynamicPageController {
             }
 
             // If validation fails, return the page and show the errors
-            if (!form.result.grep { it.hasErrors() }.isEmpty()) {
+            if (!form.results.values().grep { it.hasErrors() }.isEmpty()) {
                 render(view: '../layouts/content.gsp', model: [page: dynamicPage, content: dynamicPageService.getTemplate(dynamicPage)])
                 return
             }
@@ -58,12 +64,11 @@ class DynamicPageController {
 
             // Find out if we need to redirect the user to a specific page after a succesful transaction.
             // If not found, redirect to the show page of the same controller
-            def url = dynamicPage.defaultPage
-            if (!dynamicPage.defaultPage) {
-                url = "/${params.controller}/show"
-            }
 
-            redirect(uri: "${url}/${form.result[0].id}")
+            // TODO: Redirect
+
+            def url = "/${params.controller}/show"
+            redirect(uri: "${url}/${form.results.values().toArray()[0].id}")
         }
     }
 }

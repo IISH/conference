@@ -11,7 +11,10 @@
 		<title><g:layoutTitle default="ECA" /></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="shortcut icon" href="${resource(dir: 'images', file: 'favicon.ico')}" type="image/x-icon">
-		<link rel="stylesheet" href="${resource(dir: 'css', file: 'main.css')}" type="text/css">
+        <link rel="stylesheet" href="${resource(dir: 'css', file: 'default1.css')}" type="text/css">
+        <link rel="stylesheet" href="${resource(dir: 'css', file: 'esshc1.css')}" type="text/css">
+		<link rel="stylesheet" href="${resource(dir: 'css', file: 'default.css')}" type="text/css">
+        <link rel="stylesheet" href="${resource(dir: 'css', file: 'esshc.css')}" type="text/css">
         <link rel="stylesheet" href="${resource(dir: 'css', file: 'jquery-ui-1.8.18.custom.css')}" type="text/css">
         <g:javascript library="jquery" />
         <g:javascript library="application" />
@@ -20,42 +23,82 @@
         <script src="${resource(dir: 'js', file: 'jquery-ui.js')}" type="text/javascript"></script>
 	</head>
 	<body>
-		<div id="header" role="banner">
-            <a href="${createLink(uri: '/')}">
-                <img src="${resource(dir: 'images', file: 'grails_logo.png')}" alt="Grails"/>
+        <div id="header" role="banner">
+            <a href="http://www.iisg.nl/esshc/">
+                <g:img dir="images" file="header-esshc.gif" alt="ESSHC" title="ESSHC" />
             </a>
-        </div>
-        <div id="nav" role="navigation">
-            <div class="left">
-                <ul>
-                    <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label" /></a></li>
-                </ul>
-            </div>
-            <div class="right">
-                <ul>
-                    <sec:ifLoggedIn>
-                        <li>
-                            <div class="loggedin">
-                                <g:message code="springSecurity.loggedin.welcome" args="${[sec.loggedInUserInfo(field: 'fullName')]}" />
-                                <eca:roles />
-                                <g:img dir="images/skin" file="sorted_desc.gif" />
-                            </div>
-                        </li>
-                    </sec:ifLoggedIn>
 
-                    <sec:ifNotLoggedIn>
-                        <li>
-                            <g:localeSelect name="lang" />
-                        </li>
-                    </sec:ifNotLoggedIn>
-                </ul>
+            <span class="hosted right">
+                <a href="http://www.iisg.nl/">Hosted by IISH</a>
+            </span>
+
+            <div id="banner" class="clear">
+	            <g:img dir="images" file="banner-esshc.jpg" alt="ESSHC" title="ESSHC" />
             </div>
-            <div class="clear"></div>
+
+            <span class="event left">9th European Social Science History Conference 11 April - 14 April 2012</span>
+
+            <sec:ifLoggedIn>
+                <div class="loggedin right">
+                    <g:message code="springSecurity.loggedin.welcome" args="${[sec.loggedInUserInfo(field: 'fullName')]}" />
+                    <eca:roles />
+                    <g:img dir="images/skin" file="sorted_desc.gif" />
+                </div>
+            </sec:ifLoggedIn>
+
+            <sec:ifNotLoggedIn>
+                <div class="locales right">
+                    Select language:
+                    <ul>
+                        <li><a href="?lang=nl"><g:img dir="images/flags" file="nl.png" /></a></li>
+                        <li><a href="?lang=en"><g:img dir="images/flags" file="us.png" /></a></Li>
+                    </ul>
+                </div>
+            </sec:ifNotLoggedIn>
+
+			<div class="clear"></div>
         </div>
+
+        <div id="nav" role="navigation">
+            <dl id="menu">
+                <dt class="esshc">Web</dt>
+
+                <dd><a href="http://www.iisg.nl/esshc">ESSHC</A></dd>
+                <dd>&nbsp;</dd>
+
+                <dt class="esshc">CMS</dt>
+
+                <dd><a href="Participants.asp?year=12&partStat=-1&tp=name">Participants</a></dd>
+                <dd><a href="Networks.asp">Networks</a></dd>
+                <dd><a href="Sessions.asp">Sessions</a></dd>
+                <dd><a href="Sessions2.asp">Sessions (v. 2)</a></dd>
+                <dd><a href="Networks_Sessions.asp">Networks/Sessions</a></dd>
+                <dd><a href="SessionDateTime.asp">SessionDateTime</a></dd>
+                <dd><a href="Rooms.asp">Rooms</a></dd>
+                <dd><a href="PlanSessions.asp">Plan Sessions</a></dd>
+                <dd><a href="Email.asp">Send E-mail</a></dd>
+                <dd><a href="EmailLog.asp">Verstuurde mailtjes</a></dd>
+                <dd><a href="EditMenu.asp">Edit Menu</a></dd>
+                <dd>&nbsp;</dd>
+                <dd><a href="PaymentMade.asp">Payment Made Y/N</a></dd>
+                <dd><a href="PaymentMade2.asp">Payment Made Y/N (v. 2)</a></dd>
+                <dd><a href="programme_choose_year.asp">Programme</a></dd>
+                <dd><a href="Concordance.asp">Concordance</a></dd>
+                <dd><a href="ProgrammeWord_choose_year.asp">Programme Book</a></dd>
+                <dd><a href="Letters.asp">Make Letter</a></dd>
+                <dd><a href="ParticipantsList.asp">Participants List</a></dd>
+                <dd>&nbsp;</dd>
+                <dd><a href="overzicht_feerequest.asp">Fee Request</a></dd>
+                <dd><a href="overzicht_invitationletter.asp">Invitation Letter</a></dd>
+                <dd><a href="overzicht_reception.asp">Reception</a></dd>
+		    </dl>
+        </div>
+
         <div id="content" role="main">
             <g:if test="${page?.class == Page}">
                 <h1>${page.toString()}</h1>
             </g:if>
+
 		    <g:elseif test="${page?.class == DynamicPage}">
                 <h1>${page.page.toString()}</h1>
 		    </g:elseif>
@@ -75,15 +118,24 @@
                     </g:eachError>
                 </ul>
 			</g:hasErrors>
+
+            <span class="right">
+				<a href="#top">Back to top</a>
+            </span>
         </div>
-		<div id="footer" role="contentinfo"></div>
-        <div id="user_menu">
+
+		<div id="footer" class="clear" role="contentinfo">
+            http://intranet.iisg.nl/esshc - Last updated: June 2011
+		</div>
+
+        <div id="usermenu">
             <ul>
                 <li><g:link controller="user" action="show"><g:message code="menu.personalpage" /></g:link></li>
                 <li><a href="/"><g:message code="menu.usersoverview" /></a></li>
                 <li><g:link controller="logout"><g:message code="menu.logout" /></g:link></li>
             </ul>
         </div>
+
         <r:layoutResources />
 	</body>
 </html>

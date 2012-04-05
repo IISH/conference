@@ -1,0 +1,229 @@
+/* DEFAULT STYLING */
+
+body {
+	position: relative;
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9pt;
+	width: 1156px;
+	margin: 0;
+}
+
+a:link, a:visited , a:active {
+    color: #A26E33;
+    text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+h1 {
+    border-bottom: 1px solid #225496;
+    color: #225496;
+    font-weight: normal;
+	font-size: 16pt;
+    margin: 0 0 30px;
+}
+
+h2 {
+	display: inline;
+	color: #225496;
+	font-weight: normal;
+	font-size: 14pt;
+    margin: 0;
+}
+
+p {
+	margin-top: 6px;
+}
+
+
+ul, li, dl {
+	margin: 0;
+	padding: 0;
+}
+
+dt {
+	padding-bottom: 5px;
+	font-size: 11pt;
+    font-weight: bold;
+	color: #225496;
+}
+
+dd {	
+    margin: -4px 0;
+    padding: 5px 0;
+	list-style-position: outside;
+    list-style-type: none;
+	font-size: 8pt;	
+}
+
+/* HEADER */
+
+#header {
+	margin-bottom: 20px;
+}
+
+#banner {
+	background-image: url(../images/bannerbg-esshc.jpg);
+	background-repeat: no-repeat;
+	margin-bottom: 11px;	
+}
+
+.event {
+	margin-left: 8px;
+}
+
+.hosted {
+	font-size: 95%;
+	font-weight: bold;
+	color: #880000;
+	margin: 11px 3px 0 0;
+}
+
+.loggedin {
+	color: #225496;
+    font-weight: bold;
+    margin-right: 8px;
+}
+
+.loggedin img {
+	margin-bottom: 1px;
+    margin-left: 5px;
+}
+
+.locales ul {
+	list-style-type: none;	
+	display: inline;
+}
+
+.locales li {
+	display: inline;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+/* NAVIGATION */
+
+#nav {	
+	float: left;
+	width: 150px;
+	max-width: 150px;
+	padding: 0 8px;
+	padding-bottom: 20px;
+	border-right: 1px solid #225496;
+}
+
+/* MAIN CONTENT */
+
+#content {
+	position: relative;
+	float: right;	
+	width: 973px;
+	margin-left: 16px;
+}
+
+/* FOOTER */
+
+#footer {
+	padding: 2px 4px 2px 2px;
+	text-align: right;
+	font-size: 8pt;
+	color: #FFFFFF;
+	background-color: #225496;
+}
+
+/* USER MENU */
+
+#usermenu {
+    display: none;
+    background-color: #FFFFFF;
+    box-shadow: 0 0 3px 1px #225496;
+    position: absolute;
+    right: 3px;
+    top: 125px;
+}
+
+#usermenu ul {
+    list-style-type: none;
+}
+
+#usermenu li {
+    padding: 5px;
+    text-align: right;
+}
+
+/* EVENTS PAGE */
+
+#events .event {
+    margin-bottom: 30px;
+}
+
+#events .event ul {
+    margin-left: 40px;
+    margin-top: 10px;
+}
+
+#events .event ul li {
+    display: inline;
+    list-style: none;
+    margin-right: 20px;
+}
+
+.action {
+    display: inline;
+    font-style: italic;
+    margin-left: 10px;
+    font-size: 8pt;
+}
+
+/* FORMS */
+
+fieldset {
+    border: none;
+}
+
+fieldset div {
+    margin: 5px 0;
+}
+
+input, textarea {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9pt;
+    background: #FFFFFF;
+    border: 1px solid #7F9DB9;
+    color: #000000;
+    text-align: left;
+    vertical-align: middle;
+}
+
+label {
+	display: inline-block;
+	width: 25%;
+	margin-right: 10px;
+	text-align: right;
+    color: #666666;
+}
+
+.required-indicator {
+    color: #48802C;
+    display: inline-block;
+    font-weight: bold;
+    margin-left: 0.3em;
+    position: relative;
+    top: 0.1em;
+}
+
+/* HELPERS */
+
+.left {
+	float: left;
+}
+
+.right {
+	float: right;
+}
+
+.clear {
+	clear: both;
+}

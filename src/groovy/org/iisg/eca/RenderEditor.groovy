@@ -91,7 +91,7 @@ class RenderEditor {
     }
 
     private String getResult() {
-        "page.elements.get(${eid}).result[0]"
+        "page.elements.get(${eid}).getResultByDomainClassName('${domainClass.propertyName}')"
     }
 
     private String getName(GrailsDomainClassProperty property) {
@@ -175,7 +175,7 @@ class RenderEditor {
     private void renderManyToOne(GrailsDomainClassProperty property, ConstrainedProperty cp) {
         if (property.association) {
             Map props = createPropertiesMap(property)
-            props.put("value",      "\${${getValueReady(property)}.id}")
+            props.put("value",      "\${${getValueReady(property)}?.id}")
             props.put("id",         property.name)
             props.put("from",       "\${${property.type.name}.list()}")
             props.put("optionKey",  "id")
@@ -199,7 +199,7 @@ class RenderEditor {
 
         if (cls != null) {
             Map props = createPropertiesMap(property)
-            props.put("value",      "\${${getValueReady(property)}.id}")
+            props.put("value",      "\${${getValueReady(property)}?.id}")
             props.put("from",       "\${${cls.name}.list()}")
             props.put("multiple",   "multiple")
             props.put("optionKey",  "id")

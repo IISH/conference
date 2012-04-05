@@ -1,12 +1,14 @@
 package org.iisg.eca
 
+import org.codehaus.groovy.grails.commons.GrailsDomainClass
+
 /**
  * A representation of an element from a dynamic page
  */
 class PageElement {
     private Type type
     private Map<String, List> columns
-    private List result
+    private Map results
 
     /**
      * The possible element types
@@ -21,10 +23,10 @@ class PageElement {
      * @param columns A map of all columns requested for this element linked to their domain class
      * @param result A list of all the results from the database for this element
      */
-    PageElement(Type type, Map<String, List> columns, List result) {
+    PageElement(Type type, Map<String, List> columns, Map results) {
         this.type = type
         this.columns = columns
-        this.result = result
+        this.results = results
     }
 
     /**
@@ -47,8 +49,17 @@ class PageElement {
      * A list of all the results from the database for this element
      * @return A list of all the results
      */
-    List getResult() {
-        result
+    Map getResults() {
+        results
+    }
+
+    /**
+     * Returns a list of all columns requested for this element by the specified domain class name
+     * @param domainClass The domain class name in question
+     * @return A list of all columns
+     */
+    def getResultByDomainClassName(String domainClass) {
+        results.get(domainClass.toLowerCase())
     }
 
     /**

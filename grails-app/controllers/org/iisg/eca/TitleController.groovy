@@ -1,7 +1,7 @@
 package org.iisg.eca
 
-class NetworkController {
-    def show() {
+class TitleController {
+     def show() {
         forward(controller: 'dynamicPage', action: 'get')
     }
 

@@ -4,6 +4,7 @@ import groovy.xml.MarkupBuilder
 import grails.persistence.Event
 import org.codehaus.groovy.grails.scaffolding.DomainClassPropertyComparator
 import java.lang.reflect.Type
+import org.codehaus.groovy.grails.commons.GrailsDomainClassProperty
 
 /**
  * A tag library responsible for parsing the xml content of a dynamic page
@@ -44,7 +45,7 @@ class DynamicPageTagLib {
         Collections.sort(pageScope.props, new DomainClassPropertyComparator(pageScope.domainClass))
 
         builder.form(method: "post", action: "#") {
-            builder.input(type: "hidden", name: "id", value: "\${page.elements.get(${pageScope.eid}).result[0].id}")
+            builder.input(type: "hidden", name: "id", value: "\${page.elements.get(${pageScope.eid}).getResultByDomainClassName('${pageScope.domainClass.propertyName}').id}")
             builder.input(type: "hidden", name: "eid", value: pageScope.eid)
             builder.fieldset(class: "form") {
                 pageScope.type = 3
@@ -102,7 +103,7 @@ class DynamicPageTagLib {
                         }
                     }
                     builder.tbody {
-                        builder."g:each"(in: "\${page.elements.get(${pageScope.eid}).result}", var: "row") {
+                        builder."g:each"(in: "\${page.elements.get(${pageScope.eid}).getResultByDomainClassName('${pageScope.domainClass.propertyName}')}", var: "row") {
                             builder.tr {
                                 pageScope.children.eachWithIndex { p, i ->
                                     if (i == 0) {
@@ -172,10 +173,21 @@ class DynamicPageTagLib {
      * @param domain If the data is to come from another domain class, it is specified here
      */
     def column = { attrs ->
-        // TODO: In case of another domain class....
+        def p, cp
 
-        def p = pageScope.props.grep { it.name == attrs.name }[0]
-        def cp = pageScope.domainClass.constrainedProperties[attrs.name]
+        if (attrs.domain) {
+            def domain = grailsApplication.getDomainClass("org.iisg.eca.${attrs.domain}")
+            pageScope.columnRenderEditor = new RenderEditor(domain, pageScope.builder, pageScope.eid)
+            p = domain.properties.findAll {
+                domain.properties*.name.contains(it.name) && !excludedProps.contains(it.name)
+            }.grep { it.name == attrs.name }[0]
+            cp = domain.constrainedProperties[attrs.name]
+        }
+        else {
+            p = pageScope.props.grep { it.name == attrs.name }[0]
+            cp = pageScope.domainClass.constrainedProperties[attrs.name]
+        }
+
         def display = (cp ? cp.display : true)
         def required = (cp ? !(cp.propertyType in [boolean, Boolean]) && !cp.nullable && (cp.propertyType != String || !cp.blank) : false)
 
@@ -238,7 +250,8 @@ class DynamicPageTagLib {
         def builder = pageScope.builder
         
         if (pageScope.type == 3) {
-            builder.div(class: "fieldcontain \${hasErrors(bean: page.elements.get(${pageScope.eid}).result[0], field: '${attrs.name}', 'error')} ${required ? 'required' : ''}") {
+            // TODO: fix results array
+            builder.div(class: "fieldcontain \${hasErrors(bean: page.elements.get(${pageScope.eid}).getResultByDomainClassName('${pageScope.domainClass.propertyName}'), field: '${attrs.name}', 'error')} ${required ? 'required' : ''}") {
                 if (attrs.name.equalsIgnoreCase("id")) {
                     builder.label(for: attrs.name, "#")
                 }
@@ -253,7 +266,12 @@ class DynamicPageTagLib {
                 }
 
                 if (attrs.name.equalsIgnoreCase("id") || attrs.readonly?.equalsIgnoreCase("true")) {
-                    builder.span("\${page.elements.get(${pageScope.eid}).result[0]['${attrs.name}'].encodeAsHTML()}")
+                    if (attrs.domain) {
+                        builder.span("\${page.elements.get(${pageScope.eid}).getResultByDomainClassName('${attrs.domain}')['${attrs.name}'].encodeAsHTML()}")
+                    }
+                    else {
+                        builder.span("\${page.elements.get(${pageScope.eid}).getResultByDomainClassName('${pageScope.domainClass.propertyName}')['${attrs.name}'].encodeAsHTML()}")
+                    }
                 }
                 else if (attrs.id && (p.manyToOne || p.oneToOne || p.oneToMany || p.manyToMany)) {
                     if (attrs.id.equalsIgnoreCase("url")) {
@@ -266,7 +284,12 @@ class DynamicPageTagLib {
                     }
                 }
                 else {
-                    pageScope.renderEditor.render(attrs.name)
+                    if (attrs.domain) {
+                        pageScope.columnRenderEditor.render(attrs.name)
+                    }
+                    else {
+                        pageScope.renderEditor.render(attrs.name)
+                    }
                 }
             }
         }
@@ -317,7 +340,12 @@ class DynamicPageTagLib {
         def builder = pageScope.builder
         
         if (Collection.class.isAssignableFrom(p.type)) {
-            builder."g:each"(in: "\${page.elements.get(${pageScope.eid}).result[0]['${attrs.name}']}", var: "element", status: "i") {
+            def inVar = "\${page.elements.get(${pageScope.eid}).getResultByDomainClassName('${pageScope.domainClass.propertyName}')['${attrs.name}']}"
+            if (attrs.domain) {
+                inVar = "\${page.elements.get(${pageScope.eid}).getResultByDomainClassName('${attrs.domain}')['${attrs.name}']}"
+            }
+
+            builder."g:each"(in: inVar, var: "element", status: "i") {
                 builder.li(class: "fieldcontain") {
                     builder."g:if"(test: "\${i == 0}") {
                         builder.span(id: "${p.name}-label", class: "property-label") {
@@ -341,8 +369,13 @@ class DynamicPageTagLib {
                         builder."g:message"(code: getCode(p))
                     }
                 }
-                
-                parseValue(attrs.name, p.type, "\${page.elements.get(${pageScope.eid}).result[0]['${attrs.name}']}")
+
+                if (attrs.domain) {
+                    parseValue(attrs.name, p.type, "\${page.elements.get(${pageScope.eid}).getResultByDomainClassName('${attrs.domain}')['${attrs.name}']}")
+                }
+                else {
+                    parseValue(attrs.name, p.type, "\${page.elements.get(${pageScope.eid}).getResultByDomainClassName('${pageScope.domainClass.propertyName}')['${attrs.name}']}")
+                }
             }
         }
     }
@@ -370,7 +403,7 @@ class DynamicPageTagLib {
         } 
     }
 
-    private getCode(property) {
+    private getCode(GrailsDomainClassProperty property) {
         if (property.name.equalsIgnoreCase("enabled") || property.name.equalsIgnoreCase("deleted")) {
             return "default.${property.name.toLowerCase()}.label"
         }
@@ -378,7 +411,7 @@ class DynamicPageTagLib {
             return "${property.type.simpleName.toLowerCase()}.multiple.label"
         }
         else {
-            return "${pageScope.domainClass.propertyName.toLowerCase()}.${property.name.toLowerCase()}.label"
+            return "${property.domainClass.propertyName.toLowerCase()}.${property.name.toLowerCase()}.label"
         }
     }
 }

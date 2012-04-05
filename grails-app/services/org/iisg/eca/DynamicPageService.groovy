@@ -78,7 +78,7 @@ class DynamicPageService {
         xml.children().each { element ->
             // Create a new map to store all the columns requested by domain class
             def columns = new HashMap<String, List>()
-            def result
+            def results
             def type
 
             // Find out the main domain class of this page element
@@ -112,20 +112,20 @@ class DynamicPageService {
                 def query = element.@query.text()
 
                 if (query.isEmpty()) {
-                    result = getListForDomain(mainDomainClass, columns.get(mainDomainClass), element, params)
+                    results = getListForDomain(mainDomainClass, columns.get(mainDomainClass), element, params)
                 }
                 else {
-                    result = getListForQuery(query, mainDomainClass, element, params)
+                    results = getListForQuery(query, mainDomainClass, element, params)
                 }
 
                 // All the information is obtained, return a new PageElement with the results linked to an element id
-                elements.put(eid++, new PageElement(type, columns, result))
+                elements.put(eid++, new PageElement(type, columns, results))
             }
             // In case of a form or overview, get one instance back based on the parameters
             else if (element.name().equals(FORM) || element.name().equals(OVERVIEW)) {
                 type = (element.name().equals(FORM)) ? PageElement.Type.FORM : PageElement.Type.OVERVIEW
-                result = getInstanceWithCriteria(mainDomainClass, columns, element, params)
-                elements.put(eid++, new PageElement(type, columns, result))
+                results = getInstanceWithCriteria(mainDomainClass, columns, element, params)
+                elements.put(eid++, new PageElement(type, columns, results))
             }
         }
 
@@ -145,7 +145,7 @@ class DynamicPageService {
         def max = !element.@max.text().isEmpty() ?: element.@max.text()
         def offset = params.offset?.toString()
 
-        criteria.list {
+        def result = criteria.list {
             //
             and {
                 // Loop over all the columns and place filters if needed
@@ -172,6 +172,10 @@ class DynamicPageService {
             firstResult(offset ?: 0)
             maxResults(max ?: 100)
         }
+
+        def map = [:]
+        map.put(mainDomainClass.toLowerCase(), result)
+        map
     }
 
     /**
@@ -199,7 +203,7 @@ class DynamicPageService {
      */
     def private getInstanceWithCriteria(mainDomainClass, columns, element, params) {
         // In the future, we might need to return more instances
-        def instances = []
+        def instances = [:]
         def id = element.@id?.text()
 
         // If the id is specified in the url, get it from the parameters
@@ -219,7 +223,7 @@ class DynamicPageService {
                 instance = /*(id) ? instance.clazz.find { "${propName}.id" == id } : */instance.newInstance()
             }
 
-            instances << instance
+            instances.put(domainClass.toLowerCase(), instance)
         }
 
         instances

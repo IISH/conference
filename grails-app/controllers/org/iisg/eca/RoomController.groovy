@@ -1,6 +1,6 @@
 package org.iisg.eca
 
-class NetworkController {
+class RoomController {
     def show() {
         forward(controller: 'dynamicPage', action: 'get')
     }
