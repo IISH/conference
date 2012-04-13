@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Apr 04, 2012 at 10:44 AM
+-- Generation Time: Apr 13, 2012 at 02:27 PM
 -- Server version: 5.0.86
 -- PHP Version: 5.2.10
 
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `countries` (
   `tld` varchar(2) collate utf8_unicode_ci NOT NULL,
   `name_english` varchar(50) collate utf8_unicode_ci NOT NULL,
   `name_dutch` varchar(50) collate utf8_unicode_ci NOT NULL,
-  `remarks` tinytext collate utf8_unicode_ci,
+  `remarks` text collate utf8_unicode_ci,
   `enabled` tinyint(1) NOT NULL default '1',
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`country_id`),
@@ -63,33 +63,33 @@ INSERT INTO `countries` (`country_id`, `tld`, `name_english`, `name_dutch`, `rem
 (4, 'af', 'Afghanistan', 'Afghanistan', NULL, 1, 0),
 (5, 'ag', 'Antigua and Barbuda', 'Antigua en Barbuda', NULL, 1, 0),
 (6, 'ai', 'Anguilla', 'Anguilla', NULL, 1, 0),
-(7, 'al', 'Albania', 'AlbaniÃ«', NULL, 1, 0),
-(8, 'am', 'Armenia', 'ArmeniÃ«', NULL, 1, 0),
+(7, 'al', 'Albania', 'Albanië', NULL, 1, 0),
+(8, 'am', 'Armenia', 'Armenië', NULL, 1, 0),
 (9, 'an', 'Netherlands Antilles', 'Nederlandse Antillen', NULL, 1, 0),
 (10, 'ao', 'Angola', 'Angola', NULL, 1, 0),
 (11, 'aq', 'Antarctica', 'Antarctica', NULL, 1, 0),
-(12, 'ar', 'Argentina', 'ArgentiniÃ«', NULL, 1, 0),
+(12, 'ar', 'Argentina', 'Argentinië', NULL, 1, 0),
 (13, 'as', 'American Samoa', 'Amerikaans Samoa', NULL, 1, 0),
 (14, 'at', 'Austria', 'Oostenrijk', NULL, 1, 0),
-(15, 'au', 'Australia', 'AustraliÃ«', NULL, 1, 0),
+(15, 'au', 'Australia', 'Australië', NULL, 1, 0),
 (16, 'aw', 'Aruba', 'Aruba', NULL, 1, 0),
-(17, 'ax', 'Ã…land Islands', 'Ã…land eilanden', NULL, 1, 0),
+(17, 'ax', 'Åland Islands', 'Åland eilanden', NULL, 1, 0),
 (18, 'az', 'Azerbaijan', 'Azerbeidzjan', NULL, 1, 0),
-(19, 'ba', 'Bosnia and Herzegovina', 'BosniÃ«-Herzegovina', NULL, 1, 0),
+(19, 'ba', 'Bosnia and Herzegovina', 'Bosnië-Herzegovina', NULL, 1, 0),
 (20, 'bb', 'Barbados', 'Barbados', NULL, 1, 0),
 (21, 'bd', 'Bangladesh', 'Bangladesh', NULL, 1, 0),
-(22, 'be', 'Belgium', 'BelgiÃ«', NULL, 1, 0),
+(22, 'be', 'Belgium', 'België', NULL, 1, 0),
 (23, 'bf', 'Burkina Faso', 'Burkina Faso', NULL, 1, 0),
 (24, 'bg', 'Bulgaria', 'Bulgarije', NULL, 1, 0),
 (25, 'bh', 'Bahrain', 'Bahrein', NULL, 1, 0),
 (26, 'bi', 'Burundi', 'Burundi', NULL, 1, 0),
 (27, 'bj', 'Benin', 'Benin', NULL, 1, 0),
-(28, 'bl', 'Saint Barthelemy', 'Sint BarthÃ©lemy', NULL, 1, 0),
+(28, 'bl', 'Saint Barthelemy', 'Sint Barthélemy', NULL, 1, 0),
 (29, 'bm', 'Bermuda', 'Bermuda', NULL, 1, 0),
 (30, 'bn', 'Brunei Darussalam', 'Brunei', NULL, 1, 0),
 (31, 'bo', 'Bolivia', 'Bolivia', NULL, 1, 0),
 (32, 'bq', 'Bonaire, Saint Eustatius, Saba', 'Bonaire, Sint Eustatius, Saba - Caribisch Nederlan', NULL, 1, 0),
-(33, 'br', 'Brazil', 'BraziliÃ«', NULL, 1, 0),
+(33, 'br', 'Brazil', 'Brazilië', NULL, 1, 0),
 (34, 'bs', 'Bahamas', 'Bahama''s', NULL, 1, 0),
 (35, 'bt', 'Bhutan', 'Bhutan', NULL, 1, 0),
 (36, 'bv', 'Bouvet Island', 'Bouvet (eiland)', NULL, 1, 0),
@@ -102,7 +102,7 @@ INSERT INTO `countries` (`country_id`, `tld`, `name_english`, `name_dutch`, `rem
 (43, 'cf', 'Central African Republic', 'Centraal-Afrikaanse Republiek', NULL, 1, 0),
 (44, 'cg', 'Republic of Congo', 'Congo (Brazzaville)', NULL, 1, 0),
 (45, 'ch', 'Switzerland', 'Zwitserland', NULL, 1, 0),
-(46, 'ci', 'CÃ´te d''Ivoire', 'Ivoorkust', NULL, 1, 0),
+(46, 'ci', 'Côte d''Ivoire', 'Ivoorkust', NULL, 1, 0),
 (47, 'ck', 'Cook Islands', 'Cookeilanden', NULL, 1, 0),
 (48, 'cl', 'Chile', 'Chili', NULL, 1, 0),
 (49, 'cm', 'Cameroon', 'Kameroen', NULL, 1, 0),
@@ -110,11 +110,11 @@ INSERT INTO `countries` (`country_id`, `tld`, `name_english`, `name_dutch`, `rem
 (51, 'co', 'Colombia', 'Colombia', NULL, 1, 0),
 (52, 'cr', 'Costa Rica', 'Costa Rica', NULL, 1, 0),
 (53, 'cu', 'Cuba', 'Cuba', NULL, 1, 0),
-(54, 'cv', 'Cape Verde', 'KaapverdiÃ«', NULL, 1, 0),
-(55, 'cw', 'Curacao', 'CuraÃ§Ã£o', NULL, 1, 0),
+(54, 'cv', 'Cape Verde', 'Kaapverdië', NULL, 1, 0),
+(55, 'cw', 'Curacao', 'Curação', NULL, 1, 0),
 (56, 'cx', 'Christmas Island', 'Christmaseiland', NULL, 1, 0),
 (57, 'cy', 'Cyprus', 'Cyprus', NULL, 1, 0),
-(58, 'cz', 'Czech Republic', 'TsjechiÃ«', NULL, 1, 0),
+(58, 'cz', 'Czech Republic', 'Tsjechië', NULL, 1, 0),
 (59, 'de', 'Germany', 'Duitsland', NULL, 1, 0),
 (60, 'dj', 'Djibouti', 'Djibouti', NULL, 1, 0),
 (61, 'dk', 'Denmark', 'Denemarken', NULL, 1, 0),
@@ -127,18 +127,18 @@ INSERT INTO `countries` (`country_id`, `tld`, `name_english`, `name_dutch`, `rem
 (68, 'eh', 'Western Sahara', 'West-Sahara', NULL, 1, 0),
 (69, 'er', 'Eritrea', 'Eritrea', NULL, 1, 0),
 (70, 'es', 'Spain', 'Spanje', NULL, 1, 0),
-(71, 'et', 'Ethiopia', 'EthiopiÃ«', NULL, 1, 0),
+(71, 'et', 'Ethiopia', 'Ethiopië', NULL, 1, 0),
 (72, 'eu', 'European Union', 'Europese Unie', NULL, 1, 0),
 (73, 'fi', 'Finland', 'Finland (Suomi Finland)', NULL, 1, 0),
 (74, 'fj', 'Fiji', 'Fiji', NULL, 1, 0),
 (75, 'fk', 'Falkland Islands (Islas Malvinas)', 'Falklandeilanden', NULL, 1, 0),
-(76, 'fm', 'Federated States of Micronesia', 'MicronesiÃ«', NULL, 1, 0),
-(77, 'fo', 'Faroe Islands', 'FaerÃ¶er', NULL, 1, 0),
+(76, 'fm', 'Federated States of Micronesia', 'Micronesië', NULL, 1, 0),
+(77, 'fo', 'Faroe Islands', 'Faeröer', NULL, 1, 0),
 (78, 'fr', 'France', 'Frankrijk', NULL, 1, 0),
 (79, 'ga', 'Gabon', 'Gabon', NULL, 1, 0),
-(80, 'gb', 'Great Britain', 'Groot-BrittanniÃ«', NULL, 1, 0),
+(80, 'gb', 'Great Britain', 'Groot-Brittannië', NULL, 1, 0),
 (81, 'gd', 'Grenada', 'Grenada', NULL, 1, 0),
-(82, 'ge', 'Georgia', 'GeorgiÃ«', NULL, 1, 0),
+(82, 'ge', 'Georgia', 'Georgië', NULL, 1, 0),
 (83, 'gf', 'French Guiana', 'Frans-Guyana', NULL, 1, 0),
 (84, 'gg', 'Guernsey', 'Guernsey', NULL, 1, 0),
 (85, 'gh', 'Ghana', 'Ghana', NULL, 1, 0),
@@ -157,25 +157,25 @@ INSERT INTO `countries` (`country_id`, `tld`, `name_english`, `name_dutch`, `rem
 (98, 'hk', 'Hong Kong', 'Hongkong (Xianggang)', NULL, 1, 0),
 (99, 'hm', 'Heard Island and McDonald Islands', 'Heard en McDonald (eilanden)', NULL, 1, 0),
 (100, 'hn', 'Honduras', 'Honduras', NULL, 1, 0),
-(101, 'hr', 'Croatia (Hrvatska)', 'KroatiÃ«', NULL, 1, 0),
-(102, 'ht', 'Haiti', 'HaÃ¯ti', NULL, 1, 0),
+(101, 'hr', 'Croatia (Hrvatska)', 'Kroatië', NULL, 1, 0),
+(102, 'ht', 'Haiti', 'Haïti', NULL, 1, 0),
 (103, 'hu', 'Hungary', 'Hongarije (Magyar)', NULL, 1, 0),
-(104, 'id', 'Indonesia', 'IndonesiÃ«', NULL, 1, 0),
+(104, 'id', 'Indonesia', 'Indonesië', NULL, 1, 0),
 (105, 'ie', 'Ireland', 'Ierland (Eire)', NULL, 1, 0),
-(106, 'il', 'Israel', 'IsraÃ«l', NULL, 1, 0),
+(106, 'il', 'Israel', 'Israël', NULL, 1, 0),
 (107, 'im', 'Isle of Man', 'Man (Ellan Vannin) (eiland)', NULL, 1, 0),
 (108, 'in', 'India', 'India', NULL, 1, 0),
 (109, 'io', 'British Indian Ocean Territory', 'Britse gebiedsdelen in de Indische Oceaan: Chagos ', NULL, 1, 0),
 (110, 'iq', 'Iraq', 'Irak', NULL, 1, 0),
 (111, 'ir', 'Islamic Republic of Iran', 'Iran', NULL, 1, 0),
 (112, 'is', 'Iceland', 'IJsland', NULL, 1, 0),
-(113, 'it', 'Italy', 'ItaliÃ«', NULL, 1, 0),
+(113, 'it', 'Italy', 'Italië', NULL, 1, 0),
 (114, 'je', 'Jersey', 'Jersey', NULL, 1, 0),
 (115, 'jm', 'Jamaica', 'Jamaica', NULL, 1, 0),
-(116, 'jo', 'Jordan', 'JordaniÃ«', NULL, 1, 0),
+(116, 'jo', 'Jordan', 'Jordanië', NULL, 1, 0),
 (117, 'jp', 'Japan', 'Japan (Nippon)', NULL, 1, 0),
 (118, 'ke', 'Kenya', 'Kenya', NULL, 1, 0),
-(119, 'kg', 'Kyrgyzstan', 'KirgiziÃ«', NULL, 1, 0),
+(119, 'kg', 'Kyrgyzstan', 'Kirgizië', NULL, 1, 0),
 (120, 'kh', 'Cambodia', 'Cambodja', NULL, 1, 0),
 (121, 'ki', 'Kiribati', 'Kiribati', NULL, 1, 0),
 (122, 'km', 'Comoros', 'Comoren', NULL, 1, 0),
@@ -193,34 +193,34 @@ INSERT INTO `countries` (`country_id`, `tld`, `name_english`, `name_dutch`, `rem
 (134, 'lr', 'Liberia', 'Liberia', NULL, 1, 0),
 (135, 'ls', 'Lesotho', 'Lesotho', NULL, 1, 0),
 (136, 'lt', 'Lithuania', 'Litouwen (Lietuva)', NULL, 1, 0),
-(137, 'lu', 'Luxembourg', 'Luxemburg (LÃ«tzebuerg)', NULL, 1, 0),
+(137, 'lu', 'Luxembourg', 'Luxemburg (Lëtzebuerg)', NULL, 1, 0),
 (138, 'lv', 'Latvia', 'Letland', NULL, 1, 0),
-(139, 'ly', 'Libyan Arab Jamahiriya', 'LibiÃ«', NULL, 1, 0),
+(139, 'ly', 'Libyan Arab Jamahiriya', 'Libië', NULL, 1, 0),
 (140, 'ma', 'Morocco', 'Marokko', NULL, 1, 0),
 (141, 'mc', 'Monaco', 'Monaco', NULL, 1, 0),
-(142, 'md', 'Republic of Moldova', 'MoldaviÃ«', NULL, 1, 0),
+(142, 'md', 'Republic of Moldova', 'Moldavië', NULL, 1, 0),
 (143, 'me', 'Montenegro', 'Montenegro', NULL, 1, 0),
 (144, 'mf', 'Saint Martin', 'Sint Maarten', NULL, 1, 0),
 (145, 'mg', 'Madagascar', 'Madagaskar', NULL, 1, 0),
 (146, 'mh', 'Marshall Islands', 'Marshalleilanden', NULL, 1, 0),
-(147, 'mk', 'The former Yugoslav Republic of Macedonia', 'MacedoniÃ«', NULL, 1, 0),
+(147, 'mk', 'The former Yugoslav Republic of Macedonia', 'Macedonië', NULL, 1, 0),
 (148, 'ml', 'Mali', 'Mali', NULL, 1, 0),
 (149, 'mm', 'Myanmar', 'Myanmar', NULL, 1, 0),
-(150, 'mn', 'Mongolia', 'MongoliÃ«', NULL, 1, 0),
+(150, 'mn', 'Mongolia', 'Mongolië', NULL, 1, 0),
 (151, 'mo', 'Macao', 'Macau (Aomen)', NULL, 1, 0),
 (152, 'mp', 'Northern Mariana Islands', 'Noordelijke Marianen-eilanden', NULL, 1, 0),
 (153, 'mq', 'Martinique', 'Martinique', NULL, 1, 0),
-(154, 'mr', 'Mauritania', 'MauritaniÃ«', NULL, 1, 0),
+(154, 'mr', 'Mauritania', 'Mauritanië', NULL, 1, 0),
 (155, 'ms', 'Montserrat', 'Montserrat', NULL, 1, 0),
 (156, 'mt', 'Malta', 'Malta', NULL, 1, 0),
 (157, 'mu', 'Mauritius', 'Mauritius', NULL, 1, 0),
 (158, 'mv', 'Maldives', 'Maldiven', NULL, 1, 0),
 (159, 'mw', 'Malawi', 'Malawi', NULL, 1, 0),
 (160, 'mx', 'Mexico', 'Mexico', NULL, 1, 0),
-(161, 'my', 'Malaysia', 'MaleisiÃ«', NULL, 1, 0),
+(161, 'my', 'Malaysia', 'Maleisië', NULL, 1, 0),
 (162, 'mz', 'Mozambique', 'Mozambique', NULL, 1, 0),
-(163, 'na', 'Namibia', 'NamibiÃ«', NULL, 1, 0),
-(164, 'nc', 'New Caledonia', 'Nieuw-CaledoniÃ«', NULL, 1, 0),
+(163, 'na', 'Namibia', 'Namibië', NULL, 1, 0),
+(164, 'nc', 'New Caledonia', 'Nieuw-Caledonië', NULL, 1, 0),
 (165, 'ne', 'Niger', 'Niger', NULL, 1, 0),
 (166, 'nf', 'Norfolk Island', 'Norfolk (eiland)', NULL, 1, 0),
 (167, 'ng', 'Nigeria', 'Nigeria', NULL, 1, 0),
@@ -234,7 +234,7 @@ INSERT INTO `countries` (`country_id`, `tld`, `name_english`, `name_dutch`, `rem
 (175, 'om', 'Oman', 'Oman', NULL, 1, 0),
 (176, 'pa', 'Panama', 'Panama', NULL, 1, 0),
 (177, 'pe', 'Peru', 'Peru', NULL, 1, 0),
-(178, 'pf', 'French Polynesia', 'Frans PolynesiÃ« (Tahiti)', NULL, 1, 0),
+(178, 'pf', 'French Polynesia', 'Frans Polynesië (Tahiti)', NULL, 1, 0),
 (179, 'pg', 'Papua New Guinea', 'Papua Nieuw-Guinea', NULL, 1, 0),
 (180, 'ph', 'Philippines', 'Filipijnen', NULL, 1, 0),
 (181, 'pk', 'Pakistan', 'Pakistan', NULL, 1, 0),
@@ -247,31 +247,31 @@ INSERT INTO `countries` (`country_id`, `tld`, `name_english`, `name_dutch`, `rem
 (188, 'pw', 'Palau', 'Palau (Belau)', NULL, 1, 0),
 (189, 'py', 'Paraguay', 'Paraguay', NULL, 1, 0),
 (190, 'qa', 'Qatar', 'Qatar', NULL, 1, 0),
-(191, 're', 'Reunion Island', 'RÃ©union (eiland)', NULL, 1, 0),
-(192, 'ro', 'Romania', 'RoemeniÃ« (Rumania, Roumania)', NULL, 1, 0),
-(193, 'rs', 'Serbia', 'ServiÃ«', NULL, 1, 0),
+(191, 're', 'Reunion Island', 'Réunion (eiland)', NULL, 1, 0),
+(192, 'ro', 'Romania', 'Roemenië (Rumania, Roumania)', NULL, 1, 0),
+(193, 'rs', 'Serbia', 'Servië', NULL, 1, 0),
 (194, 'ru', 'Russian Federation', 'Rusland', NULL, 1, 0),
 (195, 'rw', 'Rwanda', 'Rwanda', NULL, 1, 0),
-(196, 'sa', 'Saudi Arabia', 'Saoedi-ArabiÃ«', NULL, 1, 0),
+(196, 'sa', 'Saudi Arabia', 'Saoedi-Arabië', NULL, 1, 0),
 (197, 'sb', 'Solomon Islands', 'Salomonseilanden', NULL, 1, 0),
 (198, 'sc', 'Seychelles', 'Seychellen', NULL, 1, 0),
 (199, 'sd', 'Sudan', 'Soedan', NULL, 1, 0),
 (200, 'se', 'Sweden', 'Zweden (Sverige)', NULL, 1, 0),
 (201, 'sg', 'Singapore', 'Singapore', NULL, 1, 0),
 (202, 'sh', 'Saint Helena', 'Sint Helena', NULL, 1, 0),
-(203, 'si', 'Slovenia', 'SloveniÃ«', NULL, 1, 0),
+(203, 'si', 'Slovenia', 'Slovenië', NULL, 1, 0),
 (204, 'sj', 'Svalbard and Jan Mayen Islands', 'Svalbard en Jan Mayen (eilanden)', NULL, 1, 0),
 (205, 'sk', 'Slovak Republic', 'Slowakije', NULL, 1, 0),
 (206, 'sl', 'Sierra Leone', 'Sierra Leone', NULL, 1, 0),
 (207, 'sm', 'San Marino', 'San Marino', NULL, 1, 0),
 (208, 'sn', 'Senegal', 'Senegal', NULL, 1, 0),
-(209, 'so', 'Somalia', 'SomaliÃ«', NULL, 1, 0),
+(209, 'so', 'Somalia', 'Somalië', NULL, 1, 0),
 (210, 'sr', 'Suriname', 'Suriname', NULL, 1, 0),
 (211, 'ss', 'South Sudan', 'Zuid Soedan', NULL, 1, 0),
-(212, 'st', 'Sao Tome and Principe', 'Sao TomÃ© en Principe (eilanden)', NULL, 1, 0),
+(212, 'st', 'Sao Tome and Principe', 'Sao Tomé en Principe (eilanden)', NULL, 1, 0),
 (213, 'sv', 'El Salvador', 'El Salvador', NULL, 1, 0),
 (214, 'sx', 'Saint Martin', 'Sint Maarten', NULL, 1, 0),
-(215, 'sy', 'Syrian Arab Republic', 'SyriÃ«', NULL, 1, 0),
+(215, 'sy', 'Syrian Arab Republic', 'Syrië', NULL, 1, 0),
 (216, 'sz', 'Swaziland', 'Swaziland', NULL, 1, 0),
 (217, 'tc', 'Turks and Caicos Islands', 'Turks- en Caicoseilanden', NULL, 1, 0),
 (218, 'td', 'Chad', 'Tsjaad', NULL, 1, 0),
@@ -282,7 +282,7 @@ INSERT INTO `countries` (`country_id`, `tld`, `name_english`, `name_dutch`, `rem
 (223, 'tk', 'Tokelau', 'Tokelau', NULL, 1, 0),
 (224, 'tl', 'Timor-Leste', 'Oost-Timor', NULL, 1, 0),
 (225, 'tm', 'Turkmenistan', 'Turkmenistan', NULL, 1, 0),
-(226, 'tn', 'Tunisia', 'TunesiÃ«', NULL, 1, 0),
+(226, 'tn', 'Tunisia', 'Tunesië', NULL, 1, 0),
 (227, 'to', 'Tonga', 'Tonga', NULL, 1, 0),
 (228, 'tp', 'East Timor', 'Oost-Timor (Timor Lorosae, Timor Leste)', NULL, 1, 0),
 (229, 'tr', 'Turkey', 'Turkije', NULL, 1, 0),
@@ -290,9 +290,9 @@ INSERT INTO `countries` (`country_id`, `tld`, `name_english`, `name_dutch`, `rem
 (231, 'tv', 'Tuvalu', 'Tuvalu', NULL, 1, 0),
 (232, 'tw', 'Taiwan (Province of China)', 'Taiwan', NULL, 1, 0),
 (233, 'tz', 'Tanzania', 'Tanzania', NULL, 1, 0),
-(234, 'ua', 'Ukraine', 'OekraÃ¯ne', NULL, 1, 0),
+(234, 'ua', 'Ukraine', 'Oekraïne', NULL, 1, 0),
 (235, 'ug', 'Uganda', 'Oeganda', NULL, 1, 0),
-(236, 'uk', 'United Kingdom', 'Verenigd Koninkrijk (Groot-BrittanniÃ«)', NULL, 1, 0),
+(236, 'uk', 'United Kingdom', 'Verenigd Koninkrijk (Groot-Brittannië)', NULL, 1, 0),
 (237, 'um', 'United States Minor Outlying Islands', 'Verenigde Staten: kleine eilanden', NULL, 1, 0),
 (238, 'us', 'United States', 'Verenigde Staten', NULL, 1, 0),
 (239, 'uy', 'Uruguay', 'Uruguay', NULL, 1, 0),
@@ -361,18 +361,18 @@ CREATE TABLE IF NOT EXISTS `days` (
   `day_id` bigint(20) NOT NULL auto_increment,
   `day` date NOT NULL,
   `date_id` bigint(20) NOT NULL,
-  `daynumber` int(11) NOT NULL,
+  `day_number` int(11) NOT NULL,
   `enabled` tinyint(1) NOT NULL default '1',
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`day_id`),
-  KEY `days_date_id_idx` (`date_id`)
+  KEY `date_id` (`date_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `days`
 --
 
-INSERT INTO `days` (`day_id`, `day`, `date_id`, `daynumber`, `enabled`, `deleted`) VALUES
+INSERT INTO `days` (`day_id`, `day`, `date_id`, `day_number`, `enabled`, `deleted`) VALUES
 (1, '2012-04-11', 1, 1, 1, 0),
 (2, '2012-04-12', 1, 2, 1, 0),
 (3, '2012-04-13', 1, 3, 1, 0),
@@ -393,20 +393,58 @@ CREATE TABLE IF NOT EXISTS `dynamic_pages` (
   PRIMARY KEY  (`dynamic_page_id`),
   KEY `date_id` (`date_id`),
   KEY `page_id` (`page_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=23 ;
 
 --
 -- Dumping data for table `dynamic_pages`
 --
 
 INSERT INTO `dynamic_pages` (`dynamic_page_id`, `content`, `cache`, `page_id`, `date_id`) VALUES
-(1, '<element:title code="event.label" />\r\n\r\n<element:overview domain="Event" id="url">\r\n	<element:column name="id" />\r\n	<element:column name="code" />\r\n	<element:column name="shortName" />\r\n	<element:column name="longName" />\r\n	<element:column name="enabled" />\r\n	<element:column name="dates" />    \r\n</element:overview>\r\n\r\n<element:buttons>\r\n	<element:button type="back" />\r\n	<element:button type="edit" url="/event/edit" />\r\n</element:buttons>', NULL, 1, NULL),
-(2, '<element:title code="event.label" />\r\n\r\n<element:form domain="Event" id="url">\r\n	<element:column name="id" />\r\n	<element:column name="code" />\r\n	<element:column name="shortName" />\r\n	<element:column name="longName" />\r\n	<element:column name="enabled" />\r\n	<element:column name="deleted" /> \r\n	\r\n	<element:button type="cancel" />\r\n	<element:button type="save" url="/event/show" />  \r\n</element:form>', NULL, 2, NULL),
-(3, '<element:title code="eventdate.label" />\r\n\r\n<element:overview domain="EventDate" id="url">\r\n   <element:column name="id" />\r\n   <element:column name="event" />\r\n   <element:column name="yearCode" />\r\n   <element:column name="startDate" />\r\n   <element:column name="endDate" />\r\n   <element:column name="dateAsText" /> \r\n   <element:column name="description" />   \r\n   <element:column name="longDescription" /> \r\n   <element:column name="enabled" />\r\n   <element:column name="days" />\r\n</element:overview>\r\n\r\n<element:buttons>\r\n   <element:button type="back" />\r\n   <element:button type="edit" url="/eventDate/edit" />\r\n</element:buttons>', NULL, 3, NULL),
-(4, '<element:title code="eventdate.label" />\r\n\r\n<element:form domain="EventDate" id="url">\r\n	<element:column name="id" />\r\n	<element:column name="event" readonly="true" />\r\n	<element:column name="yearCode" />\r\n	<element:column name="startDate" />\r\n	<element:column name="endDate" />\r\n	<element:column name="dateAsText" />\r\n	<element:column name="description" />  \r\n	<element:column name="longDescription" />\r\n	<element:column name="enabled" />\r\n	<element:column name="deleted" />\r\n  \r\n	<element:button type="cancel" />\r\n	<element:button type="save" url="/eventDate/show" />  \r\n </element:form>', NULL, 4, NULL),
-(5, '<element:title code="event.label" />\r\n\r\n<element:form domain="Event">\r\n   <element:column name="code" />\r\n   <element:column name="shortName" />\r\n   <element:column name="longName" />\r\n   <element:column name="enabled" />\r\n\r\n   <element:button type="cancel" />\r\n   <element:button type="save" url="/eventDate/create" />  \r\n</element:form>', NULL, 5, NULL),
-(6, '<element:title code="eventdate.label" />\r\n\r\n<element:form domain="EventDate">\r\n   <element:column name="event" id="url" />\r\n   <element:column name="yearCode" />\r\n   <element:column name="startDate" />\r\n   <element:column name="endDate" />\r\n   <element:column name="dateAsText" />\r\n   <element:column name="description" />  \r\n   <element:column name="longDescription" />\r\n   <element:column name="enabled" />\r\n \r\n   <element:button type="cancel" />\r\n   <element:button type="save" url="/event/list" />  \r\n</element:form>', NULL, 6, NULL),
-(7, '<element:title code="network.label" />\r\n\r\n<element:form domain="Network">\r\n	<element:column name="name" />\r\n	<element:column name="connectText" />\r\n	<element:column name="showOnline" />\r\n	<element:column name="showIntern" />\r\n	<element:column name="enabled" />\r\n\r\n	<element:button type="cancel" />\r\n	<element:button type="save" />  \r\n</element:form>', NULL, 7, NULL);
+(1, '<overview domain="Event" id="url">\r\n	<column name="id" />\r\n	<column name="code" />\r\n	<column name="shortName" />\r\n	<column name="longName" />\r\n	<column name="enabled" />\r\n	<column name="dates" />    \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 1, NULL),
+(2, '<form domain="Event" id="url">\r\n	<column name="id" />\r\n	<column name="code" />\r\n	<column name="shortName" />\r\n	<column name="longName" />\r\n	<column name="enabled" />\r\n	<column name="deleted" /> \r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 2, NULL),
+(3, '<overview domain="EventDate" id="url">\r\n   <column name="id" />\r\n   <column name="event" />\r\n   <column name="yearCode" />\r\n   <column name="startDate" />\r\n   <column name="endDate" />\r\n   <column name="dateAsText" /> \r\n   <column name="description" />   \r\n   <column name="longDescription" /> \r\n   <column name="enabled" />\r\n   <column name="days" />\r\n</overview>\r\n\r\n<buttons>\r\n   <button type="back" />\r\n   <button action="edit" />\r\n</buttons>', NULL, 3, NULL),
+(4, '<form domain="EventDate" id="url">\r\n	<column name="id" />\r\n	<column name="event" readonly="true" />\r\n	<column name="yearCode" />\r\n	<column name="startDate" />\r\n	<column name="endDate" />\r\n	<column name="dateAsText" />\r\n	<column name="description" />  \r\n	<column name="longDescription" />\r\n	<column name="enabled" />\r\n	<column name="deleted" />\r\n  \r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n </form>', NULL, 4, NULL),
+(5, '<form domain="Event">\r\n	<column name="code" />\r\n	<column name="shortName" />\r\n	<column name="longName" />\r\n	<column name="enabled" />\r\n	\r\n	<column name="dates">\r\n		<column name="yearCode" />\r\n		<column name="startDate" />\r\n		<column name="endDate" />\r\n		<column name="days">\r\n			<column name="dayNumber" />\r\n			<column name="day" />\r\n		</column>\r\n		<column name="dateAsText" />\r\n		<column name="description" />  \r\n		<column name="longDescription" />\r\n		<column name="enabled" />\r\n	</column>\r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 5, NULL),
+(6, '<form domain="EventDate">\r\n   <column name="event" id="url" />\r\n   <column name="yearCode" />\r\n   <column name="startDate" />\r\n   <column name="endDate" />\r\n   <column name="dateAsText" />\r\n   <column name="description" />  \r\n   <column name="longDescription" />\r\n   <column name="enabled" />\r\n \r\n   <button type="cancel" />\r\n   <button type="save" />  \r\n</form>', NULL, 6, NULL),
+(7, '<form domain="Network">\r\n	<column name="name" />\r\n	<column name="comment" />\r\n	<column name="url" />\r\n	<column name="showOnline" />\r\n	<column name="showInternal" />	\r\n	<column name="chairs" multiple="true">\r\n		<column name="chair" />\r\n		<column name="isMainChair" />\r\n	</column>\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 7, NULL),
+(8, '<form domain="Title">\r\n	<column name="title" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 8, NULL),
+(9, '<overview domain="Equipment" id="url">\r\n	<column name="id" />\r\n	<column name="equipment" />\r\n	<column name="description" />\r\n	<column name="imageUrl" />\r\n	<column name="enabled" />    \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 19, NULL),
+(10, '<form domain="Equipment" id="url">\r\n	<column name="id" />\r\n	<column name="equipment" />\r\n	<column name="description" />\r\n	<column name="imageUrl" />\r\n	<column name="enabled" />\r\n	<column name="deleted" /> \r\n\r\n        <button type="cancel" />\r\n	<button type="save" />	\r\n</form>\r\n', NULL, 17, NULL),
+(11, '<form domain="Equipment">\r\n	<column name="equipment" />\r\n	<column name="description" />\r\n	<column name="imageUrl" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />	\r\n</form>', NULL, 15, NULL),
+(12, '<form domain="Network" id="url">\r\n   <column name="name" />\r\n   <column name="comment" />\r\n   <column name="showOnline" />\r\n   <column name="showInternal" />\r\n   <column name="enabled" />	\r\n   <column name="deleted" />\r\n	\r\n   <button type="cancel" />\r\n   <button type="save" />  \r\n</form>', NULL, 10, NULL),
+(13, '<overview domain="Network" id="url">\r\n	<column name="name" />\r\n	<column name="comment" />\r\n	<column name="showOnline" />\r\n	<column name="showInternal" />\r\n	<column name="enabled" />	\r\n	<column name="deleted" />   \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 11, NULL),
+(14, '<form domain="Title" id="url">\r\n   <column name="title" />\r\n   <column name="enabled" />\r\n\r\n   <button type="cancel" />\r\n   <button type="save" />  \r\n</form>', NULL, 12, NULL),
+(15, '<overview domain="Title" id="url">\r\n	<column name="title" />\r\n	<column name="enabled" />\r\n	<column name="deleted" />   \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 13, NULL),
+(16, '<overview domain="Room" id="url">\r\n	<column name="roomName" />\r\n	<column name="roomNumber" />\r\n	<column name="noOfSeats" />\r\n	<column name="comment" />\r\n	<column name="deleted" />   \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>\r\n', NULL, 18, NULL),
+(17, '<form domain="Room" id="url">\r\n	<column name="roomName" />\r\n	<column name="roomNumber" />\r\n	<column name="noOfSeats" />\r\n	<column name="comment" />\r\n	<column name="enabled" />\r\n	<column name="deleted" /> \r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 16, NULL),
+(18, '<form domain="Room">\r\n	<column name="roomName" />\r\n	<column name="roomNumber" />\r\n	<column name="noOfSeats" />\r\n	<column name="comment" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 14, NULL),
+(19, '<table domain="Title">\r\n   <column name="title" />\r\n   <column name="enabled" />\r\n   <column name="deleted" />\r\n</table>\r\n\r\n<buttons>\r\n   <button type="back" />\r\n   <button action="create" />\r\n</buttons>', NULL, 20, NULL),
+(20, '<table domain="Room">\r\n	<column name="roomName" />\r\n	<column name="roomNumber" />\r\n	<column name="noOfSeats" />\r\n	<column name="comment" />\r\n	<column name="deleted" />   \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>\r\n', NULL, 21, NULL),
+(21, '<form domain="Network" id="url">\r\n	<column name="name" />\r\n	<column name="comment" />\r\n	<column name="url" />\r\n	<column name="showOnline" />\r\n	<column name="showInternal" />	\r\n	<column name="chairs" multiple="true">\r\n		<column name="chair" />\r\n		<column name="isMainChair" />\r\n	</column>\r\n	<column name="enabled" />\r\n	<column name="disabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 22, NULL),
+(22, '<table domain="Equipment">\r\n	<column name="equipment" />\r\n	<column name="description" />\r\n	<column name="imageUrl" />\r\n	<column name="enabled" />  \r\n        <column name="deleted" />  \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>\r\n', NULL, 23, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `equipment`
+--
+
+CREATE TABLE IF NOT EXISTS `equipment` (
+  `equipment_id` bigint(20) NOT NULL auto_increment,
+  `date_id` bigint(20) default NULL,
+  `equipment` varchar(30) collate utf8_unicode_ci NOT NULL,
+  `description` text collate utf8_unicode_ci,
+  `image_url` varchar(50) collate utf8_unicode_ci default NULL,
+  `enabled` tinyint(1) NOT NULL default '1',
+  `deleted` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`equipment_id`),
+  KEY `date_id` (`date_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `equipment`
+--
+
 
 -- --------------------------------------------------------
 
@@ -487,18 +525,38 @@ CREATE TABLE IF NOT EXISTS `networks` (
   `network_id` bigint(20) NOT NULL auto_increment,
   `date_id` bigint(20) default NULL,
   `name` varchar(30) collate utf8_unicode_ci NOT NULL,
-  `connect_text` varchar(30) collate utf8_unicode_ci NOT NULL,
+  `comment` text collate utf8_unicode_ci,
+  `url` varchar(255) collate utf8_unicode_ci NOT NULL,
   `show_online` tinyint(1) NOT NULL default '1',
-  `show_intern` tinyint(1) NOT NULL default '1',
-  `expoit` varchar(30) collate utf8_unicode_ci default NULL,
+  `show_internal` tinyint(1) NOT NULL default '1',
   `enabled` tinyint(1) NOT NULL default '1',
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`network_id`),
-  KEY `networks_date_id_idx` (`date_id`)
+  KEY `date_id` (`date_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 --
 -- Dumping data for table `networks`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `networks_chairs`
+--
+
+CREATE TABLE IF NOT EXISTS `networks_chairs` (
+  `network_id` bigint(20) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `is_main_chair` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`network_id`,`user_id`),
+  KEY `network_id` (`network_id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `networks_chairs`
 --
 
 
@@ -510,28 +568,47 @@ CREATE TABLE IF NOT EXISTS `networks` (
 
 CREATE TABLE IF NOT EXISTS `pages` (
   `page_id` bigint(20) NOT NULL auto_increment,
-  `name` varchar(30) collate utf8_unicode_ci NOT NULL,
-  `url` varchar(30) collate utf8_unicode_ci NOT NULL,
-  `description` tinytext collate utf8_unicode_ci,
+  `title_code` varchar(50) collate utf8_unicode_ci default NULL,
+  `title_arg` varchar(50) collate utf8_unicode_ci default NULL,
+  `title_default` varchar(50) collate utf8_unicode_ci NOT NULL,
+  `controller` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `action` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `description` text collate utf8_unicode_ci,
   `parent_page_id` bigint(20) default NULL,
   `enabled` tinyint(1) NOT NULL default '1',
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`page_id`),
   KEY `pages_parent_page_id_idx` (`parent_page_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=24 ;
 
 --
 -- Dumping data for table `pages`
 --
 
-INSERT INTO `pages` (`page_id`, `name`, `url`, `description`, `parent_page_id`, `enabled`, `deleted`) VALUES
-(1, 'Event overview', '/event/show', NULL, NULL, 1, 0),
-(2, 'Edit event', '/event/edit', NULL, NULL, 1, 0),
-(3, 'Event date overview', '/eventdate/show', NULL, NULL, 1, 0),
-(4, 'Edit event date', '/eventdate/edit', NULL, NULL, 1, 0),
-(5, 'Create event', '/event/create', NULL, NULL, 1, 0),
-(6, 'Create event date', '/eventdate/create', NULL, NULL, 1, 0),
-(7, 'Create network', '/network/create', NULL, NULL, 1, 0);
+INSERT INTO `pages` (`page_id`, `title_code`, `title_arg`, `title_default`, `controller`, `action`, `description`, `parent_page_id`, `enabled`, `deleted`) VALUES
+(1, 'default.overview.label', 'event.label', 'Event overview', 'event', 'show', NULL, NULL, 1, 0),
+(2, 'default.edit.label', 'event.label', 'Edit event', 'event', 'edit', NULL, NULL, 1, 0),
+(3, 'default.overview.label', 'eventdate.label', 'Event date overview', 'eventDate', 'show', NULL, NULL, 1, 0),
+(4, 'default.edit.label', 'eventdate.label', 'Edit event date', 'eventDate', 'edit', NULL, NULL, 1, 0),
+(5, 'default.create.label', 'event.label', 'Create event', 'event', 'create', NULL, NULL, 1, 0),
+(6, 'default.create.label', 'eventdate.label', 'Create event date', 'eventDate', 'create', NULL, NULL, 1, 0),
+(7, 'default.create.label', 'network.label', 'Create network', 'network', 'create', NULL, NULL, 1, 0),
+(8, 'default.create.label', 'title.label', 'Create title', 'title', 'create', NULL, NULL, 1, 0),
+(9, 'event.multiple.label', NULL, 'Events', 'event', 'list', NULL, NULL, 1, 0),
+(10, 'default.edit.label', 'network.label', 'Edit network', 'network', 'edit', NULL, NULL, 1, 0),
+(11, 'default.overview.label', 'network.label', 'Network overview', 'network', 'show', NULL, NULL, 1, 0),
+(12, 'default.edit.label', 'title.label', 'Edit title', 'title', 'edit', NULL, NULL, 1, 0),
+(13, 'default.overview.label', 'title.label', 'Title overview', 'title', 'show', NULL, NULL, 1, 0),
+(14, 'default.create.label', 'room.label', 'Create room', 'room', 'create', NULL, NULL, 1, 0),
+(15, 'default.create.label', 'equipment.label', 'Create equipment', 'equipment', 'create', NULL, NULL, 1, 0),
+(16, 'default.edit.label', 'room.label', 'Edit room', 'room', 'edit', NULL, NULL, 1, 0),
+(17, 'default.edit.label', 'equipment.label', 'Edit equipment', 'equipment', 'edit', NULL, NULL, 1, 0),
+(18, 'default.overview.label', 'room.label', 'Room overview', 'room', 'show', NULL, NULL, 1, 0),
+(19, 'default.overview.label', 'equipment.label', 'Equipment overview', 'equipment', 'show', NULL, NULL, 1, 0),
+(20, 'default.list.label', 'title.label', 'Title list', 'title', 'list', NULL, NULL, 1, 0),
+(21, 'default.list.label', 'room.label', 'Room list', 'room', 'list', NULL, NULL, 1, 0),
+(22, 'default.list.label', 'network.label', 'Network list', 'network', 'list', NULL, NULL, 1, 0),
+(23, 'default.list.label', 'equipment.label', 'Equipment list', 'equipment', 'list', NULL, NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -542,7 +619,7 @@ INSERT INTO `pages` (`page_id`, `name`, `url`, `description`, `parent_page_id`, 
 CREATE TABLE IF NOT EXISTS `roles` (
   `role_id` bigint(20) NOT NULL auto_increment,
   `role` varchar(20) collate utf8_unicode_ci NOT NULL,
-  `description` tinytext collate utf8_unicode_ci,
+  `description` text collate utf8_unicode_ci,
   `full_rights` tinyint(1) NOT NULL,
   PRIMARY KEY  (`role_id`),
   UNIQUE KEY `role` (`role`)
@@ -561,6 +638,30 @@ INSERT INTO `roles` (`role_id`, `role`, `description`, `full_rights`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `rooms`
+--
+
+CREATE TABLE IF NOT EXISTS `rooms` (
+  `room_id` bigint(20) NOT NULL auto_increment,
+  `date_id` bigint(20) NOT NULL,
+  `room_name` varchar(30) collate utf8_unicode_ci NOT NULL,
+  `room_number` varchar(10) collate utf8_unicode_ci NOT NULL,
+  `number_of_seets` int(11) NOT NULL,
+  `comment` text collate utf8_unicode_ci,
+  `enabled` tinyint(1) NOT NULL,
+  `deleted` tinyint(1) NOT NULL,
+  PRIMARY KEY  (`room_id`),
+  KEY `date_id` (`date_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `rooms`
+--
+
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `settings`
 --
 
@@ -571,12 +672,14 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `event_id` bigint(20) default NULL,
   PRIMARY KEY  (`setting_id`),
   KEY `settings_event_id_idx` (`event_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `settings`
 --
 
+INSERT INTO `settings` (`setting_id`, `property`, `value`, `event_id`) VALUES
+(1, 'lastUpdated', 'april 2012', NULL);
 
 -- --------------------------------------------------------
 
@@ -586,19 +689,19 @@ CREATE TABLE IF NOT EXISTS `settings` (
 
 CREATE TABLE IF NOT EXISTS `titles` (
   `title_id` bigint(20) NOT NULL auto_increment,
-  `date_id` bigint(20) default NULL,
-  `title` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `event_id` bigint(20) default NULL,
+  `title` varchar(10) collate utf8_unicode_ci NOT NULL,
   `enabled` tinyint(1) NOT NULL default '1',
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`title_id`),
-  KEY `titles_date_id_idx` (`date_id`)
+  KEY `titles_event_id_idx` (`event_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=8 ;
 
 --
 -- Dumping data for table `titles`
 --
 
-INSERT INTO `titles` (`title_id`, `date_id`, `title`, `enabled`, `deleted`) VALUES
+INSERT INTO `titles` (`title_id`, `event_id`, `title`, `enabled`, `deleted`) VALUES
 (1, 1, 'Mr.', 1, 0),
 (2, 1, 'Ms.', 1, 0),
 (3, 1, 'Drs.', 1, 0),
@@ -627,12 +730,16 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY  (`user_id`),
   UNIQUE KEY `email` (`email`),
   KEY `users_country_id_idx` (`country_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `users`
 --
 
+INSERT INTO `users` (`user_id`, `email`, `full_name`, `institute`, `country_id`, `language`, `password`, `salt`, `enabled`, `deleted`) VALUES
+(1, 'em@em.com', 'Lastname, Firstname', 'International Institute for Social History', 169, 'nl', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', 1, 0),
+(2, 'email@email.com', 'Abc, Def', 'International Institute for Social History', 1, 'nl', 'pw', NULL, 1, 0),
+(3, 'mail@mail.com', 'Qwe, Rty', 'Institute', 1, 'en', 'pw', NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -695,6 +802,8 @@ CREATE TABLE IF NOT EXISTS `users_roles` (
 -- Dumping data for table `users_roles`
 --
 
+INSERT INTO `users_roles` (`user_role_id`, `user_id`, `role_id`, `date_id`) VALUES
+(0, 1, 1, NULL);
 
 --
 -- Constraints for dumped tables
@@ -743,7 +852,14 @@ ALTER TABLE `groups_pages`
 -- Constraints for table `networks`
 --
 ALTER TABLE `networks`
-  ADD CONSTRAINT `networks_date_id_fk` FOREIGN KEY (`date_id`) REFERENCES `dates` (`date_id`);
+  ADD CONSTRAINT `networks_ibfk_1` FOREIGN KEY (`date_id`) REFERENCES `dates` (`date_id`);
+
+--
+-- Constraints for table `networks_chairs`
+--
+ALTER TABLE `networks_chairs`
+  ADD CONSTRAINT `networks_chairs_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `networks_chairs_ibfk_3` FOREIGN KEY (`network_id`) REFERENCES `networks` (`network_id`);
 
 --
 -- Constraints for table `pages`
@@ -761,7 +877,7 @@ ALTER TABLE `settings`
 -- Constraints for table `titles`
 --
 ALTER TABLE `titles`
-  ADD CONSTRAINT `titles_date_id_fk` FOREIGN KEY (`date_id`) REFERENCES `dates` (`date_id`);
+  ADD CONSTRAINT `titles_event_id_fk` FOREIGN KEY (`event_id`) REFERENCES `events` (`event_id`);
 
 --
 -- Constraints for table `users`
@@ -773,8 +889,8 @@ ALTER TABLE `users`
 -- Constraints for table `users_groups`
 --
 ALTER TABLE `users_groups`
-  ADD CONSTRAINT `users_groups_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
-  ADD CONSTRAINT `users_groups_group_id_fk` FOREIGN KEY (`group_id`) REFERENCES `groups` (`group_id`);
+  ADD CONSTRAINT `users_groups_group_id_fk` FOREIGN KEY (`group_id`) REFERENCES `groups` (`group_id`),
+  ADD CONSTRAINT `users_groups_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
 
 --
 -- Constraints for table `users_pages`
@@ -789,5 +905,5 @@ ALTER TABLE `users_pages`
 --
 ALTER TABLE `users_roles`
   ADD CONSTRAINT `users_roles_date_id_fk` FOREIGN KEY (`date_id`) REFERENCES `dates` (`date_id`),
-  ADD CONSTRAINT `users_roles_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
-  ADD CONSTRAINT `users_roles_role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`);
+  ADD CONSTRAINT `users_roles_role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`),
+  ADD CONSTRAINT `users_roles_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);

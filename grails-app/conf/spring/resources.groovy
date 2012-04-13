@@ -1,4 +1,5 @@
 import org.iisg.eca.UserSaltSource
+import org.iisg.eca.PageInformation
 import org.iisg.eca.UserDetailsService
 import org.iisg.eca.CustomPropertyEditorRegistrar
 
@@ -19,4 +20,6 @@ beans = {
     }
 
     customPropertyEditorRegistrar(CustomPropertyEditorRegistrar)
+
+    pageInformation(PageInformation)
 }

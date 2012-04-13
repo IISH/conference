@@ -30,7 +30,7 @@ class Day extends DefaultDomain {
 	}
 
     @Override
-    def String toString() {
+    String toString() {
         def dateFormat = MESSAGES.message(code: 'default.date.format').toString()
         def sdf = new SimpleDateFormat(dateFormat)
         "${dayNumber}: ${sdf.format(day)}"

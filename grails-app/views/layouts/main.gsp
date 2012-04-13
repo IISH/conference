@@ -1,4 +1,4 @@
-<%@ page import="org.iisg.eca.Page; org.iisg.eca.DynamicPage; org.springframework.validation.FieldError" %>
+<%@ page import="org.iisg.eca.Page; org.iisg.eca.DynamicPage; org.iisg.eca.Setting; org.springframework.validation.FieldError" %>
 <!doctype html>
 <!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
 <!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
@@ -24,7 +24,7 @@
 	</head>
 	<body>
         <div id="header" role="banner">
-            <a href="http://www.iisg.nl/esshc/">
+            <a href="http://www.iisg.nl/esshc/" name="top">
                 <g:img dir="images" file="header-esshc.gif" alt="ESSHC" title="ESSHC" />
             </a>
 
@@ -38,6 +38,14 @@
 
             <span class="event left">9th European Social Science History Conference 11 April - 14 April 2012</span>
 
+            <div class="locales right">
+                Select language:
+                <ul>
+                    <li><a href="?lang=nl"><g:img dir="images/flags" file="nl.png" /></a></li>
+                    <li><a href="?lang=en"><g:img dir="images/flags" file="us.png" /></a></Li>
+                </ul>
+            </div>
+
             <sec:ifLoggedIn>
                 <div class="loggedin right">
                     <g:message code="springSecurity.loggedin.welcome" args="${[sec.loggedInUserInfo(field: 'fullName')]}" />
@@ -46,29 +54,23 @@
                 </div>
             </sec:ifLoggedIn>
 
-            <sec:ifNotLoggedIn>
-                <div class="locales right">
-                    Select language:
-                    <ul>
-                        <li><a href="?lang=nl"><g:img dir="images/flags" file="nl.png" /></a></li>
-                        <li><a href="?lang=en"><g:img dir="images/flags" file="us.png" /></a></Li>
-                    </ul>
-                </div>
-            </sec:ifNotLoggedIn>
-
 			<div class="clear"></div>
         </div>
 
         <div id="nav" role="navigation">
             <dl id="menu">
-                <dt class="esshc">Web</dt>
+               <!-- <dt class="esshc">Web</dt>
 
                 <dd><a href="http://www.iisg.nl/esshc">ESSHC</A></dd>
-                <dd>&nbsp;</dd>
+                <dd>&nbsp;</dd>           -->
 
                 <dt class="esshc">CMS</dt>
 
-                <dd><a href="Participants.asp?year=12&partStat=-1&tp=name">Participants</a></dd>
+                <dd>&nbsp;</dd>
+
+                <g:menu />
+
+                <!--<dd><a href="Participants.asp?year=12&partStat=-1&tp=name">Participants</a></dd>
                 <dd><a href="Networks.asp">Networks</a></dd>
                 <dd><a href="Sessions.asp">Sessions</a></dd>
                 <dd><a href="Sessions2.asp">Sessions (v. 2)</a></dd>
@@ -90,7 +92,7 @@
                 <dd>&nbsp;</dd>
                 <dd><a href="overzicht_feerequest.asp">Fee Request</a></dd>
                 <dd><a href="overzicht_invitationletter.asp">Invitation Letter</a></dd>
-                <dd><a href="overzicht_reception.asp">Reception</a></dd>
+                <dd><a href="overzicht_reception.asp">Reception</a></dd>    -->
 		    </dl>
         </div>
 
@@ -103,7 +105,7 @@
                 <h1>${page.page.toString()}</h1>
 		    </g:elseif>
 
-            <g:if test="${flash.message}">
+            <g:if test="${flash.message && (page?.class == Page || page?.class == DynamicPage)}">
                 <div class="message" role="status">${flash.message}</div>
             </g:if>
 
@@ -119,13 +121,13 @@
                 </ul>
 			</g:hasErrors>
 
-            <span class="right">
+            <span class="top right">
 				<a href="#top">Back to top</a>
             </span>
         </div>
 
 		<div id="footer" class="clear" role="contentinfo">
-            http://intranet.iisg.nl/esshc - Last updated: June 2011
+           ${grailsApplication.config.grails.serverURL} - Last updated: ${Setting.findByProperty('lastUpdated').value}
 		</div>
 
         <div id="usermenu">

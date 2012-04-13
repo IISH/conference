@@ -22,12 +22,12 @@ abstract class DefaultDomain {
     }
 
     @Override
-    def void delete() {
+    void delete() {
         deleted = true
     }
 
     @Override
-    def void delete(Map props) {
+    void delete(Map props) {
         deleted = true
     }
 }

@@ -1,5 +1,8 @@
 package org.iisg.eca
 
+/**
+ * Domain class of table holding all available equipment
+ */
 class Equipment extends DefaultDomain {
     EventDate date
     String equipment

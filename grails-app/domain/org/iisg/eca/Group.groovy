@@ -31,7 +31,7 @@ class Group extends DefaultDomain {
     }
 
     @Override
-    def String toString() {
+    String toString() {
         name
     }
 }

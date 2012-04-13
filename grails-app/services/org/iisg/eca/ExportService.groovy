@@ -16,7 +16,7 @@ class ExportService {
      * @param fileName If specified, the name of the resulting file, defaults to 'Export'
      * @param seperator If specified, seperates the data in the case of a csv with this character
      */
-    def void getPage(format, response, pageElement, fileName='Export', seperator=',') {
+    def void getPage(format, response, pageElement, seperator=',', fileName='Export') {
         def parser
 
         switch (format.toLowerCase()) {

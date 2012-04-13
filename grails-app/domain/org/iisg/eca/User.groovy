@@ -25,8 +25,8 @@ class User extends DefaultDomain {
 	String password
 	String salt
 
-    static hasMany = [groups: Group]
     static belongsTo = Country
+    static hasMany = [groups: Group, networks: NetworkChair]
 
     static mapping = {
 		table 'users'

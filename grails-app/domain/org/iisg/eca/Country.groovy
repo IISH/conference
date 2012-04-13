@@ -31,7 +31,7 @@ class Country extends DefaultDomain {
 	}
 
     @Override
-    def String toString() {
+    String toString() {
         "${tld}, ${nameEnglish}"
     }
 }

@@ -5,6 +5,10 @@ class RoomController {
         forward(controller: 'dynamicPage', action: 'get')
     }
 
+    def list() {
+        forward(controller: 'dynamicPage', action: 'get')
+    }
+
     def create() {
         forward(controller: 'dynamicPage', action: 'getAndPost')
     }

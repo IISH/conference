@@ -38,9 +38,10 @@ p {
 }
 
 
-ul, li, dl {
+ol, ul, li, dl, dt, dd {
 	margin: 0;
 	padding: 0;
+    list-style: none;
 }
 
 dt {
@@ -54,7 +55,6 @@ dd {
     margin: -4px 0;
     padding: 5px 0;
 	list-style-position: outside;
-    list-style-type: none;
 	font-size: 8pt;	
 }
 
@@ -84,7 +84,7 @@ dd {
 .loggedin {
 	color: #225496;
     font-weight: bold;
-    margin-right: 8px;
+    margin-right: 30px;
 }
 
 .loggedin img {
@@ -93,7 +93,6 @@ dd {
 }
 
 .locales ul {
-	list-style-type: none;	
 	display: inline;
 }
 
@@ -123,6 +122,10 @@ dd {
 	margin-left: 16px;
 }
 
+#content span.top {
+    margin-bottom: 10px;
+}
+
 /* FOOTER */
 
 #footer {
@@ -140,12 +143,8 @@ dd {
     background-color: #FFFFFF;
     box-shadow: 0 0 3px 1px #225496;
     position: absolute;
-    right: 3px;
+    right: 175px;
     top: 125px;
-}
-
-#usermenu ul {
-    list-style-type: none;
 }
 
 #usermenu li {
@@ -177,27 +176,50 @@ dd {
     font-size: 8pt;
 }
 
-/* FORMS */
+/* VIEWS */
 
 fieldset {
     border: none;
 }
 
-fieldset div {
+fieldset div, ol li {
+    min-height: 24px;
     margin: 5px 0;
 }
 
-input, textarea {
+fieldset div, fieldset li, ol li {
+    min-height: 24px;
+    margin-top: 5px;
+}
+
+fieldset div:first-child, fieldset li:first-child, ol li:first-child {
+    margin-top: 0;
+}
+
+input, textarea, select {
 	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
 	font-size: 9pt;
     background: #FFFFFF;
     border: 1px solid #7F9DB9;
-    color: #000000;
-    text-align: left;
-    vertical-align: middle;
 }
 
-label {
+input, textarea, .property-value, fieldset ul {
+    color: #000000;
+    text-align: left;
+    vertical-align: top;
+}
+
+input[type=text], input[type=password], input[type=number], select {
+    height: 18px;
+    width: 180px;
+    padding-left: 2px;
+}
+
+select {
+    height: 20px;
+}
+
+label, .property-label {
 	display: inline-block;
 	width: 25%;
 	margin-right: 10px;
@@ -214,6 +236,120 @@ label {
     top: 0.1em;
 }
 
+.buttons {
+       -moz-box-shadow: 0 0 3px 1px #225496;
+    -webkit-box-shadow: 0 0 3px 1px #225496;
+            box-shadow: 0 0 3px 1px #225496;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    overflow: hidden;
+    padding: 5px;
+}
+
+.buttons input, .buttons a, .tbl_toolbar a {
+    color: #225496;
+    cursor: pointer;
+    display: inline-block;
+    margin: 0 5px;
+    overflow: visible;
+    padding: 3px 10px;
+    text-decoration: none;
+    border: none;
+    outline: none;
+    vertical-align: middle;
+    background-color: #FFFFFF;
+}
+
+.buttons input:hover, .buttons input:focus, .buttons a:hover, .buttons a:focus {
+    background-color: #CAE1FF;
+}
+
+fieldset span.ui-icon {
+    display: inline-block;
+    margin: -4px 0;
+    cursor: pointer;
+}
+
+fieldset .add {
+    font-weight: bold;
+}
+
+/* MESSAGES AND ERRORS */
+
+.message {
+    background: url("../images/skin/information.png") no-repeat scroll 7px 50% transparent;
+    color: #225496;
+    margin: 30px 30px 20px;
+    padding: 5px;
+    text-indent: 25px;
+       -moz-box-shadow: 0 0 3px 1px #225496;
+    -webkit-box-shadow: 0 0 3px 1px #225496;
+            box-shadow: 0 0 3px 1px #225496;
+}
+
+.errors {
+    color: #cc0000;
+       -moz-box-shadow: 0 0 0.25em #ff8888;
+    -webkit-box-shadow: 0 0 0.25em #ff8888;
+            box-shadow: 0 0 0.25em #ff8888;
+}
+
+.errors li {
+    background: transparent url(../images/skin/exclamation.png) 0.5em 50% no-repeat;
+    text-indent: 2.2em;
+}
+
+.error input, .error select, .error textarea {
+    background: #fff3f3;
+    border-color: #ffaaaa;
+    color: #cc0000;
+}
+
+/* TABLES */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #7F9DB9;
+}
+
+thead {
+    border: 1px solid #7F9DB9;
+    background-color: #7F9DB9;
+}
+
+tbody {
+    border: 1px solid #7F9DB9;
+}
+
+th {
+    color: #FFFFFF;
+    padding: 3px;
+}
+
+.tbl_container th input {
+    width: 80%;
+    margin-bottom: 2px;
+    text-align: center;
+}
+
+td {
+    border-right: 1px solid #7F9DB9;
+    padding: 5px;
+}
+
+.tbl_toolbar {
+    padding: 5px 10px 0;
+    font-weight: bold;
+    color: #FFFFFF;
+    background-color: #7F9DB9;
+}
+
+tbody tr:hover {
+    background-color: #CAE1FF;
+    cursor: pointer;
+}
+
 /* HELPERS */
 
 .left {
@@ -226,4 +362,12 @@ label {
 
 .clear {
 	clear: both;
+}
+
+.inline {
+    display: inline-block;
+}
+
+.hidden {
+    display: none;
 }

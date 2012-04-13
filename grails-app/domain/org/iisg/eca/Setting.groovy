@@ -13,6 +13,7 @@ class Setting {
 	static mapping = {
         table 'settings'
 		version false
+        cache true
 
         id          column: 'setting_id'
         property    column: 'property'
@@ -25,4 +26,9 @@ class Setting {
         value       blank: false,   maxSize: 255
 		event       nullable: true
 	}
+
+    @Override
+    String toString() {
+        "${property}: ${value}"
+    }
 }

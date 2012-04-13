@@ -1,10 +1,6 @@
 $(document).ready(function() {
-    $('#lang').change(function() {
-        window.location = '?lang='+this.value;
-    });
-
-    $('#nav .right img').click(function() {
-        $("#user_menu").toggle();
+    $('.loggedin img').click(function() {
+        $("#usermenu").toggle();
     });
 
     $('.datepicker').each(function() {
@@ -24,10 +20,6 @@ $(document).ready(function() {
         });
     });
 
-    $('.btn_cancel, .btn_back').click(function() {
-        history.go(-1);
-    });
-
     $('input[name=deleted]:not(:checked)').click(function(e) {
         var checkBox = $(this);
         e.preventDefault();
@@ -36,5 +28,40 @@ $(document).ready(function() {
             var deleted = confirm(data.message);
             checkBox.attr('checked', deleted);
         });
+    });
+
+    $('fieldset span.ui-icon-circle-plus').click(function(e) {
+        var parent = $(this).parent();
+        var lastItem = parent.prev();
+        var clone = parent.next().clone(true);
+        var i = 0;
+
+        if (lastItem.length !== 0) {
+            var nameSplit = lastItem.children().attr("name").split('.');
+            var number = nameSplit[0].split('_')[1];
+            if ($.isNumeric(number)) {
+                i = number;
+            }
+        }
+
+        clone.children().attr("name", clone.children().attr("name").replace("null", ++i));
+        clone.insertBefore(parent);
+        clone.removeClass("hidden");
+    });
+
+    $('fieldset span.ui-icon-circle-minus').click(function(e) {
+        var toBeRemoved = $(this).parent();
+
+        var next = toBeRemoved.next();
+        while (!next.hasClass('add')) {
+            var nameSplit = next.children().attr("name").split('.');
+            var number = nameSplit[0].split('_')[1];
+            if ($.isNumeric(number)) {
+                next.children().attr("name", next.children().attr("name").replace(number, --number));
+            }
+            next = next.next();
+        }
+
+        toBeRemoved.remove();
     });
 });

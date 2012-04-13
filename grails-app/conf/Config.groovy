@@ -64,6 +64,7 @@ grails.plugin.reveng.jdbcDriverJarDep = 'mysql:mysql-connector-java:5.1.18'
 environments {
     development {
         grails.logging.jul.usebridge = true
+        grails.serverURL = "http://localhost:8080/${appName}"
     }
     production {
         grails.logging.jul.usebridge = false

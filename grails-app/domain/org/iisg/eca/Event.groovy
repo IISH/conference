@@ -25,14 +25,14 @@ class Event extends DefaultDomain {
 	}
 
 	static constraints = {
-        code        maxSize: 20,    blank: false
+        code        maxSize: 20,    blank: false,   unique: true
 		shortName   maxSize: 20,    blank: false
 		longName    maxSize: 50,    blank: false
 		type        maxSize: 20,    nullable: true
 	}
 
     @Override
-    def String toString() {
+    String toString() {
         shortName
     }
 }

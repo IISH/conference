@@ -29,7 +29,7 @@ class Role {
     }
 
     @Override
-    def String toString() {
+    String toString() {
         role
     }
 }

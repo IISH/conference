@@ -51,7 +51,7 @@ class EventDate extends DefaultDomain {
     }
 
     @Override
-    def String toString() {
-        yearCode
+    String toString() {
+        "${description} ${dateAsText}"
     }
 }

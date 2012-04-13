@@ -1,5 +1,7 @@
 package org.iisg.eca
 
+import org.codehaus.groovy.grails.commons.GrailsDomainClassProperty
+
 /**
  *  Default controller for all dynamic pages
  */
@@ -10,65 +12,117 @@ class DynamicPageController {
     def dynamicPageService
 
     /**
+     * Service responsible for exporting results into a different format
+     */
+    def exportService
+
+    /**
      * This action is only responsible for displaying a particular dynamic page
      */
     def get() {
-        def page = Page.findByControllerAndAction(params.controller, params.action)
-        DynamicPage dynamicPage = dynamicPageService.getDynamicPage(page, params)
+        DynamicPage dynamicPage = dynamicPageService.getDynamicPage()
 
-        render(view: '../layouts/content.gsp', model: [page: dynamicPage, content: dynamicPageService.getTemplate(dynamicPage)])
+        if (params.format) {
+            // TODO: export service needs update
+            exportService.getPage(params.format, response, null, params.sep, page.toString())
+            return
+        }
+
+        render(view: '../layouts/content.gsp', model: [page: dynamicPage, content: dynamicPageService.getTemplate(dynamicPage, params)])
     }
 
     /**
      * This action is responsible for both displaying a particular dynamic page and for persisting any changes to the database
      */
     def getAndPost() {
-        def page = Page.findByControllerAndAction(params.controller, params.action)
-        DynamicPage dynamicPage = dynamicPageService.getDynamicPage(page, params)
+        DynamicPage dynamicPage = dynamicPageService.getDynamicPage()
 
         if (request.get) {
-            render(view: '../layouts/content.gsp', model: [page: dynamicPage, content: dynamicPageService.getTemplate(dynamicPage)])
+            render(view: '../layouts/content.gsp', model: [page: dynamicPage, content: dynamicPageService.getTemplate(dynamicPage, params)])
         }
         else if (request.post) {
             // Get the element from which this action was called
-            PageElement form = dynamicPage.elements.get(params.int('eid'))
+            PageElement element = dynamicPage.elements.get(params.int('eid'))
 
             // This element should be a form...
-            if (form?.type == PageElement.Type.FORM) {
-                // Loop over all domain classes, binding the data from ONLY those columns specified in the dynamic page
-                form.domainClassNames.each { domainClassName ->
-                    def columns = form.getColumnsByDomainClassName(domainClassName)
-                    def result = form.getResultByDomainClassName(domainClassName)
-                    bindData(result, params, [include: columns], domainClassName[0].toLowerCase() + domainClassName.substring(1))
+            if (element?.type == PageElement.Type.FORM) {
+                ViewElement form = (ViewElement) element
+                DynamicPageResults results = new DynamicPageResults(form, params)
+                Set<Column> hasChildren = new HashSet<Column>()
 
-                    // TODO: temp relationship fix
-                    if (params.controller == 'event' && params.action == 'create' && domainClassName == 'EventDate') {
-                        result.event = form.getResultByDomainClassName('Event')
+                // Loop over all domain classes, binding the data from ONLY those columns specified in the dynamic page
+                form.allDomainClasses.each { domainClass ->
+                    Set<Column> columns = form.getAllColumnsForDomainClass(domainClass)
+
+                    if (columns.grep { it.parent?.multiple }.isEmpty()) {
+                        bindData(results.get(domainClass.name), params, [include: columns.collect { it.name }], domainClass.name)
+                    }
+                    else {
+                        int i = 1
+                        while (params."${domainClass.name}_${i}") {
+                            bindData(results.get("${domainClass.name}_${i}"), params, [include: columns.collect { it.name }], "${domainClass.name}_${i}")
+                            i++
+                        }
+                        results.remove(domainClass.name)
                     }
 
-                    result.save(flush: true)
+                    hasChildren.addAll(columns.grep { it.hasChildren() })
                 }
+
+               List<Object> resultsToSave = results.get().values() as List
+
+                hasChildren.each { c ->
+                    Object[] owningSide = [results.get(c.domainClass.name)]
+                    Object[] otherSide
+                    GrailsDomainClassProperty owner = c.property
+
+                    if (c.multiple) {
+                        otherSide = results.get(c.property.referencedDomainClass.name)
+                    }
+                    else {
+                        otherSide = [results.get(c.property.referencedDomainClass.name)]
+                    }
+
+                    if (!c.property.owningSide) {
+                        owningSide = otherSide
+                        otherSide = [results.get(c.domainClass.name)]
+                        owner = c.property.otherSide
+                    }
+
+                    if (owner.oneToOne || owner.manyToOne) {
+                        owningSide.each { dc ->
+                            otherSide.each { os ->
+                                dc[owner.name] = os
+                            }
+                        }
+                    }
+                    else if (owner.manyToMany || owner.oneToMany) {
+                        owningSide.each { dc ->
+                            otherSide.each { os ->
+                                dc."addTo${owner.name[0].toUpperCase() + owner.name[1..-1]}"(os)
+                            }
+                        }
+                    }
+
+                    otherSide.each { resultsToSave.remove(it) }
+                }
+
+                resultsToSave.each { it.save() }
+
+                // If validation fails, return the page and show the errors
+                if (!results.get().values().grep { it.hasErrors() }.isEmpty()) {
+                    render(view: '../layouts/content.gsp', model: [page: dynamicPage, content: dynamicPageService.getTemplate(dynamicPage, params, results)])
+                    return
+                }
+
+                flash.message = message(code: "default.successful.message")
+
+                // Redirect to previous page
+                redirect(controller: params.prevController, action: params.prevAction, id: params.prevId)
             }
             else {
-                render(view: '../layouts/content.gsp', model: [page: dynamicPage, content: dynamicPageService.getTemplate(dynamicPage)])
-                return
+                render(view: '../layouts/content.gsp', model: [page: dynamicPage, content: dynamicPageService.getTemplate(dynamicPage, params)])
             }
-
-            // If validation fails, return the page and show the errors
-            if (!form.results.values().grep { it.hasErrors() }.isEmpty()) {
-                render(view: '../layouts/content.gsp', model: [page: dynamicPage, content: dynamicPageService.getTemplate(dynamicPage)])
-                return
-            }
-
-            flash.message = message(code: "default.successful.message")
-
-            // Find out if we need to redirect the user to a specific page after a succesful transaction.
-            // If not found, redirect to the show page of the same controller
-
-            // TODO: Redirect
-
-            def url = "/${params.controller}/show"
-            redirect(uri: "${url}/${form.results.values().toArray()[0].id}")
         }
     }
 }

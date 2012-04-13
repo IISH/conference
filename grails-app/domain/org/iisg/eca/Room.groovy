@@ -1,5 +1,8 @@
 package org.iisg.eca
 
+/**
+ * Domain class of table holding all rooms
+ */
 class Room extends DefaultDomain {
     EventDate date
     String roomName

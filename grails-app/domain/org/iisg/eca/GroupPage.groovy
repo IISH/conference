@@ -33,7 +33,7 @@ class GroupPage extends DefaultDomain implements Serializable {
 
     @Override
 	boolean equals(other) {
-		if (other == null) {
+		if (other == null || !(other instanceof GroupPage)) {
             return false
         }
 

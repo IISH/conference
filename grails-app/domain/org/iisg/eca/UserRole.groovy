@@ -37,7 +37,7 @@ class UserRole implements Serializable {
 
     @Override
 	boolean equals(other) {
-		if (other == null) {
+		if (other == null || !(other instanceof UserRole)) {
             return false
         }
 

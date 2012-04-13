@@ -17,7 +17,7 @@ class UserPage implements Serializable {
 
     static mapping = {
         table 'users_pages'
-		id composite: ["user", "page"]
+		id composite: ['user', 'page']
 		version false
 
         user        column: 'user_id'
@@ -25,7 +25,7 @@ class UserPage implements Serializable {
         date        column: 'date_id'
         denied      column: 'denied'
         showInMenu  column: 'show_in_menu'
-	}
+    }
 
     static constraints = {
         date    nullable: true
@@ -39,7 +39,7 @@ class UserPage implements Serializable {
 	}
 
 	boolean equals(other) {
-		if (other == null) {
+		if (other == null || !(other instanceof UserPage)) {
             return false
         }
 
