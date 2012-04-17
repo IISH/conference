@@ -14,7 +14,7 @@ class DynamicPage {
     Page page
     EventDate date
 
-    Map elements
+    List<ContainerElement> elements
 
     static belongsTo = [Page, EventDate]
     static transients = ['elements']
@@ -51,9 +51,9 @@ class DynamicPage {
      */
     Map<Integer, DynamicPageResults> getResults(GrailsParameterMap params) {
         Map<Integer, DynamicPageResults> results = new HashMap<Integer, DynamicPageResults>()
-        elements.each { eid, element ->
-            if (element.type != PageElement.Type.BUTTONS) {
-                results.put(eid, new DynamicPageResults((ViewElement) element, params))
+        elements.each { element ->
+            if (element instanceof DataContainer ) {
+                results.put(element.eid, new DynamicPageResults(element, params))
             }
         }
         results

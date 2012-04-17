@@ -1,6 +1,10 @@
 package org.iisg.eca
 
 class NetworkController {
+    def index() {
+        redirect(action: 'list', params: params)
+    }
+
     def show() {
         forward(controller: 'dynamicPage', action: 'get')
     }

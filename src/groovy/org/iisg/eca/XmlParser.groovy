@@ -11,14 +11,14 @@ class XmlParser implements Parser {
     private static final ValidationTagLib MESSAGES = new ValidationTagLib()
 
     private String title
-    private PageElement view
+    private DataContainer view
 
     /**
      * Creates a new xml parser for the specified element
      * @param pageElement The element to parse
      * @param title The title of the resulting file
      */
-    XmlParser(PageElement view, String title) {
+    XmlParser(DataContainer view, String title) {
         this.view = view
         this.title = title
     }

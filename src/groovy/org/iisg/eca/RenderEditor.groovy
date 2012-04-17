@@ -1,12 +1,6 @@
 package org.iisg.eca
 
 import groovy.xml.MarkupBuilder
-
-import org.codehaus.groovy.grails.validation.ConstrainedProperty
-
-import org.codehaus.groovy.grails.commons.GrailsDomainClass
-import org.codehaus.groovy.grails.commons.GrailsDomainClassProperty
-
 import org.springframework.core.GenericCollectionTypeResolver
 
 /**
@@ -81,20 +75,20 @@ class RenderEditor {
     }
     
     private String getValueReady(Column column) {
-        if (column.parent?.multiple) {
-            "instance"
+        if ((column.parent instanceof Column) && (column.parent.multiple)) {
+            "instance?.${column.name}"
         }
         else {
-            "${getResult(column)}['${column.name}']"
+            "${getResult(column)}?.${column.name}"
         }
     }
 
     private String getResult(Column column) {
-        "${resultsLink}.get(${column.pageElement.eid}).get('${column.domainClass.name}')"
+        "${resultsLink}.get(${column.root.eid}).get('${column.domainClass.name}')"
     }
 
     private String getName(Column column) {
-        if (column.parent?.multiple) {
+        if ((column.parent instanceof Column) && (column.parent.multiple)) {
             "${column.domainClass.name}_\${i}.${column.name}"
         }
         else {
@@ -116,8 +110,8 @@ class RenderEditor {
         props.put("from",   "${column.property.type.name}?.values()")
         props.put("keys",   "${column.property.type.name}.values()*.name()}")
 
-        (isOptional(column.constrainedProperty)) ?: props.put("required", "required")
-        renderNoSelection(column)
+        (isOptional(column)) ?: props.put("required", "required")
+        renderNoSelection(column, props)
 
         builder."g:select"(props)
     }
@@ -157,7 +151,7 @@ class RenderEditor {
                 (!column.constrainedProperty.maxSize)   ?: props.put("maxlength",   column.constrainedProperty.maxSize)
                 (column.constrainedProperty.editable)   ?: props.put("readonly",    "readonly")
                 (!column.constrainedProperty.matches)   ?: props.put("pattern",     "\${${getResult(column)}.constraints.${column.property.name}.matches}")
-                (isOptional(column))        ?: props.put("required",    "required")
+                (isOptional(column))                    ?: props.put("required",    "required")
 
                 if (column.constrainedProperty.password) {
                     props.put("type", "password")

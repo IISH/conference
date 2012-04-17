@@ -19,14 +19,14 @@ class XlsParser implements Parser {
     private static final ValidationTagLib MESSAGES = new ValidationTagLib()
 
     private String title
-    private PageElement view
+    private DataContainer view
 
     /**
      * Creates a new xls parser for the specified element
      * @param pageElement The element to parse
      * @param title The title of the resulting file
      */
-    XlsParser(PageElement view, String title) {
+    XlsParser(DataContainer view, String title) {
         this.view = view
         this.title = title
     }

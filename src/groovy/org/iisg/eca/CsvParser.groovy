@@ -10,7 +10,7 @@ class CsvParser implements Parser {
     private static final ValidationTagLib MESSAGES = new ValidationTagLib()
 
     private String title
-    private PageElement pageElement
+    private DataContainer pageElement
     private String seperator = ','
 
     /**
@@ -18,7 +18,7 @@ class CsvParser implements Parser {
      * @param pageElement The element to parse
      * @param title The title of the resulting file
      */
-    CsvParser(PageElement pageElement, String title) {
+    CsvParser(DataContainer pageElement, String title) {
         this.pageElement = pageElement
         this.title = title
     }

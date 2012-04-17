@@ -1,40 +1,75 @@
 package org.iisg.eca
 
+/**
+ * An element of a dynamic page
+ */
 abstract class Element {
     private String name
-    private ElementType type
-    private PageElement pageElement
+    private ContainerElement parent     
     
     /**
-     * The possible element types
+     * Creates a new element
+     * @param name The name of the new element
      */
-    enum ElementType {
-        COLUMN, BUTTON
-    }
-    
-    Element(String name, ElementType type) {
+    Element(String name) {
         this.name = name
-        this.type = type
-        this.pageElement = null
+        this.parent = null
     }
     
+    /**
+     * A getter method which returns the name of this element
+     * @returns The name of this element
+     */
     String getName() {
         name
     }
     
     /**
-     * Returns the type of this element
-     * @return The element type
+     * A getter method which returns the parent of this element
+     * @returns The parent of this element
      */
-    ElementType getType() {
-        type
-    }    
-        
-    PageElement getPageElement() {
-        pageElement
+    ContainerElement getParent() {
+        parent
     }
     
-    void setPageElement(PageElement pageElement) {
-        this.pageElement = pageElement  
+    /**
+     * Returns the root element
+     * @returns The root of this element
+     */
+    ContainerElement getRoot() {
+        ContainerElement current = this.parent
+        while (current?.parent) {
+            current = current.parent  
+        }
+        current
+    }
+    
+    /**
+     * Sets the parent of this element
+     * @param parent The parent element of this element
+     */
+    void setParent(ContainerElement parent) {
+        this.parent = parent  
+    }
+    
+    /**
+     * Returns all of the elements on the way to the root
+     * @returns A list of all the elements on the way to the root
+     */
+    List<Element> getPath() {
+        List<Element> path = new LinkedList<Element>()
+        Element current = this
+
+        while (current) {
+            path.addFirst(current)
+            current = current.parent
+        }
+
+        path
+    }
+
+    @Override
+    String toString() {
+        name
     }
 }

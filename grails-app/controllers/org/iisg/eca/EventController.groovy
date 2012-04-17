@@ -38,6 +38,10 @@ class EventController {
         [events: datesByEvent.keySet(), datesByEvent: datesByEvent, allEvents: allEvents, page: Page.findByControllerAndAction('event', 'list')]
     }
 
+    def list_all() {
+        forward(controller: 'dynamicPage', action: 'get')
+    }
+
     def show() {
         forward(controller: 'dynamicPage', action: 'get')
     }

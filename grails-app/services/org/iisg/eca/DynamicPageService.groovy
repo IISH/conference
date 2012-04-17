@@ -96,39 +96,42 @@ class DynamicPageService {
      * @param xml The xml representing the dynamic page
      * @return A map of all page elements of the dynamic page linked to their element id
      */
-    private Map<Integer, PageElement> gePageElements(GPathResult xml) {
-        Map<Integer, PageElement> pageElements = new HashMap<Integer, PageElement>()
+    private List<ContainerElement> gePageElements(GPathResult xml) {
+        List<ContainerElement> pageElements = new ArrayList<ContainerElement>()
         int eid = 0
                 
         // Loop over all the elements on the page
         xml.children().each { xmlElement ->
             String elemType = xmlElement.name()
 
+            // Find out if the element will hold data or buttons, if neither: ignore
             if (elemType == FORM || elemType == TABLE || elemType == OVERVIEW) {
                 String domain = xmlElement.@domain.text()             
                 if (!domain.isEmpty()) {
                     GrailsDomainClass domainClass = grailsApplication.getDomainClass("${DOMAIN_PACKAGE}.${domain}")
                 
-                    PageElement.Type type
+                    DataContainer.Type type
                     switch (elemType) {
                         case FORM:
-                            type = PageElement.Type.FORM
+                            type = DataContainer.Type.FORM
                             break
                         case TABLE:
-                            type = PageElement.Type.TABLE
+                            type = DataContainer.Type.TABLE
                             break
                         case OVERVIEW:
-                            type = PageElement.Type.OVERVIEW  
+                            type = DataContainer.Type.OVERVIEW
                     }
 
+                    // Get a list of all elements contained by this element
                     List<Element> elements = inspectElement(xmlElement, domainClass)   
 
+                    // If there are no elements, there is nothing to display either
                     if (!elements.isEmpty()) {
-                        ViewElement pageElement = new ViewElement(eid++, type, domainClass, elements)
-                        pageElement.id = xmlElement.@id.text()
-                        pageElement.query = xmlElement.@query.text()
+                        DataContainer dataContainer = new DataContainer(eid++, null, type, domainClass, elements)
+                        dataContainer.id = xmlElement.@id.text()
+                        dataContainer.query = xmlElement.@query.text()
 
-                        pageElements.put(pageElement.eid, pageElement)
+                        pageElements.add(dataContainer)
                     }
                 }
             }
@@ -136,29 +139,49 @@ class DynamicPageService {
                 List<Element> elements = inspectElement(xmlElement, null)
                 
                 if (!elements.isEmpty()) {
-                    PageElement pageElement = new ButtonElement(eid++, elements)
-                    
-                    pageElements.put(pageElement.eid, pageElement)
+                    ContainerElement containerElement = new ContainerElement(null, elements)
+                    pageElements.add(containerElement)
                 }
             }
         }
         
         pageElements
     }
-    
+
+    /**
+     * Inspects the elements contained by the given element, which could be columns or buttons,
+     * and creates the corresponding element objects for it
+     * @param xmlElement The xml representing the element
+     * @param domainClass The domain class to which these columns belong
+     * @return A list of elements contained by the given element
+     */
     private List<Element> inspectElement(GPathResult xmlElement, GrailsDomainClass domainClass) {
         List<Element> elements = new ArrayList<Element>() 
 
+        // Loop over all the children and create element objects for every one of them
         xmlElement.children().each { element ->
             String type = element.name() 
-            if (type == COLUMN) {  
+
+            // The element should be either a column or a button
+            if (type == COLUMN) {
                 String name = element.@name.text()
                 String domain = element.@domain.text()
                 if (!domain.isEmpty()) {
                     domainClass = grailsApplication.getDomainClass("${DOMAIN_PACKAGE}.${domain}")
                 }
 
-                List<Column> children = inspectElement(element, domainClass)
+                // The column might have children as well, so inspect this column as well
+                // If the column references another domain class, set that domain class
+                GrailsDomainClass refDomain = domainClass.getPropertyByName(name).referencedDomainClass
+                List<Column> children
+                if (refDomain) {
+                    children = inspectElement(element, refDomain) as List<Column>
+                }
+                else {
+                    children = inspectElement(element, domainClass) as List<Column>
+                }
+
+                // Create a new column element object and add the remaining properties
                 Column column = new Column(name, domainClass, children)
 
                 boolean readOnly = element.@readonly.text().equalsIgnoreCase("true")
@@ -172,19 +195,20 @@ class DynamicPageService {
             else if (type == BUTTON) {
                 String typeName = element.@type.text()
                 
-                Button.ButtonType buttonType
+                Button.Type buttonType
                 switch (typeName.toLowerCase()) {
                     case 'back':
                     case 'cancel':
-                        buttonType = Button.ButtonType.BACK
+                        buttonType = Button.Type.BACK
                         break
                     case 'save':
-                        buttonType = Button.ButtonType.SAVE
+                        buttonType = Button.Type.SAVE
                         break
                     default:
-                        buttonType = Button.ButtonType.URL
+                        buttonType = Button.Type.URL
                 }
 
+                // Create a new button element object and add the remaining properties
                 Button button = new Button(buttonType, typeName)
                 button.controller = element.@controller.text()
                 button.action = element.@action.text()

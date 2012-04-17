@@ -1,6 +1,10 @@
 package org.iisg.eca
 
 class EquipmentController {
+    def index() {
+        redirect(action: 'list', params: params)
+    }
+
     def show() {
         forward(controller: 'dynamicPage', action: 'get')
     }

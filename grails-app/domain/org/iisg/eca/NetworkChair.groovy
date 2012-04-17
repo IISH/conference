@@ -7,6 +7,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder
  * Domain class of table holding all chairs of a network
  */
 class NetworkChair implements Serializable {
+    Long id
     Network network
     User chair
     boolean isMainChair = false
@@ -22,6 +23,10 @@ class NetworkChair implements Serializable {
         chair       column: 'user_id'
         isMainChair column: 'is_main_chair'
 	}
+
+    Long getId() {
+        "${network.id}${chair.id}".toLong()
+    }
 
     @Override
     int hashCode() {
@@ -42,4 +47,14 @@ class NetworkChair implements Serializable {
 		builder.append chair, other.chair
 		builder.isEquals()
 	}
+
+    @Override
+    String toString() {
+        if (isMainChair) {
+            "${chair} (Main chair)"
+        }
+        else {
+            chair
+        }
+    }
 }

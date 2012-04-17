@@ -209,6 +209,12 @@ input, textarea, .property-value, fieldset ul {
     vertical-align: top;
 }
 
+li input[type="text"], li input[type="password"], li input[type="number"], li select {
+    width: 100px;
+    margin-left: 5px;
+    vertical-align: middle;
+}
+
 input[type=text], input[type=password], input[type=number], select {
     height: 18px;
     width: 180px;
@@ -223,8 +229,14 @@ label, .property-label {
 	display: inline-block;
 	width: 25%;
 	margin-right: 10px;
+    margin-top: 2px;
 	text-align: right;
     color: #666666;
+}
+
+li label {
+    display: inline;
+    margin: 3px;
 }
 
 .required-indicator {

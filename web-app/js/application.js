@@ -37,14 +37,18 @@ $(document).ready(function() {
         var i = 0;
 
         if (lastItem.length !== 0) {
-            var nameSplit = lastItem.children().attr("name").split('.');
+            var nameSplit = lastItem.find('input, select').attr("name").split('.');
             var number = nameSplit[0].split('_')[1];
             if ($.isNumeric(number)) {
                 i = number;
             }
         }
+        i++;
 
-        clone.children().attr("name", clone.children().attr("name").replace("null", ++i));
+        clone.find('input, select').each(function() {
+            $(this).attr("name", $(this).attr("name").replace("null", i));
+        });
+
         clone.insertBefore(parent);
         clone.removeClass("hidden");
     });
@@ -54,14 +58,34 @@ $(document).ready(function() {
 
         var next = toBeRemoved.next();
         while (!next.hasClass('add')) {
-            var nameSplit = next.children().attr("name").split('.');
+            var elements = next.find('input, select')
+            var nameSplit = elements.attr("name").split('.');
             var number = nameSplit[0].split('_')[1];
             if ($.isNumeric(number)) {
-                next.children().attr("name", next.children().attr("name").replace(number, --number));
+                var newNumber = number - 1;
+                elements.each(function() {
+                    $(this).attr("name", $(this).attr("name").replace(number, newNumber));
+                });
             }
             next = next.next();
         }
 
         toBeRemoved.remove();
     });
+
+    $('.filter input').keypress(function(e) {
+        if (e.which == 13) {
+            $('.filter input').each(function() {
+                queryParameters[$(this).attr("name")] = $(this).val();
+            });
+            window.location.search = $.param(queryParameters);
+        }
+    });
 });
+
+var queryParameters = {}, queryString = location.search.substring(1),
+    re = /([^&=]+)=([^&]*)/g, m;
+
+while (m = re.exec(queryString)) {
+    queryParameters[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+}

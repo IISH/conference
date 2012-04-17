@@ -1,5 +1,7 @@
 package org.iisg.eca
 
+import org.apache.commons.lang.builder.HashCodeBuilder
+
 /**
  * A default domain class with requirements used by a lot of domain classes
  */

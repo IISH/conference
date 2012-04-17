@@ -40,55 +40,56 @@ class DynamicPageController {
         if (request.get) {
             render(view: '../layouts/content.gsp', model: [page: dynamicPage, content: dynamicPageService.getTemplate(dynamicPage, params)])
         }
+        // TODO: Move to Service?
         else if (request.post) {
             // Get the element from which this action was called
-            PageElement element = dynamicPage.elements.get(params.int('eid'))
+            DataContainer element = (DataContainer) dynamicPage.elements.find { (it instanceof DataContainer) && (it.eid == params.int('eid')) }
 
             // This element should be a form...
-            if (element?.type == PageElement.Type.FORM) {
-                ViewElement form = (ViewElement) element
-                DynamicPageResults results = new DynamicPageResults(form, params)
+            if (element?.type == DataContainer.Type.FORM) {
+                DynamicPageResults results = new DynamicPageResults(element, params)
                 Set<Column> hasChildren = new HashSet<Column>()
 
                 // Loop over all domain classes, binding the data from ONLY those columns specified in the dynamic page
-                form.allDomainClasses.each { domainClass ->
-                    Set<Column> columns = form.getAllColumnsForDomainClass(domainClass)
+                element.allDomainClasses.each { domainClass ->
+                    Set<Column> columns = element.getAllColumnsForDomainClass(domainClass)
 
-                    if (columns.grep { it.parent?.multiple }.isEmpty()) {
+                    // If there is only one instance, just save that one
+                    if (columns.findAll { (it.parent instanceof Column) && (it.parent.multiple) }.isEmpty()) {
                         bindData(results.get(domainClass.name), params, [include: columns.collect { it.name }], domainClass.name)
                     }
                     else {
+                        // Every new instance has a new number which simply adds up and the domain class name as a prefix
+                        // Keep on saving every instance, until there are no values in the parameters map anymore with the given prefix
                         int i = 1
                         while (params."${domainClass.name}_${i}") {
-                            bindData(results.get("${domainClass.name}_${i}"), params, [include: columns.collect { it.name }], "${domainClass.name}_${i}")
+                            Long id = params.long("${domainClass.name}_${i}.id")
+                            bindData(results.get(domainClass.name, id), params, [include: columns.collect { it.name }], "${domainClass.name}_${i}")
                             i++
                         }
-                        results.remove(domainClass.name)
                     }
 
-                    hasChildren.addAll(columns.grep { it.hasChildren() })
+                    // Save those columns with children for later, we need to combine the results later on
+                    hasChildren.addAll(columns.grep { it.hasElements() })
                 }
 
-               List<Object> resultsToSave = results.get().values() as List
+                // For all those results, create a new list, so we can filter out which objects need to be saved
+                List<Object> resultsToSave = results.get() as List
 
+                // Explore the relationships of every column and combine the results
                 hasChildren.each { c ->
-                    Object[] owningSide = [results.get(c.domainClass.name)]
-                    Object[] otherSide
+                    Object[] owningSide = results.getArray(c.domainClass.name)
+                    Object[] otherSide = results.getArray(c.property.referencedDomainClass.name)
                     GrailsDomainClassProperty owner = c.property
 
-                    if (c.multiple) {
-                        otherSide = results.get(c.property.referencedDomainClass.name)
-                    }
-                    else {
-                        otherSide = [results.get(c.property.referencedDomainClass.name)]
-                    }
-
+                    // Make sure the owning side actually is the owning side, if not, switch them around
                     if (!c.property.owningSide) {
                         owningSide = otherSide
-                        otherSide = [results.get(c.domainClass.name)]
+                        otherSide = results.getArray(c.domainClass.name)
                         owner = c.property.otherSide
                     }
 
+                    // Add the other side to the owning side, either to a collection or not
                     if (owner.oneToOne || owner.manyToOne) {
                         owningSide.each { dc ->
                             otherSide.each { os ->
@@ -104,21 +105,30 @@ class DynamicPageController {
                         }
                     }
 
+                    // The owning side needs to be saved and takes care of the relationship
+                    // So remove the other side from the list of results to save
                     otherSide.each { resultsToSave.remove(it) }
                 }
 
+                // We're done, save the results that have to be saved
                 resultsToSave.each { it.save() }
 
                 // If validation fails, return the page and show the errors
-                if (!results.get().values().grep { it.hasErrors() }.isEmpty()) {
+                if (!results.get().grep { it.hasErrors() }.isEmpty()) {
                     render(view: '../layouts/content.gsp', model: [page: dynamicPage, content: dynamicPageService.getTemplate(dynamicPage, params, results)])
                     return
                 }
 
                 flash.message = message(code: "default.successful.message")
 
-                // Redirect to previous page
-                redirect(controller: params.prevController, action: params.prevAction, id: params.prevId)
+                if (params.prevController) {
+                    // Redirect to previous page
+                    redirect(controller: params.prevController, action: params.prevAction, id: params.prevId)
+                }
+                else {
+                    // Redirect to index page
+                    redirect(controller: 'event', action: 'list')
+                }
             }
             else {
                 render(view: '../layouts/content.gsp', model: [page: dynamicPage, content: dynamicPageService.getTemplate(dynamicPage, params)])

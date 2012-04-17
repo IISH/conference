@@ -1,15 +1,22 @@
 package org.iisg.eca
 
+import grails.orm.HibernateCriteriaBuilder
+import org.codehaus.groovy.grails.commons.GrailsDomainClass
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 
+/**
+ * Queries the database for results based on the information from the <code>DataContainer</code>
+ */
 class DynamicPageResults {
-    private ViewElement viewElement
+    private DataContainer dataContainer
     private GrailsParameterMap params
     private def results
+    private Map<String, Object> newInstances
     
-    DynamicPageResults(ViewElement viewElement, GrailsParameterMap params) {
-        this.viewElement = viewElement
+    DynamicPageResults(DataContainer dataContainer, GrailsParameterMap params) {
+        this.dataContainer = dataContainer
         this.params = params
+        this.newInstances = new HashMap<String, Object>()
         getResults()
     }
     
@@ -18,22 +25,39 @@ class DynamicPageResults {
     }
     
     def get(String domainClass) {
-        Object[] result = results.values().findAll { it.class.simpleName == domainClass }
+        results.find { it.class.simpleName == domainClass }
+    }
 
-        if (result.length > 2) {
-            return result
+    def get(String domainClass, Long id) {
+        Object result = null
+
+        if (id) {
+            result = results.find { (it.class.simpleName == domainClass) && (it.id == id) }
         }
-        else if (result.length == 1) {
-            return result[0]
+
+        if (!result) {
+            GrailsDomainClass dc = newInstances.get(domainClass)
+            result = dc.newInstance()
+            results.add(result)
         }
-        else {
-            String[] multiple = domainClass.split('_')
+
+        result
+    }
+
+    def getArray(String domainClass) {
+        results.findAll { it.class.simpleName == domainClass }
+
+        /*if (result.length == 0) {
+            /*String[] multiple = domainClass.split('_')
             String domainClassToClone = domainClass
             if (multiple.length > 1) {
                 domainClassToClone = multiple[0..multiple.length-2].join('_')
             }
-            results.get(domainClass, results.get(domainClassToClone).class.newInstance())
+            results. .get(domainClass, results.get(domainClassToClone).class.newInstance())
         }
+        else {
+            return result
+        }       */
     }
 
     void remove(String domainClass) {
@@ -41,8 +65,8 @@ class DynamicPageResults {
     }
     
     private void getResults() {
-        if (viewElement.type == PageElement.Type.TABLE) {
-            if (viewElement.query) {
+        if (dataContainer.type == DataContainer.Type.TABLE) {
+            if (dataContainer.query) {
                 getListForQuery() 
             }
             else {
@@ -52,7 +76,7 @@ class DynamicPageResults {
         else {                  
             getInstance()
         }   
-    }  
+    }
     
     /**
      * Returns a list of all data in the database for the specified main domain class
@@ -63,31 +87,38 @@ class DynamicPageResults {
      * @return A list of all data in the database for the specified main domain class
      */
     private void getList() {
-        def criteria = viewElement.domainClass.clazz.createCriteria()
+        HibernateCriteriaBuilder criteria = dataContainer.domainClass.clazz.createCriteria()
         String offset = params.offset?.toString()
         
         results = criteria.list {
-            projections {
-                viewElement.forAllColumnsWithChildren { c -> 
-                    if (!c.parent) {
-                        property("${c.name}.id")  
+            /*dataContainer.forAllColumnsWithChildren { c ->
+                String path = c.path.grep { it instanceof Column }.join(".")
+                ${path} { }
+            }    */
+
+           /* projections {
+                dataContainer.forAllColumnsWithChildren { c ->
+                    if (c.property.manyToMany || c.property.oneToMany) {
+                        String path = c.path.grep { it instanceof Column }.join(".")
+                        groupProperty(path)
                     }
-                    else {                        
-                        groupProperty(c.path.join("."))
+                    /*else if (c.property.oneToOne || c.property.manyToOne) {
+                        String path = "${c.path.grep { it instanceof Column }.join(".")}.id"
+                        property(path)
                     }
                 }
-            }
+            }     */
             
             and {
                 // Loop over all the columns and place filters if needed
-                viewElement.forAllColumns { c ->
-                    String filter = params["filter_${viewElement.eid}_${c.name}"]
-                    String sort = params["sort_${viewElement.eid}_${c.name}"]
+                dataContainer.forAllColumns { c ->
+                    String filter = params["filter_${dataContainer.eid}_${c.name}"]
+                    String sort = params["sort_${dataContainer.eid}_${c.name}"]
 
                     // Place a filter on this column, if specified by the user
                     if (filter && !filter.isEmpty()) {
-                        filter = filter.split()
-                        filter = "%${filter.join('%')}%"
+                        String[] filters = filter.split()
+                        filter = "%${filters.join('%')}%"
                         like(c.name, filter)
                     }
 
@@ -100,7 +131,7 @@ class DynamicPageResults {
 
             // For pagination, find out the maximum number of results and the offset.
             // If not specified, return at most 100 results starting from the top of the list
-            firstResult(offset ?: 0)
+            firstResult(offset?.toInteger() ?: 0)
             maxResults(100)
         }
     }
@@ -126,19 +157,28 @@ class DynamicPageResults {
      * @return A list of instances, currently with only one result
      */
     private void getInstance() {
-        Map<String, Object> domainClasses = new HashMap<String, Object>()
+        List<Object> domainClasses = new ArrayList<Object>()
         
         // If the id is specified in the url, get it from the parameters
         // Otherwise, it is of type long
         Long rId = null
-        if (viewElement.id) {
-            rId = (viewElement.id.equalsIgnoreCase("url")) ? params.long("id") : String.toLong(viewElement.id)
+        if (dataContainer.id) {
+            rId = (dataContainer.id.equalsIgnoreCase("url")) ? params.long("id") : dataContainer.id.toLong()
         }            
         
-        viewElement.allDomainClasses.each { domainClass ->
+        dataContainer.domainClasses.each { domainClass ->
             Object instance = (rId) ? domainClass.clazz.get(rId) : domainClass.newInstance()
-            domainClasses.put(domainClass.name, instance)
-        } 
+            domainClasses.add(instance)
+            dataContainer.forAllColumnsWithChildren { c ->
+                if (c.domainClass == domainClass) {
+                    instance[c.name]?.each { domainClasses.add(it) }
+                }
+            }
+        }
+
+        dataContainer.domainClassesOfMultiples.each { domainClass ->
+            newInstances.put(domainClass.name, domainClass)
+        }
         
         results = domainClasses
     }
