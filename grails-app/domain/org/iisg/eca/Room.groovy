@@ -11,6 +11,7 @@ class Room extends DefaultDomain {
     String comment
 
     static belongsTo = EventDate
+    static hasMany = [roomSessionDateTimeEquipment: RoomSessionDateTimeEquipment]
 
     static constraints = {
         date        nullable: true

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Apr 17, 2012 at 01:34 PM
+-- Generation Time: Apr 17, 2012 at 04:44 PM
 -- Server version: 5.0.86
 -- PHP Version: 5.2.10
 
@@ -63,33 +63,33 @@ INSERT INTO `countries` (`country_id`, `tld`, `name_english`, `name_dutch`, `rem
 (4, 'af', 'Afghanistan', 'Afghanistan', NULL, 1, 0),
 (5, 'ag', 'Antigua and Barbuda', 'Antigua en Barbuda', NULL, 1, 0),
 (6, 'ai', 'Anguilla', 'Anguilla', NULL, 1, 0),
-(7, 'al', 'Albania', 'Albanië', NULL, 1, 0),
-(8, 'am', 'Armenia', 'Armenië', NULL, 1, 0),
+(7, 'al', 'Albania', 'AlbaniÃ«', NULL, 1, 0),
+(8, 'am', 'Armenia', 'ArmeniÃ«', NULL, 1, 0),
 (9, 'an', 'Netherlands Antilles', 'Nederlandse Antillen', NULL, 1, 0),
 (10, 'ao', 'Angola', 'Angola', NULL, 1, 0),
 (11, 'aq', 'Antarctica', 'Antarctica', NULL, 1, 0),
-(12, 'ar', 'Argentina', 'Argentinië', NULL, 1, 0),
+(12, 'ar', 'Argentina', 'ArgentiniÃ«', NULL, 1, 0),
 (13, 'as', 'American Samoa', 'Amerikaans Samoa', NULL, 1, 0),
 (14, 'at', 'Austria', 'Oostenrijk', NULL, 1, 0),
-(15, 'au', 'Australia', 'Australië', NULL, 1, 0),
+(15, 'au', 'Australia', 'AustraliÃ«', NULL, 1, 0),
 (16, 'aw', 'Aruba', 'Aruba', NULL, 1, 0),
-(17, 'ax', 'Åland Islands', 'Åland eilanden', NULL, 1, 0),
+(17, 'ax', 'Ã…land Islands', 'Ã…land eilanden', NULL, 1, 0),
 (18, 'az', 'Azerbaijan', 'Azerbeidzjan', NULL, 1, 0),
-(19, 'ba', 'Bosnia and Herzegovina', 'Bosnië-Herzegovina', NULL, 1, 0),
+(19, 'ba', 'Bosnia and Herzegovina', 'BosniÃ«-Herzegovina', NULL, 1, 0),
 (20, 'bb', 'Barbados', 'Barbados', NULL, 1, 0),
 (21, 'bd', 'Bangladesh', 'Bangladesh', NULL, 1, 0),
-(22, 'be', 'Belgium', 'België', NULL, 1, 0),
+(22, 'be', 'Belgium', 'BelgiÃ«', NULL, 1, 0),
 (23, 'bf', 'Burkina Faso', 'Burkina Faso', NULL, 1, 0),
 (24, 'bg', 'Bulgaria', 'Bulgarije', NULL, 1, 0),
 (25, 'bh', 'Bahrain', 'Bahrein', NULL, 1, 0),
 (26, 'bi', 'Burundi', 'Burundi', NULL, 1, 0),
 (27, 'bj', 'Benin', 'Benin', NULL, 1, 0),
-(28, 'bl', 'Saint Barthelemy', 'Sint Barthélemy', NULL, 1, 0),
+(28, 'bl', 'Saint Barthelemy', 'Sint BarthÃ©lemy', NULL, 1, 0),
 (29, 'bm', 'Bermuda', 'Bermuda', NULL, 1, 0),
 (30, 'bn', 'Brunei Darussalam', 'Brunei', NULL, 1, 0),
 (31, 'bo', 'Bolivia', 'Bolivia', NULL, 1, 0),
 (32, 'bq', 'Bonaire, Saint Eustatius, Saba', 'Bonaire, Sint Eustatius, Saba - Caribisch Nederlan', NULL, 1, 0),
-(33, 'br', 'Brazil', 'Brazilië', NULL, 1, 0),
+(33, 'br', 'Brazil', 'BraziliÃ«', NULL, 1, 0),
 (34, 'bs', 'Bahamas', 'Bahama''s', NULL, 1, 0),
 (35, 'bt', 'Bhutan', 'Bhutan', NULL, 1, 0),
 (36, 'bv', 'Bouvet Island', 'Bouvet (eiland)', NULL, 1, 0),
@@ -102,7 +102,7 @@ INSERT INTO `countries` (`country_id`, `tld`, `name_english`, `name_dutch`, `rem
 (43, 'cf', 'Central African Republic', 'Centraal-Afrikaanse Republiek', NULL, 1, 0),
 (44, 'cg', 'Republic of Congo', 'Congo (Brazzaville)', NULL, 1, 0),
 (45, 'ch', 'Switzerland', 'Zwitserland', NULL, 1, 0),
-(46, 'ci', 'Côte d''Ivoire', 'Ivoorkust', NULL, 1, 0),
+(46, 'ci', 'CÃ´te d''Ivoire', 'Ivoorkust', NULL, 1, 0),
 (47, 'ck', 'Cook Islands', 'Cookeilanden', NULL, 1, 0),
 (48, 'cl', 'Chile', 'Chili', NULL, 1, 0),
 (49, 'cm', 'Cameroon', 'Kameroen', NULL, 1, 0),
@@ -110,11 +110,11 @@ INSERT INTO `countries` (`country_id`, `tld`, `name_english`, `name_dutch`, `rem
 (51, 'co', 'Colombia', 'Colombia', NULL, 1, 0),
 (52, 'cr', 'Costa Rica', 'Costa Rica', NULL, 1, 0),
 (53, 'cu', 'Cuba', 'Cuba', NULL, 1, 0),
-(54, 'cv', 'Cape Verde', 'Kaapverdië', NULL, 1, 0),
-(55, 'cw', 'Curacao', 'Curação', NULL, 1, 0),
+(54, 'cv', 'Cape Verde', 'KaapverdiÃ«', NULL, 1, 0),
+(55, 'cw', 'Curacao', 'CuraÃ§Ã£o', NULL, 1, 0),
 (56, 'cx', 'Christmas Island', 'Christmaseiland', NULL, 1, 0),
 (57, 'cy', 'Cyprus', 'Cyprus', NULL, 1, 0),
-(58, 'cz', 'Czech Republic', 'Tsjechië', NULL, 1, 0),
+(58, 'cz', 'Czech Republic', 'TsjechiÃ«', NULL, 1, 0),
 (59, 'de', 'Germany', 'Duitsland', NULL, 1, 0),
 (60, 'dj', 'Djibouti', 'Djibouti', NULL, 1, 0),
 (61, 'dk', 'Denmark', 'Denemarken', NULL, 1, 0),
@@ -127,18 +127,18 @@ INSERT INTO `countries` (`country_id`, `tld`, `name_english`, `name_dutch`, `rem
 (68, 'eh', 'Western Sahara', 'West-Sahara', NULL, 1, 0),
 (69, 'er', 'Eritrea', 'Eritrea', NULL, 1, 0),
 (70, 'es', 'Spain', 'Spanje', NULL, 1, 0),
-(71, 'et', 'Ethiopia', 'Ethiopië', NULL, 1, 0),
+(71, 'et', 'Ethiopia', 'EthiopiÃ«', NULL, 1, 0),
 (72, 'eu', 'European Union', 'Europese Unie', NULL, 1, 0),
 (73, 'fi', 'Finland', 'Finland (Suomi Finland)', NULL, 1, 0),
 (74, 'fj', 'Fiji', 'Fiji', NULL, 1, 0),
 (75, 'fk', 'Falkland Islands (Islas Malvinas)', 'Falklandeilanden', NULL, 1, 0),
-(76, 'fm', 'Federated States of Micronesia', 'Micronesië', NULL, 1, 0),
-(77, 'fo', 'Faroe Islands', 'Faeröer', NULL, 1, 0),
+(76, 'fm', 'Federated States of Micronesia', 'MicronesiÃ«', NULL, 1, 0),
+(77, 'fo', 'Faroe Islands', 'FaerÃ¶er', NULL, 1, 0),
 (78, 'fr', 'France', 'Frankrijk', NULL, 1, 0),
 (79, 'ga', 'Gabon', 'Gabon', NULL, 1, 0),
-(80, 'gb', 'Great Britain', 'Groot-Brittannië', NULL, 1, 0),
+(80, 'gb', 'Great Britain', 'Groot-BrittanniÃ«', NULL, 1, 0),
 (81, 'gd', 'Grenada', 'Grenada', NULL, 1, 0),
-(82, 'ge', 'Georgia', 'Georgië', NULL, 1, 0),
+(82, 'ge', 'Georgia', 'GeorgiÃ«', NULL, 1, 0),
 (83, 'gf', 'French Guiana', 'Frans-Guyana', NULL, 1, 0),
 (84, 'gg', 'Guernsey', 'Guernsey', NULL, 1, 0),
 (85, 'gh', 'Ghana', 'Ghana', NULL, 1, 0),
@@ -157,25 +157,25 @@ INSERT INTO `countries` (`country_id`, `tld`, `name_english`, `name_dutch`, `rem
 (98, 'hk', 'Hong Kong', 'Hongkong (Xianggang)', NULL, 1, 0),
 (99, 'hm', 'Heard Island and McDonald Islands', 'Heard en McDonald (eilanden)', NULL, 1, 0),
 (100, 'hn', 'Honduras', 'Honduras', NULL, 1, 0),
-(101, 'hr', 'Croatia (Hrvatska)', 'Kroatië', NULL, 1, 0),
-(102, 'ht', 'Haiti', 'Haïti', NULL, 1, 0),
+(101, 'hr', 'Croatia (Hrvatska)', 'KroatiÃ«', NULL, 1, 0),
+(102, 'ht', 'Haiti', 'HaÃ¯ti', NULL, 1, 0),
 (103, 'hu', 'Hungary', 'Hongarije (Magyar)', NULL, 1, 0),
-(104, 'id', 'Indonesia', 'Indonesië', NULL, 1, 0),
+(104, 'id', 'Indonesia', 'IndonesiÃ«', NULL, 1, 0),
 (105, 'ie', 'Ireland', 'Ierland (Eire)', NULL, 1, 0),
-(106, 'il', 'Israel', 'Israël', NULL, 1, 0),
+(106, 'il', 'Israel', 'IsraÃ«l', NULL, 1, 0),
 (107, 'im', 'Isle of Man', 'Man (Ellan Vannin) (eiland)', NULL, 1, 0),
 (108, 'in', 'India', 'India', NULL, 1, 0),
 (109, 'io', 'British Indian Ocean Territory', 'Britse gebiedsdelen in de Indische Oceaan: Chagos ', NULL, 1, 0),
 (110, 'iq', 'Iraq', 'Irak', NULL, 1, 0),
 (111, 'ir', 'Islamic Republic of Iran', 'Iran', NULL, 1, 0),
 (112, 'is', 'Iceland', 'IJsland', NULL, 1, 0),
-(113, 'it', 'Italy', 'Italië', NULL, 1, 0),
+(113, 'it', 'Italy', 'ItaliÃ«', NULL, 1, 0),
 (114, 'je', 'Jersey', 'Jersey', NULL, 1, 0),
 (115, 'jm', 'Jamaica', 'Jamaica', NULL, 1, 0),
-(116, 'jo', 'Jordan', 'Jordanië', NULL, 1, 0),
+(116, 'jo', 'Jordan', 'JordaniÃ«', NULL, 1, 0),
 (117, 'jp', 'Japan', 'Japan (Nippon)', NULL, 1, 0),
 (118, 'ke', 'Kenya', 'Kenya', NULL, 1, 0),
-(119, 'kg', 'Kyrgyzstan', 'Kirgizië', NULL, 1, 0),
+(119, 'kg', 'Kyrgyzstan', 'KirgiziÃ«', NULL, 1, 0),
 (120, 'kh', 'Cambodia', 'Cambodja', NULL, 1, 0),
 (121, 'ki', 'Kiribati', 'Kiribati', NULL, 1, 0),
 (122, 'km', 'Comoros', 'Comoren', NULL, 1, 0),
@@ -193,34 +193,34 @@ INSERT INTO `countries` (`country_id`, `tld`, `name_english`, `name_dutch`, `rem
 (134, 'lr', 'Liberia', 'Liberia', NULL, 1, 0),
 (135, 'ls', 'Lesotho', 'Lesotho', NULL, 1, 0),
 (136, 'lt', 'Lithuania', 'Litouwen (Lietuva)', NULL, 1, 0),
-(137, 'lu', 'Luxembourg', 'Luxemburg (Lëtzebuerg)', NULL, 1, 0),
+(137, 'lu', 'Luxembourg', 'Luxemburg (LÃ«tzebuerg)', NULL, 1, 0),
 (138, 'lv', 'Latvia', 'Letland', NULL, 1, 0),
-(139, 'ly', 'Libyan Arab Jamahiriya', 'Libië', NULL, 1, 0),
+(139, 'ly', 'Libyan Arab Jamahiriya', 'LibiÃ«', NULL, 1, 0),
 (140, 'ma', 'Morocco', 'Marokko', NULL, 1, 0),
 (141, 'mc', 'Monaco', 'Monaco', NULL, 1, 0),
-(142, 'md', 'Republic of Moldova', 'Moldavië', NULL, 1, 0),
+(142, 'md', 'Republic of Moldova', 'MoldaviÃ«', NULL, 1, 0),
 (143, 'me', 'Montenegro', 'Montenegro', NULL, 1, 0),
 (144, 'mf', 'Saint Martin', 'Sint Maarten', NULL, 1, 0),
 (145, 'mg', 'Madagascar', 'Madagaskar', NULL, 1, 0),
 (146, 'mh', 'Marshall Islands', 'Marshalleilanden', NULL, 1, 0),
-(147, 'mk', 'The former Yugoslav Republic of Macedonia', 'Macedonië', NULL, 1, 0),
+(147, 'mk', 'The former Yugoslav Republic of Macedonia', 'MacedoniÃ«', NULL, 1, 0),
 (148, 'ml', 'Mali', 'Mali', NULL, 1, 0),
 (149, 'mm', 'Myanmar', 'Myanmar', NULL, 1, 0),
-(150, 'mn', 'Mongolia', 'Mongolië', NULL, 1, 0),
+(150, 'mn', 'Mongolia', 'MongoliÃ«', NULL, 1, 0),
 (151, 'mo', 'Macao', 'Macau (Aomen)', NULL, 1, 0),
 (152, 'mp', 'Northern Mariana Islands', 'Noordelijke Marianen-eilanden', NULL, 1, 0),
 (153, 'mq', 'Martinique', 'Martinique', NULL, 1, 0),
-(154, 'mr', 'Mauritania', 'Mauritanië', NULL, 1, 0),
+(154, 'mr', 'Mauritania', 'MauritaniÃ«', NULL, 1, 0),
 (155, 'ms', 'Montserrat', 'Montserrat', NULL, 1, 0),
 (156, 'mt', 'Malta', 'Malta', NULL, 1, 0),
 (157, 'mu', 'Mauritius', 'Mauritius', NULL, 1, 0),
 (158, 'mv', 'Maldives', 'Maldiven', NULL, 1, 0),
 (159, 'mw', 'Malawi', 'Malawi', NULL, 1, 0),
 (160, 'mx', 'Mexico', 'Mexico', NULL, 1, 0),
-(161, 'my', 'Malaysia', 'Maleisië', NULL, 1, 0),
+(161, 'my', 'Malaysia', 'MaleisiÃ«', NULL, 1, 0),
 (162, 'mz', 'Mozambique', 'Mozambique', NULL, 1, 0),
-(163, 'na', 'Namibia', 'Namibië', NULL, 1, 0),
-(164, 'nc', 'New Caledonia', 'Nieuw-Caledonië', NULL, 1, 0),
+(163, 'na', 'Namibia', 'NamibiÃ«', NULL, 1, 0),
+(164, 'nc', 'New Caledonia', 'Nieuw-CaledoniÃ«', NULL, 1, 0),
 (165, 'ne', 'Niger', 'Niger', NULL, 1, 0),
 (166, 'nf', 'Norfolk Island', 'Norfolk (eiland)', NULL, 1, 0),
 (167, 'ng', 'Nigeria', 'Nigeria', NULL, 1, 0),
@@ -234,7 +234,7 @@ INSERT INTO `countries` (`country_id`, `tld`, `name_english`, `name_dutch`, `rem
 (175, 'om', 'Oman', 'Oman', NULL, 1, 0),
 (176, 'pa', 'Panama', 'Panama', NULL, 1, 0),
 (177, 'pe', 'Peru', 'Peru', NULL, 1, 0),
-(178, 'pf', 'French Polynesia', 'Frans Polynesië (Tahiti)', NULL, 1, 0),
+(178, 'pf', 'French Polynesia', 'Frans PolynesiÃ« (Tahiti)', NULL, 1, 0),
 (179, 'pg', 'Papua New Guinea', 'Papua Nieuw-Guinea', NULL, 1, 0),
 (180, 'ph', 'Philippines', 'Filipijnen', NULL, 1, 0),
 (181, 'pk', 'Pakistan', 'Pakistan', NULL, 1, 0),
@@ -247,31 +247,31 @@ INSERT INTO `countries` (`country_id`, `tld`, `name_english`, `name_dutch`, `rem
 (188, 'pw', 'Palau', 'Palau (Belau)', NULL, 1, 0),
 (189, 'py', 'Paraguay', 'Paraguay', NULL, 1, 0),
 (190, 'qa', 'Qatar', 'Qatar', NULL, 1, 0),
-(191, 're', 'Reunion Island', 'Réunion (eiland)', NULL, 1, 0),
-(192, 'ro', 'Romania', 'Roemenië (Rumania, Roumania)', NULL, 1, 0),
-(193, 'rs', 'Serbia', 'Servië', NULL, 1, 0),
+(191, 're', 'Reunion Island', 'RÃ©union (eiland)', NULL, 1, 0),
+(192, 'ro', 'Romania', 'RoemeniÃ« (Rumania, Roumania)', NULL, 1, 0),
+(193, 'rs', 'Serbia', 'ServiÃ«', NULL, 1, 0),
 (194, 'ru', 'Russian Federation', 'Rusland', NULL, 1, 0),
 (195, 'rw', 'Rwanda', 'Rwanda', NULL, 1, 0),
-(196, 'sa', 'Saudi Arabia', 'Saoedi-Arabië', NULL, 1, 0),
+(196, 'sa', 'Saudi Arabia', 'Saoedi-ArabiÃ«', NULL, 1, 0),
 (197, 'sb', 'Solomon Islands', 'Salomonseilanden', NULL, 1, 0),
 (198, 'sc', 'Seychelles', 'Seychellen', NULL, 1, 0),
 (199, 'sd', 'Sudan', 'Soedan', NULL, 1, 0),
 (200, 'se', 'Sweden', 'Zweden (Sverige)', NULL, 1, 0),
 (201, 'sg', 'Singapore', 'Singapore', NULL, 1, 0),
 (202, 'sh', 'Saint Helena', 'Sint Helena', NULL, 1, 0),
-(203, 'si', 'Slovenia', 'Slovenië', NULL, 1, 0),
+(203, 'si', 'Slovenia', 'SloveniÃ«', NULL, 1, 0),
 (204, 'sj', 'Svalbard and Jan Mayen Islands', 'Svalbard en Jan Mayen (eilanden)', NULL, 1, 0),
 (205, 'sk', 'Slovak Republic', 'Slowakije', NULL, 1, 0),
 (206, 'sl', 'Sierra Leone', 'Sierra Leone', NULL, 1, 0),
 (207, 'sm', 'San Marino', 'San Marino', NULL, 1, 0),
 (208, 'sn', 'Senegal', 'Senegal', NULL, 1, 0),
-(209, 'so', 'Somalia', 'Somalië', NULL, 1, 0),
+(209, 'so', 'Somalia', 'SomaliÃ«', NULL, 1, 0),
 (210, 'sr', 'Suriname', 'Suriname', NULL, 1, 0),
 (211, 'ss', 'South Sudan', 'Zuid Soedan', NULL, 1, 0),
-(212, 'st', 'Sao Tome and Principe', 'Sao Tomé en Principe (eilanden)', NULL, 1, 0),
+(212, 'st', 'Sao Tome and Principe', 'Sao TomÃ© en Principe (eilanden)', NULL, 1, 0),
 (213, 'sv', 'El Salvador', 'El Salvador', NULL, 1, 0),
 (214, 'sx', 'Saint Martin', 'Sint Maarten', NULL, 1, 0),
-(215, 'sy', 'Syrian Arab Republic', 'Syrië', NULL, 1, 0),
+(215, 'sy', 'Syrian Arab Republic', 'SyriÃ«', NULL, 1, 0),
 (216, 'sz', 'Swaziland', 'Swaziland', NULL, 1, 0),
 (217, 'tc', 'Turks and Caicos Islands', 'Turks- en Caicoseilanden', NULL, 1, 0),
 (218, 'td', 'Chad', 'Tsjaad', NULL, 1, 0),
@@ -282,7 +282,7 @@ INSERT INTO `countries` (`country_id`, `tld`, `name_english`, `name_dutch`, `rem
 (223, 'tk', 'Tokelau', 'Tokelau', NULL, 1, 0),
 (224, 'tl', 'Timor-Leste', 'Oost-Timor', NULL, 1, 0),
 (225, 'tm', 'Turkmenistan', 'Turkmenistan', NULL, 1, 0),
-(226, 'tn', 'Tunisia', 'Tunesië', NULL, 1, 0),
+(226, 'tn', 'Tunisia', 'TunesiÃ«', NULL, 1, 0),
 (227, 'to', 'Tonga', 'Tonga', NULL, 1, 0),
 (228, 'tp', 'East Timor', 'Oost-Timor (Timor Lorosae, Timor Leste)', NULL, 1, 0),
 (229, 'tr', 'Turkey', 'Turkije', NULL, 1, 0),
@@ -290,9 +290,9 @@ INSERT INTO `countries` (`country_id`, `tld`, `name_english`, `name_dutch`, `rem
 (231, 'tv', 'Tuvalu', 'Tuvalu', NULL, 1, 0),
 (232, 'tw', 'Taiwan (Province of China)', 'Taiwan', NULL, 1, 0),
 (233, 'tz', 'Tanzania', 'Tanzania', NULL, 1, 0),
-(234, 'ua', 'Ukraine', 'Oekraïne', NULL, 1, 0),
+(234, 'ua', 'Ukraine', 'OekraÃ¯ne', NULL, 1, 0),
 (235, 'ug', 'Uganda', 'Oeganda', NULL, 1, 0),
-(236, 'uk', 'United Kingdom', 'Verenigd Koninkrijk (Groot-Brittannië)', NULL, 1, 0),
+(236, 'uk', 'United Kingdom', 'Verenigd Koninkrijk (Groot-BrittanniÃ«)', NULL, 1, 0),
 (237, 'um', 'United States Minor Outlying Islands', 'Verenigde Staten: kleine eilanden', NULL, 1, 0),
 (238, 'us', 'United States', 'Verenigde Staten', NULL, 1, 0),
 (239, 'uy', 'Uruguay', 'Uruguay', NULL, 1, 0),
@@ -331,7 +331,7 @@ CREATE TABLE IF NOT EXISTS `dates` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`date_id`),
   KEY `dates_event_id_idx` (`event_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=14 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=13 ;
 
 --
 -- Dumping data for table `dates`
@@ -365,7 +365,7 @@ CREATE TABLE IF NOT EXISTS `days` (
   `enabled` tinyint(1) NOT NULL default '1',
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`day_id`),
-  KEY `date_id` (`date_id`)
+  KEY `days_date_id_idx` (`date_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
 
 --
@@ -391,8 +391,8 @@ CREATE TABLE IF NOT EXISTS `dynamic_pages` (
   `page_id` bigint(20) NOT NULL,
   `date_id` bigint(20) default NULL,
   PRIMARY KEY  (`dynamic_page_id`),
-  KEY `date_id` (`date_id`),
-  KEY `page_id` (`page_id`)
+  KEY `dynamic_pages_date_id_idx` (`date_id`),
+  KEY `dynamic_pages_page_id_idx` (`page_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=24 ;
 
 --
@@ -439,13 +439,18 @@ CREATE TABLE IF NOT EXISTS `equipment` (
   `enabled` tinyint(1) NOT NULL default '1',
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`equipment_id`),
-  KEY `date_id` (`date_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+  KEY `equipment_date_id_idx` (`date_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `equipment`
 --
 
+INSERT INTO `equipment` (`equipment_id`, `date_id`, `equipment`, `description`, `image_url`, `enabled`, `deleted`) VALUES
+(1, 1, 'Slide Projector', NULL, NULL, 1, 0),
+(2, 1, 'Beamer', NULL, NULL, 1, 0),
+(3, 1, 'Video recorder', NULL, NULL, 1, 0),
+(4, 1, 'DVD player', NULL, NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -508,7 +513,7 @@ CREATE TABLE IF NOT EXISTS `groups_pages` (
   `enabled` tinyint(1) NOT NULL default '1',
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`group_id`,`page_id`),
-  KEY `groups_pages_page_id_fk` (`page_id`)
+  KEY `groups_pages_page_id_idx` (`page_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -533,8 +538,8 @@ CREATE TABLE IF NOT EXISTS `networks` (
   `enabled` tinyint(1) NOT NULL default '1',
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`network_id`),
-  KEY `date_id` (`date_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+  KEY `networks_date_id_idx` (`date_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 --
 -- Dumping data for table `networks`
@@ -551,15 +556,21 @@ CREATE TABLE IF NOT EXISTS `networks_chairs` (
   `network_id` bigint(20) NOT NULL,
   `user_id` bigint(20) NOT NULL,
   `is_main_chair` tinyint(1) NOT NULL default '0',
+  `enabled` tinyint(1) NOT NULL default '1',
+  `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`network_id`,`user_id`),
-  KEY `network_id` (`network_id`),
-  KEY `user_id` (`user_id`)
+  KEY `networks_chairsnetwork_id_idx` (`network_id`),
+  KEY `networks_chairsuser_id_idx` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `networks_chairs`
 --
 
+INSERT INTO `networks_chairs` (`network_id`, `user_id`, `is_main_chair`, `enabled`, `deleted`) VALUES
+(1, 1, 0, 1, 0),
+(1, 2, 0, 1, 0),
+(1, 3, 0, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -650,16 +661,43 @@ CREATE TABLE IF NOT EXISTS `rooms` (
   `room_number` varchar(10) collate utf8_unicode_ci NOT NULL,
   `number_of_seets` int(11) NOT NULL,
   `comment` text collate utf8_unicode_ci,
-  `enabled` tinyint(1) NOT NULL,
-  `deleted` tinyint(1) NOT NULL,
+  `enabled` tinyint(1) NOT NULL default '1',
+  `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`room_id`),
-  KEY `date_id` (`date_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+  KEY `rooms_date_id_idx` (`date_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=29 ;
 
 --
 -- Dumping data for table `rooms`
 --
 
+INSERT INTO `rooms` (`room_id`, `date_id`, `room_name`, `room_number`, `number_of_seets`, `comment`, `enabled`, `deleted`) VALUES
+(1, 1, 'A', 'A', 999, NULL, 1, 0),
+(4, 1, 'B', 'B', 999, NULL, 1, 0),
+(5, 1, 'C', 'C', 999, NULL, 1, 0),
+(6, 1, 'D', 'D', 999, NULL, 1, 0),
+(7, 1, 'E', 'E', 999, NULL, 1, 0),
+(8, 1, 'F', 'F', 999, NULL, 1, 0),
+(9, 1, 'G', 'G', 999, NULL, 1, 0),
+(10, 1, 'H', 'H', 999, NULL, 1, 0),
+(11, 1, 'I', 'I', 999, NULL, 1, 0),
+(12, 1, 'J', 'J', 999, NULL, 1, 0),
+(13, 1, 'K', 'K', 999, NULL, 1, 0),
+(14, 1, 'L', 'L', 999, NULL, 1, 0),
+(15, 1, 'M', 'M', 999, NULL, 1, 0),
+(16, 1, 'N', 'N', 999, NULL, 1, 0),
+(17, 1, 'O', 'O', 999, NULL, 1, 0),
+(18, 1, 'P', 'P', 999, NULL, 1, 0),
+(19, 1, 'Q', 'Q', 999, NULL, 1, 0),
+(20, 1, 'R', 'R', 999, NULL, 1, 0),
+(21, 1, 'S', 'S', 999, NULL, 1, 0),
+(22, 1, 'T', 'T', 999, NULL, 1, 0),
+(23, 1, 'U', 'U', 999, NULL, 1, 0),
+(24, 1, 'V', 'V', 999, NULL, 1, 0),
+(25, 1, 'W', 'W', 999, NULL, 1, 0),
+(26, 1, 'X', 'X', 999, NULL, 1, 0),
+(27, 1, 'Y', 'Y', 999, NULL, 1, 0),
+(28, 1, 'Z', 'Z', 999, NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -673,8 +711,11 @@ CREATE TABLE IF NOT EXISTS `room_sessiondatetime_equipment` (
   `equipment_id` bigint(20) NOT NULL,
   `enabled` tinyint(1) NOT NULL default '1',
   `deleted` tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (`room_id`,`session_datetime_id`,`equipment_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  PRIMARY KEY  (`room_id`,`session_datetime_id`,`equipment_id`),
+  KEY `room_sessiondatetime_equipment_room_id_idx` (`room_id`),
+  KEY `room_sessiondatetime_equipment_session_datetime_id_idx` (`session_datetime_id`),
+  KEY `room_sessiondatetime_equipment_equipment_id_idx` (`equipment_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `room_sessiondatetime_equipment`
@@ -689,20 +730,60 @@ CREATE TABLE IF NOT EXISTS `room_sessiondatetime_equipment` (
 
 CREATE TABLE IF NOT EXISTS `sessions` (
   `session_id` bigint(20) NOT NULL,
-  `date_id` bigint(20) NOT NULL,
+  `date_id` bigint(20) default NULL,
   `session_code` varchar(10) collate utf8_unicode_ci NOT NULL,
   `session_name` varchar(255) collate utf8_unicode_ci NOT NULL,
   `session_comment` text collate utf8_unicode_ci NOT NULL,
   `session_abstract` text collate utf8_unicode_ci NOT NULL,
   `enabled` tinyint(1) NOT NULL default '1',
   `deleted` tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (`session_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  PRIMARY KEY  (`session_id`),
+  KEY `sessions_date_id_idx` (`date_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1;
 
 --
 -- Dumping data for table `sessions`
 --
 
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `session_datetime`
+--
+
+CREATE TABLE IF NOT EXISTS `session_datetime` (
+  `session_datetime_id` bigint(20) NOT NULL auto_increment,
+  `day_id` bigint(20) NOT NULL,
+  `index_number` int(11) NOT NULL,
+  `period` varchar(30) collate utf8_unicode_ci NOT NULL,
+  `enabled` tinyint(1) NOT NULL default '1',
+  `deleted` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`session_datetime_id`),
+  KEY `session_datetime_day_id_idx` (`day_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=18 ;
+
+--
+-- Dumping data for table `session_datetime`
+--
+
+INSERT INTO `session_datetime` (`session_datetime_id`, `day_id`, `index_number`, `period`, `enabled`, `deleted`) VALUES
+(1, 1, 1, '8.30 - 10.30', 1, 0),
+(3, 1, 2, '11.00 - 13.00', 1, 0),
+(4, 1, 3, '14.00 - 16.00', 1, 0),
+(5, 1, 4, '16.30 -18.30', 1, 0),
+(6, 2, 5, '8.30 - 10.30', 1, 0),
+(7, 2, 6, '11.00 - 13.00', 1, 0),
+(8, 2, 7, '14.00 - 16.00', 1, 0),
+(9, 2, 8, '16.00 - 18.30', 1, 0),
+(10, 3, 9, '8.30 - 10.30', 1, 0),
+(11, 3, 10, '11.00 - 13.00', 1, 0),
+(12, 3, 11, '14.00 - 16.00', 1, 0),
+(13, 3, 12, '16.30 - 18.30', 1, 0),
+(14, 4, 13, '8.30 - 10.30', 1, 0),
+(15, 4, 14, '11.00 - 13.00', 1, 0),
+(16, 4, 15, '14.00 - 16.00', 1, 0),
+(17, 4, 16, '16.30 - 18.30', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -796,7 +877,7 @@ CREATE TABLE IF NOT EXISTS `users_groups` (
   `user_id` bigint(20) NOT NULL,
   `group_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`user_id`,`group_id`),
-  KEY `users_groups_group_id_fk` (`group_id`)
+  KEY `users_groups_group_id_idx` (`group_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -866,7 +947,25 @@ ALTER TABLE `admin_pages`
 --
 ALTER TABLE `dates`
   ADD CONSTRAINT `dates_event_id_fk` FOREIGN KEY (`event_id`) REFERENCES `events` (`event_id`);
+  
+--
+-- Constraints for table `rooms`
+--
+ALTER TABLE `rooms`
+  ADD CONSTRAINT `rooms_date_id_fk` FOREIGN KEY (`date_id`) REFERENCES `dates` (`date_id`);  
 
+--
+-- Constraints for table `equipment`
+--
+ALTER TABLE `equipment`
+  ADD CONSTRAINT `equipment_date_id_fk` FOREIGN KEY (`date_id`) REFERENCES `dates` (`date_id`);  
+  
+--
+-- Constraints for table `equipment`
+--
+ALTER TABLE `sessions`
+  ADD CONSTRAINT `sessions_date_id_fk` FOREIGN KEY (`date_id`) REFERENCES `dates` (`date_id`);  
+  
 --
 -- Constraints for table `days`
 --
@@ -897,20 +996,34 @@ ALTER TABLE `groups_pages`
 -- Constraints for table `networks`
 --
 ALTER TABLE `networks`
-  ADD CONSTRAINT `networks_ibfk_1` FOREIGN KEY (`date_id`) REFERENCES `dates` (`date_id`);
+  ADD CONSTRAINT `networks_date_id_fk` FOREIGN KEY (`date_id`) REFERENCES `dates` (`date_id`);
 
 --
 -- Constraints for table `networks_chairs`
 --
 ALTER TABLE `networks_chairs`
-  ADD CONSTRAINT `networks_chairs_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
-  ADD CONSTRAINT `networks_chairs_ibfk_3` FOREIGN KEY (`network_id`) REFERENCES `networks` (`network_id`);
+  ADD CONSTRAINT `networks_chairs_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `networks_chairs_network_id_fk` FOREIGN KEY (`network_id`) REFERENCES `networks` (`network_id`);
 
 --
 -- Constraints for table `pages`
 --
 ALTER TABLE `pages`
   ADD CONSTRAINT `pages_parent_page_id_fk` FOREIGN KEY (`parent_page_id`) REFERENCES `pages` (`page_id`);
+
+--
+-- Constraints for table `room_sessiondatetime_equipment`
+--
+ALTER TABLE `room_sessiondatetime_equipment`
+  ADD CONSTRAINT `room_sessiondatetime_equipment_equipment_id_fk` FOREIGN KEY (`equipment_id`) REFERENCES `equipment` (`equipment_id`),
+  ADD CONSTRAINT `room_sessiondatetime_equipment_room_id_fk` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`room_id`),
+  ADD CONSTRAINT `room_sessiondatetime_equipment_session_datetime_id_fk` FOREIGN KEY (`session_datetime_id`) REFERENCES `session_datetime` (`session_datetime_id`);
+
+--
+-- Constraints for table `session_datetime`
+--
+ALTER TABLE `session_datetime`
+  ADD CONSTRAINT `session_datetime_day_id_fk` FOREIGN KEY (`day_id`) REFERENCES `days` (`day_id`);
 
 --
 -- Constraints for table `settings`

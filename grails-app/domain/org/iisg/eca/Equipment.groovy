@@ -10,6 +10,7 @@ class Equipment extends DefaultDomain {
     String imageUrl
 
     static belongsTo = EventDate
+    static hasMany = [roomSessionDateTimeEquipment: RoomSessionDateTimeEquipment]
 
     static constraints = {
         date        nullable: true

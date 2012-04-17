@@ -14,6 +14,7 @@ class Day extends DefaultDomain {
     EventDate date
 
     static belongsTo = EventDate
+    static hasMany = [sessionDateTimes: SessionDateTime]
 
     static constraints = {
         dayNumber   min: 0

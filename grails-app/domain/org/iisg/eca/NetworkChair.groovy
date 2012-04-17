@@ -6,7 +6,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder
 /**
  * Domain class of table holding all chairs of a network
  */
-class NetworkChair implements Serializable {
+class NetworkChair extends DefaultDomain implements Serializable {
     Long id
     Network network
     User chair
