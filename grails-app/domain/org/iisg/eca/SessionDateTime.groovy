@@ -25,6 +25,6 @@ class SessionDateTime extends DefaultDomain {
 
     @Override
     String toString() {
-        period
+        "${index} (${period})"
     }
 }

@@ -22,7 +22,6 @@ class EventDate extends DefaultDomain {
 		dateAsText      blank: false,   maxSize: 30
         description     blank: false,   maxSize: 255
 		longDescription nullable: true
-        days            nullable: true
 	}
 
 	static mapping = {
@@ -48,6 +47,10 @@ class EventDate extends DefaultDomain {
             }
             order('startDate', 'desc')
         }
+    }
+
+    String getUrl() {
+        yearCode.replaceAll('\\s', '-')
     }
 
     @Override

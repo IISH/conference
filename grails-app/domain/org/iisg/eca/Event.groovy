@@ -31,6 +31,10 @@ class Event extends DefaultDomain {
 		type        maxSize: 20,    nullable: true
 	}
 
+    String getUrl() {
+        code.replaceAll('\\s', '-')
+    }
+
     @Override
     String toString() {
         shortName

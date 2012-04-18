@@ -7,7 +7,7 @@ class TempPagesTagLib {
     def menu = { attrs, body ->
         def pages = Page.list()
         pages.each {    page ->
-            out << "<dd>${link(controller: page.controller, action: page.action, page.toString())}</dd>"
+            out << "<dd>${eca.link(controller: page.controller, action: page.action, page.toString())}</dd>"
         }
     }
 }

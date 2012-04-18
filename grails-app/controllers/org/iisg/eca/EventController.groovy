@@ -9,11 +9,18 @@ class EventController {
 	 */
     def springSecurityService
 
+    def pageInformation
+
     /**
-     * Default action: redirects to the 'list' action, listing all events
+     * Redirects to the 'list' action, listing all events if not in event portal
      */
     def index() {
-        redirect(action: "list", params: params)
+        if (params.event && params.date) {
+            return [page: pageInformation.page]
+        }
+        else {
+            redirect(action: "list", params: params)
+        }
     }
 
     /**
@@ -35,7 +42,7 @@ class EventController {
             datesForEvent.add(date)
         }
 
-        [events: datesByEvent.keySet(), datesByEvent: datesByEvent, allEvents: allEvents, page: Page.findByControllerAndAction('event', 'list')]
+        [events: datesByEvent.keySet(), datesByEvent: datesByEvent, allEvents: allEvents, page: pageInformation.page]
     }
 
     def list_all() {

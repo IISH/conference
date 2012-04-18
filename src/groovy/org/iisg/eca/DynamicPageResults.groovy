@@ -25,7 +25,15 @@ class DynamicPageResults {
     }
     
     def get(String domainClass) {
-        results.find { it.class.simpleName == domainClass }
+        Object result = results.find { it.class.simpleName == domainClass }
+
+        if (!result) {
+            GrailsDomainClass dc = newInstances.get(domainClass)
+            result = dc.newInstance()
+            results.add(result)
+        }
+
+        result
     }
 
     def get(String domainClass, Long id) {

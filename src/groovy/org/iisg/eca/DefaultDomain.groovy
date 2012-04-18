@@ -5,7 +5,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder
 /**
  * A default domain class with requirements used by a lot of domain classes
  */
-abstract class DefaultDomain {
+abstract class DefaultDomain extends EventDomain {
     boolean enabled = true
     boolean deleted = false
 

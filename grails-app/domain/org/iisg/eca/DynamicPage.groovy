@@ -6,7 +6,7 @@ import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 /**
  * Domain class of table holding all dynamic pages
  */
-class DynamicPage {
+class DynamicPage extends EventDomain {
     private static final XmlSlurper XML_SLURPER = new XmlSlurper(false, false)
 
     String content

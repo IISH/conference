@@ -6,7 +6,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder
 /**
  * Domain class of table holding all extra rules concerning access to pages
  */
-class UserPage implements Serializable {
+class UserPage extends EventDomain implements Serializable {
 	User user
 	Page page
     EventDate date

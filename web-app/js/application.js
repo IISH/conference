@@ -81,6 +81,11 @@ $(document).ready(function() {
             window.location.search = $.param(queryParameters);
         }
     });
+
+    $('.check-all').click(function(e) {
+        var checked = $(this).is(':checked');
+        $(this).parents('.column').find('input[type=checkbox]').attr('checked', checked);
+    });
 });
 
 var queryParameters = {}, queryString = location.search.substring(1),

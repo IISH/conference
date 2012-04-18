@@ -3,7 +3,7 @@ package org.iisg.eca
 /**
  * Domain class of table holding all settings
  */
-class Setting {
+class Setting extends EventDomain {
 	String property
 	String value
     Event event

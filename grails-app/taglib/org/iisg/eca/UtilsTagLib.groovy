@@ -27,7 +27,15 @@ class UtilsTagLib {
             attrs.params = [:]
         }
 
-        // TODO: deal with event data
+        // Add event (date) information
+        if (attrs.event && attrs.date) {
+            attrs.params.event = attrs.event
+            attrs.params.date = attrs.date
+        }
+        else if (params.event && params.date) {
+            attrs.params.event = params.event
+            attrs.params.date = params.date
+        }
 
         // Add parameters for moving back to the current page
         attrs.params.prevController = params.controller
@@ -46,6 +54,10 @@ class UtilsTagLib {
         attrs.controller = params.controller
         attrs.action = params.action
         attrs.id = params.id
+
+        // Add event (date) information
+        attrs.params.event = params.event
+        attrs.params.date = params.date
 
         Map tempParams = [:]
         tempParams.putAll(params)

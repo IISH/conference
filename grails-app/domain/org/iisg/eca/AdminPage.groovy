@@ -3,7 +3,7 @@ package org.iisg.eca
 /**
  * Domain class of table holding all admin pages per event
  */
-class AdminPage {
+class AdminPage extends EventDomain {
     Page page
     Event event
     boolean showInMenu = true

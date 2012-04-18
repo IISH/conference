@@ -3,7 +3,7 @@ package org.iisg.eca
 /**
  * Domain class of table holding all available user roles
  */
-class Role {
+class Role extends EventDomain {
 	String role
 	String description
 	boolean fullRights = false
