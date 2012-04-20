@@ -1,7 +1,8 @@
-import org.iisg.eca.UserSaltSource
-import org.iisg.eca.PageInformation
-import org.iisg.eca.UserDetailsService
-import org.iisg.eca.CustomPropertyEditorRegistrar
+import org.iisg.eca.utils.PageInformation
+import org.iisg.eca.utils.CustomPropertyEditorRegistrar
+
+import org.iisg.eca.security.UserSaltSource
+import org.iisg.eca.security.UserDetailsService
 
 import org.springframework.web.servlet.i18n.CookieLocaleResolver
 

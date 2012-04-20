@@ -1,5 +1,9 @@
 $(document).ready(function() {
-    $('.loggedin img').click(function() {
+    $('#event_switcher').change(function(e) {
+        $(this).parents('form').submit();
+    });
+
+    $('.loggedin img').click(function(e) {
         $("#usermenu").toggle();
     });
 
@@ -80,6 +84,10 @@ $(document).ready(function() {
             });
             window.location.search = $.param(queryParameters);
         }
+    });
+
+    $('table td').click(function(e) {
+        window.location =  "./show/" + $(this).parent().find("td.id").text().trim() + "?" + $.param(queryParameters);
     });
 
     $('.check-all').click(function(e) {

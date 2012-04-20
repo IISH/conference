@@ -97,15 +97,15 @@ log4j = {
 }
 
 // Spring Security Core config:
-grails.plugins.springsecurity.userLookup.userDomainClassName = 'org.iisg.eca.User'
+grails.plugins.springsecurity.userLookup.userDomainClassName = 'org.iisg.eca.domain.User'
 grails.plugins.springsecurity.userLookup.usernamePropertyName = 'email'
 grails.plugins.springsecurity.userLookup.passwordPropertyName = 'password'
 grails.plugins.springsecurity.userLookup.authoritiesPropertyName = 'roles'
 grails.plugins.springsecurity.userLookup.enabledPropertyName = 'enabled'
 grails.plugins.springsecurity.userLookup.accountLockedPropertyName = 'deleted'
-grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'org.iisg.eca.UserRole'
+grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'org.iisg.eca.domain.UserRole'
 
-grails.plugins.springsecurity.authority.className = 'org.iisg.eca.Role'
+grails.plugins.springsecurity.authority.className = 'org.iisg.eca.domain.Role'
 grails.plugins.springsecurity.authority.nameField = 'role'
 
 grails.plugins.springsecurity.successHandler.alwaysUseDefault = true

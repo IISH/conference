@@ -1,5 +1,5 @@
-import org.iisg.eca.Setting
 import java.text.SimpleDateFormat
+import org.iisg.eca.domain.Setting
 
 class BootStrap {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MMMMM yyyy")

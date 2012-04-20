@@ -1,4 +1,4 @@
-<%@ page import="org.iisg.eca.Page; org.iisg.eca.DynamicPage; org.iisg.eca.Setting; org.springframework.validation.FieldError" %>
+<%@ page import="org.iisg.eca.domain.Setting; org.iisg.eca.domain.DynamicPage; org.iisg.eca.domain.Page; org.springframework.validation.FieldError" %>
 <!doctype html>
 <!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
 <!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
@@ -36,7 +36,11 @@
 	            <g:img dir="images" file="banner-esshc.jpg" alt="ESSHC" title="ESSHC" />
             </div>
 
-            <span class="event left">9th European Social Science History Conference 11 April - 14 April 2012</span>
+            <g:if test="${params.event && params.date}">
+                <span class="event left">
+                    <eca:eventSwitcher />
+                </span>
+            </g:if>
 
             <div class="locales right">
                 Select language:
@@ -68,7 +72,9 @@
 
                 <dd>&nbsp;</dd>
 
-                <g:menu />
+                <g:if test="${params.event && params.date}" >
+                    <g:menu />
+                </g:if>
 
                 <!--<dd><a href="Participants.asp?year=12&partStat=-1&tp=name">Participants</a></dd>
                 <dd><a href="Networks.asp">Networks</a></dd>
@@ -93,19 +99,19 @@
                 <dd><a href="overzicht_feerequest.asp">Fee Request</a></dd>
                 <dd><a href="overzicht_invitationletter.asp">Invitation Letter</a></dd>
                 <dd><a href="overzicht_reception.asp">Reception</a></dd>    -->
-		    </dl>
+            </dl>
         </div>
 
         <div id="content" role="main">
-            <g:if test="${page?.class == Page}">
+            <g:if test="${page?.class == org.iisg.eca.domain.Page}">
                 <h1>${page.toString()}</h1>
             </g:if>
 
-		    <g:elseif test="${page?.class == DynamicPage}">
+		    <g:elseif test="${page?.class == org.iisg.eca.domain.DynamicPage}">
                 <h1>${page.page.toString()}</h1>
 		    </g:elseif>
 
-            <g:if test="${flash.message && (page?.class == Page || page?.class == DynamicPage)}">
+            <g:if test="${flash.message && (page?.class == org.iisg.eca.domain.Page || page?.class == org.iisg.eca.domain.DynamicPage)}">
                 <div class="message" role="status">${flash.message}</div>
             </g:if>
 
@@ -127,7 +133,7 @@
         </div>
 
 		<div id="footer" class="clear" role="contentinfo">
-           ${grailsApplication.config.grails.serverURL} - Last updated: ${Setting.findByProperty('lastUpdated').value}
+           ${grailsApplication.config.grails.serverURL} - Last updated: ${org.iisg.eca.domain.Setting.findByProperty('lastUpdated').value}
 		</div>
 
         <div id="usermenu">

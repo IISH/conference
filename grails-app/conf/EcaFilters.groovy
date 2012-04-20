@@ -1,6 +1,6 @@
-import org.iisg.eca.Page
-import org.iisg.eca.Event
-import org.iisg.eca.EventDate
+import org.iisg.eca.domain.Page
+import org.iisg.eca.domain.Event
+import org.iisg.eca.domain.EventDate
 
 class EcaFilters {
     def pageInformation

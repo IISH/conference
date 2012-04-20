@@ -1,41 +1,29 @@
 class UrlMappings {
  	static mappings = {
-        "/$event/$date" {
-			constraints {
-			    controller = 'event'
-                action = 'index'
-			}
+        "/$event/$date/$controller/$action/$id?" { }
+
+        name eventDate: "/$event/$date/$controller/$action/$id?" { }
+
+        name eventIdx: "/$event/$date" {
+            controller = 'event'
+            action = 'index'
 		}
 
-         "/$event/$date/$controller/$action/$id?" {
-			constraints {
-				// apply constraints here
-			}
-		}
-
-        "/login/$action" {
-            constraints {
-                controller = 'login'
-            }
+        name login: "/login/$action" {
+            controller = 'login'
         }
 
-        "/logout/$action" {
-            constraints {
-                controller = 'logout'
-            }
+        name logout: "/logout/$action" {
+            controller = 'logout'
         }
 
-        "/event/$action/$id?" {
-            constraints {
-                controller = 'event'
-            }
+        name event: "/event/$action/$id?" {
+            controller = 'event'
         }
 
-		"/" {
-            constraints {
-                controller = 'event'
-                action = 'list'
-            }
+		name index: "/" {
+            controller = 'event'
+            action = 'list'
         }
 
 		"500" (view:'/error')

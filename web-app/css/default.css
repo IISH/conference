@@ -81,6 +81,10 @@ dd {
 	margin-left: 8px;
 }
 
+#event_switcher {
+    width: 500px;
+}
+
 .hosted {
 	font-size: 95%;
 	font-weight: bold;
@@ -380,6 +384,12 @@ td {
 tbody tr:hover {
     background-color: #CAE1FF;
     cursor: pointer;
+}
+
+td.counter {
+    background-color: #7F9DB9;
+    color: #FFFFFF;
+    font-weight: bold;
 }
 
 /* HELPERS */
