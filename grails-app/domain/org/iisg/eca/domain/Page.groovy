@@ -7,14 +7,14 @@ import org.codehaus.groovy.grails.plugins.web.taglib.ValidationTagLib
  */
 class Page extends DefaultDomain {
     def pageInformation
-	private static final ValidationTagLib MESSAGES = new ValidationTagLib()
+    private static final ValidationTagLib MESSAGES = new ValidationTagLib()
 
     String titleCode
     String titleArg
     String titleDefault
-	String controller
+    String controller
     String action
-	String description
+    String description
     Page parent
 
     static hasMany = [  adminPages:     AdminPage,
@@ -22,9 +22,9 @@ class Page extends DefaultDomain {
                         subPages:       Page]
     static belongsTo = Page
 
-	static mapping = {
-		table 'pages'
-		version false
+    static mapping = {
+        table 'pages'
+        version false
 
         id              column: 'page_id'
         titleCode       column: 'title_code'
@@ -34,18 +34,18 @@ class Page extends DefaultDomain {
         action          column: 'action'
         description     column: 'description',      type: 'text'
         parent          column: 'parent_page_id'
-	}
+    }
 
-	static constraints = {
-		titleCode       nullable: true, maxSize: 50
+    static constraints = {
+        titleCode       nullable: true, maxSize: 50
         titleArg        nullable: true, maxSize: 50
         titleDefault    blank: false,   maxSize: 50
-		action          blank: false,   maxSize: 20
+        action          blank: false,   maxSize: 20
         controller      blank: false,   maxSize: 20
         description     nullable: true
         parent          nullable: true
         subPages        nullable: true
-	}
+    }
 
     Set<User> getUsers() {
         UserPage.findAllByPage(this).collect { it.user } as Set

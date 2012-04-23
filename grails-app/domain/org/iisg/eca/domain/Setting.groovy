@@ -3,54 +3,27 @@ package org.iisg.eca.domain
 /**
  * Domain class of table holding all settings
  */
-class Setting {
-    //def pageInformation
+class Setting extends EventDomain {
+    String property
+    String value
 
-	String property
-	String value
-    Event event
-
-    static belongsTo = Event
-
-	static mapping = {
+    static mapping = {
         table 'settings'
-		version false
+        version false
         cache true
 
         id          column: 'setting_id'
         property    column: 'property'
         value       column: 'value'
         event       column: 'event_id'
-	}
+    }
 
-	static constraints = {
-		property    blank: false,   maxSize: 50
+    static constraints = {
+        property    blank: false,   maxSize: 50
         value       blank: false,   maxSize: 255
-		event       nullable: true
-	}
-
-    static hibernateFilters = {
-        eventFilter(condition: "event_id = :eventId or event_id = null", types: 'long')
+        event       nullable: true
     }
-
-    /*def beforeLoad() {
-        if (pageInformation.date) {
-            enableHibernateFilter('eventFilter').setParameter('eventId', pageInformation.date.event.id)
-        }
-    }     */
-
-   /* def beforeInsert() {
-        if (pageInformation.date) {
-            event = pageInformation.date.event
-        }
-    }
-
-    def beforeUpdate() {
-        if (pageInformation.date) {
-            event = pageInformation.date.event
-        }
-    }  */
-
+    
     @Override
     String toString() {
         "${property}: ${value}"

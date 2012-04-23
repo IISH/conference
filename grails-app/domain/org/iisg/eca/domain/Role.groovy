@@ -4,11 +4,11 @@ package org.iisg.eca.domain
  * Domain class of table holding all available user roles
  */
 class Role {
-	String role
-	String description
-	boolean fullRights = false
+    String role
+    String description
+    boolean fullRights = false
 
-	static mapping = {
+    static mapping = {
         table 'roles'
         version false
         cache true
@@ -17,13 +17,13 @@ class Role {
         role        column: 'role'
         description column: 'description',  type: 'text'
         fullRights  column: 'full_rights'
-	}
+    }
 
-	static constraints = {
+    static constraints = {
         role        blank: false
         description nullable: true
-	}
-
+    }
+    
     Set<User> getUsers() {
         UserRole.findAllByRole(this).collect { it.user } as Set
     }

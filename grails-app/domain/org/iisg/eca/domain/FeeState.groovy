@@ -1,11 +1,9 @@
 package org.iisg.eca.domain
 
-class FeeState extends DefaultDomain {
-    Event event
+class FeeState extends EventDomain {
     String name
     boolean isDefaultFee
-
-    static belongsTo = Event
+    
     static hasMany = [feeAmounts: FeeAmount]
 
     static constraints = {
@@ -21,10 +19,8 @@ class FeeState extends DefaultDomain {
         event           column: 'event_id'
         name            column: 'name'
         isDefaultFee    column: 'is_default_fee'
-    }
 
-    static hibernateFilters = {
-        eventFilter(condition: "event_id = (:eventId) or event_id = null", types: 'long')
+        feeAmounts      sort: 'endDate'
     }
 
     @Override

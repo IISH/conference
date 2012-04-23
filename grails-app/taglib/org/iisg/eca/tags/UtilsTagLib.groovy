@@ -33,20 +33,29 @@ class UtilsTagLib {
         builder.doubleQuotes = true
 
         Set<EventDate> dates = User.get(springSecurityService.principal.id).dates
-        Set<Event> events = dates.collect { it.event }
+        List<EventDate> datesSorted = new ArrayList()
+        EventDate.sortByEventAndDate.list().each { date ->
+            if (dates.contains(date)) {
+                datesSorted.add(date)
+            }
+        }
+
+        Map<Event, EventDate> datesByEvent = [:]
+        datesSorted.each { date ->
+            List<EventDate> list = (List<EventDate>) datesByEvent.get(date.event, new ArrayList<EventDate>())
+            list.add(date)
+        }
 
         builder.form(method: "get", action: "switchEvent") {
             builder.select(id: "event_switcher", name: "event_switcher") {
-                events.each { event ->
+                datesByEvent.keySet().each { event ->
                     builder.optgroup(label: event.toString()) {
-                        dates.each { date ->
-                            if (date.event == event) {
-                                if (pageInformation.date == date) {
-                                    builder.option(value: date.id, date.toString(), selected: "selected")
-                                }
-                                else {
-                                    builder.option(value: date.id, date.toString())
-                                }
+                        datesByEvent.get(event).each { date ->
+                            if (pageInformation.date?.id == date?.id) {
+                                builder.option(value: date.id, date.toString(), selected: "selected")
+                            }
+                            else {
+                                builder.option(value: date.id, date.toString())
                             }
                         }
                     }
@@ -97,6 +106,7 @@ class UtilsTagLib {
         // Add event (date) information
         attrs.params.event = params.event
         attrs.params.date = params.date
+        attrs.mapping = 'eventDate'
 
         Map tempParams = [:]
         tempParams.putAll(params)

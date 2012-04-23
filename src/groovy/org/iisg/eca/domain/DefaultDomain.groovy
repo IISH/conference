@@ -3,7 +3,7 @@ package org.iisg.eca.domain
 /**
  * A default domain class with requirements used by a lot of domain classes
  */
-abstract class DefaultDomain extends EventDomain {
+abstract class DefaultDomain {
     boolean enabled = true
     boolean deleted = false
 
@@ -12,12 +12,12 @@ abstract class DefaultDomain extends EventDomain {
         deleted     column: 'deleted'
     }
 
-   /* static hibernateFilters = {
-        hideDeleted(condition: 'deleted=0')
-        hideDisabled(condition: 'enabled=1')
-    }            */
+    static hibernateFilters = {
+        hideDeleted(condition: 'deleted = 0')
+        hideDisabled(condition: 'enabled = 1')
+    }  
 
-    def enable(boolean enabled) {
+    void enable(boolean enabled) {
         this.enabled = enabled
     }
 

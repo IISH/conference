@@ -5,24 +5,24 @@
 <!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]-->
 <!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
 <!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js"><!--<![endif]-->
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title><g:layoutTitle default="ECA" /></title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="shortcut icon" href="${resource(dir: 'images', file: 'favicon.ico')}" type="image/x-icon">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title><g:layoutTitle default="ECA" /></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" href="${resource(dir: 'images', file: 'favicon.ico')}" type="image/x-icon">
         <link rel="stylesheet" href="${resource(dir: 'css', file: 'default1.css')}" type="text/css">
         <link rel="stylesheet" href="${resource(dir: 'css', file: 'esshc1.css')}" type="text/css">
-		<link rel="stylesheet" href="${resource(dir: 'css', file: 'default.css')}" type="text/css">
+        <link rel="stylesheet" href="${resource(dir: 'css', file: 'default.css')}" type="text/css">
         <link rel="stylesheet" href="${resource(dir: 'css', file: 'esshc.css')}" type="text/css">
         <link rel="stylesheet" href="${resource(dir: 'css', file: 'jquery-ui-1.8.18.custom.css')}" type="text/css">
         <g:javascript library="jquery" />
         <g:javascript library="application" />
-		<g:layoutHead/>
+        <g:layoutHead/>
         <r:layoutResources />
         <script src="${resource(dir: 'js', file: 'jquery-ui.js')}" type="text/javascript"></script>
-	</head>
-	<body>
+    </head>
+    <body>
         <div id="header" role="banner">
             <a href="http://www.iisg.nl/esshc/" name="top">
                 <g:img dir="images" file="header-esshc.gif" alt="ESSHC" title="ESSHC" />
@@ -33,7 +33,7 @@
             </span>
 
             <div id="banner" class="clear">
-	            <g:img dir="images" file="banner-esshc.jpg" alt="ESSHC" title="ESSHC" />
+                    <g:img dir="images" file="banner-esshc.jpg" alt="ESSHC" title="ESSHC" />
             </div>
 
             <g:if test="${params.event && params.date}">
@@ -58,12 +58,12 @@
                 </div>
             </sec:ifLoggedIn>
 
-			<div class="clear"></div>
+            <div class="clear"></div>
         </div>
 
         <div id="nav" role="navigation">
             <dl id="menu">
-               <!-- <dt class="esshc">Web</dt>
+              <!-- <dt class="esshc">Web</dt>
 
                 <dd><a href="http://www.iisg.nl/esshc">ESSHC</A></dd>
                 <dd>&nbsp;</dd>           -->
@@ -107,34 +107,24 @@
                 <h1>${page.toString()}</h1>
             </g:if>
 
-		    <g:elseif test="${page?.class == org.iisg.eca.domain.DynamicPage}">
+            <g:elseif test="${page?.class == org.iisg.eca.domain.DynamicPage}">
                 <h1>${page.page.toString()}</h1>
-		    </g:elseif>
+            </g:elseif>
 
             <g:if test="${flash.message && (page?.class == org.iisg.eca.domain.Page || page?.class == org.iisg.eca.domain.DynamicPage)}">
                 <div class="message" role="status">${flash.message}</div>
             </g:if>
 
             <g:layoutBody />
-
-            <g:hasErrors>
-                <ul class="errors" role="alert">
-                    <g:eachError var="error">
-                        <li <g:if test="${error in FieldError}">data-field-id="${error.field}"</g:if>>
-                            <g:message error="${error}" />
-                        </li>
-                    </g:eachError>
-                </ul>
-			</g:hasErrors>
-
+            
             <span class="top right">
-				<a href="#top">Back to top</a>
+                <a href="#top">Back to top</a>
             </span>
         </div>
 
-		<div id="footer" class="clear" role="contentinfo">
-           ${grailsApplication.config.grails.serverURL} - Last updated: ${org.iisg.eca.domain.Setting.findByProperty('lastUpdated').value}
-		</div>
+        <div id="footer" class="clear" role="contentinfo">
+            ${grailsApplication.config.grails.serverURL} - Last updated: ${org.iisg.eca.domain.Setting.findByProperty('lastUpdated').value}
+        </div>
 
         <div id="usermenu">
             <ul>
@@ -145,5 +135,5 @@
         </div>
 
         <r:layoutResources />
-	</body>
+    </body>
 </html>

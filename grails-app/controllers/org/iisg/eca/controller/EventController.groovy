@@ -8,10 +8,13 @@ import org.iisg.eca.domain.User
  */
 class EventController {
     /**
-	 * Dependency injection for the springSecurityService
-	 */
+     * Dependency injection for the springSecurityService
+     */
     def springSecurityService
-
+    
+    /**
+     * Information about the current page
+     */
     def pageInformation
 
     /**
@@ -38,7 +41,7 @@ class EventController {
             }
         }
 
-        redirect(action: "index")
+        redirect(action: "index", params: params)
     }
 
     /**
@@ -46,21 +49,22 @@ class EventController {
      */
     def list() {
         // Get all event dates the user has access to, and sort the dates
-        def userDates = User.get(springSecurityService.principal.id).dates
-        def allDates = EventDate.sortByEventAndDate.list().grep {
-            userDates.contains(it)
+        def dates = User.get(springSecurityService.principal.id).dates
+        def datesSorted = new ArrayList()
+        EventDate.sortByEventAndDate.list().each { date ->
+            if (dates.contains(date)) {
+                datesSorted.add(date)
+            }
         }
 
         // Loop over all the event dates in search for the events they belong to
-        def datesByEvent = [:]
-        def allEvents = [:]
-        allDates.each { date ->
-            def datesForEvent = datesByEvent.get(date.event.shortName, new ArrayList())
-            allEvents.put(date.event.shortName, date.event)
-            datesForEvent.add(date)
+        def datesByEvent = [:]  
+        datesSorted.each { date ->
+            def list = datesByEvent.get(date.event, new ArrayList())
+            list.add(date)
         }
 
-        [events: datesByEvent.keySet(), datesByEvent: datesByEvent, allEvents: allEvents, page: pageInformation.page]
+        [events: datesByEvent.keySet(), dates: datesByEvent, page: pageInformation.page]
     }
 
     def list_all() {

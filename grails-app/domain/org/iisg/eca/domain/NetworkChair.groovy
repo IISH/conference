@@ -16,13 +16,13 @@ class NetworkChair extends DefaultDomain implements Serializable {
 
     static mapping = {
         table 'networks_chairs'
-		id composite: ['network', 'chair']
-		version false
+        id composite: ['network', 'chair']
+        version false
 
         network     column: 'network_id'
         chair       column: 'user_id'
         isMainChair column: 'is_main_chair'
-	}
+    }
 
     Long getId() {
         "${network.id}${chair.id}".toLong()
@@ -30,23 +30,23 @@ class NetworkChair extends DefaultDomain implements Serializable {
 
     @Override
     int hashCode() {
-		def builder = new HashCodeBuilder()
-		builder.append network
-		builder.append chair
-		builder.toHashCode()
-	}
+        def builder = new HashCodeBuilder()
+        builder.append network
+        builder.append chair
+        builder.toHashCode()
+    }
 
     @Override
-	boolean equals(other) {
-		if (other == null || !(other instanceof NetworkChair)) {
+    boolean equals(other) {
+        if (other == null || !(other instanceof NetworkChair)) {
             return false
         }
 
-		def builder = new EqualsBuilder()
-		builder.append network, other.network
-		builder.append chair, other.chair
-		builder.isEquals()
-	}
+        def builder = new EqualsBuilder()
+        builder.append network, other.network
+        builder.append chair, other.chair
+        builder.isEquals()
+    }
 
     @Override
     String toString() {

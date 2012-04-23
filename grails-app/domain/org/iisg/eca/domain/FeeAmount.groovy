@@ -1,7 +1,6 @@
 package org.iisg.eca.domain
 
-class FeeAmount extends DefaultDomain {
-    EventDate date
+class FeeAmount extends EventDateDomain {
     FeeState feeState
     Date endDate
     int numDaysStart
@@ -10,7 +9,7 @@ class FeeAmount extends DefaultDomain {
     BigDecimal feeAmount
 
     static transients = ['numDays']
-    static belongsTo = [EventDate, FeeState]
+    static belongsTo = FeeState
 
     static constraints = {
         date            nullable: true
@@ -30,14 +29,5 @@ class FeeAmount extends DefaultDomain {
         numDaysStart    column: 'nr_of_days_start'
         numDaysEnd      column: 'nr_of_days_end'
         feeAmount       column: 'fee_amount'
-    }
-
-    static hibernateFilters = {
-        eventDateFilter(condition: "date_id = (:dateId) or date_id = null", types: 'long')
-    }
-
-    @Override
-    String toString() {
-
     }
 }

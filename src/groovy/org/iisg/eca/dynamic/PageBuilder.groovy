@@ -59,6 +59,18 @@ class PageBuilder {
      * @param element The container element which represents a form
      */
     private void buildForm(DataContainer element) {
+        // First build a message block for any errors made by the user
+        builder."g:hasErrors"(model: "\${${RESULTS}.get(${element.eid}).model}") {
+            builder.ul(class: "errors", role: "alert") {
+                builder."g:eachError"(model: "\${${RESULTS}.get(${element.eid}).model}", var: "error") {
+                    builder.li {
+                        builder."g:message"(error: "\${error}")
+                    }
+                }
+            }
+        }
+        
+        // Now build the actual form...
         builder.form(method: "post", action: "#") {
             builder.input(type: "hidden", name: "id", value: "\${${RESULTS}.get(${element.eid}).get('${element.domainClass.name}').id}")
             builder.input(type: "hidden", name: "eid", value: element.eid)
@@ -78,7 +90,7 @@ class PageBuilder {
     private void buildTable(DataContainer element) {
         builder.div(class: "tbl_container") {
             builder.div(class: "tbl_toolbar right") {
-                builder.mkp.yield("Export data: ")
+                builder.span("Export data: ")
                 builder."eca:linkAllParams"(params: "['export': ${element.eid}, 'format': 'csv', 'sep': ',']", "CSV (,)")
                 builder."eca:linkAllParams"(params: "['export': ${element.eid}, 'format': 'csv', 'sep': ';']", "CSV (;)")
                 builder."eca:linkAllParams"(params: "['export': ${element.eid}, 'format': 'csv', 'sep': 'tab']", "CSV (tab)")

@@ -9,28 +9,30 @@
             <g:each in="${events}" var="evt">
                 <div class="event">
                     <h2>
-                        ${evt}
+                        ${evt.toString()}
                     </h2>
 
-                    <span class="action">
-                        <eca:link controller="event" action="edit" id="${allEvents.get(evt).id}">
-                            <g:message code="default.edit.label" args="[message(code: 'event.label').toLowerCase()]" />
-                        </eca:link>
-                    </span>
+                    <sec:ifAnyGranted roles="admin">
+                        <span class="action">
+                            <eca:link controller="event" action="edit" id="${evt.id}">
+                                <g:message code="default.edit.label" args="[message(code: 'event.label').toLowerCase()]" />
+                            </eca:link>
+                        </span>
+                    </sec:ifAnyGranted>
 
                     <ul>
-                        <g:each in="${datesByEvent.get(evt)}" var="eventDate">
+                        <g:each in="${dates.get(evt)}" var="eventDate">
                             <li>
-                                <eca:link event="${eventDate.event.url}" date="${eventDate.url}">
+                                <eca:link event="${evt.url}" date="${eventDate.url}">
                                     ${eventDate.yearCode}
                                 </eca:link>
                             </li>
                         </g:each>
 
-                        <sec:ifAnyGranted roles="superAdmin">
+                        <sec:ifAnyGranted roles="admin">
                             <li>
                                 <span class="action">
-                                    <eca:link controller="eventDate" action="create" id="${allEvents.get(evt).id}">
+                                    <eca:link controller="eventDate" action="create" id="${evt.id}">
                                         <g:message code="default.add.label" args="[message(code: 'eventdate.label').toLowerCase()]" />
                                     </eca:link>
                                 </span>

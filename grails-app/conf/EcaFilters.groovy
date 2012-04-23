@@ -1,16 +1,22 @@
-import org.iisg.eca.domain.Page
+/*import org.iisg.eca.domain.Page
 import org.iisg.eca.domain.Event
 import org.iisg.eca.domain.EventDate
 
+import org.iisg.eca.domain.EventDomain
+import org.iisg.eca.domain.EventDateDomain*/
+
+import org.iisg.eca.domain.*
+
 class EcaFilters {
     def pageInformation
-
+    def grailsApplication
+    
     def filters = {
         /**
          *  Every page (except login/logout) should be in the database, so lookup the page information from the database
          *  If it is there, allow access and cache the page information for this request
          */
-        page(controller: '*', action: '*', controllerExclude: 'login|logout') {
+        page(controller: '*', action: '*', controllerExclude: 'login|logout', actionExclude: 'index') {
             before = {
                 Page page = Page.findByControllerAndAction(params.controller, params.action)
 
@@ -21,7 +27,7 @@ class EcaFilters {
 
                 return false
             }
-            after = { Map model ->
+            afterView = { Exception e ->
                 pageInformation.removePage()
             }
         }
@@ -46,12 +52,23 @@ class EcaFilters {
 
                 if (date) {
                     pageInformation.date = date
+                    
+                    grailsApplication.domainClasses.each { domainClass -> 
+                        Class domain = domainClass.clazz 
+                        if (EventDateDomain.class.isAssignableFrom(domain)) {
+                            domain.enableHibernateFilter('dateFilter').setParameter('dateId', date.id)
+                        }
+                        else if (EventDomain.class.isAssignableFrom(domain)) {
+                            domain.enableHibernateFilter('eventFilter').setParameter('eventId', date.event.id)  
+                        }
+                    }
+                    
                     return true
                 }
 
                 return false
             }
-            after = { Map model ->
+            afterView = { Exception e ->
                 pageInformation.removeDate()
             }
         }

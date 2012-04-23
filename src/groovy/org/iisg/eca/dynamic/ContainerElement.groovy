@@ -68,6 +68,14 @@ class ContainerElement extends Element {
     }
     
     /**
+     * Informs whether this element contains other columns
+     * @returns Whether this element contains other columns
+     */ 
+    boolean hasColumns() {
+        !columns.isEmpty()
+    } 
+    
+    /**
      * Returns a column this element contains by name
      * @param name The name of the column
      * @return The column with the given name
@@ -143,6 +151,14 @@ class ContainerElement extends Element {
     Button getButton(String name) {
         (Button) elements.find { (it instanceof Button) && (it.name.equalsIgnoreCase(name)) }
     }
+    
+    /**
+     * Informs whether this element contains other buttons
+     * @returns Whether this element contains other buttons
+     */ 
+    boolean hasButtons() {
+        !buttons.isEmpty()
+    } 
        
     /**
      * Returns a list of button this element contains by type

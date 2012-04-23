@@ -26,23 +26,23 @@ class RoomSessionDateTimeEquipment extends DefaultDomain implements Serializable
 
     @Override
     int hashCode() {
-		def builder = new HashCodeBuilder()
-		builder.append room
-		builder.append sessionDateTime
+        def builder = new HashCodeBuilder()
+        builder.append room
+        builder.append sessionDateTime
         builder.append equipment
-		builder.toHashCode()
-	}
+        builder.toHashCode()
+    }
 
     @Override
-	boolean equals(other) {
-		if (other == null || !(other instanceof RoomSessionDateTimeEquipment)) {
+    boolean equals(other) {
+        if (other == null || !(other instanceof RoomSessionDateTimeEquipment)) {
             return false
         }
 
-		def builder = new EqualsBuilder()
-		builder.append room, other.room
-		builder.append sessionDateTime, other.sessionDateTime
+        def builder = new EqualsBuilder()
+        builder.append room, other.room
+        builder.append sessionDateTime, other.sessionDateTime
         builder.append equipment, other.equipment
-		builder.isEquals()
-	}
+        builder.isEquals()
+    }
 }

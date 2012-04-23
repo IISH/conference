@@ -6,21 +6,18 @@ import org.apache.commons.lang.builder.HashCodeBuilder
 /**
  * Domain class of table holding all extra rules concerning access to pages
  */
-class UserPage implements Serializable {
-  //  def pageInformation
-
-	User user
-	Page page
-    EventDate date
+class UserPage extends EventDateDomain implements Serializable {
+    User user
+    Page page
     boolean denied
-	boolean showInMenu
+    boolean showInMenu
 
-    static belongsTo = [User, Page, EventDate]
+    static belongsTo = [User, Page]
 
     static mapping = {
         table 'users_pages'
-		id composite: ['user', 'page']
-		version false
+        id composite: ['user', 'page']
+        version false
 
         user        column: 'user_id'
         page        column: 'page_id'
@@ -32,44 +29,22 @@ class UserPage implements Serializable {
     static constraints = {
         date    nullable: true
     }
-
-    static hibernateFilters = {
-        eventDateFilter(condition: "date_id = (:dateId) or date_id = null", types: 'long')
+    
+    int hashCode() {
+        def builder = new HashCodeBuilder()
+        builder.append user
+        builder.append page
+        builder.toHashCode()
     }
 
-    /*def beforeLoad() {
-        if (pageInformation.date) {
-            enableHibernateFilter('eventDateFilter').setParameter('dateId', pageInformation.date.id)
-        }
-    }   */
-
-    /*def beforeInsert() {
-        if (pageInformation.date) {
-            date = pageInformation.date
-        }
-    }
-
-    def beforeUpdate() {
-        if (pageInformation.date) {
-            date = pageInformation.date
-        }
-    }    */
-
-	int hashCode() {
-		def builder = new HashCodeBuilder()
-		builder.append user
-		builder.append page
-		builder.toHashCode()
-	}
-
-	boolean equals(other) {
-		if (other == null || !(other instanceof UserPage)) {
+    boolean equals(other) {
+        if (other == null || !(other instanceof UserPage)) {
             return false
         }
 
-		def builder = new EqualsBuilder()
-		builder.append user, other.user
-		builder.append page, other.page
-		builder.isEquals()
-	}
+        def builder = new EqualsBuilder()
+        builder.append user, other.user
+        builder.append page, other.page
+        builder.isEquals()
+    }
 }

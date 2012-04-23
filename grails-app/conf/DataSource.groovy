@@ -3,8 +3,9 @@ dataSource {
     driverClassName = "com.mysql.jdbc.Driver"
     dialect = org.hibernate.dialect.MySQL5InnoDBDialect
     dbCreate = "validate"
-    //logSql = true
-    //configClass = org.grails.plugin.hibernate.filter.HibernateFilterDomainConfiguration.class
+    logSql = true
+    formatSql = true
+    configClass = org.grails.plugin.hibernate.filter.HibernateFilterDomainConfiguration.class
 }
 hibernate {
     cache.use_second_level_cache = true

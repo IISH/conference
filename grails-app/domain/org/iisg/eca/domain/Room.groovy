@@ -3,16 +3,12 @@ package org.iisg.eca.domain
 /**
  * Domain class of table holding all rooms
  */
-class Room extends DefaultDomain {
-    def pageInformation
-
-    EventDate date
+class Room extends EventDateDomain {
     String roomName
     String roomNumber
     int noOfSeats
     String comment
-
-    static belongsTo = EventDate
+    
     static hasMany = [roomSessionDateTimeEquipment: RoomSessionDateTimeEquipment]
 
     static constraints = {
@@ -34,28 +30,6 @@ class Room extends DefaultDomain {
         noOfSeats   column: 'number_of_seets'
         comment     column: 'comment',          type: 'text'
     }
-
-    static hibernateFilters = {
-        eventDateFilter(condition: "date_id = (:dateId) or date_id = null", types: 'long')
-    }
-
-    /*def beforeLoad() {
-        if (pageInformation.date) {
-            enableHibernateFilter('eventDateFilter').setParameter('dateId', pageInformation.date.id)
-        }
-    }  */
-
-   /* def beforeInsert() {
-        if (pageInformation.date) {
-            date = pageInformation.date
-        }
-    }
-
-    def beforeUpdate() {
-        if (pageInformation.date) {
-            date = pageInformation.date
-        }
-    } */
 
     @Override
     String toString() {

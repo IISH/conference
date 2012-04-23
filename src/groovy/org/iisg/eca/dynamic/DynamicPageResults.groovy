@@ -10,9 +10,15 @@ import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 class DynamicPageResults {
     private DataContainer dataContainer
     private GrailsParameterMap params
-    private def results
+    private List results
     private Map<String, Object> newInstances
     
+    /**
+     * Creates a new <code>DynamicPageResults</code> instance
+     * for the specified data container element
+     * @param dataContainer The container element to fetch the data for
+     * @param params The currently requested parameters
+     */
     DynamicPageResults(DataContainer dataContainer, GrailsParameterMap params) {
         this.dataContainer = dataContainer
         this.params = params
@@ -20,15 +26,32 @@ class DynamicPageResults {
         getResults()
     }
 
+    /**
+     * Returns the container element for which the data was fetched from the database
+     * @return The data container element
+     */
     DataContainer getDataContainer() {
         dataContainer
     }
     
-    def get() {
+    /**
+     * Returns the list with results from the database
+     * In case of a form or overview, the list consists of several different
+     * objects with the necessary data
+     * In case of a table, the list represents all rows consisting of 
+     * only one object or an array of objects per row
+     * @return A list of results
+     */
+    List get() {
         results
     }
     
-    def get(String domainClass) {
+    /**
+     * Returns the result of the given domain class name
+     * @param domainClass The name of the domain class to fetch the result of
+     * @return The result of the given domain class name
+     */
+    Object get(String domainClass) {
         Object result = results.find { it.class.simpleName == domainClass }
 
         if (!result) {
@@ -40,7 +63,13 @@ class DynamicPageResults {
         result
     }
 
-    def get(String domainClass, Long id) {
+    /**
+     * Returns the result of the given domain class name and id
+     * @param domainClass The name of the domain class to fetch the result of
+     * @param id The id of the object to fetch
+     * @return The result of the given domain class name and id
+     */
+    Object get(String domainClass, Long id) {
         Object result = null
 
         if (id) {
@@ -56,26 +85,28 @@ class DynamicPageResults {
         result
     }
 
-    def getArray(String domainClass) {
-        results.findAll { it.class.simpleName == domainClass }
-
-        /*if (result.length == 0) {
-            /*String[] multiple = domainClass.split('_')
-            String domainClassToClone = domainClass
-            if (multiple.length > 1) {
-                domainClassToClone = multiple[0..multiple.length-2].join('_')
-            }
-            results. .get(domainClass, results.get(domainClassToClone).class.newInstance())
-        }
-        else {
-            return result
-        }       */
-    }
-
-    void remove(String domainClass) {
-        results.remove(domainClass)
+    /**
+     * Returns the results of the given domain class name
+     * @param domainClass The name of the domain class to fetch the results of
+     * @return The results of the given domain class name
+     */
+    Object[] getArray(String domainClass) {
+        results.findAll { it.class.simpleName == domainClass } as Object[]
     }
     
+    /**
+     * Returns a model representation of the results
+     * @return A map of the results, numbered with an index as key
+     */
+    Map getModel() {
+        Map model = [:]
+        results.eachWithIndex { it, i -> model.put(i, it) }
+        model
+    }
+    
+    /**
+     * Queries the database for the necessary data
+     */
     private void getResults() {
         if (dataContainer.type == DataContainer.Type.TABLE) {
             if (dataContainer.query) {
@@ -91,70 +122,39 @@ class DynamicPageResults {
     }
     
     /**
-     * Returns a list of all data in the database for the specified main domain class
-     * @param mainDomainClass The domain class to query on for a list of data
-     * @param columns A list of the columns, from which some may need to be filtered or sorted
-     * @param element The part of the xml describing the element
-     * @param params The parameters of the current request
-     * @return A list of all data in the database for the specified main domain class
+     * Returns a list of the requested data for use with a table
      */
     private void getList() {
         HibernateCriteriaBuilder criteria = dataContainer.domainClass.clazz.createCriteria()
-        String offset = params.offset?.toString()
         
         results = criteria.list {
-            /*dataContainer.forAllColumnsWithChildren { c ->
-                String path = c.path.grep { it instanceof Column }.join(".")
-                ${path} { }
-            }    */
-
-           /* projections {
-                dataContainer.forAllColumnsWithChildren { c ->
-                    if (c.property.manyToMany || c.property.oneToMany) {
-                        String path = c.path.grep { it instanceof Column }.join(".")
-                        groupProperty(path)
-                    }
-                    /*else if (c.property.oneToOne || c.property.manyToOne) {
-                        String path = "${c.path.grep { it instanceof Column }.join(".")}.id"
-                        property(path)
-                    }
-                }
-            }     */
-            
             and {
                 // Loop over all the columns and place filters if needed
                 dataContainer.forAllColumns { c ->
-                    String filter = params["filter_${dataContainer.eid}_${c.name}"]
-                    String sort = params["sort_${dataContainer.eid}_${c.name}"]
+                    if (c.parent instanceof DataContainer) {
+                        String filter = params["filter_${dataContainer.eid}_${c.name}"]
+                        String sort = params["sort_${dataContainer.eid}_${c.name}"]
 
-                    // Place a filter on this column, if specified by the user
-                    if (filter && !filter.isEmpty()) {
-                        String[] filters = filter.split()
-                        filter = "%${filters.join('%')}%"
-                        like(c.name, filter)
-                    }
+                        // Place a filter on this column, if specified by the user
+                        if (filter && !filter.isEmpty()) {
+                            String[] filters = filter.split()
+                            filter = "%${filters.join('%')}%"
+                            like(c.name, filter)
+                        }
 
-                    // Sort this column, if specified by the user
-                    if (sort && !sort.isEmpty()) {
-                        order(c.name, sort)
+                        // Sort this column, if specified by the user
+                        if (sort && !sort.isEmpty()) {
+                            order(c.name, sort)
+                        }
                     }
                 }
             }
-
-            // For pagination, find out the maximum number of results and the offset.
-            // If not specified, return at most 100 results starting from the top of the list
-            firstResult(offset?.toInteger() ?: 0)
-            maxResults(100)
         }
     }
 
     /**
-     * Returns a list of all data in the database for the specified query
-     * @param query The query in question
-     * @param mainDomainClass The domain class to query on for a list of data
-     * @param element The part of the xml describing the element
-     * @param params The parameters of the current request
-     * @return A list of all data in the database for the specified main domain class
+     * Returns a list of the requested data 
+     * for use with a table for the specified query
      */
     private void getListForQuery() {
         // TODO
@@ -162,11 +162,6 @@ class DynamicPageResults {
 
     /**
      * Returns an instance from the database, based on a specified element
-     * @param mainDomainClass The main domain class
-     * @param columns A map of all the columns
-     * @param element The element in question
-     * @param params The parameters of the current request
-     * @return A list of instances, currently with only one result
      */
     private void getInstance() {
         List<Object> domainClasses = new ArrayList<Object>()
@@ -178,6 +173,7 @@ class DynamicPageResults {
             rId = (dataContainer.id.equalsIgnoreCase("url")) ? params.long("id") : dataContainer.id.toLong()
         }            
         
+        // Fetch the instances
         dataContainer.domainClasses.each { domainClass ->
             Object instance = (rId) ? domainClass.clazz.get(rId) : domainClass.newInstance()
             domainClasses.add(instance)
@@ -188,6 +184,7 @@ class DynamicPageResults {
             }
         }
 
+        // In case of multiples, a new instance could be created, so cache these
         dataContainer.domainClassesOfMultiples.each { domainClass ->
             newInstances.put(domainClass.name, domainClass)
         }

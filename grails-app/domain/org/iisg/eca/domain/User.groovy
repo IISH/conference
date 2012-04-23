@@ -8,29 +8,29 @@ import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
  */
 class User extends DefaultDomain {
     /**
-	 * The saltSource is responsible for the creation of salts
-	 */
+     * The saltSource is responsible for the creation of salts
+     */
     def saltSource
 
     /**
-	 * Information about the currently logged in user
+     * Information about the currently logged in user
      */
-	transient springSecurityService
-
-	String email
-	String fullName
-	String institute
-	Country country
-	String language
-	String password
-	String salt
+    transient springSecurityService
+    
+    String email
+    String fullName
+    String institute
+    Country country
+    String language
+    String password
+    String salt
 
     static belongsTo = Country
     static hasMany = [groups: Group, networks: NetworkChair]
 
     static mapping = {
-		table 'users'
- 		version false
+        table 'users'
+        version false
 
         id          column: 'user_id'
         email       column: 'email'
@@ -42,16 +42,16 @@ class User extends DefaultDomain {
         salt        column: 'salt'
 
         groups  joinTable: 'users_groups'
-	}
+    }
 
-	static constraints = {
-		email       maxSize: 30,    blank: false,   unique: true,   email: true
-		fullName    maxSize: 30,    blank: false
-		institute   maxSize: 50,    blank: false
-		country                     blank: false
-		language    maxSize: 10,    blank: false
-		password    maxSize: 128,   blank: false,   display: false
-		salt        maxSize: 26,    nullable: true, display: false
+    static constraints = {
+        email       maxSize: 30,    blank: false,   unique: true,   email: true
+        fullName    maxSize: 30,    blank: false
+        institute   maxSize: 50,    blank: false
+        country                     blank: false
+        language    maxSize: 10,    blank: false
+        password    maxSize: 128,   blank: false,   display: false
+        salt        maxSize: 26,    nullable: true, display: false
     }
 
     /**
@@ -72,10 +72,10 @@ class User extends DefaultDomain {
         // If the user is granted access to all events, just return a list of all event dates
         // Otherwise, only return the event dates he/she is specifically given access to
         if (SpringSecurityUtils.ifAnyGranted(roles*.role.join(','))) {
-            EventDate.sortByEventAndDate.list()
+            EventDate.list()
         }
         else {
-            UserRole.findAllByUser(this).collect { it.date } as Set
+            UserRole.findAllByUser(this).collect { it.date } 
         }
     }
 

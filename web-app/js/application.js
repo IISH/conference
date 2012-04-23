@@ -57,6 +57,29 @@ $(document).ready(function() {
         clone.removeClass("hidden");
     });
 
+    $('.buttons .btn_add').click(function(e) {
+        var parent = $(this).parent().prev().find('.columns.copy')
+        var item = parent.find('.column.hidden')
+        var clone = item.clone(true);
+        var i = 0;
+
+        if (item.prev().length !== 0) {
+            var nameSplit = item.prev().find('input, select').attr("name").split('.');
+            var number = nameSplit[0].split('_')[1];
+            if ($.isNumeric(number)) {
+                i = number;
+            }
+            i++;
+        }
+
+        clone.find('input, select').each(function() {
+            $(this).attr("name", $(this).attr("name").replace("null", i));
+        });
+
+        clone.insertBefore(item);
+        clone.removeClass("hidden");
+    });
+
     $('fieldset span.ui-icon-circle-minus').click(function(e) {
         var toBeRemoved = $(this).parent();
 
