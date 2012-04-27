@@ -4,7 +4,7 @@ class FeeState extends EventDomain {
     String name
     boolean isDefaultFee
     
-    static hasMany = [feeAmounts: FeeAmount]
+    static hasMany = [participantDates: ParticipantDate, feeAmounts: FeeAmount]
 
     static constraints = {
         event   nullable: true

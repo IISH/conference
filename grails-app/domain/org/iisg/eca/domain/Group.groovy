@@ -4,8 +4,6 @@ package org.iisg.eca.domain
  * Domain class of table holding all existing permission groups
  */
 class Group extends EventDateDomain {
-    def pageInformation
-
     String name
 
     static hasMany = [users: User]

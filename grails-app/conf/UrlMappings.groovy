@@ -1,17 +1,11 @@
 class UrlMappings {
     static mappings = {
         // The default mapping
-        "/$event/$date/$controller/$action/$id?" { }
+        "/$event/$date/$controller/$action/$id?" ()
         
         // Again the default mapping, but now with a name
-        name eventDate: "/$event/$date/$controller/$action/$id?" { }
-        
-        // The index page of an event
-        name eventIdx: "/$event/$date" {
-            controller = 'event'
-            action = 'index'
-        }
-        
+        name eventDate: "/$event/$date/$controller/$action/$id?" ()
+
         // Login is seperate from an event
         name login: "/login/$action" {
             controller = 'login'
@@ -25,6 +19,12 @@ class UrlMappings {
         // Event is a controller for ALL events, so it is seperate from AN event
         name event: "/event/$action/$id?" {
             controller = 'event'
+        }
+
+        // The index page of an event
+        name eventIdx: "/$event/$date" {
+            controller = 'event'
+            action = 'index'
         }
         
         // The default index page

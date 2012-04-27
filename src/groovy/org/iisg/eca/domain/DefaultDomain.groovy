@@ -20,14 +20,4 @@ abstract class DefaultDomain {
     void enable(boolean enabled) {
         this.enabled = enabled
     }
-
-    @Override
-    void delete() {
-        deleted = true
-    }
-
-    @Override
-    void delete(Map props) {
-        deleted = true
-    }
 }

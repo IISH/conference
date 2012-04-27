@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Apr 20, 2012 at 04:40 PM
+-- Generation Time: Apr 27, 2012 at 05:15 PM
 -- Server version: 5.0.86
 -- PHP Version: 5.2.10
 
@@ -24,6 +24,8 @@ CREATE TABLE IF NOT EXISTS `admin_pages` (
   `page_id` bigint(20) NOT NULL,
   `event_id` bigint(20) default NULL,
   `show_in_menu` tinyint(1) NOT NULL default '1',
+  `enabled` tinyint(1) NOT NULL default '1',
+  `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`admin_page_id`),
   KEY `admin_pages_page_id_idx` (`page_id`),
   KEY `admin_pages_event_id_idx` (`event_id`)
@@ -390,43 +392,48 @@ CREATE TABLE IF NOT EXISTS `dynamic_pages` (
   `cache` longtext collate utf8_unicode_ci,
   `page_id` bigint(20) NOT NULL,
   `date_id` bigint(20) default NULL,
+  `enabled` tinyint(1) NOT NULL default '1',
+  `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`dynamic_page_id`),
   KEY `date_id` (`date_id`),
   KEY `page_id` (`page_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=28 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=32 ;
 
 --
 -- Dumping data for table `dynamic_pages`
 --
 
-INSERT INTO `dynamic_pages` (`dynamic_page_id`, `content`, `cache`, `page_id`, `date_id`) VALUES
-(1, '<overview domain="Event" id="url">\r\n	<column name="id" />\r\n	<column name="code" />\r\n	<column name="shortName" />\r\n	<column name="longName" />\r\n	<column name="enabled" />\r\n	<column name="dates" />    \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 1, NULL),
-(2, '<form domain="Event" id="url">\r\n	<column name="id" />\r\n	<column name="code" />\r\n	<column name="shortName" />\r\n	<column name="longName" />\r\n	<column name="enabled" />\r\n	<column name="deleted" /> \r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 2, NULL),
-(3, '<overview domain="EventDate" id="url">\r\n	<column name="event" />\r\n	<column name="yearCode" />\r\n	<column name="startDate" />\r\n	<column name="endDate" />\r\n	<column name="days" />\r\n	<column name="dateAsText" />\r\n	<column name="description" />  \r\n	<column name="longDescription" />\r\n</overview>\r\n\r\n<buttons>\r\n        <button type="back" />\r\n        <button action="edit" />\r\n</buttons>', NULL, 3, NULL),
-(4, '<form domain="EventDate" id="url">\r\n	<column name="event" readonly="true" />\r\n	<column name="yearCode" />\r\n	<column name="startDate" />\r\n	<column name="endDate" />\r\n	<column name="days" multiple="true">\r\n		<column name="dayNumber" />\r\n		<column name="day" />	\r\n	</column>\r\n	<column name="dateAsText" />\r\n	<column name="description" />  \r\n	<column name="longDescription" />\r\n	<column name="enabled" />\r\n        <column name="deleted" />\r\n \r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 4, NULL),
-(5, '<form domain="Event">\r\n	<column name="code" />\r\n	<column name="shortName" />\r\n	<column name="longName" />\r\n	<column name="enabled" />\r\n	\r\n	<column name="dates">\r\n		<column name="yearCode" />\r\n		<column name="startDate" />\r\n		<column name="endDate" />\r\n		<column name="dateAsText" />\r\n		<column name="description" />  \r\n		<column name="longDescription" />\r\n		<column name="enabled" />\r\n	</column>\r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 5, NULL),
-(6, '<form domain="EventDate">\r\n	<column name="event" id="url" />\r\n	<column name="yearCode" />\r\n	<column name="startDate" />\r\n	<column name="endDate" />\r\n	<column name="days" multiple="true">\r\n		<column name="dayNumber" />\r\n		<column name="day" />	\r\n	</column>\r\n	<column name="dateAsText" />\r\n	<column name="description" />  \r\n	<column name="longDescription" />\r\n	<column name="enabled" />\r\n \r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 6, NULL),
-(7, '<form domain="Network">\r\n	<column name="name" />\r\n	<column name="comment" />\r\n	<column name="url" />\r\n	<column name="showOnline" />\r\n	<column name="showInternal" />	\r\n	<column name="chairs" multiple="true">\r\n		<column name="chair" />\r\n		<column name="isMainChair" />\r\n	</column>\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 7, NULL),
-(8, '<form domain="Title">\r\n	<column name="title" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 8, NULL),
-(9, '<overview domain="Equipment" id="url">\r\n	<column name="id" />\r\n	<column name="equipment" />\r\n	<column name="description" />\r\n	<column name="imageUrl" />\r\n	<column name="enabled" />    \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 19, NULL),
-(10, '<form domain="Equipment" id="url">\r\n	<column name="id" />\r\n	<column name="equipment" />\r\n	<column name="description" />\r\n	<column name="imageUrl" />\r\n	<column name="enabled" />\r\n	<column name="deleted" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />    \r\n</form>', NULL, 17, NULL),
-(11, '<form domain="Equipment">\r\n	<column name="equipment" />\r\n	<column name="description" />\r\n	<column name="imageUrl" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />	\r\n</form>', NULL, 15, NULL),
-(12, '<form domain="Network" id="url">\r\n	<column name="name" />\r\n	<column name="comment" />\r\n	<column name="url" />\r\n	<column name="showOnline" />\r\n	<column name="showInternal" />	\r\n	<column name="chairs" multiple="true">\r\n		<column name="chair" />\r\n		<column name="isMainChair" />\r\n	</column>\r\n	<column name="enabled" />\r\n	<column name="deleted" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 10, NULL),
-(13, '<overview domain="Network" id="url">\r\n	<column name="name" />\r\n	<column name="comment" />\r\n	<column name="url" />\r\n	<column name="showOnline" />\r\n	<column name="showInternal" />	\r\n	<column name="chairs" />\r\n	<column name="enabled" />\r\n	<column name="deleted" />\r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 11, NULL),
-(14, '<form domain="Title" id="url">\r\n   <column name="title" />\r\n   <column name="enabled" />\r\n\r\n   <button type="cancel" />\r\n   <button type="save" />  \r\n</form>', NULL, 12, NULL),
-(15, '<overview domain="Title" id="url">\r\n	<column name="title" />\r\n	<column name="enabled" />\r\n	<column name="deleted" />   \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 13, NULL),
-(16, '<overview domain="Room" id="url">\r\n	<column name="roomName" />\r\n	<column name="roomNumber" />\r\n	<column name="noOfSeats" />\r\n	<column name="comment" />\r\n	<column name="deleted" />   \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>\r\n', NULL, 18, NULL),
-(17, '<form domain="Room" id="url">\r\n	<column name="roomName" />\r\n	<column name="roomNumber" />\r\n	<column name="noOfSeats" />\r\n	<column name="comment" />\r\n	<column name="enabled" />\r\n	<column name="deleted" /> \r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 16, NULL),
-(18, '<form domain="Room">\r\n	<column name="roomName" />\r\n	<column name="roomNumber" />\r\n	<column name="noOfSeats" />\r\n	<column name="comment" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 14, NULL),
-(19, '<table domain="Title">\r\n   <column name="title" />\r\n   <column name="enabled" />\r\n   <column name="deleted" />\r\n</table>\r\n\r\n<buttons>\r\n   <button type="back" />\r\n   <button action="create" />\r\n</buttons>', NULL, 20, NULL),
-(20, '<table domain="Room">\r\n	<column name="roomName" />\r\n	<column name="roomNumber" />\r\n	<column name="noOfSeats" />  \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>\r\n', NULL, 21, NULL),
-(21, '<form domain="Network" id="url">\r\n	<column name="name" />\r\n	<column name="comment" />\r\n	<column name="url" />\r\n	<column name="showOnline" />\r\n	<column name="showInternal" />	\r\n	<column name="chairs" multiple="true">\r\n		<column name="chair" />\r\n		<column name="isMainChair" />\r\n	</column>\r\n	<column name="enabled" />\r\n	<column name="disabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 22, NULL),
-(22, '<table domain="Equipment">\r\n	<column name="equipment" />\r\n	<column name="description" />\r\n	<column name="imageUrl" />\r\n	<column name="enabled" />  \r\n        <column name="deleted" />  \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>\r\n', NULL, 23, NULL),
-(23, '<table domain="Event">\r\n	<column name="code" />\r\n	<column name="shortName" />\r\n	\r\n	<column name="dates">\r\n		<column name="yearCode" />\r\n	</column>\r\n</table>', NULL, 24, NULL),
-(24, '<table domain="Session" index="true">\r\n	<column name="code" />\r\n	<column name="name" /> \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>', NULL, 26, NULL),
-(25, '<form domain="Session" id="url">\r\n	<column name="id" />\r\n	<column name="name" />\r\n	<column name="code" />\r\n	<column name="comment" />\r\n	<column name="enabled" />\r\n	<column name="deleted" /> \r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 27, NULL),
-(26, '<form domain="Session">\r\n	<column name="name" />\r\n	<column name="code" />\r\n	<column name="comment" />\r\n	<column name="enabled" />\r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 28, NULL),
-(27, '<overview domain="Session" id="url">\r\n	<column name="id" />\r\n	<column name="name" />\r\n	<column name="code" />\r\n	<column name="comment" />\r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 29, NULL);
+INSERT INTO `dynamic_pages` (`dynamic_page_id`, `content`, `cache`, `page_id`, `date_id`, `enabled`, `deleted`) VALUES
+(1, '<overview domain="Event" id="url">\r\n	<column name="id" />\r\n	<column name="code" />\r\n	<column name="shortName" />\r\n	<column name="longName" />\r\n	<column name="enabled" />\r\n	<column name="dates" />    \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 1, NULL, 1, 0),
+(2, '<form domain="Event" id="url">\r\n	<column name="id" />\r\n	<column name="code" />\r\n	<column name="shortName" />\r\n	<column name="longName" />\r\n	<column name="enabled" />\r\n	<column name="deleted" /> \r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 2, NULL, 1, 0),
+(3, '<overview domain="EventDate" id="url">\r\n	<column name="event" />\r\n	<column name="yearCode" />\r\n	<column name="startDate" />\r\n	<column name="endDate" />\r\n	<column name="days" />\r\n	<column name="dateAsText" />\r\n	<column name="description" />  \r\n	<column name="longDescription" />\r\n</overview>\r\n\r\n<buttons>\r\n        <button type="back" />\r\n        <button action="edit" />\r\n</buttons>', NULL, 3, NULL, 1, 0),
+(4, '<form domain="EventDate" id="url">\r\n	<column name="event" readonly="true" />\r\n	<column name="yearCode" />\r\n	<column name="startDate" />\r\n	<column name="endDate" />\r\n	<column name="days" multiple="true">\r\n		<column name="dayNumber" />\r\n		<column name="day" />	\r\n	</column>\r\n	<column name="dateAsText" />\r\n	<column name="description" />  \r\n	<column name="longDescription" />\r\n	<column name="enabled" />\r\n        <column name="deleted" />\r\n \r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 4, NULL, 1, 0),
+(5, '<form domain="Event">\r\n	<column name="code" />\r\n	<column name="shortName" />\r\n	<column name="longName" />\r\n	<column name="enabled" />\r\n	\r\n	<column name="dates">\r\n		<column name="yearCode" />\r\n		<column name="startDate" />\r\n		<column name="endDate" />\r\n		<column name="dateAsText" />\r\n		<column name="description" />  \r\n		<column name="longDescription" />\r\n		<column name="enabled" />\r\n	</column>\r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 5, NULL, 1, 0),
+(6, '<form domain="EventDate">\r\n	<column name="event" id="url" />\r\n	<column name="yearCode" />\r\n	<column name="startDate" />\r\n	<column name="endDate" />\r\n	<column name="days" multiple="true">\r\n		<column name="dayNumber" />\r\n		<column name="day" />	\r\n	</column>\r\n	<column name="dateAsText" />\r\n	<column name="description" />  \r\n	<column name="longDescription" />\r\n	<column name="enabled" />\r\n \r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 6, NULL, 1, 0),
+(7, '<form domain="Network">\r\n	<column name="name" />\r\n	<column name="comment" />\r\n	<column name="url" />\r\n	<column name="showOnline" />\r\n	<column name="showInternal" />	\r\n	<column name="chairs" multiple="true">\r\n		<column name="chair" />\r\n		<column name="isMainChair" />\r\n	</column>\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 7, NULL, 1, 0),
+(8, '<form domain="Title">\r\n	<column name="title" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 8, NULL, 1, 0),
+(9, '<overview domain="Equipment" id="url">\r\n	<column name="id" />\r\n	<column name="equipment" />\r\n	<column name="description" />\r\n	<column name="imageUrl" />\r\n	<column name="enabled" />    \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 19, NULL, 1, 0),
+(10, '<form domain="Equipment" id="url">\r\n	<column name="id" />\r\n	<column name="equipment" />\r\n	<column name="description" />\r\n	<column name="imageUrl" />\r\n	<column name="enabled" />\r\n	<column name="deleted" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />    \r\n</form>', NULL, 17, NULL, 1, 0),
+(11, '<form domain="Equipment">\r\n	<column name="equipment" />\r\n	<column name="description" />\r\n	<column name="imageUrl" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />	\r\n</form>', NULL, 15, NULL, 1, 0),
+(12, '<form domain="Network" id="url">\r\n	<column name="name" />\r\n	<column name="comment" />\r\n	<column name="url" />\r\n	<column name="showOnline" />\r\n	<column name="showInternal" />	\r\n	<column name="chairs" multiple="true">\r\n		<column name="chair" />\r\n		<column name="isMainChair" />\r\n	</column>\r\n	<column name="enabled" />\r\n	<column name="deleted" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 10, NULL, 1, 0),
+(13, '<overview domain="Network" id="url">\r\n	<column name="name" />\r\n	<column name="comment" />\r\n	<column name="url" />\r\n	<column name="showOnline" />\r\n	<column name="showInternal" />	\r\n	<column name="chairs" />\r\n	<column name="enabled" />\r\n	<column name="deleted" />\r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 11, NULL, 1, 0),
+(14, '<form domain="Title" id="url">\r\n   <column name="title" />\r\n   <column name="enabled" />\r\n\r\n   <button type="cancel" />\r\n   <button type="save" />  \r\n</form>', NULL, 12, NULL, 1, 0),
+(15, '<overview domain="Title" id="url">\r\n	<column name="title" />\r\n	<column name="enabled" />\r\n	<column name="deleted" />   \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 13, NULL, 1, 0),
+(16, '<overview domain="Room" id="url">\r\n	<column name="roomName" />\r\n	<column name="roomNumber" />\r\n	<column name="noOfSeats" />\r\n	<column name="comment" />\r\n	<column name="deleted" />   \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>\r\n', NULL, 18, NULL, 1, 0),
+(17, '<form domain="Room" id="url">\r\n	<column name="roomName" />\r\n	<column name="roomNumber" />\r\n	<column name="noOfSeats" />\r\n	<column name="comment" />\r\n	<column name="enabled" />\r\n	<column name="deleted" /> \r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 16, NULL, 1, 0),
+(18, '<form domain="Room">\r\n	<column name="roomName" />\r\n	<column name="roomNumber" />\r\n	<column name="noOfSeats" />\r\n	<column name="comment" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 14, NULL, 1, 0),
+(19, '<table domain="Title">\r\n   <column name="title" />\r\n   <column name="enabled" />\r\n   <column name="deleted" />\r\n</table>\r\n\r\n<buttons>\r\n   <button type="back" />\r\n   <button action="create" />\r\n</buttons>', NULL, 20, NULL, 1, 0),
+(20, '<table domain="Room">\r\n	<column name="roomName" />\r\n	<column name="roomNumber" />\r\n	<column name="noOfSeats" />  \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>\r\n', NULL, 21, NULL, 1, 0),
+(21, '<form domain="Network" id="url">\r\n	<column name="name" />\r\n	<column name="comment" />\r\n	<column name="url" />\r\n	<column name="showOnline" />\r\n	<column name="showInternal" />	\r\n	<column name="chairs" multiple="true">\r\n		<column name="chair" />\r\n		<column name="isMainChair" />\r\n	</column>\r\n	<column name="enabled" />\r\n	<column name="disabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 22, NULL, 1, 0),
+(22, '<table domain="Equipment">\r\n	<column name="equipment" />\r\n	<column name="description" />\r\n	<column name="imageUrl" />\r\n	<column name="enabled" />  \r\n        <column name="deleted" />  \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>\r\n', NULL, 23, NULL, 1, 0),
+(24, '<table domain="Session" index="true">\r\n	<column name="code" />\r\n	<column name="name" /> \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>', NULL, 26, NULL, 1, 0),
+(25, '<form domain="Session" id="url">\r\n	<column name="id" />\r\n	<column name="name" />\r\n	<column name="code" />\r\n	<column name="comment" />\r\n	<column name="enabled" />\r\n	<column name="deleted" /> \r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 27, NULL, 1, 0),
+(26, '<form domain="Session">\r\n	<column name="name" />\r\n	<column name="code" />\r\n	<column name="comment" />\r\n	<column name="enabled" />\r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 28, NULL, 1, 0),
+(27, '<overview domain="Session" id="url">\r\n	<column name="id" />\r\n	<column name="name" />\r\n	<column name="code" />\r\n	<column name="comment" />\r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 29, NULL, 1, 0),
+(28, '<form domain="ParticipantState">\r\n	<column name="state" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />    \r\n</form>', NULL, 33, NULL, 1, 0),
+(29, '<form domain="ParticipantState" id="url">\r\n	<column name="id" />\r\n	<column name="state" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />    \r\n</form>', NULL, 34, NULL, 1, 0),
+(30, '<overview domain="ParticipantState" id="url">\r\n	<column name="id" />\r\n	<column name="state" />\r\n	<column name="enabled" />\r\n	<column name="deleted" />\r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 35, NULL, 1, 0),
+(31, '<table domain="ParticipantState">\r\n	<column name="state" />\r\n	<column name="enabled" />  \r\n	<column name="deleted" />  \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>', NULL, 36, NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -486,6 +493,32 @@ INSERT INTO `events` (`event_id`, `code`, `short_name`, `long_name`, `type`, `en
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `extras`
+--
+
+CREATE TABLE IF NOT EXISTS `extras` (
+  `extra_id` bigint(20) NOT NULL auto_increment,
+  `date_id` bigint(20) NOT NULL,
+  `extra` varchar(30) collate utf8_unicode_ci NOT NULL,
+  `enabled` tinyint(1) NOT NULL default '1',
+  `deleted` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`extra_id`),
+  KEY `date_id` (`date_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `extras`
+--
+
+INSERT INTO `extras` (`extra_id`, `date_id`, `extra`, `enabled`, `deleted`) VALUES
+(1, 1, 'Concert', 1, 0),
+(2, 1, 'Theater', 1, 0),
+(3, 1, 'Museum', 1, 0),
+(4, 1, 'Sightseeing', 1, 0);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `fee_amounts`
 --
 
@@ -502,7 +535,7 @@ CREATE TABLE IF NOT EXISTS `fee_amounts` (
   PRIMARY KEY  (`fee_amount_id`),
   KEY `date_id` (`date_id`),
   KEY `fee_state_id` (`fee_state_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=15 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=17 ;
 
 --
 -- Dumping data for table `fee_amounts`
@@ -518,7 +551,9 @@ INSERT INTO `fee_amounts` (`fee_amount_id`, `date_id`, `fee_state_id`, `end_date
 (11, 1, 4, '2012-04-30', 1, 4, 90.00, 1, 0),
 (12, 1, 5, '2012-04-30', 1, 4, 0.00, 1, 0),
 (13, 1, 8, '2012-04-30', 1, 1, 150.00, 1, 0),
-(14, 1, 8, '2012-04-30', 2, 4, 300.00, 1, 0);
+(14, 1, 8, '2012-04-30', 2, 4, 300.00, 1, 0),
+(15, 1, 9, '2012-07-07', 1, 2, 800.00, 1, 1),
+(16, 1, 9, '2012-05-05', 1, 4, 200.00, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -535,7 +570,7 @@ CREATE TABLE IF NOT EXISTS `fee_states` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`fee_state_id`),
   KEY `event_id` (`event_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=9 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=10 ;
 
 --
 -- Dumping data for table `fee_states`
@@ -549,7 +584,8 @@ INSERT INTO `fee_states` (`fee_state_id`, `event_id`, `name`, `is_default_fee`, 
 (5, 1, 'IISG Fee', 0, 1, 0),
 (6, 1, 'Bijbetaling', 0, 1, 0),
 (7, 1, 'Book exhibit', 0, 1, 0),
-(8, 1, 'On Site', 0, 1, 0);
+(8, 1, 'On Site', 0, 1, 0),
+(9, 1, 'Naam', 1, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -668,7 +704,7 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`page_id`),
   KEY `pages_parent_page_id_idx` (`parent_page_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=30 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=39 ;
 
 --
 -- Dumping data for table `pages`
@@ -698,12 +734,191 @@ INSERT INTO `pages` (`page_id`, `title_code`, `title_arg`, `title_default`, `con
 (21, 'default.list.label', 'room.label', 'Room list', 'room', 'list', NULL, NULL, 1, 0),
 (22, 'default.list.label', 'network.label', 'Network list', 'network', 'list', NULL, NULL, 1, 0),
 (23, 'default.list.label', 'equipment.label', 'Equipment list', 'equipment', 'list', NULL, NULL, 1, 0),
-(24, 'default.list.label', 'event.label', '', 'event', 'list_all', NULL, NULL, 1, 0),
 (25, 'default.welcome.label', NULL, 'Welcome', 'event', 'index', NULL, NULL, 1, 0),
 (26, 'default.list.label', 'session.label', 'Session list', 'session', 'list', NULL, NULL, 1, 0),
 (27, 'default.edit.label', 'session.label', 'Edit session', 'session', 'edit', NULL, NULL, 1, 0),
 (28, 'default.create.label', 'session.label', 'Create session', 'session', 'create', NULL, NULL, 1, 0),
-(29, 'default.overview.label', 'session.label', 'Session overview', 'session', 'show', NULL, NULL, 1, 0);
+(29, 'default.overview.label', 'session.label', 'Session overview', 'session', 'show', NULL, NULL, 1, 0),
+(30, 'default.create.label', 'feestate.label', 'Create fee state', 'fee', 'create', NULL, NULL, 1, 0),
+(31, 'default.edit.label', 'feestate.label', 'Edit fee state', 'fee', 'edit', NULL, NULL, 1, 0),
+(32, 'default.list.label', 'feestate.multiple.label', 'List fee states', 'fee', 'list', NULL, NULL, 1, 0),
+(33, 'default.create.label', 'participantstate.label', 'Create participant state', 'participantState', 'create', NULL, NULL, 1, 0),
+(34, 'default.edit.label', 'participantstate.label', 'Edit participant state', 'participantState', 'edit', NULL, NULL, 1, 0),
+(35, 'default.overview.label', 'participantstate.label', 'Participant state overview', 'participantState', 'show', NULL, NULL, 1, 0),
+(36, 'default.list.label', 'participantstate.multiple.label', 'Participant states list', 'participantState', 'list', NULL, NULL, 1, 0),
+(37, 'default.list.label', 'user.label', 'Participant list', 'participant', 'list', NULL, NULL, 1, 0),
+(38, 'default.overview.label', 'user.label', 'User overview', 'participant', 'show', NULL, NULL, 1, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `papers`
+--
+
+CREATE TABLE IF NOT EXISTS `papers` (
+  `paper_id` bigint(20) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `paper_state_id` bigint(20) NOT NULL,
+  `session_id` bigint(20) default NULL,
+  `date_id` bigint(20) default NULL,
+  `title` varchar(500) collate utf8_unicode_ci NOT NULL,
+  `co_authors` varchar(500) collate utf8_unicode_ci default NULL,
+  `abstract` text collate utf8_unicode_ci,
+  `comment` text collate utf8_unicode_ci,
+  `session_proposal` varchar(500) collate utf8_unicode_ci default NULL,
+  `proposal_description` text collate utf8_unicode_ci,
+  `filename` varchar(500) collate utf8_unicode_ci default NULL,
+  `content_type` varchar(100) collate utf8_unicode_ci default NULL,
+  `filesize` bigint(20) default NULL,
+  `file` mediumblob,
+  `equipment_comment` text collate utf8_unicode_ci,
+  `enabled` tinyint(1) NOT NULL default '1',
+  `deleted` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`paper_id`),
+  KEY `user_id` (`user_id`),
+  KEY `date_id` (`date_id`),
+  KEY `paper_state_id` (`paper_state_id`),
+  KEY `session_id` (`session_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `papers`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `paper_equipment`
+--
+
+CREATE TABLE IF NOT EXISTS `paper_equipment` (
+  `paper_id` bigint(20) NOT NULL,
+  `equipment_id` bigint(20) NOT NULL,
+  PRIMARY KEY  (`paper_id`,`equipment_id`),
+  KEY `equipment_id` (`equipment_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `paper_equipment`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `paper_states`
+--
+
+CREATE TABLE IF NOT EXISTS `paper_states` (
+  `paper_state_id` bigint(20) NOT NULL auto_increment,
+  `date_id` bigint(20) default NULL,
+  `description` varchar(50) collate utf8_unicode_ci NOT NULL,
+  `enabled` tinyint(1) NOT NULL default '1',
+  `deleted` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`paper_state_id`),
+  KEY `date_id` (`date_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `paper_states`
+--
+
+INSERT INTO `paper_states` (`paper_state_id`, `date_id`, `description`, `enabled`, `deleted`) VALUES
+(0, 1, 'No Paper', 1, 0),
+(1, 1, 'New Paper', 1, 0),
+(2, 1, 'Paper Accepted', 1, 0),
+(3, 1, 'Paper Not Accepted', 1, 0),
+(4, 1, 'Paper In Consideration', 1, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `participant_date`
+--
+
+CREATE TABLE IF NOT EXISTS `participant_date` (
+  `participant_date_id` bigint(20) NOT NULL auto_increment,
+  `user_id` bigint(20) NOT NULL,
+  `date_id` bigint(20) NOT NULL,
+  `participant_state_id` bigint(20) NOT NULL,
+  `fee_state_id` bigint(20) NOT NULL default '0',
+  `payment_id` bigint(20) NOT NULL default '0',
+  `date_added` date NOT NULL,
+  `invitation_letter` tinyint(1) NOT NULL default '0',
+  `invitation_letter_sent` tinyint(1) NOT NULL default '0',
+  `lower_fee_requested` tinyint(1) NOT NULL default '0',
+  `lower_fee_answered` tinyint(1) NOT NULL default '0',
+  `lower_fee_text` varchar(255) collate utf8_unicode_ci default NULL,
+  `enabled` tinyint(1) NOT NULL default '1',
+  `deleted` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`participant_date_id`),
+  KEY `user_id` (`user_id`),
+  KEY `date_id` (`date_id`),
+  KEY `participant_state_id` (`participant_state_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=8 ;
+
+--
+-- Dumping data for table `participant_date`
+--
+
+INSERT INTO `participant_date` (`participant_date_id`, `user_id`, `date_id`, `participant_state_id`, `fee_state_id`, `payment_id`, `date_added`, `invitation_letter`, `invitation_letter_sent`, `lower_fee_requested`, `lower_fee_answered`, `lower_fee_text`, `enabled`, `deleted`) VALUES
+(1, 2, 1, 0, 1, 0, '2012-04-26', 0, 0, 0, 0, '', 1, 0),
+(2, 2, 2, 0, 1, 0, '2012-04-26', 0, 0, 0, 0, '', 1, 0),
+(3, 3, 1, 1, 1, 0, '2012-04-27', 0, 0, 0, 0, NULL, 1, 0),
+(4, 4, 1, 999, 1, 0, '2012-04-27', 0, 0, 0, 0, NULL, 1, 0),
+(5, 5, 1, 2, 0, 0, '2012-04-27', 0, 0, 0, 0, NULL, 1, 0),
+(6, 6, 1, 2, 0, 0, '2012-04-27', 0, 0, 0, 0, NULL, 1, 0),
+(7, 7, 1, 1, 0, 0, '2012-04-27', 0, 0, 0, 0, NULL, 1, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `participant_date_extra`
+--
+
+CREATE TABLE IF NOT EXISTS `participant_date_extra` (
+  `participant_date_id` bigint(20) NOT NULL,
+  `extra_id` bigint(20) NOT NULL,
+  PRIMARY KEY  (`participant_date_id`,`extra_id`),
+  KEY `extra_id` (`extra_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `participant_date_extra`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `participant_states`
+--
+
+CREATE TABLE IF NOT EXISTS `participant_states` (
+  `participant_state_id` bigint(20) NOT NULL auto_increment,
+  `event_id` bigint(20) NOT NULL,
+  `participant_state` varchar(100) collate utf8_unicode_ci NOT NULL,
+  `enabled` tinyint(1) NOT NULL default '1',
+  `deleted` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`participant_state_id`),
+  KEY `event_id` (`event_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1000 ;
+
+--
+-- Dumping data for table `participant_states`
+--
+
+INSERT INTO `participant_states` (`participant_state_id`, `event_id`, `participant_state`, `enabled`, `deleted`) VALUES
+(0, 1, 'New Participant', 1, 0),
+(1, 1, 'Participant Data Checked', 1, 0),
+(2, 1, 'Participant', 1, 0),
+(3, 1, 'Will be removed', 1, 0),
+(4, 1, 'Removed: Cancelled', 1, 0),
+(5, 1, 'Removed: Double entry', 1, 0),
+(6, 1, 'No show', 1, 0),
+(7, 1, 'unclear', 1, 0),
+(999, 1, 'Participant did NOT FINISH registration', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -907,6 +1122,8 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `property` varchar(50) collate utf8_unicode_ci NOT NULL,
   `value` varchar(255) collate utf8_unicode_ci NOT NULL,
   `event_id` bigint(20) default NULL,
+  `enabled` tinyint(1) NOT NULL default '1',
+  `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`setting_id`),
   KEY `settings_event_id_idx` (`event_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
@@ -915,8 +1132,8 @@ CREATE TABLE IF NOT EXISTS `settings` (
 -- Dumping data for table `settings`
 --
 
-INSERT INTO `settings` (`setting_id`, `property`, `value`, `event_id`) VALUES
-(1, 'lastUpdated', 'april 2012', NULL);
+INSERT INTO `settings` (`setting_id`, `property`, `value`, `event_id`, `enabled`, `deleted`) VALUES
+(1, 'lastUpdated', 'april 2012', NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -956,27 +1173,42 @@ INSERT INTO `titles` (`title_id`, `event_id`, `title`, `enabled`, `deleted`) VAL
 CREATE TABLE IF NOT EXISTS `users` (
   `user_id` bigint(20) NOT NULL auto_increment,
   `email` varchar(30) collate utf8_unicode_ci NOT NULL,
-  `full_name` varchar(30) collate utf8_unicode_ci NOT NULL,
-  `institute` varchar(50) collate utf8_unicode_ci NOT NULL,
+  `lastname` varchar(100) collate utf8_unicode_ci NOT NULL,
+  `firstname` varchar(100) collate utf8_unicode_ci NOT NULL,
+  `gender` enum('M','F') collate utf8_unicode_ci default NULL,
+  `title` varchar(30) collate utf8_unicode_ci default NULL,
+  `address` text collate utf8_unicode_ci,
+  `city` varchar(100) collate utf8_unicode_ci NOT NULL,
   `country_id` bigint(20) NOT NULL,
   `language` varchar(10) collate utf8_unicode_ci NOT NULL,
   `password` varchar(128) collate utf8_unicode_ci NOT NULL,
   `salt` varchar(26) collate utf8_unicode_ci default NULL,
+  `phone` varchar(50) collate utf8_unicode_ci default NULL,
+  `fax` varchar(50) collate utf8_unicode_ci default NULL,
+  `mobile` varchar(50) collate utf8_unicode_ci default NULL,
+  `organisation` varchar(255) collate utf8_unicode_ci default NULL,
+  `department` varchar(255) collate utf8_unicode_ci default NULL,
+  `extra_info` text collate utf8_unicode_ci,
+  `date_added` date NOT NULL,
   `enabled` tinyint(1) NOT NULL default '1',
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`user_id`),
   UNIQUE KEY `email` (`email`),
   KEY `users_country_id_idx` (`country_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=8 ;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `email`, `full_name`, `institute`, `country_id`, `language`, `password`, `salt`, `enabled`, `deleted`) VALUES
-(1, 'em@em.com', 'Lastname, Firstname', 'International Institute for Social History', 169, 'nl', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', 1, 0),
-(2, 'email@email.com', 'Abc, Def', 'International Institute for Social History', 1, 'nl', 'pw', NULL, 1, 0),
-(3, 'mail@mail.com', 'Qwe, Rty', 'Institute', 1, 'en', 'pw', NULL, 1, 0);
+INSERT INTO `users` (`user_id`, `email`, `lastname`, `firstname`, `gender`, `title`, `address`, `city`, `country_id`, `language`, `password`, `salt`, `phone`, `fax`, `mobile`, `organisation`, `department`, `extra_info`, `date_added`, `enabled`, `deleted`) VALUES
+(1, 'em@em.com', 'Lastname', 'Firstname', 'M', NULL, NULL, 'City', 169, 'nl', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, NULL, NULL, 'International Institute for Social History', 'Department', NULL, '2012-04-26', 1, 0),
+(2, 'email@email.com', 'Abc', 'Def', NULL, NULL, NULL, 'City', 1, 'nl', 'pw', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
+(3, 'mail@mail.com', 'Hij', 'Klm', 'F', NULL, NULL, 'Another City', 1, 'en', 'pw', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
+(4, 'email2@email.com', 'Aaaaa', 'Aaaaaa', 'M', NULL, NULL, 'City', 169, 'nl', 'password', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
+(5, 'email3@hotmail.com', 'Abcdefgh', 'Abcdefgh', NULL, NULL, NULL, 'CIty', 9, 'nl', 'password', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
+(6, 'email56@email.com', 'Hakad', 'Hkfjdlsda', NULL, NULL, NULL, 'City', 12, 'nl', 'pass', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
+(7, 'em45@em.com', 'Losavwd', 'Losavwd', 'M', NULL, NULL, 'City', 98, 'nl', 'pw', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1008,6 +1240,8 @@ CREATE TABLE IF NOT EXISTS `users_pages` (
   `denied` tinyint(1) NOT NULL default '0',
   `show_in_menu` tinyint(1) NOT NULL default '1',
   `date_id` bigint(20) default NULL,
+  `enabled` tinyint(1) NOT NULL default '1',
+  `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`user_id`,`page_id`),
   KEY `users_pages_date_id_idx` (`date_id`),
   KEY `users_pages_page_id_idx` (`page_id`)
@@ -1025,22 +1259,30 @@ CREATE TABLE IF NOT EXISTS `users_pages` (
 --
 
 CREATE TABLE IF NOT EXISTS `users_roles` (
-  `user_role_id` bigint(20) NOT NULL,
+  `user_role_id` bigint(20) NOT NULL auto_increment,
   `user_id` bigint(20) NOT NULL,
   `role_id` bigint(20) NOT NULL,
   `date_id` bigint(20) default NULL,
+  `enabled` tinyint(1) NOT NULL default '1',
+  `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`user_role_id`),
   KEY `users_roles_user_id_idx` (`user_id`),
   KEY `users_roles_role_id_idx` (`role_id`),
   KEY `users_roles_date_id_idx` (`date_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=8 ;
 
 --
 -- Dumping data for table `users_roles`
 --
 
-INSERT INTO `users_roles` (`user_role_id`, `user_id`, `role_id`, `date_id`) VALUES
-(0, 1, 1, NULL);
+INSERT INTO `users_roles` (`user_role_id`, `user_id`, `role_id`, `date_id`, `enabled`, `deleted`) VALUES
+(1, 1, 1, NULL, 1, 0),
+(2, 2, 4, NULL, 1, 0),
+(3, 3, 4, NULL, 1, 0),
+(4, 4, 4, NULL, 1, 0),
+(5, 5, 4, NULL, 1, 0),
+(6, 6, 4, NULL, 1, 0),
+(7, 7, 4, NULL, 1, 0);
 
 --
 -- Constraints for dumped tables
@@ -1079,11 +1321,17 @@ ALTER TABLE `equipment`
   ADD CONSTRAINT `equipment_ibfk_1` FOREIGN KEY (`date_id`) REFERENCES `dates` (`date_id`);
 
 --
+-- Constraints for table `extras`
+--
+ALTER TABLE `extras`
+  ADD CONSTRAINT `extras_ibfk_1` FOREIGN KEY (`date_id`) REFERENCES `dates` (`date_id`);
+
+--
 -- Constraints for table `fee_amounts`
 --
 ALTER TABLE `fee_amounts`
-  ADD CONSTRAINT `fee_amounts_ibfk_2` FOREIGN KEY (`fee_state_id`) REFERENCES `fee_states` (`fee_state_id`),
-  ADD CONSTRAINT `fee_amounts_ibfk_1` FOREIGN KEY (`date_id`) REFERENCES `dates` (`date_id`);
+  ADD CONSTRAINT `fee_amounts_ibfk_1` FOREIGN KEY (`date_id`) REFERENCES `dates` (`date_id`),
+  ADD CONSTRAINT `fee_amounts_ibfk_2` FOREIGN KEY (`fee_state_id`) REFERENCES `fee_states` (`fee_state_id`);
 
 --
 -- Constraints for table `fee_states`
@@ -1122,6 +1370,49 @@ ALTER TABLE `networks_chairs`
 --
 ALTER TABLE `pages`
   ADD CONSTRAINT `pages_parent_page_id_fk` FOREIGN KEY (`parent_page_id`) REFERENCES `pages` (`page_id`);
+
+--
+-- Constraints for table `papers`
+--
+ALTER TABLE `papers`
+  ADD CONSTRAINT `papers_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `papers_ibfk_3` FOREIGN KEY (`date_id`) REFERENCES `dates` (`date_id`),
+  ADD CONSTRAINT `papers_ibfk_4` FOREIGN KEY (`paper_state_id`) REFERENCES `paper_states` (`paper_state_id`),
+  ADD CONSTRAINT `papers_ibfk_5` FOREIGN KEY (`session_id`) REFERENCES `sessions` (`session_id`);
+
+--
+-- Constraints for table `paper_equipment`
+--
+ALTER TABLE `paper_equipment`
+  ADD CONSTRAINT `paper_equipment_ibfk_2` FOREIGN KEY (`equipment_id`) REFERENCES `equipment` (`equipment_id`),
+  ADD CONSTRAINT `paper_equipment_ibfk_1` FOREIGN KEY (`paper_id`) REFERENCES `papers` (`paper_id`);
+
+--
+-- Constraints for table `paper_states`
+--
+ALTER TABLE `paper_states`
+  ADD CONSTRAINT `paper_states_ibfk_1` FOREIGN KEY (`date_id`) REFERENCES `dates` (`date_id`);
+
+--
+-- Constraints for table `participant_date`
+--
+ALTER TABLE `participant_date`
+  ADD CONSTRAINT `participant_date_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `participant_date_ibfk_2` FOREIGN KEY (`date_id`) REFERENCES `dates` (`date_id`),
+  ADD CONSTRAINT `participant_date_ibfk_3` FOREIGN KEY (`participant_state_id`) REFERENCES `participant_states` (`participant_state_id`);
+
+--
+-- Constraints for table `participant_date_extra`
+--
+ALTER TABLE `participant_date_extra`
+  ADD CONSTRAINT `participant_date_extra_ibfk_2` FOREIGN KEY (`extra_id`) REFERENCES `extras` (`extra_id`),
+  ADD CONSTRAINT `participant_date_extra_ibfk_1` FOREIGN KEY (`participant_date_id`) REFERENCES `participant_date` (`participant_date_id`);
+
+--
+-- Constraints for table `participant_states`
+--
+ALTER TABLE `participant_states`
+  ADD CONSTRAINT `participant_states_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `events` (`event_id`);
 
 --
 -- Constraints for table `rooms`

@@ -12,6 +12,6 @@ class UserDetailsService extends GormUserDetailsService {
     @Override
     protected UserDetails createUserDetails(user, Collection<GrantedAuthority> authorities) {
         new MyUserDetails(user.email, user.password, user.enabled, !user.deleted, authorities, user.id,
-                user.fullName, user.language, user.salt)
+                user.toString(), user.salt)
     }
 }

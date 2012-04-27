@@ -24,6 +24,7 @@ class Page extends DefaultDomain {
 
     static mapping = {
         table 'pages'
+        cache true
         version false
 
         id              column: 'page_id'

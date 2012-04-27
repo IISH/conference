@@ -7,8 +7,9 @@ class Equipment extends EventDateDomain {
     String equipment
     String description
     String imageUrl
-    
-    static hasMany = [roomSessionDateTimeEquipment: RoomSessionDateTimeEquipment]
+
+    static belongsTo = Paper
+    static hasMany = [roomSessionDateTimeEquipment: RoomSessionDateTimeEquipment, papers: Paper]
 
     static constraints = {
         equipment   blank: false,   maxSize: 30
@@ -24,6 +25,8 @@ class Equipment extends EventDateDomain {
         equipment   column: 'equipment'
         description column: 'description',  type: 'text'
         imageUrl    column: 'image_url'
+
+        papers      joinTable: 'paper_equipment'
     }
     
     @Override

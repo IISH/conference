@@ -16,42 +16,91 @@ class User extends DefaultDomain {
      * Information about the currently logged in user
      */
     transient springSecurityService
-    
+
+    enum Gender {
+        M("M"), F("F")
+
+        final String value
+
+        Gender(value) {
+            this.value = value
+        }
+
+        @Override
+        String toString() {
+            value
+        }
+    }
+
     String email
-    String fullName
-    String institute
+    String lastName
+    String firstName
+    Gender gender
+    String title
+    String address
+    String city
     Country country
     String language
     String password
     String salt
+    String phone
+    String fax
+    String mobile
+    String organisation
+    String department
+    String extraInfo
+    Date dateAdded = new Date()
 
     static belongsTo = Country
-    static hasMany = [groups: Group, networks: NetworkChair]
+    static hasMany = [  groups:             Group,
+                        networks:           NetworkChair,
+                        participantDates:   ParticipantDate,
+                        userRoles:          UserRole]
 
     static mapping = {
         table 'users'
         version false
 
-        id          column: 'user_id'
-        email       column: 'email'
-        fullName    column: 'full_name'
-        institute   column: 'institute'
-        country     column: 'country_id'
-        language    column: 'language'
-        password    column: 'password'
-        salt        column: 'salt'
+        id              column: 'user_id'
+        email           column: 'email'
+        lastName        column: 'lastname'
+        firstName       column: 'firstname'
+        gender          column: 'gender',       sqlType: 'enum'
+        title           column: 'title'
+        address         column: 'address',      type: 'text'
+        city            column: 'city'
+        country         column: 'country_id'
+        language        column: 'language'
+        password        column: 'password'
+        salt            column: 'salt'
+        phone           column: 'phone'
+        fax             column: 'fax'
+        mobile          column: 'mobile'
+        organisation    column: 'organisation'
+        department      column: 'department'
+        extraInfo       column: 'extra_info',   type: 'text'
+        dateAdded       column: 'date_added'
 
         groups  joinTable: 'users_groups'
     }
 
     static constraints = {
-        email       maxSize: 30,    blank: false,   unique: true,   email: true
-        fullName    maxSize: 30,    blank: false
-        institute   maxSize: 50,    blank: false
-        country                     blank: false
-        language    maxSize: 10,    blank: false
-        password    maxSize: 128,   blank: false,   display: false
-        salt        maxSize: 26,    nullable: true, display: false
+        email           maxSize: 30,    blank: false,   unique: true,   email: true
+        lastName        maxSize: 100,   blank: false
+        firstName       maxSize: 100,   blank: false
+        gender                          nullable: true
+        title           maxSize: 30,    nullable: true
+        address                         nullable: true
+        city            maxSize: 100,   blank: false
+        language        maxSize: 10,    blank: false
+        password        maxSize: 128,   blank: false,   display: false, password: true
+        salt            maxSize: 26,    nullable: true, display: false
+        phone           maxSize: 50,    nullable: true
+        fax             maxSize: 50,    nullable: true
+        mobile          maxSize: 50,    nullable: true
+        organisation    maxSize: 255,   nullable: true
+        department      maxSize: 255,   nullable: true
+        extraInfo                       nullable: true
     }
 
     /**
@@ -104,7 +153,7 @@ class User extends DefaultDomain {
     }
 
     @Override
-    def String toString() {
-        fullName
+    String toString() {
+        "${lastName}, ${firstName}"
     }
 }

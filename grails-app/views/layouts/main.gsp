@@ -38,7 +38,7 @@
 
             <g:if test="${params.event && params.date}">
                 <span class="event left">
-                    <eca:eventSwitcher />
+                  <eca:eventSwitcher />
                 </span>
             </g:if>
 

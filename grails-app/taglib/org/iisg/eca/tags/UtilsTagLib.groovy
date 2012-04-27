@@ -5,6 +5,7 @@ import groovy.xml.MarkupBuilder
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Event
 import org.iisg.eca.domain.EventDate
+import org.iisg.eca.domain.Page
 
 /**
  * Utilities tag library
@@ -28,7 +29,7 @@ class UtilsTagLib {
     /**
      * Creates an event switcher to make switching between different events and their dates easier
      */
-    def eventSwitcher = {
+    def eventSwitcher = { attrs ->
         MarkupBuilder builder = new MarkupBuilder(out)
         builder.doubleQuotes = true
 
@@ -46,17 +47,17 @@ class UtilsTagLib {
             list.add(date)
         }
 
-        builder.form(method: "get", action: "switchEvent") {
+        builder.form(method: "get", action: eca.createLink(controller: 'event', action: 'switchEvent')) {
             builder.select(id: "event_switcher", name: "event_switcher") {
                 datesByEvent.keySet().each { event ->
                     builder.optgroup(label: event.toString()) {
                         datesByEvent.get(event).each { date ->
-                            if (pageInformation.date?.id == date?.id) {
+                          /*  if (attrs.page?.date?.id == date?.id) {
                                 builder.option(value: date.id, date.toString(), selected: "selected")
                             }
-                            else {
+                            else { */
                                 builder.option(value: date.id, date.toString())
-                            }
+                            //}
                         }
                     }
                 }
@@ -69,30 +70,15 @@ class UtilsTagLib {
      * and for implementation of previous page information
      */
     def link = { attrs, body ->
-        if (!attrs.params) {
-            attrs.params = [:]
-        }
+        out << g.link(linkPrep(attrs, params), body)
+    }
 
-        // Add event (date) information
-        if (attrs.event && attrs.date) {
-            attrs.params.event = attrs.event
-            attrs.params.date = attrs.date
-            attrs.mapping = 'eventDate'
-        }
-        else if (params.event && params.date) {
-            attrs.params.event = params.event
-            attrs.params.date = params.date
-            attrs.mapping = 'eventDate'
-        }
-
-        // Add parameters for moving back to the current page
-        attrs.params.prevController = params.controller
-        attrs.params.prevAction = params.action
-        if (params.id) {
-            attrs.params.prevId = params.id
-        }
-
-        out << g.link(attrs, body)
+    /**
+     * An alternative to the g:createLink tag for easier use with different events
+     * and for implementation of previous page information
+     */
+    def createLink = { attrs ->
+        out << g.createLink(linkPrep(attrs, params))
     }
 
     /**
@@ -128,5 +114,38 @@ class UtilsTagLib {
         }
 
         out << msg
+    }
+
+    /**
+     * Prepares the link attributes
+     * @param attrs The attributes of the called tag
+     * @param params The request parameters
+     * @return A prepared attrs object
+     */
+    private static Object linkPrep(attrs, params) {
+        if (!attrs.params) {
+            attrs.params = [:]
+        }
+
+        // Add event (date) information
+        if (attrs.event && attrs.date) {
+            attrs.params.event = attrs.event
+            attrs.params.date = attrs.date
+            attrs.mapping = 'eventDate'
+        }
+        else if (params.event && params.date) {
+            attrs.params.event = params.event
+            attrs.params.date = params.date
+            attrs.mapping = 'eventDate'
+        }
+
+        // Add parameters for moving back to the current page
+        attrs.params.prevController = params.controller
+        attrs.params.prevAction = params.action
+        if (params.id) {
+            attrs.params.prevId = params.id
+        }
+
+        attrs
     }
 }

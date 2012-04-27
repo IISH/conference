@@ -5,16 +5,14 @@ class FeeAmount extends EventDateDomain {
     Date endDate
     int numDaysStart
     int numDaysEnd
-    String numDays = (numDaysStart == numDaysEnd) ? numDaysStart : "${numDaysStart}-${numDaysEnd}"
     BigDecimal feeAmount
 
-    static transients = ['numDays']
     static belongsTo = FeeState
 
     static constraints = {
         date            nullable: true
-        numDaysStart    min: 1, validator: { val, object -> object.date.days.dayNumber.max() <= val }
-        numDaysEnd      min: 1, validator: { val, object -> object.date.days.dayNumber.max() <= val }
+        numDaysStart    min: 1/*, validator: { val, object -> object.date.days.dayNumber.max() <= val }  */
+        numDaysEnd      min: 1/*, validator: { val, object -> object.date.days.dayNumber.max() <= val }    */
         feeAmount       min: BigDecimal.ZERO
     }
 
@@ -29,5 +27,9 @@ class FeeAmount extends EventDateDomain {
         numDaysStart    column: 'nr_of_days_start'
         numDaysEnd      column: 'nr_of_days_end'
         feeAmount       column: 'fee_amount'
+    }
+
+    String getNumDays() {
+        (numDaysStart == numDaysEnd) ? numDaysStart : "${numDaysStart} - ${numDaysEnd}"
     }
 }

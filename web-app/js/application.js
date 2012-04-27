@@ -7,6 +7,13 @@ $(document).ready(function() {
         $("#usermenu").toggle();
     });
 
+    $('input[type=submit]').click(function(e) {
+        var form = $(this).parents('form')
+        var children = form.find('.hidden input, .hidden select')
+        children.removeAttr('required')
+        form.submit();
+    });
+
     $('.datepicker').each(function() {
         var dateField = $(this);
 
@@ -80,11 +87,31 @@ $(document).ready(function() {
         clone.removeClass("hidden");
     });
 
-    $('fieldset span.ui-icon-circle-minus').click(function(e) {
+    $('fieldset li span.ui-icon-circle-minus').click(function(e) {
         var toBeRemoved = $(this).parent();
 
         var next = toBeRemoved.next();
         while (!next.hasClass('add')) {
+            var elements = next.find('input, select')
+            var nameSplit = elements.attr("name").split('.');
+            var number = nameSplit[0].split('_')[1];
+            if ($.isNumeric(number)) {
+                var newNumber = number - 1;
+                elements.each(function() {
+                    $(this).attr("name", $(this).attr("name").replace(number, newNumber));
+                });
+            }
+            next = next.next();
+        }
+
+        toBeRemoved.remove();
+    });
+
+    $('.columns.copy span.ui-icon-circle-minus').click(function(e) {
+        var toBeRemoved = $(this).parent();
+
+        var next = toBeRemoved.next();
+        while (!next.hasClass('hidden')) {
             var elements = next.find('input, select')
             var nameSplit = elements.attr("name").split('.');
             var number = nameSplit[0].split('_')[1];
@@ -109,7 +136,7 @@ $(document).ready(function() {
         }
     });
 
-    $('table td').click(function(e) {
+    $('.tbl_container table td').click(function(e) {
         window.location =  "./show/" + $(this).parent().find("td.id").text().trim() + "?" + $.param(queryParameters);
     });
 

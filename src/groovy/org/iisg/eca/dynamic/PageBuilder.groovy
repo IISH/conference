@@ -148,7 +148,7 @@ class PageBuilder {
             // A column can be represented in several different ways:
             // As a parent column which contains other columns that can be created/edited multiple times
             if (display && c.hasElements() && c.multiple) {
-                builder.div(class: "fieldcontain \${hasErrors(bean: ${RESULTS}.get(${c.root.eid}).get('${c.domainClass.name}'), field: '${c.name}', 'error')} ${required ? 'required' : ''}") {
+                builder.div(class: "\${hasErrors(bean: ${RESULTS}.get(${c.root.eid}).get('${c.domainClass.name}'), field: '${c.name}', 'error')} ${required ? 'required' : ''}") {
                     builder.label(for: "${c.domainClass.name}.${c.name}") {
                         builder."eca:fallbackMessage"(code: getCode(p), fbCode: getFbCode(p))
 
@@ -189,7 +189,7 @@ class PageBuilder {
             }
             // Or just simply as column which contains no other columns
             else if (display) {
-                builder.div(class: "fieldcontain \${hasErrors(bean: ${RESULTS}.get(${c.root.eid}).get('${c.domainClass.name}'), field: '${c.name}', 'error')} ${required ? 'required' : ''}") {
+                builder.div(class: "\${hasErrors(bean: ${RESULTS}.get(${c.root.eid}).get('${c.domainClass.name}'), field: '${c.name}', 'error')} ${required ? 'required' : ''}") {
                     if (c.name == "id") {
                         builder.label(for: "${c.domainClass.name}.${c.name}", "#")
                     }

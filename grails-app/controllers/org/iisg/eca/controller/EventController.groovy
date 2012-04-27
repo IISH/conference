@@ -41,7 +41,7 @@ class EventController {
             }
         }
 
-        redirect(action: "index", params: params)
+        redirect(controller: params.prevController, action: "index", params: params)
     }
 
     /**

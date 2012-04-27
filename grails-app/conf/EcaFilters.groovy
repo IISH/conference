@@ -1,11 +1,9 @@
-/*import org.iisg.eca.domain.Page
+import org.iisg.eca.domain.Page
 import org.iisg.eca.domain.Event
 import org.iisg.eca.domain.EventDate
 
 import org.iisg.eca.domain.EventDomain
-import org.iisg.eca.domain.EventDateDomain*/
-
-import org.iisg.eca.domain.*
+import org.iisg.eca.domain.EventDateDomain
 
 class EcaFilters {
     def pageInformation
@@ -13,10 +11,10 @@ class EcaFilters {
     
     def filters = {
         /**
-         *  Every page (except login/logout) should be in the database, so lookup the page information from the database
+         *  Every page (except login/logout/message) should be in the database, so lookup the page information from the database
          *  If it is there, allow access and cache the page information for this request
          */
-        page(controller: '*', action: '*', controllerExclude: 'login|logout', actionExclude: 'index') {
+        page(controller: '*', action: '*', controllerExclude: 'login|logout|message', actionExclude: 'index|switchEvent') {
             before = {
                 Page page = Page.findByControllerAndAction(params.controller, params.action)
 
@@ -26,6 +24,9 @@ class EcaFilters {
                 }
 
                 return false
+            }
+            after = { Map model ->
+                model.put('curPage', pageInformation.page)
             }
             afterView = { Exception e ->
                 pageInformation.removePage()
@@ -67,6 +68,9 @@ class EcaFilters {
                 }
 
                 return false
+            }
+            after = { Map model ->
+                model.put('curDate', pageInformation.date)
             }
             afterView = { Exception e ->
                 pageInformation.removeDate()
