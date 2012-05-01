@@ -25,9 +25,6 @@ class EcaFilters {
 
                 return false
             }
-            after = { Map model ->
-                model.put('curPage', pageInformation.page)
-            }
             afterView = { Exception e ->
                 pageInformation.removePage()
             }
@@ -69,11 +66,23 @@ class EcaFilters {
 
                 return false
             }
-            after = { Map model ->
-                model.put('curDate', pageInformation.date)
-            }
             afterView = { Exception e ->
                 pageInformation.removeDate()
+            }
+        }
+        
+         /**
+         * Default filter for all requests
+         */
+        defaultFilter(controller: '*', action: '*') {
+            after = { Map model ->
+                if (!model) {
+                    model = [:]
+                }
+                
+                // Add the pageInformation bean information to all models by default
+                model.put('curPage', pageInformation.page)
+                model.put('curDate', pageInformation.date)
             }
         }
     }

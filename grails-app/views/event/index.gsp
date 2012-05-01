@@ -2,7 +2,6 @@
 <html>
 	<head>
 		<meta name="layout" content="main">
-		<title>${page.toString()}</title>
 	</head>
 	<body>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas elit felis, feugiat egestas commodo eu, consequat placerat est. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras tempus arcu faucibus leo aliquet vitae egestas ipsum lacinia. Etiam suscipit mauris lacinia nibh scelerisque facilisis. Maecenas pulvinar rutrum pharetra. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Morbi ante sem, egestas ut feugiat ac, vulputate fringilla mauris. Cras eleifend egestas facilisis. Nunc mattis magna eu nibh eleifend porta. Cras et magna id nisl blandit feugiat. Nulla nec laoreet lacus.</p>

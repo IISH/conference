@@ -8,6 +8,8 @@ class Session extends EventDateDomain {
     String name
     String comment
 
+    static hasMany = [sessionParticipants: SessionParticipant]
+
     static mapping = {
         table 'sessions'
         version false

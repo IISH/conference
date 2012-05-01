@@ -55,7 +55,9 @@ class User extends DefaultDomain {
     static hasMany = [  groups:             Group,
                         networks:           NetworkChair,
                         participantDates:   ParticipantDate,
-                        userRoles:          UserRole]
+                        userRoles:          UserRole,
+                        papers:             Paper,
+                        sessionParticipant: SessionParticipant]
 
     static mapping = {
         table 'users'

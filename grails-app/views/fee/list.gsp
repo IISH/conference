@@ -2,7 +2,6 @@
 <html>
     <head>
         <meta name="layout" content="main">
-        <title>${page.toString()}</title>
     </head>
     <body>
         <g:each in="${feeStates}" var="feeState">

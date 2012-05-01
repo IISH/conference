@@ -3,6 +3,8 @@ $(document).ready(function() {
         $(this).parents('form').submit();
     });
 
+    $('#tabs').tabs();
+
     $('.loggedin img').click(function(e) {
         $("#usermenu").toggle();
     });

@@ -51,13 +51,13 @@ class UtilsTagLib {
             builder.select(id: "event_switcher", name: "event_switcher") {
                 datesByEvent.keySet().each { event ->
                     builder.optgroup(label: event.toString()) {
-                        datesByEvent.get(event).each { date ->
-                          /*  if (attrs.page?.date?.id == date?.id) {
+                        datesByEvent.get(event).each { date -> 
+                            if (attrs.date?.id == date.id) {
                                 builder.option(value: date.id, date.toString(), selected: "selected")
                             }
-                            else { */
+                            else {
                                 builder.option(value: date.id, date.toString())
-                            //}
+                            }
                         }
                     }
                 }
@@ -139,11 +139,29 @@ class UtilsTagLib {
             attrs.mapping = 'eventDate'
         }
 
+        // Link back to the previous page
+        if (attrs.previous && params.prevController) {
+            attrs.controller = params.prevController
+            attrs.action = params.prevAction ?: params.action
+            attrs.id = params.prevId ?: params.id
+            attrs.remove('previous')
+        }
+        else if (attrs.previous) {
+            attrs.uri = '/'
+            attrs.remove('previous')
+        }
+
         // Add parameters for moving back to the current page
         attrs.params.prevController = params.controller
         attrs.params.prevAction = params.action
         if (params.id) {
             attrs.params.prevId = params.id
+        }
+
+        // In cases when there are multiple bases added, one is enough...
+        if (attrs.noBase) {
+            attrs.base = '/.'
+            attrs.remove('noBase')
         }
 
         attrs

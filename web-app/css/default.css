@@ -276,13 +276,13 @@ input, textarea, .property-value, fieldset ul {
     vertical-align: top;
 }
 
-li input[type="text"], li input[type="password"], li input[type="number"], li select {
+li input[type="text"], li input[type="password"], li input[type="number"], li input[type="email"], li input[type="url"], li select {
     width: 100px;
     margin-left: 5px;
     vertical-align: middle;
 }
 
-input[type=text], input[type=password], input[type=number], select {
+input[type=text], input[type=password], input[type=number], li input[type="email"], li input[type="url"], select {
     height: 18px;
     width: 180px;
     padding-left: 2px;
@@ -298,6 +298,10 @@ label, .property-label {
     margin-right: 10px;
     text-align: right;
     color: #666666;
+}
+
+.columns label, .columns .property-label {
+    width: 30%;
 }
 
 label {
@@ -357,6 +361,10 @@ fieldset .add {
 fieldset .column {
     float: left;
     width: 200px;
+}
+
+#participant-form .column {
+    width: 460px;
 }
 
 fieldset .columns label {

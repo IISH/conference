@@ -1,4 +1,4 @@
-<%@ page import="org.iisg.eca.domain.Setting; org.iisg.eca.domain.DynamicPage; org.iisg.eca.domain.Page; org.springframework.validation.FieldError" %>
+<%@ page import="org.iisg.eca.domain.Setting;org.springframework.validation.FieldError" %>
 <!doctype html>
 <!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
 <!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
@@ -8,14 +8,16 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title><g:layoutTitle default="ECA" /></title>
+        <title>
+            <g:layoutTitle default="${(curPage) ? curPage.toString() : 'ECA' }" />
+        </title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="shortcut icon" href="${resource(dir: 'images', file: 'favicon.ico')}" type="image/x-icon">
         <link rel="stylesheet" href="${resource(dir: 'css', file: 'default1.css')}" type="text/css">
         <link rel="stylesheet" href="${resource(dir: 'css', file: 'esshc1.css')}" type="text/css">
         <link rel="stylesheet" href="${resource(dir: 'css', file: 'default.css')}" type="text/css">
         <link rel="stylesheet" href="${resource(dir: 'css', file: 'esshc.css')}" type="text/css">
-        <link rel="stylesheet" href="${resource(dir: 'css', file: 'jquery-ui-1.8.18.custom.css')}" type="text/css">
+        <link rel="stylesheet" href="${resource(dir: 'css', file: 'jquery-ui.css')}" type="text/css">
         <g:javascript library="jquery" />
         <g:javascript library="application" />
         <g:layoutHead/>
@@ -38,7 +40,7 @@
 
             <g:if test="${params.event && params.date}">
                 <span class="event left">
-                  <eca:eventSwitcher />
+                  <eca:eventSwitcher date="${curDate}" />
                 </span>
             </g:if>
 
@@ -103,15 +105,11 @@
         </div>
 
         <div id="content" role="main">
-            <g:if test="${page?.class == org.iisg.eca.domain.Page}">
-                <h1>${page.toString()}</h1>
+            <g:if test="${curPage}">
+                <h1>${curPage.toString()}</h1>
             </g:if>
 
-            <g:elseif test="${page?.class == org.iisg.eca.domain.DynamicPage}">
-                <h1>${page.page.toString()}</h1>
-            </g:elseif>
-
-            <g:if test="${flash.message && (page?.class == org.iisg.eca.domain.Page || page?.class == org.iisg.eca.domain.DynamicPage)}">
+            <g:if test="${flash.message && curPage}">
                 <div class="message" role="status">${flash.message}</div>
             </g:if>
 
@@ -123,7 +121,7 @@
         </div>
 
         <div id="footer" class="clear" role="contentinfo">
-            ${grailsApplication.config.grails.serverURL} - Last updated: ${org.iisg.eca.domain.Setting.findByProperty('lastUpdated').value}
+            ${grailsApplication.config.grails.serverURL} - Last updated: ${Setting.findByProperty('lastUpdated').value}
         </div>
 
         <div id="usermenu">
