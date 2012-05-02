@@ -12,7 +12,7 @@ class ParticipantDate extends EventDateDomain implements Serializable {
     String lowerFeeText
 
     static belongsTo = [User, ParticipantState, FeeState]
-    static hasMany = [extras: Extra]
+    static hasMany = [extras: Extra, participantVolunteering: ParticipantVolunteering]
 
     static mapping = {
         table 'participant_date'

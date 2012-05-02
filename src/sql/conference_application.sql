@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Apr 27, 2012 at 05:15 PM
+-- Generation Time: May 02, 2012 at 05:35 PM
 -- Server version: 5.0.86
 -- PHP Version: 5.2.10
 
@@ -514,7 +514,7 @@ INSERT INTO `extras` (`extra_id`, `date_id`, `extra`, `enabled`, `deleted`) VALU
 (1, 1, 'Concert', 1, 0),
 (2, 1, 'Theater', 1, 0),
 (3, 1, 'Museum', 1, 0),
-(4, 1, 'Sightseeing', 1, 0);
+(4, 1, 'Reception', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -765,6 +765,7 @@ CREATE TABLE IF NOT EXISTS `papers` (
   `co_authors` varchar(500) collate utf8_unicode_ci default NULL,
   `abstract` text collate utf8_unicode_ci,
   `comment` text collate utf8_unicode_ci,
+  `network_proposal_id` bigint(20) default NULL,
   `session_proposal` varchar(500) collate utf8_unicode_ci default NULL,
   `proposal_description` text collate utf8_unicode_ci,
   `filename` varchar(500) collate utf8_unicode_ci default NULL,
@@ -778,13 +779,16 @@ CREATE TABLE IF NOT EXISTS `papers` (
   KEY `user_id` (`user_id`),
   KEY `date_id` (`date_id`),
   KEY `paper_state_id` (`paper_state_id`),
-  KEY `session_id` (`session_id`)
+  KEY `session_id` (`session_id`),
+  KEY `network_proposal_id` (`network_proposal_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `papers`
 --
 
+INSERT INTO `papers` (`paper_id`, `user_id`, `paper_state_id`, `session_id`, `date_id`, `title`, `co_authors`, `abstract`, `comment`, `network_proposal_id`, `session_proposal`, `proposal_description`, `filename`, `content_type`, `filesize`, `file`, `equipment_comment`, `enabled`, `deleted`) VALUES
+(0, 2, 1, NULL, 1, 'Test', NULL, '                                    \r\n                                ', '                                    \r\n                                ', NULL, NULL, '                                    \r\n                                ', 'Conference-application.iml', 'application/octet-stream', 6159, 0x3c3f786d6c2076657273696f6e3d22312e302220656e636f64696e673d225554462d38223f3e0d0a3c6d6f64756c6520747970653d224a4156415f4d4f44554c45222076657273696f6e3d2234223e0d0a20203c636f6d706f6e656e74206e616d653d2245636c697073654d6f64756c654d616e61676572223e0d0a202020203c636f6e656c656d656e742076616c75653d22636f6d2e737072696e67736f757263652e7374732e677261696c732e636f72652e434c415353504154485f434f4e5441494e455222202f3e0d0a202020203c7372635f6465736372697074696f6e2065787065637465645f706f736974696f6e3d2230223e0d0a2020202020203c7372635f666f6c6465722076616c75653d2266696c653a2f2f244d4f44554c455f444952242f7372632f6a617661222065787065637465645f706f736974696f6e3d223022202f3e0d0a2020202020203c7372635f666f6c6465722076616c75653d2266696c653a2f2f244d4f44554c455f444952242f7372632f67726f6f7679222065787065637465645f706f736974696f6e3d223122202f3e0d0a2020202020203c7372635f666f6c6465722076616c75653d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f636f6e66222065787065637465645f706f736974696f6e3d223222202f3e0d0a2020202020203c7372635f666f6c6465722076616c75653d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f636f6e74726f6c6c657273222065787065637465645f706f736974696f6e3d223322202f3e0d0a2020202020203c7372635f666f6c6465722076616c75653d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f646f6d61696e222065787065637465645f706f736974696f6e3d223422202f3e0d0a2020202020203c7372635f666f6c6465722076616c75653d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f7365727669636573222065787065637465645f706f736974696f6e3d223522202f3e0d0a2020202020203c7372635f666f6c6465722076616c75653d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f7461676c6962222065787065637465645f706f736974696f6e3d223622202f3e0d0a2020202020203c7372635f666f6c6465722076616c75653d2266696c653a2f2f244d4f44554c455f444952242f746573742f696e746567726174696f6e222065787065637465645f706f736974696f6e3d223722202f3e0d0a2020202020203c7372635f666f6c6465722076616c75653d2266696c653a2f2f244d4f44554c455f444952242f746573742f756e6974222065787065637465645f706f736974696f6e3d223822202f3e0d0a202020203c2f7372635f6465736372697074696f6e3e0d0a20203c2f636f6d706f6e656e743e0d0a20203c636f6d706f6e656e74206e616d653d2246616365744d616e61676572223e0d0a202020203c666163657420747970653d22537072696e6722206e616d653d22537072696e67223e0d0a2020202020203c636f6e66696775726174696f6e3e0d0a20202020202020203c66696c657365742069643d22477261696c7322206e616d653d22477261696c73222072656d6f7665643d2266616c7365223e0d0a202020202020202020203c66696c653e66696c653a2f2f244d4f44554c455f444952242f7765622d6170702f5745422d494e462f6170706c69636174696f6e436f6e746578742e786d6c3c2f66696c653e0d0a20202020202020203c2f66696c657365743e0d0a2020202020203c2f636f6e66696775726174696f6e3e0d0a202020203c2f66616365743e0d0a202020203c666163657420747970653d2277656222206e616d653d22477261696c73576562223e0d0a2020202020203c636f6e66696775726174696f6e3e0d0a20202020202020203c776562726f6f74733e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f7765622d617070222072656c61746976653d222f22202f3e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f7669657773222072656c61746976653d222f22202f3e0d0a20202020202020203c2f776562726f6f74733e0d0a20202020202020203c736f75726365526f6f7473202f3e0d0a2020202020203c2f636f6e66696775726174696f6e3e0d0a202020203c2f66616365743e0d0a202020203c666163657420747970653d2268696265726e61746522206e616d653d2248696265726e617465223e0d0a2020202020203c636f6e66696775726174696f6e3e0d0a20202020202020203c64617461736f757263652d6d6170202f3e0d0a20202020202020203c6465706c6f796d656e7444657363726970746f72206e616d653d2268696265726e6174652e6366672e786d6c222075726c3d2266696c653a2f2f244d4f44554c455f444952242f7372632f74656d706c617465732f6172746966616374732f68696265726e6174652e6366672e786d6c22202f3e0d0a2020202020203c2f636f6e66696775726174696f6e3e0d0a202020203c2f66616365743e0d0a202020203c666163657420747970653d2277656222206e616d653d22576562223e0d0a2020202020203c636f6e66696775726174696f6e3e0d0a20202020202020203c64657363726970746f72733e0d0a202020202020202020203c6465706c6f796d656e7444657363726970746f72206e616d653d227765622e786d6c222075726c3d2266696c653a2f2f244d4f44554c455f444952242f7372632f74656d706c617465732f7761722f7765622e786d6c22202f3e0d0a20202020202020203c2f64657363726970746f72733e0d0a20202020202020203c776562726f6f74733e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f7372632f74656d706c617465732f776172222072656c61746976653d222f5745422d494e4622202f3e0d0a20202020202020203c2f776562726f6f74733e0d0a20202020202020203c736f75726365526f6f74733e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f7372632f6a61766122202f3e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f7574696c7322202f3e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f7372632f67726f6f767922202f3e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f636f6e74726f6c6c65727322202f3e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f646f6d61696e22202f3e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f736572766963657322202f3e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f7461676c696222202f3e0d0a20202020202020203c2f736f75726365526f6f74733e0d0a2020202020203c2f636f6e66696775726174696f6e3e0d0a202020203c2f66616365743e0d0a20203c2f636f6d706f6e656e743e0d0a20203c636f6d706f6e656e74206e616d653d224e65774d6f64756c65526f6f744d616e616765722220696e68657269742d636f6d70696c65722d6f75747075743d2266616c7365223e0d0a202020203c6f75747075742075726c3d2266696c653a2f2f244d4f44554c455f444952242f7765622d6170702f5745422d494e462f636c617373657322202f3e0d0a202020203c6578636c7564652d6f7574707574202f3e0d0a202020203c636f6e74656e742075726c3d2266696c653a2f2f244d4f44554c455f44495224223e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f7372632f6a6176612220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f7574696c732220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f7372632f67726f6f76792220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f636f6e74726f6c6c6572732220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f646f6d61696e2220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f73657276696365732220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f7461676c69622220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f746573742f756e69742220697354657374536f757263653d227472756522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f746573742f696e746567726174696f6e2220697354657374536f757263653d227472756522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f636f6e662220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f746573742f696e746567726174696f6e2220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f746573742f756e69742220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c6578636c756465466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f7461726765742f636c617373657322202f3e0d0a2020202020203c6578636c756465466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f7461726765742f746573742d636c617373657322202f3e0d0a2020202020203c6578636c756465466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f7765622d6170702f706c7567696e7322202f3e0d0a202020203c2f636f6e74656e743e0d0a202020203c6f72646572456e74727920747970653d22736f75726365466f6c6465722220666f7254657374733d2266616c736522202f3e0d0a202020203c6f72646572456e74727920747970653d22696e686572697465644a646b22202f3e0d0a202020203c6f72646572456e74727920747970653d226c69627261727922206e616d653d22636f6d2e737072696e67736f757263652e7374732e677261696c732e636f72652e434c415353504154485f434f4e5441494e455222206c6576656c3d226170706c69636174696f6e22202f3e0d0a202020203c6f72646572456e74727920747970653d226c69627261727922206e616d653d22677261696c732d322e302e3122206c6576656c3d226170706c69636174696f6e22202f3e0d0a202020203c6f72646572456e74727920747970653d226d6f64756c652d6c69627261727922206578706f727465643d22223e0d0a2020202020203c6c696272617279206e616d653d22477261696c732055736572204c6962726172792028436f6e666572656e63652d6170706c69636174696f6e29223e0d0a20202020202020203c434c41535345533e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f6c696222202f3e0d0a202020202020202020203c726f6f742075726c3d226a61723a2f2f24555345525f484f4d45242f2e677261696c732f6976792d63616368652f6c6f67346a2f6c6f67346a2f6a6172732f6c6f67346a2d312e322e31342e6a6172212f22202f3e0d0a202020202020202020203c726f6f742075726c3d226a61723a2f2f24555345525f484f4d45242f2e677261696c732f6976792d63616368652f6e65742e736f75726365666f7267652e6a657863656c6170692f6a786c2f6a6172732f6a786c2d322e362e31322e6a6172212f22202f3e0d0a202020202020202020203c726f6f742075726c3d226a61723a2f2f24555345525f484f4d45242f2e677261696c732f6976792d63616368652f6f72672e68696265726e6174652f68696265726e6174652d746f6f6c732f6a6172732f68696265726e6174652d746f6f6c732d332e322e342e47412e6a6172212f22202f3e0d0a202020202020202020203c726f6f742075726c3d226a61723a2f2f24555345525f484f4d45242f2e677261696c732f6976792d63616368652f667265656d61726b65722f667265656d61726b65722f6a6172732f667265656d61726b65722d322e332e382e6a6172212f22202f3e0d0a202020202020202020203c726f6f742075726c3d226a61723a2f2f24555345525f484f4d45242f2e677261696c732f6976792d63616368652f6f72672e6265616e7368656c6c2f6273682f6a6172732f6273682d322e3062342e6a6172212f22202f3e0d0a202020202020202020203c726f6f742075726c3d226a61723a2f2f24555345525f484f4d45242f2e677261696c732f6976792d63616368652f6f72672e68696265726e6174652f6a746964792f6a6172732f6a746964792d72382d32303036303830312e6a6172212f22202f3e0d0a202020202020202020203c726f6f742075726c3d226a61723a2f2f24555345525f484f4d45242f2e677261696c732f6976792d63616368652f6f72672e737072696e676672616d65776f726b2e73656375726974792f737072696e672d73656375726974792d7765622f6a6172732f737072696e672d73656375726974792d7765622d332e302e372e52454c454153452e6a6172212f22202f3e0d0a202020202020202020203c726f6f742075726c3d226a61723a2f2f24555345525f484f4d45242f2e677261696c732f6976792d63616368652f6f72672e737072696e676672616d65776f726b2e73656375726974792f737072696e672d73656375726974792d636f72652f6a6172732f737072696e672d73656375726974792d636f72652d332e302e372e52454c454153452e6a6172212f22202f3e0d0a202020202020202020203c726f6f742075726c3d226a61723a2f2f24555345525f484f4d45242f2e677261696c732f6976792d63616368652f6d7973716c2f6d7973716c2d636f6e6e6563746f722d6a6176612f6a6172732f6d7973716c2d636f6e6e6563746f722d6a6176612d352e312e31382e6a6172212f22202f3e0d0a20202020202020203c2f434c41535345533e0d0a20202020202020203c4a415641444f43202f3e0d0a20202020202020203c534f5552434553202f3e0d0a20202020202020203c6a61724469726563746f72792075726c3d2266696c653a2f2f244d4f44554c455f444952242f6c696222207265637572736976653d2266616c736522202f3e0d0a2020202020203c2f6c6962726172793e0d0a202020203c2f6f72646572456e7472793e0d0a202020203c6f72646572456e74727920747970653d226d6f64756c6522206d6f64756c652d6e616d653d22436f6e666572656e63652d6170706c69636174696f6e2d677261696c73506c7567696e7322202f3e0d0a20203c2f636f6d706f6e656e743e0d0a3c2f6d6f64756c653e0d0a0d0a, '                                    \r\n                                ', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -853,9 +857,11 @@ CREATE TABLE IF NOT EXISTS `participant_date` (
   `enabled` tinyint(1) NOT NULL default '1',
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`participant_date_id`),
-  KEY `user_id` (`user_id`),
+  UNIQUE KEY `user_id` (`user_id`,`date_id`),
   KEY `date_id` (`date_id`),
-  KEY `participant_state_id` (`participant_state_id`)
+  KEY `participant_state_id` (`participant_state_id`),
+  KEY `fee_state_id` (`fee_state_id`),
+  KEY `payment_id` (`payment_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=8 ;
 
 --
@@ -863,8 +869,8 @@ CREATE TABLE IF NOT EXISTS `participant_date` (
 --
 
 INSERT INTO `participant_date` (`participant_date_id`, `user_id`, `date_id`, `participant_state_id`, `fee_state_id`, `payment_id`, `date_added`, `invitation_letter`, `invitation_letter_sent`, `lower_fee_requested`, `lower_fee_answered`, `lower_fee_text`, `enabled`, `deleted`) VALUES
-(1, 2, 1, 0, 1, 0, '2012-04-26', 0, 0, 0, 0, '', 1, 0),
-(2, 2, 2, 0, 1, 0, '2012-04-26', 0, 0, 0, 0, '', 1, 0),
+(1, 2, 1, 0, 1, 0, '2012-04-26', 0, 0, 0, 0, NULL, 1, 0),
+(2, 2, 2, 0, 1, 0, '2012-04-26', 0, 0, 0, 0, NULL, 1, 0),
 (3, 3, 1, 1, 1, 0, '2012-04-27', 0, 0, 0, 0, NULL, 1, 0),
 (4, 4, 1, 999, 1, 0, '2012-04-27', 0, 0, 0, 0, NULL, 1, 0),
 (5, 5, 1, 2, 0, 0, '2012-04-27', 0, 0, 0, 0, NULL, 1, 0),
@@ -888,6 +894,8 @@ CREATE TABLE IF NOT EXISTS `participant_date_extra` (
 -- Dumping data for table `participant_date_extra`
 --
 
+INSERT INTO `participant_date_extra` (`participant_date_id`, `extra_id`) VALUES
+(1, 3);
 
 -- --------------------------------------------------------
 
@@ -919,6 +927,80 @@ INSERT INTO `participant_states` (`participant_state_id`, `event_id`, `participa
 (6, 1, 'No show', 1, 0),
 (7, 1, 'unclear', 1, 0),
 (999, 1, 'Participant did NOT FINISH registration', 1, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `participant_types`
+--
+
+CREATE TABLE IF NOT EXISTS `participant_types` (
+  `participant_type_id` bigint(20) NOT NULL auto_increment,
+  `event_id` bigint(20) NOT NULL,
+  `type` varchar(30) collate utf8_unicode_ci NOT NULL,
+  `enabled` tinyint(1) NOT NULL default '1',
+  `deleted` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`participant_type_id`),
+  KEY `event_id` (`event_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
+
+--
+-- Dumping data for table `participant_types`
+--
+
+INSERT INTO `participant_types` (`participant_type_id`, `event_id`, `type`, `enabled`, `deleted`) VALUES
+(1, 1, 'Chair', 1, 0),
+(2, 1, 'Organizer', 1, 0),
+(3, 1, 'Author', 1, 0),
+(4, 1, 'Co-Author', 1, 0),
+(5, 1, 'Discussant', 1, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `participant_type_rules`
+--
+
+CREATE TABLE IF NOT EXISTS `participant_type_rules` (
+  `participant_type_rule_id` bigint(20) NOT NULL auto_increment,
+  `participant_type_1_id` bigint(20) NOT NULL,
+  `participant_type_2_id` bigint(20) NOT NULL,
+  `event_id` bigint(20) NOT NULL,
+  `enabled` tinyint(1) NOT NULL default '1',
+  `deleted` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`participant_type_rule_id`),
+  UNIQUE KEY `participant_type_1_id` (`participant_type_1_id`,`participant_type_2_id`,`event_id`),
+  KEY `participant_type_2_id` (`participant_type_2_id`),
+  KEY `event_id` (`event_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `participant_type_rules`
+--
+
+INSERT INTO `participant_type_rules` (`participant_type_rule_id`, `participant_type_1_id`, `participant_type_2_id`, `event_id`, `enabled`, `deleted`) VALUES
+(1, 3, 1, 1, 1, 0),
+(2, 3, 5, 1, 1, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `participant_volunteering`
+--
+
+CREATE TABLE IF NOT EXISTS `participant_volunteering` (
+  `participant_date_id` bigint(20) NOT NULL,
+  `volunteering_id` bigint(20) NOT NULL,
+  `network_id` bigint(20) NOT NULL,
+  PRIMARY KEY  (`participant_date_id`,`volunteering_id`,`network_id`),
+  KEY `volunteering_id` (`volunteering_id`),
+  KEY `network_id` (`network_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `participant_volunteering`
+--
+
 
 -- --------------------------------------------------------
 
@@ -1089,27 +1171,29 @@ INSERT INTO `session_datetime` (`session_datetime_id`, `day_id`, `index_number`,
 -- --------------------------------------------------------
 
 --
--- Table structure for table `session_users`
+-- Table structure for table `session_participant`
 --
 
-CREATE TABLE IF NOT EXISTS `session_users` (
-  `session_user_id` bigint(20) NOT NULL auto_increment,
+CREATE TABLE IF NOT EXISTS `session_participant` (
+  `session_participant_id` bigint(20) NOT NULL auto_increment,
   `user_id` bigint(20) NOT NULL,
   `session_id` bigint(20) NOT NULL,
-  `chair` tinyint(1) NOT NULL default '0',
-  `organiser` tinyint(1) NOT NULL default '0',
-  `author` tinyint(1) NOT NULL default '0',
-  `coauthor` tinyint(1) NOT NULL default '0',
-  `discussant` tinyint(1) NOT NULL default '0',
+  `participant_type_id` bigint(20) NOT NULL,
   `enabled` tinyint(1) NOT NULL default '1',
   `deleted` tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (`session_user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+  PRIMARY KEY  (`session_participant_id`),
+  KEY `user_id` (`user_id`),
+  KEY `session_id` (`session_id`),
+  KEY `participant_type_id` (`participant_type_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
 
 --
--- Dumping data for table `session_users`
+-- Dumping data for table `session_participant`
 --
 
+INSERT INTO `session_participant` (`session_participant_id`, `user_id`, `session_id`, `participant_type_id`, `enabled`, `deleted`) VALUES
+(1, 2, 2, 2, 1, 0),
+(2, 3, 2, 3, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1133,7 +1217,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
 --
 
 INSERT INTO `settings` (`setting_id`, `property`, `value`, `event_id`, `enabled`, `deleted`) VALUES
-(1, 'lastUpdated', 'april 2012', NULL, 1, 0);
+(1, 'lastUpdated', 'mei 2012', NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1203,7 +1287,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 INSERT INTO `users` (`user_id`, `email`, `lastname`, `firstname`, `gender`, `title`, `address`, `city`, `country_id`, `language`, `password`, `salt`, `phone`, `fax`, `mobile`, `organisation`, `department`, `extra_info`, `date_added`, `enabled`, `deleted`) VALUES
 (1, 'em@em.com', 'Lastname', 'Firstname', 'M', NULL, NULL, 'City', 169, 'nl', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, NULL, NULL, 'International Institute for Social History', 'Department', NULL, '2012-04-26', 1, 0),
-(2, 'email@email.com', 'Abc', 'Def', NULL, NULL, NULL, 'City', 1, 'nl', 'pw', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
+(2, 'email@email.com', 'Abcd', 'Defg', 'F', 'Mr.', NULL, 'City', 1, 'nl', 'pw', NULL, NULL, NULL, NULL, 'organisation', 'department', NULL, '2012-04-26', 1, 0),
 (3, 'mail@mail.com', 'Hij', 'Klm', 'F', NULL, NULL, 'Another City', 1, 'en', 'pw', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
 (4, 'email2@email.com', 'Aaaaa', 'Aaaaaa', 'M', NULL, NULL, 'City', 169, 'nl', 'password', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
 (5, 'email3@hotmail.com', 'Abcdefgh', 'Abcdefgh', NULL, NULL, NULL, 'CIty', 9, 'nl', 'password', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
@@ -1283,6 +1367,32 @@ INSERT INTO `users_roles` (`user_role_id`, `user_id`, `role_id`, `date_id`, `ena
 (5, 5, 4, NULL, 1, 0),
 (6, 6, 4, NULL, 1, 0),
 (7, 7, 4, NULL, 1, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `volunteering`
+--
+
+CREATE TABLE IF NOT EXISTS `volunteering` (
+  `volunteering_id` bigint(20) NOT NULL auto_increment,
+  `event_id` bigint(20) NOT NULL,
+  `description` varchar(30) collate utf8_unicode_ci NOT NULL,
+  `enabled` tinyint(1) NOT NULL default '1',
+  `deleted` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`volunteering_id`),
+  KEY `event_id` (`event_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `volunteering`
+--
+
+INSERT INTO `volunteering` (`volunteering_id`, `event_id`, `description`, `enabled`, `deleted`) VALUES
+(1, 1, 'Chair', 1, 0),
+(2, 1, 'Discussant', 1, 0),
+(3, 1, 'Language coach', 1, 0),
+(4, 1, 'Language pupil', 1, 0);
 
 --
 -- Constraints for dumped tables
@@ -1375,6 +1485,7 @@ ALTER TABLE `pages`
 -- Constraints for table `papers`
 --
 ALTER TABLE `papers`
+  ADD CONSTRAINT `papers_ibfk_6` FOREIGN KEY (`network_proposal_id`) REFERENCES `networks` (`network_id`),
   ADD CONSTRAINT `papers_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
   ADD CONSTRAINT `papers_ibfk_3` FOREIGN KEY (`date_id`) REFERENCES `dates` (`date_id`),
   ADD CONSTRAINT `papers_ibfk_4` FOREIGN KEY (`paper_state_id`) REFERENCES `paper_states` (`paper_state_id`),
@@ -1405,14 +1516,36 @@ ALTER TABLE `participant_date`
 -- Constraints for table `participant_date_extra`
 --
 ALTER TABLE `participant_date_extra`
-  ADD CONSTRAINT `participant_date_extra_ibfk_2` FOREIGN KEY (`extra_id`) REFERENCES `extras` (`extra_id`),
-  ADD CONSTRAINT `participant_date_extra_ibfk_1` FOREIGN KEY (`participant_date_id`) REFERENCES `participant_date` (`participant_date_id`);
+  ADD CONSTRAINT `participant_date_extra_ibfk_1` FOREIGN KEY (`participant_date_id`) REFERENCES `participant_date` (`participant_date_id`),
+  ADD CONSTRAINT `participant_date_extra_ibfk_2` FOREIGN KEY (`extra_id`) REFERENCES `extras` (`extra_id`);
 
 --
 -- Constraints for table `participant_states`
 --
 ALTER TABLE `participant_states`
   ADD CONSTRAINT `participant_states_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `events` (`event_id`);
+
+--
+-- Constraints for table `participant_types`
+--
+ALTER TABLE `participant_types`
+  ADD CONSTRAINT `participant_types_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `events` (`event_id`);
+
+--
+-- Constraints for table `participant_type_rules`
+--
+ALTER TABLE `participant_type_rules`
+  ADD CONSTRAINT `participant_type_rules_ibfk_3` FOREIGN KEY (`event_id`) REFERENCES `events` (`event_id`),
+  ADD CONSTRAINT `participant_type_rules_ibfk_1` FOREIGN KEY (`participant_type_1_id`) REFERENCES `participant_types` (`participant_type_id`),
+  ADD CONSTRAINT `participant_type_rules_ibfk_2` FOREIGN KEY (`participant_type_2_id`) REFERENCES `participant_types` (`participant_type_id`);
+
+--
+-- Constraints for table `participant_volunteering`
+--
+ALTER TABLE `participant_volunteering`
+  ADD CONSTRAINT `participant_volunteering_ibfk_3` FOREIGN KEY (`network_id`) REFERENCES `networks` (`network_id`),
+  ADD CONSTRAINT `participant_volunteering_ibfk_1` FOREIGN KEY (`participant_date_id`) REFERENCES `participant_date` (`participant_date_id`),
+  ADD CONSTRAINT `participant_volunteering_ibfk_2` FOREIGN KEY (`volunteering_id`) REFERENCES `volunteering` (`volunteering_id`);
 
 --
 -- Constraints for table `rooms`
@@ -1439,6 +1572,14 @@ ALTER TABLE `sessions`
 --
 ALTER TABLE `session_datetime`
   ADD CONSTRAINT `session_datetime_ibfk_1` FOREIGN KEY (`day_id`) REFERENCES `days` (`day_id`);
+
+--
+-- Constraints for table `session_participant`
+--
+ALTER TABLE `session_participant`
+  ADD CONSTRAINT `session_participant_ibfk_3` FOREIGN KEY (`participant_type_id`) REFERENCES `participant_types` (`participant_type_id`),
+  ADD CONSTRAINT `session_participant_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `session_participant_ibfk_2` FOREIGN KEY (`session_id`) REFERENCES `sessions` (`session_id`);
 
 --
 -- Constraints for table `settings`
@@ -1480,3 +1621,9 @@ ALTER TABLE `users_roles`
   ADD CONSTRAINT `users_roles_date_id_fk` FOREIGN KEY (`date_id`) REFERENCES `dates` (`date_id`),
   ADD CONSTRAINT `users_roles_role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`),
   ADD CONSTRAINT `users_roles_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
+
+--
+-- Constraints for table `volunteering`
+--
+ALTER TABLE `volunteering`
+  ADD CONSTRAINT `volunteering_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `events` (`event_id`);

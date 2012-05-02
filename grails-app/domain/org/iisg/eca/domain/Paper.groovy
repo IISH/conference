@@ -1,7 +1,5 @@
 package org.iisg.eca.domain
 
-import java.sql.Blob
-
 class Paper extends EventDateDomain {
     User user
     PaperState state
@@ -9,15 +7,16 @@ class Paper extends EventDateDomain {
     String coAuthors
     String abstr
     String comment
+    Network networkProposal
     String sessionProposal
     String proposalDescription
     String fileName
     String contentType
     Long fileSize
-    Blob file
+    byte[] file
     String equipmentComment
 
-    static belongsTo = [User, PaperState]
+    static belongsTo = [User, PaperState, Network]
     static hasMany = [equipment: Equipment]
 
     static mapping = {
@@ -30,6 +29,7 @@ class Paper extends EventDateDomain {
         coAuthors           column: 'co_authors'
         abstr               column: 'abstract',             type: 'text'
         comment             column: 'comment',              type: 'text'
+        networkProposal     column: 'network_proposal_id'
         sessionProposal     column: 'session_proposal'
         proposalDescription column: 'proposal_description', type: 'text'
         fileName            column: 'filename'

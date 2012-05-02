@@ -146,6 +146,40 @@ $(document).ready(function() {
         var checked = $(this).is(':checked');
         $(this).parents('.column').find('input[type=checkbox]').attr('checked', checked);
     });
+
+    $('#tabs.session input[type=button]').click(function(e) {
+        var elem = $(this).prev();
+        var id = elem.prev().val();
+        var i = 0;
+
+        var print = $("#session-participants li.hidden");
+        var clone = print.clone(true);
+        var prev = print.prev();
+        if (prev.length !== 0) {
+            var nameSplit = prev.find('input').attr("name").split('.');
+            var number = nameSplit[0].split('_')[1];
+            if ($.isNumeric(number)) {
+                i = number;
+            }
+            i++;
+        }
+
+        clone.find('input').each(function() {
+            var name= $(this).attr("name").replace("null", i);
+            $(this).attr("name", name);
+            if (name === 'input[name=SessionParticipant_'+i+'.user.id]') {
+                $(this).val(elem.val());
+            }
+            else {
+                $(this).val(id);
+            }
+        });
+
+        clone.find('.property-value').text(elem.find(':selected').text() + ' (' + elem.attr('name') + ')');
+        clone.removeClass("hidden");
+
+        $('#session-participants').append(clone);
+    });
 });
 
 var queryParameters = {}, queryString = location.search.substring(1),

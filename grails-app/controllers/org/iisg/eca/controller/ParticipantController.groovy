@@ -6,6 +6,8 @@ import org.iisg.eca.domain.Paper
 import org.iisg.eca.domain.Equipment
 import org.iisg.eca.domain.Extra
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
+import org.springframework.web.multipart.commons.CommonsMultipartFile
+import java.sql.Blob
 
 class ParticipantController {
     /**
@@ -23,21 +25,22 @@ class ParticipantController {
     }
 
     def list() {
-        def participants = participantService.getParticipants(params)
-        render(view: "list", model: [   page:           pageInformation.page,
+        Map participants = [:]
+        if (params.filter) {
+            participants = participantService.getParticipants(params)
+        }
+
+        render(view: "list", model: [   participants:   participants,
                                         alfabet:        participants.keySet(),
-                                        participants:   participants,
-                                        states:         participantService.getParticipantCounts(params),
-                                        dates:          participantService.datesList])
+                                        states:         participantService.getParticipantCounts(params)])
     }
 
     def show() {
         User user = User.get(params.id)
-        GrailsParameterMap parameterMap = params
 
          if (!user) {
             flash.message =  message(code: 'default.not.found.message', args: [message(code: 'user.label'), params.id])
-            redirect(uri: eca.createLink(previous: true, base: false))
+            redirect(uri: eca.createLink(previous: true, noBase: true))
             return
          }
 
@@ -64,29 +67,41 @@ class ParticipantController {
             bindData(user, params, [include: ['title', 'firstName', 'lastName', 'gender', 'organisation',
                     'department', 'email', 'address', 'city', 'country', 'phone', 'mobile', 'extraInfo']], "User")
 
+            participant.extras.clear()
             params."ParticipantDate.extras".each { extraId ->
-                participant.addToExtras(Extra.get(String.toLong(extraId)))
+                participant.addToExtras(Extra.get(extraId))
             }
 
-            i = 0
+            int i = 0
             while (params["Paper_${i}"]) {
                 Paper paper = user.papers.find { it.id == params.long("Paper_${i}.id") }
                 if (paper) {
-                    bindData(paper, params, [include: ['title', 'abstr', 'file', 'coAuthors', 'state', 'comment',
+                    bindData(paper, params, [include: ['title', 'abstr', 'coAuthors', 'state', 'comment',
                             'sessionProposal', 'proposalDescription', 'equipmentComment']], "Paper_${i}")
+
+                    CommonsMultipartFile file = (CommonsMultipartFile) params["Paper_${i}.file"]
+                    if (file) {
+                        paper.fileSize = file.size
+                        paper.contentType = file.contentType
+                        paper.fileName = file.originalFilename
+                        paper.file = file.bytes
+                    }
+
+                    paper.equipment.clear()
                     params["Paper_${i}.equipment"].each { equipmentId ->
-                        paper.addToEquipment(Equipment.get(String.toLong(equipmentId)))
+                        paper.addToEquipment(Equipment.get(equipmentId))
                     }
                 }
+                i++
             }
 
-            if (!participant.save(flush: true)) {
+            if (!participant.save() || !user.save()) {
                 render(view: "form", model: [user: user, participant: participant])
                 return
             }
             else {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'User.label'), user.id])
-                redirect(uri: eca.createLink(action: 'list', base: false))
+                flash.message = message(code: 'default.updated.message', args: [message(code: 'user.label'), user.id])
+                redirect(uri: eca.createLink(action: 'list', noBase: true))
             }
         }
     }

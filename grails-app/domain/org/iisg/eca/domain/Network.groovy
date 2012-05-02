@@ -10,7 +10,7 @@ class Network extends EventDateDomain {
     boolean showOnline = true
     boolean showInternal = true
     
-    static hasMany = [chairs: NetworkChair]
+    static hasMany = [chairs: NetworkChair, participantVolunteering: ParticipantVolunteering]
 
     static constraints = {
         date    nullable: true

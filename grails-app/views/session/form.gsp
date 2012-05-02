@@ -1,3 +1,4 @@
+<%@ page import="org.iisg.eca.domain.ParticipantType; org.iisg.eca.domain.User" %>
 <html>
 	<head>
 		<meta name="layout" content="main">
@@ -55,37 +56,47 @@
                 </div>
 
                 <div style="color:red; font-weight:bold;">TODO: Equipment for this session</div>
-                <div style="color:red; font-weight:bold;">TODO: Participants for this session</div>
 
-                <div id="tabs">
+                <ol id="session-participants">
+                <g:each in="${eventSession.sessionParticipants}" var="participant" status="i">
+                    <li>
+                        <input type="hidden" name="SessionParticipant_${i}.user.id" value="${participant.user.id}" />
+                        <input type="hidden" name="SessionParticipant_${i}.type.id" value="${participant.type.id}" />
+
+                        <g:if test="${i == 0}">
+                            <span class="property-label">
+                                Participants in session
+                            </span>
+                        </g:if>
+                        <g:else>
+                            <span class="property-label"> </span>
+                        </g:else>
+                        <span class="property-value">${participant.encodeAsHTML()}</span>
+                    </li>
+                </g:each>
+                    <li class="hidden">
+                        <input type="hidden" name="SessionParticipant_null.user.id" />
+                        <input type="hidden" name="SessionParticipant_null.type.id" />
+
+                        <span class="property-label"> </span>
+                        <span class="property-value"> </span>
+                    </li>
+                </ol>
+
+                <div id="tabs" class="session">
                     <ul>
-                        <li><a href="#chair-tab">Add Chair</a></li>
-                        <li><a href="#organiser-tab">Add Organiser</a></li>
-                        <li><a href="#author-tab">Add Author</a></li>
-                        <li><a href="#co-author-tab">Add Co-Author</a></li>
-                        <li><a href="#discussant-tab">Add Discussant</a></li>
+                        <g:each in="${types}" var="type">
+                            <li><a href="#${type.toString().toLowerCase()}-tab">Add ${type}</a></li>
+                        </g:each>
                     </ul>
 
-                    <div id="chair-tab">
-                        <div>
-                            <label>
-                                <g:message code="default.deleted.label" />
-                            </label>
-                            <g:checkBox name="Session.deleted" checked="${eventSession.deleted}" />
+                    <g:each in="${types}" var="type">
+                        <div id="${type.toString().toLowerCase()}-tab">
+                            <input type="hidden" name="${type.toString().toLowerCase()}-id" value="${type.id}" />
+                            <g:select from="${participants}" name="${type}" optionKey="id" noSelection="${['null': 'Select a participant']}" />
+                            <input type="button" name="add-${type.toString().toLowerCase()}" value="Add ${type}" />
                         </div>
-                    </div>
-                    <div id="organiser-tab">
-
-                    </div>
-                    <div id="author-tab">
-
-                    </div>
-                    <div id="co-author-tab">
-
-                    </div>
-                    <div id="discussant-tab">
-
-                    </div>
+                    </g:each>
                 </div>
             </fieldset>
 

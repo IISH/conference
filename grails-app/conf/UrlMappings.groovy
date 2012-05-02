@@ -1,15 +1,7 @@
-import org.iisg.eca.domain.Page
-
 class UrlMappings {
     static mappings = {
         // The default mapping
-        "/$event/$date/$controller/$action/$id?" {
-           /* Page page = Page.findByControllerAndAction(controller, action)
-            if (page && !page.dynamicPages.isEmpty()) {
-                controller: 'dynamicPage'
-                action: 'getAndPost'
-            }       */
-        }
+        "/$event/$date/$controller/$action/$id?" ()
         
         // Again the default mapping, but now with a name
         name eventDate: "/$event/$date/$controller/$action/$id?" ()

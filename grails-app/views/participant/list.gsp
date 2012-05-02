@@ -8,12 +8,6 @@
             <form name="filter-participant" action="#" method="get">
                 <fieldset id="filter">
                     <div>
-                        <label for="filter-date">
-                            <g:message code="eventdate.label" />
-                        </label>
-                        <g:select from="${dates}" id="filter-date" name="filter-date" optionKey="${-2}" optionValue="${1}" value="${params['filter-date']}" />
-                    </div>
-                    <div>
                         <label for="filter-type">
                             <g:message code="default.button.searchin.label" />
                         </label>
@@ -30,7 +24,7 @@
                         <eca:link controller="${params.prevController}" action="${params.prevAction}" id="${params.prevId}">
                             <g:message code="default.button.cancel.label" />
                         </eca:link>
-                        <input type="submit" value="${message(code: 'default.button.search.label')}" />
+                        <input type="submit" name="filter" value="${message(code: 'default.button.search.label')}" />
                     </div>
                 </fieldset>
 
@@ -68,11 +62,16 @@
             </div>
 
             <div id="list">
+                <g:if test="${participants.isEmpty()}">
+                    <ol>
+                        <li><g:message code="default.empty.message" /></li>
+                    </ol>
+                </g:if>
                 <g:each in="${alfabet}" var="character">
                     <ol name="${character.toLowerCase()}">
                         <li class="char">${character}</li>
                         <g:each in="${participants.get(character)}" var="user">
-                            <li><eca:link action="show" id="${user[0]}">${user[1]}</eca:link></li>
+                            <li><eca:link action="show" id="${user[0]}">${user[1]}</eca:link> ${user[2]}</li>
                         </g:each>
                     </ol>
                 </g:each>

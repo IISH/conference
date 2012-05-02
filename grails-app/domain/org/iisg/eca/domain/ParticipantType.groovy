@@ -3,7 +3,11 @@ package org.iisg.eca.domain
 class ParticipantType extends EventDomain {
     String type
 
-    static hasMany = [sessionParticipants: SessionParticipant]
+    static hasMany = [  sessionParticipants:    SessionParticipant,
+                        rulesFirst:             ParticipantTypeRule,
+                        rulesSecond:            ParticipantTypeRule]
+    static mappedBy = [ rulesFirst:             'firstType',
+                        rulesSecond:            'secondType']
 
     static mapping = {
         table 'participant_types'

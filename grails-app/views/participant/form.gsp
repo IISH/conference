@@ -1,16 +1,25 @@
-<%@ page import="org.iisg.eca.domain.Title; org.iisg.eca.domain.Equipment; org.iisg.eca.domain.PaperState; org.iisg.eca.domain.FeeState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Extra; org.iisg.eca.domain.Country" %>
+<%@ page import="org.iisg.eca.domain.Network; org.iisg.eca.domain.Title; org.iisg.eca.domain.Equipment; org.iisg.eca.domain.PaperState; org.iisg.eca.domain.FeeState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Extra; org.iisg.eca.domain.Country" %>
 <!doctype html>
 <html>
     <head>
         <meta name="layout" content="main">
     </head>
     <body>
+        <g:hasErrors model="[participant: participant, user: user]">
+            <ul class="errors" role="alert">
+                <g:eachError model="[participant: participant, user: user]" var="error">
+                    <li><g:message error="${error}" /></li>
+                </g:eachError>
+             </ul>
+        </g:hasErrors>
+
+        <form id="participant-form" action="#" method="post" enctype="multipart/form-data">
+
         <div id="tabs">
             <ul>
                 <li><a href="#personal-tab">Personal information</a></li>
                 <li><a href="#papers-tab">Papers</a></li>
             </ul>
-            <form id="participant-form" action="#" method="post" enctype="multipart/form-data">
                 <fieldset id="personal-tab" class="columns">
                     <div class="column">
                         <h3>Registration info</h3>
@@ -91,9 +100,7 @@
                             <label>
                                 Address
                             </label>
-                            <textarea name="User.address" cols="40" rows="5">
-                                ${fieldValue(bean: user, field: 'address')}
-                            </textarea>
+                            <textarea name="User.address" cols="40" rows="5">${fieldValue(bean: user, field: 'address')}</textarea>
                         </div>
                         <div class="${hasErrors(bean: user, field: 'city', 'error')} required">
                             <label>
@@ -125,9 +132,7 @@
                             <label>
                                 Extra information
                             </label>
-                            <textarea name="User.extraInfo" cols="40" rows="5">
-                                ${fieldValue(bean: user, field: 'extraInfo')}
-                            </textarea>
+                            <textarea name="User.extraInfo" cols="40" rows="5">${fieldValue(bean: user, field: 'extraInfo')}</textarea>
                         </div>
                     </div>
 
@@ -184,18 +189,19 @@
                                 </label>
                                 <g:select name="ParticipantDate.feeState.id" from="${FeeState.list()}" optionKey="id" optionValue="name" value="${participant.feeState.id}" />
                             </div>
-                            <span style="font-weight:bold; color:red;">TODO (Present / Not present at)</span>
+                            <div style="font-weight:bold; color:red;">TODO (Present / Not present at)</div>
+                            <div style="font-weight:bold; color:red;">TODO (Participant would like to be / would like to get)</div>
                         </div>
                     </g:if>
                     <g:else>
-                        <span style="font-weight:bold; color:red;">TODO (User did not sign up for this event date)</span>
+                        <div style="font-weight:bold; color:red;">TODO (User did not sign up for this event date)</div>
                     </g:else>
                 </fieldset>
 
                 <fieldset id="papers-tab" class="columns">
                 <g:if test="${participant}">
                     <g:if test="${participant.user.papers.isEmpty()}">
-                        <span style="font-weight:bold; color:red;">NO PAPERS!</span>
+                        <div style="font-weight:bold; color:red;">NO PAPERS!</div>
                     </g:if>
                     <g:each in="${participant.user.papers}" var="paper" status="i">
                         <div class="column">
@@ -213,9 +219,7 @@
                                 <label>
                                     Abstract
                                 </label>
-                                <textarea name="Paper_${i}.abstr" cols="40" rows="5">
-                                    ${fieldValue(bean: paper, field: 'abstr')}
-                                </textarea>
+                                <textarea name="Paper_${i}.abstr" cols="40" rows="5">${fieldValue(bean: paper, field: 'abstr')}</textarea>
                             </div>
                             <div class="${hasErrors(bean: paper, field: 'file', 'error')}">
                                 <label>
@@ -239,15 +243,19 @@
                                 <label>
                                     Additional comments
                                 </label>
-                                <textarea name="Paper_${i}.comment" cols="40" rows="5">
-                                    ${fieldValue(bean: paper, field: 'comment')}
-                                </textarea>
+                                <textarea name="Paper_${i}.comment" cols="40" rows="5">${fieldValue(bean: paper, field: 'comment')}</textarea>
                             </div>
 
                             <h3>Networks & Sessions information</h3>
+                            <div class="${hasErrors(bean: paper, field: 'networkProposal', 'error')}">
+                                <label>
+                                    Network proposal
+                                </label>
+                                <g:select from="${Network.list()}" name="Paper_${i}.networkProposal" optionKey="id" optionValue="name" value="${paper.networkProposal}" noSelection="${[null: ' ']}" />
+                            </div>
                             <div class="${hasErrors(bean: paper, field: 'sessionProposal', 'error')}">
                                 <label>
-                                    Session proposal:
+                                    Session proposal
                                 </label>
                                 <input type="text" name="Paper_${i}.sessionProposal" maxlength="500" value="${fieldValue(bean: paper, field: 'sessionProposal')}" />
                             </div>
@@ -255,9 +263,7 @@
                                 <label>
                                     Session proposal description
                                 </label>
-                                <textarea name="Paper_${i}.proposalDescription" cols="40" rows="5">
-                                    ${fieldValue(bean: paper, field: 'proposalDescription')}
-                                </textarea>
+                                <textarea name="Paper_${i}.proposalDescription" cols="40" rows="5">${fieldValue(bean: paper, field: 'proposalDescription')}</textarea>
                             </div>
                             <span style="font-weight:bold; color:red;">TODO (Sessions and proposals)</span>
 
@@ -274,26 +280,23 @@
                                 <label>
                                     Equipment comments
                                 </label>
-                                <textarea name="Paper_${i}.equipmentComment" cols="40" rows="5">
-                                    ${fieldValue(bean: paper, field: 'equipmentComment')}
-                                </textarea>
+                                <textarea name="Paper_${i}.equipmentComment" cols="40" rows="5">${fieldValue(bean: paper, field: 'equipmentComment')}</textarea>
                             </div>
-                            <span style="font-weight:bold; color:red;">TODO (Participant would like to be / would like to get)</span>
                         </div>
                     </g:each>
                 </g:if>
                 <g:else>
-                    <span style="font-weight:bold; color:red;">TODO (User did not sign up for this event date)</span>
+                    <div style="font-weight:bold; color:red;">TODO (User did not sign up for this event date)</div>
                 </g:else>
                 </fieldset>
+            </div>
 
-                <fieldset class="buttons">
-                    <eca:link previous="true">
-                        <g:message code="default.button.cancel.label" />
-                    </eca:link>
-                    <input type="submit" name="btn_save" class="btn_save" value="${message(code: 'default.button.save.label')}" />
-                </fieldset>
-            </form>
-        </div>
+            <fieldset class="buttons">
+                <eca:link previous="true">
+                    <g:message code="default.button.cancel.label" />
+                </eca:link>
+                <input type="submit" name="btn_save" class="btn_save" value="${message(code: 'default.button.save.label')}" />
+            </fieldset>
+        </form>
     </body>
 </html>

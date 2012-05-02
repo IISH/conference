@@ -16,4 +16,9 @@ class SessionParticipant extends DefaultDomain {
         session column: 'session_id'
         type    column: 'participant_type_id'
     }
+
+    @Override
+    String toString() {
+        "${user} (${type})"
+    }
 }
