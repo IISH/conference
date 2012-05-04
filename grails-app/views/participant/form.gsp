@@ -1,4 +1,4 @@
-<%@ page import="org.iisg.eca.domain.Network; org.iisg.eca.domain.Title; org.iisg.eca.domain.Equipment; org.iisg.eca.domain.PaperState; org.iisg.eca.domain.FeeState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Extra; org.iisg.eca.domain.Country" %>
+<%@ page import="org.iisg.eca.domain.Volunteering; org.iisg.eca.domain.Network; org.iisg.eca.domain.Title; org.iisg.eca.domain.Equipment; org.iisg.eca.domain.PaperState; org.iisg.eca.domain.FeeState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Extra; org.iisg.eca.domain.Country" %>
 <!doctype html>
 <html>
     <head>
@@ -189,8 +189,44 @@
                                 </label>
                                 <g:select name="ParticipantDate.feeState.id" from="${FeeState.list()}" optionKey="id" optionValue="name" value="${participant.feeState.id}" />
                             </div>
+
                             <div style="font-weight:bold; color:red;">TODO (Present / Not present at)</div>
-                            <div style="font-weight:bold; color:red;">TODO (Participant would like to be / would like to get)</div>
+
+                            <h3>Volunteering</h3>
+                            <div class="${hasErrors(bean: participant, field: 'participantVolunteering', 'error')} ">
+                                <ul class="inline">
+                                <g:each in="${participant.participantVolunteering}" var="instance" status="i">
+                                    <li>
+                                        <input type="hidden" name="ParticipantVolunteering_${i}.id" value="${instance.id}" />
+                                        <label>
+                                            Would like to be
+                                            <g:select from="${Volunteering.list()}" name="ParticipantVolunteering_${i}.volunteering.id" optionKey="id" optionValue="description" value="${instance.volunteering.id}" />
+                                        </label>
+                                        <label>
+                                            Network
+                                            <g:select from="${Network.list()}" name="ParticipantVolunteering_${i}.network.id" optionKey="id" optionValue="name" value="${instance.network.id}" />
+                                        </label>
+                                        <span class="ui-icon ui-icon-circle-minus"></span>
+                                    </li>
+                                </g:each>
+                                    <li class="add">
+                                        <span class="ui-icon ui-icon-circle-plus"></span>
+                                        <g:message code="default.add.label" args="['volunteer offer']" />
+                                    </li>
+                                    <li class="hidden">
+                                        <input type="hidden" name="ParticipantVolunteering_null.id" />
+                                        <label>
+                                            Would like to be
+                                            <g:select from="${Volunteering.list()}" name="ParticipantVolunteering_null.volunteering.id" optionKey="id" optionValue="description" />
+                                        </label>
+                                        <label>
+                                            Network
+                                            <g:select from="${Network.list()}" name="ParticipantVolunteering_null.network.id" optionKey="id" optionValue="name" />
+                                        </label>
+                                        <span class="ui-icon ui-icon-circle-minus"></span>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </g:if>
                     <g:else>
@@ -221,9 +257,20 @@
                                 </label>
                                 <textarea name="Paper_${i}.abstr" cols="40" rows="5">${fieldValue(bean: paper, field: 'abstr')}</textarea>
                             </div>
-                            <div class="${hasErrors(bean: paper, field: 'file', 'error')}">
+                            <g:if test="${paper.file}">
+                            <div>
                                 <label>
                                     Uploaded paper
+                                </label>
+                                <span>
+                                    <a target="_blank" href="${eca.createLink(action: 'downloadPaper', id: paper.id)}">${paper.fileName}</a> - ${paper.getReadableFileSize()}
+                                </span>
+                                <span class="ui-icon ui-icon-circle-minus"></span>
+                            </div>
+                            </g:if>
+                            <div class="${hasErrors(bean: paper, field: 'file', 'error')}">
+                                <label>
+                                    Upload new paper
                                 </label>
                                 <input type="file" name="Paper_${i}.file" />
                             </div>
@@ -252,6 +299,7 @@
                                     Network proposal
                                 </label>
                                 <g:select from="${Network.list()}" name="Paper_${i}.networkProposal" optionKey="id" optionValue="name" value="${paper.networkProposal}" noSelection="${[null: ' ']}" />
+                                <input type="button" id="btn_network" name="btn_network" value="Go to" />
                             </div>
                             <div class="${hasErrors(bean: paper, field: 'sessionProposal', 'error')}">
                                 <label>
@@ -265,7 +313,17 @@
                                 </label>
                                 <textarea name="Paper_${i}.proposalDescription" cols="40" rows="5">${fieldValue(bean: paper, field: 'proposalDescription')}</textarea>
                             </div>
-                            <span style="font-weight:bold; color:red;">TODO (Sessions and proposals)</span>
+                            <div class="${hasErrors(bean: paper, field: 'session', 'error')}">
+                                <label>
+                                    Session
+                                </label>
+                                <span>
+                                    <g:if test="${paper.session}">${fieldValue(bean: paper, field: 'session')}</g:if>
+                                    <g:else>-</g:else>
+                                </span>
+                                <input type="hidden" name="session_id" value="${paper.session?.id}" />
+                                <input type="button" id="btn_session" name="btn_session" value="Go to" />
+                            </div>
 
                             <h3>Audiovisual equipment</h3>
                             <g:each in="${Equipment.list()}" var="equipment">

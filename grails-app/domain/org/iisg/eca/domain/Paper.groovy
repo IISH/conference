@@ -1,8 +1,11 @@
 package org.iisg.eca.domain
 
+import java.math.RoundingMode
+
 class Paper extends EventDateDomain {
     User user
     PaperState state
+    Session session
     String title
     String coAuthors
     String abstr
@@ -16,7 +19,7 @@ class Paper extends EventDateDomain {
     byte[] file
     String equipmentComment
 
-    static belongsTo = [User, PaperState, Network]
+    static belongsTo = [User, PaperState, Session, Network]
     static hasMany = [equipment: Equipment]
 
     static mapping = {
@@ -25,6 +28,7 @@ class Paper extends EventDateDomain {
 
         id                  column: 'paper_id'
         state               column: 'paper_state_id'
+        session             column: 'session_id'
         title               column: 'title'
         coAuthors           column: 'co_authors'
         abstr               column: 'abstract',             type: 'text'
@@ -42,6 +46,7 @@ class Paper extends EventDateDomain {
     }
 
     static constraints = {
+        session             nullable: true
         title               blank: false,   maxSize: 500
         coAuthors           nullable: true, maxSize: 500
         abstr               nullable: true
@@ -53,6 +58,20 @@ class Paper extends EventDateDomain {
         fileSize            nullable: true
         file                nullable: true
         equipmentComment    nullable: true
+    }
+
+    String getReadableFileSize() {
+        if (!fileSize) {
+            return "0 bytes"
+        }
+
+        if (fileSize/1024 > 1) {
+            if (fileSize/1048576 > 1) {
+                return "${(fileSize/1048576).setScale(2, RoundingMode.HALF_UP)} MB"
+            }
+            return "${(fileSize/1024).setScale(2, RoundingMode.HALF_UP)} KB"
+        }
+        return "${fileSize} bytes"
     }
 
     @Override

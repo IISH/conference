@@ -30,6 +30,8 @@ class ParticipantDate extends EventDateDomain implements Serializable {
         lowerFeeText            column: 'lower_fee_text'
 
         extras  joinTable: 'participant_date_extra'
+
+        sort    participantVolunteering: 'volunteering'
     }
 
     static constraints = {

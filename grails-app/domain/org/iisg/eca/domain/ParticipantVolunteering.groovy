@@ -18,6 +18,8 @@ class ParticipantVolunteering implements Serializable {
         participantDate column: 'participant_date_id'
         volunteering    column: 'volunteering_id'
         network         column: 'network_id'
+
+        sort    volunteering: 'description'
     }
 
     Long getId() {

@@ -8,6 +8,7 @@ import org.iisg.eca.domain.Extra
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 import org.springframework.web.multipart.commons.CommonsMultipartFile
 import java.sql.Blob
+import org.iisg.eca.domain.ParticipantVolunteering
 
 class ParticipantController {
     /**
@@ -19,6 +20,11 @@ class ParticipantController {
      * Service taking care of participant information
      */
     def participantService
+
+    /**
+     * Service taking care of exporting the participants paper
+     */
+    def exportService
 
     def index() {
         redirect(action: "list", params: params)
@@ -73,11 +79,20 @@ class ParticipantController {
             }
 
             int i = 0
+            participant.participantVolunteering.clear()
+            while (params["ParticipantVolunteering_${i}"]) {
+                ParticipantVolunteering pv = new ParticipantVolunteering()
+                bindData(pv, params, [include: ['volunteering', 'network']], "ParticipantVolunteering_${i}")
+                participant.addToParticipantVolunteering(pv)
+            }
+
+            i = 0
             while (params["Paper_${i}"]) {
                 Paper paper = user.papers.find { it.id == params.long("Paper_${i}.id") }
                 if (paper) {
                     bindData(paper, params, [include: ['title', 'abstr', 'coAuthors', 'state', 'comment',
-                            'sessionProposal', 'proposalDescription', 'equipmentComment']], "Paper_${i}")
+                            'networkProposal', 'sessionProposal', 'proposalDescription',
+                            'equipmentComment']], "Paper_${i}")
 
                     CommonsMultipartFile file = (CommonsMultipartFile) params["Paper_${i}.file"]
                     if (file) {
@@ -103,6 +118,14 @@ class ParticipantController {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'user.label'), user.id])
                 redirect(uri: eca.createLink(action: 'list', noBase: true))
             }
+        }
+    }
+
+    def downloadPaper() {
+        Paper paper = Paper.get(params.id)
+
+        if (paper) {
+            exportService.getPaper(paper, response)
         }
     }
 }

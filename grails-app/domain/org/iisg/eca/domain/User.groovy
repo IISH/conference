@@ -57,7 +57,7 @@ class User extends DefaultDomain {
                         participantDates:   ParticipantDate,
                         userRoles:          UserRole,
                         papers:             Paper,
-                        sessionParticipant: SessionParticipant]
+                        sessionParticipants: SessionParticipant]
 
     static mapping = {
         table 'users'

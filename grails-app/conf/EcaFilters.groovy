@@ -11,19 +11,18 @@ class EcaFilters {
     
     def filters = {
         /**
-         *  Every page (except login/logout/message) should be in the database, so lookup the page information from the database
-         *  If it is there, allow access and cache the page information for this request
+         *  Every page (except login/logout/xhr) should be in the database, so lookup the page information from the database
+         *  If it is there, cache the page information for this request
          */
-        page(controller: '*', action: '*', controllerExclude: 'login|logout|message', actionExclude: 'index|switchEvent') {
+        page(controller: '*', action: '*') {
             before = {
                 Page page = Page.findByControllerAndAction(params.controller, params.action)
 
                 if (page) {
                     pageInformation.page = page
-                    return true
                 }
 
-                return false
+                return true
             }
             afterView = { Exception e ->
                 pageInformation.removePage()

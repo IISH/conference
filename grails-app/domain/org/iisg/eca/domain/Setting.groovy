@@ -4,6 +4,9 @@ package org.iisg.eca.domain
  * Domain class of table holding all settings
  */
 class Setting extends EventDomain {
+    static final String LAST_UPDATED = 'last_updated'
+    static final String MAX_PAPERS_PER_PERSON_PER_SESSION = 'max_papers_per_person_per_session'
+
     String property
     String value
 

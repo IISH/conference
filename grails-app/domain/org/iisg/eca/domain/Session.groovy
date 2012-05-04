@@ -8,7 +8,7 @@ class Session extends EventDateDomain {
     String name
     String comment
 
-    static hasMany = [sessionParticipants: SessionParticipant]
+    static hasMany = [sessionParticipants: SessionParticipant, papers: Paper]
 
     static mapping = {
         table 'sessions'

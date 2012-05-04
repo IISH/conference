@@ -121,7 +121,7 @@
         </div>
 
         <div id="footer" class="clear" role="contentinfo">
-            ${grailsApplication.config.grails.serverURL} - Last updated: ${Setting.findByProperty('lastUpdated').value}
+            ${grailsApplication.config.grails.serverURL} - Last updated: ${Setting.findByProperty(Setting.LAST_UPDATED).value}
         </div>
 
         <div id="usermenu">

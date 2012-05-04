@@ -15,6 +15,10 @@ class ParticipantTypeRule extends EventDomain {
         secondType  column: 'participant_type_2_id'
     }
 
+    static List<ParticipantTypeRule> getRulesForParticipantType(ParticipantType participantType) {
+        ParticipantTypeRule.findAllByFirstTypeOrSecondType(participantType, participantType)
+    }
+
     @Override
     String toString() {
         "${firstType} : ${secondType}"

@@ -3,7 +3,36 @@ $(document).ready(function() {
         $(this).parents('form').submit();
     });
 
-    $('#tabs').tabs();
+    $('#tabs').tabs({
+        selected: function(tab) {
+            if ($(tab).hasClass('session')) {
+                return -1;
+            }
+            else {
+                return 0;
+            }
+        }(this),
+        select: function(event, ui) {
+            if ($(this).hasClass('session')) {
+                var selected = $(ui.panel);
+                var textBox = selected.find('input[type=text]');
+                var typeIdHidden = selected.find('input[name=type-id]');
+                textBox.autocomplete("option", "source", []);
+
+                var typeId = typeIdHidden.val();
+
+                $.getJSON(
+                    '../participantswithtype',
+                    'type_id='+typeId,
+                    function(data) {
+                        participantsCopy = participants // TODO
+
+                        textBox.autocomplete("option", "source", participantsCopy);
+                    }
+                );
+            }
+        }
+    });
 
     $('.loggedin img').click(function(e) {
         $("#usermenu").toggle();
@@ -147,40 +176,64 @@ $(document).ready(function() {
         $(this).parents('.column').find('input[type=checkbox]').attr('checked', checked);
     });
 
-    $('#tabs.session input[type=button]').click(function(e) {
-        var elem = $(this).prev();
-        var id = elem.prev().val();
-        var i = 0;
+    $.getJSON('../participants', function(data) {
+        participants = data;
+    });
 
-        var print = $("#session-participants li.hidden");
-        var clone = print.clone(true);
-        var prev = print.prev();
-        if (prev.length !== 0) {
-            var nameSplit = prev.find('input').attr("name").split('.');
-            var number = nameSplit[0].split('_')[1];
-            if ($.isNumeric(number)) {
-                i = number;
-            }
-            i++;
-        }
-
-        clone.find('input').each(function() {
-            var name= $(this).attr("name").replace("null", i);
-            $(this).attr("name", name);
-            if (name === 'input[name=SessionParticipant_'+i+'.user.id]') {
-                $(this).val(elem.val());
-            }
-            else {
-                $(this).val(id);
+    $('#tabs.session input[type=text]').each(function(e) {
+        $(this).autocomplete({
+            src: [],
+            focus: function(event, ui) {
+                $(this).val(ui.item.label);
+                return false;
+            },
+            select: function(event, ui) {
+                var element = $(this);
+                element.val(ui.item.label);
+                element.prev().val(ui.item.value);
+                return false;
             }
         });
+    });
 
-        clone.find('.property-value').text(elem.find(':selected').text() + ' (' + elem.attr('name') + ')');
-        clone.removeClass("hidden");
+    $('#tabs.session input[type=button]').click(function(e) {
+        var element = $(this).prev().prev()
 
-        $('#session-participants').append(clone);
+        $.getJSON(
+            '../addParticipant',
+            {   'session_id': $('form span').first().text(),
+                'participant_id': element.val(),
+                'type_id': element.prev().val()
+            },
+            function(data) {
+                if (success) {
+
+                }
+                else {
+
+                }
+            }
+        );
+    });
+
+    $('#btn_network').click(function() {
+        var id = $(this).prev().find(':selected').val();
+        if ($.isNumeric(id)) {
+            window.open('../../network/show/' + id)
+        }
+    });
+
+    $('#btn_sessopm').click(function() {
+        var id = $(this).prev().val();
+        if ($.isNumeric(id)) {
+            window.open('../../session/show/' + id)
+        }
     });
 });
+
+var participants= []
+var participantsCopy = []
+var participantsWithType = []
 
 var queryParameters = {}, queryString = location.search.substring(1),
     re = /([^&=]+)=([^&]*)/g, m;

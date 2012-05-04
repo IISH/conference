@@ -1,9 +1,12 @@
 package org.iisg.eca.service
 
+import org.iisg.eca.domain.Paper
+
+import org.iisg.eca.export.Export
 import org.iisg.eca.export.XmlExport
 import org.iisg.eca.export.XlsExport
 import org.iisg.eca.export.CsvExport
-import org.iisg.eca.export.Export
+import javax.servlet.http.HttpServletResponse
 
 /**
  * Service responsible for exporting the results from the database to another format
@@ -24,7 +27,7 @@ class ExportService {
      * @param seperator If specified, seperates the data in the case of a csv with this character
      * @param fileName If specified, the name of the resulting file, defaults to the page name
      */
-    def void getPage(format, response, columns, results, seperator=',', fileName=pageInformation.page.toString()) {
+    void getPage(format, response, columns, results, seperator=',', fileName=pageInformation.page.toString()) {
         Export export
 
         switch (format.toLowerCase()) {
@@ -44,5 +47,11 @@ class ExportService {
         response.contentType = export.contentType
         response.setHeader("Content-disposition", "attachment;filename=${fileName}.${format.toLowerCase()}")
         response.outputStream << export.parse()
+    }
+
+    void getPaper(Paper paper, HttpServletResponse response) {
+        response.contentType = paper.contentType
+        response.setHeader("Content-disposition", "attachment;filename=${paper.fileName}")
+        response.outputStream << paper.file
     }
 }

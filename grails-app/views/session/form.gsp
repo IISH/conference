@@ -55,8 +55,6 @@
                     <g:checkBox name="Session.deleted" checked="${eventSession.deleted}" />
                 </div>
 
-                <div style="color:red; font-weight:bold;">TODO: Equipment for this session</div>
-
                 <ol id="session-participants">
                 <g:each in="${eventSession.sessionParticipants}" var="participant" status="i">
                     <li>
@@ -74,13 +72,6 @@
                         <span class="property-value">${participant.encodeAsHTML()}</span>
                     </li>
                 </g:each>
-                    <li class="hidden">
-                        <input type="hidden" name="SessionParticipant_null.user.id" />
-                        <input type="hidden" name="SessionParticipant_null.type.id" />
-
-                        <span class="property-label"> </span>
-                        <span class="property-value"> </span>
-                    </li>
                 </ol>
 
                 <div id="tabs" class="session">
@@ -91,10 +82,15 @@
                     </ul>
 
                     <g:each in="${types}" var="type">
-                        <div id="${type.toString().toLowerCase()}-tab">
-                            <input type="hidden" name="${type.toString().toLowerCase()}-id" value="${type.id}" />
-                            <g:select from="${participants}" name="${type}" optionKey="id" noSelection="${['null': 'Select a participant']}" />
-                            <input type="button" name="add-${type.toString().toLowerCase()}" value="Add ${type}" />
+                        <div id="${type.toString().toLowerCase()}-tab" <g:if test="${type.type.equalsIgnoreCase('author')}">class="author"</g:if>>
+                            <input type="hidden" name="type-id" value="${type.id}" />
+                            <input type="hidden" name="participant-id" />
+                            <input type="text" name="participant" />
+                            <g:if test="${type.type.equalsIgnoreCase('author')}">
+                                <input type="hidden" name="paper-id" />
+                                <input type="text" name="paper" />
+                            </g:if>
+                            <input type="button" name="add-participant" value="Add ${type}" />
                         </div>
                     </g:each>
                 </div>
