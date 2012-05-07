@@ -8,40 +8,26 @@ import org.iisg.eca.domain.SessionParticipant
 class ParticipantSessionService {
     def pageInformation
 
-    List<Object[]> getAllParticipants() {
+    List<User> getAllParticipants() {
         User.withCriteria {
-            projections {
-                property('id')
-                property('firstName')
-                property('lastName')
-            }
-
             participantDates {
                 eq('date.id', pageInformation.date.id)
             }
         }
     }
 
-    List<Object[]> getParticipantsOfType(ParticipantType participantType) {
-        getParticipantsOfType(participantType.id)
+    List<User> getParticipantsOfType(ParticipantType participantType, Session, session) {
+        getParticipantsOfType(participantType.id, session.id)
     }
 
-    List<Object[]> getParticipantsOfType(long participantTypeId) {
+    List<User> getParticipantsOfType(long participantTypeId, long sessionId) {
         User.withCriteria {
-            projections {
-                property('id')
-                property('firstName')
-                property('lastName')
-            }
-
             participantDates {
                 eq('date.id', pageInformation.date.id)
             }
 
             sessionParticipants {
-                session {
-                    eq('date.id', pageInformation.date.id)
-                }
+                eq('session.id', sessionId)
                 eq('type.id', participantTypeId)
             }
         }

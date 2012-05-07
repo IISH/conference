@@ -3,36 +3,7 @@ $(document).ready(function() {
         $(this).parents('form').submit();
     });
 
-    $('#tabs').tabs({
-        selected: function(tab) {
-            if ($(tab).hasClass('session')) {
-                return -1;
-            }
-            else {
-                return 0;
-            }
-        }(this),
-        select: function(event, ui) {
-            if ($(this).hasClass('session')) {
-                var selected = $(ui.panel);
-                var textBox = selected.find('input[type=text]');
-                var typeIdHidden = selected.find('input[name=type-id]');
-                textBox.autocomplete("option", "source", []);
-
-                var typeId = typeIdHidden.val();
-
-                $.getJSON(
-                    '../participantswithtype',
-                    'type_id='+typeId,
-                    function(data) {
-                        participantsCopy = participants // TODO
-
-                        textBox.autocomplete("option", "source", participantsCopy);
-                    }
-                );
-            }
-        }
-    });
+    $('#tabs').tabs();
 
     $('.loggedin img').click(function(e) {
         $("#usermenu").toggle();
@@ -176,46 +147,6 @@ $(document).ready(function() {
         $(this).parents('.column').find('input[type=checkbox]').attr('checked', checked);
     });
 
-    $.getJSON('../participants', function(data) {
-        participants = data;
-    });
-
-    $('#tabs.session input[type=text]').each(function(e) {
-        $(this).autocomplete({
-            src: [],
-            focus: function(event, ui) {
-                $(this).val(ui.item.label);
-                return false;
-            },
-            select: function(event, ui) {
-                var element = $(this);
-                element.val(ui.item.label);
-                element.prev().val(ui.item.value);
-                return false;
-            }
-        });
-    });
-
-    $('#tabs.session input[type=button]').click(function(e) {
-        var element = $(this).prev().prev()
-
-        $.getJSON(
-            '../addParticipant',
-            {   'session_id': $('form span').first().text(),
-                'participant_id': element.val(),
-                'type_id': element.prev().val()
-            },
-            function(data) {
-                if (success) {
-
-                }
-                else {
-
-                }
-            }
-        );
-    });
-
     $('#btn_network').click(function() {
         var id = $(this).prev().find(':selected').val();
         if ($.isNumeric(id)) {
@@ -223,17 +154,13 @@ $(document).ready(function() {
         }
     });
 
-    $('#btn_sessopm').click(function() {
+    $('#btn_session').click(function() {
         var id = $(this).prev().val();
         if ($.isNumeric(id)) {
             window.open('../../session/show/' + id)
         }
     });
 });
-
-var participants= []
-var participantsCopy = []
-var participantsWithType = []
 
 var queryParameters = {}, queryString = location.search.substring(1),
     re = /([^&=]+)=([^&]*)/g, m;

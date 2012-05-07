@@ -18,11 +18,11 @@
         <link rel="stylesheet" href="${resource(dir: 'css', file: 'default.css')}" type="text/css">
         <link rel="stylesheet" href="${resource(dir: 'css', file: 'esshc.css')}" type="text/css">
         <link rel="stylesheet" href="${resource(dir: 'css', file: 'jquery-ui.css')}" type="text/css">
-        <g:javascript library="jquery" />
-        <g:javascript library="application" />
-        <g:layoutHead/>
+        <g:javascript library="jquery" plugin="jquery" />
         <r:layoutResources />
-        <script src="${resource(dir: 'js', file: 'jquery-ui.js')}" type="text/javascript"></script>
+        <g:javascript src="jquery-ui.js"  />
+        <g:javascript src="application.js" />
+        <g:layoutHead/>
     </head>
     <body>
         <div id="header" role="banner">
@@ -35,7 +35,7 @@
             </span>
 
             <div id="banner" class="clear">
-                    <g:img dir="images" file="banner-esshc.jpg" alt="ESSHC" title="ESSHC" />
+                <g:img dir="images" file="banner-esshc.jpg" alt="ESSHC" title="ESSHC" />
             </div>
 
             <g:if test="${params.event && params.date}">

@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<meta name="layout" content="main">
+        <g:javascript src="session.js" />
 	</head>
 	<body>
         <g:hasErrors bean="${eventSession}">
@@ -34,32 +35,65 @@
                     </label>
                     <input type="text" name="Session.name" required="required" value="${fieldValue(bean: eventSession, field: 'name')}" />
                 </div>
-                <div class="${hasErrors(bean: eventSession, field: 'comment', 'error')} ">
+                <div class="${hasErrors(bean: eventSession, field: 'comment', 'error')}">
                     <label>
                         <g:message code="session.comment.label" />
                     </label>
-                    <textarea cols="40" rows="5" name="Session.comment">
-                        ${fieldValue(bean: eventSession, field: 'comment')}
-                    </textarea>
+                    <textarea cols="40" rows="5" name="Session.comment">${fieldValue(bean: eventSession, field: 'comment')}</textarea>
                 </div>
-                <div class="${hasErrors(bean: eventSession, field: 'enabled', 'error')} ">
+                <div class="${hasErrors(bean: eventSession, field: 'enabled', 'error')}">
                     <label>
                         <g:message code="default.enabled.label" />
                     </label>
                     <g:checkBox name="Session.enabled" checked="${eventSession.enabled}" />
                 </div>
-                <div class="${hasErrors(bean: eventSession, field: 'deleted', 'error')} ">
+                <div class="${hasErrors(bean: eventSession, field: 'deleted', 'error')}">
                     <label>
                         <g:message code="default.deleted.label" />
                     </label>
                     <g:checkBox name="Session.deleted" checked="${eventSession.deleted}" />
                 </div>
 
+                <ol id="session-equipment">
+                <g:if test="${equipment.isEmpty()}">
+                    <li>
+                        <span class="property-label">
+                            Equipment
+                        </span>
+                        <span class="property-value">-</span>
+                    </li>
+                </g:if>
+                <g:each in="${equipment}" var="equip" status="i">
+                    <li>
+                        <g:if test="${i == 0}">
+                            <span class="property-label">
+                                Equipment
+                            </span>
+                        </g:if>
+                        <g:else>
+                            <span class="property-label"> </span>
+                        </g:else>
+                        <span class="property-value">${equip[0]} (${equip[1]})</span>
+                    </li>
+                </g:each>
+                </ol>
+
                 <ol id="session-participants">
+                <g:if test="${eventSession.sessionParticipants.isEmpty()}">
+                    <li>
+                        <input type="hidden" name="user-id" class="user-id" />
+                        <input type="hidden" name="type-id" class="type-id" />
+
+                        <span class="property-label">
+                            Participants in session
+                        </span>
+                        <span class="property-value">-</span>
+                    </li>
+                </g:if>
                 <g:each in="${eventSession.sessionParticipants}" var="participant" status="i">
                     <li>
-                        <input type="hidden" name="SessionParticipant_${i}.user.id" value="${participant.user.id}" />
-                        <input type="hidden" name="SessionParticipant_${i}.type.id" value="${participant.type.id}" />
+                        <input type="hidden" name="user-id" class="user-id" value="${participant.user.id}" />
+                        <input type="hidden" name="type-id" class="type-id" value="${participant.type.id}" />
 
                         <g:if test="${i == 0}">
                             <span class="property-label">
@@ -74,7 +108,7 @@
                 </g:each>
                 </ol>
 
-                <div id="tabs" class="session">
+                <div id="tabs">
                     <ul>
                         <g:each in="${types}" var="type">
                             <li><a href="#${type.toString().toLowerCase()}-tab">Add ${type}</a></li>
@@ -83,14 +117,26 @@
 
                     <g:each in="${types}" var="type">
                         <div id="${type.toString().toLowerCase()}-tab" <g:if test="${type.type.equalsIgnoreCase('author')}">class="author"</g:if>>
-                            <input type="hidden" name="type-id" value="${type.id}" />
-                            <input type="hidden" name="participant-id" />
-                            <input type="text" name="participant" />
+                            <input type="hidden" name="type-id" value="${type.id}" class="type-id" />
+                            <input type="hidden" name="participant-id" class="participant-id" />
+
+                            <div>
+                                <label>
+                                    Paticipant
+                                </label>
+                                <input type="text" name="participant" class="select-participant" />
+                            </div>
                             <g:if test="${type.type.equalsIgnoreCase('author')}">
-                                <input type="hidden" name="paper-id" />
-                                <input type="text" name="paper" />
+                                <div>
+                                    <label>
+                                        Paper
+                                    </label>
+                                    <select class="paper" name="paper"></select>
+                                </div>
                             </g:if>
-                            <input type="button" name="add-participant" value="Add ${type}" />
+                            <div>
+                                <input type="button" name="add-participant" value="Add ${type}" />
+                            </div>
                         </div>
                     </g:each>
                 </div>

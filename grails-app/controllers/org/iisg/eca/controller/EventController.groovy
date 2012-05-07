@@ -33,16 +33,19 @@ class EventController {
      * Switches the user to the event (date) portal based on the event date id
      */
     def switchEvent() {
+        String controller = params.controller
         if (params.event_switcher) {
-            EventDate date = EventDate.get(params.event_switcher)
+            String[] attrs = params.event_switcher.split("\\|")
+            EventDate date = EventDate.get(attrs[0])
             if (date) {
                 params.event = date.event.url
                 params.date = date.url
             }
+            controller = attrs[1]
         }
         params.remove('event_switcher')
 
-        redirect(uri: eca.createLink(controller: params.prevController, action: 'index', params: params, noBase: true))
+        redirect(uri: eca.createLink(controller: controller, action: 'index', params: params, noBase: true))
     }
 
     /**

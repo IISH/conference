@@ -53,10 +53,10 @@ class UtilsTagLib {
                     builder.optgroup(label: event.toString()) {
                         datesByEvent.get(event).each { date -> 
                             if (attrs.date?.id == date.id) {
-                                builder.option(value: date.id, date.toString(), selected: "selected")
+                                builder.option(value: "${date.id}|${params.controller}", date.toString(), selected: "selected")
                             }
                             else {
-                                builder.option(value: date.id, date.toString())
+                                builder.option(value: "${date.id}|${params.controller}", date.toString())
                             }
                         }
                     }

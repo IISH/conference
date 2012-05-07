@@ -52,12 +52,12 @@ class User extends DefaultDomain {
     Date dateAdded = new Date()
 
     static belongsTo = Country
-    static hasMany = [  groups:             Group,
-                        networks:           NetworkChair,
-                        participantDates:   ParticipantDate,
-                        userRoles:          UserRole,
-                        papers:             Paper,
-                        sessionParticipants: SessionParticipant]
+    static hasMany = [  groups:                 Group,
+                        networks:               NetworkChair,
+                        participantDates:       ParticipantDate,
+                        userRoles:              UserRole,
+                        papers:                 Paper,
+                        sessionParticipants:    SessionParticipant]
 
     static mapping = {
         table 'users'
