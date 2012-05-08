@@ -1,10 +1,9 @@
 package org.iisg.eca.controller
 
-import org.codehaus.groovy.grails.commons.GrailsDomainClassProperty
-import org.iisg.eca.dynamic.DynamicPageResults
-import org.iisg.eca.dynamic.DataContainer
-import org.iisg.eca.dynamic.Column
 import org.iisg.eca.domain.DynamicPage
+
+import org.iisg.eca.dynamic.DataContainer
+import org.iisg.eca.dynamic.DynamicPageResults
 
 /**
  *  Default controller for all dynamic pages

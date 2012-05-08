@@ -49,6 +49,11 @@ class ExportService {
         response.outputStream << export.parse()
     }
 
+    /**
+     * Returns the uploaded file of the given paper
+     * @param paper The paper file to return
+     * @param response The response to write the obtained file to
+     */
     void getPaper(Paper paper, HttpServletResponse response) {
         response.contentType = paper.contentType
         response.setHeader("Content-disposition", "attachment;filename=${paper.fileName}")

@@ -3,6 +3,9 @@ package org.iisg.eca.domain
 import org.apache.commons.lang.builder.EqualsBuilder
 import org.apache.commons.lang.builder.HashCodeBuilder
 
+/**
+ * Domain class of table holding all participants who signed up as a volunteer
+ */
 class ParticipantVolunteering implements Serializable {
     ParticipantDate participantDate
     Volunteering volunteering

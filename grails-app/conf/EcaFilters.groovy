@@ -4,6 +4,7 @@ import org.iisg.eca.domain.EventDate
 
 import org.iisg.eca.domain.EventDomain
 import org.iisg.eca.domain.EventDateDomain
+import org.iisg.eca.domain.DefaultDomain
 
 class EcaFilters {
     def pageInformation
@@ -49,9 +50,9 @@ class EcaFilters {
 
                 if (date) {
                     pageInformation.date = date
-                    
+
                     grailsApplication.domainClasses.each { domainClass -> 
-                        Class domain = domainClass.clazz 
+                        Class domain = domainClass.clazz
                         if (EventDateDomain.class.isAssignableFrom(domain)) {
                             domain.enableHibernateFilter('dateFilter').setParameter('dateId', date.id)
                         }

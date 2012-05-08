@@ -1,5 +1,8 @@
 package org.iisg.eca.domain
 
+/**
+ * Domain class of table holding all days and times during which sessions can be planned
+ */
 class SessionDateTime extends DefaultDomain {
     Day day
     int index

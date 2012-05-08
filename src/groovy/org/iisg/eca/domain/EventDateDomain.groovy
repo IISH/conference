@@ -1,7 +1,7 @@
 package org.iisg.eca.domain
 
 abstract class EventDateDomain extends DefaultDomain {
-    def pageInformation
+    static def pageInformation
     
     EventDate date
     

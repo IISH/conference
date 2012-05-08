@@ -8,6 +8,8 @@ class Role {
     String description
     boolean fullRights = false
 
+    static hasMany = [userRoles: UserRole]
+
     static mapping = {
         table 'roles'
         version false
@@ -22,10 +24,6 @@ class Role {
     static constraints = {
         role        blank: false
         description nullable: true
-    }
-    
-    Set<User> getUsers() {
-        UserRole.findAllByRole(this).collect { it.user } as Set
     }
 
     @Override

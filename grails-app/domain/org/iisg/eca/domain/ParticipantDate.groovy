@@ -1,5 +1,8 @@
 package org.iisg.eca.domain
 
+/**
+ * Domain class of table holding all participants (users) who signed up for an event date
+ */
 class ParticipantDate extends EventDateDomain implements Serializable {
     User user
     ParticipantState state
@@ -40,6 +43,6 @@ class ParticipantDate extends EventDateDomain implements Serializable {
 
     @Override
     String toString() {
-        "${date.yearCode}: ${state.state}"
+        "${user.toString()} (${state.state})"
     }
 }

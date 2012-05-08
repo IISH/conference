@@ -1,5 +1,8 @@
 package org.iisg.eca.domain
 
+/**
+ * Domain class of table holding all fee states
+ */
 class FeeState extends EventDomain {
     String name
     boolean isDefaultFee

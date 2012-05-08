@@ -1,5 +1,8 @@
 package org.iisg.eca.domain
 
+/**
+ * Domain class of table holding all possible paper states
+ */
 class PaperState extends EventDateDomain {
     String description
 

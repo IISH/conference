@@ -21,8 +21,8 @@
         <g:javascript library="jquery" plugin="jquery" />
         <r:layoutResources />
         <g:javascript src="jquery-ui.js"  />
-        <g:javascript src="application.js" />
         <g:layoutHead/>
+        <g:javascript src="application.js" />
     </head>
     <body>
         <div id="header" role="banner">

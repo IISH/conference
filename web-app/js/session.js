@@ -1,6 +1,85 @@
 var sessionId = 0;
 var participants = [];
 
+var setSessionData = function(data) {
+    $('#tabs').tabs("option", "selected", -1);
+
+    if (data.success) {
+        var participantsContainer = $('#session-participants');
+        var clone = participantsContainer.find('li:first').clone(true);
+
+        participantsContainer.html("");
+        if (data.participants.length === 0) {
+            var item = clone.clone(true);
+            item.find('.user-id').val("");
+            item.find('.type-id').val("");
+            item.find('.property-value').text("-");
+            item.find('.ui-icon-circle-minus').remove();
+            participantsContainer.append(item);
+        }
+
+        for (var i=0; i<data.participants.length; i++) {
+            var item = clone.clone(true);
+            item.find('.user-id').val(data.participants[i][0]);
+            item.find('.type-id').val(data.participants[i][1]);
+            item.find('.paper-ids').val(data.participants[i][2]);
+            item.find('.property-value').text(data.participants[i][3]);
+
+            if (item.find('.ui-icon-circle-minus').length === 0) {
+                item.append('<span class="ui-icon ui-icon-circle-minus"></span>');
+            }
+
+            if (i !== 0) {
+                item.find('.property-label').text("");
+            }
+
+            participantsContainer.append(item);
+        }
+
+        var equipmentContainer = $('#session-equipment');
+        clone = equipmentContainer.find('li:first').clone(true);
+
+        equipmentContainer.html("");
+        if (data.equipment.length === 0) {
+            var item = clone.clone(true);
+            item.find('.property-value').text("-");
+            equipmentContainer.append(item);
+        }
+
+        for (var i=0; i<data.equipment.length; i++) {
+            var item = clone.clone(true);
+            item.find('.property-value').text(data.equipment[i][0] + " (" + data.equipment[i][1] + ")");
+
+            if (i !== 0) {
+                item.find('span.property-label').text("");
+            }
+
+            equipmentContainer.append(item);
+        }
+    }
+    else {
+        if ($.isArray(data.message)) {
+            var errorsBox = $('.errors');
+            if (errorsBox.length === 0) {
+                errorsBox = $('h1').after('<ul class="errors" role="alert"></ul>').next();
+            }
+
+            errorsBox.html("");
+            for (var i=0; i<data.message.length; i++) {
+                errorsBox.prepend('<li>' + data.message[i] + '</li>');
+            }
+        }
+        else {
+            var messageBox = $('.message');
+            if (messageBox.length === 0) {
+                messageBox = $('h1').after('<div class="message" role="status"></div>').next();
+            }
+
+            messageBox.text(data.message);
+        }
+    }
+}
+
 $.getJSON('../participants', function(data) {
     participants = data;
 });
@@ -26,7 +105,7 @@ $(document).ready(function() {
                 function(data) {
                     participantsCopy = $.grep(participants, function(n) {
                         for (var i=0; i<data.length; i++) {
-                            if (data[i].value === n.value) {
+                            if (data[i] === n.value) {
                                 return null;
                             }
                         }
@@ -51,7 +130,7 @@ $(document).ready(function() {
                 element.val(ui.item.label);
                 element.parents('.ui-tabs-panel').find('.participant-id').val(ui.item.value);
 
-                var paper = $('.paper');
+                var paper = $('.paper-id');
                 paper.html("");
                 for (var i=0; i<ui.item.papers.length; i++) {
                     paper.append($("<option></option>").attr("value", ui.item.papers[i].value).text(ui.item.papers[i].label));
@@ -69,60 +148,28 @@ $(document).ready(function() {
             '../addParticipant',
             {   'session_id':       sessionId,
                 'participant_id':   element.find('.participant-id').val(),
-                'type_id':          element.find('.type-id').val()
+                'type_id':          element.find('.type-id').val(),
+                'paper_id':         element.find('.paper-id').val()
             },
-            function(data) {
-                if (data.success) {
-                    var participantsContainer = $('#session-participants');
-                    var clone = participantsContainer.find('li:first').clone(true);
-
-                    participantsContainer.html("");
-                    if (data.participants.length === 0) {
-                        var item = clone.clone(true);
-                        item.find('.user-id').val("");
-                        item.find('.type-id').val("");
-                        item.find('.property-value').text("-");
-                        participantsContainer.append(item);
-                    }
-
-                    for (var i=0; i<data.participants.length; i++) {
-                        var item = clone.clone(true);
-                        item.find('.user-id').val(data.participants[i][0]);
-                        item.find('.type-id').val(data.participants[i][1]);
-                        item.find('.property-value').text(data.participants[i][2]);
-
-                        if (i !== 0) {
-                            item.find('.property-label').text("");
-                        }
-
-                        participantsContainer.append(item);
-                    }
-
-                    var equipmentContainer = $('#session-equipment');
-                    clone = equipmentContainer.find('li:first').clone(true);
-
-                    equipmentContainer.html("");
-                    if (data.equipment.length === 0) {
-                        var item = clone.clone(true);
-                        item.find('.property-value').text("-");
-                        equipmentContainer.append(item);
-                    }
-
-                    for (var i=0; i<data.equipment.length; i++) {
-                        var item = clone.clone(true);
-                        item.find('.property-value').text(data.equipment[i][0] + " (" + data.equipment[i][1] + ")");
-
-                        if (i !== 0) {
-                            item.find('span.property-label').text("");
-                        }
-
-                        equipmentContainer.append(item);
-                    }
-                }
-                else {
-
-                }
-            }
+            setSessionData
         );
     });
+
+    $('.ui-icon-circle-minus').live('click', function(e) {
+        var element = $(this).parents('li');
+        $.getJSON('../../message/index', {code: 'default.button.delete.confirm.message'}, function(data) {
+            var deleted = confirm(data.message);
+            if (deleted) {
+                $.getJSON(
+                    '../deleteParticipant',
+                    {   'session_id':   sessionId,
+                        'user_id':      element.find('.user-id').val(),
+                        'type_id':      element.find('.type-id').val(),
+                        'paper_ids':    element.find('.paper-ids').val()
+                    },
+                    setSessionData
+                );
+            }
+        });
+   });
 });

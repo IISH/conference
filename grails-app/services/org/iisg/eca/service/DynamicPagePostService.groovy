@@ -10,12 +10,24 @@ import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 import org.codehaus.groovy.grails.commons.GrailsDomainClassProperty
 import org.codehaus.groovy.grails.commons.metaclass.GroovyDynamicMethodsInterceptor
 
+/**
+ * Service responsible for saving the data of a form on a dynamic page
+ */
 class DynamicPagePostService {
+    /**
+     * Make sure we can use the bind method within all methods of this service
+     */
     DynamicPagePostService() {
         GroovyDynamicMethodsInterceptor i = new GroovyDynamicMethodsInterceptor(this)
         i.addDynamicMethodInvocation(new BindDynamicMethod())
     }
-    
+
+    /**
+     * Saves the data of the given element from a dynamic page
+     * @param element The element, which should represent a form, stating the data and the relationships between columns
+     * @param params The data filled out by the user to be saved in the database
+     * @return A list of domain objects which were saved to the database
+     */
     List saveFormData(DataContainer element, GrailsParameterMap params) {
         // This element should be a form...
         if (element?.type == DataContainer.Type.FORM) {

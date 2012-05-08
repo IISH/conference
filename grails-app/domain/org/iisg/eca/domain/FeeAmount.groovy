@@ -1,5 +1,8 @@
 package org.iisg.eca.domain
 
+/**
+ * Domain class of table holding all fee amounts
+ */
 class FeeAmount extends EventDateDomain {
     FeeState feeState
     Date endDate
@@ -11,8 +14,8 @@ class FeeAmount extends EventDateDomain {
 
     static constraints = {
         date            nullable: true
-        numDaysStart    min: 1/*, validator: { val, object -> object.date.days.dayNumber.max() <= val }  */
-        numDaysEnd      min: 1/*, validator: { val, object -> object.date.days.dayNumber.max() <= val }    */
+        numDaysStart    min: 1, validator: { val, object -> object.date.days*.dayNumber.max() <= val }
+        numDaysEnd      min: 1, validator: { val, object -> object.date.days*.dayNumber.max() <= val }
         feeAmount       min: BigDecimal.ZERO
     }
 

@@ -1,4 +1,4 @@
-<%@ page import="org.iisg.eca.domain.ParticipantType; org.iisg.eca.domain.User" %>
+<%@ page import="org.iisg.eca.domain.Setting; org.iisg.eca.domain.ParticipantType; org.iisg.eca.domain.User" %>
 <html>
 	<head>
 		<meta name="layout" content="main">
@@ -79,10 +79,11 @@
                 </ol>
 
                 <ol id="session-participants">
-                <g:if test="${eventSession.sessionParticipants.isEmpty()}">
+                <g:if test="${participants.isEmpty()}">
                     <li>
                         <input type="hidden" name="user-id" class="user-id" />
                         <input type="hidden" name="type-id" class="type-id" />
+                        <input type="hidden" name="paper-ids" class="paper-ids" />
 
                         <span class="property-label">
                             Participants in session
@@ -90,10 +91,11 @@
                         <span class="property-value">-</span>
                     </li>
                 </g:if>
-                <g:each in="${eventSession.sessionParticipants}" var="participant" status="i">
+                <g:each in="${participants}" var="participant" status="i">
                     <li>
-                        <input type="hidden" name="user-id" class="user-id" value="${participant.user.id}" />
-                        <input type="hidden" name="type-id" class="type-id" value="${participant.type.id}" />
+                        <input type="hidden" name="user-id" class="user-id" value="${participant[0].user.id}" />
+                        <input type="hidden" name="type-id" class="type-id" value="${participant[0].type.id}" />
+                        <input type="hidden" name="paper-ids" class="paper-ids" value="${participant[1]*.id.join(',')}" />
 
                         <g:if test="${i == 0}">
                             <span class="property-label">
@@ -103,7 +105,14 @@
                         <g:else>
                             <span class="property-label"> </span>
                         </g:else>
-                        <span class="property-value">${participant.encodeAsHTML()}</span>
+
+                        <g:if test="${participant[0].type.type.equalsIgnoreCase('author')}">
+                            <span class="property-value">${participant[0].encodeAsHTML()} (Paper(s): ${participant[1]*.title.join(', ')})</span>
+                        </g:if>
+                        <g:else>
+                            <span class="property-value">${participant[0].encodeAsHTML()}</span>
+                        </g:else>
+                        <span class="ui-icon ui-icon-circle-minus"></span>
                     </li>
                 </g:each>
                 </ol>
@@ -126,12 +135,12 @@
                                 </label>
                                 <input type="text" name="participant" class="select-participant" />
                             </div>
-                            <g:if test="${type.type.equalsIgnoreCase('author')}">
+                            <g:if test="${type.type.equalsIgnoreCase('author') && (Setting.getByProperty(Setting.MAX_PAPERS_PER_PERSON_PER_SESSION).value.toInteger() > 1)}">
                                 <div>
                                     <label>
                                         Paper
                                     </label>
-                                    <select class="paper" name="paper"></select>
+                                    <select class="paper-id" name="paper-id"></select>
                                 </div>
                             </g:if>
                             <div>

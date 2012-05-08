@@ -2,6 +2,9 @@ package org.iisg.eca.domain
 
 import java.math.RoundingMode
 
+/**
+ * Domain class of table holding all papers
+ */
 class Paper extends EventDateDomain {
     User user
     PaperState state
@@ -51,6 +54,7 @@ class Paper extends EventDateDomain {
         coAuthors           nullable: true, maxSize: 500
         abstr               nullable: true
         comment             nullable: true
+        networkProposal     nullable: true
         sessionProposal     nullable: true, maxSize: 500
         proposalDescription nullable: true
         fileName            nullable: true, maxSize: 500
@@ -60,6 +64,10 @@ class Paper extends EventDateDomain {
         equipmentComment    nullable: true
     }
 
+    /**
+     * Returns the file size in a human friendly readable way
+     * @return The file size
+     */
     String getReadableFileSize() {
         if (!fileSize) {
             return "0 bytes"

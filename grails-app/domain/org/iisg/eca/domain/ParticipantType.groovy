@@ -1,5 +1,8 @@
 package org.iisg.eca.domain
 
+/**
+ * Domain class of table holding all possible participant types
+ */
 class ParticipantType extends EventDomain {
     String type
 

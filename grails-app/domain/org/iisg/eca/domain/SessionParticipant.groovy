@@ -1,5 +1,8 @@
 package org.iisg.eca.domain
 
+/**
+ * Domain class of table holding all participants of a session
+ */
 class SessionParticipant extends DefaultDomain {
     User user
     Session session

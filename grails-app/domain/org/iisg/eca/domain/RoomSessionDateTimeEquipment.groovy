@@ -3,6 +3,9 @@ package org.iisg.eca.domain
 import org.apache.commons.lang.builder.EqualsBuilder
 import org.apache.commons.lang.builder.HashCodeBuilder
 
+/**
+ * Domain class of table holding all equipment for a room during a specific day and time of a session
+ */
 class RoomSessionDateTimeEquipment extends DefaultDomain implements Serializable {
     Room room
     SessionDateTime sessionDateTime

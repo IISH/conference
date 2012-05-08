@@ -1,5 +1,8 @@
 package org.iisg.eca.domain
 
+/**
+ * Domain class of table holding all extras for a particular event
+ */
 class Extra extends EventDateDomain {
     String extra
 

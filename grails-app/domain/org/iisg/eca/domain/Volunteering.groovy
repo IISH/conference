@@ -1,5 +1,8 @@
 package org.iisg.eca.domain
 
+/**
+ * Domain class of table holding all volunteering possibilities for participants
+ */
 class Volunteering extends EventDomain {
     String description
 

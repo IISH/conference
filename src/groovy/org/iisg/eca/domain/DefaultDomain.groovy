@@ -13,7 +13,7 @@ abstract class DefaultDomain {
     }
 
     static hibernateFilters = {
-        hideDeleted(condition: 'deleted = 0')
+        hideDeleted(condition: 'deleted = 0', default: true)
         hideDisabled(condition: 'enabled = 1')
     }  
 

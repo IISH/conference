@@ -6,7 +6,7 @@ import org.codehaus.groovy.grails.plugins.web.taglib.ValidationTagLib
  * Domain class of table holding all pages of this application
  */
 class Page extends DefaultDomain {
-    def pageInformation
+    static def pageInformation
     private static final ValidationTagLib MESSAGES = new ValidationTagLib()
 
     String titleCode

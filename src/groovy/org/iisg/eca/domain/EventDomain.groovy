@@ -1,7 +1,7 @@
 package org.iisg.eca.domain
 
 abstract class EventDomain extends DefaultDomain {
-    def pageInformation
+    static def pageInformation
     
     Event event
     

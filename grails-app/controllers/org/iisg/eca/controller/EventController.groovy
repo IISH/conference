@@ -45,7 +45,7 @@ class EventController {
         }
         params.remove('event_switcher')
 
-        redirect(uri: eca.createLink(controller: controller, action: 'index', params: params, noBase: true))
+        redirect(uri: eca.createLink(controller: controller, action: 'index', noBase: true))
     }
 
     /**
@@ -71,19 +71,15 @@ class EventController {
         [events: datesByEvent.keySet(), dates: datesByEvent, page: pageInformation.page]
     }
 
-    def list_all() {
-        forward(controller: 'dynamicPage', action: 'get')
-    }
-
     def show() {
-        forward(controller: 'dynamicPage', action: 'get')
+        forward(controller: 'dynamicPage', action: 'get', params: params)
     }
 
     def create() {
-        forward(controller: 'dynamicPage', action: 'getAndPost')
+        forward(controller: 'dynamicPage', action: 'getAndPost', params: params)
     }
 
     def edit() {
-        forward(controller: 'dynamicPage', action: 'getAndPost')
+        forward(controller: 'dynamicPage', action: 'getAndPost', params: params)
     }
 }
