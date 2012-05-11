@@ -8,7 +8,7 @@ class Session extends EventDateDomain {
     String name
     String comment
 
-    static hasMany = [sessionParticipants: SessionParticipant, papers: Paper]
+    static hasMany = [sessionParticipants: SessionParticipant, papers: Paper, sessionRoomDateTime: SessionRoomDateTime]
 
     static mapping = {
         table 'sessions'
@@ -30,6 +30,6 @@ class Session extends EventDateDomain {
     
     @Override
     String toString() {
-        name
+        "${code}: ${name}"
     }
 }

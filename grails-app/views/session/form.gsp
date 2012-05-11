@@ -5,6 +5,8 @@
         <g:javascript src="session.js" />
 	</head>
 	<body>
+        <g:set var="maxPapers" value="${Setting.getByProperty(Setting.MAX_PAPERS_PER_PERSON_PER_SESSION).value?.toInteger()}" />
+
         <g:hasErrors bean="${eventSession}">
             <ul class="errors" role="alert">
                 <g:eachError bean="${eventSession}" var="error">
@@ -58,7 +60,7 @@
                 <g:if test="${equipment.isEmpty()}">
                     <li>
                         <span class="property-label">
-                            Equipment
+                            <g:message code="equipment.multiple.label" />
                         </span>
                         <span class="property-value">-</span>
                     </li>
@@ -67,7 +69,7 @@
                     <li>
                         <g:if test="${i == 0}">
                             <span class="property-label">
-                                Equipment
+                                <g:message code="equipment.multiple.label" />
                             </span>
                         </g:if>
                         <g:else>
@@ -86,7 +88,7 @@
                         <input type="hidden" name="paper-ids" class="paper-ids" />
 
                         <span class="property-label">
-                            Participants in session
+                            <g:message code="session.sessionparticipants.label" />
                         </span>
                         <span class="property-value">-</span>
                     </li>
@@ -99,14 +101,14 @@
 
                         <g:if test="${i == 0}">
                             <span class="property-label">
-                                Participants in session
+                                <g:message code="session.sessionparticipants.label" />
                             </span>
                         </g:if>
                         <g:else>
                             <span class="property-label"> </span>
                         </g:else>
 
-                        <g:if test="${participant[0].type.type.equalsIgnoreCase('author')}">
+                        <g:if test="${participant[0].type.withPaper}">
                             <span class="property-value">${participant[0].encodeAsHTML()} (Paper(s): ${participant[1]*.title.join(', ')})</span>
                         </g:if>
                         <g:else>
@@ -120,7 +122,7 @@
                 <div id="tabs">
                     <ul>
                         <g:each in="${types}" var="type">
-                            <li><a href="#${type.toString().toLowerCase()}-tab">Add ${type}</a></li>
+                            <li><a href="#${type.toString().toLowerCase()}-tab"><g:message code="default.add.label" args="[type]" /></a></li>
                         </g:each>
                     </ul>
 
@@ -135,7 +137,7 @@
                                 </label>
                                 <input type="text" name="participant" class="select-participant" />
                             </div>
-                            <g:if test="${type.type.equalsIgnoreCase('author') && (Setting.getByProperty(Setting.MAX_PAPERS_PER_PERSON_PER_SESSION).value.toInteger() > 1)}">
+                            <g:if test="${type.withPaper && (maxPapers == null || maxPapers > 1)}">
                                 <div>
                                     <label>
                                         Paper
@@ -144,7 +146,7 @@
                                 </div>
                             </g:if>
                             <div>
-                                <input type="button" name="add-participant" value="Add ${type}" />
+                                <input type="button" name="add-participant" value="${g.message(code: "default.add.label", args: [type])}" />
                             </div>
                         </div>
                     </g:each>
@@ -155,7 +157,7 @@
                 <eca:link previous="true">
                     <g:message code="default.button.cancel.label" />
                 </eca:link>
-                <input type="submit" name="btn_save" class="btn_save" value="${message(code: 'default.button.save.label')}" />
+                <input type="submit" name="btn_save" class="btn_save" value="${g.message(code: 'default.button.save.label')}" />
             </fieldset>
         </form>
     </body>

@@ -95,6 +95,15 @@ class ParticipantService {
      */
     List<Object[]> getParticipantCounts() {
         Integer count = 0
+
+        /**
+        	SELECT s.id, s.state, count(pd)
+        	FROM ParticipantState s
+        	LEFT JOIN s.participantDates AS pd
+        	GROUP BY s.state
+        	ORDER BY s.id''')
+         */
+
         List<Object[]> states = (List<Object[]>) ParticipantDate.executeQuery('''
             SELECT s.id, s.state, count(pd)
             FROM ParticipantDate pd

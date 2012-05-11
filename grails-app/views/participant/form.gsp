@@ -1,4 +1,4 @@
-<%@ page import="org.iisg.eca.domain.Volunteering; org.iisg.eca.domain.Network; org.iisg.eca.domain.Title; org.iisg.eca.domain.Equipment; org.iisg.eca.domain.PaperState; org.iisg.eca.domain.FeeState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Extra; org.iisg.eca.domain.Country" %>
+<%@ page import="org.iisg.eca.domain.Title; org.iisg.eca.domain.FeeState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Extra; org.iisg.eca.domain.Country" %>
 <!doctype html>
 <html>
     <head>
@@ -17,12 +17,12 @@
 
         <div id="tabs">
             <ul>
-                <li><a href="#personal-tab">Personal information</a></li>
-                <li><a href="#papers-tab">Papers</a></li>
+                <li><a href="#personal-tab"><g:message code="participantdate.personalinfo.label" /></a></li>
+                <li><a href="#papers-tab"><g:message code="paper.multiple.label" /></a></li>
             </ul>
                 <fieldset id="personal-tab" class="columns">
                     <div class="column">
-                        <h3>Registration info</h3>
+                        <h3><g:message code="participantdate.registrationinfo.label" /></h3>
                         <ol class="property-list">
                             <li>
                                 <span id="id-label" class="property-label">#</span>
@@ -32,7 +32,7 @@
                             </li>
                             <li>
                                 <span id="date-added-label" class="property-label">
-                                    Date added
+                                    <g:message code="user.dateadded.label" />
                                 </span>
                                 <span class="property-value" arial-labelledby="date-added-label">
                                     <g:formatDate date="${user.dateAdded}" />
@@ -41,7 +41,7 @@
                             <g:if test="${participant}">
                                 <li>
                                     <span id="event-date-added-label" class="property-label">
-                                        Event date added
+                                        <g:message code="participantdate.dateadded.label" />
                                     </span>
                                     <span class="property-value" arial-labelledby="event-date-added-label">
                                         <g:formatDate date="${participant.dateAdded}" />
@@ -50,87 +50,87 @@
                             </g:if>
                         </ol>
 
-                        <h3>Personal info</h3>
+                        <h3><g:message code="participantdate.personalinfo.label" /></h3>
                         <div class="${hasErrors(bean: user, field: 'title', 'error')} required">
                             <label>
-                                Title
+                                <g:message code="title.label" />
                             </label>
                             <g:select from="${Title.list()}" name="User.title" optionKey="title" optionValue="title" value="${user.title}" noSelection="${[null:' ']}" />
                         </div>
                         <div class="${hasErrors(bean: user, field: 'firstName', 'error')} required">
                             <label>
-                                First name
+                                <g:message code="user.firstname.label" />
                                 <span class="required-indicator">*</span>
                             </label>
                             <input type="text" name="User.firstName" required="required" maxlength="50" value="${fieldValue(bean: user, field: 'firstName')}" />
                         </div>
                         <div class="${hasErrors(bean: user, field: 'lastName', 'error')} required">
                             <label>
-                                Last name
+                                <g:message code="user.lastname.label" />
                                 <span class="required-indicator">*</span>
                             </label>
                             <input type="text" name="User.lastName" required="required" maxlength="50" value="${fieldValue(bean: user, field: 'lastName')}" />
                         </div>
                         <div class="${hasErrors(bean: user, field: 'gender', 'error')} required">
                             <label>
-                                Gender
+                                <g:message code="user.gender.label" />
                             </label>
                             <g:select from="['M','F']" name="User.gender" value="${user.gender?.toString()}" noSelection="${[null:' ']}" />
                         </div>
                         <div class="${hasErrors(bean: user, field: 'organisation', 'error')} required">
                             <label>
-                                Organisation
+                                <g:message code="user.organisation.label" />
                             </label>
                             <input type="text" name="User.organisation" maxlength="50" value="${fieldValue(bean: user, field: 'organisation')}" />
                         </div>
                         <div class="${hasErrors(bean: user, field: 'department', 'error')} required">
                             <label>
-                                Department
+                                <g:message code="user.department.label" />
                             </label>
                             <input type="text" name="User.department" maxlength="50" value="${fieldValue(bean: user, field: 'department')}" />
                         </div>
                         <div class="${hasErrors(bean: user, field: 'email', 'error')} required">
                             <label>
-                                E-mail
+                                <g:message code="user.email.label" />
                                 <span class="required-indicator">*</span>
                             </label>
                             <input type="email" name="User.email" required="required" maxlength="50" value="${fieldValue(bean: user, field: 'email')}" />
                         </div>
                         <div class="${hasErrors(bean: user, field: 'address', 'error')} required">
                             <label>
-                                Address
+                                <g:message code="user.address.label" />
                             </label>
                             <textarea name="User.address" cols="40" rows="5">${fieldValue(bean: user, field: 'address')}</textarea>
                         </div>
                         <div class="${hasErrors(bean: user, field: 'city', 'error')} required">
                             <label>
-                                City
+                                <g:message code="user.city.label" />
                                 <span class="required-indicator">*</span>
                             </label>
                             <input type="text" name="User.city" required="required" maxlength="50" value="${fieldValue(bean: user, field: 'city')}" />
                         </div>
                         <div class="${hasErrors(bean: user, field: 'country', 'error')} required">
                             <label>
-                                Country
+                                <g:message code="user.country.label" />
                                 <span class="required-indicator">*</span>
                             </label>
                             <g:select name="User.country.id" from="${Country.list(sort: 'nameEnglish')}" required="required" optionKey="id" optionValue="nameEnglish" value="${user.country.id}" noSelection="${[null:' ']}" />
                         </div>
                         <div class="${hasErrors(bean: user, field: 'phone', 'error')}">
                             <label>
-                                Phone
+                                <g:message code="user.phone.label" />
                             </label>
                             <input type="text" name="User.phone" maxlength="50" value="${fieldValue(bean: user, field: 'phone')}" />
                         </div>
                         <div class="${hasErrors(bean: user, field: 'mobile', 'error')}">
                             <label>
-                                Mobile
+                                <g:message code="user.mobile.label" />
                             </label>
                             <input type="text" name="User.mobile" maxlength="50" value="${fieldValue(bean: user, field: 'mobile')}" />
                         </div>
                         <div class="${hasErrors(bean: user, field: 'extraInfo', 'error')}">
                             <label>
-                                Extra information
+                                <g:message code="user.extrainfo.label" />
                             </label>
                             <textarea name="User.extraInfo" cols="40" rows="5">${fieldValue(bean: user, field: 'extraInfo')}</textarea>
                         </div>
@@ -138,21 +138,21 @@
 
                     <g:if test="${participant}">
                         <div class="column">
-                            <h3>Inventation letter</h3>
+                            <h3><g:message code="participantdate.inventationletter.label" /></h3>
                             <div class="${hasErrors(bean: participant, field: 'invitationLetter', 'error')}">
                                 <label>
-                                    Inventation letter requested
+                                    <g:message code="participantdate.invitationletter.label" />
                                 </label>
                                 <g:checkBox name="ParticipantDate.invitationLetter" checked="${participant.invitationLetter}" />
                             </div>
                             <div class="${hasErrors(bean: participant, field: 'invitationLetterSent', 'error')}">
                                 <label>
-                                    Inventation letter sent
+                                    <g:message code="participantdate.invitationlettersent.label" />
                                 </label>
                                 <g:checkBox name="ParticipantDate.invitationLetterSent" checked="${participant.invitationLetterSent}" />
                             </div>
 
-                            <h3>Extra</h3>
+                            <h3><g:message code="participantdate.extra.label" /></h3>
                             <g:each in="${Extra.list()}" var="extra">
                                 <div class="${hasErrors(bean: participant, field: 'invitationLetterSent', 'error')}">
                                     <label>
@@ -162,66 +162,66 @@
                                 </div>
                             </g:each>
 
-                            <h3>Fee request</h3>
+                            <h3><g:message code="participantdate.lowerfee.label" /></h3>
                             <div class="${hasErrors(bean: participant, field: 'lowerFeeRequested', 'error')}">
                                 <label>
-                                    Lower fee requested
+                                    <g:message code="participantdate.lowerfeerequested.label" />
                                 </label>
                                 <g:checkBox name="ParticipantDate.lowerFeeRequested" checked="${participant.lowerFeeRequested}" />
                             </div>
                             <div class="${hasErrors(bean: participant, field: 'lowerFeeAnswered', 'error')}">
                                 <label>
-                                    Lower fee answered
+                                    <g:message code="participantdate.lowerfeeanswered.label" />
                                 </label>
                                 <g:checkBox name="ParticipantDate.lowerFeeAnswered" checked="${participant.lowerFeeAnswered}" />
                             </div>
 
-                            <h3>Attendance</h3>
+                            <h3><g:message code="participantdate.attendance.label" /></h3>
                             <div class="${hasErrors(bean: participant, field: 'state', 'error')} required">
                                 <label>
-                                    Current state
+                                    <g:message code="participantdate.state.label" />
                                 </label>
                                 <g:select name="ParticipantDate.state.id" from="${ParticipantState.list()}" optionKey="id" optionValue="state" value="${participant.state.id}" />
                             </div>
                             <div class="${hasErrors(bean: participant, field: 'feeState', 'error')} required">
                                 <label>
-                                    Current fee state
+                                    <g:message code="participantdate.feestate.label" />
                                 </label>
                                 <g:select name="ParticipantDate.feeState.id" from="${FeeState.list()}" optionKey="id" optionValue="name" value="${participant.feeState.id}" />
                             </div>
 
                             <div style="font-weight:bold; color:red;">TODO (Present / Not present at)</div>
 
-                            <h3>Volunteering</h3>
+                            <h3><g:message code="participantdate.volunteering.label" /></h3>
                             <div class="${hasErrors(bean: participant, field: 'participantVolunteering', 'error')} ">
                                 <ul class="inline">
                                 <g:each in="${participant.participantVolunteering}" var="instance" status="i">
                                     <li>
                                         <input type="hidden" name="ParticipantVolunteering_${i}.id" value="${instance.id}" />
                                         <label>
-                                            Would like to be
-                                            <g:select from="${Volunteering.list()}" name="ParticipantVolunteering_${i}.volunteering.id" optionKey="id" optionValue="description" value="${instance.volunteering.id}" />
+                                            <g:message code="participantdate.volunteering.select.label" />
+                                            <g:select from="${volunteering}" name="ParticipantVolunteering_${i}.volunteering.id" optionKey="id" optionValue="description" value="${instance.volunteering.id}" />
                                         </label>
                                         <label>
-                                            Network
-                                            <g:select from="${Network.list()}" name="ParticipantVolunteering_${i}.network.id" optionKey="id" optionValue="name" value="${instance.network.id}" />
+                                            <g:message code="network.label" />
+                                            <g:select from="${networks}" name="ParticipantVolunteering_${i}.network.id" optionKey="id" optionValue="name" value="${instance.network.id}" />
                                         </label>
                                         <span class="ui-icon ui-icon-circle-minus"></span>
                                     </li>
                                 </g:each>
                                     <li class="add">
                                         <span class="ui-icon ui-icon-circle-plus"></span>
-                                        <g:message code="default.add.label" args="['volunteer offer']" />
+                                        <g:message code="default.add.label" args="[g.message(code: 'participantdate.volunteering.add.label')]" />
                                     </li>
                                     <li class="hidden">
                                         <input type="hidden" name="ParticipantVolunteering_null.id" />
                                         <label>
-                                            Would like to be
-                                            <g:select from="${Volunteering.list()}" name="ParticipantVolunteering_null.volunteering.id" optionKey="id" optionValue="description" />
+                                            <g:message code="participantdate.volunteering.select.label" />
+                                            <g:select from="${volunteering}" name="ParticipantVolunteering_null.volunteering.id" optionKey="id" optionValue="description" />
                                         </label>
                                         <label>
-                                            Network
-                                            <g:select from="${Network.list()}" name="ParticipantVolunteering_null.network.id" optionKey="id" optionValue="name" />
+                                            <g:message code="network.label" />
+                                            <g:select from="${networks}" name="ParticipantVolunteering_null.network.id" optionKey="id" optionValue="name" />
                                         </label>
                                         <span class="ui-icon ui-icon-circle-minus"></span>
                                     </li>
@@ -230,103 +230,106 @@
                         </div>
                     </g:if>
                     <g:else>
-                        <div style="font-weight:bold; color:red;">TODO (User did not sign up for this event date)</div>
+                        <div>
+                            <g:message code="participantdata.would.like.to.add.message" args="[curDate.toString()]" />
+                            <input type="checkbox" name="add-to-date" value="add" />
+                        </div>
                     </g:else>
                 </fieldset>
 
                 <fieldset id="papers-tab" class="columns">
                 <g:if test="${participant}">
                     <g:if test="${participant.user.papers.isEmpty()}">
-                        <div style="font-weight:bold; color:red;">NO PAPERS!</div>
+                        <div style="font-weight:bold; color:red;">TODO: NO PAPERS!</div>
                     </g:if>
                     <g:each in="${participant.user.papers}" var="paper" status="i">
                         <div class="column">
                             <input type="hidden" name="Paper_${i}.id" value="${paper.id}" />
 
-                            <h3>Attendance information</h3>
+                            <h3><g:message code="paper.label" /></h3>
                             <div class="${hasErrors(bean: paper, field: 'title', 'error')}">
                                 <label>
-                                    Paper title
+                                    <g:message code="paper.title.label" />
                                     <span class="required-indicator">*</span>
                                 </label>
                                 <input type="text" name="Paper_${i}.title" maxlength="500" required="required" value="${fieldValue(bean: paper, field: 'title')}" />
                             </div>
                             <div class="${hasErrors(bean: paper, field: 'abstr', 'error')}">
                                 <label>
-                                    Abstract
+                                    <g:message code="paper.abstr.label" />
                                 </label>
                                 <textarea name="Paper_${i}.abstr" cols="40" rows="5">${fieldValue(bean: paper, field: 'abstr')}</textarea>
                             </div>
                             <g:if test="${paper.file}">
                             <div>
                                 <label>
-                                    Uploaded paper
+                                    <g:message code="paper.file.label" />
                                 </label>
                                 <span>
                                     <a target="_blank" href="${eca.createLink(action: 'downloadPaper', id: paper.id)}">${paper.fileName}</a> - ${paper.getReadableFileSize()}
                                 </span>
-                                <span class="ui-icon ui-icon-circle-minus"></span>
+                                <span class="paper ui-icon ui-icon-circle-minus"></span>
                             </div>
                             </g:if>
                             <div class="${hasErrors(bean: paper, field: 'file', 'error')}">
                                 <label>
-                                    Upload new paper
+                                    <g:message code="paper.file.upload.label" />
                                 </label>
                                 <input type="file" name="Paper_${i}.file" />
                             </div>
                             <div class="${hasErrors(bean: paper, field: 'coAuthors', 'error')}">
                                 <label>
-                                    Co-authors
+                                    <g:message code="paper.coauthors.label" />
                                 </label>
                                 <input type="text" name="Paper_${i}.coAuthors" maxlength="500" value="${fieldValue(bean: paper, field: 'coAuthors')}" />
                             </div>
                             <div class="${hasErrors(bean: paper, field: 'state', 'error')}">
                                 <label>
-                                    Paper state
+                                    <g:message code="paper.state.label" />
                                 </label>
-                                <g:select from="${PaperState.list()}" name="Paper_${i}.state.id" optionKey="id" optionValue="description" value="${paper.state.id}" />
+                                <g:select from="${paperStates}" name="Paper_${i}.state.id" optionKey="id" optionValue="description" value="${paper.state.id}" />
                             </div>
                             <div class="${hasErrors(bean: paper, field: 'comment', 'error')}">
                                 <label>
-                                    Additional comments
+                                    <g:message code="paper.comment.label" />
                                 </label>
                                 <textarea name="Paper_${i}.comment" cols="40" rows="5">${fieldValue(bean: paper, field: 'comment')}</textarea>
                             </div>
 
-                            <h3>Networks & Sessions information</h3>
+                            <h3><g:message code="paper.networkssessionsinfo.label" /></h3>
                             <div class="${hasErrors(bean: paper, field: 'networkProposal', 'error')}">
                                 <label>
-                                    Network proposal
+                                    <g:message code="paper.networkproposal.label" />
                                 </label>
-                                <g:select from="${Network.list()}" name="Paper_${i}.networkProposal" optionKey="id" optionValue="name" value="${paper.networkProposal}" noSelection="${[null: ' ']}" />
-                                <input type="button" id="btn_network" name="btn_network" value="Go to" />
+                                <g:select from="${networks}" name="Paper_${i}.networkProposal" optionKey="id" optionValue="name" value="${paper.networkProposal}" noSelection="${[null: ' ']}" />
+                                <input type="button" id="btn_network" name="btn_network" value="${g.message(code: "default.goto")}" />
                             </div>
                             <div class="${hasErrors(bean: paper, field: 'sessionProposal', 'error')}">
                                 <label>
-                                    Session proposal
+                                    <g:message code="paper.sessionproposal.label" />
                                 </label>
                                 <input type="text" name="Paper_${i}.sessionProposal" maxlength="500" value="${fieldValue(bean: paper, field: 'sessionProposal')}" />
                             </div>
                             <div class="${hasErrors(bean: paper, field: 'proposalDescription', 'error')}">
                                 <label>
-                                    Session proposal description
+                                    <g:message code="paper.proposaldescription.label" />
                                 </label>
                                 <textarea name="Paper_${i}.proposalDescription" cols="40" rows="5">${fieldValue(bean: paper, field: 'proposalDescription')}</textarea>
                             </div>
                             <div class="${hasErrors(bean: paper, field: 'session', 'error')}">
                                 <label>
-                                    Session
+                                    <g:message code="session.label" />
                                 </label>
                                 <span>
                                     <g:if test="${paper.session}">${fieldValue(bean: paper, field: 'session')}</g:if>
                                     <g:else>-</g:else>
                                 </span>
                                 <input type="hidden" name="session_id" value="${paper.session?.id}" />
-                                <input type="button" id="btn_session" name="btn_session" value="Go to" />
+                                <input type="button" id="btn_session" name="btn_session" value="${g.message(code: "default.goto")}" />
                             </div>
 
-                            <h3>Audiovisual equipment</h3>
-                            <g:each in="${Equipment.list()}" var="equipment">
+                            <h3><g:message code="equipment.label" /></h3>
+                            <g:each in="${equipmentList}" var="equipment">
                                 <div class="${hasErrors(bean: paper, field: 'equipment', 'error')}">
                                     <label>
                                         ${equipment.equipment}
@@ -336,7 +339,7 @@
                             </g:each>
                             <div class="${hasErrors(bean: paper, field: 'equipmentComment', 'error')}">
                                 <label>
-                                    Equipment comments
+                                    <g:message code="paper.equipmentcomment.label" />
                                 </label>
                                 <textarea name="Paper_${i}.equipmentComment" cols="40" rows="5">${fieldValue(bean: paper, field: 'equipmentComment')}</textarea>
                             </div>

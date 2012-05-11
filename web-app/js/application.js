@@ -89,6 +89,14 @@ $(document).ready(function() {
         clone.removeClass("hidden");
     });
 
+    $('.paper.ui-icon-circle-minus').click(function(e) {
+        $(this).parent().remove();
+
+        var paperId = $(this).parents('.column').children('input[type=hidden]').first().val();
+
+        $.getJSON('../removePaper', {'paper-id': paperId});
+    });
+
     $('fieldset li span.ui-icon-circle-minus').click(function(e) {
         var toBeRemoved = $(this).parent();
 

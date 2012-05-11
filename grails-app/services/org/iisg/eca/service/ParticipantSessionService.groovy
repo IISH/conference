@@ -4,11 +4,15 @@ import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Paper
 import org.iisg.eca.domain.Session
 import org.iisg.eca.domain.ParticipantType
+import org.iisg.eca.domain.ParticipantTypeRule
 
 /**
  * Service responsible for requesting participant data in order to allow them in a session
  */
 class ParticipantSessionService {
+    /**
+     * Service with information about the current page, such as the current event date
+     */
     def pageInformation
 
     /**
@@ -30,17 +34,7 @@ class ParticipantSessionService {
      * @param session The session to look for these participants
      * @return A list of participants
      */
-    List<User> getParticipantsOfType(ParticipantType participantType, Session session) {
-        getParticipantsOfType(participantType.id, session.id)
-    }
-
-    /**
-     * Returns all participants of the current event date and session with the given type
-     * @param participantTypeId The id of the participant type
-     * @param sessionId The id of the session to look for these participants
-     * @return A list of participants
-     */
-    List<User> getParticipantsOfType(long participantTypeId, long sessionId) {
+    List<User> getParticipantsOfType(ParticipantType type, Session session) {
         User.withCriteria {
             participantDates {
                 eq('date.id', pageInformation.date.id)
@@ -48,8 +42,8 @@ class ParticipantSessionService {
             }
 
             sessionParticipants {
-                eq('session.id', sessionId)
-                eq('type.id', participantTypeId)
+                eq('session.id', session.id)
+                eq('type.id', type.id)
                 eq('deleted', false)
             }
         }
@@ -77,22 +71,43 @@ class ParticipantSessionService {
      * @return A list of arrays with the equipment and number of participant requesting it
      */
     List<Object[]> getEquipmentForSession(Session session) {
-        getEquipmentForSession(session.id)
-    }
-
-    /**
-     * Returns a list of arrays with the equipment needed for the given session
-     * and the number of participants that need that type of equipment
-     * @param sessionId The id of the session to look for this equipment
-     * @return A list of arrays with the equipment and number of participant requesting it
-     */
-    List<Object[]> getEquipmentForSession(long sessionId) {
         (List<Object[]>) Paper.executeQuery('''
             SELECT e.equipment, count(*)
             FROM Paper AS p
             INNER JOIN p.equipment AS e
             WHERE p.session.id = :sessionId
             GROUP BY e
-        ''', [sessionId: sessionId])
+        ''', [sessionId: session.id])
+    }
+
+    /**
+     * Based on the rules as set for the current event, create a blacklist of users
+     * for the specified type in the specified session
+     * @param session The session to create a blacklist for
+     * @param type The participant type to create a blacklist for
+     * @return A list of all participants that cannot be added to the specified session with the specified type
+     */
+    List<User> getBlacklistForTypeInSession(Session session, ParticipantType type) {
+        List<User> participants = new ArrayList<User>()
+
+        // Check for every individual rule, which participants with what type should be added to the blacklist
+        ParticipantTypeRule.getRulesForParticipantType(type).each { rule ->
+            if (rule.firstType.id == type.id) {
+                participants.addAll(getParticipantsOfType(rule.secondType, session))
+            }
+            else if (rule.secondType.id == type.id) {
+                participants.addAll(getParticipantsOfType(rule.firstType, session))
+            }
+        }
+        // And of course, participants who are already in the specified session
+        // with the specified type cannot be added twice
+        participants.addAll(getParticipantsOfType(type, session))
+
+        // In case the participant should be added with an paper, blacklist those without (open) papers
+        if (type.withPaper) {
+            participants.addAll(getParticipantsWithoutOpenPapers())
+        }
+
+        participants.unique()
     }
 }

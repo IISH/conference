@@ -514,3 +514,88 @@ fieldset .columns.copy .ui-icon {
 .bold {
     font-weight: bold;
 }
+
+/* PLAN SESSIONS */
+
+#sessions-unscheduled {
+    margin-bottom: 20px;
+    overflow: auto;
+    padding: 10px;
+    white-space: nowrap;
+    border: 1px solid #225496;
+}
+
+.session-block {
+    border: 1px solid #225496;
+    display: inline-block;
+    font-weight: bold;
+    padding: 3px;
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+#legenda-schedule {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+#legenda-schedule td {
+    border: 1px solid #225496;
+    padding: 0;
+    vertical-align: text-top;
+}
+
+td.equipment-combos {
+
+}
+
+#schedule {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#schedule tr {
+
+}
+
+#schedule td {
+    border: 1px solid #225496;
+    padding: 0 0 5px;
+    font-weight: bold;
+}
+
+#schedule td.time-slot {
+    height: 50px;
+    vertical-align: bottom;
+    font-weight: normal;
+    opacity: 1.0;
+}
+
+#schedule .equipment-indicator {
+    margin-top: 3px;
+}
+
+#legenda-rooms {
+    margin-bottom: 20px;
+}
+
+#legenda-rooms td {
+
+}
+
+#loading {
+    background-color: rgba(255, 255, 255, 0.7);
+    display: none;
+    font-size: 14pt;
+    font-weight: bold;
+    line-height: 5;
+    position: absolute;
+    text-align: center;
+}
+
+#session-info, #room-info {
+    display: none;
+    background-color: white;
+    border: 1px solid #225496;
+    position: absolute;
+    width: 500px;
+}

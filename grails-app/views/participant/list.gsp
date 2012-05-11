@@ -11,7 +11,7 @@
                         <label for="filter-type">
                             <g:message code="default.button.searchin.label" />
                         </label>
-                        <g:select id="filter-type" name="filter-type" valueMessagePrefix="search.for" from="['organisation', 'name', 'address']" value="${params['filter-type']}" />
+                        <g:select id="filter-type" name="filter-type" valueMessagePrefix="search.for" from="['name', 'organisation', 'address']" value="${params['filter-type']}" />
                     </div>
                     <div>
                         <label for="filter-text">
@@ -62,11 +62,16 @@
             </div>
 
             <div id="list">
-                <g:if test="${participants.isEmpty()}">
+                <g:if test="${!params.filter}">
                     <ol>
-                        <li><g:message code="default.empty.message" /></li>
+                        <li><g:message code="default.search.help.message" /></li>
                     </ol>
                 </g:if>
+                <g:elseif test="${participants.isEmpty()}">
+                    <ol>
+                        <li><g:message code="default.search.nothing.found.message" /></li>
+                    </ol>
+                </g:elseif>
                 <g:each in="${alfabet}" var="character">
                     <ol name="${character.toLowerCase()}">
                         <li class="char">${character}</li>

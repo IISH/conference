@@ -58,24 +58,19 @@ var setSessionData = function(data) {
         }
     }
     else {
-        if ($.isArray(data.message)) {
-            var errorsBox = $('.errors');
-            if (errorsBox.length === 0) {
-                errorsBox = $('h1').after('<ul class="errors" role="alert"></ul>').next();
-            }
+        var errorsBox = $('.errors');
+        if (errorsBox.length === 0) {
+            errorsBox = $('h1').after('<ul class="errors" role="alert"></ul>').next();
+        }
+        errorsBox.html("");
 
-            errorsBox.html("");
+        if ($.isArray(data.message)) {
             for (var i=0; i<data.message.length; i++) {
                 errorsBox.prepend('<li>' + data.message[i] + '</li>');
             }
         }
         else {
-            var messageBox = $('.message');
-            if (messageBox.length === 0) {
-                messageBox = $('h1').after('<div class="message" role="status"></div>').next();
-            }
-
-            messageBox.text(data.message);
+            errorsBox.prepend('<li>' + data.message + '</li>');
         }
     }
 }
@@ -85,9 +80,10 @@ $.getJSON('../participants', function(data) {
 });
 
 $(document).ready(function() {
-    sessionId = $('form span').first().text();
+    sessionId = $('form span:first').text();
 
     $('#tabs').tabs({
+        collapsible: true,
         selected: -1,
         select: function(event, ui) {
             var participantsCopy;
@@ -121,6 +117,9 @@ $(document).ready(function() {
     $('.select-participant').each(function(e) {
         $(this).autocomplete({
             src: [],
+            search: function(event, ui) {
+                $(this).parents('.ui-tabs-panel').find('.participant-id').val("");
+            },
             focus: function(event, ui) {
                 $(this).val(ui.item.label);
                 return false;

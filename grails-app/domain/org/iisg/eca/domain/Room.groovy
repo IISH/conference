@@ -9,7 +9,7 @@ class Room extends EventDateDomain {
     int noOfSeats
     String comment
     
-    static hasMany = [roomSessionDateTimeEquipment: RoomSessionDateTimeEquipment]
+    static hasMany = [roomSessionDateTimeEquipment: RoomSessionDateTimeEquipment, sessionRoomDateTime: SessionRoomDateTime]
 
     static constraints = {
         date        nullable: true

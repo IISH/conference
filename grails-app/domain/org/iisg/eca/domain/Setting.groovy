@@ -18,13 +18,11 @@ class Setting extends EventDomain {
         id          column: 'setting_id'
         property    column: 'property'
         value       column: 'value'
-        event       column: 'event_id'
     }
 
     static constraints = {
         property    blank: false,   maxSize: 50
         value       blank: false,   maxSize: 255
-        event       nullable: true
     }
 
     /**
@@ -37,9 +35,9 @@ class Setting extends EventDomain {
         Setting setting = null
 
         if (settings.size() > 0) {
-            setting = settings.find { it.event.id == pageInformation.date.event.id }
+            setting = settings.find { it.event?.id == pageInformation.date?.event?.id }
             if (!setting) {
-                settings.get(0)
+                setting = settings.get(0)
             }
         }
 

@@ -4,7 +4,6 @@ import org.iisg.eca.domain.EventDate
 
 import org.iisg.eca.domain.EventDomain
 import org.iisg.eca.domain.EventDateDomain
-import org.iisg.eca.domain.DefaultDomain
 
 class EcaFilters {
     def pageInformation
@@ -42,8 +41,8 @@ class EcaFilters {
                     return true
                 }
 
-                String eventCode = params.event?.replaceAll('-', '\\s')
-                String dateCode = params.date?.replaceAll('-', '\\s')
+                String eventCode = params.event?.replaceAll('-', ' ')
+                String dateCode = params.date?.replaceAll('-', ' ')
 
                 Event event = Event.findByCode(eventCode)
                 EventDate date = EventDate.findByEventAndYearCode(event, dateCode)

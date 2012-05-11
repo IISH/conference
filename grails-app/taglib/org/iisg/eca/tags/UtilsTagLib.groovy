@@ -129,13 +129,13 @@ class UtilsTagLib {
 
         // Add event (date) information
         if (attrs.event && attrs.date) {
-            attrs.params.event = attrs.event
-            attrs.params.date = attrs.date
+            attrs.params.put('event', attrs.event)
+            attrs.params.put('date', attrs.date)
             attrs.mapping = 'eventDate'
         }
         else if (params.event && params.date) {
-            attrs.params.event = params.event
-            attrs.params.date = params.date
+            attrs.params.put('event', params.event)
+            attrs.params.put('date', params.date)
             attrs.mapping = 'eventDate'
         }
 
@@ -151,11 +151,14 @@ class UtilsTagLib {
             attrs.remove('previous')
         }
 
-        // Add parameters for moving back to the current page
-        attrs.params.prevController = params.controller
-        attrs.params.prevAction = params.action
-        if (params.id) {
-            attrs.params.prevId = params.id
+        // Add parameters for moving back to the current page, unless specifically specified not to do so
+        if (!attrs.noPreviousInfo) {
+            attrs.params.prevController = params.controller
+            attrs.params.prevAction = params.action
+            if (params.id) {
+                attrs.params.prevId = params.id
+            }
+            attrs.remove('noPreviousInfo')
         }
 
         // In cases when there are multiple bases added, one is enough...

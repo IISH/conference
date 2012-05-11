@@ -45,7 +45,7 @@ class EventController {
         }
         params.remove('event_switcher')
 
-        redirect(uri: eca.createLink(controller: controller, action: 'index', noBase: true))
+        redirect(uri: eca.createLink(controller: controller, action: 'index', noBase: true, noPreviousInfo: true))
     }
 
     /**

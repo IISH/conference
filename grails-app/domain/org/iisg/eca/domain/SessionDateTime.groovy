@@ -9,7 +9,7 @@ class SessionDateTime extends DefaultDomain {
     String period
 
     static belongsTo = Day
-    static hasMany = [roomSessionDateTimeEquipment: RoomSessionDateTimeEquipment]
+    static hasMany = [roomSessionDateTimeEquipment: RoomSessionDateTimeEquipment, sessionRoomDateTime: SessionRoomDateTime]
 
     static mapping = {
         table 'session_datetime'
