@@ -242,12 +242,16 @@ class SessionController {
 
             if (session && room && sessionDateTime) {
                 List<SessionRoomDateTime> sessionRoomDateTimes = SessionRoomDateTime.findAllByRoomAndSessionDateTime(room, sessionDateTime)
-
                 if (sessionRoomDateTimes && !sessionRoomDateTimes.isEmpty()) {
-                    sessionRoomDateTimes.get(0).delete()
+                    sessionRoomDateTimes.get(0).delete(flush: true)
                 }
 
-                SessionRoomDateTime sessionRoomDateTime = new SessionRoomDateTime(session: session, room: room, sessionDateTime: sessionDateTime)
+                SessionRoomDateTime sessionRoomDateTime = SessionRoomDateTime.findBySession(session)
+                if (sessionRoomDateTime) {
+                    sessionRoomDateTime.delete(flush: true)
+                }
+
+                sessionRoomDateTime = new SessionRoomDateTime(session: session, room: room, sessionDateTime: sessionDateTime)
                 possibilitiesResponse = [success: (boolean) sessionRoomDateTime.save(flush: true)]
             }
 
@@ -275,7 +279,7 @@ class SessionController {
 
     def sessionInfo() {
         if (request.xhr && params.session_id) {
-            Map possibilitiesResponse = null
+            Map possibilitiesResponse = [:]
             Session session = Session.findById(params.long('session_id'))
 
             if (session) {
@@ -296,7 +300,7 @@ class SessionController {
 
     def roomInfo() {
         if (request.xhr && params.room_id) {
-            Map possibilitiesResponse = null
+            Map possibilitiesResponse = [:]
             Room room = Room.findById(params.long('room_id'))
 
             if (room) {

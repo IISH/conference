@@ -31,8 +31,8 @@ class Day extends EventDateDomain {
 
     @Override
     String toString() {
-        def dateFormat = MESSAGES.message(code: 'default.date.format').toString()
-        def sdf = new SimpleDateFormat(dateFormat)
+        String dateFormat = MESSAGES.message(code: 'default.date.format').toString()
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat)
         "${dayNumber}: ${sdf.format(day)}"
     }
 }

@@ -41,6 +41,12 @@ class TimeSlot {
         if (!equipment) {
             return -1
         }
-        equipmentCombos.findIndexOf { it.intersect(equipment).size() == equipment.size() }
+
+        equipmentCombos.findIndexOf {
+            def intersect = it.intersect(equipment)
+            def plus = it.plus(equipment)
+            plus.removeAll(intersect)
+            plus.isEmpty()
+        }
     }
 }

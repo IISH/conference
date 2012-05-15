@@ -35,7 +35,7 @@
             <tr>
                 <td>&nbsp;</td>
                 <g:each in="${dateTimes}" var="dateTime">
-                    <td>${dateTime.index} <br /> ${dateTime.period}</td>
+                    <td>${dateTime.index} <br /> ${formatDate(date: dateTime.day.day, format: 'EE')} <br /> ${dateTime.period}</td>
                 </g:each>
             </tr>
 
@@ -86,7 +86,7 @@
 
         <div id="loading">LOADING...</div>
 
-        <div id="session-info">
+        <div id="session-info" class="info">
             <ol class="property-list">
                 <li>
                     <span id="code-label" class="property-label">
@@ -121,7 +121,7 @@
             </ol>
         </div>
 
-        <div id="room-info">
+        <div id="room-info" class="info">
             <ol class="property-list">
                 <li>
                     <span id="roomnumnber-label" class="property-label">

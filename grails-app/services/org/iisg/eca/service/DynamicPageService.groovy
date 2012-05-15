@@ -195,6 +195,7 @@ class DynamicPageService {
 
                 column.readOnly = element.@readonly.text().equalsIgnoreCase("true")
                 column.multiple = element.@multiple.text().equalsIgnoreCase("true")
+                column.textarea = element.@textarea.text()
 
                 elements.add(column)
             }  

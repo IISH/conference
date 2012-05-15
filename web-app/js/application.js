@@ -1,3 +1,15 @@
+var decodeUrlParameters = function(urlParameters) {
+    var parameters = {};
+    var re = /([^&=]+)=([^&]*)/g;
+    var parameter;
+
+    while (parameter = re.exec(urlParameters)) {
+        parameters[decodeURIComponent(parameter[1])] = decodeURIComponent(parameter[2]);
+    }
+
+    return parameters;
+}
+
 $(document).ready(function() {
     $('#event_switcher').change(function(e) {
         $(this).parents('form').submit();
@@ -7,6 +19,17 @@ $(document).ready(function() {
 
     $('.loggedin img').click(function(e) {
         $("#usermenu").toggle();
+    });
+
+    $('.export-data').change(function(e) {
+        var urlParams = $(this).val();
+
+        if (urlParams != -1) {
+            var urlParameters = decodeUrlParameters(window.location.search.substring(1));
+            $.extend(urlParameters, decodeUrlParameters(urlParams));
+
+            window.location.search = "?" + $.param(urlParameters);
+        }
     });
 
     $('input[type=submit]').click(function(e) {
@@ -140,14 +163,16 @@ $(document).ready(function() {
     $('.filter input').keypress(function(e) {
         if (e.which == 13) {
             $('.filter input').each(function() {
-                queryParameters[$(this).attr("name")] = $(this).val();
+                var urlParameters = decodeUrlParameters(window.location.search.substring(1));
+                urlParameters[$(this).attr("name")] = $(this).val();
             });
-            window.location.search = $.param(queryParameters);
+            window.location.search = "?" + $.param(queryParameters);
         }
     });
 
-    $('.tbl_container table td').click(function(e) {
-        window.location =  "./show/" + $(this).parent().find("td.id").text().trim() + "?" + $.param(queryParameters);
+    $('.tbl_container table tr').click(function(e) {
+        // TODO: table to show page on click
+        window.location =  "./show/" + $(this).find("td.id").text().trim() + window.location.search;
     });
 
     $('.check-all').click(function(e) {
@@ -169,10 +194,3 @@ $(document).ready(function() {
         }
     });
 });
-
-var queryParameters = {}, queryString = location.search.substring(1),
-    re = /([^&=]+)=([^&]*)/g, m;
-
-while (m = re.exec(queryString)) {
-    queryParameters[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
-}

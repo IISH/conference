@@ -10,6 +10,7 @@ import org.iisg.eca.domain.RoomSessionDateTimeEquipment
 import org.iisg.eca.utils.TimeSlot
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.SessionParticipant
+import org.iisg.eca.domain.DefaultDomain
 
 class SessionPlannerService {
     /**
@@ -17,7 +18,7 @@ class SessionPlannerService {
      * @return A set which contains a list of all possible equipment combinations
      */
     Set<List<Equipment>> getEquipmentCombinations() {
-        (Set<List<Equipment>>) GroovyCollections.subsequences(Equipment.list())
+        (Set<List<Equipment>>) GroovyCollections.subsequences(Equipment.list(sort: 'equipment'))
     }
 
     List<Session> getUnscheduledSessions() {
@@ -41,7 +42,9 @@ class SessionPlannerService {
     }
 
     List<Session> getSessionsWithSameParticipants(Session session) {
-        (List<Session>) SessionParticipant.executeQuery('''
+        SessionParticipant.disableHibernateFilter('hideDeleted')
+
+        List<Session> result = (List<Session>) SessionParticipant.executeQuery('''
             SELECT sp.session
             FROM SessionParticipant AS sp
             WHERE EXISTS (
@@ -52,6 +55,9 @@ class SessionPlannerService {
             )
             GROUP BY sp.session
         ''', [sessionId: session.id])
+
+        SessionParticipant.enableHibernateFilter('hideDeleted')
+        result
     }
 
     /**

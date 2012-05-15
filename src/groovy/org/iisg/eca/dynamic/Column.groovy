@@ -11,6 +11,7 @@ class Column extends ContainerElement {
     private GrailsDomainClass domainClass
     private boolean readOnly
     private boolean multiple
+    private String textarea
 
     /**
      * Creates a new <code>Column</code> element
@@ -23,6 +24,7 @@ class Column extends ContainerElement {
         this.domainClass = domainClass
         this.readOnly = false
         this.multiple = false
+        this.textarea = null
     }
 
     /**
@@ -79,6 +81,24 @@ class Column extends ContainerElement {
      */
     void setMultiple(boolean multiple) {
         this.multiple = multiple
+    }
+
+    /**
+     * Indicates whether this column should be a textarea if not null and with what size
+     * @returns Either null, 'normal' or 'large'
+     */
+    String getTextarea() {
+        textarea
+    }
+
+    /**
+     * Sets whether this column should be displayed as a textarea in a form either normal or large sized
+     * @param textarea Either 'normal' or 'large'
+     */
+    void setTextarea(String textarea) {
+        if (textarea == 'normal' || textarea == 'large') {
+            this.textarea = textarea
+        }
     }
     
     /*

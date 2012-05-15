@@ -91,11 +91,14 @@ class PageBuilder {
         builder.div(class: "tbl_container") {
             builder.div(class: "tbl_toolbar right") {
                 builder.span("Export data: ")
-                builder."eca:linkAllParams"(params: "['export': ${element.eid}, 'format': 'csv', 'sep': ',']", "CSV (,)")
-                builder."eca:linkAllParams"(params: "['export': ${element.eid}, 'format': 'csv', 'sep': ';']", "CSV (;)")
-                builder."eca:linkAllParams"(params: "['export': ${element.eid}, 'format': 'csv', 'sep': 'tab']", "CSV (tab)")
-                builder."eca:linkAllParams"(params: "['export': ${element.eid}, 'format': 'xls']", "XLS")
-                builder."eca:linkAllParams"(params: "['export': ${element.eid}, 'format': 'xml']", "XML")
+                builder.select(class: "export-data") {
+                    builder.option(value: "-1", " ")
+                    builder.option(value: "export=${element.eid}&format=csv&sep=,", "CSV (,)")
+                    builder.option(value: "export=${element.eid}&format=csv&sep=;", "CSV (;)")
+                    builder.option(value: "export=${element.eid}&format=csv&sep=tab", "CSV (tab)")
+                    builder.option(value: "export=${element.eid}&format=xls", "XLS")
+                    builder.option(value: "export=${element.eid}&format=xml", "XML")
+                }
             }
             builder.table(class: "clear") {
                 builder.thead {
@@ -224,7 +227,7 @@ class PageBuilder {
                 if (element.index) {
                     builder.td(class: "counter", "\${i+1}")
                 }
-                if (!element.columns.find { it.name == "id" }) {
+                if (!element.columns.find { it.name.equalsIgnoreCase("id") }) {
                     builder.td(class: "id hidden") {
                         builder."g:fieldValue"(bean: "\${row}", field: "id")
                     }
@@ -236,8 +239,10 @@ class PageBuilder {
                                 builder."g:fieldValue"(bean: "\${row}", field: "id")
                             }
                         }
-                        builder.td {
-                            builder."g:fieldValue"(bean: "\${row}", field: c.name)
+                        else {
+                            builder.td {
+                                builder."g:fieldValue"(bean: "\${row}", field: c.name)
+                            }
                         }
                     }
                 }
@@ -338,29 +343,31 @@ class PageBuilder {
         if (element.index) {
             builder.th(class: "counter", "")
         }
-        if (!element.columns.find { it.name == "id" }) {
+        if (!element.columns.find { it.name.equalsIgnoreCase("id") }) {
             builder.th(class: "id hidden", "")
         }
         element.forAllColumns { c ->
-            if ( c.name == "id" ) {
+            if (c.name == "id") {
                 builder.th(class: "id sortable") {
                     builder.mkp.yield "#"
                     builder."eca:linkAllParams"(params: "['sort_${element.eid}_${c.name}': 'asc']") {
-                        builder."g:img"(dir: "images/skin", file: "sorted_asc_white.gif", class: "sort_asc")
+                        builder."g:img"(dir: "images/skin", file: "sorted_asc.gif", class: "sort_asc")
                     }
                     builder."eca:linkAllParams"(params: "['sort_${element.eid}_${c.name}': 'desc']") {
-                        builder."g:img"(dir: "images/skin", file: "sorted_desc_white.gif", class: "sort_desc")
+                        builder."g:img"(dir: "images/skin", file: "sorted_desc.gif", class: "sort_desc")
                     }
                 }
             }
-            builder.th(class: "sortable") {
-                builder."eca:fallbackMessage"(code: getCode(c.property), fbCode: getFbCode(c.property))
+            else {
+                builder.th(class: "sortable") {
+                    builder."eca:fallbackMessage"(code: getCode(c.property), fbCode: getFbCode(c.property))
 
-                builder."eca:linkAllParams"(params: "['sort_${element.eid}_${c.name}': 'asc']") {
-                    builder."g:img"(dir: "images/skin", file: "sorted_asc_white.gif", class: "sort_asc")
-                }
-                builder."eca:linkAllParams"(params: "['sort_${element.eid}_${c.name}': 'desc']") {
-                    builder."g:img"(dir: "images/skin", file: "sorted_desc_white.gif", class: "sort_desc")
+                    builder."eca:linkAllParams"(params: "['sort_${element.eid}_${c.name}': 'asc']") {
+                        builder."g:img"(dir: "images/skin", file: "sorted_asc.gif", class: "sort_asc")
+                    }
+                    builder."eca:linkAllParams"(params: "['sort_${element.eid}_${c.name}': 'desc']") {
+                        builder."g:img"(dir: "images/skin", file: "sorted_desc.gif", class: "sort_desc")
+                    }
                 }
             }
         }            
@@ -374,12 +381,14 @@ class PageBuilder {
         if (element.index) {
             builder.th(class: "counter", "")
         }
-        if (!element.columns.find { it.name == "id" }) {
+        if (!element.columns.find { it.name.equalsIgnoreCase("id") }) {
             builder.th(class: "id hidden", "")
         }
         element.forAllColumns { c ->
             builder.th(class: "filter") {
-                builder.input(type: "text", name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", placeholder: "Filter on \${message(code: '${getCode(c.property)}').toLowerCase()}")
+                if (c.property.type == String) {
+                    builder.input(type: "text", name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", placeholder: "Filter on \${message(code: '${getCode(c.property)}').toLowerCase()}")
+                }
             }
         }
     }

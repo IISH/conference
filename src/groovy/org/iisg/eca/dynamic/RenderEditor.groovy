@@ -123,18 +123,27 @@ class RenderEditor {
         else {
             Map props = createPropertiesMap(column)
 
-            if ("textarea" == column.constrainedProperty.widget || ((!column.constrainedProperty.maxSize || column.constrainedProperty.maxSize > 30) && !column.constrainedProperty.password && !column.constrainedProperty.inList)) {
+            if (     (column.textarea || ("textarea" == column.constrainedProperty.widget)) ||
+                     ((!column.constrainedProperty.maxSize || column.constrainedProperty.maxSize > 255) &&
+                      (!column.constrainedProperty.password && !column.constrainedProperty.inList))) {
                 props.remove("value")
-                props.put("cols", "40")
-                if (column.constrainedProperty.maxSize) {
-                    props.put("rows", Math.min((column.constrainedProperty.maxSize/30).intValue(), 5))
+
+                if (column.textarea == 'large') {
+                    props.put("rows", "20")
+                    props.put("style", "width:70%;")
                 }
                 else {
-                    props.put("rows", 5)
+                    props.put("cols", "40")
+                    if (column.constrainedProperty.maxSize) {
+                        props.put("rows", Math.min((column.constrainedProperty.maxSize/30).intValue(), 5).toString())
+                    }
+                    else {
+                        props.put("rows", "5")
+                    }
                 }
 
-                (!column.constrainedProperty.maxSize) ?: props.put("maxlength",   column.constrainedProperty.maxSize)
-                (isOptional(column))        ?: props.put("required",    "required")
+                (!column.constrainedProperty.maxSize)   ?: props.put("maxlength",   column.constrainedProperty.maxSize.toString())
+                (isOptional(column))                    ?: props.put("required",    "required")
 
                 builder.textarea(props, getValue(column))
             }

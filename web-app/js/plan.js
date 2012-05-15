@@ -17,7 +17,7 @@ var findIndexesThatMatch = function(equipmentIds) {
     for (var equip in equipment) {
         var addIndex = true;
         for (var y=0; y<equipmentIds.length; y++) {
-            if ($.inArray(equipmentIds[y], equip.ids) < 0) {
+            if ($.inArray(equipmentIds[y], equipment[equip].ids) < 0) {
                 addIndex = false;
             }
         }
@@ -31,22 +31,27 @@ var findIndexesThatMatch = function(equipmentIds) {
 }
 
 var isBestChoice = function(equipmentComboId, equipmentIds) {
-    var bestChoice = true;
+    if (equipmentIds.length === equipment[equipmentComboId].ids.length) {
+        var bestChoice = true;
 
-    for (var y=0; y<equipmentIds.length; y++) {
-        var found = false;
-        for (var x=0; x<equipment[equipmentComboId].ids.length; x++) {
-            if (equipment[equipmentComboId].ids[x] === equipmentIds[y]) {
-                found = true;
+        for (var y=0; y<equipmentIds.length; y++) {
+            var found = false;
+            for (var x=0; x<equipment[equipmentComboId].ids.length; x++) {
+                if (equipment[equipmentComboId].ids[x] === equipmentIds[y]) {
+                    found = true;
+                }
+            }
+
+            if (!found) {
+                bestChoice = false;
             }
         }
 
-        if (!found) {
-            bestChoice = false;
-        }
+        return bestChoice;
     }
-
-    return bestChoice;
+    else {
+        return false;
+    }
 }
 
 var disableTableWithLoading = function(enable) {
@@ -120,7 +125,7 @@ $(document).ready(function() {
                             timeSlot.droppable("option", "disabled", true);
                             timeSlot.css('background-color', '#f30');
                         }
-                        else if (isBestChoice(equipmentId, equipmentIds)) {
+                        else if (isBestChoice(equipmentId, data.equipment)) {
                             timeSlot.css('background-color', '#ff0');
                         }
                         else {
@@ -201,8 +206,8 @@ $(document).ready(function() {
                         infoElement.find('#code-label').next().text(data.code);
                         infoElement.find('#name-label').next().text(data.name);
                         infoElement.find('#commnent-label').next().text(data.comment);
-                        infoElement.find('#participants-label').next().text(data.participants);
-                        infoElement.find('#equipment-label').next().text(data.equipment);
+                        infoElement.find('#participants-label').next().text(data.participants.join(' - '));
+                        infoElement.find('#equipment-label').next().text(data.equipment.join(' - '));
                     }
                     else {
                         infoElement.find('#code-label').next().text(data.message);
@@ -210,8 +215,8 @@ $(document).ready(function() {
 
                     var position = element.position();
                     infoElement.css({
-                        top:    position.top + element.height() + 2,
-                        left:   position.left + element.width() + 2
+                        top:    position.top + element.outerHeight() + 2,
+                        left:   position.left + 10
                     });
                     infoElement.show();
                 });
@@ -219,7 +224,7 @@ $(document).ready(function() {
         }, 500);
     });
 
-    $('.session-indicator').mouseleave(function() {
+    $('.session-block').mouseleave(function() {
         noShow = true;
         $('#session-info').hide();
     });
@@ -246,8 +251,8 @@ $(document).ready(function() {
 
                     var position = element.position();
                     infoElement.css({
-                        top:    position.top + element.height() + 2,
-                        left:   position.left + element.width() + 2
+                        top:    position.top + 10,
+                        left:   position.left + 20
                     });
                     infoElement.show();
                 });
