@@ -100,6 +100,7 @@ class RenderEditor {
         Map props = new HashMap<String, String>()
 
         props.put("name",   getName(column))
+        props.put("id",     getName(column))
         props.put("value",  getValue(column))
 
         props
@@ -308,8 +309,10 @@ class RenderEditor {
             }
             else {
                 Map props = createPropertiesMap(column)
-                props.put("type",   "text")
-                props.put("class",  "datepicker")
+                props.put("type",           "text")
+                props.put("class",          "datepicker")
+                props.put("placeholder",    "\${g.message(code: 'default.date.form.format').toLowerCase()}")
+                props.put("value",          "\${g.formatDate(formatName: 'default.date.form.format', date: ${getValueReady(column)})}")
 
                 (isOptional(column)) ?: props.put("required", "required")
 

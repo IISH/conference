@@ -20,7 +20,9 @@ beans = {
         cookieName = 'lang'
     }
 
-    customPropertyEditorRegistrar(CustomPropertyEditorRegistrar)
+    customPropertyEditorRegistrar(CustomPropertyEditorRegistrar) {
+        messageSource = ref('messageSource')
+    }
 
     pageInformation(PageInformation)
 }

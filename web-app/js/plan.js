@@ -1,13 +1,13 @@
 var noShow = true;
-var equipment = new Object();
+var equipment = {};
 var timeSlots;
 var colors = [
     [255, 94, 0], [255, 125, 0], [255, 156, 0], [255, 187, 0], [255, 219, 0],
-    [255, 250, 0], [198, 255, 0], [167, 255, 0], [135, 255, 0], [104, 255, 0], [73, 255, 0], [42, 255, 0],
+    [255, 250, 0], [167, 255, 0], [135, 255, 0], [104, 255, 0], [73, 255, 0], [42, 255, 0],
     [10, 255, 0], [0, 255, 21], [0, 255, 52], [0, 255, 83], [0, 255, 114], [0, 255, 146], [0, 255, 177], [0, 255, 208],
     [0, 255, 239], [0, 239, 255], [0, 208, 255], [0, 177, 255], [0, 146, 255], [0, 114, 255], [0, 83, 255], [0, 52, 255],
     [0, 21, 255], [10, 0, 255], [42, 0, 255], [73, 0, 255], [104, 0, 255], [135, 0, 255], [167, 0, 255], [198, 0, 255],
-    [229, 0, 255], [255, 0, 250], [255, 0, 219], [255, 0, 187], [255, 0, 156], [255, 0, 125], [255, 0, 94], [255, 0, 62],
+    [229, 0, 255], [255, 0, 250], [255, 0, 219], [255, 0, 187], [255, 0, 156], [255, 0, 125], [255, 0, 94],
     [255, 0, 31], [255, 0, 255]
 ];
 
@@ -23,21 +23,21 @@ var findIndexesThatMatch = function(equipmentIds) {
         }
 
         if (addIndex) {
-            ids.push(parseInt(equip));
+            ids.push(equip);
         }
     }
 
     return ids;
 }
 
-var isBestChoice = function(equipmentComboId, equipmentIds) {
-    if (equipmentIds.length === equipment[equipmentComboId].ids.length) {
+var isBestChoice = function(equipmentComboCode, equipmentIds) {
+    if (equipmentIds.length === equipment[equipmentComboCode].ids.length) {
         var bestChoice = true;
 
         for (var y=0; y<equipmentIds.length; y++) {
             var found = false;
-            for (var x=0; x<equipment[equipmentComboId].ids.length; x++) {
-                if (equipment[equipmentComboId].ids[x] === equipmentIds[y]) {
+            for (var x=0; x<equipment[equipmentComboCode].ids.length; x++) {
+                if (equipment[equipmentComboCode].ids[x] === equipmentIds[y]) {
                     found = true;
                 }
             }
@@ -64,8 +64,8 @@ var disableTableWithLoading = function(enable) {
         overlay.css({
             top:        position.top,
             left:       position.left,
-            width:      schedule.width()+1,
-            height:     schedule.height()+1
+            width:      schedule.outerWidth(),
+            height:     schedule.outerHeight()
         });
 
         overlay.show();
@@ -80,15 +80,15 @@ $(document).ready(function() {
     var colorsCount = 0;
     var colorsCountSkip = parseInt(colors.length/equipmentCombos.length);
 
-    equipment["-1"] = new Object();
-    equipment["-1"].ids = [];
-    equipment["-1"].css = "#ccc";
+    equipment[""] = {};
+    equipment[""].ids = [];
+    equipment[""].css = "#ccc";
 
     equipmentCombos.each(function() {
         var element = $(this);
 
-        var index = element.find('input[name=equipment-combo-id]').val();
-        equipment[index] = new Object();
+        var index = element.find('input[name=equipment-combo-code]').val();
+        equipment[index] = {};
         equipment[index].ids = element.find('input[name=equipment-ids]').val().split(',');
 
         for (var i=0; i<equipment[index].ids.length; i++) {
@@ -115,21 +115,21 @@ $(document).ready(function() {
                 var sessionId = element.find('input[name=session-id]').val();
 
                 $.getJSON('./possibilities', {'session_id': sessionId}, function(data) {
-                    var equipmentIds = findIndexesThatMatch(data.equipment);
+                    var equipmentCodes = findIndexesThatMatch(data.equipment);
                     timeSlots.each(function() {
                         var timeSlot = $(this);
-                        var equipmentId = parseInt(timeSlot.find('input[name=equipment-combo-id]').val());
+                        var equipmentCode = timeSlot.find('input[name=equipment-combo-code]').val();
                         var dateTimeId = parseInt(timeSlot.find('input[name=date-time-id]').val());
 
-                        if (($.inArray(dateTimeId, data['date-times']) >= 0) || ($.inArray(equipmentId, equipmentIds) === -1)) {
+                        if (($.inArray(dateTimeId, data['date-times']) >= 0) || ($.inArray(equipmentCode, equipmentCodes) === -1)) {
                             timeSlot.droppable("option", "disabled", true);
                             timeSlot.css('background-color', '#f30');
                         }
-                        else if (isBestChoice(equipmentId, data.equipment)) {
+                        else if (isBestChoice(equipmentCode, data.equipment)) {
                             timeSlot.css('background-color', '#ff0');
                         }
                         else {
-                            timeSlot.css('background-color', equipment[equipmentId].css);
+                            timeSlot.css('background-color', equipment[equipmentCode].css);
                         }
                     });
                     disableTableWithLoading(false);

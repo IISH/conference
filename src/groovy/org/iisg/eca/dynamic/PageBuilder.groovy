@@ -89,6 +89,7 @@ class PageBuilder {
      */
     private void buildTable(DataContainer element) {
         builder.div(class: "tbl_container") {
+            builder.input(type: "hidden", name: "default-action", value: element.action)
             builder.div(class: "tbl_toolbar right") {
                 builder.span("Export data: ")
                 builder.select(class: "export-data") {

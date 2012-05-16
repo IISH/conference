@@ -12,7 +12,6 @@
             <g:layoutTitle default="${(curPage) ? curPage.toString() : 'ECA' }" />
         </title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="shortcut icon" href="${resource(dir: 'images', file: 'favicon.ico')}" type="image/x-icon">
         <link rel="stylesheet" href="${resource(dir: 'css', file: 'default1.css')}" type="text/css">
         <link rel="stylesheet" href="${resource(dir: 'css', file: 'esshc1.css')}" type="text/css">
         <link rel="stylesheet" href="${resource(dir: 'css', file: 'default.css')}" type="text/css">

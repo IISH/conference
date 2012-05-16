@@ -4,10 +4,12 @@ import org.iisg.eca.domain.EventDate
 
 import org.iisg.eca.domain.EventDomain
 import org.iisg.eca.domain.EventDateDomain
+import org.iisg.eca.domain.User
 
 class EcaFilters {
     def pageInformation
     def grailsApplication
+    def springSecurityService
     
     def filters = {
         /**
@@ -74,6 +76,18 @@ class EcaFilters {
          * Default filter for all requests
          */
         defaultFilter(controller: '*', action: '*') {
+            before = {
+                // Update locale of currently logged in user if it has changed
+                if (params.lang) {
+                    User user = User.get(springSecurityService.principal.id)
+                    if (user) {
+                        user.language = params.lang
+                        user.save()
+                    }
+                }
+
+                return true
+            }
             after = { Map model ->
                 if (!model) {
                     model = [:]

@@ -42,17 +42,8 @@ $(document).ready(function() {
     $('.datepicker').each(function() {
         var dateField = $(this);
 
-       /* $("input[name="+dateField.attr('name')+"_month]").val(new Date(dateField.val()).getMonth() +1);
-        $("input[name="+dateField.attr('name')+"_day]").val(new Date(dateField.val()).getDate());
-        $("input[name="+dateField.attr('name')+"_year]").val(new Date(dateField.val()).getFullYear());      */
-
         dateField.datepicker({
-            /*onClose: function() {
-                $("input[name="+dateField.attr('name')+"_month]").val(new Date(dateField.val()).getMonth() +1);
-                $("input[name="+dateField.attr('name')+"_day]").val(new Date(dateField.val()).getDate());
-                $("input[name="+dateField.attr('name')+"_year]").val(new Date(dateField.val()).getFullYear());
-            }, */
-            dateFormat: 'mm/dd/yy'
+            dateFormat: dateField.attr('placeholder').replace('yyyy', 'yy')
         });
     });
 
@@ -171,8 +162,9 @@ $(document).ready(function() {
     });
 
     $('.tbl_container table tr').click(function(e) {
-        // TODO: table to show page on click
-        window.location =  "./show/" + $(this).find("td.id").text().trim() + window.location.search;
+        var element = $(this);
+        var action = element.parents('.tbl_container').find('input[name=default-action]').val();
+        window.location =  "./" + action + "/" + element.find("td.id").text().trim() + window.location.search;
     });
 
     $('.check-all').click(function(e) {

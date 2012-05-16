@@ -14,6 +14,7 @@ class DataContainer extends ContainerElement {
     private String id
     private String query
     private boolean index
+    private String action
     
     /**
      * The possible data element types
@@ -38,6 +39,7 @@ class DataContainer extends ContainerElement {
         this.id = null
         this.query = null
         this.index = false
+        this.action = 'show'
     }    
     
     /**
@@ -172,5 +174,26 @@ class DataContainer extends ContainerElement {
      */
     void setIndex(boolean index) {
         this.index = index
+    }
+
+    /**
+     * Returns the action to go to, when a column is clicked
+     * @returns The action to go to, when a column is clicked
+     */
+    String getAction() {
+        action
+    }
+
+    /**
+     * Sets the action to go to, when a column is clicked
+     * @param action The name of the action to go to, when a column is clicked
+     */
+    void setAction(String action) {
+        if (!action || action.isEmpty()) {
+            this.action = 'show'
+        }
+        else {
+            this.action = action
+        }
     }
 }

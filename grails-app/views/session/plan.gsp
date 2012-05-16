@@ -17,14 +17,15 @@
             <tr>
                 <td style="background-color:#f30;">Not possible</td>
                 <td style="background-color:#ccc;">
-                    <input type="hidden" name="equipment-combo-id" value="-1">
-                    No/default equipment (-)
+                    <input type="hidden" name="equipment-combo-code" value="">
+                    No/default equipment <br /> <br /> (-)
                 </td>
                 <g:each in="${equipment}" var="equip" status="i">
                     <td class="equipment-combos">
-                        <input type="hidden" name="equipment-ids" value="${equip.collect { it.id }.join(',')}">
-                        <input type="hidden" name="equipment-combo-id" value="${i}">
-                        ${equip.collect { it.equipment }.join(' & ').encodeAsHTML()} (${i})
+                        <input type="hidden" name="equipment-ids" value="${equip*.id.join(',')}">
+                        <input type="hidden" name="equipment-combo-code" value="${equip*.code.join('')}">
+                        ${equip.collect { it.equipment }.join(' & ').encodeAsHTML()} <br /> <br />
+                        (${i}) (${equip*.code.join('')})
                     </td>
                 </g:each>
                 <td style="background-color:#ff0;">Best choice</td>
@@ -51,7 +52,7 @@
                 <td class="time-slot">
                     <input type="hidden" name="date-time-id" value="${timeSlot.sessionDateTime.id}" />
                     <input type="hidden" name="room-id" value="${timeSlot.room.id}" />
-                    <input type="hidden" name="equipment-combo-id" value="${timeSlot.equipmentCombinationIndex(equipment)}">
+                    <input type="hidden" name="equipment-combo-code" value="${timeSlot.equipment*.code.join('')}">
 
                     <g:if test="${timeSlot.session}">
                         <div class="session-block">
@@ -62,7 +63,7 @@
 
                     <div class="equipment-indicator">
                         <g:if test="${timeSlot.equipmentCombinationIndex(equipment) >= 0}">
-                            (${timeSlot.equipmentCombinationIndex(equipment)})
+                            (${timeSlot.equipmentCombinationIndex(equipment)}) (${timeSlot.equipment*.code.join('')})
                         </g:if>
                         <g:else>
                             (-)

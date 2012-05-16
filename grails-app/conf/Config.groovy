@@ -112,12 +112,14 @@ grails.plugins.springsecurity.successHandler.defaultTargetUrl = '/login/authSucc
 grails.plugins.springsecurity.password.algorithm = 'SHA-512'
 grails.plugins.springsecurity.dao.reflectionSaltSourceProperty = 'salt'
 
+grails.plugins.springsecurity.securityConfigType = grails.plugins.springsecurity.SecurityConfigType.Requestmap
+
+grails.plugins.springsecurity.requestMap.className = 'org.iisg.eca.domain.RequestMap'
+grails.plugins.springsecurity.requestMap.urlField = 'url'
+grails.plugins.springsecurity.requestMap.configAttributeField = 'configAttribute'
+
 grails.plugins.springsecurity.roleHierarchy = '''
         superAdmin > admin
         admin > user
         user > participant
 '''
-grails.plugins.springsecurity.controllerAnnotations.staticRules = [
-        '/login/*':     ["permitAll"],
-        '/**':          ["hasRole('participant')"]
-]

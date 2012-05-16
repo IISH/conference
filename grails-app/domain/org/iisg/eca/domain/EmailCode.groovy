@@ -32,6 +32,6 @@ class EmailCode extends EventDomain {
 
     @Override
     String toString() {
-        "${code} : ${description}"
+        "[${code}] : ${description}"
     }
 }
