@@ -11,7 +11,9 @@ class Column extends ContainerElement {
     private GrailsDomainClass domainClass
     private boolean readOnly
     private boolean multiple
+    private boolean hidden
     private String textarea
+    private String eq
 
     /**
      * Creates a new <code>Column</code> element
@@ -24,7 +26,9 @@ class Column extends ContainerElement {
         this.domainClass = domainClass
         this.readOnly = false
         this.multiple = false
+        this.hidden = false
         this.textarea = null
+        this.eq = null
     }
 
     /**
@@ -68,6 +72,14 @@ class Column extends ContainerElement {
     }
 
     /**
+     * Indicates whether this column should be hidden
+     * @returns Whether this column should be hidden
+     */
+    boolean isHidden() {
+        hidden
+    }
+
+    /**
      * Sets whether it is allowed to change this value in a form
      * @param readOnly Whether this column is read only
      */
@@ -81,6 +93,14 @@ class Column extends ContainerElement {
      */
     void setMultiple(boolean multiple) {
         this.multiple = multiple
+    }
+
+    /**
+     * Sets whether this column should be hidden or not
+     * @param hidden Whether this column should be hidden or not
+     */
+    void setHidden(boolean hidden) {
+        this.hidden = hidden
     }
 
     /**
@@ -99,6 +119,22 @@ class Column extends ContainerElement {
         if (textarea == 'normal' || textarea == 'large') {
             this.textarea = textarea
         }
+    }
+
+    /**
+     * Indicates whether all results should have the same value
+     * @returns Which value all the results need to have for this column
+     */
+    String getEq() {
+        eq
+    }
+
+    /**
+     * Sets whether all of this columns results should have this value
+     * @param eq What the column should have for value
+     */
+    void setEq(String eq) {
+        this.eq = eq
     }
     
     /*

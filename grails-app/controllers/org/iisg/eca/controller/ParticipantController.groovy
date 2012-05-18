@@ -11,6 +11,8 @@ import org.iisg.eca.domain.ParticipantDate
 import org.iisg.eca.domain.ParticipantVolunteering
 
 import org.springframework.web.multipart.commons.CommonsMultipartFile
+import org.iisg.eca.domain.ParticipantState
+import org.iisg.eca.domain.FeeState
 
 class ParticipantController {
     /**
@@ -32,6 +34,10 @@ class ParticipantController {
         redirect(action: "list", params: params)
     }
 
+    def inventations() {
+        forward(controller: 'dynamicPage', action: 'get', params: params)
+    }
+
     def list() {
         Map participants = [:]
         if (params.filter) {
@@ -45,7 +51,6 @@ class ParticipantController {
 
     def show() {
         User user = User.get(params.id)
-        ParticipantDate participant = null
 
         if (!user) {
             flash.message =  message(code: 'default.not.found.message', args: [message(code: 'user.label'), params.id])
@@ -53,15 +58,14 @@ class ParticipantController {
             return
         }
 
-        if (request.get) {
-            participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
-        }
-        else if (request.post) {
+        ParticipantDate participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
+
+        if (request.post) {
             bindData(user, params, [include: ['title', 'firstName', 'lastName', 'gender', 'organisation',
                     'department', 'email', 'address', 'city', 'country', 'phone', 'mobile', 'extraInfo']], "User")
 
             if (!participant && params['add-to-date']?.equals('add')) {
-                participant = new ParticipantDate(user: user)
+                participant = new ParticipantDate(user: user, state: ParticipantState.get(0), feeState: FeeState.get(0))
 
                 participant.save()
                 user.save()
@@ -93,24 +97,29 @@ class ParticipantController {
                 i = 0
                 while (params["Paper_${i}"]) {
                     Paper paper = user.papers.find { it.id == params.long("Paper_${i}.id") }
-                    if (paper) {
-                        bindData(paper, params, [include: ['title', 'abstr', 'coAuthors', 'state', 'comment',
-                                'networkProposal', 'sessionProposal', 'proposalDescription',
-                                'equipmentComment']], "Paper_${i}")
 
-                        CommonsMultipartFile file = (CommonsMultipartFile) params["Paper_${i}.file"]
-                        if (file) {
-                            paper.fileSize = file.size
-                            paper.contentType = file.contentType
-                            paper.fileName = file.originalFilename
-                            paper.file = file.bytes
-                        }
-
-                        paper.equipment.clear()
-                        params["Paper_${i}.equipment"].each { equipmentId ->
-                            paper.addToEquipment(Equipment.get(equipmentId))
-                        }
+                    if (!paper) {
+                        paper = new Paper(state: PaperState.get(0))
+                        user.addToPapers(paper)
                     }
+
+                    bindData(paper, params, [include: ['title', 'abstr', 'coAuthors', 'state', 'comment',
+                            'networkProposal', 'sessionProposal', 'proposalDescription',
+                            'equipmentComment']], "Paper_${i}")
+
+                    CommonsMultipartFile file = (CommonsMultipartFile) params["Paper_${i}.file"]
+                    if (file?.size > 0) {
+                        paper.fileSize = file.size
+                        paper.contentType = file.contentType
+                        paper.fileName = file.originalFilename
+                        paper.file = file.bytes
+                    }
+
+                    paper.equipment?.clear()
+                    params["Paper_${i}.equipment"].each { equipmentId ->
+                        paper.addToEquipment(Equipment.get(equipmentId))
+                    }
+
                     i++
                 }
 

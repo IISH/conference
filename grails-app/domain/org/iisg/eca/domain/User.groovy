@@ -103,6 +103,10 @@ class User extends DefaultDomain {
         organisation    maxSize: 255,   nullable: true
         department      maxSize: 255,   nullable: true
         extraInfo                       nullable: true
+        papers          validator: { val, obj ->
+                            Integer maxPapers = Setting.getByProperty(Setting.MAX_PAPERS_PER_PERSON_PER_SESSION)?.value?.toInteger()
+                            (maxPapers && (obj?.papers?.size() <= maxPapers))
+                        }
     }
 
     /**

@@ -6,8 +6,6 @@ import org.codehaus.groovy.grails.commons.GrailsDomainClass
  * A representation of an element from a dynamic page
  */
 class DataContainer extends ContainerElement {
-    private static final String DOMAIN_PACKAGE = "org.iisg.eca"
-
     private int eid
     private Type type
     private GrailsDomainClass domainClass    

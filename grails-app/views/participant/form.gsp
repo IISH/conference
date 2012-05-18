@@ -236,12 +236,9 @@
                         </div>
                     </g:else>
                 </fieldset>
-
+        
                 <fieldset id="papers-tab" class="columns">
                 <g:if test="${participant}">
-                    <g:if test="${participant.user.papers.isEmpty()}">
-                        <div style="font-weight:bold; color:red;">TODO: NO PAPERS!</div>
-                    </g:if>
                     <g:each in="${participant.user.papers}" var="paper" status="i">
                         <div class="column">
                             <input type="hidden" name="Paper_${i}.id" value="${paper.id}" />
@@ -345,9 +342,93 @@
                             </div>
                         </div>
                     </g:each>
+                    <div class="column copy hidden">
+                        <h3><g:message code="paper.label" /></h3>
+                        <div>
+                            <label>
+                                <g:message code="paper.title.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <input type="text" name="Paper_null.title" maxlength="500" required="required" />
+                        </div>
+                        <div>
+                            <label>
+                                <g:message code="paper.abstr.label" />
+                            </label>
+                            <textarea name="Paper_null.abstr" cols="40" rows="5"></textarea>
+                        </div>
+                        <div>
+                            <label>
+                                <g:message code="paper.file.upload.label" />
+                            </label>
+                            <input type="file" name="Paper_null.file" />
+                        </div>
+                        <div>
+                            <label>
+                                <g:message code="paper.coauthors.label" />
+                            </label>
+                            <input type="text" name="Paper_null.coAuthors" maxlength="500" />
+                        </div>
+                        <div>
+                            <label>
+                                <g:message code="paper.state.label" />
+                            </label>
+                            <g:select from="${paperStates}" name="Paper_null.state.id" optionKey="id" optionValue="description" value="${paperStates.find { it.id == 1 }}" />
+                        </div>
+                        <div>
+                            <label>
+                                <g:message code="paper.comment.label" />
+                            </label>
+                            <textarea name="Paper_null.comment" cols="40" rows="5"></textarea>
+                        </div>
+        
+                        <h3><g:message code="paper.networkssessionsinfo.label" /></h3>
+                        <div>
+                            <label>
+                                <g:message code="paper.networkproposal.label" />
+                            </label>
+                            <g:select from="${networks}" name="Paper_null.networkProposal" optionKey="id" optionValue="name" noSelection="${[null: ' ']}" />
+                            <input type="button" id="btn_network" name="btn_network" value="${g.message(code: "default.goto")}" />
+                        </div>
+                        <div>
+                            <label>
+                                <g:message code="paper.sessionproposal.label" />
+                            </label>
+                            <input type="text" name="Paper_null.sessionProposal" maxlength="500" />
+                        </div>
+                        <div>
+                            <label>
+                                <g:message code="paper.proposaldescription.label" />
+                            </label>
+                            <textarea name="Paper_null.proposalDescription" cols="40" rows="5"></textarea>
+                        </div>
+                        <div>
+                            <label>
+                                <g:message code="session.label" />
+                            </label>
+                            <span>-</span>
+                            <input type="button" class="btn_session" name="btn_session" value="${g.message(code: "default.goto")}" />
+                        </div>
+        
+                        <h3><g:message code="equipment.label" /></h3>
+                        <g:each in="${equipmentList}" var="equipment">
+                            <div>
+                                <label>
+                                    ${equipment.equipment}
+                                </label>
+                                <input type="checkbox" name="Paper_null.equipment" />
+                            </div>
+                        </g:each>
+                        <div>
+                            <label>
+                                <g:message code="paper.equipmentcomment.label" />
+                            </label>
+                            <textarea name="Paper_null.equipmentComment" cols="40" rows="5"></textarea>
+                        </div>
+                    </div>
                 </g:if>
                 <g:else>
-                    <div style="font-weight:bold; color:red;">TODO (User did not sign up for this event date)</div>
+                    <div style="font-weight:bold; color:red;">User did not sign up for this event date</div>
                 </g:else>
                 </fieldset>
             </div>
@@ -357,6 +438,7 @@
                     <g:message code="default.button.cancel.label" />
                 </eca:link>
                 <input type="submit" name="btn_save" class="btn_save" value="${message(code: 'default.button.save.label')}" />
+                <input type="button" name="btn_add" class="btn_add" value="${message(code: 'default.add.label', args: [message(code: 'paper.label')])}" />
             </fieldset>
         </form>
     </body>

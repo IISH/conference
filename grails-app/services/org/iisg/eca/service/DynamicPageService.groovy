@@ -174,15 +174,17 @@ class DynamicPageService {
 
             // The element should be either a column or a button
             if (type == COLUMN) {
+                GrailsDomainClass curDomainClass = domainClass
+
                 String name = element.@name.text()
                 String domain = element.@domain.text()
                 if (!domain.isEmpty()) {
-                    domainClass = (GrailsDomainClass) grailsApplication.getDomainClass("${DOMAIN_PACKAGE}.${domain}")
+                    curDomainClass = (GrailsDomainClass) grailsApplication.getDomainClass("${DOMAIN_PACKAGE}.${domain}")
                 }
 
                 // The column might have children as well, so inspect this column as well
                 // If the column references another domain class, set that domain class
-                GrailsDomainClass refDomain = domainClass.getPropertyByName(name)?.referencedDomainClass
+                GrailsDomainClass refDomain = curDomainClass.getPropertyByName(name)?.referencedDomainClass
                 List<Column> children
                 if (refDomain) {
                     children = inspectElement(element, refDomain) as List<Column>
@@ -192,11 +194,13 @@ class DynamicPageService {
                 }
 
                 // Create a new column element object and add the remaining properties
-                Column column = new Column(name, domainClass, children)
+                Column column = new Column(name, curDomainClass, children)
 
                 column.readOnly = element.@readonly.text().equalsIgnoreCase("true")
                 column.multiple = element.@multiple.text().equalsIgnoreCase("true")
+                column.hidden   = element.@hidden.text().equalsIgnoreCase("true")
                 column.textarea = element.@textarea.text()
+                column.eq       = element.@eq.text()
 
                 elements.add(column)
             }  

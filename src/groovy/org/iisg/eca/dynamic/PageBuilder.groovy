@@ -192,7 +192,7 @@ class PageBuilder {
                 }
             }
             // Or just simply as column which contains no other columns
-            else if (display) {
+            else if (display && !c.hidden) {
                 builder.div(class: "\${hasErrors(bean: ${RESULTS}.get(${c.root.eid}).get('${c.domainClass.name}'), field: '${c.name}', 'error')} ${required ? 'required' : ''}") {
                     if (c.name == "id") {
                         builder.label(for: "${c.domainClass.name}.${c.name}", "#")
@@ -223,26 +223,26 @@ class PageBuilder {
      * @param element The element to build table columns from
      */
     private void buildTableColumns(DataContainer element) {
-        builder."g:each"(in: "\${${RESULTS}.get(${element.eid}).get()}", var: "row", status: "i") {
+        builder."g:each"(in: "\${${RESULTS}.get(${element.eid}).getTableList()}", var: "row", status: "i") {
             builder.tr {
                 if (element.index) {
                     builder.td(class: "counter", "\${i+1}")
                 }
                 if (!element.columns.find { it.name.equalsIgnoreCase("id") }) {
                     builder.td(class: "id hidden") {
-                        builder."g:fieldValue"(bean: "\${row}", field: "id")
+                        builder."g:fieldValue"(bean: "\${row.get('${element.domainClass.name}')}", field: "id")
                     }
                 }
                 element.forAllColumns { c ->
-                    if (!c.constrainedProperty  || c.constrainedProperty.display) {
+                    if (!c.constrainedProperty  || c.constrainedProperty.display && !c.hidden) {
                         if (c.name == "id") {
                             builder.td(class: "id") {
-                                builder."g:fieldValue"(bean: "\${row}", field: "id")
+                                builder."g:fieldValue"(bean: "\${row.get('${c.domainClass.name}')}", field: "id")
                             }
                         }
                         else {
                             builder.td {
-                                builder."g:fieldValue"(bean: "\${row}", field: c.name)
+                                builder."g:fieldValue"(bean: "\${row.get('${c.domainClass.name}')}", field: c.name)
                             }
                         }
                     }
@@ -284,7 +284,7 @@ class PageBuilder {
                 }
             }
             // Otherwise just print the column
-            else if (display) {
+            else if (display && !c.hidden) {
                 builder.li {
                     if (c.name == "id") {
                         builder.span(id: "id-label", class: "property-label", "#")
@@ -348,26 +348,28 @@ class PageBuilder {
             builder.th(class: "id hidden", "")
         }
         element.forAllColumns { c ->
-            if (c.name == "id") {
-                builder.th(class: "id sortable") {
-                    builder.mkp.yield "#"
-                    builder."eca:linkAllParams"(params: "['sort_${element.eid}_${c.name}': 'asc']") {
-                        builder."g:img"(dir: "images/skin", file: "sorted_asc.gif", class: "sort_asc")
-                    }
-                    builder."eca:linkAllParams"(params: "['sort_${element.eid}_${c.name}': 'desc']") {
-                        builder."g:img"(dir: "images/skin", file: "sorted_desc.gif", class: "sort_desc")
+            if (!c.hidden) {
+                if (c.name == "id") {
+                    builder.th(class: "id sortable") {
+                        builder.mkp.yield "#"
+                        builder."eca:linkAllParams"(params: "['sort_${element.eid}_${c.name}': 'asc']") {
+                            builder."g:img"(dir: "images/skin", file: "sorted_asc.gif", class: "sort_asc")
+                        }
+                        builder."eca:linkAllParams"(params: "['sort_${element.eid}_${c.name}': 'desc']") {
+                            builder."g:img"(dir: "images/skin", file: "sorted_desc.gif", class: "sort_desc")
+                        }
                     }
                 }
-            }
-            else {
-                builder.th(class: "sortable") {
-                    builder."eca:fallbackMessage"(code: getCode(c.property), fbCode: getFbCode(c.property))
+                else {
+                    builder.th(class: "sortable") {
+                        builder."eca:fallbackMessage"(code: getCode(c.property), fbCode: getFbCode(c.property))
 
-                    builder."eca:linkAllParams"(params: "['sort_${element.eid}_${c.name}': 'asc']") {
-                        builder."g:img"(dir: "images/skin", file: "sorted_asc.gif", class: "sort_asc")
-                    }
-                    builder."eca:linkAllParams"(params: "['sort_${element.eid}_${c.name}': 'desc']") {
-                        builder."g:img"(dir: "images/skin", file: "sorted_desc.gif", class: "sort_desc")
+                        builder."eca:linkAllParams"(params: "['sort_${element.eid}_${c.name}': 'asc']") {
+                            builder."g:img"(dir: "images/skin", file: "sorted_asc.gif", class: "sort_asc")
+                        }
+                        builder."eca:linkAllParams"(params: "['sort_${element.eid}_${c.name}': 'desc']") {
+                            builder."g:img"(dir: "images/skin", file: "sorted_desc.gif", class: "sort_desc")
+                        }
                     }
                 }
             }
@@ -386,9 +388,21 @@ class PageBuilder {
             builder.th(class: "id hidden", "")
         }
         element.forAllColumns { c ->
-            builder.th(class: "filter") {
-                if (c.property.type == String) {
-                    builder.input(type: "text", name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", placeholder: "Filter on \${message(code: '${getCode(c.property)}').toLowerCase()}")
+            if (!c.hidden) {
+                builder.th(class: "filter") {
+                    if (c.property.type == Boolean || c.property.type == boolean) {
+                        builder.label {
+                            builder."g:message"(code: 'default.boolean.false')
+                            builder.input(type: "checkbox", name: "filter_${element.eid}_${c.name}", value: "0")
+                        }
+                        builder.label {
+                            builder."g:message"(code: 'default.boolean.true')
+                            builder.input(type: "checkbox", name: "filter_${element.eid}_${c.name}", value: "1")
+                        }
+                    }
+                    else {
+                        builder.input(type: "text", name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", placeholder: "Filter on \${message(code: '${getCode(c.property)}').toLowerCase()}")
+                    }
                 }
             }
         }

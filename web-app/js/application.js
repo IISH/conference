@@ -81,13 +81,13 @@ $(document).ready(function() {
     });
 
     $('.buttons .btn_add').click(function(e) {
-        var parent = $(this).parent().prev().find('.columns.copy')
+        var parent = $(this).parent().prev().find('.columns')
         var item = parent.find('.column.hidden')
         var clone = item.clone(true);
         var i = 0;
 
         if (item.prev().length !== 0) {
-            var nameSplit = item.prev().find('input, select').attr("name").split('.');
+            var nameSplit = item.prev().find('input, select, textarea').attr("name").split('.');
             var number = nameSplit[0].split('_')[1];
             if ($.isNumeric(number)) {
                 i = number;
@@ -95,7 +95,7 @@ $(document).ready(function() {
             i++;
         }
 
-        clone.find('input, select').each(function() {
+        clone.find('input, select, textarea').each(function() {
             $(this).attr("name", $(this).attr("name").replace("null", i));
         });
 

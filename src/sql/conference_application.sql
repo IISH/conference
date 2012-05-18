@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 16, 2012 at 04:37 PM
+-- Generation Time: May 18, 2012 at 04:06 PM
 -- Server version: 5.0.86
 -- PHP Version: 5.2.10
 
@@ -397,7 +397,7 @@ CREATE TABLE IF NOT EXISTS `dynamic_pages` (
   PRIMARY KEY  (`dynamic_page_id`),
   KEY `date_id` (`date_id`),
   KEY `page_id` (`page_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=46 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=48 ;
 
 --
 -- Dumping data for table `dynamic_pages`
@@ -447,7 +447,9 @@ INSERT INTO `dynamic_pages` (`dynamic_page_id`, `content`, `cache`, `page_id`, `
 (42, '<form domain="RequestMap">\r\n	<column name="url" />\r\n	<column name="configAttribute" />\r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 50, NULL, 1, 0),
 (43, '<form domain="RequestMap" id="url">\r\n	<column name="url" />\r\n	<column name="configAttribute" />\r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 51, NULL, 1, 0),
 (44, '<table domain="RequestMap" index="true">\r\n	<column name="url" />\r\n	<column name="configAttribute" />\r\n</table>\r\n\r\n<buttons>\r\n   <button type="back" />\r\n   <button action="create" />\r\n</buttons>', NULL, 52, NULL, 1, 0),
-(45, '<overview domain="RequestMap" id="url">\r\n	<column name="url" />\r\n	<column name="configAttribute" /> \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 53, NULL, 1, 0);
+(45, '<overview domain="RequestMap" id="url">\r\n	<column name="url" />\r\n	<column name="configAttribute" /> \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 53, NULL, 1, 0),
+(46, '<table domain="ParticipantDate" index="true">\r\n	<column name="extras" eq="url" hidden="true" />\r\n	<column name="user" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>', NULL, 54, NULL, 1, 0),
+(47, '<table domain="ParticipantDate" index="true" query="SELECT pd, pd.user FROM ParticipantDate AS pd WHERE pd.invitationLetter = 1">	\r\n	<column name="user" />\r\n	<column name="state" />\r\n	<column name="country" domain="User" />\r\n	<column name="invitationLetterSent" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n</buttons>\r\n', NULL, 55, NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -603,7 +605,7 @@ CREATE TABLE IF NOT EXISTS `fee_amounts` (
   PRIMARY KEY  (`fee_amount_id`),
   KEY `date_id` (`date_id`),
   KEY `fee_state_id` (`fee_state_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=17 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=15 ;
 
 --
 -- Dumping data for table `fee_amounts`
@@ -619,9 +621,7 @@ INSERT INTO `fee_amounts` (`fee_amount_id`, `date_id`, `fee_state_id`, `end_date
 (11, 1, 4, '2012-04-30', 1, 4, 90.00, 1, 0),
 (12, 1, 5, '2012-04-30', 1, 4, 0.00, 1, 0),
 (13, 1, 8, '2012-04-30', 1, 1, 150.00, 1, 0),
-(14, 1, 8, '2012-04-30', 2, 4, 300.00, 1, 0),
-(15, 1, 9, '2012-07-07', 1, 2, 800.00, 1, 1),
-(16, 1, 9, '2012-05-05', 1, 4, 200.00, 1, 1);
+(14, 1, 8, '2012-04-30', 2, 4, 300.00, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -638,13 +638,14 @@ CREATE TABLE IF NOT EXISTS `fee_states` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`fee_state_id`),
   KEY `event_id` (`event_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=9 ;
 
 --
 -- Dumping data for table `fee_states`
 --
 
 INSERT INTO `fee_states` (`fee_state_id`, `event_id`, `name`, `is_default_fee`, `enabled`, `deleted`) VALUES
+(0, NULL, 'No fee selected', 0, 1, 0),
 (1, 1, 'Normal Fee', 1, 1, 0),
 (2, 1, 'No Fee', 0, 1, 0),
 (3, 1, 'No Fee and Beurs', 0, 1, 0),
@@ -652,8 +653,7 @@ INSERT INTO `fee_states` (`fee_state_id`, `event_id`, `name`, `is_default_fee`, 
 (5, 1, 'IISG Fee', 0, 1, 0),
 (6, 1, 'Bijbetaling', 0, 1, 0),
 (7, 1, 'Book exhibit', 0, 1, 0),
-(8, 1, 'On Site', 0, 1, 0),
-(9, 1, 'Naam', 1, 1, 0);
+(8, 1, 'On Site', 0, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -772,7 +772,7 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`page_id`),
   KEY `pages_parent_page_id_idx` (`parent_page_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=54 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=56 ;
 
 --
 -- Dumping data for table `pages`
@@ -830,7 +830,9 @@ INSERT INTO `pages` (`page_id`, `title_code`, `title_arg`, `title_default`, `con
 (50, 'default.create.label', 'requestmap.label', 'Create request map', 'requestmap', 'create', NULL, NULL, 1, 0),
 (51, 'default.edit.label', 'requestmap.label', 'Edit request map', 'requestmap', 'edit', NULL, NULL, 1, 0),
 (52, 'default.list.label', 'requestmap.label', 'Request map list', 'requestmap', 'list', NULL, NULL, 1, 0),
-(53, 'default.overview.label', 'requestmap.label', 'Show request map', 'requestmap', 'show', NULL, NULL, 1, 0);
+(53, 'default.overview.label', 'requestmap.label', 'Show request map', 'requestmap', 'show', NULL, NULL, 1, 0),
+(54, 'default.list.label', 'extra.label', 'Extra list', 'extra', 'list', NULL, NULL, 1, 0),
+(55, 'default.list.label', 'participantdate.inventationletter.label', 'Inventation letter list', 'participant', 'inventations', NULL, NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -841,7 +843,7 @@ INSERT INTO `pages` (`page_id`, `title_code`, `title_arg`, `title_default`, `con
 CREATE TABLE IF NOT EXISTS `papers` (
   `paper_id` bigint(20) NOT NULL auto_increment,
   `user_id` bigint(20) NOT NULL,
-  `paper_state_id` bigint(20) NOT NULL,
+  `paper_state_id` bigint(20) NOT NULL default '1',
   `session_id` bigint(20) default NULL,
   `date_id` bigint(20) default NULL,
   `title` varchar(500) collate utf8_unicode_ci NOT NULL,
@@ -917,7 +919,7 @@ CREATE TABLE IF NOT EXISTS `paper_states` (
 
 INSERT INTO `paper_states` (`paper_state_id`, `date_id`, `description`, `enabled`, `deleted`) VALUES
 (0, 1, 'No Paper', 1, 0),
-(1, 1, 'New Paper', 1, 0),
+(1, NULL, 'New Paper', 1, 0),
 (2, 1, 'Paper Accepted', 1, 0),
 (3, 1, 'Paper Not Accepted', 1, 0),
 (4, 1, 'Paper In Consideration', 1, 0);
@@ -949,20 +951,21 @@ CREATE TABLE IF NOT EXISTS `participant_date` (
   KEY `participant_state_id` (`participant_state_id`),
   KEY `fee_state_id` (`fee_state_id`),
   KEY `payment_id` (`payment_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=9 ;
 
 --
 -- Dumping data for table `participant_date`
 --
 
 INSERT INTO `participant_date` (`participant_date_id`, `user_id`, `date_id`, `participant_state_id`, `fee_state_id`, `payment_id`, `date_added`, `invitation_letter`, `invitation_letter_sent`, `lower_fee_requested`, `lower_fee_answered`, `lower_fee_text`, `enabled`, `deleted`) VALUES
-(1, 2, 1, 0, 1, 0, '2012-04-26', 0, 0, 0, 0, NULL, 1, 0),
-(2, 2, 2, 0, 1, 0, '2012-04-26', 0, 0, 0, 0, NULL, 1, 0),
-(3, 3, 1, 1, 1, 0, '2012-04-27', 0, 0, 0, 0, NULL, 1, 0),
+(1, 2, 1, 0, 1, 0, '2012-04-26', 1, 0, 0, 0, NULL, 1, 0),
+(2, 2, 2, 0, 1, 0, '2012-04-26', 1, 0, 0, 0, NULL, 1, 0),
+(3, 3, 1, 1, 1, 0, '2012-04-27', 1, 0, 0, 0, NULL, 1, 0),
 (4, 4, 1, 999, 1, 0, '2012-04-27', 0, 0, 0, 0, NULL, 1, 0),
 (5, 5, 1, 2, 0, 0, '2012-04-27', 0, 0, 0, 0, NULL, 1, 0),
 (6, 6, 1, 2, 0, 0, '2012-04-27', 0, 0, 0, 0, NULL, 1, 0),
-(7, 7, 1, 1, 0, 0, '2012-04-27', 0, 0, 0, 0, NULL, 1, 0);
+(7, 7, 1, 1, 0, 0, '2012-04-27', 0, 0, 0, 0, NULL, 1, 0),
+(8, 1, 1, 0, 0, 0, '2012-05-18', 0, 0, 0, 0, NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -992,7 +995,7 @@ INSERT INTO `participant_date_extra` (`participant_date_id`, `extra_id`) VALUES
 
 CREATE TABLE IF NOT EXISTS `participant_states` (
   `participant_state_id` bigint(20) NOT NULL auto_increment,
-  `event_id` bigint(20) NOT NULL,
+  `event_id` bigint(20) default NULL,
   `participant_state` varchar(100) collate utf8_unicode_ci NOT NULL,
   `enabled` tinyint(1) NOT NULL default '1',
   `deleted` tinyint(1) NOT NULL default '0',
@@ -1005,15 +1008,15 @@ CREATE TABLE IF NOT EXISTS `participant_states` (
 --
 
 INSERT INTO `participant_states` (`participant_state_id`, `event_id`, `participant_state`, `enabled`, `deleted`) VALUES
-(0, 1, 'New Participant', 1, 0),
-(1, 1, 'Participant Data Checked', 1, 0),
-(2, 1, 'Participant', 1, 0),
-(3, 1, 'Will be removed', 1, 0),
-(4, 1, 'Removed: Cancelled', 1, 0),
-(5, 1, 'Removed: Double entry', 1, 0),
-(6, 1, 'No show', 1, 0),
-(7, 1, 'unclear', 1, 0),
-(999, 1, 'Participant did NOT FINISH registration', 1, 0);
+(0, NULL, 'New Participant', 1, 0),
+(1, NULL, 'Participant Data Checked', 1, 0),
+(2, NULL, 'Participant', 1, 0),
+(3, NULL, 'Will be removed', 1, 0),
+(4, NULL, 'Removed: Cancelled', 1, 0),
+(5, NULL, 'Removed: Double entry', 1, 0),
+(6, NULL, 'No show', 1, 0),
+(7, NULL, 'unclear', 1, 0),
+(999, NULL, 'Participant did NOT FINISH registration', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1656,7 +1659,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`user_id`, `email`, `lastname`, `firstname`, `gender`, `title`, `address`, `city`, `country_id`, `language`, `password`, `salt`, `phone`, `fax`, `mobile`, `organisation`, `department`, `extra_info`, `date_added`, `enabled`, `deleted`) VALUES
-(1, 'em@em.com', 'Lastname', 'Firstname', 'M', 'null', NULL, 'City', 169, 'en', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, NULL, NULL, 'International Institute for Social History', 'Department', NULL, '2012-04-26', 1, 0),
+(1, 'em@em.com', 'Lastname', 'Firstname', 'M', 'null', NULL, 'City', 169, 'nl', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, NULL, NULL, 'International Institute for Social History', 'Department', NULL, '2012-04-26', 1, 0),
 (2, 'email@email.com', 'Abcd', 'Defg', 'F', 'Mr.', NULL, 'City', 1, 'nl', 'pw', NULL, NULL, NULL, NULL, 'organisation', 'department', NULL, '2012-04-26', 1, 0),
 (3, 'mail@mail.com', 'Hij', 'Klm', 'F', NULL, NULL, 'Another City', 1, 'en', 'pw', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
 (4, 'email2@email.com', 'Aaaaa', 'Aaaaaa', 'M', NULL, NULL, 'City', 169, 'nl', 'password', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
@@ -1890,6 +1893,7 @@ ALTER TABLE `paper_states`
 -- Constraints for table `participant_date`
 --
 ALTER TABLE `participant_date`
+  ADD CONSTRAINT `participant_date_ibfk_4` FOREIGN KEY (`fee_state_id`) REFERENCES `fee_states` (`fee_state_id`),
   ADD CONSTRAINT `participant_date_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
   ADD CONSTRAINT `participant_date_ibfk_2` FOREIGN KEY (`date_id`) REFERENCES `dates` (`date_id`),
   ADD CONSTRAINT `participant_date_ibfk_3` FOREIGN KEY (`participant_state_id`) REFERENCES `participant_states` (`participant_state_id`);

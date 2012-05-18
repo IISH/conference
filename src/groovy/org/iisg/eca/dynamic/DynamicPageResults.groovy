@@ -3,6 +3,7 @@ package org.iisg.eca.dynamic
 import grails.orm.HibernateCriteriaBuilder
 import org.codehaus.groovy.grails.commons.GrailsDomainClass
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
+import org.codehaus.groovy.grails.commons.GrailsDomainClassProperty
 
 /**
  * Queries the database for results based on the information from the <code>DataContainer</code>
@@ -55,7 +56,7 @@ class DynamicPageResults {
         Object result = results.find { it.class.simpleName == domainClass }
 
         if (!result) {
-            GrailsDomainClass dc = newInstances.get(domainClass)
+            GrailsDomainClass dc = (GrailsDomainClass) newInstances.get(domainClass)
             result = dc.newInstance()
             results.add(result)
         }
@@ -77,7 +78,7 @@ class DynamicPageResults {
         }
 
         if (!result) {
-            GrailsDomainClass dc = newInstances.get(domainClass)
+            GrailsDomainClass dc = (GrailsDomainClass) newInstances.get(domainClass)
             result = dc.newInstance()
             results.add(result)
         }
@@ -102,6 +103,39 @@ class DynamicPageResults {
         Map model = [:]
         results.eachWithIndex { it, i -> model.put(i, it) }
         model
+    }
+
+    /**
+     * Returns a model representation of the results
+     * @return A map of the results, numbered with an index as key
+     */
+    List getTableList() {
+        results.collect { value ->
+            if (value.class.isArray()) {
+                Map values = [:]
+
+                value.each { it ->
+                    String name = it.class.simpleName
+                    int index = name.indexOf('_$$_javassist')
+                    if (index > -1) {
+                        name = name[0..index-1]
+                    }
+
+                    values.put(name, it)
+                }
+
+                values
+            }
+            else {
+                String name = value.class.simpleName
+                int index = name.indexOf('_$$_javassist')
+                if (index > -1) {
+                    name = name[0..index-1]
+                }
+
+                [name: value]
+            }
+        }
     }
     
     /**
@@ -142,6 +176,27 @@ class DynamicPageResults {
                             like(c.name, filter)
                         }
 
+                        if (c.eq) {
+                            String value = null
+                            if (c.eq.equalsIgnoreCase("url")) {
+                                if (params.id) {
+                                    value = params.id
+                                }
+                            }
+                            else {
+                                value = c.eq
+                            }
+
+                            if (c.property.otherSide instanceof GrailsDomainClassProperty && value) {
+                                "${c.name}" {
+                                    eq("id", value.toLong())
+                                }
+                            }
+                            else if (value) {
+                                eq(c.name, value)
+                            }
+                        }
+
                         // Sort this column, if specified by the user
                         if (sort && !sort.isEmpty()) {
                             order(c.name, sort)
@@ -157,7 +212,7 @@ class DynamicPageResults {
      * for use with a table for the specified query
      */
     private void getListForQuery() {
-        // TODO
+        results = dataContainer.domainClass.clazz.executeQuery(dataContainer.query)
     }
 
     /**

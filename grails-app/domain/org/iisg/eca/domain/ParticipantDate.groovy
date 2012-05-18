@@ -43,6 +43,6 @@ class ParticipantDate extends EventDateDomain implements Serializable {
 
     @Override
     String toString() {
-        "${user.toString()} (${state.state})"
+        user.toString()
     }
 }
