@@ -16,11 +16,12 @@ class EmailController {
     }
 
     def create() {
+        EmailTemplate template = new EmailTemplate()
+         
         if (request.get) {
-            render(view: "form", model: [template: new EmailTemplate()])
+            render(view: "form", model: [template: template])
         }
         else if (request.post) {
-            EmailTemplate template = new EmailTemplate()
             bindData(template, params, [include: ['usedBy', 'subject', 'body', 'sender', 'comment',
                     'testEmail', 'testAfterSave']], "EmailTemplate")
 
@@ -35,10 +36,16 @@ class EmailController {
     }
 
     def edit() {
+        if (!params.id) {
+            flash.message = message(code: 'default.no.id.message')
+            redirect(uri: eca.createLink(previous: true, noBase: true))
+            return
+        }
+        
         EmailTemplate template = EmailTemplate.findById(params.id)
 
         if (!template) {
-            flash.message =  message(code: 'default.not.found.message', args: [message(code: 'emailtemplate.label'), template.id])
+            flash.message = message(code: 'default.not.found.message', args: [message(code: 'emailtemplate.label'), params.id])
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
         }
@@ -55,7 +62,7 @@ class EmailController {
                 return
             }
 
-           flash.message = message(code: 'default.updated.message', args: [message(code: 'emailtemplate.label'), template.id])
+            flash.message = message(code: 'default.updated.message', args: [message(code: 'emailtemplate.label'), template.id])
             redirect(uri: eca.createLink(action: "show", id: template.id, noBase: true))
         }
     }

@@ -35,12 +35,20 @@ class ParticipantController {
     }
 
     def inventations() {
-        forward(controller: 'dynamicPage', action: 'get', params: params)
+        forward(controller: "dynamicPage", action: "get")
+    }
+
+    def lowerFee() {
+        forward(controller: "dynamicPage", action: "get")
+    }
+
+    def listAll() {
+        forward(controller: "dynamicPage", action: "get")
     }
 
     def list() {
         Map participants = [:]
-        if (params.filter) {
+        if (params['filter-type']) {
             participants = participantService.getParticipants(params)
         }
 

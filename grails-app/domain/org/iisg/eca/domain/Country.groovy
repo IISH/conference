@@ -32,6 +32,6 @@ class Country {
 
     @Override
     String toString() {
-        "${tld}, ${nameEnglish}"
+        nameEnglish
     }
 }

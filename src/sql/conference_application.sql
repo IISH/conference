@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 18, 2012 at 04:06 PM
+-- Generation Time: May 22, 2012 at 04:50 PM
 -- Server version: 5.0.86
 -- PHP Version: 5.2.10
 
@@ -397,7 +397,7 @@ CREATE TABLE IF NOT EXISTS `dynamic_pages` (
   PRIMARY KEY  (`dynamic_page_id`),
   KEY `date_id` (`date_id`),
   KEY `page_id` (`page_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=48 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=51 ;
 
 --
 -- Dumping data for table `dynamic_pages`
@@ -449,7 +449,9 @@ INSERT INTO `dynamic_pages` (`dynamic_page_id`, `content`, `cache`, `page_id`, `
 (44, '<table domain="RequestMap" index="true">\r\n	<column name="url" />\r\n	<column name="configAttribute" />\r\n</table>\r\n\r\n<buttons>\r\n   <button type="back" />\r\n   <button action="create" />\r\n</buttons>', NULL, 52, NULL, 1, 0),
 (45, '<overview domain="RequestMap" id="url">\r\n	<column name="url" />\r\n	<column name="configAttribute" /> \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 53, NULL, 1, 0),
 (46, '<table domain="ParticipantDate" index="true">\r\n	<column name="extras" eq="url" hidden="true" />\r\n	<column name="user" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>', NULL, 54, NULL, 1, 0),
-(47, '<table domain="ParticipantDate" index="true" query="SELECT pd, pd.user FROM ParticipantDate AS pd WHERE pd.invitationLetter = 1">	\r\n	<column name="user" />\r\n	<column name="state" />\r\n	<column name="country" domain="User" />\r\n	<column name="invitationLetterSent" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n</buttons>\r\n', NULL, 55, NULL, 1, 0);
+(48, '<table domain="ParticipantDate" index="true">\r\n	<column name="user">\r\n		<column name="lastName" />\r\n		<column name="firstName" />\r\n		<column name="country" />\r\n	</column>\r\n	<column name="state" />\r\n	<column name="invitationLetter" eq="1" hidden="true" />\r\n	<column name="invitationLetterSent" />  \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n</buttons>', NULL, 55, NULL, 1, 0),
+(49, '<table domain="ParticipantDate" index="true">\r\n	<column name="user">\r\n		<column name="lastName" />\r\n		<column name="firstName" />\r\n	</column>\r\n	<column name="feeState" />\r\n	<column name="lowerFeeRequested" eq="1" hidden="true" />\r\n	<column name="lowerFeeAnswered" />  \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n</buttons>', NULL, 56, NULL, 1, 0),
+(50, '<table domain="ParticipantDate">\r\n	<column name="user">\r\n		<column name="id" />\r\n		<column name="lastName" />\r\n		<column name="firstName" />\r\n		<column name="email" />\r\n	</column>\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n</buttons>', NULL, 57, NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -772,7 +774,7 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`page_id`),
   KEY `pages_parent_page_id_idx` (`parent_page_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=56 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=58 ;
 
 --
 -- Dumping data for table `pages`
@@ -832,7 +834,9 @@ INSERT INTO `pages` (`page_id`, `title_code`, `title_arg`, `title_default`, `con
 (52, 'default.list.label', 'requestmap.label', 'Request map list', 'requestmap', 'list', NULL, NULL, 1, 0),
 (53, 'default.overview.label', 'requestmap.label', 'Show request map', 'requestmap', 'show', NULL, NULL, 1, 0),
 (54, 'default.list.label', 'extra.label', 'Extra list', 'extra', 'list', NULL, NULL, 1, 0),
-(55, 'default.list.label', 'participantdate.inventationletter.label', 'Inventation letter list', 'participant', 'inventations', NULL, NULL, 1, 0);
+(55, 'default.list.label', 'participantdate.inventationletter.label', 'Inventation letter list', 'participant', 'inventations', NULL, NULL, 1, 0),
+(56, 'default.list.label', 'participantdate.lowerfee.label', 'Lower fee list', 'participant', 'lowerFee', NULL, NULL, 1, 0),
+(57, 'default.list.label', 'participantdate.label', 'Participant list', 'participant', 'listAll', NULL, NULL, 1, 0);
 
 -- --------------------------------------------------------
 

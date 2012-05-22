@@ -13,13 +13,13 @@
 
         <form action='${postUrl}' method='post' id='loginForm' autocomplete='off'>
             <fieldset class="form">
-                <div class="fieldcontain">
-                    <label for='username'><g:message code="springSecurity.login.username.label" />:</label>
-                    <input type='text' class='text_' name='j_username' id='username'/>
+                <div>
+                    <label class="property-label" for='username'><g:message code="springSecurity.login.username.label" /></label>
+                    <input type='text' class='property-value' name='j_username' id='username'/>
                 </div>
-                <div class="fieldcontain">
-                    <label for='password'><g:message code="springSecurity.login.password.label" />:</label>
-                    <input type='password' class='text_' name='j_password' id='password'/>
+                <div>
+                    <label class="property-label" for='password'><g:message code="springSecurity.login.password.label" /></label>
+                    <input type='password' class='property-value' name='j_password' id='password'/>
                 </div>
             </fieldset>
             <fieldset class="buttons">

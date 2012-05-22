@@ -57,11 +57,11 @@ abstract class Element {
      * @returns A list of all the elements on the way to the root
      */
     List<Element> getPath() {
-        List<Element> path = new LinkedList<Element>()
+        List<Element> path = new ArrayList<Element>()
         Element current = this
 
         while (current) {
-            path.addFirst(current)
+            path.add(0, current)
             current = current.parent
         }
 

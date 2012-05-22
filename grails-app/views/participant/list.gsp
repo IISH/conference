@@ -6,27 +6,29 @@
     <body>
         <div id="filter-participant">
             <form name="filter-participant" action="#" method="get">
-                <fieldset id="filter">
-                    <div>
-                        <label for="filter-type">
-                            <g:message code="default.button.searchin.label" />
-                        </label>
-                        <g:select id="filter-type" name="filter-type" valueMessagePrefix="search.for" from="['name', 'organisation', 'address']" value="${params['filter-type']}" />
-                    </div>
-                    <div>
-                        <label for="filter-text">
-                            <g:message code="default.button.search.label" />
-                        </label>
-                        <input type="text" id="filter-text" name="filter-text" value="${params['filter-text']}" />
-                    </div>
+                <div id="filter">
+                    <fieldset class="form">
+                        <div>
+                            <label class="property-label" for="filter-type">
+                                <g:message code="default.button.searchin.label" />
+                            </label>
+                            <g:select class="property-value" id="filter-type" name="filter-type" valueMessagePrefix="search.for" from="['name', 'organisation', 'address']" value="${params['filter-type']}" />
+                        </div>
+                        <div>
+                            <label class="property-label" for="filter-text">
+                                <g:message code="default.button.search.label" />
+                            </label>
+                            <input class="property-value" type="text" id="filter-text" name="filter-text" value="${params['filter-text']}" />
+                        </div>
+                    </fieldset>
 
-                    <div class="buttons">
+                    <fieldset class="buttons">
                         <eca:link controller="${params.prevController}" action="${params.prevAction}" id="${params.prevId}">
                             <g:message code="default.button.cancel.label" />
                         </eca:link>
-                        <input type="submit" name="filter" value="${message(code: 'default.button.search.label')}" />
-                    </div>
-                </fieldset>
+                        <input type="submit" value="${message(code: 'default.button.search.label')}" />
+                    </fieldset>
+                </div>
 
                 <fieldset id="status">
                     <table>
@@ -62,16 +64,15 @@
             </div>
 
             <div id="list">
-                <g:if test="${!params.filter}">
-                    <ol>
-                        <li><g:message code="default.search.help.message" /></li>
-                    </ol>
-                </g:if>
-                <g:elseif test="${participants.isEmpty()}">
-                    <ol>
-                        <li><g:message code="default.search.nothing.found.message" /></li>
-                    </ol>
-                </g:elseif>
+                <ol>
+                  <g:if test="${!params['filter-type']}">
+                      <li><g:message code="default.search.help.message" /></li>
+                  </g:if>
+                  <g:elseif test="${participants.isEmpty()}">
+                      <li><g:message code="default.search.nothing.found.message" /></li>
+                  </g:elseif>
+                </ol>   
+              
                 <g:each in="${alfabet}" var="character">
                     <ol name="${character.toLowerCase()}">
                         <li class="char">${character}</li>

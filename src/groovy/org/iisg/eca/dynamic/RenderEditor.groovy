@@ -102,6 +102,7 @@ class RenderEditor {
         props.put("name",   getName(column))
         props.put("id",     getName(column))
         props.put("value",  getValue(column))
+        props.put("class",  "property-value")
 
         props
     }
@@ -119,7 +120,7 @@ class RenderEditor {
 
     private void renderStringEditor(Column column) {
         if (!column.constrainedProperty) {
-            builder.input(type: "text", name: getName(column), value: getValue(column))
+            builder.input(type: "text", class: "property-value", name: getName(column), value: getValue(column))
         }
         else {
             Map props = createPropertiesMap(column)
@@ -182,7 +183,7 @@ class RenderEditor {
     }
 
     private void renderByteArrayEditor(Column column) {
-        builder.input(type: "file", id: column.property.name, name: getName(column))
+        builder.input(class: "property-value", type: "file", id: column.property.name, name: getName(column))
     }
 
     private void renderManyToOne(Column column) {
@@ -193,7 +194,6 @@ class RenderEditor {
             props.put("id",         column.property.name)
             props.put("from",       "\${${column.property.type.name}.list()}")
             props.put("optionKey",  "id")
-            props.put("class",      "many-to-one")
 
             (isOptional(column)) ?: props.put("required", "required")
             renderNoSelection(column, props)
@@ -218,7 +218,6 @@ class RenderEditor {
             props.put("multiple",   "multiple")
             props.put("optionKey",  "id")
             props.put("size",       "5")
-            props.put("class",      "many-to-many")
 
             (isOptional(column)) ?: props.put("required", "required")
 
@@ -227,7 +226,7 @@ class RenderEditor {
     }
 
     private void renderOneToMany(Column column) {
-        builder.ul(class: "one-to-many") {
+        builder.ul(class: "property-value") {
             builder."g:each"(in: "\${${getResult(column)}.${column.property.name}?}", var: "instance") {
                 builder.li {
                     builder.a(href: "../${column.property.referencedDomainClass.propertyName}/show/\${instance.id}", "\${instance?.encodeAsHTML()}")
@@ -244,10 +243,10 @@ class RenderEditor {
     private void renderNumberEditor(Column column) {
         if (!column.constrainedProperty) {
             if (column.property.type == Byte) {
-                builder."g:select"(name: getName(column), from: "\${-128..127}", class: "range", value: getValue(column))
+                builder."g:select"(name: getName(column), from: "\${-128..127}", class: "property-value", value: getValue(column))
             }
             else {
-                builder."g:field"(type: "number", name: getName(column), value: getValue(column))
+                builder."g:field"(class: "property-value", type: "number", name: getName(column), value: getValue(column))
             }
         }
         else {
@@ -258,7 +257,6 @@ class RenderEditor {
 
             if (column.constrainedProperty.range) {
                 props.put("from",   "\${${column.constrainedProperty.range.from}..${column.constrainedProperty.range.to}}")
-                props.put("class",  "range")
 
                 builder."g:select"(props)
             }
@@ -282,7 +280,7 @@ class RenderEditor {
 
     private void renderBooleanEditor(Column column) {
         if (!column.constrainedProperty) {
-            builder.input(type: "checkbox", name: getName(column), value: getValue(column))
+            builder.input(class: "property-value", type: "checkbox", name: getName(column), value: getValue(column))
         }
         else {
             Map props = createPropertiesMap(column)
@@ -301,16 +299,16 @@ class RenderEditor {
         String precision = (column.property.type == Date || column.property.type == java.sql.Date || column.property.type == Calendar) ? "day" : "minute"
 
         if (!column.constrainedProperty) {
-            builder."g:datePicker"(name: getName(column), precision: precision, value: getValue(column))
+            builder."g:datePicker"(class: "property-value", name: getName(column), precision: precision, value: getValue(column))
         }
         else {
             if (!column.constrainedProperty.editable) {
-                builder.span(getValue(column))
+                builder.span(class: "property-value", getValue(column))
             }
             else {
                 Map props = createPropertiesMap(column)
                 props.put("type",           "text")
-                props.put("class",          "datepicker")
+                props.put("class",          "property-value datepicker")
                 props.put("placeholder",    "\${g.message(code: 'default.date.form.format').toLowerCase()}")
                 props.put("value",          "\${g.formatDate(formatName: 'default.date.form.format', date: ${getValueReady(column)})}")
 
@@ -323,7 +321,7 @@ class RenderEditor {
 
     private void renderSelectTypeEditor(String type, Column column) {
         if (!column.constrainedProperty) {
-            builder."g:${type}Select"(name: getName(column), value: getValue(column))
+            builder."g:${type}Select"(class: "property-value", name: getName(column), value: getValue(column))
         }
         else {
             Map props = createPropertiesMap(column)

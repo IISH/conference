@@ -69,11 +69,11 @@ class DynamicPageController {
 
             if (params.prevController) {
                 // Redirect to previous page
-                redirect(controller: params.prevController, action: params.prevAction, id: params.prevId)
+                redirect(uri: eca.createLink(previous: true, noBase: true))
             }
             else {
                 // Redirect to index page
-                redirect(controller: 'event', action: 'list')
+                redirect(uri: eca.createLink(controller: 'event', action: 'index', noBase: true))
             }
         }
     }

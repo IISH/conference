@@ -1,3 +1,5 @@
+var content, body, navWidth, contentMargin;
+
 var decodeUrlParameters = function(urlParameters) {
     var parameters = {};
     var re = /([^&=]+)=([^&]*)/g;
@@ -10,14 +12,27 @@ var decodeUrlParameters = function(urlParameters) {
     return parameters;
 }
 
+var setContentWidth = function() {
+    var bodyWidth = body.outerWidth();
+    content.css("width", bodyWidth-navWidth-(contentMargin*2) + "px");
+}
+
 $(document).ready(function() {
+    content = $('#content');
+    body = $('body');
+    navWidth = $('#nav').outerWidth();
+    contentMargin = parseInt(content.css('margin-left').replace('px', ''));
+    
+    $(window).resize(setContentWidth);
+    setContentWidth();
+	
+    $('#tabs').tabs();
+
     $('#event_switcher').change(function(e) {
         $(this).parents('form').submit();
     });
-
-    $('#tabs').tabs();
-
-    $('.loggedin img').click(function(e) {
+	
+    $('#loggedin img').click(function(e) {
         $("#usermenu").toggle();
     });
 
@@ -33,21 +48,21 @@ $(document).ready(function() {
     });
 
     $('input[type=submit]').click(function(e) {
-        var form = $(this).parents('form')
-        var children = form.find('.hidden input, .hidden select')
-        children.removeAttr('required')
+        var form = $(this).parents('form');
+        var children = form.find('.hidden input, .hidden select');
+        children.removeAttr('required');
         form.submit();
     });
 
     $('.datepicker').each(function() {
         var dateField = $(this);
-
+        
         dateField.datepicker({
             dateFormat: dateField.attr('placeholder').replace('yyyy', 'yy')
         });
     });
 
-    $('input[name=deleted]:not(:checked)').click(function(e) {
+    /*$('input[name=deleted]:not(:checked)').click(function(e) {
         var checkBox = $(this);
         e.preventDefault();
 
@@ -55,7 +70,7 @@ $(document).ready(function() {
             var deleted = confirm(data.message);
             checkBox.attr('checked', deleted);
         });
-    });
+    });*/
 
     $('fieldset span.ui-icon-circle-plus').click(function(e) {
         var parent = $(this).parent();
@@ -153,15 +168,23 @@ $(document).ready(function() {
 
     $('.filter input').keypress(function(e) {
         if (e.which == 13) {
-            $('.filter input').each(function() {
-                var urlParameters = decodeUrlParameters(window.location.search.substring(1));
+            var urlParameters = decodeUrlParameters(window.location.search.substring(1));
+            $('.filter input, .filter select').each(function() {
                 urlParameters[$(this).attr("name")] = $(this).val();
             });
-            window.location.search = "?" + $.param(queryParameters);
+            window.location.search = "?" + $.param(urlParameters);
         }
     });
 
-    $('.tbl_container table tr').click(function(e) {
+    $('.filter select').change(function(e) {
+        var urlParameters = decodeUrlParameters(window.location.search.substring(1));
+        $('.filter input, .filter select').each(function() {
+            urlParameters[$(this).attr("name")] = $(this).val();
+        });
+        window.location.search = "?" + $.param(urlParameters);
+    });
+
+    $('.tbl_container tbody tr').click(function(e) {
         var element = $(this);
         var action = element.parents('.tbl_container').find('input[name=default-action]').val();
         window.location =  "./" + action + "/" + element.find("td.id").text().trim() + window.location.search;

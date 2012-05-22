@@ -40,6 +40,12 @@ class SessionController {
      * with a specific participant type (and paper)
      */
     def edit() {
+        if (!params.id) {
+            flash.message = message(code: 'default.no.id.message')
+            redirect(uri: eca.createLink(previous: true, noBase: true))
+            return
+        }
+        
         Session session = Session.findById(params.id)
 
         if (!session) {

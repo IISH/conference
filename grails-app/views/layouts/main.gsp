@@ -8,15 +8,14 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        
         <title>
             <g:layoutTitle default="${(curPage) ? curPage.toString() : 'ECA' }" />
         </title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="${resource(dir: 'css', file: 'default1.css')}" type="text/css">
-        <link rel="stylesheet" href="${resource(dir: 'css', file: 'esshc1.css')}" type="text/css">
+        
         <link rel="stylesheet" href="${resource(dir: 'css', file: 'default.css')}" type="text/css">
-        <link rel="stylesheet" href="${resource(dir: 'css', file: 'esshc.css')}" type="text/css">
         <link rel="stylesheet" href="${resource(dir: 'css', file: 'jquery-ui.css')}" type="text/css">
+        
         <g:javascript library="jquery" plugin="jquery" />
         <r:layoutResources />
         <g:javascript src="jquery-ui.js"  />
@@ -25,41 +24,41 @@
     </head>
     <body>
         <div id="header" role="banner">
-            <a href="http://www.iisg.nl/esshc/" name="top">
-                <g:img dir="images" file="header-esshc.gif" alt="ESSHC" title="ESSHC" />
-            </a>
-
-            <span class="hosted right">
-                <a href="http://www.iisg.nl/">Hosted by IISH</a>
-            </span>
-
-            <div id="banner" class="clear">
-                <g:img dir="images" file="banner-esshc.jpg" alt="ESSHC" title="ESSHC" />
+            <div id="event-header">
+                <a id="event-logo" href="${grailsApplication.config.grails.serverURL}" name="top">
+                    ${grailsApplication.config.grails.serverURL}
+                </a>
+                
+                <a href="http://www.iisg.nl/" class="hosted">Hosted by IISH</a>
             </div>
-
-            <g:if test="${params.event && params.date}">
-                <span class="event left">
-                  <eca:eventSwitcher date="${curDate}" />
-                </span>
-            </g:if>
-
-            <div class="locales right">
-                Select language:
-                <ul>
-                    <li><a href="?lang=nl"><g:img dir="images/flags" file="nl.png" /></a></li>
-                    <li><a href="?lang=en"><g:img dir="images/flags" file="us.png" /></a></Li>
-                </ul>
+          
+            <div id="banner-container">
+                <div id="banner"></div>
             </div>
+          
+            <div id="banner-menu">
+                <g:if test="${params.event && params.date}">
+                    <div id="event-switcher">
+                        <eca:eventSwitcher date="${curDate}" />
+                    </div>
+                </g:if>
 
-            <sec:ifLoggedIn>
-                <div class="loggedin right">
-                    <g:message code="springSecurity.loggedin.welcome" args="${[sec.loggedInUserInfo(field: 'fullName')]}" />
-                    <eca:roles />
-                    <g:img dir="images/skin" file="sorted_desc.gif" />
+                <div id="locales">
+                    Select language:
+                    <ul>
+                        <li><a href="?lang=nl"><g:img dir="images/flags" file="nl.png" /></a></li>
+                        <li><a href="?lang=en"><g:img dir="images/flags" file="us.png" /></a></Li>
+                    </ul>
                 </div>
-            </sec:ifLoggedIn>
 
-            <div class="clear"></div>
+                <sec:ifLoggedIn>
+                    <div id="loggedin">
+                        <g:message code="springSecurity.loggedin.welcome" args="${[sec.loggedInUserInfo(field: 'fullName')]}" />
+                        <eca:roles />
+                        <g:img dir="images/skin" file="sorted_desc.gif" />
+                    </div>
+                </sec:ifLoggedIn>
+            </div>
         </div>
 
         <div id="nav" role="navigation">

@@ -17,6 +17,32 @@ class UtilsTagLib {
     static namespace = "eca"
 
     /**
+     * Tag creating a boolean select box
+     */
+    def booleanSelect = { attrs ->
+        MarkupBuilder builder = new MarkupBuilder(out)
+        builder.doubleQuotes = true
+
+        Map options =
+            ["null": "${g.message(code: 'default.boolean.true')} & ${g.message(code: 'default.boolean.false')}",
+            "0": "${g.message(code: 'default.boolean.false')}",
+            "1": "${g.message(code: 'default.boolean.true')}"]
+        String value = attrs.value
+        attrs.remove("value")
+
+        builder.select(attrs) {
+            options.each { option ->
+                if (option.key == value) {
+                    builder.option(value: option.key, selected: "selected", option.value)
+                }
+                else {
+                    builder.option(value: option.key, option.value)
+                }
+            }
+        }
+    }
+
+    /**
      * Tag printing all roles of the logged in user in a user-friendly way
      */
     def roles = {
@@ -114,6 +140,22 @@ class UtilsTagLib {
         }
 
         out << msg
+    }
+    
+    /**
+     * Creates a date field with the given attributes
+     */
+    def dateField = { attrs -> 
+        MarkupBuilder builder = new MarkupBuilder(out)
+        builder.doubleQuotes = true
+        
+        attrs['type'] = "text"
+        attrs['class'] = "${attrs['class']} datepicker"
+        attrs['placeholder'] = g.message(code: 'default.date.form.format').toLowerCase()
+        attrs['value'] = g.formatDate(formatName: 'default.date.form.format', date: attrs.date)
+        attrs.remove('date')
+        
+        builder.input(attrs)
     }
 
     /**

@@ -151,4 +151,13 @@ class Column extends ContainerElement {
             }
         }
     }*/
+
+    /**
+    * Returns all of the elements on the way to the root
+    * @returns A list of all the elements on the way to the root
+    */
+   List<Column> getColumnPath() {
+       List<Element> path = this.path
+       path.grep { it instanceof Column }
+   }
 }

@@ -1,9 +1,11 @@
 package org.iisg.eca.dynamic
 
 import grails.orm.HibernateCriteriaBuilder
+
 import org.codehaus.groovy.grails.commons.GrailsDomainClass
-import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 import org.codehaus.groovy.grails.commons.GrailsDomainClassProperty
+
+import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 
 /**
  * Queries the database for results based on the information from the <code>DataContainer</code>
@@ -108,12 +110,12 @@ class DynamicPageResults {
     /**
      * Returns a model representation of the results
      * @return A map of the results, numbered with an index as key
+     * TODO: Remove method?
      */
     List getTableList() {
         results.collect { value ->
+            Map values = [:]
             if (value.class.isArray()) {
-                Map values = [:]
-
                 value.each { it ->
                     String name = it.class.simpleName
                     int index = name.indexOf('_$$_javassist')
@@ -133,7 +135,8 @@ class DynamicPageResults {
                     name = name[0..index-1]
                 }
 
-                [name: value]
+                values.put(name, value)
+                values
             }
         }
     }
@@ -143,12 +146,7 @@ class DynamicPageResults {
      */
     private void getResults() {
         if (dataContainer.type == DataContainer.Type.TABLE) {
-            if (dataContainer.query) {
-                getListForQuery() 
-            }
-            else {
-                getList()
-            }
+             getList()
         }
         else {                  
             getInstance()
@@ -159,60 +157,87 @@ class DynamicPageResults {
      * Returns a list of the requested data for use with a table
      */
     private void getList() {
-        HibernateCriteriaBuilder criteria = dataContainer.domainClass.clazz.createCriteria()
-        
-        results = criteria.list {
-            and {
-                // Loop over all the columns and place filters if needed
-                dataContainer.forAllColumns { c ->
-                    if (c.parent instanceof DataContainer) {
-                        String filter = params["filter_${dataContainer.eid}_${c.name}"]
-                        String sort = params["sort_${dataContainer.eid}_${c.name}"]
+        // First let's define a closure to filter on only one column,
+        // which we will use for all columns in the Hibernate criteria builder later on
+        Closure criteriaForColumn = { c ->
+            // Only sort and filter on those that will be displayed anyway
+            if (!c.hasColumns() && (!c.constrainedProperty || c.constrainedProperty.display) && !c.hidden) {
+                String filter = params["filter_${dataContainer.eid}_${c.name}"]
+                String sort = params["sort_${dataContainer.eid}_${c.name}"]
 
-                        // Place a filter on this column, if specified by the user
-                        if (filter && !filter.isEmpty()) {
-                            String[] filters = filter.split()
-                            filter = "%${filters.join('%')}%"
-                            like(c.name, filter)
+                // Place a filter on this column (currently only Strings and booleans) if specified by the user
+                if (filter && !filter.isEmpty()) {
+                    if (c.property.type == Boolean || c.property.type == boolean) {
+                        if ((filter == "0") || (filter == "1")) {
+                            delegate.eq(c.name, filter.equals("1"))
                         }
+                    }
+                    else if (c.property.type == String)  {
+                        String[] filters = filter.split()
+                        filter = "%${filters.join('%')}%"
+                        delegate.like(c.name, filter)
+                    }
+                }
+                // Sort this column, if specified by the user
+                if (sort && !sort.isEmpty()) {
+                    delegate.order(c.name, sort)
+                }
+            }
 
-                        if (c.eq) {
-                            String value = null
-                            if (c.eq.equalsIgnoreCase("url")) {
-                                if (params.id) {
-                                    value = params.id
-                                }
-                            }
-                            else {
-                                value = c.eq
-                            }
+            // Now apply the filter from the column description, if there is one
+            if (c.eq) {
+                String value = null
+                // Figure out the exact value to filter on, the given property or from the url...
+                if (c.eq.equalsIgnoreCase("url")) {
+                    if (params.id) {
+                        value = params.id
+                    }
+                }
+                else {
+                    value = c.eq
+                }
 
-                            if (c.property.otherSide instanceof GrailsDomainClassProperty && value) {
-                                "${c.name}" {
-                                    eq("id", value.toLong())
-                                }
-                            }
-                            else if (value) {
-                                eq(c.name, value)
-                            }
-                        }
-
-                        // Sort this column, if specified by the user
-                        if (sort && !sort.isEmpty()) {
-                            order(c.name, sort)
-                        }
+                // Figure out if we're filtering on a relationship to another domain class or not
+                if (c.property.otherSide instanceof GrailsDomainClassProperty && value) {
+                    delegate."${c.name}" {
+                        delegate.eq("id", value.toLong())
+                    }
+                }
+                else if (value) {
+                    if (c.property.type == Boolean || c.property.type == boolean) {
+                        delegate.eq(c.name, value.equals("1"))
+                    }
+                    else {
+                        delegate.eq(c.name, value)
                     }
                 }
             }
         }
-    }
 
-    /**
-     * Returns a list of the requested data 
-     * for use with a table for the specified query
-     */
-    private void getListForQuery() {
-        results = dataContainer.domainClass.clazz.executeQuery(dataContainer.query)
+        // The criteria builder will be used to query the database, so delegate it to the closure we just defined
+        HibernateCriteriaBuilder criteria = dataContainer.domainClass.clazz.createCriteria()
+        criteriaForColumn.delegate = criteria
+
+        results = criteria.list {
+            // If there are child columns defined, then first set the level to the referencing domain class
+            dataContainer.forAllColumnsWithChildren { withChild ->
+                "${withChild.name}" {
+                    and {
+                        // Then Loop over all the columns and place filters if needed
+                        dataContainer.getAllColumnsForDomainClass(withChild.property.referencedDomainClass).each { c ->
+                            criteriaForColumn(c)
+                        }
+                    }
+                }
+            }
+
+            and {
+                // Loop over all the columns and place filters if needed
+                dataContainer.getAllColumnsForDomainClass(dataContainer.domainClass).each { c ->
+                    criteriaForColumn(c)
+                }
+            }
+        }
     }
 
     /**

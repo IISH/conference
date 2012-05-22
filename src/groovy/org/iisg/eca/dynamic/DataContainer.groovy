@@ -10,7 +10,6 @@ class DataContainer extends ContainerElement {
     private Type type
     private GrailsDomainClass domainClass    
     private String id
-    private String query
     private boolean index
     private String action
     
@@ -35,7 +34,6 @@ class DataContainer extends ContainerElement {
         this.type = type
         this.domainClass = domainClass
         this.id = null
-        this.query = null
         this.index = false
         this.action = 'show'
     }    
@@ -135,27 +133,6 @@ class DataContainer extends ContainerElement {
         else {
             this.id = id
         }
-    }
-    
-    /**
-     * Returns the query used to query the database if one is specified
-     * @returns The query string or null if not specified
-     */
-    String getQuery() {
-        query
-    }
-    
-    /**
-     * Sets the query used to query the database
-     * @param query The query string
-     */
-    void setQuery(String query) {
-        if (!query || query.isEmpty()) {
-            this.query = null     
-        }
-        else {
-            this.query = query
-        }  
     }
 
     /**

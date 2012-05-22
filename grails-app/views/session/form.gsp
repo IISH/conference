@@ -1,7 +1,7 @@
 <%@ page import="org.iisg.eca.domain.Setting; org.iisg.eca.domain.ParticipantType; org.iisg.eca.domain.User" %>
 <html>
 	<head>
-		<meta name="layout" content="main">
+        <meta name="layout" content="main">
         <g:javascript src="session.js" />
 	</head>
 	<body>
@@ -20,105 +20,84 @@
         <form method="post" action="#">
             <fieldset class="form">
                 <div>
-                    <label>#</label>
-                    <span>${eventSession.id}</span>
+                    <label class="property-label">#</label>
+                    <span class="property-value">${eventSession.id}</span>
                 </div>
                 <div class="${hasErrors(bean: eventSession, field: 'code', 'error')} required">
-                    <label>
+                    <label class="property-label">
                         <g:message code="session.code.label" />
                         <span class="required-indicator">*</span>
                     </label>
-                    <input type="text" maxlength="10" name="Session.code" value="${fieldValue(bean: eventSession, field: 'code')}" required="required" />
+                    <input class="property-value" type="text" maxlength="10" name="Session.code" value="${fieldValue(bean: eventSession, field: 'code')}" required="required" />
                 </div>
                 <div class="${hasErrors(bean: eventSession, field: 'name', 'error')} required">
-                    <label>
+                    <label class="property-label">
                         <g:message code="session.name.label" />
                         <span class="required-indicator">*</span>
                     </label>
-                    <input type="text" name="Session.name" required="required" value="${fieldValue(bean: eventSession, field: 'name')}" />
+                    <input class="property-value" type="text" name="Session.name" required="required" value="${fieldValue(bean: eventSession, field: 'name')}" />
                 </div>
                 <div class="${hasErrors(bean: eventSession, field: 'comment', 'error')}">
-                    <label>
+                    <label class="property-label">
                         <g:message code="session.comment.label" />
                     </label>
-                    <textarea cols="40" rows="5" name="Session.comment">${fieldValue(bean: eventSession, field: 'comment')}</textarea>
+                    <textarea class="property-value" cols="40" rows="5" name="Session.comment">${fieldValue(bean: eventSession, field: 'comment')}</textarea>
                 </div>
                 <div class="${hasErrors(bean: eventSession, field: 'enabled', 'error')}">
-                    <label>
+                    <label class="property-label">
                         <g:message code="default.enabled.label" />
                     </label>
-                    <g:checkBox name="Session.enabled" checked="${eventSession.enabled}" />
+                    <g:checkBox class="property-value" name="Session.enabled" checked="${eventSession.enabled}" />
                 </div>
                 <div class="${hasErrors(bean: eventSession, field: 'deleted', 'error')}">
-                    <label>
+                    <label class="property-label">
                         <g:message code="default.deleted.label" />
                     </label>
-                    <g:checkBox name="Session.deleted" checked="${eventSession.deleted}" />
+                    <g:checkBox class="property-value" name="Session.deleted" checked="${eventSession.deleted}" />
                 </div>
-
-                <ol id="session-equipment">
-                <g:if test="${equipment.isEmpty()}">
-                    <li>
-                        <span class="property-label">
-                            <g:message code="equipment.multiple.label" />
-                        </span>
-                        <span class="property-value">-</span>
-                    </li>
-                </g:if>
-                <g:each in="${equipment}" var="equip" status="i">
-                    <li>
-                        <g:if test="${i == 0}">
-                            <span class="property-label">
-                                <g:message code="equipment.multiple.label" />
-                            </span>
-                        </g:if>
-                        <g:else>
-                            <span class="property-label"> </span>
-                        </g:else>
-                        <span class="property-value">${equip[0]} (${equip[1]})</span>
-                    </li>
-                </g:each>
-                </ol>
-
-                <ol id="session-participants">
-                <g:if test="${participants.isEmpty()}">
-                    <li>
-                        <input type="hidden" name="user-id" class="user-id" />
-                        <input type="hidden" name="type-id" class="type-id" />
-                        <input type="hidden" name="paper-ids" class="paper-ids" />
-
-                        <span class="property-label">
-                            <g:message code="session.sessionparticipants.label" />
-                        </span>
-                        <span class="property-value">-</span>
-                    </li>
-                </g:if>
-                <g:each in="${participants}" var="participant" status="i">
-                    <li>
-                        <input type="hidden" name="user-id" class="user-id" value="${participant[0].user.id}" />
-                        <input type="hidden" name="type-id" class="type-id" value="${participant[0].type.id}" />
-                        <input type="hidden" name="paper-ids" class="paper-ids" value="${participant[1]*.id.join(',')}" />
-
-                        <g:if test="${i == 0}">
-                            <span class="property-label">
-                                <g:message code="session.sessionparticipants.label" />
-                            </span>
-                        </g:if>
-                        <g:else>
-                            <span class="property-label"> </span>
-                        </g:else>
-
-                        <g:if test="${participant[0].type.withPaper}">
-                            <span class="property-value">${participant[0].encodeAsHTML()} (Paper(s): ${participant[1]*.title.join(', ')})</span>
-                        </g:if>
-                        <g:else>
-                            <span class="property-value">${participant[0].encodeAsHTML()}</span>
-                        </g:else>
-                        <span class="ui-icon ui-icon-circle-minus"></span>
-                    </li>
-                </g:each>
-                </ol>
-
+                <div>
+                    <label class="property-label">
+                        <g:message code="equipment.multiple.label" />
+                    </label>
+                    <ul id="session-equipment" class="property-value">
+                        <g:each in="${equipment}" var="equip" status="i">
+                            <li>${equip[0]} (${equip[1]})</li>
+                        </g:each>
+                    </ul>
+                </div>
+                <div>
+                    <label class="property-label">
+                        <g:message code="session.sessionparticipants.label" />
+                    </label>
+                    <ul id="session-participants" class="property-value">
+                        <g:each in="${participants}" var="participant" status="i">
+                            <li>
+                                <input type="hidden" name="user-id" class="user-id" value="${participant[0].user.id}" />
+                                <input type="hidden" name="type-id" class="type-id" value="${participant[0].type.id}" />
+                                <input type="hidden" name="paper-ids" class="paper-ids" value="${participant[1]*.id.join(',')}" />
+                                
+                                <g:if test="${participant[0].type.withPaper}">
+                                    <span>(Paper(s): ${participant[1]*.title.join(', ')})</span>
+                                </g:if>
+                                <g:else>
+                                    <span>${participant[0].encodeAsHTML()}</span>
+                                </g:else>
+                                
+                                <span class="ui-icon ui-icon-circle-minus"></span>
+                            </li>
+                        </g:each>
+                        <li class="hidden">
+                            <input type="hidden" name="user-id" class="user-id" />
+                            <input type="hidden" name="type-id" class="type-id" />
+                            <input type="hidden" name="paper-ids" class="paper-ids" />
+                            
+                            <span></span>
+                            
+                            <span class="ui-icon ui-icon-circle-minus"></span>
+                        </li>
+                    </ul>
+                </div>
+                
                 <div id="tabs">
                     <ul>
                         <g:each in="${types}" var="type">

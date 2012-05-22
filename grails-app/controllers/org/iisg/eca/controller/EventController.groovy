@@ -22,7 +22,7 @@ class EventController {
      */
     def index() {
         if (params.event && params.date) {
-            render(view: 'index')
+            render(view: "index")
         }
         else {
             redirect(action: "list", params: params)
@@ -45,7 +45,7 @@ class EventController {
         }
         params.remove('event_switcher')
 
-        redirect(uri: eca.createLink(controller: controller, action: 'index', noBase: true, noPreviousInfo: true))
+        redirect(uri: eca.createLink(controller: controller, action: "index", noBase: true, noPreviousInfo: true))
     }
 
     /**
@@ -68,7 +68,7 @@ class EventController {
             list.add(date)
         }
 
-        [events: datesByEvent.keySet(), dates: datesByEvent, page: pageInformation.page]
+        [events: datesByEvent.keySet(), dates: datesByEvent]
     }
 
     def show() {

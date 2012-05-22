@@ -6,38 +6,38 @@
 	<body>
         <form method="post" action="#">
             <fieldset class="form">
-                <div class="fieldcontain ${hasErrors(bean: room, field: 'roomName', 'error')} required">
-                    <label for="roomName">
+                <div class="${hasErrors(bean: room, field: 'roomName', 'error')} required">
+                    <label class="property-label" for="roomName">
                         <g:message code="room.roomname.label" />
                         <span class="required-indicator">*</span>
                     </label>
-                    <input type="text" name="roomName" maxlength="30" required="required" value="${fieldValue(bean: room, field: 'roomName')}" />
+                    <input class="property-value" type="text" name="roomName" maxlength="30" required="required" value="${fieldValue(bean: room, field: 'roomName')}" />
                 </div>
-                <div class="fieldcontain ${hasErrors(bean: room, field: 'roomNumber', 'error')} required">
-                    <label for="roomNumber">
+                <div class="${hasErrors(bean: room, field: 'roomNumber', 'error')} required">
+                    <label class="property-label" for="roomNumber">
                         <g:message code="room.roomnumber.label" />
                         <span class="required-indicator">*</span>
                     </label>
-                    <input type="text" name="roomNumber" maxlength="10" required="required" value="${fieldValue(bean: room, field: 'roomNumber')}" />
+                    <input class="property-value" type="text" name="roomNumber" maxlength="10" required="required" value="${fieldValue(bean: room, field: 'roomNumber')}" />
                 </div>
-                <div class="fieldcontain ${hasErrors(bean: room, field: 'noOfSeats', 'error')} required">
-                    <label for="noOfSeats">
+                <div class="${hasErrors(bean: room, field: 'noOfSeats', 'error')} required">
+                    <label class="property-label" for="noOfSeats">
                         <g:message code="room.noofseats.label" />
                         <span class="required-indicator">*</span>
                     </label>
-                    <input type="number" name="noOfSeats" required="required" value="${fieldValue(bean: room, field: 'noOfSeats')}"/>
+                    <input class="property-value" type="number" name="noOfSeats" required="required" value="${fieldValue(bean: room, field: 'noOfSeats')}"/>
                 </div>
-                <div class="fieldcontain ${hasErrors(bean: room, field: 'comment', 'error')} ">
-                    <label for="comment">
+                <div class="${hasErrors(bean: room, field: 'comment', 'error')} ">
+                    <label class="property-label" for="comment">
                         <g:message code="room.comment.label" />
                     </label>
-                    <textarea cols="40" rows="5" name="comment">${fieldValue(bean: room, field: 'comment')}</textarea>
+                    <textarea class="property-value" cols="40" rows="5" name="comment">${fieldValue(bean: room, field: 'comment')}</textarea>
                 </div>
 
-                <div class="columns">
+                <div id="room-equipment" class="columns">
                     <g:each in="${equipment}" var="equip">
-                        <div class="column">
-                            <h3>${equip.equipment}</h3>
+                        <fieldset class="form column">
+                            <legend>${equip.equipment}</legend>
                             <div class="bold">
                                 <label>
                                     <input type="checkbox" class="check-all" />
@@ -52,7 +52,7 @@
                                     </label>
                                 </div>
                             </g:each>
-                        </div>
+                        </fieldset>
                     </g:each>
                     <div class="clear empty" />
                 </div>

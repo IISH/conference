@@ -6,8 +6,6 @@ import org.iisg.eca.domain.SessionDateTime
 import org.iisg.eca.domain.Equipment
 
 class RoomController {
-    def pageInformation
-
     def index() {
         redirect(action: 'list', params: params)
     }
@@ -21,11 +19,11 @@ class RoomController {
     }
 
     def create() {
+        Room room = new Room()
         if (request.get) {
-            render(view: "form", model: [page: pageInformation.page, room: new Room(), equipment: Equipment.list(), timeSlots: SessionDateTime.list()])
+            render(view: "form", model: [room: room, equipment: Equipment.list(), timeSlots: SessionDateTime.list()])
         }
         else if (request.post) {
-            Room room = new Room()
             bindData(room, params, [include: ['roomName', 'roomNumber', 'noOfSeats', 'comment']])
 
             Equipment.list().each { equip ->
@@ -37,21 +35,34 @@ class RoomController {
             }
 
             if (!room.save(flush: true)) {
-                render(view: "form", model: [page: pageInformation.page, room: room, equipment: Equipment.list(), timeSlots: SessionDateTime.list()])
+                render(view: "form", model: [room: room, equipment: Equipment.list(), timeSlots: SessionDateTime.list()])
                 return
             }
 
             flash.message = message(code: 'default.created.message', args: [message(code: 'room.label'), room.id])
-            redirect(action: "show", id: room.id)
+            redirect(uri: eca.createLink(action: "show", id: room.id, noBase: true))
         }
     }
 
     def edit() {
+        if (!params.id) {
+            flash.message = message(code: 'default.no.id.message')
+            redirect(uri: eca.createLink(previous: true, noBase: true))
+            return
+        }
+        
+        Room room = Room.findById(params.id)
+
+        if (!room) {
+            flash.message = message(code: 'default.not.found.message', args: [message(code: 'room.label'), params.id])
+            redirect(uri: eca.createLink(previous: true, noBase: true))
+            return
+        }
+        
         if (request.get) {
-            render(view: "form", model: [page: pageInformation.page, room: Room.get(params.id), equipment: Equipment.list(), timeSlots: SessionDateTime.list()])
+            render(view: "form", model: [room: Room.get(params.id), equipment: Equipment.list(), timeSlots: SessionDateTime.list()])
         }
         else if (request.post) {
-            Room room = Room.get(params.id)
             bindData(room, params, [include: ['roomName', 'roomNumber', 'noOfSeats', 'comment']])
 
             room.roomSessionDateTimeEquipment.clear()
@@ -64,12 +75,12 @@ class RoomController {
             }
 
             if (!room.save(flush: true)) {
-                render(view: "form", model: [page: pageInformation.page, room: room, equipment: Equipment.list(), timeSlots: SessionDateTime.list()])
+                render(view: "form", model: [room: room, equipment: Equipment.list(), timeSlots: SessionDateTime.list()])
                 return
             }
 
             flash.message = message(code: 'default.updated.message', args: [message(code: 'room.label'), room.id])
-            redirect(action: "show", id: room.id)
+            redirect(uri: eca.createLink(action: "show", id: room.id, noBase: true))
         }
     }
 }

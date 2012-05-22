@@ -1,9 +1,5 @@
 package org.iisg.eca.service
 
-import groovy.util.slurpersupport.GPathResult
-
-import org.codehaus.groovy.grails.commons.GrailsDomainClass
-import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 import org.iisg.eca.dynamic.DataContainer
 import org.iisg.eca.dynamic.Button
 import org.iisg.eca.dynamic.Element
@@ -11,7 +7,15 @@ import org.iisg.eca.dynamic.PageBuilder
 import org.iisg.eca.dynamic.DynamicPageResults
 import org.iisg.eca.dynamic.ContainerElement
 import org.iisg.eca.dynamic.Column
+
 import org.iisg.eca.domain.DynamicPage
+
+import groovy.util.slurpersupport.GPathResult
+
+import org.codehaus.groovy.grails.commons.GrailsDomainClass
+import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
+
+import groovy.text.Template
 
 /**
  * Service responsible for dynamic page related actions
@@ -86,7 +90,7 @@ class DynamicPageService {
         }
 
         // Use the cache to fill the elements on the page with the requested data from the database
-        def tmpl = groovyPagesTemplateEngine.createTemplate(dynamicPage.cache, 'temp')
+        Template tmpl = groovyPagesTemplateEngine.createTemplate(dynamicPage.cache, 'temp')
         StringWriter out = new StringWriter()
 
         // Get all the results; overwrite the results of the element send along if present
@@ -137,7 +141,6 @@ class DynamicPageService {
                     if (!elements.isEmpty()) {
                         DataContainer dataContainer = new DataContainer(eid++, null, type, domainClass, elements)
                         dataContainer.id = xmlElement.@id.text()
-                        dataContainer.query = xmlElement.@query.text()
                         dataContainer.index = xmlElement.@index.text().equalsIgnoreCase("true")
                         dataContainer.action = xmlElement.@action.text()
 

@@ -19,24 +19,24 @@ class FeeController {
         feeStates.each { feeState ->
             List<FeeAmount> amounts = FeeAmount.withCriteria {
                 eq('feeState.id', feeState.id)
-                order('endDate', 'asc')
-                order('numDaysStart', 'asc')
-                order('numDaysEnd', 'asc')
+                order('endDate',        'asc')
+                order('numDaysStart',   'asc')
+                order('numDaysEnd',     'asc')
             }
             feeAmounts.put(feeState, amounts)
         }
 
-        render(view: "list", model: [page: pageInformation.page, feeStates: feeStates, feeAmounts: feeAmounts])
+        render(view: "list", model: [feeStates: feeStates, feeAmounts: feeAmounts])
     }
 
     def create() {
+        int nrOfDays = Day.countByDayNumberGreaterThan(0)
+        FeeState feeState = new FeeState()
+        
         if (request.get) {
-            int nrOfDays = Day.countByDayNumberGreaterThan(0)
-            render(view: "form", model: [page: pageInformation.page, feeState: new FeeState(), days: nrOfDays])
+            render(view: "form", model: [feeState: feeState, days: nrOfDays])
         }
         else if (request.post) {
-            int nrOfDays = Day.countByDayNumberGreaterThan(0)
-            FeeState feeState = new FeeState()
             bindData(feeState, params, [include: ['name', 'isDefaultFee']], 'FeeState')
 
             int i = 0
@@ -48,33 +48,33 @@ class FeeController {
             }
 
             if (!feeState.save(flush: true)) {
-                render(view: "form", model: [page: pageInformation.page, feeState: feeState, days: nrOfDays])
+                render(view: "form", model: [feeState: feeState, days: nrOfDays])
                 return
             }
 
             flash.message = message(code: 'default.created.message', args: [message(code: 'feestate.label'), feeState.id])
-
-            if (params.prevController) {
-                redirect(event: params.event, date: params.date, controller: params.prevController, action: params.prevAction, id: params.prevId)
-            }
-            else {
-                redirect(action: "list")
-            }
+            redirect(uri: eca.createLink(action: "list", id: template.id, noBase: true))
         }
     }
 
     def edit() {
+        if (!params.id) {
+            flash.message = message(code: 'default.no.id.message')
+            redirect(uri: eca.createLink(previous: true, noBase: true))
+            return
+        }
+        
         int nrOfDays = Day.countByDayNumberGreaterThan(0)
         FeeState feeState = FeeState.findById(params.id)
 
         if (!feeState) {
             flash.message =  message(code: 'default.not.found.message', args: [message(code: 'feestate.label'), feeState.id])
-            redirect(controller: params.prevController, action: params.prevAction, id: params.prevId, params: params)
+            redirect(uri: eca.createLink(previous: true, noBase: true))
             return
         }
 
         if (request.get) {
-            render(view: "form", model: [page: pageInformation.page, feeState: feeState, days: nrOfDays])
+            render(view: "form", model: [feeState: feeState, days: nrOfDays])
         }
         else if (request.post) {
             Set<FeeAmount> toBeDeleted = new HashSet<FeeAmount>(feeState.feeAmounts)
@@ -104,22 +104,22 @@ class FeeController {
             }
 
             if (!feeState.save(flush: true)) {
-                render(view: "form", model: [page: pageInformation.page, feeState: feeState, days: nrOfDays])
+                render(view: "form", model: [feeState: feeState, days: nrOfDays])
                 return
             }
 
             flash.message = message(code: 'default.updated.message', args: [message(code: 'feestate.label'), feeState.id])
-
-            if (params.prevController) {
-                redirect(uri: eca.createLink(params))
-            }
-            else {
-                redirect(action: "list")
-            }
+            redirect(uri: eca.createLink(action: "list", id: template.id, noBase: true))
         }
     }
 
     def delete() {
+        if (!params.id) {
+            flash.message = message(code: 'default.no.id.message')
+            redirect(uri: eca.createLink(previous: true, noBase: true))
+            return
+        }
+        
         FeeState feeState = FeeState.findById(params.id)
 
         if (feeState) {
@@ -128,15 +128,15 @@ class FeeController {
 
             if (!feeState.save(flush: true)) {
                 flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'feestate.label'), feeState.id])
-                redirect(controller: params.prevController, action: params.prevAction, id: params.prevId, params: params)
+                redirect(uri: eca.createLink(previous: true, noBase: true))
             }
 
             flash.message = message(code: 'default.deleted.message', args: [message(code: 'feestate.label'), feeState.id])
-            redirect(action: "list")
+            redirect(uri: eca.createLink(previous: true, noBase: true))
         }
         else {
             flash.message =  message(code: 'default.not.found.message', args: [message(code: 'feestate.label'), feeState.id])
-            redirect(controller: params.prevController, action: params.prevAction, id: params.prevId, params: params)
+            redirect(uri: eca.createLink(previous: true, noBase: true))
         }
     }
 }

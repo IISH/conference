@@ -153,14 +153,14 @@ class PageBuilder {
             // As a parent column which contains other columns that can be created/edited multiple times
             if (display && c.hasElements() && c.multiple) {
                 builder.div(class: "\${hasErrors(bean: ${RESULTS}.get(${c.root.eid}).get('${c.domainClass.name}'), field: '${c.name}', 'error')} ${required ? 'required' : ''}") {
-                    builder.label(for: "${c.domainClass.name}.${c.name}") {
+                    builder.label(class: "property-label", for: "${c.domainClass.name}.${c.name}") {
                         builder."eca:fallbackMessage"(code: getCode(p), fbCode: getFbCode(p))
 
                         if (RenderEditor.isRequired(c) && !c.isReadOnly() && c.name != 'id') {
                             builder.span(class: "required-indicator", "*")
                         }
                     }
-                    builder.ul(class: "inline") {
+                    builder.ul(class: "property-value") {
                         builder."g:each"(in: "\${${RESULTS}.get(${c.root.eid}).get('${c.domainClass.name}')['${c.name}']}", var: "instance", status: "i") {
                             builder.li {
                                 builder.input(type: "hidden", name: "${c.property.referencedDomainClass.name}_\${i}.id", value: "\${instance.id}")
@@ -186,7 +186,7 @@ class PageBuilder {
             }
             // As a child of another column which can be created/edited multiple times
             else if (display && c.parent instanceof Column && c.parent.multiple) {
-                builder.label {
+                builder.label(class: "property-label") {
                     builder."eca:fallbackMessage"(code: getCode(p), fbCode: getFbCode(p))
                     renderEditor.render(c)
                 }
@@ -195,10 +195,10 @@ class PageBuilder {
             else if (display && !c.hidden) {
                 builder.div(class: "\${hasErrors(bean: ${RESULTS}.get(${c.root.eid}).get('${c.domainClass.name}'), field: '${c.name}', 'error')} ${required ? 'required' : ''}") {
                     if (c.name == "id") {
-                        builder.label(for: "${c.domainClass.name}.${c.name}", "#")
+                        builder.label(class: "property-label", for: "${c.domainClass.name}.${c.name}", "#")
                     }
                     else {
-                        builder.label(for: "${c.domainClass.name}.${c.name}") {
+                        builder.label(class: "property-label", for: "${c.domainClass.name}.${c.name}") {
                             builder."eca:fallbackMessage"(code: getCode(p), fbCode: getFbCode(p))
 
                             if (RenderEditor.isRequired(c) && !c.isReadOnly() && c.name != 'id') {
@@ -208,7 +208,7 @@ class PageBuilder {
                     }
 
                     if (c.name == 'id' || c.isReadOnly()) {
-                        builder.span("\${${RESULTS}.get(${c.root.eid}).get('${c.domainClass.name}')['${c.name}'].encodeAsHTML()}")
+                        builder.span(class: "property-value", "\${${RESULTS}.get(${c.root.eid}).get('${c.domainClass.name}')['${c.name}'].encodeAsHTML()}")
                     }
                     else {
                         renderEditor.render(c)
@@ -223,27 +223,35 @@ class PageBuilder {
      * @param element The element to build table columns from
      */
     private void buildTableColumns(DataContainer element) {
-        builder."g:each"(in: "\${${RESULTS}.get(${element.eid}).getTableList()}", var: "row", status: "i") {
+        builder."g:each"(in: "\${${RESULTS}.get(${element.eid}).get()}", var: "row", status: "i") {
             builder.tr {
                 if (element.index) {
                     builder.td(class: "counter", "\${i+1}")
                 }
                 if (!element.columns.find { it.name.equalsIgnoreCase("id") }) {
                     builder.td(class: "id hidden") {
-                        builder."g:fieldValue"(bean: "\${row.get('${element.domainClass.name}')}", field: "id")
+                        builder."g:fieldValue"(bean: "\${row}", field: "id")
                     }
                 }
                 element.forAllColumns { c ->
-                    if (!c.constrainedProperty  || c.constrainedProperty.display && !c.hidden) {
+                    if (!c.hasColumns() && (!c.constrainedProperty || c.constrainedProperty.display) && !c.hidden) {
                         if (c.name == "id") {
                             builder.td(class: "id") {
-                                builder."g:fieldValue"(bean: "\${row.get('${c.domainClass.name}')}", field: "id")
+                                builder."g:fieldValue"(bean: "\${row}", field: "id")
                             }
                         }
-                        else {
+                        else if (c.property.type == Date || c.property.type == java.sql.Date || c.property.type == java.sql.Time || c.property.type == Calendar) {
                             builder.td {
-                                builder."g:fieldValue"(bean: "\${row.get('${c.domainClass.name}')}", field: c.name)
+                                builder."g:formatDate"(date: "\${row.${c.columnPath.join('.')}}")
                             }
+                        }
+                        else if (c.property.type == Boolean || c.property.type == boolean) {
+                            builder.td {
+                                builder."g:formatBoolean"(boolean: "\${row.${c.columnPath.join('.')}}")
+                            }
+                        }
+                        else  {
+                            builder.td("\${row.${c.columnPath.join('.')}}")
                         }
                     }
                 }
@@ -269,17 +277,12 @@ class PageBuilder {
             // If the column is actually a collection, then list all of the items in the collection
             else if (display && Collection.class.isAssignableFrom(c.property.type)) {                
                 String inVar = "\${${RESULTS}.get(${c.root.eid}).get('${c.domainClass.name}')['${c.name}']}"
-                builder."g:each"(in: inVar, var: "element", status: "i") {
-                    builder.li {
-                        builder."g:if"(test: "\${i == 0}") {
-                            builder.span(id: "${c.name}-label", class: "property-label") {
-                                builder."eca:fallbackMessage"(code: getCode(c.property), fbCode: getFbCode(c.property))
-                            }
-                        }
-                        builder."g:else" {
-                            builder.span(class: "property-label", " ")
-                        }
-                        builder.span(class: "property-value", "arial-labelledby": "${c.name}-label", "\${element.encodeAsHTML()}")
+                builder.span(id: "${c.name}-label", class: "property-label") {
+                    builder."eca:fallbackMessage"(code: getCode(c.property), fbCode: getFbCode(c.property))
+                }
+                builder.ul(class: "property-label", "arial-labelledby": "${c.name}-label") {
+                    builder."g:each"(in: inVar, var: "element", status: "i") {
+                        builder.li("\${element.encodeAsHTML()}")
                     }
                 }
             }
@@ -348,7 +351,7 @@ class PageBuilder {
             builder.th(class: "id hidden", "")
         }
         element.forAllColumns { c ->
-            if (!c.hidden) {
+            if (!c.hasColumns() && (!c.constrainedProperty || c.constrainedProperty.display) && !c.hidden) {
                 if (c.name == "id") {
                     builder.th(class: "id sortable") {
                         builder.mkp.yield "#"
@@ -388,20 +391,13 @@ class PageBuilder {
             builder.th(class: "id hidden", "")
         }
         element.forAllColumns { c ->
-            if (!c.hidden) {
-                builder.th(class: "filter") {
+            if (!c.hasColumns() && (!c.constrainedProperty || c.constrainedProperty.display) && !c.hidden) {
+                builder.th(class: "filter", value: "\${params.filter_${element.eid}_${c.name}}") {
                     if (c.property.type == Boolean || c.property.type == boolean) {
-                        builder.label {
-                            builder."g:message"(code: 'default.boolean.false')
-                            builder.input(type: "checkbox", name: "filter_${element.eid}_${c.name}", value: "0")
-                        }
-                        builder.label {
-                            builder."g:message"(code: 'default.boolean.true')
-                            builder.input(type: "checkbox", name: "filter_${element.eid}_${c.name}", value: "1")
-                        }
+                        builder."eca:booleanSelect"(name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}")
                     }
-                    else {
-                        builder.input(type: "text", name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", placeholder: "Filter on \${message(code: '${getCode(c.property)}').toLowerCase()}")
+                    else if (c.property.type == String)  {
+                        builder.input(type: "text", name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", placeholder: "Filter on \${eca.fallbackMessage(code: '${getCode(c.property)}', fbCode: '${getFbCode(c.property)}').toLowerCase()}")
                     }
                 }
             }
