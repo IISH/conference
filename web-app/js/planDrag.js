@@ -1,6 +1,8 @@
 var noShow = true;
 var equipment = {};
 var timeSlots;
+var sessionInfo;
+var roomInfo;
 var colors = [
     [255, 94, 0], [255, 125, 0], [255, 156, 0], [255, 187, 0], [255, 219, 0],
     [255, 250, 0], [167, 255, 0], [135, 255, 0], [104, 255, 0], [73, 255, 0], [42, 255, 0],
@@ -78,7 +80,7 @@ var disableTableWithLoading = function(enable) {
 $(document).ready(function() {
     var equipmentCombos = $('.equipment-combos');
     var colorsCount = 0;
-    var colorsCountSkip = parseInt(colors.length/equipmentCombos.length);
+    var colorsCountSkip = parseInt(colors.length/(equipmentCombos.length/2));
 
     equipment[""] = {};
     equipment[""].ids = [];
@@ -86,21 +88,31 @@ $(document).ready(function() {
 
     equipmentCombos.each(function() {
         var element = $(this);
-
         var index = element.find('input[name=equipment-combo-code]').val();
-        equipment[index] = {};
-        equipment[index].ids = element.find('input[name=equipment-ids]').val().split(',');
 
-        for (var i=0; i<equipment[index].ids.length; i++) {
-            equipment[index].ids[i] = parseInt(equipment[index].ids[i]);
+        if (equipment[index] == null || equipment[index] == undefined) {
+            equipment[index] = {};
+            equipment[index].ids = element.find('input[name=equipment-ids]').val().split(',');
+
+            for (var i=0; i<equipment[index].ids.length; i++) {
+                equipment[index].ids[i] = parseInt(equipment[index].ids[i]);
+            }
+
+            equipment[index].css = 'rgb('+colors[colorsCount][0]+' ,'+colors[colorsCount][1]+' , '+colors[colorsCount][2]+')';
         }
 
-        equipment[index].css = 'rgb('+colors[colorsCount][0]+' ,'+colors[colorsCount][1]+' , '+colors[colorsCount][2]+')';
         element.css('background-color', equipment[index].css);
+
         colorsCount = colorsCount + colorsCountSkip;
+        if (colorsCount > colors.length) {
+            colorsCount = 0;
+        }
     });
 
     timeSlots = $('#schedule td.time-slot');
+
+    sessionInfo = $('#session-info-container');
+    roomInfo = $('#room-info-container');
 
     $('.session-block').each(function() {
         $(this).draggable({
@@ -111,6 +123,8 @@ $(document).ready(function() {
 
                 var element = $(this);
                 element.hide();
+                sessionInfo.hide();
+                roomInfo.hide();
 
                 var sessionId = element.find('input[name=session-id]').val();
 
@@ -158,19 +172,24 @@ $(document).ready(function() {
                 var dateTimeId = element.find('input[name=date-time-id]').val();
                 var sessionId = $(ui.draggable).find('input[name=session-id]').val();
 
-                $.getJSON(
-                    './planSession',
-                    {   'session_id':   sessionId,
-                        'room_id':      roomId,
-                        'date_time_id': dateTimeId},
-                    function(data) {
-                        if (data.success) {
-                            $('#sessions-unscheduled').prepend(element.find('.session-block'));
-                            element.prepend(ui.draggable);
+                var plan = confirm(ui.draggable.text().trim() + ': \r\n' + element.find('input[name=plan-message]').val().trim());
+
+                if (plan) {
+                    $.getJSON(
+                        './planSession',
+                        {   'session_id':   sessionId,
+                            'room_id':      roomId,
+                            'date_time_id': dateTimeId},
+                        function(data) {
+                            if (data.success) {
+                                $('#sessions-unscheduled').prepend(element.find('.session-block'));
+                                element.prepend(ui.draggable);
+                            }
                         }
-                        disableTableWithLoading(false);
-                    }
-                );
+                    );
+                }
+
+                disableTableWithLoading(false);
             }
         });
     });
@@ -198,27 +217,44 @@ $(document).ready(function() {
 
         setTimeout(function() {
             if (!noShow) {
+                sessionInfo.hide();
+                roomInfo.hide();
+
                 var sessionId = element.find('input[name=session-id]').val();
                 $.getJSON('./sessionInfo', {'session_id': sessionId}, function(data) {
-                    var infoElement =  $('#session-info');
-
                     if (data.success) {
-                        infoElement.find('#code-label').next().text(data.code);
-                        infoElement.find('#name-label').next().text(data.name);
-                        infoElement.find('#commnent-label').next().text(data.comment);
-                        infoElement.find('#participants-label').next().text(data.participants.join(' - '));
-                        infoElement.find('#equipment-label').next().text(data.equipment.join(' - '));
+                        sessionInfo.find('#code-label').next().text(data.code);
+                        sessionInfo.find('#name-label').next().text(data.name);
+                        sessionInfo.find('#commnent-label').next().text(data.comment);
+                        sessionInfo.find('#participants-label').next().html('<li>'+data.participants.join('</li><li>')+'</li>');
+                        sessionInfo.find('#equipment-label').next().html('<li>'+data.equipment.join('</li><li>')+'</li>');
                     }
                     else {
-                        infoElement.find('#code-label').next().text(data.message);
+                        sessionInfo.find('#code-label').next().text(data.message);
                     }
 
                     var position = element.position();
-                    infoElement.css({
-                        top:    position.top + element.outerHeight() + 2,
-                        left:   position.left + 10
+                    var contentWidth = $('#content').outerWidth();
+                    var contentHeight = $('#content').outerHeight();
+                    var infoElementWidth = sessionInfo.outerWidth();
+                    var infoElementHeight = sessionInfo.outerHeight();
+
+                    var top = position.top + element.outerHeight() - 5;
+                    var left = position.left;
+
+                    if ((left + infoElementWidth) > contentWidth) {
+                        left = left - (infoElementWidth - (contentWidth - left));
+                    }
+
+                    if ((top + infoElementHeight) > contentHeight) {
+                        top = top - (infoElementHeight - (contentHeight - top));
+                    }
+
+                    sessionInfo.css({
+                        top:    top,
+                        left:   left
                     });
-                    infoElement.show();
+                    sessionInfo.show();
                 });
             }
         }, 500);
@@ -226,7 +262,7 @@ $(document).ready(function() {
 
     $('.session-block').mouseleave(function() {
         noShow = true;
-        $('#session-info').hide();
+        sessionInfo.hide();
     });
 
     $('.room-indicator').mouseenter(function() {
@@ -235,26 +271,37 @@ $(document).ready(function() {
 
         setTimeout(function() {
             if (!noShow) {
+                sessionInfo.hide();
+                roomInfo.hide();
+
                 var roomId = element.find('input[name=room-id]').val();
                 $.getJSON('./roomInfo', {'room_id': roomId}, function(data) {
-                    var infoElement = $('#room-info');
-
                     if (data.success) {
-                        infoElement.find('#roomnumnber-label').next().text(data.number);
-                        infoElement.find('#roomname-label').next().text(data.name);
-                        infoElement.find('#noofseats-label').next().text(data.seats);
-                        infoElement.find('#roomcomment-label').next().text(data.comment);
+                        roomInfo.find('#roomnumnber-label').next().text(data.number);
+                        roomInfo.find('#roomname-label').next().text(data.name);
+                        roomInfo.find('#noofseats-label').next().text(data.seats);
+                        roomInfo.find('#roomcomment-label').next().text(data.comment);
                     }
                     else {
-                        infoElement.find('#code-label').next().text(data.message);
+                        roomInfo.find('#code-label').next().text(data.message);
                     }
 
                     var position = element.position();
-                    infoElement.css({
-                        top:    position.top + 10,
-                        left:   position.left + 20
+                    var contentHeight = $('#content').outerHeight();
+                    var infoElementHeight = roomInfo.outerHeight();
+
+                    var top = position.top + 5;
+                    var left = position.left + 20;
+
+                    if ((top + infoElementHeight) > contentHeight) {
+                        top = top - (infoElementHeight - (contentHeight - top));
+                    }
+
+                    roomInfo.css({
+                        top:    top,
+                        left:   left
                     });
-                    infoElement.show();
+                    roomInfo.show();
                 });
             }
         }, 500);
@@ -262,6 +309,6 @@ $(document).ready(function() {
 
     $('.room-indicator').mouseleave(function() {
         noShow = true;
-        $('#room-info').hide();
+        roomInfo.hide();
     });
 });

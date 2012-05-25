@@ -18,8 +18,8 @@ class Setting extends EventDomain {
 
     static mapping = {
         table 'settings'
-        version false
         cache true
+        version false
 
         id          column: 'setting_id'
         property    column: 'property'

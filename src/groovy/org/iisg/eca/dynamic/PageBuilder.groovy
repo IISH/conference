@@ -277,12 +277,14 @@ class PageBuilder {
             // If the column is actually a collection, then list all of the items in the collection
             else if (display && Collection.class.isAssignableFrom(c.property.type)) {                
                 String inVar = "\${${RESULTS}.get(${c.root.eid}).get('${c.domainClass.name}')['${c.name}']}"
-                builder.span(id: "${c.name}-label", class: "property-label") {
-                    builder."eca:fallbackMessage"(code: getCode(c.property), fbCode: getFbCode(c.property))
-                }
-                builder.ul(class: "property-label", "arial-labelledby": "${c.name}-label") {
-                    builder."g:each"(in: inVar, var: "element", status: "i") {
-                        builder.li("\${element.encodeAsHTML()}")
+                builder.li {
+                    builder.span(id: "${c.name}-label", class: "property-label") {
+                        builder."eca:fallbackMessage"(code: getCode(c.property), fbCode: getFbCode(c.property))
+                    }
+                    builder.ul(class: "property-value", "arial-labelledby": "${c.name}-label") {
+                        builder."g:each"(in: inVar, var: "element", status: "i") {
+                            builder.li("\${element.encodeAsHTML()}")
+                        }
                     }
                 }
             }
@@ -297,7 +299,7 @@ class PageBuilder {
                             builder."eca:fallbackMessage"(code: getCode(c.property), fbCode: getFbCode(c.property))
                         }
                     }
-                    
+
                     String value = "\${${RESULTS}.get(${c.root.eid}).get('${c.domainClass.name}')['${c.name}']}"
                     builder.span(class: "property-value", "arial-labelledby": "${c.name}-label") {
                         if (c.property.type == Boolean || c.property.type == boolean) {
@@ -307,7 +309,7 @@ class PageBuilder {
                             builder."g:formatDate"(date: value)
                         }
                         else {
-                            builder."g:fieldValue"(bean: "\${${RESULTS}.get(${c.root.eid}).get('${c.domainClass.name}')}", field: c.name)
+                            builder."eca:formatText"(text: value)
                         }
                     }
                 }

@@ -12,9 +12,9 @@ class TimeSlot {
     Room room
     SessionDateTime sessionDateTime
     Session session
-    Set<Equipment> equipment
+    List<Equipment> equipment
 
-    TimeSlot(Room room, SessionDateTime sessionDateTime, Session session, Set<Equipment> equipment) {
+    TimeSlot(Room room, SessionDateTime sessionDateTime, Session session, List<Equipment> equipment) {
         this.room = room
         this.sessionDateTime = sessionDateTime
         this.session = session
@@ -33,7 +33,7 @@ class TimeSlot {
         session
     }
 
-    Set<Equipment> getEquipment() {
+    List<Equipment> getEquipment() {
         equipment
     }
 

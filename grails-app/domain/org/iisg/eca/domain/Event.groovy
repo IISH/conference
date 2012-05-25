@@ -13,6 +13,7 @@ class Event extends DefaultDomain {
 
     static mapping = {
         table 'events'
+        cache true
         version false
 
         id          column: 'event_id'

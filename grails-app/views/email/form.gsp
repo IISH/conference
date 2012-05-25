@@ -62,7 +62,6 @@
             <div class="${hasErrors(bean: template, field: 'testAfterSave', 'error')} ">
               <label class="property-label" for="EmailTemplate.testAfterSave">
                 <g:message code="emailtemplate.testaftersave.label" />
-                <span class="required-indicator">*</span>
               </label>
               <input class="property-value" type="checkbox" id="EmailTemplate.testAfterSave" name="EmailTemplate.testAfterSave" value="${template?.testAfterSave}" />
             </div>

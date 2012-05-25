@@ -1,11 +1,12 @@
 package org.iisg.eca.tags
 
-import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
-import groovy.xml.MarkupBuilder
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Event
 import org.iisg.eca.domain.EventDate
-import org.iisg.eca.domain.Page
+
+import groovy.xml.MarkupBuilder
+
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
 /**
  * Utilities tag library
@@ -15,6 +16,15 @@ class UtilsTagLib {
     def springSecurityService
 
     static namespace = "eca"
+
+    /**
+     * Tag responsible for formatting the given String
+     */
+    def formatText = { attrs ->
+        if (attrs.text) {
+            out << attrs.text.encodeAsHTML().replaceAll("\n", "<br />")
+        }
+    }
 
     /**
      * Tag creating a boolean select box

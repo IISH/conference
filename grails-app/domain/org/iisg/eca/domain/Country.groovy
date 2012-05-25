@@ -13,8 +13,8 @@ class Country {
 
     static mapping = {
         table 'countries'
-        version false
         cache true
+        version false
 
         id          column: 'country_id'
         tld         column: 'tld'

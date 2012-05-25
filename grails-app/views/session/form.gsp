@@ -1,5 +1,5 @@
 <%@ page import="org.iisg.eca.domain.Setting; org.iisg.eca.domain.ParticipantType; org.iisg.eca.domain.User" %>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 	<head>
         <meta name="layout" content="main">
         <g:javascript src="session.js" />
@@ -77,10 +77,10 @@
                                 <input type="hidden" name="paper-ids" class="paper-ids" value="${participant[1]*.id.join(',')}" />
                                 
                                 <g:if test="${participant[0].type.withPaper}">
-                                    <span>(Paper(s): ${participant[1]*.title.join(', ')})</span>
+                                    <span class="participant-value">${participant[0].encodeAsHTML()} (<g:message code="paper.label" />: ${participant[1]*.title.join(', ').encodeAsHTML()})</span>
                                 </g:if>
                                 <g:else>
-                                    <span>${participant[0].encodeAsHTML()}</span>
+                                    <span class="participant-value">${participant[0].encodeAsHTML()}</span>
                                 </g:else>
                                 
                                 <span class="ui-icon ui-icon-circle-minus"></span>
@@ -90,8 +90,8 @@
                             <input type="hidden" name="user-id" class="user-id" />
                             <input type="hidden" name="type-id" class="type-id" />
                             <input type="hidden" name="paper-ids" class="paper-ids" />
-                            
-                            <span></span>
+
+                            <span class="participant-value"></span>
                             
                             <span class="ui-icon ui-icon-circle-minus"></span>
                         </li>
@@ -106,26 +106,26 @@
                     </ul>
 
                     <g:each in="${types}" var="type">
-                        <div id="${type.toString().toLowerCase()}-tab" <g:if test="${type.type.equalsIgnoreCase('author')}">class="author"</g:if>>
+                        <div id="${type.toString().toLowerCase()}-tab" class="form <g:if test="${type.type.equalsIgnoreCase('author')}">author</g:if>">
                             <input type="hidden" name="type-id" value="${type.id}" class="type-id" />
                             <input type="hidden" name="participant-id" class="participant-id" />
 
                             <div>
-                                <label>
+                                <label class="property-label">
                                     Paticipant
                                 </label>
-                                <input type="text" name="participant" class="select-participant" />
+                                <input type="text" name="participant" class="select-participant property-value" />
                             </div>
                             <g:if test="${type.withPaper && (maxPapers == null || maxPapers > 1)}">
                                 <div>
-                                    <label>
+                                    <label class="property-label">
                                         Paper
                                     </label>
-                                    <select class="paper-id" name="paper-id"></select>
+                                    <select class="paper-id property-value" name="paper-id"></select>
                                 </div>
                             </g:if>
                             <div>
-                                <input type="button" name="add-participant" value="${g.message(code: "default.add.label", args: [type])}" />
+                                <input type="button" name="add-participant" class="property-value" value="${g.message(code: "default.add.label", args: [type])}" />
                             </div>
                         </div>
                     </g:each>

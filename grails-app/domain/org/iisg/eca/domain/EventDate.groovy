@@ -26,6 +26,7 @@ class EventDate extends DefaultDomain {
 
     static mapping = {
         table 'dates'
+        cache true
         version false
 
         id              column: 'date_id'

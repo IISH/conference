@@ -4,61 +4,41 @@ var participants = [];
 var setSessionData = function(data) {
     $('#tabs').tabs("option", "selected", -1);
 
+    var errorsBox = $('.errors');
+    errorsBox.hide();
+
     if (data.success) {
         var participantsContainer = $('#session-participants');
-        var clone = participantsContainer.find('li:first').clone(true);
+        var clone = participantsContainer.find('li.hidden').clone(true);
+        var item;
 
         participantsContainer.html("");
-        if (data.participants.length === 0) {
-            var item = clone.clone(true);
-            item.find('.user-id').val("");
-            item.find('.type-id').val("");
-            item.find('.property-value').text("-");
-            item.find('.ui-icon-circle-minus').remove();
-            participantsContainer.append(item);
-        }
-
         for (var i=0; i<data.participants.length; i++) {
-            var item = clone.clone(true);
+            item = clone.clone(true);
             item.find('.user-id').val(data.participants[i][0]);
             item.find('.type-id').val(data.participants[i][1]);
             item.find('.paper-ids').val(data.participants[i][2]);
-            item.find('.property-value').text(data.participants[i][3]);
+            item.find('.participant-value').text(data.participants[i][3]);
 
             if (item.find('.ui-icon-circle-minus').length === 0) {
                 item.append('<span class="ui-icon ui-icon-circle-minus"></span>');
             }
 
-            if (i !== 0) {
-                item.find('.property-label').text("");
-            }
-
             participantsContainer.append(item);
+            item.removeClass('hidden');
         }
+
+        item = clone.clone(true);
+        participantsContainer.append(item);
+        item.addClass('hidden');
 
         var equipmentContainer = $('#session-equipment');
-        clone = equipmentContainer.find('li:first').clone(true);
-
         equipmentContainer.html("");
-        if (data.equipment.length === 0) {
-            var item = clone.clone(true);
-            item.find('.property-value').text("-");
-            equipmentContainer.append(item);
-        }
-
         for (var i=0; i<data.equipment.length; i++) {
-            var item = clone.clone(true);
-            item.find('.property-value').text(data.equipment[i][0] + " (" + data.equipment[i][1] + ")");
-
-            if (i !== 0) {
-                item.find('span.property-label').text("");
-            }
-
-            equipmentContainer.append(item);
+            equipmentContainer.append("<li>" + data.equipment[i][0] + " (" + data.equipment[i][1] + ")" + "</li>");
         }
     }
     else {
-        var errorsBox = $('.errors');
         if (errorsBox.length === 0) {
             errorsBox = $('h1').after('<ul class="errors" role="alert"></ul>').next();
         }

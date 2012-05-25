@@ -29,6 +29,7 @@ class DynamicPage extends EventDateDomain {
 
     static mapping = {
         table 'dynamic_pages'
+        cache true
         version false
 
         id      column: 'dynamic_page_id'

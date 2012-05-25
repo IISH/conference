@@ -18,7 +18,7 @@ class SessionPlannerService {
      * @return A set which contains a list of all possible equipment combinations
      */
     Set<List<Equipment>> getEquipmentCombinations() {
-        (Set<List<Equipment>>) GroovyCollections.subsequences(Equipment.list(sort: 'equipment'))
+        GroovyCollections.subsequences(Equipment.list(sort: 'code'))
     }
 
     List<Session> getUnscheduledSessions() {
@@ -76,7 +76,7 @@ class SessionPlannerService {
         List<Object[]> equipment = (List<Object[]>) RoomSessionDateTimeEquipment.executeQuery('''
             SELECT rsdte.room.id, rsdte.sessionDateTime.id, rsdte.equipment
             FROM RoomSessionDateTimeEquipment AS rsdte
-            ORDER BY rsdte.room.roomName, rsdte.sessionDateTime.index
+            ORDER BY rsdte.room.roomName, rsdte.sessionDateTime.index, rsdte.equipment.code
         ''')
 
         // ... then retrieve all sessions already scheduled in the rooms at specific dates and times
@@ -90,7 +90,7 @@ class SessionPlannerService {
         List<TimeSlot> schedule = new ArrayList<TimeSlot>()
         roomDateTimes.each { roomDateTime ->
             // Get all equipment available for this room at this timeslot
-            Set<Equipment> equipmentSet = new HashSet<Equipment>()
+            List<Equipment> equipmentList = new ArrayList<Equipment>()
 
             Iterator equipmentIterator = equipment.iterator()
             boolean noMoreEquipment = false
@@ -98,7 +98,7 @@ class SessionPlannerService {
             while (equipmentIterator.hasNext() && !noMoreEquipment) {
                 Object[] equip = equipmentIterator.next()
                 if ((equip[0] == roomDateTime[0].id) && (equip[1] == roomDateTime[1].id)) {
-                    equipmentSet.add((Equipment) equip[2])
+                    equipmentList.add((Equipment) equip[2])
                     equipmentIterator.remove()
                 }
                 else {
@@ -114,7 +114,7 @@ class SessionPlannerService {
             }
 
             // Now combine everything and add to the list
-            schedule.add(new TimeSlot((Room) roomDateTime[0], (SessionDateTime) roomDateTime[1], session, equipmentSet))
+            schedule.add(new TimeSlot((Room) roomDateTime[0], (SessionDateTime) roomDateTime[1], session, equipmentList))
         }
 
         schedule

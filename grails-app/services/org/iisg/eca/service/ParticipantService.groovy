@@ -6,6 +6,7 @@ import grails.orm.HibernateCriteriaBuilder
 
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 import org.codehaus.groovy.grails.plugins.web.taglib.ValidationTagLib
+import groovy.sql.Sql
 
 /**
  * Service responsible for requesting participant data
@@ -17,6 +18,8 @@ class ParticipantService {
     protected static final ValidationTagLib MESSAGES = new ValidationTagLib()
 
     def pageInformation
+
+    def dataSource
 
     /**
      * Returns all participants of the current event date with filters set by the user
@@ -95,21 +98,19 @@ class ParticipantService {
      */
     List<Object[]> getParticipantCounts() {
         Integer count = 0
+        Sql sql = new Sql(dataSource)
 
-        /**
-        	SELECT s.id, s.state, count(pd)
-        	FROM ParticipantState s
-        	LEFT JOIN s.participantDates AS pd
-        	GROUP BY s.state
-        	ORDER BY s.id''')
-         */
+        // Due to unusual join, not possible with HQL
+        List<Object[]> states = sql.rows('''
+            SELECT participant_states.participant_state_id, participant_states.participant_state, count( participant_date.participant_date_id )
+            FROM participant_states
+            LEFT JOIN participant_date
+            ON participant_date.participant_state_id = participant_states.participant_state_id
+            AND participant_date.date_id = :dateId
+            GROUP BY participant_states.participant_state
+            ORDER BY participant_states.participant_state_id
+        ''', [dateId: pageInformation.date.id]).collect { it.values() as Object[] }
 
-        List<Object[]> states = (List<Object[]>) ParticipantDate.executeQuery('''
-            SELECT s.id, s.state, count(pd)
-            FROM ParticipantDate pd
-            RIGHT JOIN pd.state AS s
-            GROUP BY s.state
-            ORDER BY s.id''')
         states.each { count = count + it[2] }
         states.add(0, [new Integer(-1), MESSAGES.message(code: 'default.all.label'), count])
         states

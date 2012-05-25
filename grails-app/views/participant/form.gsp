@@ -1,4 +1,4 @@
-<%@ page import="org.iisg.eca.domain.Title; org.iisg.eca.domain.FeeState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Extra; org.iisg.eca.domain.Country" %>
+<%@ page import="org.iisg.eca.domain.Setting; org.iisg.eca.domain.Title; org.iisg.eca.domain.FeeState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Extra; org.iisg.eca.domain.Country" %>
 <!doctype html>
 <html>
     <head>
@@ -252,7 +252,9 @@
                 </div>
 
                 <div id="papers-tab" class="columns">
-                <g:if test="${participant}">
+                    <input type="hidden" name="max-papers" value="${Setting.getByProperty(Setting.MAX_PAPERS_PER_PERSON_PER_SESSION).value}" />
+
+                    <g:if test="${participant}">
                     <g:each in="${participant.user.papers}" var="paper" status="i">
                         <div class="column">
                             <input type="hidden" name="Paper_${i}.id" value="${paper.id}" />
@@ -272,19 +274,20 @@
                                     </label>
                                     <textarea class="property-value" name="Paper_${i}.abstr" cols="40" rows="5">${fieldValue(bean: paper, field: 'abstr')}</textarea>
                                 </div>
-                                <g:if test="${paper.file}">
                                 <div>
                                     <label class="property-label">
                                         <g:message code="paper.file.label" />
                                     </label>
                                     <div class="property-value">
+                                        <g:if test="${paper.file}">
                                         <span>
                                             <a target="_blank" href="${eca.createLink(action: 'downloadPaper', id: paper.id)}">${paper.fileName}</a> - ${paper.getReadableFileSize()}
                                         </span>
                                         <span class="paper ui-icon ui-icon-circle-minus"></span>
+                                        </g:if>
+                                        <g:else> - </g:else>
                                     </div>
                                 </div>
-                                </g:if>
                                 <div class="${hasErrors(bean: paper, field: 'file', 'error')}">
                                     <label class="property-label">
                                         <g:message code="paper.file.upload.label" />
@@ -318,7 +321,7 @@
                                         <g:message code="paper.networkproposal.label" />
                                     </label>
                                     <div class="property-value">
-                                        <g:select from="${networks}" name="Paper_${i}.networkProposal" optionKey="id" optionValue="name" value="${paper.networkProposal}" noSelection="${[null: ' ']}" />
+                                        <g:select from="${networks}" name="Paper_${i}.networkProposal.id" optionKey="id" optionValue="name" value="${paper.networkProposal}" noSelection="${[null: ' ']}" />
                                         <input type="button" id="btn_network" name="btn_network" value="${g.message(code: "default.goto")}" />
                                     </div>
                                 </div>
@@ -384,6 +387,12 @@
                                     <g:message code="paper.abstr.label" />
                                 </label>
                                 <textarea class="property-value" name="Paper_null.abstr" cols="40" rows="5"></textarea>
+                            </div>
+                            <div>
+                                <label class="property-label">
+                                    <g:message code="paper.file.label" />
+                                </label>
+                                <div class="property-value"> - </div>
                             </div>
                             <div>
                                 <label class="property-label">

@@ -53,6 +53,11 @@ select {
     width: 204px;
 }
 
+input[type=checkbox], input[type=radio] {
+    border: 0;
+    outline: 0;
+}
+
 h1 {
     border-bottom: 1px solid #225496;
     color: #225496;
@@ -165,7 +170,7 @@ a:hover {
 }
 
 .buttons input {
-    height: 23px;
+    padding-top: 2px;
 }
 
 .buttons a {
@@ -178,42 +183,46 @@ a:hover {
 
 /* LISTS AND FORMS */
 
-fieldset.form > div, ol.property-list > li, fieldset.form div > ul > li {
+.form > div, .form > div > ul > li, .property-list > li {
     min-height: 22px;
     margin: 5px 0;
     line-height: 1.8;
+    overflow: hidden;
 }
 
-fieldset.form > div > .property-label, ol.property-list li > .property-label {
+.form > div > ul > li:first-child {
+    margin: 0;
+}
+
+.form > div > .property-label, .property-list li > .property-label {
     width: 25%;
     float: left;  
     color: #666666;
     text-align: right;    
 }
 
-fieldset.form > div > .property-value, ol.property-list li > .property-value {
+.form > div > .property-value, .property-list li > .property-value {
     display: block;
     margin-left: 26%;
     text-align: left; 
 }
 
-fieldset.form > div > input[type=checkbox].property-value, fieldset.form > div > input[type=radio].property-value {
+.form > div > input[type=checkbox].property-value, .form > div > input[type=radio].property-value {
     height: 22px;
 }
 
-fieldset.column.form > div > .property-label {
+.column.form > div > .property-label {
     width: 33%;   
 }
 
-fieldset.column.form > div > .property-value {
+.column.form > div > .property-value {
     margin-left: 36%;
 }
 
 ul input[type=text], ul input[type=password], ul input[type=number],
 ul input[type=email], ul input[type=url], ul select {
-    width: 150px;
+    width: 120px;
 }
-
 
 .columns > .column {
     float: left;
@@ -350,7 +359,7 @@ span.ui-icon {
 #loggedin {
     color: #225496;
     font-weight: bold;
-    margin-right: 30px;
+    margin-right: 20px;
 }
 
 #loggedin img {
@@ -513,6 +522,11 @@ span.ui-icon {
     margin-left: 20px;
 }
 
+#personal-tab, #papers-tab {
+    margin: 0;
+    padding: 0;
+}
+
 #participant-form .column {
     width: 50%;
     margin: 0;
@@ -537,10 +551,6 @@ span.ui-icon {
     width: 160px;
 }
 
-#room-equipment .column label {
-    
-}
-
 /* PLAN SESSIONS */
 
 #sessions-unscheduled {
@@ -549,7 +559,6 @@ span.ui-icon {
     padding: 10px;
     white-space: nowrap;
     border: 1px solid #225496;
-    height: 22px;
 }
 
 .session-block {
@@ -563,12 +572,17 @@ span.ui-icon {
 #legenda-schedule {
     margin-bottom: 20px;
     text-align: center;
+    border: 1px solid #225496;
 }
 
 #legenda-schedule td {
-    border: 1px solid #225496;
+    border-left: 1px solid #225496;
     padding: 0;
     vertical-align: text-top;
+}
+
+#legenda-schedule .equipment td {
+    padding-bottom: 10px;
 }
 
 #schedule {
@@ -593,10 +607,6 @@ span.ui-icon {
     margin-top: 3px;
 }
 
-#legenda-rooms {
-    margin-bottom: 20px;
-}
-
 #loading {
     background-color: rgba(255, 255, 255, 0.7);
     display: none;
@@ -607,12 +617,51 @@ span.ui-icon {
     text-align: center;
 }
 
-#session-info, #room-info {
+#session-info-container, #room-info-container {
     display: none;
-    background-color: white;
-    border: 1px solid #225496;
     position: absolute;
-    width: 500px;
+    background-color: transparent;
+}
+
+#session-info, #room-info {
+    background-color: white;
+    border: 3px solid #225496;
+    padding: 0 10px;
+}
+
+#session-info-click {
+    border: 1px solid #225496;
+    margin-bottom: 20px;
+}
+
+.click-to-plan {
+    cursor: pointer;
+}
+
+#session-info .property-label, #room-info .property-label {
+    width: 110px;
+}
+
+#session-info .property-value, #room-info .property-value {
+    margin-left: 120px;
+}
+
+.pointer {
+    width: 0;
+    height: 0;
+    border: 5px solid transparent;
+}
+
+#session-info-container .pointer {
+    margin-left: 15px;
+    border-bottom-color: #225496;
+}
+
+#room-info-container .pointer {
+    border-right-color: #225496;
+    position: absolute;
+    left: -10px;
+    top: 15px;
 }
 
 /* HELPERS */

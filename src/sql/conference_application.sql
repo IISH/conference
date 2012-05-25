@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 22, 2012 at 04:50 PM
+-- Generation Time: May 25, 2012 at 04:37 PM
 -- Server version: 5.0.86
 -- PHP Version: 5.2.10
 
@@ -424,7 +424,7 @@ INSERT INTO `dynamic_pages` (`dynamic_page_id`, `content`, `cache`, `page_id`, `
 (18, '<form domain="Room">\r\n	<column name="roomName" />\r\n	<column name="roomNumber" />\r\n	<column name="noOfSeats" />\r\n	<column name="comment" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 14, NULL, 1, 0),
 (19, '<table domain="Title">\r\n   <column name="title" />\r\n   <column name="enabled" />\r\n   <column name="deleted" />\r\n</table>\r\n\r\n<buttons>\r\n   <button type="back" />\r\n   <button action="create" />\r\n</buttons>', NULL, 20, NULL, 1, 0),
 (20, '<table domain="Room">\r\n	<column name="roomName" />\r\n	<column name="roomNumber" />\r\n	<column name="noOfSeats" />  \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>\r\n', NULL, 21, NULL, 1, 0),
-(21, '<form domain="Network" id="url">\r\n	<column name="name" />\r\n	<column name="comment" />\r\n	<column name="url" />\r\n	<column name="showOnline" />\r\n	<column name="showInternal" />	\r\n	<column name="chairs" multiple="true">\r\n		<column name="chair" />\r\n		<column name="isMainChair" />\r\n	</column>\r\n	<column name="enabled" />\r\n	<column name="disabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 22, NULL, 1, 0),
+(21, '<table domain="Network" index="true">\r\n	<column name="name" />\r\n	<column name="showOnline" />\r\n	<column name="showInternal" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>\r\n', NULL, 22, NULL, 1, 0),
 (22, '<table domain="Equipment" index="true">	\r\n	<column name="code" />\r\n	<column name="equipment" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>\r\n', NULL, 23, NULL, 1, 0),
 (24, '<table domain="Session" index="true">\r\n	<column name="code" />\r\n	<column name="name" /> \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>', NULL, 26, NULL, 1, 0),
 (25, '<form domain="Session" id="url">\r\n	<column name="id" />\r\n	<column name="name" />\r\n	<column name="code" />\r\n	<column name="comment" />\r\n	<column name="enabled" />\r\n	<column name="deleted" /> \r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 27, NULL, 1, 0),
@@ -469,14 +469,15 @@ CREATE TABLE IF NOT EXISTS `email_codes` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`email_code_id`),
   KEY `event_id` (`event_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `email_codes`
 --
 
 INSERT INTO `email_codes` (`email_code_id`, `event_id`, `code`, `description`, `groovy_script`, `enabled`, `deleted`) VALUES
-(1, 1, 'test', 'test', 'println "Simply a test"', 1, 0);
+(1, 1, 'test', 'test', 'println "Simply a test"', 1, 0),
+(2, 1, 'code', 'Test code', 'println "test code"', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -496,7 +497,7 @@ CREATE TABLE IF NOT EXISTS `email_templates` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`email_template_id`),
   KEY `event_id` (`event_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `email_templates`
@@ -504,7 +505,8 @@ CREATE TABLE IF NOT EXISTS `email_templates` (
 
 INSERT INTO `email_templates` (`email_template_id`, `event_id`, `used_by`, `subject`, `body`, `sender`, `comment`, `enabled`, `deleted`) VALUES
 (1, 1, 'Aanmaningen', 'ESSHC: Reminder - Online payment closes March 10', 'Dear You,', 'ESSHC', 'Verstuur aanmaningen', 1, 0),
-(2, 1, 'Test emails', 'Test voor het verzenden van emails', 'Geachte heer/mevoruw,\r\n\r\nDit is een test.\r\n\r\nMet vriendelijke groet,\r\nMe', 'Me', 'Test email', 1, 0);
+(2, 1, 'Test emails', 'Test voor het verzenden van emails', 'Geachte heer/mevoruw,\r\n\r\nDit is een test.\r\n\r\nMet vriendelijke groet,\r\nMe', 'Me', 'Test email', 1, 0),
+(3, 1, 'Another test email', 'subject', 'Some message', 'Me', 'Some comments', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -774,7 +776,7 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`page_id`),
   KEY `pages_parent_page_id_idx` (`parent_page_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=58 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=59 ;
 
 --
 -- Dumping data for table `pages`
@@ -818,7 +820,7 @@ INSERT INTO `pages` (`page_id`, `title_code`, `title_arg`, `title_default`, `con
 (36, 'default.list.label', 'participantstate.multiple.label', 'Participant states list', 'participantState', 'list', NULL, NULL, 1, 0),
 (37, 'default.list.label', 'participantdate.label', 'Participant list', 'participant', 'list', NULL, NULL, 1, 0),
 (38, 'default.overview.label', 'participantdate.label', 'User overview', 'participant', 'show', NULL, NULL, 1, 0),
-(39, 'default.plan.label', 'session.multiple.label', 'Plan sessions', 'session', 'plan', NULL, NULL, 1, 0),
+(39, 'default.plan.drag.label', 'session.multiple.label', 'Plan sessions (Drag)', 'session', 'planDrag', NULL, NULL, 1, 0),
 (40, 'default.create.label', 'emailtemplate.label', 'Create email template', 'email', 'create', NULL, NULL, 1, 0),
 (41, 'default.edit.label', 'emailtemplate.label', 'Edit email template', 'email', 'edit', NULL, NULL, 1, 0),
 (42, 'default.list.label', 'emailtemplate.multiple.label', 'List email templates', 'email', 'list', NULL, NULL, 1, 0),
@@ -836,7 +838,8 @@ INSERT INTO `pages` (`page_id`, `title_code`, `title_arg`, `title_default`, `con
 (54, 'default.list.label', 'extra.label', 'Extra list', 'extra', 'list', NULL, NULL, 1, 0),
 (55, 'default.list.label', 'participantdate.inventationletter.label', 'Inventation letter list', 'participant', 'inventations', NULL, NULL, 1, 0),
 (56, 'default.list.label', 'participantdate.lowerfee.label', 'Lower fee list', 'participant', 'lowerFee', NULL, NULL, 1, 0),
-(57, 'default.list.label', 'participantdate.label', 'Participant list', 'participant', 'listAll', NULL, NULL, 1, 0);
+(57, 'default.list.label', 'participantdate.label', 'Participant list', 'participant', 'listAll', NULL, NULL, 1, 0),
+(58, 'default.plan.click.label', 'session.multiple.label', 'Plan sessions (Click)', 'session', 'planClick', NULL, NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -963,7 +966,7 @@ CREATE TABLE IF NOT EXISTS `participant_date` (
 
 INSERT INTO `participant_date` (`participant_date_id`, `user_id`, `date_id`, `participant_state_id`, `fee_state_id`, `payment_id`, `date_added`, `invitation_letter`, `invitation_letter_sent`, `lower_fee_requested`, `lower_fee_answered`, `lower_fee_text`, `enabled`, `deleted`) VALUES
 (1, 2, 1, 0, 1, 0, '2012-04-26', 1, 0, 0, 0, NULL, 1, 0),
-(2, 2, 2, 0, 1, 0, '2012-04-26', 1, 0, 0, 0, NULL, 1, 0),
+(2, 2, 2, 0, 1, 0, '2012-04-26', 1, 0, 1, 0, NULL, 1, 0),
 (3, 3, 1, 1, 1, 0, '2012-04-27', 1, 0, 0, 0, NULL, 1, 0),
 (4, 4, 1, 999, 1, 0, '2012-04-27', 0, 0, 0, 0, NULL, 1, 0),
 (5, 5, 1, 2, 0, 0, '2012-04-27', 0, 0, 0, 0, NULL, 1, 0),
@@ -1526,25 +1529,16 @@ CREATE TABLE IF NOT EXISTS `session_participant` (
   KEY `user_id` (`user_id`),
   KEY `session_id` (`session_id`),
   KEY `participant_type_id` (`participant_type_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `session_participant`
 --
 
 INSERT INTO `session_participant` (`session_participant_id`, `user_id`, `session_id`, `participant_type_id`, `enabled`, `deleted`) VALUES
-(1, 2, 2, 2, 1, 1),
-(2, 3, 2, 2, 1, 1),
-(3, 4, 2, 2, 1, 1),
-(4, 6, 2, 2, 1, 1),
-(5, 5, 2, 4, 1, 1),
-(6, 2, 2, 4, 1, 1),
-(7, 2, 2, 3, 1, 1),
-(8, 2, 2, 3, 1, 0),
-(9, 2, 1, 1, 1, 0),
-(10, 4, 1, 1, 1, 0),
-(11, 6, 3, 1, 1, 0),
-(12, 5, 3, 1, 1, 0);
+(1, 7, 2, 4, 1, 0),
+(2, 2, 2, 3, 1, 0),
+(3, 5, 2, 5, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1565,8 +1559,6 @@ CREATE TABLE IF NOT EXISTS `session_room_datetime` (
 -- Dumping data for table `session_room_datetime`
 --
 
-INSERT INTO `session_room_datetime` (`room_id`, `session_datetime_id`, `session_id`) VALUES
-(4, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -1897,10 +1889,10 @@ ALTER TABLE `paper_states`
 -- Constraints for table `participant_date`
 --
 ALTER TABLE `participant_date`
-  ADD CONSTRAINT `participant_date_ibfk_4` FOREIGN KEY (`fee_state_id`) REFERENCES `fee_states` (`fee_state_id`),
   ADD CONSTRAINT `participant_date_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
   ADD CONSTRAINT `participant_date_ibfk_2` FOREIGN KEY (`date_id`) REFERENCES `dates` (`date_id`),
-  ADD CONSTRAINT `participant_date_ibfk_3` FOREIGN KEY (`participant_state_id`) REFERENCES `participant_states` (`participant_state_id`);
+  ADD CONSTRAINT `participant_date_ibfk_3` FOREIGN KEY (`participant_state_id`) REFERENCES `participant_states` (`participant_state_id`),
+  ADD CONSTRAINT `participant_date_ibfk_4` FOREIGN KEY (`fee_state_id`) REFERENCES `fee_states` (`fee_state_id`);
 
 --
 -- Constraints for table `participant_date_extra`
@@ -1975,9 +1967,9 @@ ALTER TABLE `session_participant`
 -- Constraints for table `session_room_datetime`
 --
 ALTER TABLE `session_room_datetime`
-  ADD CONSTRAINT `session_room_datetime_ibfk_3` FOREIGN KEY (`session_id`) REFERENCES `sessions` (`session_id`),
   ADD CONSTRAINT `session_room_datetime_ibfk_1` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`room_id`),
-  ADD CONSTRAINT `session_room_datetime_ibfk_2` FOREIGN KEY (`session_datetime_id`) REFERENCES `session_datetime` (`session_datetime_id`);
+  ADD CONSTRAINT `session_room_datetime_ibfk_2` FOREIGN KEY (`session_datetime_id`) REFERENCES `session_datetime` (`session_datetime_id`),
+  ADD CONSTRAINT `session_room_datetime_ibfk_3` FOREIGN KEY (`session_id`) REFERENCES `sessions` (`session_id`);
 
 --
 -- Constraints for table `settings`

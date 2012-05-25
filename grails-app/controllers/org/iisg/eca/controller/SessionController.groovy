@@ -63,9 +63,20 @@ class SessionController {
     }
 
     /**
-     * Shows tha plan sessions page, which allows one to plan sessions at a specific timeslot        *
+     * Shows tha plan sessions page, which allows one to plan sessions at a specific timeslot
      */
-    def plan() {
+    def planDrag() {
+        [   equipment:              sessionPlannerService.equipmentCombinations,
+            schedule:               sessionPlannerService.schedule,
+            sessionsUnscheduled:    sessionPlannerService.unscheduledSessions,
+            dateTimes:              SessionDateTime.list(),
+            rooms:                  Room.list()]
+    }
+
+    /**
+     * Shows tha plan sessions page, which allows one to plan sessions at a specific timeslot
+     */
+    def planClick() {
         [   equipment:              sessionPlannerService.equipmentCombinations,
             schedule:               sessionPlannerService.schedule,
             sessionsUnscheduled:    sessionPlannerService.unscheduledSessions,
@@ -125,7 +136,7 @@ class SessionController {
                                 [   it[0].user.id,
                                     it[0].type.id,
                                     it[1]*.id.join(','),
-                                    (it[0].type.withPaper) ? "${it[0].toString()} (Paper(s): ${it[1]*.title.join(', ')})" : it[0].toString()]
+                                    (it[0].type.withPaper) ? "${it[0].toString()} (${g.message(code: 'paper.label')}: ${it[1]*.title.join(', ')})" : it[0].toString()]
                             }, equipment: equipment]
                         }
                         else {
@@ -181,7 +192,7 @@ class SessionController {
                         [   it[0].user.id,
                             it[0].type.id,
                             it[1]*.id.join(','),
-                            (it[0].type.type.equalsIgnoreCase('author')) ? "${it[0].toString()} (Paper(s): ${it[1]*.title.join(', ')})" : it[0].toString()]
+                            (it[0].type.type.equalsIgnoreCase('author')) ? "${it[0].toString()} (${g.message(code: 'paper.label')}: ${it[1]*.title.join(', ')})" : it[0].toString()]
                     }, equipment: equipment]
                 }
                 else {
@@ -279,6 +290,35 @@ class SessionController {
             }
 
             Map possibilitiesResponse = [success: (boolean) sessionRoomDateTime]
+            render possibilitiesResponse as JSON
+        }
+    }
+
+    def possibilitiesAndInfo() {
+        if (request.xhr && params.session_id) {
+            Map possibilitiesResponse = [:]
+            Session session = Session.findById(params.long('session_id'))
+
+            if (session) {
+                possibilitiesResponse.put('success', true)
+                possibilitiesResponse.put('code', session.code)
+                possibilitiesResponse.put('name', session.name)
+                possibilitiesResponse.put('comment', session.comment)
+                possibilitiesResponse.put('participants', session.sessionParticipants.collect { it.toString() })
+                possibilitiesResponse.put('equipment', sessionPlannerService.getEquipment(session).collect { it.toString() })
+
+                List<Equipment> equipment = sessionPlannerService.getEquipment(session)
+                possibilitiesResponse.put('equipment-ids', equipment.collect { it.id })
+
+                List<Session> sessions = sessionPlannerService.getSessionsWithSameParticipants(session)
+                List<Long> dateTimeIds = sessions.collect { SessionRoomDateTime.findBySession(it)?.sessionDateTime?.id }.unique()
+                dateTimeIds.remove(null)
+                possibilitiesResponse.put('date-times', dateTimeIds)
+            }
+            else {
+                possibilitiesResponse = [success: false, message: 'Not found!']
+            }
+
             render possibilitiesResponse as JSON
         }
     }

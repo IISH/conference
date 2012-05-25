@@ -4,15 +4,15 @@ import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Paper
 import org.iisg.eca.domain.Extra
 import org.iisg.eca.domain.Network
+import org.iisg.eca.domain.FeeState
 import org.iisg.eca.domain.Equipment
 import org.iisg.eca.domain.PaperState
 import org.iisg.eca.domain.Volunteering
 import org.iisg.eca.domain.ParticipantDate
+import org.iisg.eca.domain.ParticipantState
 import org.iisg.eca.domain.ParticipantVolunteering
 
 import org.springframework.web.multipart.commons.CommonsMultipartFile
-import org.iisg.eca.domain.ParticipantState
-import org.iisg.eca.domain.FeeState
 
 class ParticipantController {
     /**
@@ -104,7 +104,11 @@ class ParticipantController {
 
                 i = 0
                 while (params["Paper_${i}"]) {
-                    Paper paper = user.papers.find { it.id == params.long("Paper_${i}.id") }
+                    Paper paper = null
+
+                    if (params["Paper_${i}.id"].isLong()) {
+                        paper = user.papers.find { it.id == params.long("Paper_${i}.id") }
+                    }
 
                     if (!paper) {
                         paper = new Paper(state: PaperState.get(0))
@@ -132,7 +136,7 @@ class ParticipantController {
                 }
 
                 if (participant.save() && user.save()) {
-                    flash.message = message(code: 'default.updated.message', args: [message(code: 'user.label'), user.id])
+                    flash.message = message(code: 'default.updated.message', args: [message(code: 'participantdate.label')])
                     redirect(uri: eca.createLink(action: 'list', noBase: true))
                     return
                 }

@@ -92,6 +92,10 @@ log4j = {
            'org.springframework',
            'org.hibernate',
            'net.sf.ehcache.hibernate'
+
+    trace   'org.hibernate.type'
+    debug   'org.hibernate.SQL'
+
 }
 
 // Spring Security Core config:

@@ -13,7 +13,7 @@ class BootStrap {
         else {
             lastUpdated.value = DATE_FORMAT.format(new Date())
         }
-        lastUpdated.save(flush: true)
+        lastUpdated.save()
     }
     
     def destroy = {
