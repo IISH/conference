@@ -4,6 +4,7 @@ import groovy.sql.Sql
 
 class EmailCode extends EventDomain {
     def dataSource
+    def pageInformation
 
     String code
     String description
@@ -25,9 +26,11 @@ class EmailCode extends EventDomain {
         groovyScript    column: 'groovy_script',    type: 'text'
     }
 
-    String runScript(Map params) {
-        GroovyShell shell = new GroovyShell(new Binding([sql: new Sql(dataSource), params: params]))
-        shell.evaluate(this.groovyScript).toString()
+    String translateForUser(User user) {
+        Binding binding = new Binding([sql: new Sql(dataSource), params: [userId: user.id, dateId: pageInformation.date.id]])
+        GroovyShell shell = new GroovyShell(binding)
+        Object ret = shell.evaluate(groovyScript)
+        ret.toString()
     }
 
     @Override

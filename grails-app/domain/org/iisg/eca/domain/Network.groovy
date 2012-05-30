@@ -10,7 +10,10 @@ class Network extends EventDateDomain {
     boolean showOnline = true
     boolean showInternal = true
     
-    static hasMany = [chairs: NetworkChair, participantVolunteering: ParticipantVolunteering, paperProposals: Paper]
+    static hasMany = [  chairs: NetworkChair,
+                        participantVolunteering: ParticipantVolunteering,
+                        paperProposals: Paper,
+                        sessions: Session]
 
     static constraints = {
         date    nullable: true
@@ -28,6 +31,8 @@ class Network extends EventDateDomain {
         name    column: 'name'
         comment column: 'comment',      type: 'text'
         url     column: 'url'
+
+        sessions joinTable: 'session_in_network'
     }
     
     @Override

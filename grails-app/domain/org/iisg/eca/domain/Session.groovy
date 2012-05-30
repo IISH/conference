@@ -8,7 +8,11 @@ class Session extends EventDateDomain {
     String name
     String comment
 
-    static hasMany = [sessionParticipants: SessionParticipant, papers: Paper, sessionRoomDateTime: SessionRoomDateTime]
+    static belongsTo = Network
+    static hasMany = [  sessionParticipants: SessionParticipant,
+                        papers: Paper,
+                        sessionRoomDateTime: SessionRoomDateTime,
+                        networks: Network]
 
     static mapping = {
         table 'sessions'
@@ -19,6 +23,8 @@ class Session extends EventDateDomain {
         code        column: 'session_code'
         name        column: 'session_name'
         comment     column: 'session_comment',  type: 'text'
+
+        networks    joinTable: 'session_in_network'
     }
 
     static constraints = {

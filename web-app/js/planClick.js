@@ -127,15 +127,20 @@ $(document).ready(function() {
     $('#schedule input').hide();
     $('input[type=checkbox]').attr("checked", false);
 
-    $('#sessions-unscheduled .session-block').live("click", function() {
+    $('#sessions-unscheduled .session-block').live("click", function(e) {
         disableTableWithLoading(true);
-        curSessionBlock = $(this);
 
+        curSessionBlock = $(this);
         var checkbox = curSessionBlock.find('input[type=checkbox]');
-        $('#sessions-unscheduled input[type=checkbox]').attr("checked", false);
-        checkbox.attr("checked", true);
+
+        if (e.target !== checkbox[0]) {
+            checkbox.attr('checked', !checkbox.attr('checked'));
+        }
 
         if (checkbox.is(':checked')) {
+            $('#sessions-unscheduled input[type=checkbox]').attr("checked", false);
+            checkbox.attr("checked", true);
+
             curSessionId = parseInt(checkbox.val());
 
             $.getJSON('./possibilitiesAndInfo', {'session_id': curSessionId}, function(data) {

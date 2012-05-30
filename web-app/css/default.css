@@ -551,6 +551,27 @@ span.ui-icon {
     width: 160px;
 }
 
+/* SESSIONS INFORMATION */
+
+.participant-state-value {
+    margin-right: 15px;
+}
+
+.participant-type-value {
+    color: #225496;
+    font-style: italic;
+}
+
+.participant-paper-value {
+    display: block;
+    color: #225496;
+    font-style: italic;
+}
+
+#session-participants li ul, #session-participants li ul li {
+    display: inline;
+}
+
 /* PLAN SESSIONS */
 
 #sessions-unscheduled {

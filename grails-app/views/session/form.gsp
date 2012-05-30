@@ -72,28 +72,41 @@
                     <ul id="session-participants" class="property-value">
                         <g:each in="${participants}" var="participant" status="i">
                             <li>
-                                <input type="hidden" name="user-id" class="user-id" value="${participant[0].user.id}" />
-                                <input type="hidden" name="type-id" class="type-id" value="${participant[0].type.id}" />
-                                <input type="hidden" name="paper-ids" class="paper-ids" value="${participant[1]*.id.join(',')}" />
-                                
-                                <g:if test="${participant[0].type.withPaper}">
-                                    <span class="participant-value">${participant[0].encodeAsHTML()} (<g:message code="paper.label" />: ${participant[1]*.title.join(', ').encodeAsHTML()})</span>
+                                <input type="hidden" name="user-id" class="user-id" value="${participant.participant.user.id}" />
+
+                                <span class="participant-value">${participant.participant}</span>
+                                <span class="participant-state-value">(${participant.participant.state})</span>
+
+                                <ul>
+                                <g:each in="${participant.types}" var="type">
+                                    <li class="participant-type-value">
+                                        <input type="hidden" name="type-id" class="type-id" value="${type.id}" />
+                                        <span class="participant-type-val">${type}</span> <span class="ui-icon ui-icon-circle-minus"></span>
+                                    </li>
+                                </g:each>
+                                </ul>
+
+                                <g:if test="${participant.paper}">
+                                    <span class="participant-paper-value">
+                                        <g:message code="paper.label" />: ${participant.paper}
+                                    </span>
                                 </g:if>
-                                <g:else>
-                                    <span class="participant-value">${participant[0].encodeAsHTML()}</span>
-                                </g:else>
-                                
-                                <span class="ui-icon ui-icon-circle-minus"></span>
                             </li>
                         </g:each>
                         <li class="hidden">
                             <input type="hidden" name="user-id" class="user-id" />
-                            <input type="hidden" name="type-id" class="type-id" />
-                            <input type="hidden" name="paper-ids" class="paper-ids" />
 
-                            <span class="participant-value"></span>
-                            
-                            <span class="ui-icon ui-icon-circle-minus"></span>
+                            <span class="participant-value"> </span>
+                            <span class="participant-state-value"> </span>
+
+                            <ul>
+                                <li class="participant-type-value">
+                                    <input type="hidden" name="type-id" class="type-id" />
+                                    <span class="participant-type-val"> </span> <span class="ui-icon ui-icon-circle-minus"></span>
+                                </li>
+                            </ul>
+
+                            <span class="participant-paper-value"> </span>
                         </li>
                     </ul>
                 </div>

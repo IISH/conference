@@ -15,14 +15,27 @@ var setSessionData = function(data) {
         participantsContainer.html("");
         for (var i=0; i<data.participants.length; i++) {
             item = clone.clone(true);
-            item.find('.user-id').val(data.participants[i][0]);
-            item.find('.type-id').val(data.participants[i][1]);
-            item.find('.paper-ids').val(data.participants[i][2]);
-            item.find('.participant-value').text(data.participants[i][3]);
+            item.find('.user-id').val(data.participants[i].id);
+            item.find('.participant-value').text(data.participants[i].participant);
+            item.find('.participant-state-value').text("("+data.participants[i].state+")");
 
-            if (item.find('.ui-icon-circle-minus').length === 0) {
-                item.append('<span class="ui-icon ui-icon-circle-minus"></span>');
+            if (data.participants[i].paper.trim().length === 0) {
+                item.find('.participant-paper-value').remove();
             }
+            else {
+                item.find('.participant-paper-value').text(data.participants[i].paper);
+            }
+
+            var typeContainer = item.find('ul');
+            var typeClone = typeContainer.find('.participant-type-value');
+            var typeItem;
+            for (var j=0; j<data.participants[i].types.length; j++) {
+                typeItem = typeClone.clone(true);
+                typeItem.find('.type-id').val(data.participants[i].types[j].id);
+                typeItem.find('.participant-type-val').text(data.participants[i].types[j].type);
+                typeContainer.append(typeItem);
+            }
+            typeClone.remove();
 
             participantsContainer.append(item);
             item.removeClass('hidden');
@@ -135,16 +148,17 @@ $(document).ready(function() {
     });
 
     $('.ui-icon-circle-minus').live('click', function(e) {
-        var element = $(this).parents('li');
+        var element = $(this).parents('.participant-type-value');
+        var parentElement = $(this).parents('li');
+
         $.getJSON('../../message/index', {code: 'default.button.delete.confirm.message'}, function(data) {
             var deleted = confirm(data.message);
             if (deleted) {
                 $.getJSON(
                     '../deleteParticipant',
                     {   'session_id':   sessionId,
-                        'user_id':      element.find('.user-id').val(),
-                        'type_id':      element.find('.type-id').val(),
-                        'paper_ids':    element.find('.paper-ids').val()
+                        'user_id':      parentElement.find('.user-id').val(),
+                        'type_id':      element.find('.type-id').val()
                     },
                     setSessionData
                 );

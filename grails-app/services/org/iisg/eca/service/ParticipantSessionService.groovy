@@ -5,6 +5,9 @@ import org.iisg.eca.domain.Paper
 import org.iisg.eca.domain.Session
 import org.iisg.eca.domain.ParticipantType
 import org.iisg.eca.domain.ParticipantTypeRule
+import org.iisg.eca.domain.SessionParticipant
+import org.iisg.eca.utils.ParticipantSessionInfo
+import org.iisg.eca.domain.ParticipantDate
 
 /**
  * Service responsible for requesting participant data in order to allow them in a session
@@ -62,6 +65,35 @@ class ParticipantSessionService {
             OR p.session.id IS NOT NULL
             OR p.date.id <> :dateId
         ''', [dateId: pageInformation.date.id])
+    }
+
+    /**
+     * Returns a set with information about every participant added to the given session
+     * @param session The session in question
+     * @return A set of <code>ParticipantSessionInfo</code> objects
+     */
+    List<ParticipantSessionInfo> getParticipantsForSession(Session session) {
+        List<ParticipantSessionInfo> sessionInformation = []
+
+        SessionParticipant.executeQuery('''
+            SELECT sp.user, sp.type
+            FROM SessionParticipant AS sp
+            INNER JOIN sp.type AS t
+            WHERE sp.session.id = :sessionId
+            ORDER BY t.importance DESC
+        ''', [sessionId: session.id]).each { sessionParticipant ->
+            ParticipantSessionInfo sessionInfo = sessionInformation.find { it.participant.user.id == sessionParticipant[0].id }
+
+            if (!sessionInfo) {
+                sessionInfo = new ParticipantSessionInfo(session, ParticipantDate.findByUserAndDate(sessionParticipant[0], pageInformation.date))
+                sessionInformation.add(sessionInfo)
+            }
+
+            sessionInfo.addType(sessionParticipant[1])
+            sessionInfo.paper = session.papers.find { it.user.id == sessionParticipant[0].id }
+        }
+
+        sessionInformation
     }
 
     /**

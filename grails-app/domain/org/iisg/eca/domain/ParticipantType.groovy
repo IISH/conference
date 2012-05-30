@@ -6,6 +6,7 @@ package org.iisg.eca.domain
 class ParticipantType extends EventDomain {
     String type
     boolean withPaper = false
+    int importance = 0
 
     static hasMany = [  sessionParticipants:    SessionParticipant,
                         rulesFirst:             ParticipantTypeRule,
@@ -20,10 +21,11 @@ class ParticipantType extends EventDomain {
         id          column: 'participant_type_id'
         type        column: 'type'
         withPaper   column: 'with_paper'
+        importance  column: 'importance',           sort: 'desc'
     }
 
     static constraints = {
-        type    blank: false,   maxSize: 30
+        type        blank: false,   maxSize: 30
     }
 
     @Override

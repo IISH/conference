@@ -54,7 +54,7 @@ class SessionController {
             return
         }
 
-        def participants = SessionParticipant.findAllBySession(session).collect { [it, Paper.findAllByUserAndSession(it.user, session)] }
+        def participants = participantSessionService.getParticipantsForSession(session)
         def equipment = participantSessionService.getEquipmentForSession(session)
         render(view: "form", model: [   eventSession:   session,
                                         types:          ParticipantType.list(),
@@ -130,13 +130,16 @@ class SessionController {
 
                         if (session.save(flush: true)) {
                             // Everything is fine, return all updated data to the client
-                            def participants = SessionParticipant.findAllBySession(session).collect { [it, Paper.findAllByUserAndSession(it.user, session)] }
+                            def participants = participantSessionService.getParticipantsForSession(session)
                             def equipment = participantSessionService.getEquipmentForSession(session)
                             responseMap = [success: true, participants: participants.collect {
-                                [   it[0].user.id,
-                                    it[0].type.id,
-                                    it[1]*.id.join(','),
-                                    (it[0].type.withPaper) ? "${it[0].toString()} (${g.message(code: 'paper.label')}: ${it[1]*.title.join(', ')})" : it[0].toString()]
+                                [   id:             it.participant.user.id,
+                                    participant:    it.participant.user.toString(),
+                                    state:          it.participant.state.toString(),
+                                    types:          it.types.collect { pType ->
+                                                        [id: pType.id, type:  pType.toString()]
+                                                    },
+                                    paper:          (it.paper) ? "${g.message(code: 'paper.label')}: ${it.paper?.toString()}" : ""]
                             }, equipment: equipment]
                         }
                         else {
@@ -168,31 +171,26 @@ class SessionController {
             User user = User.get(params.user_id)
             ParticipantType type = ParticipantType.findById(params.type_id)
             Session session = Session.findById(params.session_id)
-            SessionParticipant sessionParticipant = SessionParticipant.findWhere(user: user, type: type)
-            List<Paper> papers =  []
-
-            if (params.paper_ids) {
-                papers = Paper.withCriteria {
-                    and {
-                        inList('id', params.paper_ids.trim().split(',').collect { it.toLong() })
-                        eq('session.id', session.id)
-                        eq('user.id', user.id)
-                    }
-                }
-            }
+            SessionParticipant sessionParticipant = SessionParticipant.findWhere(user: user, type: type, session: session)
 
             if (sessionParticipant) {
-                papers.each { session.removeFromPapers(it) }
-                sessionParticipant.deleted = true
+                sessionParticipant.delete()
+
+                if (type.withPaper) {
+                    session.papers.find { it.user.id == user.id }?.session = null
+                }
 
                 if (session.save(flush: true)) {
-                    def participants = SessionParticipant.findAllBySession(session).collect { [it, Paper.findAllByUserAndSession(it.user, session)] }
+                    def participants = participantSessionService.getParticipantsForSession(session)
                     def equipment = participantSessionService.getEquipmentForSession(session)
                     responseMap = [success: true, participants: participants.collect {
-                        [   it[0].user.id,
-                            it[0].type.id,
-                            it[1]*.id.join(','),
-                            (it[0].type.type.equalsIgnoreCase('author')) ? "${it[0].toString()} (${g.message(code: 'paper.label')}: ${it[1]*.title.join(', ')})" : it[0].toString()]
+                        [   id:             it.participant.user.id,
+                            participant:    it.participant.user.toString(),
+                            state:          it.participant.state.toString(),
+                            types:          it.types.collect { pType ->
+                                                [id: pType.id, type:  pType.toString()]
+                                            },
+                            paper:          (it.paper) ? "${g.message(code: 'paper.label')}: ${it.paper?.toString()}" : ""]
                     }, equipment: equipment]
                 }
                 else {
