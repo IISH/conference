@@ -1,5 +1,7 @@
 package org.iisg.eca.controller
 
+import org.iisg.eca.domain.User
+import org.iisg.eca.domain.EmailCode
 import org.iisg.eca.domain.EmailTemplate
 
 class EmailController {
@@ -7,63 +9,25 @@ class EmailController {
         redirect(action: 'list', params: params)
     }
 
-    def show() {
-        forward(controller: 'dynamicPage', action: 'get', params: params)
-    }
-
     def list() {
-        forward(controller: 'dynamicPage', action: 'get', params: params)
+
     }
 
-    def create() {
-        EmailTemplate template = new EmailTemplate()
-         
-        if (request.get) {
-            render(view: "form", model: [template: template])
-        }
-        else if (request.post) {
-            bindData(template, params, [include: ['usedBy', 'subject', 'body', 'sender', 'comment',
-                    'testEmail', 'testAfterSave']], "EmailTemplate")
+    def send() {
 
-            if (!template.save(flush: true)) {
-                render(view: "form", model: [template: template])
-                return
-            }
-
-           flash.message = message(code: 'default.created.message', args: [message(code: 'emailtemplate.label'), template.id])
-           redirect(uri: eca.createLink(action: "show", id: template.id, noBase: true))
-        }
     }
 
-    def edit() {
-        if (!params.id) {
-            flash.message = message(code: 'default.no.id.message')
-            redirect(uri: eca.createLink(previous: true, noBase: true))
-            return
-        }
-        
+    def example() {
         EmailTemplate template = EmailTemplate.findById(params.id)
+        User user = User.get(params.user)
 
-        if (!template) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'emailtemplate.label'), params.id])
-            redirect(uri: eca.createLink(previous: true, noBase: true))
-            return
-        }
-
-        if (request.get) {
-            render(view: "form", model: [template: template])
-        }
-        else if (request.post) {
-            bindData(template, params, [include: ['usedBy', 'subject', 'body', 'sender', 'comment',
-                    'testEmail', 'testAfterSave']], "EmailTemplate")
-
-            if (!template.save(flush: true)) {
-                render(view: "form", model: [template: template])
-                return
+        String email = template.body.toString()
+        for (EmailCode code : EmailCode.list()) {
+            if (email.contains("[${code.code}]")) {
+                email = email.replaceAll("\\[${code.code}\\]", code.translateForUser(user))
             }
-
-            flash.message = message(code: 'default.updated.message', args: [message(code: 'emailtemplate.label'), template.id])
-            redirect(uri: eca.createLink(action: "show", id: template.id, noBase: true))
         }
+
+        [email: email]
     }
 }
