@@ -50,7 +50,11 @@ input[type=text], input[type=password], input[type=number], input[type=email], i
 
 select {
     height: 22px;
-    width: 204px;
+   /* width: 204px;       */
+}
+
+select[size] {
+    height: 100%;
 }
 
 input[type=checkbox], input[type=radio] {
@@ -127,6 +131,25 @@ a:hover {
     color: #cc0000;
 }
 
+/* NAVIGATION */
+
+.navigation {
+    position: absolute;
+    color: #225496;
+    font-weight: bold; 
+    text-align: center;
+    top: 5px;
+    right: 0;
+}
+
+.navigation .prev, .navigation .next {
+    cursor: pointer;
+}
+
+.navigation .ui-icon-bullet {
+    cursor: default;
+}
+
 /* TABS */
 
 #tabs {
@@ -183,14 +206,14 @@ a:hover {
 
 /* LISTS AND FORMS */
 
-.form > div, .form > div > ul > li, .property-list > li {
+.form > div, .form div ul > li, .property-list > li , .property-list li ul > li {
     min-height: 22px;
     margin: 5px 0;
     line-height: 1.8;
     overflow: hidden;
 }
 
-.form > div > ul > li:first-child {
+.form > div ul > li:first-child, .property-list li ul > li:first-child {
     margin: 0;
 }
 
@@ -220,7 +243,7 @@ a:hover {
 }
 
 ul input[type=text], ul input[type=password], ul input[type=number],
-ul input[type=email], ul input[type=url], ul select {
+ul input[type=email], ul input[type=url]/*, ul select */{
     width: 120px;
 }
 
@@ -252,6 +275,11 @@ span.ui-icon {
     margin-left: 3px;
     position: relative;
     top: 1px;
+}
+
+.loading {
+    cursor: pointer;
+    font-weight: bold;
 }
 
 /* TABLES */
@@ -553,10 +581,6 @@ span.ui-icon {
 
 /* SESSIONS INFORMATION */
 
-.participant-state-value {
-    margin-right: 15px;
-}
-
 .participant-type-value {
     color: #225496;
     font-style: italic;
@@ -568,8 +592,21 @@ span.ui-icon {
     font-style: italic;
 }
 
-#session-participants li ul, #session-participants li ul li {
+.session-participants li ul, .session-participants li ul li {
     display: inline;
+    margin-left: 10px;
+}
+
+#not-in-session {
+    display: none;
+}
+
+#network-sessions .session, #not-in-session .participant {
+    font-weight: bold;
+}
+
+#network-sessions .session-participants, #not-in-session .participants  {
+    margin-left: 30px;
 }
 
 /* PLAN SESSIONS */

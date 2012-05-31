@@ -14,41 +14,6 @@
         </g:each>
         </div>
 
-        <div id="session-info-click" class="info">
-            <ol class="property-list">
-                <li>
-                    <span id="code-label" class="property-label">
-                        <g:message code="session.code.label" />
-                    </span>
-                    <span class="property-value" aria-labelledby="code-label"> </span>
-                </li>
-                <li>
-                    <span id="name-label" class="property-label">
-                        <g:message code="session.name.label" />
-                    </span>
-                    <span class="property-value" aria-labelledby="name-label"> </span>
-                </li>
-                <li>
-                    <span id="commnent-label" class="property-label">
-                        <g:message code="session.comment.label" />
-                    </span>
-                    <span class="property-value" aria-labelledby="commnent-label"> </span>
-                </li>
-                <li>
-                    <span id="participants-label" class="property-label">
-                        <g:message code="session.sessionparticipants.label" />
-                    </span>
-                    <ul class="property-value" aria-labelledby="participants-label"> </ul>
-                </li>
-                <li>
-                    <span id="equipment-label" class="property-label">
-                        <g:message code="equipment.label" />
-                    </span>
-                    <ul class="property-value" aria-labelledby="equipment-label"> </ul>
-                </li>
-            </ol>
-        </div>
-
         <table id="legenda-schedule">
             <tr class="equipment">
                 <td style="background-color:#f30;">Not possible</td>
@@ -130,6 +95,44 @@
         </table>
 
         <div id="loading">LOADING...</div>
+
+        <div id="session-info-container">
+            <div class="pointer"></div>
+            <div id="session-info" class="info">
+                <ol class="property-list">
+                    <li>
+                        <span id="code-label" class="property-label">
+                            <g:message code="session.code.label" />
+                        </span>
+                        <span class="property-value" aria-labelledby="code-label"> </span>
+                    </li>
+                    <li>
+                        <span id="name-label" class="property-label">
+                            <g:message code="session.name.label" />
+                        </span>
+                        <span class="property-value" aria-labelledby="name-label"> </span>
+                    </li>
+                    <li>
+                        <span id="commnent-label" class="property-label">
+                            <g:message code="session.comment.label" />
+                        </span>
+                        <span class="property-value" aria-labelledby="commnent-label"> </span>
+                    </li>
+                    <li>
+                        <span id="participants-label" class="property-label">
+                            <g:message code="session.sessionparticipants.label" />
+                        </span>
+                        <ul class="property-value" aria-labelledby="participants-label"> </ul>
+                    </li>
+                    <li>
+                        <span id="equipment-label" class="property-label">
+                            <g:message code="equipment.label" />
+                        </span>
+                        <ul class="property-value" aria-labelledby="equipment-label"> </ul>
+                    </li>
+                </ol>
+            </div>
+        </div>
 
         <div id="room-info-container">
             <div class="pointer"></div>

@@ -11,6 +11,7 @@ import org.iisg.eca.domain.ParticipantDate
 import org.iisg.eca.domain.Setting
 import org.iisg.eca.domain.SessionDateTime
 import org.iisg.eca.domain.Room
+import org.iisg.eca.domain.Network
 import org.iisg.eca.domain.Equipment
 import org.iisg.eca.domain.SessionRoomDateTime
 
@@ -24,7 +25,24 @@ class SessionController {
     }
 
     def show() {
-        forward(controller: 'dynamicPage', action: 'get')
+        if (!params.id) {
+            flash.message = message(code: 'default.no.id.message')
+            redirect(uri: eca.createLink(previous: true, noBase: true))
+            return
+        }
+
+        Session session = Session.findById(params.id)
+        if (!session) {
+            flash.message =  message(code: 'default.not.found.message', args: [message(code: 'session.label'), params.id])
+            redirect(uri: eca.createLink(previous: true, noBase: true))
+            return
+        }
+
+        def participants = participantSessionService.getParticipantsForSession(session)
+        def equipment = participantSessionService.getEquipmentForSession(session)
+        render(view: "show", model: [   eventSession:   session,
+                                        participants:   participants,
+                                        equipment:      equipment])
     }
 
     def list() {
@@ -47,7 +65,6 @@ class SessionController {
         }
         
         Session session = Session.findById(params.id)
-
         if (!session) {
             flash.message =  message(code: 'default.not.found.message', args: [message(code: 'session.label'), params.id])
             redirect(uri: eca.createLink(previous: true, noBase: true))
@@ -59,7 +76,8 @@ class SessionController {
         render(view: "form", model: [   eventSession:   session,
                                         types:          ParticipantType.list(),
                                         participants:   participants,
-                                        equipment:      equipment])
+                                        equipment:      equipment,
+                                        networks:       Network.list()])
     }
 
     /**
@@ -292,7 +310,7 @@ class SessionController {
         }
     }
 
-    def possibilitiesAndInfo() {
+    /*def possibilitiesAndInfo() {
         if (request.xhr && params.session_id) {
             Map possibilitiesResponse = [:]
             Session session = Session.findById(params.long('session_id'))
@@ -319,7 +337,7 @@ class SessionController {
 
             render possibilitiesResponse as JSON
         }
-    }
+    }         */
 
     def sessionInfo() {
         if (request.xhr && params.session_id) {

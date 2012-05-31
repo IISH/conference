@@ -8,7 +8,7 @@ var setSessionData = function(data) {
     errorsBox.hide();
 
     if (data.success) {
-        var participantsContainer = $('#session-participants');
+        var participantsContainer = $('.session-participants');
         var clone = participantsContainer.find('li.hidden').clone(true);
         var item;
 
@@ -147,7 +147,7 @@ $(document).ready(function() {
         );
     });
 
-    $('.ui-icon-circle-minus').live('click', function(e) {
+    $('.session-participants .ui-icon-circle-minus').live('click', function(e) {
         var element = $(this).parents('.participant-type-value');
         var parentElement = $(this).parents('li');
 
@@ -164,5 +164,37 @@ $(document).ready(function() {
                 );
             }
         });
-   });
+    });
+
+    $('.loading').click(function(e) {
+        var element = $(this);
+
+        $.getJSON('../participantsNotScheduled', {network_id: $(this).find('input').val()}, function(data) {
+            var participantsContainer = $('#not-in-session');
+            var clone = participantsContainer.find('li:eq(0)')
+            var item;
+
+            participantsContainer.html("");
+            for (var i=0; i<data.participants.length; i++) {
+                item = clone.clone(true);
+                item.find('.participant').text(data.participants[i].participant);
+                item.find('.participant').attr('href', data.participants[i].url);
+
+                var papersContainer = item.find('.participants');
+                var paperClone = papersContainer.find('li');
+                var paperItem;
+                for (var j=0; j<data.participants[i].papers.length; j++) {
+                    paperItem = paperClone.clone(true);
+                    paperItem.text(data.participants[i].papers[j].name + " (" + data.participants[i].papers[j].state + ")");
+                    papersContainer.append(paperItem);
+                }
+                paperClone.remove();
+
+                participantsContainer.append(item);
+            }
+            clone.remove();
+            element.remove();
+            participantsContainer.show();
+        });
+    });
 });

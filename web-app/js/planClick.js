@@ -120,7 +120,7 @@ $(document).ready(function() {
     });
 
     timeSlots = $('#schedule td.time-slot');
-    sessionInfo = $('#session-info-click');
+    sessionInfo = $('#session-info-container');
     roomInfo = $('#room-info-container');
 
     $('#sessions-unscheduled .ui-icon').hide();
@@ -143,14 +143,8 @@ $(document).ready(function() {
 
             curSessionId = parseInt(checkbox.val());
 
-            $.getJSON('./possibilitiesAndInfo', {'session_id': curSessionId}, function(data) {
-                sessionInfo.find('#code-label').next().text(data.code);
-                sessionInfo.find('#name-label').next().text(data.name);
-                sessionInfo.find('#commnent-label').next().text(data.comment);
-                sessionInfo.find('#participants-label').next().html('<li>'+data.participants.join('</li><li>')+'</li>');
-                sessionInfo.find('#equipment-label').next().html('<li>'+data.equipment.join('</li><li>')+'</li>');
-
-                var equipmentCodes = findIndexesThatMatch(data['equipment-ids']);
+            $.getJSON('./possibilities', {'session_id': curSessionId}, function(data) {
+                var equipmentCodes = findIndexesThatMatch(data.equipment);
                 timeSlots.each(function() {
                     var timeSlot = $(this);
                     var equipmentCode = timeSlot.find('input[name=equipment-combo-code]').val();
@@ -160,7 +154,7 @@ $(document).ready(function() {
                         timeSlot.css('background-color', '#f30');
                         timeSlot.removeClass("click-to-plan");
                     }
-                    else if (isBestChoice(equipmentCode, data['equipment-ids'])) {
+                    else if (isBestChoice(equipmentCode, data.equipment)) {
                         timeSlot.css('background-color', '#ff0');
                         timeSlot.addClass("click-to-plan");
                     }
@@ -237,6 +231,60 @@ $(document).ready(function() {
                 }
             });
         }
+    });
+
+    $('.session-block').mouseenter(function() {
+        var element = $(this);
+        noShow = false;
+
+        setTimeout(function() {
+            if (!noShow) {
+                sessionInfo.hide();
+                roomInfo.hide();
+
+                var session_id = element.find('input[name=session-id]').val();
+                $.getJSON('./sessionInfo', {'session_id': session_id}, function(data) {
+                    if (data.success) {
+                        sessionInfo.find('#code-label').next().text(data.code);
+                        sessionInfo.find('#name-label').next().text(data.name);
+                        sessionInfo.find('#commnent-label').next().text(data.comment);
+                        sessionInfo.find('#participants-label').next().html('<li>'+data.participants.join('</li><li>')+'</li>');
+                        sessionInfo.find('#equipment-label').next().html('<li>'+data.equipment.join('</li><li>')+'</li>');
+                    }
+                    else {
+                        sessionInfo.find('#code-label').next().text(data.message);
+                    }
+
+                    var position = element.position();
+                    var contentWidth = $('#content').outerWidth();
+                    var contentHeight = $('#content').outerHeight();
+                    var infoElementWidth = sessionInfo.outerWidth();
+                    var infoElementHeight = sessionInfo.outerHeight();
+
+                    var top = position.top + element.outerHeight() - 5;
+                    var left = position.left;
+
+                    if ((left + infoElementWidth) > contentWidth) {
+                        left = left - (infoElementWidth - (contentWidth - left));
+                    }
+
+                    if ((top + infoElementHeight) > contentHeight) {
+                        top = top - (infoElementHeight - (contentHeight - top));
+                    }
+
+                    sessionInfo.css({
+                        top:    top,
+                        left:   left
+                    });
+                    sessionInfo.show();
+                });
+            }
+        }, 500);
+    });
+
+    $('.session-block').mouseleave(function() {
+        noShow = true;
+        sessionInfo.hide();
     });
 
     $('.room-indicator').mouseenter(function() {

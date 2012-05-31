@@ -17,6 +17,7 @@ class Session extends EventDateDomain {
     static mapping = {
         table 'sessions'
         version false
+        sort        code: 'asc'
 
         id          column: 'session_id'
         date        column: 'date_id'

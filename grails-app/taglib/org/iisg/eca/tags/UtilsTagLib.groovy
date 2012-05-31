@@ -25,6 +25,32 @@ class UtilsTagLib {
             out << attrs.text.encodeAsHTML().replaceAll("\n", "<br />")
         }
     }
+    
+    /**
+     * Tag creating navigation buttons 
+     */
+    def navigation = { attrs -> 
+        MarkupBuilder builder = new MarkupBuilder(out)
+        builder.doubleQuotes = true
+        
+        builder.div(class: "navigation") {
+            if (attrs.prev) {
+                builder.a(class: "prev", href: attrs.prev) {                    
+                    builder.span(class: "ui-icon ui-icon-arrowthick-1-w", "")                    
+                    builder.span(g.message(code: "default.paginate.prev"))
+                }
+            }
+            
+            builder.span(class: "ui-icon ui-icon-bullet", "")
+            
+            if (attrs.next) {
+                builder.a(class: "next", href: attrs.next) {
+                    builder.span(g.message(code: "default.paginate.next"))
+                    builder.span(class: "ui-icon ui-icon-arrowthick-1-e", "")
+                }
+            }
+        }
+    }
 
     /**
      * Tag creating a boolean select box

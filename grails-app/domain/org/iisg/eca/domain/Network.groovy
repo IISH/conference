@@ -32,7 +32,8 @@ class Network extends EventDateDomain {
         comment column: 'comment',      type: 'text'
         url     column: 'url'
 
-        sessions joinTable: 'session_in_network'
+        chairs      sort: 'isMainChair',    order: 'desc'
+        sessions    joinTable: 'session_in_network'
     }
     
     @Override

@@ -8,6 +8,7 @@ import org.iisg.eca.domain.ParticipantTypeRule
 import org.iisg.eca.domain.SessionParticipant
 import org.iisg.eca.utils.ParticipantSessionInfo
 import org.iisg.eca.domain.ParticipantDate
+import org.iisg.eca.domain.Network
 
 /**
  * Service responsible for requesting participant data in order to allow them in a session
@@ -94,6 +95,55 @@ class ParticipantSessionService {
         }
 
         sessionInformation
+    }
+
+    /**
+     * Returns a map with information about every participant added to the network
+     * The participant information is accessible by the sessions belonging to the network
+     * @param network The network in question
+     * @return A set of <code>ParticipantSessionInfo</code> objects
+     */
+    Map<Session, ParticipantSessionInfo> getParticipantsForNetwork(Network network) {
+        Map sessions = [:]
+
+        Session.executeQuery('''
+            SELECT s
+            FROM Session AS s
+            INNER JOIN s.networks AS n
+            WHERE n.id = :networkId
+            ORDER BY s.code
+        ''', [networkId: network.id]).each { session ->
+            sessions.put(session, getParticipantsForSession(session))
+        }
+
+        sessions
+    }
+
+    /**
+     * Returns a map of all participants of which their papers were proposed for the given network,
+     * but are not scheduled in any of the network's sessions
+     * @param network The network in question
+     * @return A map of participants and their papers that were not scheduled in any of the sessions yet
+     */
+    Map<ParticipantDate, List<Paper>> getParticipantsNotInNetwork(Network network) {
+        Map<ParticipantDate, List<Paper>> papersNotScheduled = [:]
+
+        // TODO Think what should happen in the future if participants have multiple papers, one paper could be
+        // assigned to a session but the other not, should the participant be shown in the list?
+        ParticipantDate.executeQuery('''
+            SELECT pd, p
+            FROM ParticipantDate AS pd
+            INNER JOIN pd.user AS u
+            INNER JOIN u.papers AS p
+            WHERE p.networkProposal.id = :networkId
+            AND p.session IS NULL
+            AND pd.state.id = 2
+        ''', [networkId: network.id]).each { result ->
+            List<Paper> papers = papersNotScheduled.get(result[0], new ArrayList<Paper>())
+            papers.add(result[1])
+        }
+
+        papersNotScheduled
     }
 
     /**
