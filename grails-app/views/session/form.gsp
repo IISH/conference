@@ -2,9 +2,11 @@
 <html xmlns="http://www.w3.org/1999/html">
 	<head>
         <meta name="layout" content="main">
-        <g:javascript src="network-session.js" />
+        <g:javascript src="session.js" />
+        <g:javascript src="participants-in-sessions.js" />
 	</head>
 	<body>
+        <input type="hidden" name="id" value="${params.id}" />
         <g:set var="maxPapers" value="${Setting.getByProperty(Setting.MAX_PAPERS_PER_PERSON_PER_SESSION).value?.toInteger()}" />
         
         <g:hasErrors bean="${eventSession}">
@@ -62,7 +64,7 @@
                     <ul class="property-value">
                         <g:each in="${eventSession.networks}" var="network" status="i">
                             <li>
-                                <g:select name="Session_${i}.network.id" from="${networks}" optionKey="id" value="${network.id}" />
+                                <g:select name="Session_${i}.networks.id" from="${networks}" optionKey="id" value="${network.id}" />
                                 <span class="ui-icon ui-icon-circle-minus"></span>
                             </li>
                         </g:each>
@@ -71,7 +73,7 @@
                             <g:message code="default.add.label" args="[g.message(code: 'network.label')]" />
                         </li>
                         <li class="hidden">
-                            <g:select name="Session_null.network.id" from="${networks}" optionKey="id" />
+                            <g:select name="Session_null.networks.id" from="${networks}" optionKey="id" />
                             <span class="ui-icon ui-icon-circle-minus"></span>
                         </li>
                     </ul>

@@ -100,6 +100,7 @@ class ParticipantController {
                     ParticipantVolunteering pv = new ParticipantVolunteering()
                     bindData(pv, params, [include: ['volunteering', 'network']], "ParticipantVolunteering_${i}")
                     participant.addToParticipantVolunteering(pv)
+                    i++
                 }
 
                 i = 0

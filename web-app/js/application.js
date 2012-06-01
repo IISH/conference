@@ -17,6 +17,25 @@ var setContentWidth = function() {
     content.css("width", bodyWidth-navWidth-(contentMargin*2) + "px");
 }
 
+var showErrors = function(data) {
+    var errorsBox = $('.errors');
+    errorsBox.hide();
+
+    if (errorsBox.length === 0) {
+        errorsBox = $('h1').after('<ul class="errors" role="alert"></ul>').next();
+    }
+    errorsBox.html("");
+
+    if ($.isArray(data.message)) {
+        for (var i=0; i<data.message.length; i++) {
+            errorsBox.prepend('<li>' + data.message[i] + '</li>');
+        }
+    }
+    else {
+        errorsBox.prepend('<li>' + data.message + '</li>');
+    }
+}
+
 $(document).ready(function() {
     content = $('#content');
     body = $('body');
@@ -72,7 +91,7 @@ $(document).ready(function() {
         });
     });*/
 
-    $('fieldset span.ui-icon-circle-plus').click(function(e) {
+    $('.add > span.ui-icon-circle-plus').click(function(e) {
         var parent = $(this).parent();
         var lastItem = parent.prev();
         var clone = parent.next().clone(true);

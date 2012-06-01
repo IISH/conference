@@ -2,9 +2,12 @@
 <html>
 	<head>
 		<meta name="layout" content="main">
-        <g:javascript src="network-session.js" />
+        <g:javascript src="network.js" />
+        <g:javascript src="participants-in-sessions.js" />
 	</head>
 	<body>
+        <input type="hidden" name="id" value="${params.id}" />
+
         <ol class="property-list">
           <li>
             <span id="name-label" class="property-label">

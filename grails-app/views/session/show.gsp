@@ -4,6 +4,7 @@
 		<meta name="layout" content="main">
 	</head>
 	<body>
+        <input type="hidden" name="id" value="${params.id}" />
         <eca:navigation prev="${eca.createLink(action: params.action, id: params.int('id')-1)}" next="${eca.createLink(action: params.action, id: params.int('id')+1)}" />
 
         <ol class="property-list">

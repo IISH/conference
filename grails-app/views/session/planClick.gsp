@@ -7,8 +7,7 @@
         <div id="sessions-unscheduled">
         <g:each in="${sessionsUnscheduled}" var="session">
             <div class="session-block">
-                <input type="checkbox" name="session-id" value="${session.id}" />
-                <span class="ui-icon ui-icon-circle-minus"></span>
+                <input type="hidden" name="session-id" value="${session.id}" />
                 ${session.code}
             </div>
         </g:each>
@@ -72,8 +71,7 @@
 
                     <g:if test="${timeSlot.session}">
                         <div class="session-block">
-                            <input type="checkbox" name="session-id" value="${timeSlot.session.id}" />
-                            <span class="ui-icon ui-icon-circle-minus"></span>
+                            <input type="hidden" name="session-id" value="${timeSlot.session.id}" />
                             ${timeSlot.session.code}
                         </div>
                     </g:if>

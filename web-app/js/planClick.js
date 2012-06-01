@@ -1,6 +1,7 @@
-var noShow = true;
+var timeOut = null;
 var curSessionId = null;
 var curSessionBlock = null;
+var curSessionBlockParent = null;
 var equipment = {};
 var timeSlots;
 var sessionInfo;
@@ -60,9 +61,9 @@ var isBestChoice = function(equipmentComboCode, equipmentIds) {
 
 var disableTableWithLoading = function(enable) {
     var overlay = $('#loading');
-    var schedule = $('#schedule');
 
     if (enable) {
+        var schedule = $('#schedule');
         var position = schedule.position();
 
         overlay.css({
@@ -77,14 +78,6 @@ var disableTableWithLoading = function(enable) {
     else {
         overlay.hide();
     }
-}
-
-var clearSessionInfo = function() {
-    sessionInfo.find('#code-label').next().text("");
-    sessionInfo.find('#name-label').next().text("");
-    sessionInfo.find('#commnent-label').next().text("");
-    sessionInfo.find('#participants-label').next().html("");
-    sessionInfo.find('#equipment-label').next().html("");
 }
 
 $(document).ready(function() {
@@ -123,25 +116,29 @@ $(document).ready(function() {
     sessionInfo = $('#session-info-container');
     roomInfo = $('#room-info-container');
 
-    $('#sessions-unscheduled .ui-icon').hide();
-    $('#schedule input').hide();
-    $('input[type=checkbox]').attr("checked", false);
-
-    $('#sessions-unscheduled .session-block').live("click", function(e) {
+    $('.session-block').click(function(e) {
         disableTableWithLoading(true);
-
-        curSessionBlock = $(this);
-        var checkbox = curSessionBlock.find('input[type=checkbox]');
-
-        if (e.target !== checkbox[0]) {
-            checkbox.attr('checked', !checkbox.attr('checked'));
+        
+        var element = $(this);        
+        if (element.hasClass('selected')) {
+            element.removeClass('selected');
+            curSessionId = null;
+            curSessionBlock = null;
+            curSessionBlockParent = null;
+            
+            timeSlots.css('background-color', 'transparent');
+            timeSlots.removeClass('click-to-plan');
+            $('#sessions-unscheduled').removeClass('click-to-plan');
         }
+        else {
+            if (curSessionBlock !== null) {
+                curSessionBlock.removeClass('selected');
+            }
 
-        if (checkbox.is(':checked')) {
-            $('#sessions-unscheduled input[type=checkbox]').attr("checked", false);
-            checkbox.attr("checked", true);
-
-            curSessionId = parseInt(checkbox.val());
+            curSessionBlock = element;
+            curSessionBlock.addClass('selected');
+            curSessionBlockParent = curSessionBlock.parent();
+            curSessionId = parseInt(curSessionBlock.find('input').val());
 
             $.getJSON('./possibilities', {'session_id': curSessionId}, function(data) {
                 var equipmentCodes = findIndexesThatMatch(data.equipment);
@@ -156,21 +153,17 @@ $(document).ready(function() {
                     }
                     else if (isBestChoice(equipmentCode, data.equipment)) {
                         timeSlot.css('background-color', '#ff0');
-                        timeSlot.addClass("click-to-plan");
+                        (curSessionBlockParent[0] === timeSlot[0]) ? timeSlot.removeClass("click-to-plan") : timeSlot.addClass("click-to-plan");
                     }
                     else {
                         timeSlot.css('background-color', equipment[equipmentCode].css);
-                        timeSlot.addClass("click-to-plan");
+                        (curSessionBlockParent[0] === timeSlot[0]) ? timeSlot.removeClass("click-to-plan") : timeSlot.addClass("click-to-plan");
                     }
                 });
+
+                var unscheduled = $('#sessions-unscheduled');
+                (curSessionBlockParent[0] === unscheduled[0]) ? unscheduled.removeClass('click-to-plan') : unscheduled.addClass('click-to-plan');
             });
-        }
-        else {
-            curSessionId = null;
-            curSessionBlock = null;
-            clearSessionInfo();
-            timeSlots.css('background-color', 'transparent');
-            timeSlots.removeClass("click-to-plan");
         }
 
         disableTableWithLoading(false);
@@ -198,139 +191,143 @@ $(document).ready(function() {
                     }
 
                     if (contPlan) {
-                        $('#sessions-unscheduled').prepend(plannedSession);
-                        plannedSession.find('.ui-icon').hide();
-                        plannedSession.find('input').show();
-
-                        element.prepend(curSessionBlock);
-                        curSessionBlock.find('input').attr('checked', false).hide();
-                        curSessionBlock.find('.ui-icon').show();
+                        $('#sessions-unscheduled').prepend(plannedSession);                        
+                        element.prepend(curSessionBlock);                        
                     }
                 }
+                
+                curSessionBlock.removeClass('selected');
                 curSessionId = null;
                 curSessionBlock = null;
+                curSessionBlockParent = null;
             }
         );
-
-        clearSessionInfo();
+        
         timeSlots.css('background-color', 'transparent');
         timeSlots.removeClass("click-to-plan");
+        $('#sessions-unscheduled').removeClass("click-to-plan");
         disableTableWithLoading(false);
     });
 
-    $('.time-slot .ui-icon').live("click", function() {
-        var element = $(this).parents('.session-block');
-        var sure = confirm("Are you sure?");
+    $('#sessions-unscheduled.click-to-plan').live("click", function() {
+        disableTableWithLoading(true);
+        var element = $(this);
 
-        if (sure) {
-            $.getJSON('./returnSession', {'session_id': element.find('input').val()}, function(data) {
+        $.getJSON(
+            './returnSession', {'session_id': curSessionId}, function(data) {
                 if (data.success) {
-                    $('#sessions-unscheduled').prepend(element);
-                    element.find('.ui-icon').hide();
-                    element.find('input').show();
+                    element.prepend(curSessionBlock);
                 }
-            });
-        }
-    });
 
+                curSessionBlock.removeClass('selected');
+                curSessionId = null;
+                curSessionBlock = null;
+                curSessionBlockParent = null;
+            }
+        );
+
+        timeSlots.css('background-color', 'transparent');
+        timeSlots.removeClass("click-to-plan");
+        $('#sessions-unscheduled').removeClass("click-to-plan");
+        disableTableWithLoading(false);
+    });
+    
     $('.session-block').mouseenter(function() {
         var element = $(this);
-        noShow = false;
 
-        setTimeout(function() {
-            if (!noShow) {
-                sessionInfo.hide();
-                roomInfo.hide();
+        clearTimeout(timeOut);
+        sessionInfo.hide();
 
-                var session_id = element.find('input[name=session-id]').val();
-                $.getJSON('./sessionInfo', {'session_id': session_id}, function(data) {
-                    if (data.success) {
-                        sessionInfo.find('#code-label').next().text(data.code);
-                        sessionInfo.find('#name-label').next().text(data.name);
-                        sessionInfo.find('#commnent-label').next().text(data.comment);
-                        sessionInfo.find('#participants-label').next().html('<li>'+data.participants.join('</li><li>')+'</li>');
-                        sessionInfo.find('#equipment-label').next().html('<li>'+data.equipment.join('</li><li>')+'</li>');
-                    }
-                    else {
-                        sessionInfo.find('#code-label').next().text(data.message);
-                    }
+        timeOut = setTimeout(function() {
+            roomInfo.hide();
 
-                    var position = element.position();
-                    var contentWidth = $('#content').outerWidth();
-                    var contentHeight = $('#content').outerHeight();
-                    var infoElementWidth = sessionInfo.outerWidth();
-                    var infoElementHeight = sessionInfo.outerHeight();
+            var session_id = element.find('input[name=session-id]').val();
+            $.getJSON('./sessionInfo', {'session_id': session_id}, function(data) {
+                if (data.success) {
+                    sessionInfo.find('#code-label').next().text(data.code);
+                    sessionInfo.find('#name-label').next().text(data.name);
+                    sessionInfo.find('#commnent-label').next().text(data.comment);
+                    sessionInfo.find('#participants-label').next().html('<li>'+data.participants.join('</li><li>')+'</li>');
+                    sessionInfo.find('#equipment-label').next().html('<li>'+data.equipment.join('</li><li>')+'</li>');
+                }
+                else {
+                    sessionInfo.find('#code-label').next().text(data.message);
+                }
 
-                    var top = position.top + element.outerHeight() - 5;
-                    var left = position.left;
+                var position = element.position();
+                var contentWidth = $('#content').outerWidth();
+                var contentHeight = $('#content').outerHeight();
+                var infoElementWidth = sessionInfo.outerWidth();
+                var infoElementHeight = sessionInfo.outerHeight();
 
-                    if ((left + infoElementWidth) > contentWidth) {
-                        left = left - (infoElementWidth - (contentWidth - left));
-                    }
+                var top = position.top + element.outerHeight();
+                var left = position.left;
 
-                    if ((top + infoElementHeight) > contentHeight) {
-                        top = top - (infoElementHeight - (contentHeight - top));
-                    }
+                if ((left + infoElementWidth) > contentWidth) {
+                    left = left - (infoElementWidth - (contentWidth - left));
+                }
 
-                    sessionInfo.css({
-                        top:    top,
-                        left:   left
-                    });
-                    sessionInfo.show();
+                if ((top + infoElementHeight) > contentHeight) {
+                    top = top - (infoElementHeight - (contentHeight - top));
+                }
+
+                sessionInfo.css({
+                    top:    top,
+                    left:   left
                 });
-            }
+                sessionInfo.show();
+            });
         }, 500);
     });
 
     $('.session-block').mouseleave(function() {
-        noShow = true;
+        clearTimeout(timeOut);
         sessionInfo.hide();
     });
 
     $('.room-indicator').mouseenter(function() {
         var element = $(this);
-        noShow = false;
 
-        setTimeout(function() {
-            if (!noShow) {
-                sessionInfo.hide();
-                roomInfo.hide();
+        clearTimeout(timeOut);
+        roomInfo.hide();
 
-                var roomId = element.find('input[name=room-id]').val();
-                $.getJSON('./roomInfo', {'room_id': roomId}, function(data) {
-                    if (data.success) {
-                        roomInfo.find('#roomnumnber-label').next().text(data.number);
-                        roomInfo.find('#roomname-label').next().text(data.name);
-                        roomInfo.find('#noofseats-label').next().text(data.seats);
-                        roomInfo.find('#roomcomment-label').next().text(data.comment);
-                    }
-                    else {
-                        roomInfo.find('#code-label').next().text(data.message);
-                    }
+        timeOut = setTimeout(function() {
+            sessionInfo.hide();
 
-                    var position = element.position();
-                    var contentHeight = $('#content').outerHeight();
-                    var infoElementHeight = roomInfo.outerHeight();
+            var roomId = element.find('input[name=room-id]').val();
+            $.getJSON('./roomInfo', {'room_id': roomId}, function(data) {
+                if (data.success) {
+                    roomInfo.find('#roomnumnber-label').next().text(data.number);
+                    roomInfo.find('#roomname-label').next().text(data.name);
+                    roomInfo.find('#noofseats-label').next().text(data.seats);
+                    roomInfo.find('#roomcomment-label').next().text(data.comment);
+                }
+                else {
+                    roomInfo.find('#code-label').next().text(data.message);
+                }
 
-                    var top = position.top + 5;
-                    var left = position.left + 20;
+                var position = element.position();
+                var contentHeight = $('#content').outerHeight();
+                var infoElementHeight = roomInfo.outerHeight();
 
-                    if ((top + infoElementHeight) > contentHeight) {
-                        top = top - (infoElementHeight - (contentHeight - top));
-                    }
+                var top = position.top + 5;
+                var left = position.left + 20;
 
-                    roomInfo.css({
-                        top:    top,
-                        left:   left
-                    });
-                    roomInfo.show();
+                if ((top + infoElementHeight) > contentHeight) {
+                    top = top - (infoElementHeight - (contentHeight - top));
+                }
+
+                roomInfo.css({
+                    top:    top,
+                    left:   left
                 });
-            }
+                roomInfo.show();
+            });
         }, 500);
     });
 
     $('.room-indicator').mouseleave(function() {
-        noShow = true;
+        clearTimeout(timeOut);
         roomInfo.hide();
     });
 });

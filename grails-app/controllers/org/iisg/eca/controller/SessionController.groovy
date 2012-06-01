@@ -71,6 +71,22 @@ class SessionController {
             return
         }
 
+        if (request.post) {
+            bindData(session, params, [include: ["code", "name", "comment", "enabeled"]], "Session")
+
+            int i = 0
+            while (params["Session_${i}"]) {
+                bindData(session, params, [include: ['networks']], "Session_${i}")
+                i++
+            }
+
+            if (session.save(flush: true)) {
+                flash.message = message(code: 'default.updated.message', args: [message(code: 'session.label')])
+                redirect(uri: eca.createLink(action: 'list', noBase: true))
+                return
+            }
+        }
+
         def participants = participantSessionService.getParticipantsForSession(session)
         def equipment = participantSessionService.getEquipmentForSession(session)
         render(view: "form", model: [   eventSession:   session,

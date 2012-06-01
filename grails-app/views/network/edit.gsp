@@ -3,9 +3,12 @@
 <html>
 	<head>
 		<meta name="layout" content="main">
-        <g:javascript src="network-session.js" />
+        <g:javascript src="network.js" />
+        <g:javascript src="participants-in-sessions.js" />
 	</head>
 	<body>
+        <input type="hidden" name="id" value="${params.id}" />
+
         <g:hasErrors bean="${network}">
           <ul class="errors" role="alert">
             <g:eachError bean="${network}" var="error">
@@ -100,20 +103,20 @@
                 <ul class="property-value">
                     <li>
                         <g:select name="Network_${i}.sessions.id" from="${Session.list()}" optionKey="id" value="${session.id}" />
-                        <span class="ui-icon ui-icon-circle-plus"></span>
+                        <span class="ui-icon ui-icon-circle-plus add-session"></span>
                     </li>
                     <li>
                         <label class="property-label">
                             <g:message code="session.code.label" />
-                            <input type="text" maxlength="10" name="Session.code" />
+                            <input type="text" maxlength="10" name="Session.code" class="session-code" />
                         </label>
 
                         <label class="property-label">
                             <g:message code="session.name.label" />
-                            <input type="text" name="Session.name" />
+                            <input type="text" name="Session.name" class="session-name" />
                         </label>
 
-                        <span class="ui-icon ui-icon-circle-plus"></span>
+                        <span class="ui-icon ui-icon-circle-plus add-new-session"></span>
                     </li>
                 </ul>
               </div>
@@ -124,8 +127,9 @@
                   <ul id="network-sessions" class="property-value">
                     <g:each in="${sessions}" var="session">
                     <li>
+                        <input type="hidden" name="session-id" value="${session.key.id}" class="session-id" />
                         <span class="session">${session.key.toString()}</span>
-                        <span class="ui-icon ui-icon-circle-minus"></span>
+                        <span class="ui-icon ui-icon-circle-minus remove-session"></span>
 
                         <ul class="session-participants" class="property-value">
                           <g:each in="${session.value}" var="participant" status="i">
@@ -148,21 +152,29 @@
                                   </g:if>
                               </li>
                           </g:each>
-                          <li class="hidden">
-                              <span class="participant-value"> </span>
-                              <span class="participant-state-value"> </span>
-
-                              <ul>
-                                  <li class="participant-type-value">
-                                      <span class="participant-type-val"> </span>
-                                  </li>
-                              </ul>
-
-                              <span class="participant-paper-value"> </span>
-                          </li>
-                      </ul>
+                        </ul>
                     </li>
                     </g:each>
+                    <li class="hidden">
+                      <input type="hidden" name="session-id" class="session-id" />
+                      <span class="session"> </span>
+                      <span class="ui-icon ui-icon-circle-minus remove-session"></span>
+
+                      <ul class="session-participants" class="property-value">
+                        <li>
+                            <span class="participant-value"> </span>
+                            <span class="participant-state-value"> </span>
+
+                            <ul>
+                                <li class="participant-type-value">
+                                    <span class="participant-type-val"> </span>
+                                </li>
+                            </ul>
+
+                            <span class="participant-paper-value"> </span>
+                        </li>
+                      </ul>
+                    </li>
                   </ul>
               </div>
               <div>
