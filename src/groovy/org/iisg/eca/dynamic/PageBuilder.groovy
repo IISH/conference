@@ -412,13 +412,13 @@ class PageBuilder {
      */
     private static getCode(GrailsDomainClassProperty property) {
         if (property.name.equalsIgnoreCase("enabled") || property.name.equalsIgnoreCase("deleted")) {
-            return "default.${property.name.toLowerCase()}.label"
+            return "default.${property.name}.label"
         }
         else if (property.manyToOne || property.oneToOne || property.oneToMany || property.manyToMany) {
-            return "${property.referencedDomainClass.name.toLowerCase()}.multiple.label"
+            return "${property.referencedDomainClass.name}.multiple.label"
         }
         else {
-            return "${property.domainClass.propertyName.toLowerCase()}.${property.name.toLowerCase()}.label"
+            return "${property.domainClass.propertyName}.${property.name}.label"
         }
     }
     

@@ -90,7 +90,7 @@
                 </div>
                 <div>
                     <label class="property-label">
-                        <g:message code="session.sessionparticipants.label" />
+                        <g:message code="session.sessionParticipants.label" />
                     </label>
                     <ul class="session-participants property-value">
                         <g:each in="${participants}" var="participant" status="i">

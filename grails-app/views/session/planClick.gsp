@@ -5,12 +5,12 @@
 	</head>
 	<body>
         <div id="sessions-unscheduled">
-        <g:each in="${sessionsUnscheduled}" var="session">
+            <g:each in="${sessionsUnscheduled}" var="session">
             <div class="session-block">
                 <input type="hidden" name="session-id" value="${session.id}" />
                 ${session.code}
             </div>
-        </g:each>
+            </g:each>
         </div>
 
         <table id="legenda-schedule">

@@ -7,7 +7,7 @@
         <ol class="property-list">
             <li>
                 <span id="roomName-label" class="property-label">
-                    <g:message code="room.roomname.label" />
+                    <g:message code="room.roomName.label" />
                 </span>
                 <span class="property-value" arial-labelledby="roomName-label">
                     <g:fieldValue bean="${room}" field="roomName" />
@@ -15,7 +15,7 @@
             </li>
             <li>
                 <span id="roomNumber-label" class="property-label">
-                    <g:message code="room.roomnumber.label" />
+                    <g:message code="room.roomNumber.label" />
                 </span>
                 <span class="property-value" arial-labelledby="roomNumber-label">
                     <g:fieldValue bean="${room}" field="roomNumber" />
@@ -23,7 +23,7 @@
             </li>
             <li>
                 <span id="noOfSeats-label" class="property-label">
-                    <g:message code="room.noofseats.label" />
+                    <g:message code="room.noOfSeats.label" />
                 </span>
                 <span class="property-value" arial-labelledby="noOfSeats-label">
                     <g:fieldValue bean="${room}" field="noOfSeats" />

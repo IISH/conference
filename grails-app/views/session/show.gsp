@@ -58,7 +58,7 @@
           </li>
           <li>
             <span id="participants-label" class="property-label">
-              <g:message code="session.sessionparticipants.label" />
+              <g:message code="session.sessionParticipants.label" />
             </span>
             <ul class="session-participants property-value" arial-labelledby="participants-label">
                 <g:each in="${participants}" var="participant" status="i">

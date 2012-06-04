@@ -8,12 +8,12 @@
             <h3>${feeState.toString()}</h3>
 
             <g:if test="${ feeState.isDefaultFee }">
-                <span class="action"><g:message code="feestate.isdefaultfee.label" /></span>
+                <span class="action"><g:message code="feeState.isDefaultFee.label" /></span>
             </g:if>
 
             <span class="action">
                 <eca:link controller="fee" action="edit" id="${feeState.id}">
-                    <g:message code="default.edit.label" args="[message(code: 'feestate.label').toLowerCase()]" />
+                    <g:message code="default.edit.label" args="[message(code: 'feeState.label').toLowerCase()]" />
                 </eca:link>
             </span>
 
@@ -21,9 +21,9 @@
                 <thead>
                     <tr>
                         <td class="id hidden"></td>
-                        <td><g:message code="feeamount.numdays.label" /></td>
-                        <td><g:message code="feeamount.enddate.label" /></td>
-                        <td><g:message code="feeamount.feeamount.label" /></td>
+                        <td><g:message code="feeAmount.numDays.label" /></td>
+                        <td><g:message code="feeAmount.endDate.label" /></td>
+                        <td><g:message code="feeAmount.feeAmount.label" /></td>
                     </tr>
                 </thead>
                 <tbody>

@@ -43,13 +43,13 @@
             </div>
             <div class="${hasErrors(bean: network, field: 'showOnline', 'error')} ">
               <label class="property-label" for="Network.showOnline">
-                <g:message code="network.showonline.label" />
+                <g:message code="network.showOnline.label" />
               </label>
               <g:checkBox id="Network.showOnline" name="Network.showOnline" value="${network.showOnline}" class="property-value" />
             </div>
             <div class="${hasErrors(bean: network, field: 'showInternal', 'error')} ">
               <label class="property-label" for="Network.showInternal">
-                <g:message code="network.showinternal.label" />
+                <g:message code="network.showInternal.label" />
               </label>
               <g:checkBox id="Network.showInternal" name="Network.showInternal" value="${network.showInternal}" class="property-value" />
             </div>
@@ -72,7 +72,7 @@
                       <g:select id="chair" name="NetworkChair_${i}.chair.id" value="${instance.chair.id}" optionKey="id" class="property-value" from="${User.list()}" required="required" />
                     </label>
                     <label class="property-label">
-                      <g:message code="networkchair.ismainchair.label" />
+                      <g:message code="networkChair.isMainChair.label" />
                       <g:checkBox id="NetworkChair_${i}.isMainChair" name="NetworkChair_${i}.isMainChair" value="${instance.isMainChair}" class="property-value" />
                     </label>
                     <span class="ui-icon ui-icon-circle-minus"></span>
@@ -89,7 +89,7 @@
                     <g:select id="chair" name="NetworkChair_${i}.chair.id" optionKey="id" class="property-value" from="${User.list()}" required="required" />
                   </label>
                   <label class="property-label">
-                    <g:message code="networkchair.ismainchair.label" />
+                    <g:message code="networkChair.isMainChair.label" />
                     <g:checkBox id="NetworkChair_${i}.isMainChair" name="NetworkChair_${i}.isMainChair" class="property-value" />
                   </label>
                   <span class="ui-icon ui-icon-circle-minus"></span>

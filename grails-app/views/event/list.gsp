@@ -32,7 +32,7 @@
                             <li>
                                 <span class="action">
                                     <eca:link controller="eventDate" action="create" id="${evt.id}">
-                                        <g:message code="default.add.label" args="[message(code: 'eventdate.label').toLowerCase()]" />
+                                        <g:message code="default.add.label" args="[message(code: 'eventDate.label').toLowerCase()]" />
                                     </eca:link>
                                 </span>
                             </li>

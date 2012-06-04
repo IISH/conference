@@ -18,18 +18,18 @@
         <form method="post" action="#">
           <fieldset class="form">
             <div class="${hasErrors(bean: template, field: 'usedBy', 'error')} required">
-              <label class="property-label" for="EmailTemplate.usedBy">
-                <g:message code="emailtemplate.usedby.label" />
+              <label class="property-label" for="emailTemplate.usedBy">
+                <g:message code="emailTemplate.usedBy.label" />
                 <span class="required-indicator">*</span>
               </label>
-              <input class="property-value" id="EmailTemplate.usedBy" maxlength="255" name="EmailTemplate.usedBy" value="${template?.usedBy}" type="text" required="required" />
+              <input class="property-value" id="emailTemplate.usedBy" maxlength="255" name="emailTemplate.usedBy" value="${template?.usedBy}" type="text" required="required" />
             </div>
             <div class="${hasErrors(bean: template, field: 'subject', 'error')} required">
-              <label class="property-label" for="EmailTemplate.subject">
-                <g:message code="emailtemplate.subject.label" />
+              <label class="property-label" for="emailTemplate.subject">
+                <g:message code="emailTemplate.subject.label" />
                 <span class="required-indicator">*</span>
               </label>
-              <input class="property-value" id="EmailTemplate.subject" maxlength="78" name="EmailTemplate.subject" value="${template?.subject}" type="text" required="required" />
+              <input class="property-value" id="emailTemplate.subject" maxlength="78" name="emailTemplate.subject" value="${template?.subject}" type="text" required="required" />
             </div>
             <div>
                 <label class="property-label"></label>
@@ -40,36 +40,36 @@
                 </ul>
             </div>
             <div class="${hasErrors(bean: template, field: 'body', 'error')} required">
-              <label class="property-label" for="EmailTemplate.body">
-                <g:message code="emailtemplate.body.label" />
+              <label class="property-label" for="emailTemplate.body">
+                <g:message code="emailTemplate.body.label" />
                 <span class="required-indicator">*</span>
               </label>
-              <textarea class="property-value" id="EmailTemplate.body" style="width:70%;" name="EmailTemplate.body" required="required" rows="20">${template?.body}</textarea>
+              <textarea class="property-value" id="emailTemplate.body" style="width:70%;" name="emailTemplate.body" required="required" rows="20">${template?.body}</textarea>
             </div>
             <div class="${hasErrors(bean: template, field: 'sender', 'error')} required">
-              <label class="property-label" for="EmailTemplate.sender">
-                <g:message code="emailtemplate.sender.label" />
+              <label class="property-label" for="emailTemplate.sender">
+                <g:message code="emailTemplate.sender.label" />
                 <span class="required-indicator">*</span>
               </label>
-              <input class="property-value" id="EmailTemplate.sender" maxlength="30" name="EmailTemplate.sender" value="${template?.sender}" type="text" required="required" />
+              <input class="property-value" id="emailTemplate.sender" maxlength="30" name="emailTemplate.sender" value="${template?.sender}" type="text" required="required" />
             </div>
             <div class="${hasErrors(bean: template, field: 'comment', 'error')} ">
-              <label class="property-label" for="EmailTemplate.comment">
-                <g:message code="emailtemplate.comment.label" />
+              <label class="property-label" for="emailTemplate.comment">
+                <g:message code="emailTemplate.comment.label" />
               </label>
-              <textarea class="property-value" id="EmailTemplate.comment" cols="40" name="EmailTemplate.comment" rows="5">${template?.comment}</textarea>
+              <textarea class="property-value" id="emailTemplate.comment" cols="40" name="emailTemplate.comment" rows="5">${template?.comment}</textarea>
             </div>
             <div class="${hasErrors(bean: template, field: 'testAfterSave', 'error')} ">
-              <label class="property-label" for="EmailTemplate.testAfterSave">
-                <g:message code="emailtemplate.testaftersave.label" />
+              <label class="property-label" for="emailTemplate.testAfterSave">
+                <g:message code="emailTemplate.testAfterSave.label" />
               </label>
-              <input class="property-value" type="checkbox" id="EmailTemplate.testAfterSave" name="EmailTemplate.testAfterSave" value="${template?.testAfterSave}" />
+              <input class="property-value" type="checkbox" id="emailTemplate.testAfterSave" name="emailTemplate.testAfterSave" value="${template?.testAfterSave}" />
             </div>
             <div class="${hasErrors(bean: template, field: 'testEmail', 'error')} ">
-              <label class="property-label" for="EmailTemplate.testEmail">
-                <g:message code="emailtemplate.testemail.label" />
+              <label class="property-label" for="emailTemplate.testEmail">
+                <g:message code="emailTemplate.testEmail.label" />
               </label>
-              <input class="property-value" id="EmailTemplate.testEmail" maxlength="255" name="EmailTemplate.testEmail" value="${sec.username()}" type="email" />
+              <input class="property-value" id="emailTemplate.testEmail" maxlength="255" name="emailTemplate.testEmail" value="${sec.username()}" type="email" />
             </div>
           </fieldset>
           <fieldset class="buttons">

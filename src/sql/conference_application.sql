@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 01, 2012 at 04:51 PM
+-- Generation Time: Jun 04, 2012 at 05:00 PM
 -- Server version: 5.0.86
 -- PHP Version: 5.2.10
 
@@ -333,7 +333,7 @@ CREATE TABLE IF NOT EXISTS `dates` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`date_id`),
   KEY `dates_event_id_idx` (`event_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=14 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=15 ;
 
 --
 -- Dumping data for table `dates`
@@ -563,7 +563,7 @@ CREATE TABLE IF NOT EXISTS `events` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`event_id`),
   UNIQUE KEY `code` (`code`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
 
 --
 -- Dumping data for table `events`
@@ -796,10 +796,10 @@ CREATE TABLE IF NOT EXISTS `pages` (
 INSERT INTO `pages` (`page_id`, `title_code`, `title_arg`, `title_default`, `controller`, `action`, `description`, `parent_page_id`, `enabled`, `deleted`) VALUES
 (1, 'default.overview.label', 'event.label', 'Event overview', 'event', 'show', NULL, NULL, 1, 0),
 (2, 'default.edit.label', 'event.label', 'Edit event', 'event', 'edit', NULL, NULL, 1, 0),
-(3, 'default.overview.label', 'eventdate.label', 'Event date overview', 'eventDate', 'show', NULL, NULL, 1, 0),
-(4, 'default.edit.label', 'eventdate.label', 'Edit event date', 'eventDate', 'edit', NULL, NULL, 1, 0),
+(3, 'default.overview.label', 'eventDate.label', 'Event date overview', 'eventDate', 'show', NULL, NULL, 1, 0),
+(4, 'default.edit.label', 'eventDate.label', 'Edit event date', 'eventDate', 'edit', NULL, NULL, 1, 0),
 (5, 'default.create.label', 'event.label', 'Create event', 'event', 'create', NULL, NULL, 1, 0),
-(6, 'default.create.label', 'eventdate.label', 'Create event date', 'eventDate', 'create', NULL, NULL, 1, 0),
+(6, 'default.create.label', 'eventDate.label', 'Create event date', 'eventDate', 'create', NULL, NULL, 1, 0),
 (7, 'default.create.label', 'network.label', 'Create network', 'network', 'create', NULL, NULL, 1, 0),
 (8, 'default.create.label', 'title.label', 'Create title', 'title', 'create', NULL, NULL, 1, 0),
 (9, 'event.multiple.label', NULL, 'Events', 'event', 'list', NULL, NULL, 1, 0),
@@ -822,34 +822,34 @@ INSERT INTO `pages` (`page_id`, `title_code`, `title_arg`, `title_default`, `con
 (27, 'default.edit.label', 'session.label', 'Edit session', 'session', 'edit', NULL, NULL, 1, 0),
 (28, 'default.create.label', 'session.label', 'Create session', 'session', 'create', NULL, NULL, 1, 0),
 (29, 'default.overview.label', 'session.label', 'Session overview', 'session', 'show', NULL, NULL, 1, 0),
-(30, 'default.create.label', 'feestate.label', 'Create fee state', 'fee', 'create', NULL, NULL, 1, 0),
-(31, 'default.edit.label', 'feestate.label', 'Edit fee state', 'fee', 'edit', NULL, NULL, 1, 0),
-(32, 'default.list.label', 'feestate.multiple.label', 'List fee states', 'fee', 'list', NULL, NULL, 1, 0),
-(33, 'default.create.label', 'participantstate.label', 'Create participant state', 'participantState', 'create', NULL, NULL, 1, 0),
-(34, 'default.edit.label', 'participantstate.label', 'Edit participant state', 'participantState', 'edit', NULL, NULL, 1, 0),
-(35, 'default.overview.label', 'participantstate.label', 'Participant state overview', 'participantState', 'show', NULL, NULL, 1, 0),
-(36, 'default.list.label', 'participantstate.multiple.label', 'Participant states list', 'participantState', 'list', NULL, NULL, 1, 0),
-(37, 'default.list.label', 'participantdate.label', 'Participant list', 'participant', 'list', NULL, NULL, 1, 0),
-(38, 'default.overview.label', 'participantdate.label', 'User overview', 'participant', 'show', NULL, NULL, 1, 0),
+(30, 'default.create.label', 'feeState.label', 'Create fee state', 'fee', 'create', NULL, NULL, 1, 0),
+(31, 'default.edit.label', 'feeState.label', 'Edit fee state', 'fee', 'edit', NULL, NULL, 1, 0),
+(32, 'default.list.label', 'feeState.multiple.label', 'List fee states', 'fee', 'list', NULL, NULL, 1, 0),
+(33, 'default.create.label', 'participantState.label', 'Create participant state', 'participantState', 'create', NULL, NULL, 1, 0),
+(34, 'default.edit.label', 'participantState.label', 'Edit participant state', 'participantState', 'edit', NULL, NULL, 1, 0),
+(35, 'default.overview.label', 'participantState.label', 'Participant state overview', 'participantState', 'show', NULL, NULL, 1, 0),
+(36, 'default.list.label', 'participantState.multiple.label', 'Participant states list', 'participantState', 'list', NULL, NULL, 1, 0),
+(37, 'default.list.label', 'participantDate.label', 'Participant list', 'participant', 'list', NULL, NULL, 1, 0),
+(38, 'default.overview.label', 'participantDate.label', 'User overview', 'participant', 'show', NULL, NULL, 1, 0),
 (39, 'default.plan.drag.label', 'session.multiple.label', 'Plan sessions (Drag)', 'session', 'planDrag', NULL, NULL, 1, 0),
-(40, 'default.create.label', 'emailtemplate.label', 'Create email template', 'emailTemplate', 'create', NULL, NULL, 1, 0),
-(41, 'default.edit.label', 'emailtemplate.label', 'Edit email template', 'emailTemplate', 'edit', NULL, NULL, 1, 0),
-(42, 'default.list.label', 'emailtemplate.multiple.label', 'List email templates', 'emailTemplate', 'list', NULL, NULL, 1, 0),
-(43, 'default.overview.label', 'emailtemplate.label', 'Show email template', 'emailTemplate', 'show', NULL, NULL, 1, 0),
-(44, 'default.create.label', 'emailcode.label', 'Create email code', 'emailCode', 'create', NULL, NULL, 1, 0),
-(45, 'default.edit.label', 'emailcode.label', 'Edit email code', 'emailCode', 'edit', NULL, NULL, 1, 0),
-(46, 'default.list.label', 'emailcode.multiple.label', 'List email code', 'emailCode', 'list', NULL, NULL, 1, 0),
-(47, 'default.overview.label', 'emailcode.label', 'Show email code', 'emailCode', 'show', NULL, NULL, 1, 0),
+(40, 'default.create.label', 'emailTemplate.label', 'Create email template', 'emailTemplate', 'create', NULL, NULL, 1, 0),
+(41, 'default.edit.label', 'emailTemplate.label', 'Edit email template', 'emailTemplate', 'edit', NULL, NULL, 1, 0),
+(42, 'default.list.label', 'emailTemplate.multiple.label', 'List email templates', 'emailTemplate', 'list', NULL, NULL, 1, 0),
+(43, 'default.overview.label', 'emailTemplate.label', 'Show email template', 'emailTemplate', 'show', NULL, NULL, 1, 0),
+(44, 'default.create.label', 'emailCode.label', 'Create email code', 'emailCode', 'create', NULL, NULL, 1, 0),
+(45, 'default.edit.label', 'emailCode.label', 'Edit email code', 'emailCode', 'edit', NULL, NULL, 1, 0),
+(46, 'default.list.label', 'emailCode.multiple.label', 'List email code', 'emailCode', 'list', NULL, NULL, 1, 0),
+(47, 'default.overview.label', 'emailCode.label', 'Show email code', 'emailCode', 'show', NULL, NULL, 1, 0),
 (48, 'default.list.label', 'setting.multiple.label', 'List settings', 'setting', 'list', NULL, NULL, 1, 0),
 (49, 'default.edit.label', 'setting.label', 'Edit setting', 'setting', 'edit', NULL, NULL, 1, 0),
-(50, 'default.create.label', 'requestmap.label', 'Create request map', 'requestmap', 'create', NULL, NULL, 1, 0),
-(51, 'default.edit.label', 'requestmap.label', 'Edit request map', 'requestmap', 'edit', NULL, NULL, 1, 0),
-(52, 'default.list.label', 'requestmap.label', 'Request map list', 'requestmap', 'list', NULL, NULL, 1, 0),
-(53, 'default.overview.label', 'requestmap.label', 'Show request map', 'requestmap', 'show', NULL, NULL, 1, 0),
+(50, 'default.create.label', 'requestMap.label', 'Create request map', 'requestmap', 'create', NULL, NULL, 1, 0),
+(51, 'default.edit.label', 'requestMap.label', 'Edit request map', 'requestmap', 'edit', NULL, NULL, 1, 0),
+(52, 'default.list.label', 'requestMap.label', 'Request map list', 'requestmap', 'list', NULL, NULL, 1, 0),
+(53, 'default.overview.label', 'requestMap.label', 'Show request map', 'requestmap', 'show', NULL, NULL, 1, 0),
 (54, 'default.list.label', 'extra.label', 'Extra list', 'extra', 'list', NULL, NULL, 1, 0),
-(55, 'default.list.label', 'participantdate.inventationletter.label', 'Inventation letter list', 'participant', 'inventations', NULL, NULL, 1, 0),
-(56, 'default.list.label', 'participantdate.lowerfee.label', 'Lower fee list', 'participant', 'lowerFee', NULL, NULL, 1, 0),
-(57, 'default.list.label', 'participantdate.label', 'Participant list', 'participant', 'listAll', NULL, NULL, 1, 0),
+(55, 'default.list.label', 'participantDate.inventationLetter.label', 'Inventation letter list', 'participant', 'inventations', NULL, NULL, 1, 0),
+(56, 'default.list.label', 'participantDate.lowerFee.label', 'Lower fee list', 'participant', 'lowerFee', NULL, NULL, 1, 0),
+(57, 'default.list.label', 'participantDate.label', 'Participant list', 'participant', 'listAll', NULL, NULL, 1, 0),
 (58, 'default.plan.click.label', 'session.multiple.label', 'Plan sessions (Click)', 'session', 'planClick', NULL, NULL, 1, 0),
 (59, 'default.send.label', 'email.label', 'Send e-mail', 'email', 'list', NULL, NULL, 1, 0),
 (60, 'default.send.label', 'email.label', 'Send e-mail', 'email', 'send', NULL, NULL, 1, 0);
@@ -1411,10 +1411,7 @@ INSERT INTO `sessions` (`session_id`, `date_id`, `session_code`, `session_name`,
 (1, 13, 'AFR02', 'Knowledge, Culture and Empowerment', NULL, 1, 0),
 (2, 13, 'ANT02', 'Urban Labour in Roman Italy', NULL, 1, 0),
 (3, 13, 'ANT03', 'The Social Institution of Money in the Ancient World', NULL, 1, 0),
-(4, 13, 'ANT04', 'Social Networks Analysis and the Ancient Economy: Networks Around Commodities', NULL, 1, 0),
-(5, 13, 'TEST', 'Test session', NULL, 1, 0),
-(6, 13, 'AB10', 'Should be on top', NULL, 1, 0),
-(7, 13, 'HOI', 'Hoi', NULL, 1, 0);
+(4, 13, 'ANT04', 'Social Networks Analysis and the Ancient Economy: Networks Around Commodities', NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1536,7 +1533,7 @@ CREATE TABLE IF NOT EXISTS `session_room_datetime` (
 --
 
 INSERT INTO `session_room_datetime` (`room_id`, `session_datetime_id`, `session_id`) VALUES
-(4, 9, 1);
+(5, 4, 3);
 
 -- --------------------------------------------------------
 
@@ -1553,7 +1550,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`setting_id`),
   KEY `settings_event_id_idx` (`event_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=7 ;
 
 --
 -- Dumping data for table `settings`
@@ -1564,7 +1561,8 @@ INSERT INTO `settings` (`setting_id`, `property`, `value`, `event_id`, `enabled`
 (2, 'max_papers_per_person_per_session', '1', 4, 1, 0),
 (3, 'max_papers_per_person_per_session', NULL, NULL, 1, 0),
 (4, 'salt', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, 1, 0),
-(5, 'role_hierarchy', 'superAdmin > admin admin > user user > participant', NULL, 1, 0);
+(5, 'role_hierarchy', 'superAdmin > admin admin > user user > participant', NULL, 1, 0),
+(6, 'show_programme_online', '0', NULL, 1, 0);
 
 -- --------------------------------------------------------
 

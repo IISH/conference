@@ -50,7 +50,7 @@ class DynamicPageController {
             render(view: '../layouts/content.gsp', model: [page: dynamicPage, content: dynamicPageService.getTemplate(dynamicPage, params)])
         }
         else if (request.post) {
-            List results = dynamicPagePostService.saveFormData(dynamicPage.elements.find { it.eid == params.int('eid') }, params)
+            DynamicPageResults results = dynamicPagePostService.saveFormData(dynamicPage.elements.find { it.eid == params.int('eid') }, params)
             
             // If there are no results, it was most likely not a form; just return the same page...
             if (!results) {
@@ -59,7 +59,7 @@ class DynamicPageController {
             }
             
             // If validation fails, return the page and show the errors
-            if (!results.grep { it.hasErrors() }.isEmpty()) {
+            if (!results.get().grep { it.hasErrors() }.isEmpty()) {
                 render(view: '../layouts/content.gsp', model: [page: dynamicPage, content: dynamicPageService.getTemplate(dynamicPage, params, results)])
                 return
             }

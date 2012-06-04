@@ -28,7 +28,7 @@ class DynamicPagePostService {
      * @param params The data filled out by the user to be saved in the database
      * @return A list of domain objects which were saved to the database
      */
-    List saveFormData(DataContainer element, GrailsParameterMap params) {
+    DynamicPageResults saveFormData(DataContainer element, GrailsParameterMap params) {
         // This element should be a form...
         if (element?.type == DataContainer.Type.FORM) {
             DynamicPageResults results = new DynamicPageResults(element, params)
@@ -97,7 +97,7 @@ class DynamicPagePostService {
             // We're done, save the results that have to be saved
             resultsToSave.each { it.save() }
 
-            return results.get()
+            return results
         }
         
         return null

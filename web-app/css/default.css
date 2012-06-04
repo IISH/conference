@@ -39,7 +39,7 @@ input, textarea, select {
     font-size: 9pt;
     background: #FFFFFF;
     border: 1px solid #7F9DB9;
-    vertical-align: middle;
+   /* vertical-align: middle;*/
 }
 
 input[type=text], input[type=password], input[type=number], input[type=email], input[type=url] {

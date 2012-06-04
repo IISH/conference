@@ -35,7 +35,7 @@
           </li>
           <li>
             <span id="showOnline-label" class="property-label">
-              <g:message code="network.showonline.label" />
+              <g:message code="network.showOnline.label" />
             </span>
             <span class="property-value" arial-labelledby="showOnline-label">
               <g:checkBox name="showOnline" value="${network.showOnline}" disabled="true" />
@@ -43,7 +43,7 @@
           </li>
           <li>
             <span id="showInternal-label" class="property-label">
-              <g:message code="network.showinternal.label" />
+              <g:message code="network.showInternal.label" />
             </span>
             <span class="property-value" arial-labelledby="showInternal-label">
               <g:checkBox name="showInternal" value="${network.showInternal}" disabled="true" />

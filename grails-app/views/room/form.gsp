@@ -8,21 +8,21 @@
             <fieldset class="form">
                 <div class="${hasErrors(bean: room, field: 'roomName', 'error')} required">
                     <label class="property-label" for="roomName">
-                        <g:message code="room.roomname.label" />
+                        <g:message code="room.roomName.label" />
                         <span class="required-indicator">*</span>
                     </label>
                     <input class="property-value" type="text" name="roomName" maxlength="30" required="required" value="${fieldValue(bean: room, field: 'roomName')}" />
                 </div>
                 <div class="${hasErrors(bean: room, field: 'roomNumber', 'error')} required">
                     <label class="property-label" for="roomNumber">
-                        <g:message code="room.roomnumber.label" />
+                        <g:message code="room.roomNumber.label" />
                         <span class="required-indicator">*</span>
                     </label>
                     <input class="property-value" type="text" name="roomNumber" maxlength="10" required="required" value="${fieldValue(bean: room, field: 'roomNumber')}" />
                 </div>
                 <div class="${hasErrors(bean: room, field: 'noOfSeats', 'error')} required">
                     <label class="property-label" for="noOfSeats">
-                        <g:message code="room.noofseats.label" />
+                        <g:message code="room.noOfSeats.label" />
                         <span class="required-indicator">*</span>
                     </label>
                     <input class="property-value" type="number" name="noOfSeats" required="required" value="${fieldValue(bean: room, field: 'noOfSeats')}"/>
