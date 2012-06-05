@@ -745,6 +745,16 @@ ul input.session-name {
     top: 15px;
 }
 
+/* EMAIL */
+
+#email-templates ul {
+    margin-bottom: 20px;
+}
+
+#email-templates li {
+    margin: 5px 0;
+}
+
 /* HELPERS */
 
 .left {

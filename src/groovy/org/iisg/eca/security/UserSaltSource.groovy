@@ -36,7 +36,7 @@ class UserSaltSource extends ReflectionSaltSource {
      */
     private static Object createSalt(String userSalt) {
         // Get the static salt from the settings table
-        String staticSalt = Setting.getByProperty(Setting.SALT).value
+        String staticSalt = Setting.getByEvent(Setting.findAllByProperty(Setting.SALT)).value
         staticSalt + userSalt
     }
 }

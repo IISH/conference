@@ -137,7 +137,7 @@ class SessionController {
                     // Find out if the participant also needs to add a paper to the session
                     if (type.withPaper) {
                         // If only one paper is allowed, get that one
-                        Integer maxPapers = Setting.getByProperty(Setting.MAX_PAPERS_PER_PERSON_PER_SESSION).value?.toInteger()
+                        Integer maxPapers = Setting.getByEvent(Setting.findAllByProperty(Setting.MAX_PAPERS_PER_PERSON_PER_SESSION)).value?.toInteger()
                         if ((maxPapers == null || maxPapers > 1) && params.paper_id) {
                             paper = Paper.findById(params.paper_id)
                         }
@@ -359,14 +359,20 @@ class SessionController {
         if (request.xhr && params.session_id) {
             Map possibilitiesResponse = [:]
             Session session = Session.findById(params.long('session_id'))
+            def participants = participantSessionService.getParticipantsForSession(session)
 
             if (session) {
-                possibilitiesResponse.put('success', true)
-                possibilitiesResponse.put('code', session.code)
-                possibilitiesResponse.put('name', session.name)
-                possibilitiesResponse.put('comment', session.comment)
-                possibilitiesResponse.put('participants', session.sessionParticipants.collect { it.toString() })
-                possibilitiesResponse.put('equipment', sessionPlannerService.getEquipment(session).collect { it.toString() })
+                possibilitiesResponse.put('success',        true)
+                possibilitiesResponse.put('code',           session.code)
+                possibilitiesResponse.put('name',           session.name)
+                possibilitiesResponse.put('comment',        session.comment)
+                possibilitiesResponse.put('equipment',      sessionPlannerService.getEquipment(session).collect { it.toString() })
+                possibilitiesResponse.put('participants',   participants.collect {
+                    [   participant:    it.participant.user.toString(),
+                        state:          it.participant.state.toString(),
+                        types:          it.types.collect { pType -> [type: pType.toString()] },
+                        paper:          (it.paper) ? "${g.message(code: 'paper.label')}: ${it.paper?.toString()}" : ""] }
+                )
             }
             else {
                 possibilitiesResponse = [success: false, message: 'Not found!']

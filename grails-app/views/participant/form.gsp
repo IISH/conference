@@ -252,7 +252,7 @@
                 </div>
 
                 <div id="papers-tab" class="columns">
-                    <input type="hidden" name="max-papers" value="${Setting.getByProperty(Setting.MAX_PAPERS_PER_PERSON_PER_SESSION).value}" />
+                    <input type="hidden" name="max-papers" value="${Setting.getByEvent(Setting.findAllByProperty(Setting.MAX_PAPERS_PER_PERSON_PER_SESSION)).value}" />
 
                     <g:if test="${participant}">
                     <g:each in="${participant.user.papers}" var="paper" status="i">

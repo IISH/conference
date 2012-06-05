@@ -3,8 +3,6 @@ dataSource {
     driverClassName = "com.mysql.jdbc.Driver"
     dialect = org.hibernate.dialect.MySQL5InnoDBDialect
     dbCreate = "validate"
-    logSql = true
-    formatSql = true
     configClass = org.grails.plugin.hibernate.filter.HibernateFilterDomainConfiguration.class
 }
 hibernate {
@@ -19,6 +17,8 @@ environments {
             username = "eca"
             password = "Ec0nfApp38"
             url = "jdbc:mysql://cottus.iisg.nl/eca"
+            logSql = true
+            formatSql = true
         }
     }
     test {

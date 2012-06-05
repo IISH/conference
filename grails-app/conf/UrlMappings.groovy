@@ -32,6 +32,11 @@ class UrlMappings {
             controller = 'event'
             action = 'list'
         }
+
+        name email: "/$event/$date/email/send/$type/$id?" {
+            controller = 'email'
+            action = 'send'
+        }
         
         // Errors:
         "500" (view:'/error')

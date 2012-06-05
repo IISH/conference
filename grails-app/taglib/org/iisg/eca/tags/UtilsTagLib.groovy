@@ -209,12 +209,16 @@ class UtilsTagLib {
         if (attrs.event && attrs.date) {
             attrs.params.put('event', attrs.event)
             attrs.params.put('date', attrs.date)
-            attrs.mapping = 'eventDate'
+            if (!attrs.mapping) {
+                attrs.mapping = 'eventDate'
+            }
         }
         else if (params.event && params.date) {
             attrs.params.put('event', params.event)
             attrs.params.put('date', params.date)
-            attrs.mapping = 'eventDate'
+            if (!attrs.mapping) {
+                attrs.mapping = 'eventDate'
+            }
         }
 
         // Link back to the previous page

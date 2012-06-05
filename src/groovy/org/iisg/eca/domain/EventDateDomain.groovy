@@ -29,11 +29,25 @@ abstract class EventDateDomain extends DefaultDomain {
     }
     
     def beforeUpdate() {
-        if (pageInformation.date) {
-            date = pageInformation.date
+        if (this.date != pageInformation.date) {
+            // TODO: Create trigger???
         }
-        else {
-            date = null 
+    }
+
+    /**
+     * Searches the list and will try to return the one specifically specified for the current event date
+     * @return The element from the list for the current event date if available
+     */
+    static def getByDate(List list) {
+        def element = null
+
+        if (list.size() > 0) {
+            element = list.find { it.date?.id == pageInformation.date?.id }
+            if (!element) {
+                element = list.get(0)
+            }
         }
+
+        element
     }
 }

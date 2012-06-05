@@ -3,7 +3,7 @@ package org.iisg.eca.domain
 /**
  * Domain class of table holding all participants (users) who signed up for an event date
  */
-class ParticipantDate extends EventDateDomain implements Serializable {
+class ParticipantDate extends EventDateDomain {
     User user
     ParticipantState state
     FeeState feeState
@@ -20,6 +20,7 @@ class ParticipantDate extends EventDateDomain implements Serializable {
     static mapping = {
         table 'participant_date'
         version false
+        sort participantVolunteering: 'volunteering'
 
         id                      column: 'participant_date_id'
         user                    column: 'user_id'
@@ -33,12 +34,39 @@ class ParticipantDate extends EventDateDomain implements Serializable {
         lowerFeeText            column: 'lower_fee_text'
 
         extras  joinTable: 'participant_date_extra'
-
-        sort    participantVolunteering: 'volunteering'
     }
 
     static constraints = {
         lowerFeeText    nullable: true, maxSize: 255
+    }
+
+    static namedQueries = {
+        paperAccepted { date ->
+            user {
+                papers {
+                    eq('state.id', 2L)
+                    eq('date.id', date.id)
+                }
+            }
+        }
+
+        paperInConsideration { date ->
+            user {
+                papers {
+                    eq('state.id', 4L)
+                    eq('date.id', date.id)
+                }
+            }
+        }
+
+        paperNotAccepted { date ->
+            user {
+                papers {
+                    eq('state.id', 3L)
+                    eq('date.id', date.id)
+                }
+            }
+        }
     }
 
     @Override
@@ -46,3 +74,4 @@ class ParticipantDate extends EventDateDomain implements Serializable {
         user.toString()
     }
 }
+

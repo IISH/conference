@@ -80,6 +80,20 @@ var disableTableWithLoading = function(enable) {
     }
 }
 
+var unselectSession = function() {
+    curSessionBlock.removeClass('selected');
+            
+    curSessionId = null;
+    curSessionBlock = null;
+    curSessionBlockParent = null;
+
+    timeSlots.css('background-color', 'transparent');
+    timeSlots.removeClass('click-to-plan');
+    $('#sessions-unscheduled').removeClass('click-to-plan');
+    
+    disableTableWithLoading(false);
+}
+
 $(document).ready(function() {
     var equipmentCombos = $('.equipment-combos');
     var colorsCount = 0;
@@ -116,19 +130,20 @@ $(document).ready(function() {
     sessionInfo = $('#session-info-container');
     roomInfo = $('#room-info-container');
 
+    $(document).keypress(function(e) {
+        if (e.keyCode === 27 && curSessionBlock !== null) {
+            unselectSession();
+        }
+    });
+
     $('.session-block').click(function(e) {
+        e.stopPropagation();
         disableTableWithLoading(true);
         
         var element = $(this);        
         if (element.hasClass('selected')) {
             element.removeClass('selected');
-            curSessionId = null;
-            curSessionBlock = null;
-            curSessionBlockParent = null;
-            
-            timeSlots.css('background-color', 'transparent');
-            timeSlots.removeClass('click-to-plan');
-            $('#sessions-unscheduled').removeClass('click-to-plan');
+            unselectSession();
         }
         else {
             if (curSessionBlock !== null) {
@@ -163,13 +178,13 @@ $(document).ready(function() {
 
                 var unscheduled = $('#sessions-unscheduled');
                 (curSessionBlockParent[0] === unscheduled[0]) ? unscheduled.removeClass('click-to-plan') : unscheduled.addClass('click-to-plan');
+                
+                 disableTableWithLoading(false);
             });
         }
-
-        disableTableWithLoading(false);
     });
 
-    $('.time-slot.click-to-plan').live("click", function() {
+    $('.time-slot.click-to-plan').live("click", function(e) {
         disableTableWithLoading(true);
 
         var element = $(this);
@@ -194,22 +209,13 @@ $(document).ready(function() {
                         $('#sessions-unscheduled').prepend(plannedSession);                        
                         element.prepend(curSessionBlock);                        
                     }
-                }
-                
-                curSessionBlock.removeClass('selected');
-                curSessionId = null;
-                curSessionBlock = null;
-                curSessionBlockParent = null;
+                }                
+                unselectSession();
             }
         );
-        
-        timeSlots.css('background-color', 'transparent');
-        timeSlots.removeClass("click-to-plan");
-        $('#sessions-unscheduled').removeClass("click-to-plan");
-        disableTableWithLoading(false);
     });
 
-    $('#sessions-unscheduled.click-to-plan').live("click", function() {
+    $('#sessions-unscheduled.click-to-plan').live("click", function(e) {
         disableTableWithLoading(true);
         var element = $(this);
 
@@ -218,18 +224,9 @@ $(document).ready(function() {
                 if (data.success) {
                     element.prepend(curSessionBlock);
                 }
-
-                curSessionBlock.removeClass('selected');
-                curSessionId = null;
-                curSessionBlock = null;
-                curSessionBlockParent = null;
+                unselectSession();
             }
         );
-
-        timeSlots.css('background-color', 'transparent');
-        timeSlots.removeClass("click-to-plan");
-        $('#sessions-unscheduled').removeClass("click-to-plan");
-        disableTableWithLoading(false);
     });
     
     $('.session-block').mouseenter(function() {
@@ -247,8 +244,8 @@ $(document).ready(function() {
                     sessionInfo.find('#code-label').next().text(data.code);
                     sessionInfo.find('#name-label').next().text(data.name);
                     sessionInfo.find('#commnent-label').next().text(data.comment);
-                    sessionInfo.find('#participants-label').next().html('<li>'+data.participants.join('</li><li>')+'</li>');
                     sessionInfo.find('#equipment-label').next().html('<li>'+data.equipment.join('</li><li>')+'</li>');
+                    setParticipantDataForSession(data);
                 }
                 else {
                     sessionInfo.find('#code-label').next().text(data.message);

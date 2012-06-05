@@ -2,6 +2,7 @@
 	<head>
 		<meta name="layout" content="main">
         <g:javascript src="planClick.js" />
+        <g:javascript src="participants-in-sessions.js" />
 	</head>
 	<body>
         <div id="sessions-unscheduled">
@@ -118,9 +119,22 @@
                     </li>
                     <li>
                         <span id="participants-label" class="property-label">
-                            <g:message code="session.sessionparticipants.label" />
+                            <g:message code="session.sessionParticipants.label" />
                         </span>
-                        <ul class="property-value" aria-labelledby="participants-label"> </ul>
+                        <ul class="session-participants property-value" arial-labelledby="participants-label">
+                            <li class="hidden">
+                                <span class="participant-value"> </span>
+                                <span class="participant-state-value"> </span>
+
+                                <ul>
+                                    <li class="participant-type-value">
+                                        <span class="participant-type-val"> </span>
+                                    </li>
+                                </ul>
+
+                                <span class="participant-paper-value"> </span>
+                            </li>
+                        </ul>
                     </li>
                     <li>
                         <span id="equipment-label" class="property-label">
@@ -138,19 +152,19 @@
                 <ol class="property-list">
                     <li>
                         <span id="roomnumnber-label" class="property-label">
-                            <g:message code="room.roomnumber.label" />
+                            <g:message code="room.roomNumber.label" />
                         </span>
                         <span class="property-value" aria-labelledby="roomnumnber-label"> </span>
                     </li>
                     <li>
                         <span id="roomname-label" class="property-label">
-                            <g:message code="room.roomname.label" />
+                            <g:message code="room.roomName.label" />
                         </span>
                         <span class="property-value" aria-labelledby="roomname-label"> </span>
                     </li>
                     <li>
                         <span id="noofseats-label" class="property-label">
-                            <g:message code="room.noofseats.label" />
+                            <g:message code="room.noOfSeats.label" />
                         </span>
                         <span class="property-value" aria-labelledby="noofseats-label"> </span>
                     </li>

@@ -1,17 +1,18 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: kerim
-  Date: 30-5-12
-  Time: 9:49
-  To change this template use File | Settings | File Templates.
---%>
-
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="org.iisg.eca.domain.EmailTemplate" %>
+<!doctype html>
 <html>
-<head>
-  <title></title>
-</head>
-<body>
-
-</body>
+	<head>
+		<meta name="layout" content="main">
+	</head>
+	<body>
+        <ul id="email-templates">
+        <g:each in="${EmailTemplate.list(usedInternal: true)}" var="emailTemplate">
+            <li>
+                <eca:link mapping="email" params="${[type: emailTemplate.action]}" id="${emailTemplate.id}">
+                    ${emailTemplate.description}
+                </eca:link>
+            </li>
+        </g:each>
+        </ul>
+    </body>
 </html>

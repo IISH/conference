@@ -31,25 +31,6 @@ class Setting extends EventDomain {
         value       blank: false,   maxSize: 255
     }
 
-    /**
-     * Searches the settings table for the specified property
-     * If there are multiple results, it will try to return the one specifically specified for the current event
-     * @return The settings of the specified property
-     */
-    static Setting getByProperty(String property) {
-        List<Setting> settings = Setting.findAllByProperty(property)
-        Setting setting = null
-
-        if (settings.size() > 0) {
-            setting = settings.find { it.event?.id == pageInformation.date?.event?.id }
-            if (!setting) {
-                setting = settings.get(0)
-            }
-        }
-
-        setting
-    }
-
     def afterInsert() {
         setSetting()
     }
