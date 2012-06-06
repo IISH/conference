@@ -12,6 +12,11 @@ class Setting extends EventDomain {
     static final String MAX_PAPERS_PER_PERSON_PER_SESSION = 'max_papers_per_person_per_session'
     static final String SALT = 'salt'
     static final String ROLE_HIERARCHY = 'role_hierarchy'
+    static final String SHOW_PROGRAMME_ONLINE = 'show_programme_online'
+    static final String EMAIL_MAX_NUM_TRIES = 'email_max_num_tries'
+    static final String EMAIL_MIN_MILLISEC_BETWEEN_SENDING = 'email_min_millisec_between_sending'
+    static final String EMAIL_MAX_NUM_EMAILS_PER_SESSION = 'email_max_num_emails_per_session'
+    static final String DISABLE_EMAIL_SESSIONS = 'disable_email_sessions'
 
     String property
     String value

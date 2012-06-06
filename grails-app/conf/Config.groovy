@@ -60,11 +60,30 @@ grails.hibernate.cache.queries = true
 // MySQL driver for reverse engineering
 grails.plugin.reveng.jdbcDriverJarDep = 'mysql:mysql-connector-java:5.1.18'
 
+// Grails mail config
+grails {
+   mail {
+        host = "smtp.gmail.com"
+        port = 465
+        username = "*****"
+        password = "*****"
+        props = ["mail.smtp.auth": "true",
+                 "mail.smtp.socketFactory.port": "465",
+                 "mail.smtp.socketFactory.class": "javax.net.ssl.SSLSocketFactory",
+                 "mail.smtp.socketFactory.fallback": "false"]
+    }
+}
+grails.mail.default.from = "ECA conference application <*****>"
+
 // set per-environment serverURL stem for creating absolute links
 environments {
     development {
         grails.logging.jul.usebridge = true
         grails.serverURL = "http://localhost:8080/${appName}"
+        grails.mail.overrideAddress = "Test ECA <*****>"
+    }
+    test {
+        grails.mail.disabled = true
     }
     production {
         grails.logging.jul.usebridge = false
@@ -98,7 +117,7 @@ log4j = {
 
 }
 
-// Spring Security Core config:
+// Spring Security Core config
 grails.plugins.springsecurity.userLookup.userDomainClassName = 'org.iisg.eca.domain.User'
 grails.plugins.springsecurity.userLookup.usernamePropertyName = 'email'
 grails.plugins.springsecurity.userLookup.passwordPropertyName = 'password'

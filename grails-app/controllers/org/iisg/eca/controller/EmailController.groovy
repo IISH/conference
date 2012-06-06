@@ -1,7 +1,7 @@
 package org.iisg.eca.controller
 
-import org.iisg.eca.domain.User
-import org.iisg.eca.domain.EmailCode
+import org.iisg.eca.jobs.CreateEmailJob
+
 import org.iisg.eca.domain.EmailTemplate
 import org.iisg.eca.domain.ParticipantDate
 
@@ -28,10 +28,7 @@ class EmailController {
             return
         }
 
-        if (request.get) {
-            render view: "filter_${params.type}", model: [emailTemplate: emailTemplate, participants: ParticipantDate.createCriteria().list {}]
-        }
-        else if (request.post) {
+        if (request.post) {
             List<ParticipantDate> participants
             def criteria
 
@@ -49,34 +46,24 @@ class EmailController {
                 if (params.participant && params.participant != "null") {
                     eq('id', params.long('participant'))
                 }
-
-                user {
-                    papers {
-                        if (params.paper) {
+                if (params.paper && params.paper != "null") {
+                    user {
+                        papers {
                             eq('state.id', params.long('paper'))
                         }
                     }
                 }
             }
 
-            // TODO: Send emails
+            CreateEmailJob.triggerNow([participants: participants, template: emailTemplate, date: pageInformation.date])
 
-            flash.message = "Email send to ${participants.size()} participants"
-            redirect(uri: eca.createLink(previous: true, noBase: true))
-        }
-    }
-
-    def example() {
-        EmailTemplate template = EmailTemplate.findById(params.id)
-        User user = User.get(params.user)
-
-        String email = template.body.toString()
-        for (EmailCode code : EmailCode.list()) {
-            if (email.contains("[${code.code}]")) {
-                email = email.replaceAll("\\[${code.code}\\]", code.translateForUser(user))
-            }
+            flash.message = "Email for ${participants.size()} participants is being processed in the background, please continue with your work..."
         }
 
-        [email: email]
+        if (!params.type) {
+            params.type = "default"
+        }
+
+        render view: "filter_${params.type}", model: [emailTemplate: emailTemplate, participants: ParticipantDate.createCriteria().list {}]
     }
 }

@@ -5,21 +5,21 @@
 		<meta name="layout" content="main">
 	</head>
 	<body>
-        <h3>${emailTemplate.description}: Select type of mail recipients</h3>
+        <h3>${emailTemplate.description} - Select type of mail recipients</h3>
 
         <form method="post" action="#">
             <fieldset class="form">
                 <div>
                     <label class="property-label"><g:message code="participantState.label" /></label>
-                    <g:select name="state" from="${ParticipantState.list()}" class="property-value" noSelection="['null', 'All states']" optionKey="id" />
+                    <g:select name="state" from="${ParticipantState.list()}" class="property-value" optionKey="id" noSelection="${[null: 'All participant states']}" />
                 </div>
                 <div>
                     <label class="property-label"><g:message code="paper.state.label" /></label>
-                    <g:select name="paper" from="${PaperState.list()}" class="property-value" noSelection="['null', 'All paper states']" optionKey="id" />
+                    <g:select name="paper" from="${PaperState.list()}" class="property-value" optionKey="id" noSelection="${[null: 'All paper states']}" />
                 </div>
                 <div>
                     <label class="property-label"><g:message code="participantDate.label" /></label>
-                    <g:select name="participant" from="${participants}" class="property-value" noSelection="['null', 'All participants']" optionKey="id" />
+                    <g:select name="participant" from="${participants}" class="property-value" optionKey="id" noSelection="${[null: 'All participants']}" />
                 </div>
             </fieldset>
             <fieldset class="buttons">

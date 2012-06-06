@@ -5,7 +5,7 @@
 		<meta name="layout" content="main">
 	</head>
 	<body>
-        <h3>${emailTemplate.description}: Select type of mail recipients</h3>
+        <h3>${emailTemplate.description} - Select type of mail recipients</h3>
 
         <form method="post" action="#">
             <fieldset class="form">

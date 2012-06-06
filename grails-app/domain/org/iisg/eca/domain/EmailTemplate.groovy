@@ -8,7 +8,7 @@ class EmailTemplate extends EventDomain {
     String action
     String queryType
     int sortOrder = 0
-    boolean usedInternal = false
+    boolean showInBackend = true
     String comment
 
     String testEmail
@@ -41,7 +41,7 @@ class EmailTemplate extends EventDomain {
         action          column: 'action'
         queryType       column: 'query_type'
         sortOrder       column: 'sort_order'
-        usedInternal    column: 'used_internal'
+        showInBackend   column: 'show_in_backend'
         comment         column: 'comment',  type: 'text'
     }
 
