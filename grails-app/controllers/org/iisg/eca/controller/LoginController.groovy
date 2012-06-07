@@ -18,6 +18,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 
 import org.iisg.eca.domain.User
+import org.iisg.eca.domain.SentEmail
+import org.iisg.eca.domain.EmailTemplate
 
 /**
  * Controller for login related actions
@@ -32,6 +34,11 @@ class LoginController {
 	 * Dependency injection for the springSecurityService.
 	 */
 	def springSecurityService
+
+    /**
+     *  EmailService for mailing the new password when requested
+     */
+    def emailService
 
 	/**
 	 * Default action; redirects to 'defaultTargetUrl' if logged in, /login/auth otherwise.
@@ -173,24 +180,25 @@ class LoginController {
      * Gives the user a new password
      */
     def newPassword() {
-        def userInstance = User.findByEmail(params.j_username)
-        def newPassword = User.createSecureRandomString()
+        User user = User.findByEmail(params.j_username)
+        String newPassword = User.createSecureRandomString()
 
-        if (!userInstance) {
+        if (!user) {
             flash.message = message(code: 'springSecurity.forgot.fail')
             render view: 'forgot'
             return
         }
 
-        userInstance.password = newPassword
+        user.password = newPassword
 
-        if (!userInstance.save(flush: true)) {
+        if (!user.save(flush: true)) {
             flash.message = message(code: 'springSecurity.forgot.error')
             render view: 'forgot'
             return
         }
 
-        // TODO: mail the user the new password
+        SentEmail email = emailService.createEmail(user, EmailTemplate.findByDescription("New password"), null, ['NewPassword': newPassword])
+        emailService.sendEmail(email, false)
 
         flash.message = message(code: 'springSecurity.forgot.success')
         redirect action: 'auth'

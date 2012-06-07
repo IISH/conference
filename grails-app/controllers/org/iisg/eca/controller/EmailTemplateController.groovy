@@ -22,7 +22,7 @@ class EmailTemplateController {
             render(view: "form", model: [template: template])
         }
         else if (request.post) {
-            bindData(template, params, [include: ['usedBy', 'subject', 'body', 'sender', 'comment',
+            bindData(template, params, [include: ['description', 'subject', 'body', 'sender', 'comment', 'sortOrder',
                     'testEmail', 'testAfterSave']], "emailTemplate")
 
             if (!template.save(flush: true)) {
@@ -54,7 +54,7 @@ class EmailTemplateController {
             render(view: "form", model: [template: template])
         }
         else if (request.post) {
-            bindData(template, params, [include: ['usedBy', 'subject', 'body', 'sender', 'comment',
+            bindData(template, params, [include: ['description', 'subject', 'body', 'sender', 'comment', 'sortOrder',
                     'testEmail', 'testAfterSave']], "emailTemplate")
 
             if (!template.save(flush: true)) {

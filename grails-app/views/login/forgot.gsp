@@ -5,21 +5,25 @@
 </head>
 <body>
     <div id='login'>
-        <div class='fheader'><g:message code="springSecurity.forgot.header" /></div>
+        <h1><g:message code="springSecurity.forgot.header" /></h1>
 
         <g:if test='${flash.message}'>
-            <div class='login_message'>${flash.message}</div>
+            <div class="message" role="status">${flash.message}</div>
         </g:if>
 
-        <g:form controller="login" action="newPassword" method='POST' id='loginForm' class='cssform' autocomplete='off'>
-            <p>
-                <label for='username'><g:message code="springSecurity.forgot.username.label" />:</label>
-                <input type='text' class='text_' name='j_username' id='username'/>
-            </p>
-
-            <p>
+        <g:form controller="login" action="newPassword" method="POST" id="loginForm" autocomplete="off">
+            <fieldset class="form">
+                <div>
+                    <label for='username' class="property-label"><g:message code="springSecurity.forgot.username.label" /></label>
+                    <input type='text' class='property-value' name='j_username' id='username'/>
+                </div>
+            </fieldset>
+            <fieldset class="buttons">
+                <eca:link previous="true">
+                    <g:message code="default.button.back.label" />
+                </eca:link>
                 <input type='submit' id="submit" value='${message(code: "springSecurity.forgot.button")}'/>
-            </p>
+            </fieldset>
         </g:form>
     </div>
 </body>

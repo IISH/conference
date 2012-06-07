@@ -6,17 +6,22 @@ class UrlMappings {
         // Again the default mapping, but now with a name
         name eventDate: "/$event/$date/$controller/$action/$id?" ()
 
-        // Login is seperate from an event
+        // Login is separate from an event
         name login: "/login/$action" {
             controller = 'login'
         }
         
-        // Logout is seperate from an event
+        // Logout is separate from an event
         name logout: "/logout/$action" {
             controller = 'logout'
         }
+
+        // User is separate from an event
+        name user: "/user/$action" {
+            controller = 'user'
+        }
         
-        // Event is a controller for ALL events, so it is seperate from AN event
+        // Event is a controller for ALL events, so it is separate from AN event
         name event: "/event/$action/$id?" {
             controller = 'event'
         }
@@ -31,11 +36,6 @@ class UrlMappings {
         name index: "/" {
             controller = 'event'
             action = 'list'
-        }
-
-        name email: "/$event/$date/email/send/$type/$id?" {
-            controller = 'email'
-            action = 'send'
         }
         
         // Errors:

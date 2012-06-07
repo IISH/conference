@@ -57,7 +57,8 @@ class User extends DefaultDomain {
                         participantDates:       ParticipantDate,
                         userRoles:              UserRole,
                         papers:                 Paper,
-                        sessionParticipants:    SessionParticipant]
+                        sessionParticipants:    SessionParticipant,
+                        sentEmails:             SentEmail]
 
     static mapping = {
         table 'users'
@@ -105,7 +106,7 @@ class User extends DefaultDomain {
         extraInfo                       nullable: true
         papers          validator: { val, obj ->
                             Integer maxPapers = Setting.getByEvent(Setting.findAllByProperty(Setting.MAX_PAPERS_PER_PERSON_PER_SESSION))?.value?.toInteger()
-                            (maxPapers && (obj?.papers?.size() <= maxPapers))
+                            (!maxPapers || (obj?.papers?.size() <= maxPapers))
                         }
     }
 
@@ -146,14 +147,29 @@ class User extends DefaultDomain {
         }
     }
 
-    def static createSecureRandomString() {
-        // Create a 26 characters long String using a secure random generator
+    /**
+     * Check to see if the given password equals the hashed password
+     * @param plainPassword The password to hash and compare
+     * @return Is a correct password or not
+     */
+    boolean isPasswordCorrect(String plainPassword) {
+        String hashedPassword = springSecurityService.encodePassword(plainPassword, saltSource.getSalt(this))
+        hashedPassword.equals(password)
+    }
+
+    /**
+     * Creates a 26 characters long String using a secure random generator
+     * @return A new secure random String
+     */
+    static String createSecureRandomString() {
         Random r = new SecureRandom()
         new BigInteger(130, r).toString(32)
     }
 
+    /**
+     * Every time a new password is saved (and has to be hashed), also create a new user salt
+     */
     protected void encodePassword() {
-        // Every time a new password is saved (and has to be hashed), also create a new user salt
         salt = createSecureRandomString()
         password = springSecurityService.encodePassword(password, saltSource.getSalt(this))
     }

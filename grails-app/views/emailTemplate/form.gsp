@@ -18,11 +18,11 @@
         <form method="post" action="#">
           <fieldset class="form">
             <div class="${hasErrors(bean: template, field: 'usedBy', 'error')} required">
-              <label class="property-label" for="emailTemplate.usedBy">
-                <g:message code="emailTemplate.usedBy.label" />
+              <label class="property-label" for="emailTemplate.description">
+                <g:message code="emailTemplate.description.label" />
                 <span class="required-indicator">*</span>
               </label>
-              <input class="property-value" id="emailTemplate.usedBy" maxlength="255" name="emailTemplate.usedBy" value="${template?.usedBy}" type="text" required="required" />
+              <input class="property-value" id="emailTemplate.description" maxlength="255" name="emailTemplate.description" value="${template?.description}" type="text" required="required" />
             </div>
             <div class="${hasErrors(bean: template, field: 'subject', 'error')} required">
               <label class="property-label" for="emailTemplate.subject">
@@ -58,6 +58,12 @@
                 <g:message code="emailTemplate.comment.label" />
               </label>
               <textarea class="property-value" id="emailTemplate.comment" cols="40" name="emailTemplate.comment" rows="5">${template?.comment}</textarea>
+            </div>
+            <div class="${hasErrors(bean: template, field: 'sortOrder', 'error')} ">
+              <label class="property-label" for="emailTemplate.sortOrder">
+                <g:message code="emailTemplate.sortOrder.label" />
+              </label>
+              <input type="number" class="property-value" id="emailTemplate.sortOrder" name="emailTemplate.sortOrder" value="${template?.sortOrder}" />
             </div>
             <div class="${hasErrors(bean: template, field: 'testAfterSave', 'error')} ">
               <label class="property-label" for="emailTemplate.testAfterSave">

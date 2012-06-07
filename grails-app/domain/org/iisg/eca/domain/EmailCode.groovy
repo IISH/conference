@@ -26,8 +26,8 @@ class EmailCode extends EventDomain {
         groovyScript    column: 'groovy_script',    type: 'text'
     }
 
-    String translateForUser(User user, EventDate date) {
-        Binding binding = new Binding([sql: new Sql(dataSource), params: [userId: user.id, dateId: date.id]])
+    String translateForUser(User user, EventDate date = pageInformation.date) {
+        Binding binding = new Binding([sql: new Sql(dataSource), params: [userId: user?.id, dateId: date?.id]])
         GroovyShell shell = new GroovyShell(binding)
         Object ret = shell.evaluate(groovyScript)
         ret.toString()

@@ -20,11 +20,8 @@ abstract class EventDateDomain extends DefaultDomain {
     }
     
     def beforeInsert() {
-        if (pageInformation.date) {
+        if (!date && pageInformation.date) {
             date = pageInformation.date
-        }
-        else {
-            date = null 
         }
     }
     

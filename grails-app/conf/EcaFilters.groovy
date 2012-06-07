@@ -36,7 +36,7 @@ class EcaFilters {
          *  Lookup the event and event date for this request in the database
          *  If it is there, allow access and cache the event date information for this request
          */
-        eventDate(controller: '*', action: '*', controllerExclude: 'login|logout|event') {
+        eventDate(controller: '*', action: '*', controllerExclude: 'login|logout|user|event') {
             before = {
                 // Issue with dynamic pages, which uses the dynamic page controller
                 if (params.controller == 'event') {

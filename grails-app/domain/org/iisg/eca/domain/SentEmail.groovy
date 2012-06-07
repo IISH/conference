@@ -2,15 +2,17 @@ package org.iisg.eca.domain
 
 class SentEmail extends EventDateDomain {
     User user
-    String from
+    String fromName
     String fromEmail
     String subject
     String body
     Date dateTimeSent
     int numTries = 0
 
+    static belongsTo = User
+
     static constraints = {
-        from            blank: false
+        fromName        blank: false
         fromEmail       blank: false
         subject         blank: false
         body            blank: false
@@ -24,7 +26,7 @@ class SentEmail extends EventDateDomain {
 
         id              column: 'sent_email_id'
         user            column: 'user_id'
-        from            column: 'from'
+        fromName        column: 'from_name'
         fromEmail       column: 'from_email'
         subject         column: 'subject'
         body            column: 'body',             type: 'text'

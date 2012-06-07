@@ -124,9 +124,8 @@
 
         <div id="usermenu">
             <ul>
-                <li><g:link controller="user" action="show"><g:message code="menu.personalpage" /></g:link></li>
-                <li><a href="/"><g:message code="menu.usersoverview" /></a></li>
-                <li><g:link controller="logout"><g:message code="menu.logout" /></g:link></li>
+                <li><eca:link controller="user" action="show"><g:message code="menu.personalpage" /></eca:link></li>
+                <li><eca:link controller="logout"><g:message code="menu.logout" /></eca:link></li>
             </ul>
         </div>
 

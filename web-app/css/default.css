@@ -747,13 +747,17 @@ ul input.session-name {
 
 /* EMAIL */
 
-#email-templates ul {
-    margin-bottom: 20px;
+#email-templates li {
+    margin: 10px 0;
+    list-style: decimal inside;
 }
 
-#email-templates li {
-    margin: 5px 0;
+#email-templates li span {
+    display: block;
+    margin-left: 50px;
+    margin-top: 10px;
 }
+
 
 /* HELPERS */
 

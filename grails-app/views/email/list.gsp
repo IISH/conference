@@ -5,14 +5,17 @@
 		<meta name="layout" content="main">
 	</head>
 	<body>
-        <ul id="email-templates">
-        <g:each in="${EmailTemplate.list(usedInternal: true)}" var="emailTemplate">
+        <ol id="email-templates">
+        <g:each in="${EmailTemplate.findAllByShowInBackend(true)}" var="emailTemplate">
             <li>
-                <eca:link mapping="email" params="${[type: emailTemplate.action]}" id="${emailTemplate.id}">
+                <eca:link action="send" id="${emailTemplate.id}" params="${[type: emailTemplate.action]}">
                     ${emailTemplate.description}
                 </eca:link>
+                <span>
+                    <eca:formatText text="${emailTemplate.comment}" />
+                </span>
             </li>
         </g:each>
-        </ul>
+        </ol>
     </body>
 </html>

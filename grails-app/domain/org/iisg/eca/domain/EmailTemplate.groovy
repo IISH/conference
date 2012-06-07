@@ -1,6 +1,8 @@
 package org.iisg.eca.domain
 
 class EmailTemplate extends EventDomain {
+    def emailService
+
     String description
     String subject
     String body
@@ -47,14 +49,18 @@ class EmailTemplate extends EventDomain {
 
     def afterInsert() {
         if (testAfterSave) {
-            // TODO: sent test email
+            testTemplate()
         }
     }
 
     def afterUpdate() {
         if (testAfterSave) {
-            // TODO: sent test email
+            testTemplate()
         }
+    }
+
+    private testTemplate() {
+        // TODO: Test template after save
     }
 
     @Override

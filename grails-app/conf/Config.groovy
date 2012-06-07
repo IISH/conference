@@ -73,7 +73,7 @@ grails {
                  "mail.smtp.socketFactory.fallback": "false"]
     }
 }
-grails.mail.default.from = "ECA conference application <*****>"
+grails.mail.default.from = "ECA conference application <******>"
 
 // set per-environment serverURL stem for creating absolute links
 environments {

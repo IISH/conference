@@ -14,7 +14,8 @@ var decodeUrlParameters = function(urlParameters) {
 
 var setContentWidth = function() {
     var bodyWidth = body.outerWidth();
-    content.css("width", bodyWidth-navWidth-(contentMargin*2) + "px");
+    var newContentWidth = bodyWidth - navWidth - (contentMargin * 2);
+    content.css("width", newContentWidth + "px");
 }
 
 var showErrors = function(data) {

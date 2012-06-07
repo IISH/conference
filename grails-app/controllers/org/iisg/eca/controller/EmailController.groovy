@@ -55,9 +55,9 @@ class EmailController {
                 }
             }
 
-            CreateEmailJob.triggerNow([participants: participants, template: emailTemplate, date: pageInformation.date])
+            CreateEmailJob.triggerNow([participants: participants, template: emailTemplate])
 
-            flash.message = "Email for ${participants.size()} participants is being processed in the background, please continue with your work..."
+            flash.message = g.message(code: 'email.background.message', attrs: "${[participants.size()]}")
         }
 
         if (!params.type) {
