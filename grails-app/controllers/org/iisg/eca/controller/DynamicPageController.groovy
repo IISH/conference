@@ -33,7 +33,7 @@ class DynamicPageController {
         if (params.format) {
             DataContainer exportContainer = (DataContainer) dynamicPage.elements.find { (it instanceof DataContainer) && (it.eid == params.int('export')) }
             DynamicPageResults exportResults = new DynamicPageResults(exportContainer, params)
-            exportService.getPage(params.format, response, exportContainer.columns, exportResults.get(), params.sep)
+            exportService.getPage(params.format, response, exportContainer.allColumns, exportResults.get(), params.sep)
             return
         }
 

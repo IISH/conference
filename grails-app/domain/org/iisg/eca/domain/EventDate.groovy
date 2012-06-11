@@ -37,8 +37,9 @@ class EventDate extends DefaultDomain {
         description     column: 'description'
         longDescription column: 'long_description', sqlType: 'text'
         event           column: 'event_id'
-        
-        sort startDate: 'desc'
+
+        days            sort: 'dayNumber',  order: 'asc'
+        sort            startDate: 'desc'
     }
 
     static namedQueries = {

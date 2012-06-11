@@ -371,6 +371,7 @@ span.ui-icon {
 #banner-menu {
     margin: 10px;
     line-height: 1.75;
+    min-height: 22px;
 }
 
 #banner-menu > div {
@@ -574,10 +575,36 @@ span.ui-icon {
     margin-left: 35%;
 }
 
+#participant-form input, #participant-form select, #participant-form textarea {
+    max-width: 250px;
+}
+
+#participant-present {
+    margin-top: 20px;
+}
+
+#participant-present td {
+    border: 1px solid #225496;
+}
+
 /* ROOMS */
 
 #room-equipment .column {
     width: 160px;
+}
+
+/* FEE STATES */
+
+.fee-list {
+    margin-bottom: 20px;
+}
+
+.fee-list thead td {
+    font-weight: bold;
+}
+
+.fee-list td {
+    width: 33%;
 }
 
 /* SESSIONS INFORMATION */

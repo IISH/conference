@@ -37,6 +37,15 @@ var showErrors = function(data) {
     }
 }
 
+var setDatePicker = function(element) {
+    element = $(element);
+
+    element.datepicker("destroy");
+    element.datepicker({
+        dateFormat: element.attr('placeholder').replace('yyyy', 'yy')
+    });
+}
+
 $(document).ready(function() {
     content = $('#content');
     body = $('body');
@@ -75,11 +84,7 @@ $(document).ready(function() {
     });
 
     $('.datepicker').each(function() {
-        var dateField = $(this);
-        
-        dateField.datepicker({
-            dateFormat: dateField.attr('placeholder').replace('yyyy', 'yy')
-        });
+        setDatePicker(this);
     });
 
     /*$('input[name=deleted]:not(:checked)').click(function(e) {
@@ -108,7 +113,21 @@ $(document).ready(function() {
         i++;
 
         clone.find('input, select').each(function() {
-            $(this).attr("name", $(this).attr("name").replace("null", i));
+            var name = $(this).attr("name");
+
+            if (name.indexOf("null") === -1) {
+                var nameSplit = name.split("_");
+                $(this).attr("name", nameSplit[0] + "_" + i + nameSplit[1]);
+                $(this).attr("id", nameSplit[0] + "_" + i + nameSplit[1]);
+            }
+            else {
+                $(this).attr("name", name.replace("null", i));
+                $(this).attr("id", name.replace("null", i));
+            }
+        });
+
+        clone.find('.datepicker').each(function() {
+            setDatePicker(this);
         });
 
         clone.insertBefore(parent);
@@ -131,7 +150,17 @@ $(document).ready(function() {
         }
 
         clone.find('input, select, textarea').each(function() {
-            $(this).attr("name", $(this).attr("name").replace("null", i));
+            var name = $(this).attr("name");
+
+            if (name.indexOf("null") === -1) {
+                var nameSplit = name.split("_");
+                $(this).attr("name", nameSplit[0] + "_" + i + nameSplit[1]);
+                $(this).attr("id", nameSplit[0] + "_" + i + nameSplit[1]);
+            }
+            else {
+                $(this).attr("name", name.replace("null", i));
+                $(this).attr("id", name.replace("null", i));
+            }
         });
 
         clone.insertBefore(item);
@@ -163,6 +192,17 @@ $(document).ready(function() {
             next = next.next();
         }
 
+        var idsToBeRemoved = toBeRemoved.parents('ul').find('.to-be-deleted');
+        var ids = idsToBeRemoved.val().split(';');
+        ids.push(toBeRemoved.find('input[type=hidden]:eq(0)').val());
+        for (var i=0; i<ids.length; i++) {
+            if (ids[i] == "") {
+                ids.splice(i, 1);
+                i--;
+            }
+        }
+        idsToBeRemoved.val(ids.join(';'));
+
         toBeRemoved.remove();
     });
 
@@ -182,6 +222,17 @@ $(document).ready(function() {
             }
             next = next.next();
         }
+
+        var idsToBeRemoved = toBeRemoved.parents('ul').find('.to-be-deleted');
+        var ids = idsToBeRemoved.val().split(';');
+        ids.push(toBeRemoved.find('input[type=hidden]:eq(0)').val());
+        for (var i=0; i<ids.length; i++) {
+            if (ids[i] == "") {
+                ids.splice(i, 1);
+                i--;
+            }
+        }
+        idsToBeRemoved.val(ids.join(';'));
 
         toBeRemoved.remove();
     });
@@ -219,13 +270,6 @@ $(document).ready(function() {
         var id = $(this).prev().find(':selected').val();
         if ($.isNumeric(id)) {
             window.open('../../network/show/' + id)
-        }
-    });
-
-    $('#btn_session').click(function() {
-        var id = $(this).prev().val();
-        if ($.isNumeric(id)) {
-            window.open('../../session/show/' + id)
         }
     });
 });

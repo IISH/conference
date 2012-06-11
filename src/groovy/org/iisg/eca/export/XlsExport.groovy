@@ -8,6 +8,9 @@ import jxl.write.WritableFont
 import jxl.write.WritableSheet
 import jxl.write.WritableWorkbook
 import jxl.write.WritableCellFormat
+import jxl.format.Orientation
+import jxl.CellView
+import jxl.Cell
 
 /**
  * Export xls (Excel) files
@@ -50,26 +53,20 @@ class XlsExport extends AbstractExport {
         WritableCellFormat format = new WritableCellFormat(font)
         WritableCellFormat formatBold = new WritableCellFormat(fontBold)
 
-        format.setShrinkToFit(true)
-        formatBold.setShrinkToFit(true)
-
         WritableSheet sheet = workbook.createSheet(title, 0)
 
         columnNames.eachWithIndex { column, j ->
-            sheet.addCell(new Label(j, 0, column, formatBold))
+            sheet.addCell(new Label(j, 0, columnNames[j].toString(), formatBold))
         }
 
         results.eachWithIndex { result, i ->
-            if (result.class.isArray()) {
-                columns.eachWithIndex { c, j ->
-                    sheet.addCell(new Label(j, i+1, result.find { it.class.simpleName == c.domainClass.name }[c.name], format))
-                }
+            columns.eachWithIndex { c, j ->
+                sheet.addCell(new Label(j, i+1, result."${c.columnPath.join('.')}".toString(), format))
             }
-            else {
-                columns.eachWithIndex { c, j ->
-                    sheet.addCell(new Label(j, i+1, result[c.name], format))
-                }
-            }
+        }
+
+        for (int i=0; i<columns.size(); i++) {
+            sheet.getColumnView(i).autosize = true
         }
 
         workbook.write()

@@ -71,7 +71,7 @@
                                     <g:message code="feeAmount.numDaysEnd.label" />
                                     <span class="required-indicator">*</span>
                                 </label>
-                                <g:selec class="property-value"t from="${1..days}" name="feeAmount_${i}.numDaysStart" required="required" value="${fieldValue(bean: amount, field: 'numDaysEnd')}" />
+                                <g:select class="property-value" from="${1..days}" name="feeAmount_${i}.numDaysStart" required="required" value="${fieldValue(bean: amount, field: 'numDaysEnd')}" />
                             </div>
 
                             <div class="${hasErrors(bean: amount, field: 'enabled', 'error')} ">

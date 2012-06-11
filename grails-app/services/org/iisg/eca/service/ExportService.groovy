@@ -6,6 +6,7 @@ import org.iisg.eca.export.Export
 import org.iisg.eca.export.XmlExport
 import org.iisg.eca.export.XlsExport
 import org.iisg.eca.export.CsvExport
+
 import javax.servlet.http.HttpServletResponse
 
 /**
@@ -15,8 +16,8 @@ class ExportService {
     def pageInformation
 
     private static final String XML = "xml"
-    private static final String CSV = "csv"
     private static final String XLS = "xls"
+    private static final String CSV = "csv"
 
     /**
      * Parses the results based on the format requested
@@ -24,23 +25,23 @@ class ExportService {
      * @param response The response to write the obtained file to
      * @param columns The columns that will be exported
      * @param result A list of results
-     * @param seperator If specified, seperates the data in the case of a csv with this character
+     * @param separator If specified, separates the data in the case of a csv with this character
      * @param fileName If specified, the name of the resulting file, defaults to the page name
      */
-    void getPage(format, response, columns, results, seperator=',', fileName=pageInformation.page.toString()) {
-        Export export
+    void getPage(format, response, columns, results, separator=',', fileName=pageInformation.page.toString()) {
+        Export export = null
 
         switch (format.toLowerCase()) {
             case XML:
                 export = new XmlExport(columns, results, fileName)
                 break
-            case CSV:
-                export = new CsvExport(columns, results, fileName)
-                export.seperator = seperator
-                break
             case XLS:
                 export = new XlsExport(columns, results, fileName)
                 break
+            case CSV:
+            default:
+                export = new CsvExport(columns, results, fileName)
+                export.separator = separator
         }
 
         // Parse the results and write it to the response

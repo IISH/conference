@@ -9,6 +9,7 @@ import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 
 import org.codehaus.groovy.grails.commons.GrailsDomainClassProperty
 import org.codehaus.groovy.grails.commons.metaclass.GroovyDynamicMethodsInterceptor
+import org.iisg.eca.domain.DefaultDomain
 
 /**
  * Service responsible for saving the data of a form on a dynamic page
@@ -43,13 +44,31 @@ class DynamicPagePostService {
                     bindData(results.get(domainClass.name), params, [include: columns.collect { it.name }], domainClass.name)
                 }
                 else {
+                    // First delete the records that are to be deleted
+                    String[] ids = params["${domainClass.name}.to-be-deleted"].split(';')
+                    ids.each { idToDelete ->
+                        if (idToDelete.isLong()) {
+                            // See if there is a soft delete, otherwise perform a hard delete
+                            if (DefaultDomain.class.isAssignableFrom(domainClass.clazz)) {
+                                Object domain = domainClass.clazz.get(idToDelete.toLong())
+                                domain?.softDelete()
+                                domain?.save()
+                            }
+                            else {
+                                domainClass.clazz.get(idToDelete.toLong())?.delete()
+                            }
+                        }
+                    }
+
                     // Every new instance has a new number which simply adds up and the domain class name as a prefix
                     // Keep on saving every instance, until there are no values in the parameters map anymore with the given prefix
                     int i = 1
                     while (params."${domainClass.name}_${i}") {
                         Long id = params.long("${domainClass.name}_${i}.id")
-                        bindData(results.get(domainClass.name, id), params, [include: columns.collect { it.name }], "${domainClass.name}_${i}")
-                        i++
+                        if (!ids.find { it.isLong() && (id == it.toLong()) }) {
+                            bindData(results.get(domainClass.name, id), params, [include: columns.collect { it.name }], "${domainClass.name}_${i}".toString())
+                            i++
+                        }
                     }
                 }
 

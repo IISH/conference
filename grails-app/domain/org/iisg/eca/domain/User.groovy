@@ -58,7 +58,8 @@ class User extends DefaultDomain {
                         userRoles:              UserRole,
                         papers:                 Paper,
                         sessionParticipants:    SessionParticipant,
-                        sentEmails:             SentEmail]
+                        sentEmails:             SentEmail,
+                        dateTimesNotPresent:    SessionDateTime]
 
     static mapping = {
         table 'users'
@@ -84,7 +85,8 @@ class User extends DefaultDomain {
         extraInfo       column: 'extra_info',   type: 'text'
         dateAdded       column: 'date_added'
 
-        groups  joinTable: 'users_groups'
+        groups              joinTable: 'users_groups'
+        dateTimesNotPresent joinTable: 'participant_not_present'
     }
 
     static constraints = {

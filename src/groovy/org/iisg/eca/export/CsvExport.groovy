@@ -6,7 +6,7 @@ package org.iisg.eca.export
 class CsvExport extends AbstractExport {
     private static final String CONTENT_TYPE = 'text/csv'
 
-    private String seperator = ','
+    private String separator = ','
 
     /**
      * Creates a new csv export for the specified results
@@ -19,15 +19,15 @@ class CsvExport extends AbstractExport {
     }
 
     /**
-     * Sets the seperator to seperate the values in the resulting document
-     * @param seperator The character(s) to seperate the values with; 'tab' is reserved for seperation by tabs
+     * Sets the separator to separate the values in the resulting document
+     * @param separator The character(s) to separate the values with; 'tab' is reserved for separation by tabs
      */
-    void setSeperator(String seperator) {
-        if (seperator.equalsIgnoreCase('tab')) {
-            this.seperator = '\t'
+    void setSeparator(String separator) {
+        if (separator.equalsIgnoreCase('tab')) {
+            this.separator = '\t'
         }
-        else if (seperator && !seperator.isEmpty()) {
-            this.seperator = seperator
+        else if (separator && !separator.isEmpty()) {
+            this.separator = separator
         }
     }
 
@@ -47,17 +47,10 @@ class CsvExport extends AbstractExport {
     parse() {
         StringWriter writer = new StringWriter()
 
-        writer.write("${columnNames.join(seperator)}\n")
+        writer.write("${columnNames.join(separator)}\n")
         results.each { result ->
-            def r
-            if (result.class.isArray()) {
-                r = []
-                columns.each { c -> r.add(result.find { it.class.simpleName == c.domainClass.name }[c.name]) }
-            }
-            else {
-                r = columns.collect { result[it.name] }
-            }
-            writer.write("${r.join(seperator)}\n")
+            String[] r = columns.collect { c -> result."${c.columnPath.join('.')}" }
+            writer.write("${r.join(separator)}\n")
         }
 
         writer

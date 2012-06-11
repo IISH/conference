@@ -17,6 +17,10 @@
                     <label class="property-label"><g:message code="participantDate.label" /></label>
                     <g:select name="participant" from="${participants}" class="property-value" optionKey="id" noSelection="${[null: 'All participants']}" />
                 </div>
+                <div>
+                    <label class="property-label"><g:message code="emailTemplate.comment.label" /></label>
+                    <span class="property-value"><eca:formatText text="${emailTemplate.comment}" /></span>
+                </div>
             </fieldset>
             <fieldset class="buttons">
                 <eca:link previous="true">

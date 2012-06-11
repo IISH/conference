@@ -37,7 +37,7 @@
             </div>
           
             <div id="banner-menu">
-                <g:if test="${params.event && params.date}">
+                <g:if test="${curDate}">
                     <div id="event-switcher">
                         <eca:eventSwitcher date="${curDate}" />
                     </div>

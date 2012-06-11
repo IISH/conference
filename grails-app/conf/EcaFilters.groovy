@@ -32,19 +32,16 @@ class EcaFilters {
         }
 
         /**
-         *  Every page (except login/logout/event related actions) should be in the database belongs to a certain event
+         *  Every page (except login/logout/user/event related actions) should belong to a certain event
          *  Lookup the event and event date for this request in the database
          *  If it is there, allow access and cache the event date information for this request
          */
-        eventDate(controller: '*', action: '*', controllerExclude: 'login|logout|user|event') {
+        eventDate(controller: '*', action: '*', controllerExclude: 'login|logout|user') {
             before = {
-                // Issue with dynamic pages, which uses the dynamic page controller
-                if (params.controller == 'event') {
-                    return true
-                }
-
                 String eventCode = params.event?.replaceAll('-', ' ')
                 String dateCode = params.date?.replaceAll('-', ' ')
+                eventCode = eventCode ?: ""
+                dateCode = dateCode ?: ""
 
                 Event event = Event.findByCode(eventCode)
                 EventDate date = EventDate.findByEventAndYearCode(event, dateCode)
@@ -65,7 +62,8 @@ class EcaFilters {
                     return true
                 }
 
-                return false
+                // Some event actions are allowed to have no date set, but they are the only ones
+                return (params.controller == 'event' && (params.action == 'index' || params.action == 'switchEvent' || params.action == 'list'))
             }
             afterView = { Exception e ->
                 pageInformation.removeDate()

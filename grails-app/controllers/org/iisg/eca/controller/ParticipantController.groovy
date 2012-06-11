@@ -13,6 +13,7 @@ import org.iisg.eca.domain.ParticipantState
 import org.iisg.eca.domain.ParticipantVolunteering
 
 import org.springframework.web.multipart.commons.CommonsMultipartFile
+import org.iisg.eca.domain.SessionDateTime
 
 class ParticipantController {
     /**
@@ -94,6 +95,13 @@ class ParticipantController {
                     participant.addToExtras(Extra.get(extraId))
                 }
 
+                user.dateTimesNotPresent.clear()
+                List<SessionDateTime> sessionDateTimes = SessionDateTime.list()
+                params.present.each { dateTimeId ->
+                    sessionDateTimes.remove(sessionDateTimes.find { dateTimeId.isLong() && (it.id == dateTimeId.toLong()) })
+                }
+                user.dateTimesNotPresent.addAll(sessionDateTimes)
+
                 int i = 0
                 participant.participantVolunteering.clear()
                 while (params["ParticipantVolunteering_${i}"]) {
@@ -137,7 +145,7 @@ class ParticipantController {
                 }
 
                 if (participant.save() && user.save()) {
-                    flash.message = message(code: 'default.updated.message', args: [message(code: 'participantdate.label')])
+                    flash.message = message(code: 'default.updated.message', args: [message(code: 'participantDate.label')])
                     redirect(uri: eca.createLink(action: 'list', noBase: true))
                     return
                 }
@@ -148,7 +156,7 @@ class ParticipantController {
                                         participant: participant,
                                         volunteering: Volunteering.list(),
                                         networks: Network.list(),
-                                        paperSates: PaperState.list(),
+                                        paperStates: PaperState.list(),
                                         equipmentList: Equipment.list()])
     }
 

@@ -17,7 +17,7 @@
                 </eca:link>
             </span>
 
-            <table>
+            <table class="fee-list">
                 <thead>
                     <tr>
                         <td class="id hidden"></td>

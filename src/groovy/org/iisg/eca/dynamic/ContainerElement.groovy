@@ -73,7 +73,19 @@ class ContainerElement extends Element {
      */ 
     boolean hasColumns() {
         !columns.isEmpty()
-    } 
+    }
+
+    /**
+     * Returns all of the columns
+     * @return A list of columns
+     */
+    List<Column> getAllColumns() {
+        List<Column> columns = new ArrayList<Column>()
+        forAllColumns {
+            columns.add(it)
+        }
+        columns
+    }
     
     /**
      * Returns a column this element contains by name

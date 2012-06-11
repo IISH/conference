@@ -1,4 +1,4 @@
-<%@ page import="org.iisg.eca.domain.Setting; org.iisg.eca.domain.Title; org.iisg.eca.domain.FeeState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Extra; org.iisg.eca.domain.Country" %>
+<%@ page import="org.iisg.eca.domain.SessionDateTime; org.iisg.eca.domain.Setting; org.iisg.eca.domain.Title; org.iisg.eca.domain.FeeState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Extra; org.iisg.eca.domain.Country" %>
 <!doctype html>
 <html>
     <head>
@@ -158,9 +158,12 @@
                                 </div>
                             </fieldset>
 
-                            <fieldset class="form"> 
-                                <legend><g:message code="participantDate.extra.label" /></legend>
-                                <g:each in="${Extra.list()}" var="extra">
+                            <fieldset class="form">
+                                <g:each in="${Extra.list()}" var="extra" status="i">
+                                    <g:if test="${i==0}">
+                                        <legend><g:message code="participantDate.extra.label" /></legend>
+                                    </g:if>
+
                                     <div class="${hasErrors(bean: participant, field: 'invitationLetterSent', 'error')}">
                                         <label class="property-label">
                                             ${extra.toString()}
@@ -200,9 +203,25 @@
                                     </label>
                                     <g:select class="property-value" name="ParticipantDate.feeState.id" from="${FeeState.list()}" optionKey="id" optionValue="name" value="${participant.feeState.id}" />
                                 </div>
-                            </fieldset>
+                                <div class="${hasErrors(bean: user, field: 'dateTimesNotPresent', 'error')}">
+                                    <table id="participant-present">
+                                        <g:each in="${SessionDateTime.tableList}" var="dateTimeRow">
+                                            <tr>
+                                            <g:each in="${dateTimeRow}" var="sessionDateTime" status="i">
+                                                <g:if test="${i==0}">
+                                                    <td><g:formatDate date="${sessionDateTime.day.day}" formatName="default.date.day.format" /></td>
+                                                </g:if>
 
-                            <div style="font-weight:bold; color:red;">TODO (Present / Not present at)</div>
+                                                <td>
+                                                    ${sessionDateTime.period} <br />
+                                                    <g:checkBox name="present" value="${sessionDateTime.id}" checked="${!user.dateTimesNotPresent.find { it.id == sessionDateTime.id }}" />
+                                                </td>
+                                            </g:each>
+                                            </tr>
+                                        </g:each>
+                                    </table>
+                                </div>
+                            </fieldset>
 
                             <fieldset class="form"> 
                                 <legend><g:message code="participantDate.volunteering.label" /></legend>
@@ -243,7 +262,7 @@
                             </fieldset>
                         </g:if>
                         <g:else>
-                            <g:message code="participantdata.would.like.to.add.message" args="[curDate.toString()]" />
+                            <g:message code="participantData.would.like.to.add.message" args="[curDate.toString()]" />
                             <input type="checkbox" name="add-to-date" value="add" />
                         </g:else>
                     </div>
@@ -343,11 +362,13 @@
                                     </label>
                                     <div class="property-value">
                                         <span>
-                                            <g:if test="${paper.session}">${fieldValue(bean: paper, field: 'session')}</g:if>
+                                            <g:if test="${paper.session}">
+                                                <eca:link controller="session" action="show" id="${paper.session.id}">
+                                                    ${fieldValue(bean: paper, field: 'session')}
+                                                </eca:link>
+                                            </g:if>
                                             <g:else>-</g:else>
                                         </span>
-                                        <input type="hidden" name="session_id" value="${paper.session?.id}" />
-                                        <input type="button" id="btn_session" name="btn_session" value="${g.message(code: "default.goto")}" />
                                     </div>
                                 </div>
                             </fieldset>

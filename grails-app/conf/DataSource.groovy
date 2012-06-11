@@ -14,9 +14,6 @@ hibernate {
 environments {
     development {
         dataSource {
-            username = "eca"
-            password = "Ec0nfApp38"
-            url = "jdbc:mysql://cottus.iisg.nl/eca"
             logSql = true
             formatSql = true
         }

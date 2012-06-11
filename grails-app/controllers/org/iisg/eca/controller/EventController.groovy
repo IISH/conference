@@ -21,7 +21,7 @@ class EventController {
      * Redirects to the 'list' action, listing all events if not in event portal
      */
     def index() {
-        if (params.event && params.date) {
+        if (pageInformation.date) {
             render(view: "index")
         }
         else {

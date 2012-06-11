@@ -2,6 +2,8 @@ package org.iisg.eca.export
 
 import org.codehaus.groovy.grails.plugins.web.taglib.ValidationTagLib
 import org.iisg.eca.dynamic.ContainerElement
+import org.iisg.eca.tags.UtilsTagLib
+import org.iisg.eca.dynamic.PageBuilder
 
 /**
  * An abstract implementation of the <code>Export</code> interface
@@ -10,7 +12,7 @@ abstract class AbstractExport implements Export {
     /**
      * Required for looking up the translated column names
      */
-    protected static final ValidationTagLib MESSAGES = new ValidationTagLib()
+    protected static final UtilsTagLib UTILS = new UtilsTagLib()
 
     protected List columns
     protected List results
@@ -27,6 +29,13 @@ abstract class AbstractExport implements Export {
         this.columns = columns
         this.results = results
         this.title = title
-        columnNames = columns.collect { MESSAGES.message(code: "${it.domainClass.name.toLowerCase()}.${it.name.toLowerCase()}.label") }
+        columnNames = columns.collect {
+            if (it.name == "id") {
+                "id"
+            }
+            else {
+                UTILS.fallbackMessage(code: PageBuilder.getCode(it.property), fbCode: PageBuilder.getFbCode(it.property))
+            }
+        }
     }
 }

@@ -20,4 +20,8 @@ abstract class DefaultDomain {
     void enable(boolean enabled) {
         this.enabled = enabled
     }
+
+    void softDelete() {
+        deleted = true
+    }
 }

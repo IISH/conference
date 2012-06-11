@@ -162,15 +162,18 @@ class PageBuilder {
                     }
                     builder.ul(class: "property-value") {
                         builder."g:each"(in: "\${${RESULTS}.get(${c.root.eid}).get('${c.domainClass.name}')['${c.name}']}", var: "instance", status: "i") {
-                            builder.li {
-                                builder.input(type: "hidden", name: "${c.property.referencedDomainClass.name}_\${i}.id", value: "\${instance.id}")
-                                buildFormColumns(c.columns)
-                                builder.span(class: "ui-icon ui-icon-circle-minus", "")
+                            builder."g:if"(test: "\${!instance['deleted']}") {
+                                builder.li {
+                                    builder.input(type: "hidden", name: "${c.property.referencedDomainClass.name}_\${i}.id", value: "\${instance.id}")
+                                    buildFormColumns(c.columns)
+                                    builder.span(class: "ui-icon ui-icon-circle-minus", "")
+                                }
                             }
                         }
                         builder.li(class: "add") {
                             builder.span(class: "ui-icon ui-icon-circle-plus", "")
                             builder."g:message"(code: "default.add.label", args: "[eca.fallbackMessage(code: '${getCode(p)}', fbCode: '${getFbCode(p)}').toLowerCase()]")
+                            builder.input(type: "hidden",  name: "${c.property.referencedDomainClass.name}.to-be-deleted", class: "to-be-deleted")
                         }
                         builder.li(class: "hidden") {
                             builder.input(type: "hidden", name: "${c.property.referencedDomainClass.name}_null.id")
@@ -410,12 +413,12 @@ class PageBuilder {
      * Returns the i18n lookup code for the given column property
      * @param property The propery of a column which needs an i18n label
      */
-    private static getCode(GrailsDomainClassProperty property) {
+    static getCode(GrailsDomainClassProperty property) {
         if (property.name.equalsIgnoreCase("enabled") || property.name.equalsIgnoreCase("deleted")) {
             return "default.${property.name}.label"
         }
         else if (property.manyToOne || property.oneToOne || property.oneToMany || property.manyToMany) {
-            return "${property.referencedDomainClass.name}.multiple.label"
+            return "${property.referencedDomainClass.propertyName}.multiple.label"
         }
         else {
             return "${property.domainClass.propertyName}.${property.name}.label"
@@ -426,7 +429,7 @@ class PageBuilder {
      * Returns the i18n fallback lookup code for the given column property, in case the first one does not exist
      * @param property The propery of a column which needs a secondary i18n label
      */
-    private static getFbCode(GrailsDomainClassProperty property) {
-        "${property.domainClass.propertyName.toLowerCase()}.${property.name.toLowerCase()}.label"      
+    static getFbCode(GrailsDomainClassProperty property) {
+        "${property.domainClass.propertyName}.${property.name}.label"
     }
 }

@@ -32,21 +32,16 @@ class XmlExport extends AbstractExport {
      */
     @Override
     parse() {
-        def writer = new StringWriter()
-        def xml = new MarkupBuilder(writer)
+        StringWriter writer = new StringWriter()
+        MarkupBuilder xml = new MarkupBuilder(writer)
         xml.doubleQuotes = true
 
         writer.write('<?xml version="1.0" encoding="utf-8" ?>\n')
         xml."${title.toLowerCase().replaceAll('\\s', '-')}"() {
             results.eachWithIndex { r, i ->
-                xml.row("${MESSAGES.message(code: 'default.count').toLowerCase()}": i+1) {
+                xml.row("${UTILS.message(code: 'default.count').toLowerCase()}": i+1) {
                     columns.eachWithIndex { c, j ->
-                        if (r.class.isArray()) {
-                            xml."${columnNames[j].toLowerCase().replaceAll('\\s', '-')}"(r.find { it.class.simpleName == c.domainClass.name }[c.name])
-                        }
-                        else {
-                            xml."${columnNames[j].toLowerCase().replaceAll('\\s', '-')}"(r[c.name])
-                        }
+                        xml."${columnNames[j].toLowerCase().replaceAll('\\s', '-')}"(r."${c.columnPath.join('.')}")
                     }
                 }
             }

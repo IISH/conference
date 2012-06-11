@@ -60,27 +60,34 @@ grails.hibernate.cache.queries = true
 // MySQL driver for reverse engineering
 grails.plugin.reveng.jdbcDriverJarDep = 'mysql:mysql-connector-java:5.1.18'
 
-// Grails mail config
-grails {
-   mail {
-        host = "smtp.gmail.com"
-        port = 465
-        username = "*****"
-        password = "*****"
-        props = ["mail.smtp.auth": "true",
-                 "mail.smtp.socketFactory.port": "465",
-                 "mail.smtp.socketFactory.class": "javax.net.ssl.SSLSocketFactory",
-                 "mail.smtp.socketFactory.fallback": "false"]
-    }
+// Make sure grails.config.locations is initialized
+if (!grails.config.locations || !(grails.config.locations instanceof Collection)) {
+    grails.config.locations = []
 }
-grails.mail.default.from = "ECA conference application <******>"
+
+// Load properties, like passwords, from another location
+if (System.properties.containsKey("conference.properties")) {
+   println("Loading properties from " + System.properties["conference.properties"])
+   grails.config.locations << "file:" + System.properties["conference.properties"]
+}
+else if (System.getenv()?.containsKey("CONFERENCE")) {
+   println("Loading properties from " + System.getenv().get("CONFERENCE"))
+   grails.config.locations << "file:" + System.getenv().get("CONFERENCE")
+}
+else {
+   println("FATAL: no conference.properties file set in VM or Environment. \n \
+       Add a -Dconference.properties=/path/to/conference.properties argument when starting this application. \n \
+       Or set a CONFERENCE=/path/to/conference.properties as environment variable.")
+   System.exit(-1)
+}
 
 // set per-environment serverURL stem for creating absolute links
 environments {
     development {
         grails.logging.jul.usebridge = true
         grails.serverURL = "http://localhost:8080/${appName}"
-        grails.mail.overrideAddress = "Test ECA <*****>"
+        grails.mail.default.from = "ECA conference application <esshc@iisg.nl>"
+        grails.mail.overrideAddress = "Test ECA <kerim.meijer@gmail.com>"
     }
     test {
         grails.mail.disabled = true
