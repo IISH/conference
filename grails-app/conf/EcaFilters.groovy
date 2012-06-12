@@ -1,10 +1,9 @@
+import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Page
 import org.iisg.eca.domain.Event
 import org.iisg.eca.domain.EventDate
-
 import org.iisg.eca.domain.EventDomain
 import org.iisg.eca.domain.EventDateDomain
-import org.iisg.eca.domain.User
 
 class EcaFilters {
     def pageInformation

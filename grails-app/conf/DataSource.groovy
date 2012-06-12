@@ -22,9 +22,9 @@ environments {
         dataSource {
             driverClassName = "org.h2.Driver"
             dialect = org.hibernate.dialect.H2Dialect
-            dbCreate = "create-drop"
             username = "sa"
             password = ""
+            dbCreate = "update"
             url = "jdbc:h2:mem:testDb;MVCC=TRUE"
         }
     }

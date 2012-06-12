@@ -19,15 +19,21 @@ class UtilsTagLib {
 
     /**
      * Tag responsible for formatting the given String
+     * @attr text The text to format
      */
     def formatText = { attrs ->
-        if (attrs.text) {
-            out << attrs.text.encodeAsHTML().replaceAll("\n", "<br />")
+        if (attrs.text != null && (attrs.text.trim().length() != 0)) {
+            out << attrs.text.encodeAsHTML().replaceAll("\n", "<br />").replaceAll("\t", "     ")
+        }
+        else {
+            out << "-"
         }
     }
     
     /**
-     * Tag creating navigation buttons 
+     * Tag creating navigation buttons
+     * @attr prev The url to go to when the user wants to go to the previous page
+     * @attr next The url to go to when the user wants to go to the next page
      */
     def navigation = { attrs -> 
         MarkupBuilder builder = new MarkupBuilder(out)
@@ -147,6 +153,10 @@ class UtilsTagLib {
      * An alternative to the g:link tag for a link to the same page with all existing parameters + parameters added
      */
     def linkAllParams = { attrs, body ->
+        if (!attrs.params) {
+            attrs.params = [:]
+        }
+
         attrs.controller = params.controller
         attrs.action = params.action
         attrs.id = params.id
@@ -175,7 +185,7 @@ class UtilsTagLib {
             msg = message(code: attrs.fbCode, attrs: attrs.fbAttrs, default: attrs.default)
         }
 
-        out << msg
+        out << msg.toString()
     }
     
     /**
@@ -220,6 +230,8 @@ class UtilsTagLib {
                 attrs.mapping = 'eventDate'
             }
         }
+        attrs.remove('event')
+        attrs.remove('date')
 
         // Link back to the previous page
         if (attrs.previous && params.prevController) {

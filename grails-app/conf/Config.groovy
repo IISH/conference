@@ -1,3 +1,6 @@
+import org.codehaus.groovy.grails.commons.GrailsApplication
+import grails.util.GrailsUtil
+
 // locations to search for config files that get merged into the main config
 // config files can either be Java properties files or ConfigSlurper scripts
 
@@ -65,20 +68,22 @@ if (!grails.config.locations || !(grails.config.locations instanceof Collection)
     grails.config.locations = []
 }
 
-// Load properties, like passwords, from another location
-if (System.properties.containsKey("conference.properties")) {
-   println("Loading properties from " + System.properties["conference.properties"])
-   grails.config.locations << "file:" + System.properties["conference.properties"]
-}
-else if (System.getenv()?.containsKey("CONFERENCE")) {
-   println("Loading properties from " + System.getenv().get("CONFERENCE"))
-   grails.config.locations << "file:" + System.getenv().get("CONFERENCE")
-}
-else {
-   println("FATAL: no conference.properties file set in VM or Environment. \n \
-       Add a -Dconference.properties=/path/to/conference.properties argument when starting this application. \n \
-       Or set a CONFERENCE=/path/to/conference.properties as environment variable.")
-   System.exit(-1)
+if (GrailsUtil.getEnvironment() != GrailsApplication.ENV_TEST) {
+    // Load properties, like passwords, from another location
+    if (System.properties.containsKey("conference.properties")) {
+       println("Loading properties from " + System.properties["conference.properties"])
+       grails.config.locations << "file:" + System.properties["conference.properties"]
+    }
+    else if (System.getenv()?.containsKey("CONFERENCE")) {
+       println("Loading properties from " + System.getenv().get("CONFERENCE"))
+       grails.config.locations << "file:" + System.getenv().get("CONFERENCE")
+    }
+    else {
+       println("FATAL: no conference.properties file set in VM or Environment. \n \
+           Add a -Dconference.properties=/path/to/conference.properties argument when starting this application. \n \
+           Or set a CONFERENCE=/path/to/conference.properties as environment variable.")
+       System.exit(-1)
+    }
 }
 
 // set per-environment serverURL stem for creating absolute links
