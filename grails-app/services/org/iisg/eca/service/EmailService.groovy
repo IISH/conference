@@ -73,11 +73,16 @@ class EmailService {
      * @param emailSubject The subject of the email to send
      * @param message The message of the email to send
      */
-    synchronized void sendInfoMail(String emailSubject, String message) {
+    synchronized void sendInfoMail(String emailSubject, String message, String emailAddress = null) {
         String[] recipients = Setting.getByEvent(Setting.findAllByProperty(Setting.EMAIL_ADDRESS_INFO_ERRORS)).value.split(';')
 
+        // If no email address is set, use the default info email address from the settings
+        if (!emailAddress) {
+            emailAddress = "Info email <${Setting.getByEvent(Setting.findAllByProperty(Setting.DEFAULT_ORGANISATION_EMAIL)).value}>"
+        }
+
         mailService.sendMail {
-            from "ECA info mail <${Setting.getByEvent(Setting.findAllByProperty(Setting.DEFAULT_ORGANISATION_EMAIL)).value}>"
+            from emailAddress
             to recipients
             subject emailSubject
             text message

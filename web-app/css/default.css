@@ -50,8 +50,8 @@ input[type=text], input[type=password], input[type=number], input[type=email], i
 
 select {
     height: 22px;
-   /* width: 204px;       */
     min-width: 150px;
+    vertical-align: middle;
 }
 
 select[size] {
@@ -61,6 +61,7 @@ select[size] {
 input[type=checkbox], input[type=radio] {
     border: 0;
     outline: 0;
+    vertical-align: middle;
 }
 
 h1 {

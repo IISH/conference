@@ -52,7 +52,7 @@ class Paper extends EventDateDomain {
         session             nullable: true
         title               blank: false,   maxSize: 500
         coAuthors           nullable: true, maxSize: 500
-        abstr               nullable: true
+        abstr               blank: false
         comment             nullable: true
         networkProposal     nullable: true
         sessionProposal     nullable: true, maxSize: 500

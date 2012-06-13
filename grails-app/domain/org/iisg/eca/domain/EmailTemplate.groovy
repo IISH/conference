@@ -59,8 +59,22 @@ class EmailTemplate extends EventDomain {
         }
     }
 
-    private testTemplate() {
-        // TODO: Test template after save
+    /**
+     * Tests the template with the testEmail specified
+     */
+    private void testTemplate() {
+        User user = User.findByEmail(testEmail)
+
+        if (user) {
+            SentEmail email = emailService.createEmail(user, this, pageInformation.date)
+            emailService.sendEmail(email, false)
+        }
+        else {
+            String subject = "Could not find the user for the given email address"
+            String message = "Could not find the user for the given email address. \nTesting the email template failed!"
+
+            emailService.sendInfoMail(subject, message, testEmail)
+        }
     }
 
     @Override

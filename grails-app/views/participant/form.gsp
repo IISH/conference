@@ -213,8 +213,10 @@
                                                 </g:if>
 
                                                 <td>
-                                                    ${sessionDateTime.period} <br />
-                                                    <g:checkBox name="present" value="${sessionDateTime.id}" checked="${!user.dateTimesNotPresent.find { it.id == sessionDateTime.id }}" />
+                                                    <label>
+                                                        <g:checkBox name="present" value="${sessionDateTime.id}" checked="${!user.dateTimesNotPresent.find { it.id == sessionDateTime.id }}" />
+                                                        ${sessionDateTime.period}
+                                                    </label>
                                                 </td>
                                             </g:each>
                                             </tr>
@@ -290,8 +292,9 @@
                                 <div class="${hasErrors(bean: paper, field: 'abstr', 'error')}">
                                     <label class="property-label">
                                         <g:message code="paper.abstr.label" />
+                                        <span class="required-indicator">*</span>
                                     </label>
-                                    <textarea class="property-value" name="Paper_${i}.abstr" cols="40" rows="5">${fieldValue(bean: paper, field: 'abstr')}</textarea>
+                                    <textarea class="property-value" name="Paper_${i}.abstr" required="required" cols="40" rows="5">${fieldValue(bean: paper, field: 'abstr')}</textarea>
                                 </div>
                                 <div>
                                     <label class="property-label">
@@ -304,7 +307,7 @@
                                         </span>
                                         <span class="paper ui-icon ui-icon-circle-minus"></span>
                                         </g:if>
-                                        <g:else> - </g:else>
+                                        <g:else>-</g:else>
                                     </div>
                                 </div>
                                 <div class="${hasErrors(bean: paper, field: 'file', 'error')}">
@@ -406,8 +409,9 @@
                             <div>
                                 <label class="property-label">
                                     <g:message code="paper.abstr.label" />
+                                    <span class="required-indicator">*</span>
                                 </label>
-                                <textarea class="property-value" name="Paper_null.abstr" cols="40" rows="5"></textarea>
+                                <textarea class="property-value" name="Paper_null.abstr" required="required" cols="40" rows="5"></textarea>
                             </div>
                             <div>
                                 <label class="property-label">
@@ -423,7 +427,7 @@
                             </div>
                             <div>
                                 <label class="property-label">
-                                    <g:message code="paper.coauthors.label" />
+                                    <g:message code="paper.coAuthors.label" />
                                 </label>
                                 <input class="property-value" type="text" name="Paper_null.coAuthors" maxlength="500" />
                             </div>
@@ -442,10 +446,10 @@
                         </fieldset>
 
                         <fieldset class="form">
-                            <legend><g:message code="paper.networkssessionsinfo.label" /></legend>
+                            <legend><g:message code="paper.networks.sessions.info.label" /></legend>
                             <div>
                                 <label class="property-label">
-                                    <g:message code="paper.networkproposal.label" />
+                                    <g:message code="paper.networkProposal.label" />
                                 </label>
                                 <div class="property-value">
                                     <g:select from="${networks}" name="Paper_null.networkProposal" optionKey="id" optionValue="name" noSelection="${[null: ' ']}" />
@@ -454,13 +458,13 @@
                             </div>
                             <div>
                                 <label class="property-label">
-                                    <g:message code="paper.sessionproposal.label" />
+                                    <g:message code="paper.sessionProposal.label" />
                                 </label>
                                 <input class="property-value" type="text" name="Paper_null.sessionProposal" maxlength="500" />
                             </div>
                             <div>
                                 <label class="property-label">
-                                    <g:message code="paper.proposaldescription.label" />
+                                    <g:message code="paper.proposalDescription.label" />
                                 </label>
                                 <textarea class="property-value" name="Paper_null.proposalDescription" cols="40" rows="5"></textarea>
                             </div>
@@ -487,7 +491,7 @@
                             </g:each>
                             <div>
                                 <label class="property-label">
-                                    <g:message code="paper.equipmentcomment.label" />
+                                    <g:message code="paper.equipmentComment.label" />
                                 </label>
                                 <textarea class="property-value" name="Paper_null.equipmentComment" cols="40" rows="5"></textarea>
                             </div>
