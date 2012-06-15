@@ -156,5 +156,4 @@ grails.plugins.springsecurity.requestMap.configAttributeField = 'configAttribute
 grails.plugins.springsecurity.roleHierarchy = '''
         superAdmin > admin
         admin > user
-        user > participant
 '''

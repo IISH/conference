@@ -78,7 +78,7 @@ $(document).ready(function() {
 
     $('input[type=submit]').click(function(e) {
         var form = $(this).parents('form');
-        var children = form.find('.hidden input, .hidden select');
+        var children = form.find('.hidden input, .hidden select, .hidden textarea');
         children.removeAttr('required');
         form.submit();
     });
@@ -101,7 +101,7 @@ $(document).ready(function() {
         var parent = $(this).parent();
         var lastItem = parent.prev();
         var clone = parent.next().clone(true);
-        var i = 0;
+        var i = -1;
 
         if (lastItem.length !== 0) {
             var nameSplit = lastItem.find('input, select').attr("name").split('.');
@@ -138,7 +138,7 @@ $(document).ready(function() {
         var parent = $(this).parent().prev().find('.columns')
         var item = parent.find('.column.hidden')
         var clone = item.clone(true);
-        var i = 0;
+        var i = -1;
 
         if (item.prev().length !== 0) {
             var nameSplit = item.prev().find('input, select, textarea').attr("name").split('.');
@@ -193,15 +193,17 @@ $(document).ready(function() {
         }
 
         var idsToBeRemoved = toBeRemoved.parents('ul').find('.to-be-deleted');
-        var ids = idsToBeRemoved.val().split(';');
-        ids.push(toBeRemoved.find('input[type=hidden]:eq(0)').val());
-        for (var i=0; i<ids.length; i++) {
-            if (ids[i] == "") {
-                ids.splice(i, 1);
-                i--;
+        if (idsToBeRemoved.length > 0) {
+            var ids = idsToBeRemoved.val().split(';');
+            ids.push(toBeRemoved.find('input[type=hidden]:eq(0)').val());
+            for (var i=0; i<ids.length; i++) {
+                if (ids[i] == "") {
+                    ids.splice(i, 1);
+                    i--;
+                }
             }
+            idsToBeRemoved.val(ids.join(';'));
         }
-        idsToBeRemoved.val(ids.join(';'));
 
         toBeRemoved.remove();
     });
@@ -224,15 +226,17 @@ $(document).ready(function() {
         }
 
         var idsToBeRemoved = toBeRemoved.parents('ul').find('.to-be-deleted');
-        var ids = idsToBeRemoved.val().split(';');
-        ids.push(toBeRemoved.find('input[type=hidden]:eq(0)').val());
-        for (var i=0; i<ids.length; i++) {
-            if (ids[i] == "") {
-                ids.splice(i, 1);
-                i--;
+        if (idsToBeRemoved.length > 0) {
+            var ids = idsToBeRemoved.val().split(';');
+            ids.push(toBeRemoved.find('input[type=hidden]:eq(0)').val());
+            for (var i=0; i<ids.length; i++) {
+                if (ids[i] == "") {
+                    ids.splice(i, 1);
+                    i--;
+                }
             }
+            idsToBeRemoved.val(ids.join(';'));
         }
-        idsToBeRemoved.val(ids.join(';'));
 
         toBeRemoved.remove();
     });

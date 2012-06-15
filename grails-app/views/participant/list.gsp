@@ -74,8 +74,8 @@
                 </ol>   
               
                 <g:each in="${alfabet}" var="character">
-                    <ol name="${character.toLowerCase()}">
-                        <li class="char">${character}</li>
+                    <ol>
+                        <li class="char"><a name="${character.toLowerCase()}">${character}</a></li>
                         <g:each in="${participants.get(character)}" var="user">
                             <li><eca:link action="show" id="${user[0]}">${user[1]}</eca:link> ${user[2]}</li>
                         </g:each>

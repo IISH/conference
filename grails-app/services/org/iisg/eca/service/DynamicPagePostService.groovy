@@ -62,7 +62,7 @@ class DynamicPagePostService {
 
                     // Every new instance has a new number which simply adds up and the domain class name as a prefix
                     // Keep on saving every instance, until there are no values in the parameters map anymore with the given prefix
-                    int i = 1
+                    int i = 0
                     while (params."${domainClass.name}_${i}") {
                         Long id = params.long("${domainClass.name}_${i}.id")
                         if (!ids.find { it.isLong() && (id == it.toLong()) }) {

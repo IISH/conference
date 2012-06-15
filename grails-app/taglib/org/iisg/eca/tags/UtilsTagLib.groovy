@@ -22,7 +22,7 @@ class UtilsTagLib {
      * @attr text The text to format
      */
     def formatText = { attrs ->
-        if (attrs.text != null && (attrs.text.trim().length() != 0)) {
+        if (attrs.text != null && (attrs.text.toString().trim().length() != 0)) {
             out << attrs.text.encodeAsHTML().replaceAll("\n", "<br />").replaceAll("\t", "     ")
         }
         else {

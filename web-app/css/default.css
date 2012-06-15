@@ -553,6 +553,10 @@ span.ui-icon {
     margin-left: 20px;
 }
 
+#list li.char a {
+    color: #000000;
+}
+
 #personal-tab, #papers-tab {
     margin: 0;
     padding: 0;
@@ -785,7 +789,6 @@ ul input.session-name {
     margin-left: 50px;
     margin-top: 10px;
 }
-
 
 /* HELPERS */
 

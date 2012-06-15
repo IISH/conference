@@ -13,6 +13,7 @@ class SendEmailJob {
      * Service responsible for sending the emails
      */
     def emailService
+
     /**
      * Scheduler helps resetting the trigger, if necessary
      */
@@ -58,7 +59,7 @@ class SendEmailJob {
     }
 
     /**
-     * Check the configured repeat interval and reschedule the job
+     * Checks the configured repeat interval and reschedules the job
      */
     private void rescheduleJob() {
         // Get the trigger and adjust the repeat interval
