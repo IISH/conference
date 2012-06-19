@@ -102,7 +102,7 @@
             <span class="loading property-value" arial-labelledby="not-participants">
                 <input type="hidden" name="network-id" value="${params.id}" />
                 <span class="ui-icon ui-icon-refresh"></span>
-                <g:message code="default.load.label" args="[g.message(code: 'participantdate.multiple.label').toLowerCase()]" />
+                <g:message code="default.load.label" args="[g.message(code: 'participantDate.multiple.label').toLowerCase()]" />
             </span>
             <ul id="not-in-session" class="property-value" arial-labelledby="not-participants">
                 <li>

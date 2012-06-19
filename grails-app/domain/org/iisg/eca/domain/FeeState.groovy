@@ -23,7 +23,7 @@ class FeeState extends EventDomain {
         name            column: 'name'
         isDefaultFee    column: 'is_default_fee'
 
-        feeAmounts      sort: 'endDate'
+        feeAmounts      sort: 'endDate', cascade: 'all-delete-orphan'
     }
 
     @Override

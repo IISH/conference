@@ -62,16 +62,20 @@
                         <g:message code="network.multiple.label" />                        
                     </label>
                     <ul class="property-value">
+                        <input type="hidden" name="Session.to-be-deleted" class="to-be-deleted" />
+
                         <g:each in="${eventSession.networks}" var="network" status="i">
                             <li>
                                 <g:select name="Session_${i}.networks.id" from="${networks}" optionKey="id" value="${network.id}" />
                                 <span class="ui-icon ui-icon-circle-minus"></span>
                             </li>
                         </g:each>
+
                         <li class="add">
                             <span class="ui-icon ui-icon-circle-plus"></span>
                             <g:message code="default.add.label" args="[g.message(code: 'network.label')]" />
                         </li>
+
                         <li class="hidden">
                             <g:select name="Session_null.networks.id" from="${networks}" optionKey="id" />
                             <span class="ui-icon ui-icon-circle-minus"></span>

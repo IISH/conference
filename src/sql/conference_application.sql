@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 15, 2012 at 05:06 PM
+-- Generation Time: Jun 19, 2012 at 05:16 PM
 -- Server version: 5.0.86
 -- PHP Version: 5.2.10
 
@@ -369,7 +369,7 @@ CREATE TABLE IF NOT EXISTS `days` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`day_id`),
   KEY `date_id` (`date_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=9 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `days`
@@ -398,7 +398,7 @@ CREATE TABLE IF NOT EXISTS `dynamic_pages` (
   PRIMARY KEY  (`dynamic_page_id`),
   KEY `date_id` (`date_id`),
   KEY `page_id` (`page_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=54 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=55 ;
 
 --
 -- Dumping data for table `dynamic_pages`
@@ -420,11 +420,11 @@ INSERT INTO `dynamic_pages` (`dynamic_page_id`, `content`, `cache`, `page_id`, `
 (13, '<overview domain="Network" id="url">\r\n	<column name="name" />\r\n	<column name="comment" />\r\n	<column name="url" />\r\n	<column name="showOnline" />\r\n	<column name="showInternal" />	\r\n	<column name="chairs" />\r\n	<column name="enabled" />\r\n	<column name="deleted" />\r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 11, NULL, 1, 0),
 (14, '<form domain="Title" id="url">\r\n   <column name="title" />\r\n   <column name="enabled" />\r\n\r\n   <button type="cancel" />\r\n   <button type="save" />  \r\n</form>', NULL, 12, NULL, 1, 0),
 (15, '<overview domain="Title" id="url">\r\n	<column name="title" />\r\n	<column name="enabled" />\r\n	<column name="deleted" />   \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 13, NULL, 1, 0),
-(16, '<overview domain="Room" id="url">\r\n	<column name="roomName" />\r\n	<column name="roomNumber" />\r\n	<column name="noOfSeats" />\r\n	<column name="comment" />\r\n	<column name="deleted" />   \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>\r\n', NULL, 18, NULL, 1, 0),
+(16, '<overview domain="Room" id="url">\r\n	<column name="roomName" />\r\n	<column name="roomNumber" />\r\n	<column name="noOfSeats" />\r\n	<column name="comment" />\r\n	<column name="enabled" />   \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>\r\n', NULL, 18, NULL, 1, 0),
 (17, '<form domain="Room" id="url">\r\n	<column name="roomName" />\r\n	<column name="roomNumber" />\r\n	<column name="noOfSeats" />\r\n	<column name="comment" />\r\n	<column name="enabled" />\r\n	<column name="deleted" /> \r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 16, NULL, 1, 0),
 (18, '<form domain="Room">\r\n	<column name="roomName" />\r\n	<column name="roomNumber" />\r\n	<column name="noOfSeats" />\r\n	<column name="comment" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 14, NULL, 1, 0),
 (19, '<table domain="Title">\r\n   <column name="title" />\r\n   <column name="enabled" />\r\n   <column name="deleted" />\r\n</table>\r\n\r\n<buttons>\r\n   <button type="back" />\r\n   <button action="create" />\r\n</buttons>', NULL, 20, NULL, 1, 0),
-(20, '<table domain="Room">\r\n	<column name="roomName" />\r\n	<column name="roomNumber" />\r\n	<column name="noOfSeats" />  \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>\r\n', NULL, 21, NULL, 1, 0),
+(20, '<table domain="Room" index="true">\r\n	<column name="roomName" />\r\n	<column name="roomNumber" />\r\n	<column name="noOfSeats" />  \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>\r\n', NULL, 21, NULL, 1, 0),
 (21, '<table domain="Network" index="true">\r\n	<column name="name" />\r\n	<column name="showOnline" />\r\n	<column name="showInternal" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>\r\n', NULL, 22, NULL, 1, 0),
 (22, '<table domain="Equipment" index="true">	\r\n	<column name="code" />\r\n	<column name="equipment" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>\r\n', NULL, 23, NULL, 1, 0),
 (24, '<table domain="Session" index="true">\r\n	<column name="code" />\r\n	<column name="name" /> \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>', NULL, 26, NULL, 1, 0),
@@ -447,10 +447,14 @@ INSERT INTO `dynamic_pages` (`dynamic_page_id`, `content`, `cache`, `page_id`, `
 (43, '<form domain="RequestMap" id="url">\r\n	<column name="url" />\r\n	<column name="configAttribute" />\r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 51, NULL, 1, 0),
 (44, '<table domain="RequestMap" index="true">\r\n	<column name="url" />\r\n	<column name="configAttribute" />\r\n</table>\r\n\r\n<buttons>\r\n   <button type="back" />\r\n   <button action="create" />\r\n</buttons>', NULL, 52, NULL, 1, 0),
 (45, '<overview domain="RequestMap" id="url">\r\n	<column name="url" />\r\n	<column name="configAttribute" /> \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 53, NULL, 1, 0),
-(46, '<table domain="ParticipantDate" index="true">\r\n	<column name="extras" eq="url" hidden="true" />\r\n	<column name="user" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>', NULL, 54, NULL, 1, 0),
+(46, '<table domain="ParticipantDate" index="true">\r\n	<column name="extras" eq="url" />\r\n	<column name="user" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>', NULL, 54, NULL, 1, 0),
 (48, '<table domain="ParticipantDate" index="true">\r\n	<column name="user">\r\n		<column name="lastName" />\r\n		<column name="firstName" />\r\n		<column name="country" />\r\n	</column>\r\n	<column name="state" />\r\n	<column name="invitationLetter" eq="1" hidden="true" />\r\n	<column name="invitationLetterSent" />  \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n</buttons>', NULL, 55, NULL, 1, 0),
 (49, '<table domain="ParticipantDate" index="true">\r\n	<column name="user">\r\n		<column name="lastName" />\r\n		<column name="firstName" />\r\n	</column>\r\n	<column name="feeState" />\r\n	<column name="lowerFeeRequested" eq="1" hidden="true" />\r\n	<column name="lowerFeeAnswered" />  \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n</buttons>', NULL, 56, NULL, 1, 0),
-(50, '<table domain="ParticipantDate">\r\n	<column name="user">\r\n		<column name="id" />\r\n		<column name="lastName" />\r\n		<column name="firstName" />\r\n		<column name="email" />\r\n	</column>\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n</buttons>', NULL, 57, NULL, 1, 0);
+(50, '<table domain="User">\r\n	<column name="id" />\r\n	<column name="lastName" />\r\n	<column name="firstName" />\r\n	<column name="email" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n</buttons>', NULL, 65, NULL, 1, 0),
+(51, '<table domain="Group" index="true">	\r\n	<column name="name" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>', NULL, 61, NULL, 1, 0),
+(52, '<form domain="Group">\r\n	<column name="name" />\r\n	<column name="pages" />\r\n	<column name="users" />\r\n	<column name="enabled" />\r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 62, NULL, 1, 0),
+(53, '<form domain="Group" id="url">\r\n	<column name="name" />\r\n	<column name="pages" />\r\n	<column name="users" />\r\n	<column name="enabled" />\r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 63, NULL, 1, 0),
+(54, '<overview domain="Group" id="url">\r\n	<column name="name" />\r\n	<column name="pages" />\r\n	<column name="users" />\r\n	<column name="enabled" /> \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 64, NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -563,7 +567,7 @@ CREATE TABLE IF NOT EXISTS `events` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`event_id`),
   UNIQUE KEY `code` (`code`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `events`
@@ -684,12 +688,14 @@ CREATE TABLE IF NOT EXISTS `groups` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`group_id`),
   KEY `groups_date_id_idx` (`date_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `groups`
 --
 
+INSERT INTO `groups` (`group_id`, `name`, `date_id`, `enabled`, `deleted`) VALUES
+(1, 'Access to all', 13, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -700,9 +706,6 @@ CREATE TABLE IF NOT EXISTS `groups` (
 CREATE TABLE IF NOT EXISTS `groups_pages` (
   `group_id` bigint(20) NOT NULL,
   `page_id` bigint(20) NOT NULL,
-  `show_in_menu` tinyint(1) NOT NULL default '1',
-  `enabled` tinyint(1) NOT NULL default '1',
-  `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`group_id`,`page_id`),
   KEY `groups_pages_page_id_fk` (`page_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -711,6 +714,13 @@ CREATE TABLE IF NOT EXISTS `groups_pages` (
 -- Dumping data for table `groups_pages`
 --
 
+INSERT INTO `groups_pages` (`group_id`, `page_id`) VALUES
+(1, 4),
+(1, 5),
+(1, 6),
+(1, 7),
+(1, 8),
+(1, 9);
 
 -- --------------------------------------------------------
 
@@ -730,15 +740,16 @@ CREATE TABLE IF NOT EXISTS `networks` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`network_id`),
   KEY `date_id` (`date_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=8 ;
 
 --
 -- Dumping data for table `networks`
 --
 
 INSERT INTO `networks` (`network_id`, `date_id`, `name`, `comment`, `url`, `show_online`, `show_internal`, `enabled`, `deleted`) VALUES
-(1, 13, 'Culture', NULL, 'http://www.url.nl', 1, 1, 1, 0),
-(2, 13, 'Criminal Justice', NULL, 'http://www.url.nl', 1, 1, 1, 0);
+(4, 13, 'Culture', NULL, 'http://www.url.nl', 1, 1, 1, 0),
+(5, 13, 'Criminal Justice', NULL, 'http://www.url.nl', 1, 1, 1, 0),
+(6, 13, 'Africa', NULL, 'http://www.url.nl', 1, 1, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -762,11 +773,8 @@ CREATE TABLE IF NOT EXISTS `networks_chairs` (
 --
 
 INSERT INTO `networks_chairs` (`network_id`, `user_id`, `is_main_chair`, `enabled`, `deleted`) VALUES
-(1, 1, 0, 1, 0),
-(1, 2, 0, 1, 0),
-(1, 3, 0, 1, 0),
-(2, 1, 1, 1, 0),
-(2, 2, 0, 1, 0);
+(5, 1, 0, 1, 0),
+(5, 3, 1, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -781,78 +789,85 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `title_default` varchar(50) collate utf8_unicode_ci NOT NULL,
   `controller` varchar(20) collate utf8_unicode_ci NOT NULL,
   `action` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `sort_order` int(11) NOT NULL default '999',
+  `show_in_menu` tinyint(1) NOT NULL default '0',
   `description` text collate utf8_unicode_ci,
   `parent_page_id` bigint(20) default NULL,
   `enabled` tinyint(1) NOT NULL default '1',
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`page_id`),
   KEY `pages_parent_page_id_idx` (`parent_page_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=64 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=66 ;
 
 --
 -- Dumping data for table `pages`
 --
 
-INSERT INTO `pages` (`page_id`, `title_code`, `title_arg`, `title_default`, `controller`, `action`, `description`, `parent_page_id`, `enabled`, `deleted`) VALUES
-(1, 'default.overview.label', 'event.label', 'Event overview', 'event', 'show', NULL, NULL, 1, 0),
-(2, 'default.edit.label', 'event.label', 'Edit event', 'event', 'edit', NULL, NULL, 1, 0),
-(3, 'default.overview.label', 'eventDate.label', 'Event date overview', 'eventDate', 'show', NULL, NULL, 1, 0),
-(4, 'default.edit.label', 'eventDate.label', 'Edit event date', 'eventDate', 'edit', NULL, NULL, 1, 0),
-(5, 'default.create.label', 'event.label', 'Create event', 'event', 'create', NULL, NULL, 1, 0),
-(6, 'default.create.label', 'eventDate.label', 'Create event date', 'eventDate', 'create', NULL, NULL, 1, 0),
-(7, 'default.create.label', 'network.label', 'Create network', 'network', 'create', NULL, NULL, 1, 0),
-(8, 'default.create.label', 'title.label', 'Create title', 'title', 'create', NULL, NULL, 1, 0),
-(9, 'event.multiple.label', NULL, 'Events', 'event', 'list', NULL, NULL, 1, 0),
-(10, 'default.edit.label', 'network.label', 'Edit network', 'network', 'edit', NULL, NULL, 1, 0),
-(11, 'default.overview.label', 'network.label', 'Network overview', 'network', 'show', NULL, NULL, 1, 0),
-(12, 'default.edit.label', 'title.label', 'Edit title', 'title', 'edit', NULL, NULL, 1, 0),
-(13, 'default.overview.label', 'title.label', 'Title overview', 'title', 'show', NULL, NULL, 1, 0),
-(14, 'default.create.label', 'room.label', 'Create room', 'room', 'create', NULL, NULL, 1, 0),
-(15, 'default.create.label', 'equipment.label', 'Create equipment', 'equipment', 'create', NULL, NULL, 1, 0),
-(16, 'default.edit.label', 'room.label', 'Edit room', 'room', 'edit', NULL, NULL, 1, 0),
-(17, 'default.edit.label', 'equipment.label', 'Edit equipment', 'equipment', 'edit', NULL, NULL, 1, 0),
-(18, 'default.overview.label', 'room.label', 'Room overview', 'room', 'show', NULL, NULL, 1, 0),
-(19, 'default.overview.label', 'equipment.label', 'Equipment overview', 'equipment', 'show', NULL, NULL, 1, 0),
-(20, 'default.list.label', 'title.label', 'Title list', 'title', 'list', NULL, NULL, 1, 0),
-(21, 'default.list.label', 'room.label', 'Room list', 'room', 'list', NULL, NULL, 1, 0),
-(22, 'default.list.label', 'network.label', 'Network list', 'network', 'list', NULL, NULL, 1, 0),
-(23, 'default.list.label', 'equipment.label', 'Equipment list', 'equipment', 'list', NULL, NULL, 1, 0),
-(25, 'default.welcome.label', NULL, 'Welcome', 'event', 'index', NULL, NULL, 1, 0),
-(26, 'default.list.label', 'session.label', 'Session list', 'session', 'list', NULL, NULL, 1, 0),
-(27, 'default.edit.label', 'session.label', 'Edit session', 'session', 'edit', NULL, NULL, 1, 0),
-(28, 'default.create.label', 'session.label', 'Create session', 'session', 'create', NULL, NULL, 1, 0),
-(29, 'default.overview.label', 'session.label', 'Session overview', 'session', 'show', NULL, NULL, 1, 0),
-(30, 'default.create.label', 'feeState.label', 'Create fee state', 'fee', 'create', NULL, NULL, 1, 0),
-(31, 'default.edit.label', 'feeState.label', 'Edit fee state', 'fee', 'edit', NULL, NULL, 1, 0),
-(32, 'default.list.label', 'feeState.multiple.label', 'List fee states', 'fee', 'list', NULL, NULL, 1, 0),
-(33, 'default.create.label', 'participantState.label', 'Create participant state', 'participantState', 'create', NULL, NULL, 1, 0),
-(34, 'default.edit.label', 'participantState.label', 'Edit participant state', 'participantState', 'edit', NULL, NULL, 1, 0),
-(35, 'default.overview.label', 'participantState.label', 'Participant state overview', 'participantState', 'show', NULL, NULL, 1, 0),
-(36, 'default.list.label', 'participantState.multiple.label', 'Participant states list', 'participantState', 'list', NULL, NULL, 1, 0),
-(37, 'default.list.label', 'participantDate.label', 'Participant list', 'participant', 'list', NULL, NULL, 1, 0),
-(38, 'default.overview.label', 'participantDate.label', 'User overview', 'participant', 'show', NULL, NULL, 1, 0),
-(39, 'default.plan.drag.label', 'session.multiple.label', 'Plan sessions (Drag)', 'session', 'planDrag', NULL, NULL, 1, 0),
-(40, 'default.create.label', 'emailTemplate.label', 'Create email template', 'emailTemplate', 'create', NULL, NULL, 1, 0),
-(41, 'default.edit.label', 'emailTemplate.label', 'Edit email template', 'emailTemplate', 'edit', NULL, NULL, 1, 0),
-(42, 'default.list.label', 'emailTemplate.multiple.label', 'List email templates', 'emailTemplate', 'list', NULL, NULL, 1, 0),
-(43, 'default.overview.label', 'emailTemplate.label', 'Show email template', 'emailTemplate', 'show', NULL, NULL, 1, 0),
-(44, 'default.create.label', 'emailCode.label', 'Create email code', 'emailCode', 'create', NULL, NULL, 1, 0),
-(45, 'default.edit.label', 'emailCode.label', 'Edit email code', 'emailCode', 'edit', NULL, NULL, 1, 0),
-(46, 'default.list.label', 'emailCode.multiple.label', 'List email code', 'emailCode', 'list', NULL, NULL, 1, 0),
-(47, 'default.overview.label', 'emailCode.label', 'Show email code', 'emailCode', 'show', NULL, NULL, 1, 0),
-(48, 'default.list.label', 'setting.multiple.label', 'List settings', 'setting', 'list', NULL, NULL, 1, 0),
-(49, 'default.edit.label', 'setting.label', 'Edit setting', 'setting', 'edit', NULL, NULL, 1, 0),
-(50, 'default.create.label', 'requestMap.label', 'Create request map', 'requestmap', 'create', NULL, NULL, 1, 0),
-(51, 'default.edit.label', 'requestMap.label', 'Edit request map', 'requestmap', 'edit', NULL, NULL, 1, 0),
-(52, 'default.list.label', 'requestMap.label', 'Request map list', 'requestmap', 'list', NULL, NULL, 1, 0),
-(53, 'default.overview.label', 'requestMap.label', 'Show request map', 'requestmap', 'show', NULL, NULL, 1, 0),
-(54, 'default.list.label', 'extra.label', 'Extra list', 'extra', 'list', NULL, NULL, 1, 0),
-(55, 'default.list.label', 'participantDate.inventationLetter.label', 'Inventation letter list', 'participant', 'inventations', NULL, NULL, 1, 0),
-(56, 'default.list.label', 'participantDate.lowerFee.label', 'Lower fee list', 'participant', 'lowerFee', NULL, NULL, 1, 0),
-(57, 'default.list.label', 'participantDate.label', 'Participant list', 'participant', 'listAll', NULL, NULL, 1, 0),
-(58, 'default.plan.click.label', 'session.multiple.label', 'Plan sessions (Click)', 'session', 'planClick', NULL, NULL, 1, 0),
-(59, 'default.send.label', 'email.label', 'Send e-mail', 'email', 'list', NULL, NULL, 1, 0),
-(60, 'default.send.label', 'email.label', 'Send e-mail', 'email', 'send', NULL, NULL, 1, 0);
+INSERT INTO `pages` (`page_id`, `title_code`, `title_arg`, `title_default`, `controller`, `action`, `sort_order`, `show_in_menu`, `description`, `parent_page_id`, `enabled`, `deleted`) VALUES
+(1, 'default.overview.label', 'event.label', 'Event overview', 'event', 'show', 999, 0, NULL, NULL, 1, 0),
+(2, 'default.edit.label', 'event.label', 'Edit event', 'event', 'edit', 999, 0, NULL, NULL, 1, 0),
+(3, 'default.overview.label', 'eventDate.label', 'Event date overview', 'eventDate', 'show', 999, 0, NULL, NULL, 1, 0),
+(4, 'default.edit.label', 'eventDate.label', 'Edit event date', 'eventDate', 'edit', 999, 0, NULL, NULL, 1, 0),
+(5, 'default.create.label', 'event.label', 'Create event', 'event', 'create', 999, 0, NULL, NULL, 1, 0),
+(6, 'default.create.label', 'eventDate.label', 'Create event date', 'eventDate', 'create', 999, 0, NULL, NULL, 1, 0),
+(7, 'default.create.label', 'network.label', 'Create network', 'network', 'create', 999, 0, NULL, NULL, 1, 0),
+(8, 'default.create.label', 'title.label', 'Create title', 'title', 'create', 999, 0, NULL, NULL, 1, 0),
+(9, 'event.multiple.label', NULL, 'Events', 'event', 'list', 999, 0, NULL, NULL, 1, 0),
+(10, 'default.edit.label', 'network.label', 'Edit network', 'network', 'edit', 999, 0, NULL, NULL, 1, 0),
+(11, 'default.overview.label', 'network.label', 'Network overview', 'network', 'show', 999, 0, NULL, NULL, 1, 0),
+(12, 'default.edit.label', 'title.label', 'Edit title', 'title', 'edit', 999, 0, NULL, NULL, 1, 0),
+(13, 'default.overview.label', 'title.label', 'Title overview', 'title', 'show', 999, 0, NULL, NULL, 1, 0),
+(14, 'default.create.label', 'room.label', 'Create room', 'room', 'create', 999, 0, NULL, NULL, 1, 0),
+(15, 'default.create.label', 'equipment.label', 'Create equipment', 'equipment', 'create', 999, 0, NULL, NULL, 1, 0),
+(16, 'default.edit.label', 'room.label', 'Edit room', 'room', 'edit', 999, 0, NULL, NULL, 1, 0),
+(17, 'default.edit.label', 'equipment.label', 'Edit equipment', 'equipment', 'edit', 999, 0, NULL, NULL, 1, 0),
+(18, 'default.overview.label', 'room.label', 'Room overview', 'room', 'show', 999, 0, NULL, NULL, 1, 0),
+(19, 'default.overview.label', 'equipment.label', 'Equipment overview', 'equipment', 'show', 999, 0, NULL, NULL, 1, 0),
+(20, 'default.list.label', 'title.label', 'Title list', 'title', 'list', 999, 0, NULL, NULL, 1, 0),
+(21, 'room.multiple.label', NULL, 'Rooms', 'room', 'list', 25, 1, NULL, NULL, 1, 0),
+(22, 'network.multiple.label', NULL, 'Networks', 'network', 'list', 10, 1, NULL, NULL, 1, 0),
+(23, 'default.list.label', 'equipment.label', 'Equipment list', 'equipment', 'list', 999, 0, NULL, NULL, 1, 0),
+(25, 'default.welcome.label', NULL, 'Welcome', 'event', 'index', 999, 0, NULL, NULL, 1, 0),
+(26, 'session.multiple.label', NULL, 'Sessions', 'session', 'list', 15, 1, NULL, NULL, 1, 0),
+(27, 'default.edit.label', 'session.label', 'Edit session', 'session', 'edit', 999, 0, NULL, NULL, 1, 0),
+(28, 'default.create.label', 'session.label', 'Create session', 'session', 'create', 999, 0, NULL, NULL, 1, 0),
+(29, 'default.overview.label', 'session.label', 'Session overview', 'session', 'show', 999, 0, NULL, NULL, 1, 0),
+(30, 'default.create.label', 'feeState.label', 'Create fee state', 'fee', 'create', 999, 0, NULL, NULL, 1, 0),
+(31, 'default.edit.label', 'feeState.label', 'Edit fee state', 'fee', 'edit', 999, 0, NULL, NULL, 1, 0),
+(32, 'default.list.label', 'feeState.multiple.label', 'List fee states', 'fee', 'list', 999, 0, NULL, NULL, 1, 0),
+(33, 'default.create.label', 'participantState.label', 'Create participant state', 'participantState', 'create', 999, 0, NULL, NULL, 1, 0),
+(34, 'default.edit.label', 'participantState.label', 'Edit participant state', 'participantState', 'edit', 999, 0, NULL, NULL, 1, 0),
+(35, 'default.overview.label', 'participantState.label', 'Participant state overview', 'participantState', 'show', 999, 0, NULL, NULL, 1, 0),
+(36, 'default.list.label', 'participantState.multiple.label', 'Participant states list', 'participantState', 'list', 999, 0, NULL, NULL, 1, 0),
+(37, 'participantDate.multiple.label', NULL, 'Participants', 'participant', 'list', 5, 1, NULL, NULL, 1, 0),
+(38, 'default.overview.label', 'participantDate.label', 'User overview', 'participant', 'show', 999, 0, NULL, NULL, 1, 0),
+(39, 'default.plan.drag.label', 'session.multiple.label', 'Plan sessions (Drag)', 'session', 'planDrag', 999, 0, NULL, NULL, 1, 0),
+(40, 'default.create.label', 'emailTemplate.label', 'Create email template', 'emailTemplate', 'create', 999, 0, NULL, NULL, 1, 0),
+(41, 'default.edit.label', 'emailTemplate.label', 'Edit email template', 'emailTemplate', 'edit', 999, 0, NULL, NULL, 1, 0),
+(42, 'default.list.label', 'emailTemplate.multiple.label', 'List email templates', 'emailTemplate', 'list', 999, 0, NULL, NULL, 1, 0),
+(43, 'default.overview.label', 'emailTemplate.label', 'Show email template', 'emailTemplate', 'show', 999, 0, NULL, NULL, 1, 0),
+(44, 'default.create.label', 'emailCode.label', 'Create email code', 'emailCode', 'create', 999, 0, NULL, NULL, 1, 0),
+(45, 'default.edit.label', 'emailCode.label', 'Edit email code', 'emailCode', 'edit', 999, 0, NULL, NULL, 1, 0),
+(46, 'default.list.label', 'emailCode.multiple.label', 'List email code', 'emailCode', 'list', 999, 0, NULL, NULL, 1, 0),
+(47, 'default.overview.label', 'emailCode.label', 'Show email code', 'emailCode', 'show', 999, 0, NULL, NULL, 1, 0),
+(48, 'default.list.label', 'setting.multiple.label', 'List settings', 'setting', 'list', 999, 0, NULL, NULL, 1, 0),
+(49, 'default.edit.label', 'setting.label', 'Edit setting', 'setting', 'edit', 999, 0, NULL, NULL, 1, 0),
+(50, 'default.create.label', 'requestMap.label', 'Create request map', 'requestmap', 'create', 999, 0, NULL, NULL, 1, 0),
+(51, 'default.edit.label', 'requestMap.label', 'Edit request map', 'requestmap', 'edit', 999, 0, NULL, NULL, 1, 0),
+(52, 'default.list.label', 'requestMap.label', 'Request map list', 'requestmap', 'list', 999, 0, NULL, NULL, 1, 0),
+(53, 'default.overview.label', 'requestMap.label', 'Show request map', 'requestmap', 'show', 999, 0, NULL, NULL, 1, 0),
+(54, 'default.list.label', 'extra.label', 'Extra list', 'extra', 'list', 999, 0, NULL, NULL, 1, 0),
+(55, 'default.list.label', 'participantDate.inventationLetter.label', 'Inventation letter list', 'participant', 'inventations', 999, 0, NULL, NULL, 1, 0),
+(56, 'default.list.label', 'participantDate.lowerFee.label', 'Lower fee list', 'participant', 'lowerFee', 999, 0, NULL, NULL, 1, 0),
+(57, 'default.list.label', 'participantDate.label', 'Participant list', 'participant', 'listAll', 999, 0, NULL, NULL, 1, 0),
+(58, 'default.plan.click.label', 'session.multiple.label', 'Plan sessions (Click)', 'session', 'planClick', 30, 1, NULL, NULL, 1, 0),
+(59, 'default.send.label', 'email.label', 'Send e-mail', 'email', 'list', 35, 1, NULL, NULL, 1, 0),
+(60, 'default.send.label', 'email.label', 'Send e-mail', 'email', 'send', 999, 0, NULL, NULL, 1, 0),
+(61, 'group.multiple.label', NULL, 'Authorization groups', 'authGroup', 'list', 999, 1, NULL, NULL, 1, 0),
+(62, 'default.create.label', 'group.label', 'Create group', 'authGroup', 'create', 999, 0, NULL, NULL, 1, 0),
+(63, 'default.edit.label', 'group.label', 'Edit group', 'authGroup', 'edit', 999, 0, NULL, NULL, 1, 0),
+(64, 'default.overview.label', 'group.label', 'Group overview', 'authGroup', 'show', 999, 0, NULL, NULL, 1, 0),
+(65, 'user.multiple.list', NULL, 'Users', 'userAuth', 'list', 999, 1, NULL, NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1137,9 +1152,6 @@ CREATE TABLE IF NOT EXISTS `participant_volunteering` (
 -- Dumping data for table `participant_volunteering`
 --
 
-INSERT INTO `participant_volunteering` (`participant_date_id`, `volunteering_id`, `network_id`) VALUES
-(1, 1, 1),
-(1, 2, 2);
 
 -- --------------------------------------------------------
 
@@ -1454,7 +1466,7 @@ CREATE TABLE IF NOT EXISTS `sessions` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`session_id`),
   KEY `date_id` (`date_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `sessions`
@@ -1523,9 +1535,11 @@ CREATE TABLE IF NOT EXISTS `session_in_network` (
 --
 
 INSERT INTO `session_in_network` (`network_id`, `session_id`) VALUES
-(2, 2),
-(2, 3),
-(2, 4);
+(5, 1),
+(6, 1),
+(5, 2),
+(5, 3),
+(5, 4);
 
 -- --------------------------------------------------------
 
@@ -1544,7 +1558,7 @@ CREATE TABLE IF NOT EXISTS `session_participant` (
   KEY `user_id` (`user_id`),
   KEY `session_id` (`session_id`),
   KEY `participant_type_id` (`participant_type_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=61 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=64 ;
 
 --
 -- Dumping data for table `session_participant`
@@ -1567,7 +1581,8 @@ INSERT INTO `session_participant` (`session_participant_id`, `user_id`, `session
 (57, 2, 2, 3, 1, 0),
 (58, 5, 2, 2, 1, 0),
 (59, 5, 3, 2, 1, 0),
-(60, 6, 3, 5, 1, 0);
+(60, 6, 3, 5, 1, 0),
+(62, 2, 2, 4, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1589,7 +1604,7 @@ CREATE TABLE IF NOT EXISTS `session_room_datetime` (
 --
 
 INSERT INTO `session_room_datetime` (`room_id`, `session_datetime_id`, `session_id`) VALUES
-(5, 4, 3);
+(5, 5, 3);
 
 -- --------------------------------------------------------
 
@@ -1693,7 +1708,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`user_id`, `email`, `lastname`, `firstname`, `gender`, `title`, `address`, `city`, `country_id`, `language`, `password`, `salt`, `phone`, `fax`, `mobile`, `organisation`, `department`, `extra_info`, `date_added`, `enabled`, `deleted`) VALUES
-(1, 'testeca1@knoex.com', 'Haas', 'Lester', 'M', NULL, NULL, 'City', 169, 'en', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, NULL, NULL, 'International Institute for Social History', 'Department', NULL, '2012-04-26', 1, 0),
+(1, 'testeca1@knoex.com', 'Haas', 'Lester', 'M', 'null', NULL, 'City', 169, 'nl', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, NULL, NULL, 'International Institute for Social History', 'Department', NULL, '2012-04-26', 1, 0),
 (2, 'testeca2@knoex.com', 'Jansen', 'Jan', 'M', 'Mr.', 'Astreet 5\r\n1234 AB', 'Amsterdam', 169, 'nl', 'e25aad0f7d9d00d2bc7d1ee8754cf7610e22edc1e5be813d3866263a5b2f483eac7891e74315a727bf79b6bdbb12d92073bdf4fdc273dafec771ec1c1e4fbfdf', 'our05jbtovlvgpqsmsisji9v3t', '0123456789', NULL, '0623456789', 'International Institute of Social History', NULL, NULL, '2012-04-26', 1, 0),
 (3, 'testeca3@knoex.com', 'Molens', 'Kees', 'M', NULL, NULL, 'Another City', 1, 'en', '9ff3d4a2607fce38eda4f17a2a86ecb4b2bdb598659540f132ec71066650a9590a66d4e658b61cb4823e9304ed8a916171426a51542c42104969ca9c231fd707', 'tc9u3d1rs1rtuoe2rv79hllv7h', NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
 (4, 'testeca4@knoex.com', 'Kloos', 'Joost', 'M', NULL, NULL, 'City', 169, 'nl', 'password', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
@@ -1718,6 +1733,8 @@ CREATE TABLE IF NOT EXISTS `users_groups` (
 -- Dumping data for table `users_groups`
 --
 
+INSERT INTO `users_groups` (`user_id`, `group_id`) VALUES
+(2, 1);
 
 -- --------------------------------------------------------
 
@@ -1729,7 +1746,6 @@ CREATE TABLE IF NOT EXISTS `users_pages` (
   `user_id` bigint(20) NOT NULL,
   `page_id` bigint(20) NOT NULL,
   `denied` tinyint(1) NOT NULL default '0',
-  `show_in_menu` tinyint(1) NOT NULL default '1',
   `date_id` bigint(20) default NULL,
   `enabled` tinyint(1) NOT NULL default '1',
   `deleted` tinyint(1) NOT NULL default '0',
@@ -1760,14 +1776,15 @@ CREATE TABLE IF NOT EXISTS `users_roles` (
   KEY `users_roles_user_id_idx` (`user_id`),
   KEY `users_roles_role_id_idx` (`role_id`),
   KEY `users_roles_date_id_idx` (`date_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `users_roles`
 --
 
 INSERT INTO `users_roles` (`user_role_id`, `user_id`, `role_id`, `date_id`, `enabled`, `deleted`) VALUES
-(1, 1, 1, NULL, 1, 0);
+(1, 1, 1, NULL, 1, 0),
+(2, 2, 2, 13, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1937,8 +1954,8 @@ ALTER TABLE `participant_date_extra`
 -- Constraints for table `participant_not_present`
 --
 ALTER TABLE `participant_not_present`
-  ADD CONSTRAINT `participant_not_present_ibfk_2` FOREIGN KEY (`session_datetime_id`) REFERENCES `session_datetime` (`session_datetime_id`),
-  ADD CONSTRAINT `participant_not_present_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
+  ADD CONSTRAINT `participant_not_present_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `participant_not_present_ibfk_2` FOREIGN KEY (`session_datetime_id`) REFERENCES `session_datetime` (`session_datetime_id`);
 
 --
 -- Constraints for table `participant_states`
@@ -1998,8 +2015,8 @@ ALTER TABLE `session_datetime`
 -- Constraints for table `session_in_network`
 --
 ALTER TABLE `session_in_network`
-  ADD CONSTRAINT `session_in_network_ibfk_2` FOREIGN KEY (`session_id`) REFERENCES `sessions` (`session_id`),
-  ADD CONSTRAINT `session_in_network_ibfk_1` FOREIGN KEY (`network_id`) REFERENCES `networks` (`network_id`);
+  ADD CONSTRAINT `session_in_network_ibfk_1` FOREIGN KEY (`network_id`) REFERENCES `networks` (`network_id`),
+  ADD CONSTRAINT `session_in_network_ibfk_2` FOREIGN KEY (`session_id`) REFERENCES `sessions` (`session_id`);
 
 --
 -- Constraints for table `session_participant`

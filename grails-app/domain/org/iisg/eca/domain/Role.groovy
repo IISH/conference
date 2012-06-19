@@ -19,6 +19,8 @@ class Role {
         role        column: 'role'
         description column: 'description',  type: 'text'
         fullRights  column: 'full_rights'
+        
+        userRoles   cascade: 'all-delete-orphan'
     }
 
     static constraints = {

@@ -14,6 +14,7 @@ import org.iisg.eca.domain.Room
 import org.iisg.eca.domain.Network
 import org.iisg.eca.domain.Equipment
 import org.iisg.eca.domain.SessionRoomDateTime
+import org.apache.catalina.ant.SessionsTask
 
 class SessionController {
     def pageInformation
@@ -74,9 +75,14 @@ class SessionController {
         if (request.post) {
             bindData(session, params, [include: ["code", "name", "comment", "enabeled"]], "Session")
 
+            List<Network> networks = []
+            networks += session.networks
+            networks.each { it.removeFromSessions(session) }
+            session.save(flush: true)
+
             int i = 0
             while (params["Session_${i}"]) {
-                bindData(session, params, [include: ['networks']], "Session_${i}")
+                session.addToNetworks(Network.findById(params.long("Session_${i}.networks.id")))
                 i++
             }
 
@@ -188,7 +194,7 @@ class SessionController {
 
             // If there is no responseMap defined yet, it can only mean the participant could not be found
             if (!responseMap) {
-                responseMap = [success: false, message: g.message(code: 'default.not.found.message', args: [g.message(code: 'participantdate.label')])]
+                responseMap = [success: false, message: g.message(code: 'default.not.found.message', args: [g.message(code: 'participantDate.label')])]
             }
 
             render responseMap as JSON
@@ -232,7 +238,7 @@ class SessionController {
                 }
             }
             else {
-                responseMap = [success: false, message: g.message(code: 'default.not.found.message', args: ['Participant'])]
+                responseMap = [success: false, message: g.message(code: 'default.not.found.message', args: [g.message(code: 'participantDate.label')])]
             }
             
             render responseMap as JSON
@@ -247,7 +253,7 @@ class SessionController {
         if (request.xhr) {
             List<User> participants = participantSessionService.allParticipants
             render participants.collect { user ->
-                def papers = user.papers.findAll { (it.date.id == pageInformation.date.id) && (it.session == null) }
+                def papers = Paper.findAllByUserAndSessionIsNull(user)
                 [label: "${user.firstName} ${user.lastName}", value: user.id, papers: papers.collect { [label: it.title, value: it.id] }]
             } as JSON
         }
@@ -265,6 +271,10 @@ class SessionController {
         }
     }
 
+    /**
+     * Returns the equipment necessary to plan this session and the time slots that have to be blocked
+     * (AJAX call)
+     */
     def possibilities() {
         if (request.xhr && params.session_id) {
             Map possibilitiesResponse = [:]
@@ -274,9 +284,11 @@ class SessionController {
             possibilitiesResponse.put('equipment', equipment.collect { it.id })
 
             List<Session> sessions = sessionPlannerService.getSessionsWithSameParticipants(session)
-            List<Long> dateTimeIds = sessions.collect { SessionRoomDateTime.findBySession(it)?.sessionDateTime?.id }.unique()
+            List<Long> dateTimeIds = sessions.collect { SessionRoomDateTime.findBySession(it)?.sessionDateTime?.id }
+            dateTimeIds.addAll(sessionPlannerService.getTimesParticipantsNotPresent(session)*.id)
             dateTimeIds.remove(null)
-            possibilitiesResponse.put('date-times', dateTimeIds)
+
+            possibilitiesResponse.put('date-times', dateTimeIds.unique())
 
             render possibilitiesResponse as JSON
         }
@@ -326,35 +338,6 @@ class SessionController {
         }
     }
 
-    /*def possibilitiesAndInfo() {
-        if (request.xhr && params.session_id) {
-            Map possibilitiesResponse = [:]
-            Session session = Session.findById(params.long('session_id'))
-
-            if (session) {
-                possibilitiesResponse.put('success', true)
-                possibilitiesResponse.put('code', session.code)
-                possibilitiesResponse.put('name', session.name)
-                possibilitiesResponse.put('comment', session.comment)
-                possibilitiesResponse.put('participants', session.sessionParticipants.collect { it.toString() })
-                possibilitiesResponse.put('equipment', sessionPlannerService.getEquipment(session).collect { it.toString() })
-
-                List<Equipment> equipment = sessionPlannerService.getEquipment(session)
-                possibilitiesResponse.put('equipment-ids', equipment.collect { it.id })
-
-                List<Session> sessions = sessionPlannerService.getSessionsWithSameParticipants(session)
-                List<Long> dateTimeIds = sessions.collect { SessionRoomDateTime.findBySession(it)?.sessionDateTime?.id }.unique()
-                dateTimeIds.remove(null)
-                possibilitiesResponse.put('date-times', dateTimeIds)
-            }
-            else {
-                possibilitiesResponse = [success: false, message: 'Not found!']
-            }
-
-            render possibilitiesResponse as JSON
-        }
-    }         */
-
     def sessionInfo() {
         if (request.xhr && params.session_id) {
             Map possibilitiesResponse = [:]
@@ -375,7 +358,7 @@ class SessionController {
                 )
             }
             else {
-                possibilitiesResponse = [success: false, message: 'Not found!']
+                possibilitiesResponse = [success: false, message: g.message(code: 'default.not.found.message', args: [g.message(code: 'session.label')])]
             }
 
             render possibilitiesResponse as JSON
@@ -395,7 +378,7 @@ class SessionController {
                 possibilitiesResponse.put('comment', room.comment)
             }
             else {
-                possibilitiesResponse = [success: false, message: 'Not found!']
+                possibilitiesResponse = [success: false, message: g.message(code: 'default.not.found.message', args: [g.message(code: 'room.label')])]
             }
 
             render possibilitiesResponse as JSON

@@ -30,6 +30,8 @@ class Equipment extends EventDateDomain {
         imageUrl    column: 'image_url'
 
         papers      joinTable: 'paper_equipment'
+        
+        roomSessionDateTimeEquipment cascade: 'all-delete-orphan'
     }
     
     @Override

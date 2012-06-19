@@ -22,6 +22,10 @@ class ParticipantType extends EventDomain {
         type        column: 'type'
         withPaper   column: 'with_paper'
         importance  column: 'importance',           sort: 'desc'
+        
+        sessionParticipants cascade: 'all-delete-orphan'
+        rulesFirst          cascade: 'all-delete-orphan'
+        rulesSecond         cascade: 'all-delete-orphan'
     }
 
     static constraints = {

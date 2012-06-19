@@ -1,17 +1,18 @@
 package org.iisg.eca.service
 
+import org.iisg.eca.utils.TimeSlot
+
 import org.iisg.eca.domain.Room
 import org.iisg.eca.domain.Session
 import org.iisg.eca.domain.Equipment
 import org.iisg.eca.domain.SessionDateTime
+import org.iisg.eca.domain.SessionParticipant
 import org.iisg.eca.domain.SessionRoomDateTime
 import org.iisg.eca.domain.RoomSessionDateTimeEquipment
 
-import org.iisg.eca.utils.TimeSlot
-import org.iisg.eca.domain.User
-import org.iisg.eca.domain.SessionParticipant
-import org.iisg.eca.domain.DefaultDomain
-
+/**
+ * Service responsible for session planning activities
+ */
 class SessionPlannerService {
     /**
      * Finds out all possible combinations of equipment for the current event date
@@ -21,6 +22,10 @@ class SessionPlannerService {
         GroovyCollections.subsequences(Equipment.list(sort: 'code'))
     }
 
+    /**
+     * Returns all sessions that are not scheduled yet
+     * @return All sessions that are not scheduled yet
+     */
     List<Session> getUnscheduledSessions() {
         Session.executeQuery('''
             FROM Session AS s
@@ -31,6 +36,11 @@ class SessionPlannerService {
         ''')
     }
 
+    /**
+     * Returns all necessary equipment for the given session
+     * @param session The session in question
+     * @return A list of equipment necessary
+     */
     List<Equipment> getEquipment(Session session) {
         (List<Equipment>) Session.executeQuery('''
             SELECT e
@@ -41,6 +51,11 @@ class SessionPlannerService {
         ''', [sessionId: session.id])
     }
 
+    /**
+     * Returns a list of sessions that have the same participants scheduled as the given session
+     * @param session The session of which the participants should be checked
+     * @return A list of sessions that have the same participants scheduled as the given one
+     */
     List<Session> getSessionsWithSameParticipants(Session session) {
         SessionParticipant.disableHibernateFilter('hideDeleted')
 
@@ -58,6 +73,28 @@ class SessionPlannerService {
 
         SessionParticipant.enableHibernateFilter('hideDeleted')
         result
+    }
+
+    /**
+     * Returns a list of time slots, where at least one of the participants from the given session is not present
+     * @param session The session of which the participants should be checked
+     * @return A list of time slots, where at least one of the participants from the given session is not present
+     */
+    List<SessionDateTime> getTimesParticipantsNotPresent(Session session) {
+        List<Long> userIds = session.sessionParticipants*.user.id
+
+        // If there are no participants, then there is no point in executing the query
+        if (userIds.isEmpty()) {
+            return []
+        }
+
+        (List<SessionDateTime>) SessionParticipant.executeQuery('''
+            SELECT dt
+            FROM ParticipantDate AS p
+            INNER JOIN p.user.dateTimesNotPresent AS dt
+            WHERE p.user.id IN :userIds
+            GROUP BY dt
+        ''', [userIds: userIds])
     }
 
     /**

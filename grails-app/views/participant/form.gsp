@@ -3,8 +3,11 @@
 <html>
     <head>
         <meta name="layout" content="main">
+        <g:javascript src="participant.js" />
     </head>
     <body>
+        <eca:navigation prev="${eca.createLink(action: params.action, id: params.int('id')-1)}" next="${eca.createLink(action: params.action, id: params.int('id')+1)}" />
+
         <g:hasErrors model="[participant: participant, user: user]">
             <ul class="errors" role="alert">
                 <g:eachError model="[participant: participant, user: user]" var="error">
@@ -272,13 +275,19 @@
                     <div class="clear empty"></div>
                 </div>
 
-                <div id="papers-tab" class="columns">
+                <div id="papers-tab" class="columns copy">
                     <input type="hidden" name="max-papers" value="${Setting.getByEvent(Setting.findAllByProperty(Setting.MAX_PAPERS_PER_PERSON_PER_SESSION)).value}" />
+                    <input type="hidden" name="to-be-deleted" class="to-be-deleted" />
 
                     <g:if test="${participant}">
-                    <g:each in="${participant.user.papers}" var="paper" status="i">
+                    <g:each in="${papers}" var="paper" status="i">
                         <div class="column">
                             <input type="hidden" name="Paper_${i}.id" value="${paper.id}" />
+
+                            <span class="remove-item">
+                                <span class="ui-icon ui-icon-circle-minus"></span>
+                                <g:message code="default.delete.label" args="[message(code: 'paper.label').toLowerCase()]" />
+                            </span>
 
                             <fieldset class="form">
                                 <legend><g:message code="paper.label" /></legend>
@@ -343,7 +352,7 @@
                                         <g:message code="paper.networkProposal.label" />
                                     </label>
                                     <div class="property-value">
-                                        <g:select from="${networks}" name="Paper_${i}.networkProposal.id" optionKey="id" optionValue="name" value="${paper.networkProposal}" noSelection="${[null: ' ']}" />
+                                        <g:select from="${networks}" name="Paper_${i}.networkProposal.id" optionKey="id" optionValue="name" value="${paper.networkProposal?.id}" noSelection="${['': ' ']}" />
                                         <input type="button" id="btn_network" name="btn_network" value="${g.message(code: "default.goto")}" />
                                     </div>
                                 </div>
@@ -396,7 +405,12 @@
                         </div>
                     </g:each>
 
-                    <div class="column copy hidden">
+                    <div class="column hidden">
+                        <span class="remove-item">
+                            <span class="ui-icon ui-icon-circle-minus"></span>
+                            <g:message code="default.delete.label" args="[message(code: 'paper.label').toLowerCase()]" />
+                        </span>
+
                         <fieldset class="form">
                             <legend><g:message code="paper.label" /></legend>
                             <div>
@@ -452,7 +466,7 @@
                                     <g:message code="paper.networkProposal.label" />
                                 </label>
                                 <div class="property-value">
-                                    <g:select from="${networks}" name="Paper_null.networkProposal" optionKey="id" optionValue="name" noSelection="${[null: ' ']}" />
+                                    <g:select from="${networks}" name="Paper_null.networkProposal" optionKey="id" optionValue="name" noSelection="${['': ' ']}" />
                                     <input type="button" id="btn_network" name="btn_network" value="${g.message(code: "default.goto")}" />
                                 </div>
                             </div>

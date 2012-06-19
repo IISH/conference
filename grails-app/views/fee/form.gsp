@@ -39,7 +39,11 @@
                 <div class="columns copy">
                     <g:each in="${feeState.feeAmounts}" var="amount" status="i">
                         <fieldset class="form column">
-                            <span class="ui-icon ui-icon-circle-minus"></span>
+                            <span class="remove-item">
+                                <span class="ui-icon ui-icon-circle-minus"></span>
+                                <g:message code="default.delete.label" args="[message(code: 'feeAmount.label').toLowerCase()]" />
+                            </span>
+
                             <input type="hidden" name="feeAmount_${i}.id" value="${amount?.id}" />
 
                             <div class="${hasErrors(bean: amount, field: 'feeAmount', 'error')} required">
@@ -83,7 +87,10 @@
                         </fieldset>
                     </g:each>
                     <fieldset class="form column hidden">
-                        <span class="ui-icon ui-icon-circle-minus"></span>
+                        <span class="remove-item">
+                            <span class="ui-icon ui-icon-circle-minus"></span>
+                            <g:message code="default.delete.label" args="[message(code: 'feeAmount.label').toLowerCase()]" />
+                        </span>
 
                         <div class="required">
                             <label class="property-label">

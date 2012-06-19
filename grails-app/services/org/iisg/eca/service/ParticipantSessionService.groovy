@@ -65,6 +65,7 @@ class ParticipantSessionService {
             WHERE p.id IS NULL
             OR p.session.id IS NOT NULL
             OR p.date.id <> :dateId
+            OR p.deleted = true
         ''', [dateId: pageInformation.date.id])
     }
 
@@ -181,6 +182,7 @@ class ParticipantSessionService {
                 participants.addAll(getParticipantsOfType(rule.firstType, session))
             }
         }
+
         // And of course, participants who are already in the specified session
         // with the specified type cannot be added twice
         participants.addAll(getParticipantsOfType(type, session))

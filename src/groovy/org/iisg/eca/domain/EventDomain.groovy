@@ -16,6 +16,8 @@ abstract class EventDomain extends DefaultDomain {
     }
     
     static hibernateFilters = {
+        hideDeleted(condition: 'deleted = 0', default: true)
+        hideDisabled(condition: 'enabled = 1')
         eventFilter(condition: '(event_id = :eventId OR event_id IS NULL)', types: 'long')
     }
     

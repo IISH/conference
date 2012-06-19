@@ -7,6 +7,8 @@ import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
  * Domain class of table holding all registered users
  */
 class User extends DefaultDomain {
+    def static pageInformation
+
     /**
      * The saltSource is responsible for the creation of salts
      */
@@ -51,7 +53,7 @@ class User extends DefaultDomain {
     String extraInfo
     Date dateAdded = new Date()
 
-    static belongsTo = Country
+    static belongsTo = [Country, Group]
     static hasMany = [  groups:                 Group,
                         networks:               NetworkChair,
                         participantDates:       ParticipantDate,
@@ -59,7 +61,8 @@ class User extends DefaultDomain {
                         papers:                 Paper,
                         sessionParticipants:    SessionParticipant,
                         sentEmails:             SentEmail,
-                        dateTimesNotPresent:    SessionDateTime]
+                        dateTimesNotPresent:    SessionDateTime,
+                        userPages:              UserPage]
 
     static mapping = {
         table 'users'
@@ -86,7 +89,10 @@ class User extends DefaultDomain {
         dateAdded       column: 'date_added'
 
         groups              joinTable: 'users_groups'
-        dateTimesNotPresent joinTable: 'participant_not_present'
+        dateTimesNotPresent joinTable: 'participant_not_present', cascade: 'all-delete-orphan'
+        userRoles           cascade: 'all-delete-orphan'
+        papers              cascade: 'all-delete-orphan'
+        sessionParticipants cascade: 'all-delete-orphan'
     }
 
     static constraints = {
@@ -108,7 +114,9 @@ class User extends DefaultDomain {
         extraInfo                       nullable: true
         papers          validator: { val, obj ->
                             Integer maxPapers = Setting.getByEvent(Setting.findAllByProperty(Setting.MAX_PAPERS_PER_PERSON_PER_SESSION))?.value?.toInteger()
-                            (!maxPapers || (obj?.papers?.size() <= maxPapers))
+                            if (maxPapers && (obj?.papers?.findAll { !it.deleted && (it.date.id == pageInformation.date.id) }?.size() > maxPapers)) {
+                                "paper.validation.max.message"
+                            }
                         }
     }
 

@@ -25,7 +25,9 @@ class Session extends EventDateDomain {
         name        column: 'session_name'
         comment     column: 'session_comment',  type: 'text'
 
-        networks    joinTable: 'session_in_network'
+        networks                joinTable: 'session_in_network'
+        sessionParticipants     cascade: 'all-delete-orphan'
+        sessionRoomDateTime     cascade: 'all-delete-orphan'  
     }
 
     static constraints = {

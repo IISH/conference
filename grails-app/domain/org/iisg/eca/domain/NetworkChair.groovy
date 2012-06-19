@@ -24,6 +24,10 @@ class NetworkChair extends DefaultDomain implements Serializable {
         isMainChair column: 'is_main_chair'
     }
 
+    static constraints = {
+        network     unique: 'chair'
+    }
+
     Long getId() {
         "${network.id}${chair.id}".toLong()
     }

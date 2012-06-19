@@ -35,6 +35,8 @@ var showErrors = function(data) {
     else {
         errorsBox.prepend('<li>' + data.message + '</li>');
     }
+
+    errorsBox.show();
 }
 
 var setDatePicker = function(element) {
@@ -44,6 +46,72 @@ var setDatePicker = function(element) {
     element.datepicker({
         dateFormat: element.attr('placeholder').replace('yyyy', 'yy')
     });
+}
+
+var createNewItem = function(item, lastItem) {
+    var i = -1;
+    if ((lastItem.length !== 0) && (lastItem.hasClass('.column') || lastItem.is('li'))) {
+        var nameSplit = lastItem.find('input, select, textarea').attr("name").split('.');
+        var number = nameSplit[0].split('_')[1];
+        if ($.isNumeric(number)) {
+            i = number;
+        }
+    }
+    i++;
+
+    var clone = item.clone(true);
+
+    clone.find('input, select, textarea').each(function() {
+        var name = $(this).attr("name");
+
+        if (name.indexOf("null") === -1) {
+            var nameSplit = name.split("_");
+            $(this).attr("name", nameSplit[0] + "_" + i + nameSplit[1]);
+            $(this).attr("id", nameSplit[0] + "_" + i + nameSplit[1]);
+        }
+        else {
+            $(this).attr("name", name.replace("null", i));
+            $(this).attr("id", name.replace("null", i));
+        }
+    });
+
+    clone.find('.datepicker').each(function() {
+        setDatePicker(this);
+    });
+
+    clone.removeClass("hidden");
+    return clone;
+}
+
+var removeAnItem = function(toBeRemoved, classToStop) {
+    var next = toBeRemoved.next();
+    while (!next.hasClass(classToStop)) {
+        var elements = next.find('input, select')
+        var nameSplit = elements.attr("name").split('.');
+        var number = nameSplit[0].split('_')[1];
+        if ($.isNumeric(number)) {
+            var newNumber = number - 1;
+            elements.each(function() {
+                $(this).attr("name", $(this).attr("name").replace(number, newNumber));
+            });
+        }
+        next = next.next();
+    }
+
+    var idsToBeRemoved = toBeRemoved.parents('ul, .columns.copy').find('.to-be-deleted');
+    if (idsToBeRemoved.length > 0) {
+        var ids = idsToBeRemoved.val().split(';');
+        ids.push(toBeRemoved.find('input[type=hidden]:eq(0)').val());
+        for (var i=0; i<ids.length; i++) {
+            if (ids[i] == undefined || ids[i] == null || ids[i] == "") {
+                ids.splice(i, 1);
+                i--;
+            }
+        }
+        idsToBeRemoved.val(ids.join(';'));
+    }
+
+    toBeRemoved.remove();
 }
 
 $(document).ready(function() {
@@ -100,145 +168,27 @@ $(document).ready(function() {
     $('.add > span.ui-icon-circle-plus').click(function(e) {
         var parent = $(this).parent();
         var lastItem = parent.prev();
-        var clone = parent.next().clone(true);
-        var i = -1;
+        var item = parent.next();
 
-        if (lastItem.length !== 0) {
-            var nameSplit = lastItem.find('input, select').attr("name").split('.');
-            var number = nameSplit[0].split('_')[1];
-            if ($.isNumeric(number)) {
-                i = number;
-            }
-        }
-        i++;
-
-        clone.find('input, select').each(function() {
-            var name = $(this).attr("name");
-
-            if (name.indexOf("null") === -1) {
-                var nameSplit = name.split("_");
-                $(this).attr("name", nameSplit[0] + "_" + i + nameSplit[1]);
-                $(this).attr("id", nameSplit[0] + "_" + i + nameSplit[1]);
-            }
-            else {
-                $(this).attr("name", name.replace("null", i));
-                $(this).attr("id", name.replace("null", i));
-            }
-        });
-
-        clone.find('.datepicker').each(function() {
-            setDatePicker(this);
-        });
-
-        clone.insertBefore(parent);
-        clone.removeClass("hidden");
+        var newItem = createNewItem(item, lastItem);
+        newItem.insertBefore(parent);
     });
 
     $('.buttons .btn_add').click(function(e) {
-        var parent = $(this).parent().prev().find('.columns')
-        var item = parent.find('.column.hidden')
-        var clone = item.clone(true);
-        var i = -1;
+        var parent = $(this).parent().prev().find('.columns.copy');
+        var item = parent.find('.column.hidden');
+        var lastItem = item.prev();
 
-        if (item.prev().length !== 0) {
-            var nameSplit = item.prev().find('input, select, textarea').attr("name").split('.');
-            var number = nameSplit[0].split('_')[1];
-            if ($.isNumeric(number)) {
-                i = number;
-            }
-            i++;
-        }
-
-        clone.find('input, select, textarea').each(function() {
-            var name = $(this).attr("name");
-
-            if (name.indexOf("null") === -1) {
-                var nameSplit = name.split("_");
-                $(this).attr("name", nameSplit[0] + "_" + i + nameSplit[1]);
-                $(this).attr("id", nameSplit[0] + "_" + i + nameSplit[1]);
-            }
-            else {
-                $(this).attr("name", name.replace("null", i));
-                $(this).attr("id", name.replace("null", i));
-            }
-        });
-
-        clone.insertBefore(item);
-        clone.removeClass("hidden");
-    });
-
-    $('.paper.ui-icon-circle-minus').click(function(e) {
-        $(this).parent().remove();
-
-        var paperId = $(this).parents('.column').children('input[type=hidden]').first().val();
-
-        $.getJSON('../removePaper', {'paper-id': paperId});
-    });
+        var newItem = createNewItem(item, lastItem);
+        newItem.insertBefore(item);
+    });    
 
     $('fieldset li span.ui-icon-circle-minus').click(function(e) {
-        var toBeRemoved = $(this).parent();
-
-        var next = toBeRemoved.next();
-        while (!next.hasClass('add')) {
-            var elements = next.find('input, select')
-            var nameSplit = elements.attr("name").split('.');
-            var number = nameSplit[0].split('_')[1];
-            if ($.isNumeric(number)) {
-                var newNumber = number - 1;
-                elements.each(function() {
-                    $(this).attr("name", $(this).attr("name").replace(number, newNumber));
-                });
-            }
-            next = next.next();
-        }
-
-        var idsToBeRemoved = toBeRemoved.parents('ul').find('.to-be-deleted');
-        if (idsToBeRemoved.length > 0) {
-            var ids = idsToBeRemoved.val().split(';');
-            ids.push(toBeRemoved.find('input[type=hidden]:eq(0)').val());
-            for (var i=0; i<ids.length; i++) {
-                if (ids[i] == "") {
-                    ids.splice(i, 1);
-                    i--;
-                }
-            }
-            idsToBeRemoved.val(ids.join(';'));
-        }
-
-        toBeRemoved.remove();
+        removeAnItem($(this).parent(), 'add');
     });
 
     $('.columns.copy span.ui-icon-circle-minus').click(function(e) {
-        var toBeRemoved = $(this).parent();
-
-        var next = toBeRemoved.next();
-        while (!next.hasClass('hidden')) {
-            var elements = next.find('input, select')
-            var nameSplit = elements.attr("name").split('.');
-            var number = nameSplit[0].split('_')[1];
-            if ($.isNumeric(number)) {
-                var newNumber = number - 1;
-                elements.each(function() {
-                    $(this).attr("name", $(this).attr("name").replace(number, newNumber));
-                });
-            }
-            next = next.next();
-        }
-
-        var idsToBeRemoved = toBeRemoved.parents('ul').find('.to-be-deleted');
-        if (idsToBeRemoved.length > 0) {
-            var ids = idsToBeRemoved.val().split(';');
-            ids.push(toBeRemoved.find('input[type=hidden]:eq(0)').val());
-            for (var i=0; i<ids.length; i++) {
-                if (ids[i] == "") {
-                    ids.splice(i, 1);
-                    i--;
-                }
-            }
-            idsToBeRemoved.val(ids.join(';'));
-        }
-
-        toBeRemoved.remove();
+        removeAnItem($(this).parents('.column'), 'hidden');
     });
 
     $('.filter input').keypress(function(e) {
@@ -268,12 +218,5 @@ $(document).ready(function() {
     $('.check-all').click(function(e) {
         var checked = $(this).is(':checked');
         $(this).parents('.column').find('input[type=checkbox]').attr('checked', checked);
-    });
-
-    $('#btn_network').click(function() {
-        var id = $(this).prev().find(':selected').val();
-        if ($.isNumeric(id)) {
-            window.open('../../network/show/' + id)
-        }
     });
 });

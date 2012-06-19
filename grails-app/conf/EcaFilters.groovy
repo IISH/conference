@@ -4,6 +4,7 @@ import org.iisg.eca.domain.Event
 import org.iisg.eca.domain.EventDate
 import org.iisg.eca.domain.EventDomain
 import org.iisg.eca.domain.EventDateDomain
+import org.iisg.eca.domain.DefaultDomain
 
 class EcaFilters {
     def pageInformation

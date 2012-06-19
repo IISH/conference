@@ -61,10 +61,13 @@ class NetworkController {
 
             int i = 0
             network.chairs.clear()
+            network.save(flush: true)
             while (params["NetworkChair_${i}"]) {
                 NetworkChair chair = new NetworkChair()
                 bindData(chair, params, [include: ['chair', 'isMainChair']], "NetworkChair_${i}")
-                network.addToChairs(chair)
+                if (!network.chairs.find { it.chair.id == chair.chair.id }) {
+                    network.addToChairs(chair)
+                }
                 i++
             }
 

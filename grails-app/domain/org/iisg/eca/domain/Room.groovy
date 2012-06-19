@@ -29,6 +29,9 @@ class Room extends EventDateDomain {
         roomNumber  column: 'room_number'
         noOfSeats   column: 'number_of_seets'
         comment     column: 'comment',          type: 'text'
+        
+        roomSessionDateTimeEquipment    cascade: 'all-delete-orphan'
+        sessionRoomDateTime             cascade: 'all-delete-orphan'
     }
 
     @Override

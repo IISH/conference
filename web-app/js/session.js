@@ -67,6 +67,9 @@ $(document).ready(function() {
     });
 
     $('#tabs input[type=button]').click(function(e) {
+        $('.errors').hide();
+        $('.message').hide();
+
         var element = $(this).parents('.ui-tabs-panel');
 
         $.getJSON(
@@ -89,6 +92,9 @@ $(document).ready(function() {
     });
 
     $('.session-participants .ui-icon-circle-minus').live('click', function(e) {
+        $('.errors').hide();
+        $('.message').hide();
+
         var element = $(this).parents('.participant-type-value');
         var parentElement = $(this).parents('li');
 

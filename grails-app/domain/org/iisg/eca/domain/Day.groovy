@@ -27,6 +27,8 @@ class Day extends EventDateDomain {
         dayNumber   column: 'day_number'
         
         sort        'dayNumber'
+        
+        sessionDateTimes cascade: 'all-delete-orphan'
     }
 
     @Override

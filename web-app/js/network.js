@@ -12,6 +12,11 @@ $(document).ready(function() {
             var item;
 
             participantsContainer.html("");
+
+            if (data.participants.length === 0) {
+                participantsContainer.text('-');
+            }
+
             for (var i=0; i<data.participants.length; i++) {
                 item = clone.clone(true);
                 item.find('.participant').text(data.participants[i].participant);
@@ -36,6 +41,9 @@ $(document).ready(function() {
     });
 
     $('.add-session').click(function(e) {
+        $('.errors').hide();
+        $('.message').hide();
+
         var element = $(this);
 
         $.getJSON('../addSession', {network_id: networkId, session_id: element.prev().val()}, function(data) {
@@ -49,6 +57,9 @@ $(document).ready(function() {
     });
 
     $('.add-new-session').click(function(e) {
+        $('.errors').hide();
+        $('.message').hide();
+
         var element = $(this);
         var parentElement = element.parent();
 
@@ -68,6 +79,9 @@ $(document).ready(function() {
     });
 
     $('.remove-session').live("click", function(e) {
+        $('.errors').hide();
+        $('.message').hide();
+
         var element = $(this);
         var parentElement = element.parent();
 

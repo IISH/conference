@@ -23,7 +23,9 @@ class SessionDateTime extends DefaultDomain {
         index   column: 'index_number'
         period  column: 'period'
 
-        usersNotPresent joinTable: [name: 'participant_not_present', key: 'session_datetime_id' ]
+        usersNotPresent joinTable: [name: 'participant_not_present', key: 'session_datetime_id' ], cascade: 'all-delete-orphan'
+        roomSessionDateTimeEquipment    cascade: 'all-delete-orphan'
+        sessionRoomDateTime             cascade: 'all-delete-orphan'
     }
 
     static constraints = {

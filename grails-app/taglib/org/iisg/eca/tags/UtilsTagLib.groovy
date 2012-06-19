@@ -1,5 +1,6 @@
 package org.iisg.eca.tags
 
+import org.iisg.eca.domain.Page
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Event
 import org.iisg.eca.domain.EventDate
@@ -7,6 +8,7 @@ import org.iisg.eca.domain.EventDate
 import groovy.xml.MarkupBuilder
 
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+
 
 /**
  * Utilities tag library
@@ -129,6 +131,22 @@ class UtilsTagLib {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * Prints the menu
+     */
+    def menu = {
+        def pages = Page.menuPages.list()
+
+        pages.each { page ->
+            if (page.subPages?.size() > 0) {
+                out << "<dd>${page.toString()}</dd>"
+            }
+            else {
+                out << "<dd>${eca.link(controller: page.controller, action: page.action, page.toString())}</dd>"
             }
         }
     }

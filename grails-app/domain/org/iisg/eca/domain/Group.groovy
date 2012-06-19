@@ -6,8 +6,7 @@ package org.iisg.eca.domain
 class Group extends EventDateDomain {
     String name
 
-    static hasMany = [users: User]
-    static belongsTo = User
+    static hasMany = [users: User, pages: Page]
 
     static mapping = {
         table 'groups'
@@ -18,15 +17,12 @@ class Group extends EventDateDomain {
         date    column: 'date_id'
 
         users   joinTable: 'users_groups'
+        pages   joinTable: 'groups_pages'
     }
 
     static constraints = {
         name    blank: false,   maxSize: 30
         date    nullable: true
-    }
-    
-    Set<Page> getPages() {
-        GroupPage.findAllByGroup(this).collect { it.page } as Set
     }
 
     @Override

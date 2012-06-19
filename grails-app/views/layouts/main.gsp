@@ -63,42 +63,15 @@
 
         <div id="nav" role="navigation">
             <dl id="menu">
-              <!-- <dt class="esshc">Web</dt>
-
-                <dd><a href="http://www.iisg.nl/esshc">ESSHC</A></dd>
-                <dd>&nbsp;</dd>           -->
-
-                <dt class="esshc">CMS</dt>
+                <dt>Web</dt>
+                <dd><a href="http://www.iisg.nl/esshc">ESSHC</a></dd>
 
                 <dd>&nbsp;</dd>
 
-                <g:if test="${params.event && params.date}" >
-                    <g:menu />
+                <g:if test="${params.event && params.date}">
+                    <dt class="esshc">CMS</dt>
+                    <eca:menu />
                 </g:if>
-
-                <!--<dd><a href="Participants.asp?year=12&partStat=-1&tp=name">Participants</a></dd>
-                <dd><a href="Networks.asp">Networks</a></dd>
-                <dd><a href="Sessions.asp">Sessions</a></dd>
-                <dd><a href="Sessions2.asp">Sessions (v. 2)</a></dd>
-                <dd><a href="Networks_Sessions.asp">Networks/Sessions</a></dd>
-                <dd><a href="SessionDateTime.asp">SessionDateTime</a></dd>
-                <dd><a href="Rooms.asp">Rooms</a></dd>
-                <dd><a href="PlanSessions.asp">Plan Sessions</a></dd>
-                <dd><a href="Email.asp">Send E-mail</a></dd>
-                <dd><a href="EmailLog.asp">Verstuurde mailtjes</a></dd>
-                <dd><a href="EditMenu.asp">Edit Menu</a></dd>
-                <dd>&nbsp;</dd>
-                <dd><a href="PaymentMade.asp">Payment Made Y/N</a></dd>
-                <dd><a href="PaymentMade2.asp">Payment Made Y/N (v. 2)</a></dd>
-                <dd><a href="programme_choose_year.asp">Programme</a></dd>
-                <dd><a href="Concordance.asp">Concordance</a></dd>
-                <dd><a href="ProgrammeWord_choose_year.asp">Programme Book</a></dd>
-                <dd><a href="Letters.asp">Make Letter</a></dd>
-                <dd><a href="ParticipantsList.asp">Participants List</a></dd>
-                <dd>&nbsp;</dd>
-                <dd><a href="overzicht_feerequest.asp">Fee Request</a></dd>
-                <dd><a href="overzicht_invitationletter.asp">Invitation Letter</a></dd>
-                <dd><a href="overzicht_reception.asp">Reception</a></dd>    -->
             </dl>
         </div>
 

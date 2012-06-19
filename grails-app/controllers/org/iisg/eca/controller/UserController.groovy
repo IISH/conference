@@ -1,6 +1,5 @@
 package org.iisg.eca.controller
 
-import javax.servlet.http.Cookie
 import org.iisg.eca.domain.User
 
 /**
@@ -11,11 +10,6 @@ class UserController {
 	 * Dependency injection for the springSecurityService.
 	 */
     def springSecurityService
-
-    /**
-     * All methods responding to HTTP POST calls
-     */
-    static allowedMethods = [update: "POST"]
 
     /**
      * Default action: Redirects to 'show' method, which will display information of the logged in user

@@ -14,6 +14,8 @@ class Volunteering extends EventDomain {
 
         id          column: 'volunteering_id'
         description column: 'description'
+        
+        participantVolunteering cascade: 'all-delete-orphan'
     }
 
     static constraints = {

@@ -33,7 +33,8 @@ class ParticipantDate extends EventDateDomain {
         lowerFeeAnswered        column: 'lower_fee_answered'
         lowerFeeText            column: 'lower_fee_text'
 
-        extras  joinTable: 'participant_date_extra'
+        extras                  joinTable: 'participant_date_extra'
+        participantVolunteering cascade: 'all-delete-orphan'
     }
 
     static constraints = {

@@ -32,8 +32,9 @@ class Network extends EventDateDomain {
         comment column: 'comment',      type: 'text'
         url     column: 'url'
 
-        chairs      sort: 'isMainChair',    order: 'desc'
+        chairs      sort: 'isMainChair', order: 'desc', cascade: 'all-delete-orphan'
         sessions    joinTable: 'session_in_network'
+        participantVolunteering     cascade: 'all-delete-orphan'
     }
     
     @Override

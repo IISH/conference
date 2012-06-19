@@ -54,7 +54,7 @@ select {
     vertical-align: middle;
 }
 
-select[size] {
+select[size], select[multiple] {
     height: 100%;
 }
 
@@ -268,6 +268,13 @@ span.ui-icon {
     display: inline-block;
     margin: -3px 0;
     cursor: pointer;
+}
+
+span.remove-item {
+    display: block;
+    font-weight: bold;
+    margin: 0 auto;
+    text-align: center;
 }
 
 .required-indicator {
@@ -582,6 +589,10 @@ span.ui-icon {
 
 #participant-form input, #participant-form select, #participant-form textarea {
     max-width: 250px;
+}
+
+#papers-tab .column {
+    border-bottom: 1px solid #225496;
 }
 
 #participant-present {

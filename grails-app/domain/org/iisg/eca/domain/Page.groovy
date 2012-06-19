@@ -14,18 +14,22 @@ class Page extends DefaultDomain {
     String titleDefault
     String controller
     String action
+    int sortOrder = 999
+    boolean showInMenu = false
     String description
     Page parent
 
     static hasMany = [  adminPages:     AdminPage,
                         dynamicPages:   DynamicPage,
-                        subPages:       Page]
-    static belongsTo = Page
+                        subPages:       Page,
+                        groups:         Group]
+    static belongsTo = [Page, Group]
 
     static mapping = {
         table 'pages'
         cache true
         version false
+        sort sortOrder: 'asc'
 
         id              column: 'page_id'
         titleCode       column: 'title_code'
@@ -33,8 +37,12 @@ class Page extends DefaultDomain {
         titleDefault    column: 'title_default'
         controller      column: 'controller'
         action          column: 'action'
+        sortOrder       column: 'sort_order'
+        showInMenu      column: 'show_in_menu'
         description     column: 'description',      type: 'text'
         parent          column: 'parent_page_id'
+
+        groups  joinTable: 'groups_pages'
     }
 
     static constraints = {
@@ -48,12 +56,23 @@ class Page extends DefaultDomain {
         subPages        nullable: true
     }
 
-    Set<User> getUsers() {
-        UserPage.findAllByPage(this).collect { it.user } as Set
+    static namedQueries = {
+        menuPages() {
+            cache(true)
+
+            and {
+                eq('showInMenu', true)
+                isNull('parent')
+            }
+
+            order('sortOrder')
+            order('controller')
+            order('titleDefault')
+        }
     }
 
-    Set<Group> getGroups() {
-        GroupPage.findAllByPage(this).collect { it.group } as Set
+    Set<User> getUsers() {
+        UserPage.findAllByPage(this).collect { it.user } as Set
     }
 
     @Override
