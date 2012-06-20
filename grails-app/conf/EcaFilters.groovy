@@ -82,46 +82,16 @@ class EcaFilters {
          */
         authFilter(controller: '*', action: '*', controllerExclude: 'login|logout') {
             before = {
-                if (SpringSecurityUtils.ifNotGranted('superAdmin')) {
-                    User user = User.get(springSecurityService.principal.id)
-                    UserPage userPage = UserPage.findAllByUser(user).find { (it.page.controller == params.controller) && (it.page.action == params.action) }
-
-                    // An individual rule for this page has been configured for this user
-                    if (userPage) {
-                        if (userPage.denied) {
-                            response.sendError(403)
-                            return
-                        }
-                    }
-                    else {
-                        // Look in all the groups assigned to this user, whether the requested page is among them
-                        List<Long> count = Group.withCriteria {
-                            cache(true)
-
-                            projections {
-                                count()
-                            }
-
-                            users {
-                                eq('id', user.id)
-                            }
-
-                            pages {
-                                eq('controller', params.controller)
-                                eq('action', params.action)
-                            }
-                        }
-
-                        // Ifd the page was not found, deny access
-                        if (count.first() == 0) {
-                            response.sendError(403)
-                            return
-                        }
-                    }
+                if (!pageInformation.page) {
+                    return true
                 }
-
-                // Access seems to be allowed
-                return true
+                else if (pageInformation.page.hasAccess()) {
+                    return true
+                }
+                else {
+                    response.sendError(403)
+                    return
+                }
             }
         }
         

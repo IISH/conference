@@ -63,8 +63,8 @@
             <ul class="session-participants property-value" arial-labelledby="participants-label">
                 <g:each in="${participants}" var="participant" status="i">
                     <li>
-                        <span class="participant-value">${participant.participant}</span>
-                        <span class="participant-state-value">(${participant.participant.state})</span>
+                        <span class="participant-value">${participant?.participant}</span>
+                        <span class="participant-state-value">(${participant?.participant?.state})</span>
 
                         <ul>
                         <g:each in="${participant.types}" var="type">
@@ -86,12 +86,14 @@
         </ol>
 
         <div class="buttons">
-          <eca:link controller="${params.prevController}" action="${params.prevAction}" id="${params.prevId}">
-            <g:message code="default.button.back.label" />
-          </eca:link>
-          <eca:link controller="${params.controller}" action="edit" id="${params.id}">
-            <g:message code="default.button.edit.label" />
-          </eca:link>
+            <eca:link controller="${params.prevController}" action="${params.prevAction}" id="${params.prevId}">
+                <g:message code="default.button.back.label" />
+            </eca:link>
+            <eca:ifUserHasAccess controller="${params.controller}" action="edit">
+                <eca:link controller="${params.controller}" action="edit" id="${params.id}">
+                    <g:message code="default.button.edit.label" />
+                </eca:link>
+            </eca:ifUserHasAccess>
         </div>
 	</body>
 </html>

@@ -84,7 +84,7 @@ class ParticipantSessionService {
             WHERE sp.session.id = :sessionId
             ORDER BY t.importance DESC
         ''', [sessionId: session.id]).each { sessionParticipant ->
-            ParticipantSessionInfo sessionInfo = sessionInformation.find { it.participant.user.id == sessionParticipant[0].id }
+            ParticipantSessionInfo sessionInfo = sessionInformation.find { it.participant?.user?.id == sessionParticipant[0]?.id }
 
             if (!sessionInfo) {
                 sessionInfo = new ParticipantSessionInfo(session, ParticipantDate.findByUserAndDate(sessionParticipant[0], pageInformation.date))
@@ -92,7 +92,7 @@ class ParticipantSessionService {
             }
 
             sessionInfo.addType(sessionParticipant[1])
-            sessionInfo.paper = session.papers.find { it.user.id == sessionParticipant[0].id }
+            sessionInfo.paper = Paper.findAllBySession(session).find { it.user?.id == sessionParticipant[0].id }
         }
 
         sessionInformation

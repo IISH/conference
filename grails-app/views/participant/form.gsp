@@ -524,8 +524,11 @@
                 <eca:link previous="true">
                     <g:message code="default.button.cancel.label" />
                 </eca:link>
+                <eca:link action="delete" id="${params.id}">
+                    <g:message code="default.deleted.label" />
+                </eca:link>
                 <input type="submit" name="btn_save" class="btn_save" value="${message(code: 'default.button.save.label')}" />
-                <input type="button" name="btn_add" class="btn_add" value="${message(code: 'default.add.label', args: [message(code: 'paper.label')])}" />
+                <input type="button" name="btn_add" class="btn_add" value="${message(code: 'default.add.label', args: [message(code: 'paper.label').toLowerCase()])}" />
             </fieldset>
         </form>
     </body>

@@ -43,9 +43,11 @@
             <eca:link controller="${params.prevController}" action="${params.prevAction}" id="${params.prevId}">
                 <g:message code="default.button.back.label" />
             </eca:link>
-            <eca:link controller="${params.controller}" action="create">
-                <g:message code="default.button.create.label" />
-            </eca:link>
+            <eca:ifUserHasAccess controller="${params.controller}" action="create">
+                <eca:link controller="${params.controller}" action="create">
+                    <g:message code="default.button.create.label" />
+                </eca:link>
+            </eca:ifUserHasAccess>
         </div>
     </body>
 </html>

@@ -81,9 +81,11 @@
                 <eca:link previous="true">
                     <g:message code="default.button.back.label" />
                 </eca:link>
-                <eca:link action="edit" id="${params.id}">
-                    <g:message code="default.button.edit.label" />
-                </eca:link>
+                <eca:ifUserHasAccess controller="${params.controller}" action="edit">
+                    <eca:link action="edit" id="${params.id}">
+                        <g:message code="default.button.edit.label" />
+                    </eca:link>
+                </eca:ifUserHasAccess>
             </fieldset>
         </div>
 	</body>

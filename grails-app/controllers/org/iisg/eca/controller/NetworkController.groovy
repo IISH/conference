@@ -48,7 +48,7 @@ class NetworkController {
 
         Network network = Network.findById(params.id)
         if (!network) {
-            flash.message =  message(code: 'default.not.found.message', args: [message(code: 'network.label'), network.id])
+            flash.message =  message(code: 'default.not.found.message', args: [message(code: 'network.label')])
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
         }
@@ -79,6 +79,30 @@ class NetworkController {
 
             render(view: "edit", model: [network: network, sessions: participantSessionService.getParticipantsForNetwork(network)])
         }
+    }
+
+    def delete() {
+        if (params.id) {
+            Network network = Network.findById(params.id)
+
+            network?.softDelete()
+            network?.chairs?.each {
+                it.softDelete()
+                it.save()
+            }
+
+            if (network?.save(flush: true)) {
+                flash.message =  message(code: 'default.deleted.message', args: [message(code: 'network.label')])
+            }
+            else {
+                flash.message =  message(code: 'default.not.deleted.message', args: [message(code: 'network.label')])
+            }
+        }
+        else {
+            flash.message =  message(code: 'default.no.id.message')
+        }
+
+        redirect(uri: eca.createLink(previous: true, noBase: true))
     }
 
     /**

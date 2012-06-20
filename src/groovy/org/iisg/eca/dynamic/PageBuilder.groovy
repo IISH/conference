@@ -337,8 +337,10 @@ class PageBuilder {
                     break
                 case Button.Type.URL:
                 default:
-                    builder."eca:link"(controller: button.controller, action: button.action, id: button.id) {
-                        builder."g:message"(code: "default.button.${button.action}.label")
+                    builder."eca:ifUserHasAccess"(controller: button.controller, action: button.action) {
+                        builder."eca:link"(controller: button.controller, action: button.action, id: button.id) {
+                            builder."g:message"(code: "default.button.${button.action}.label")
+                        }
                     }
             }
         }

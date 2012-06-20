@@ -8,9 +8,16 @@
         <ol id="email-templates">
         <g:each in="${EmailTemplate.findAllByShowInBackend(true)}" var="emailTemplate">
             <li>
-                <eca:link action="send" id="${emailTemplate.id}" params="${[type: emailTemplate.action]}">
-                    ${emailTemplate.description}
-                </eca:link>
+                <eca:ifUserHasAccess controller="email" action="send">
+                    <eca:link action="send" id="${emailTemplate.id}" params="${[type: emailTemplate.action]}">
+                        ${emailTemplate.description}
+                    </eca:link>
+                </eca:ifUserHasAccess>
+
+                <eca:ifUserHasNoAccess controller="email" action="send">
+                        ${emailTemplate.description}
+                </eca:ifUserHasNoAccess>
+
                 <span>
                     <eca:formatText text="${emailTemplate.comment}" />
                 </span>

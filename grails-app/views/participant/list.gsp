@@ -77,7 +77,14 @@
                     <ol>
                         <li class="char"><a name="${character.toLowerCase()}">${character}</a></li>
                         <g:each in="${participants.get(character)}" var="user">
-                            <li><eca:link action="show" id="${user[0]}">${user[1]}</eca:link> ${user[2]}</li>
+                            <li>
+                                <eca:ifUserHasAccess controller="${params.controller}" action="show">
+                                    <eca:link action="show" id="${user[0]}">${user[1]}</eca:link> ${user[2]}
+                                </eca:ifUserHasAccess>
+                                <eca:ifUserHasNoAccess controller="${params.controller}" action="show">
+                                    ${user[1]} ${user[2]}
+                                </eca:ifUserHasNoAccess>
+                            </li>
                         </g:each>
                     </ol>
                 </g:each>

@@ -217,6 +217,28 @@ class UtilsTagLib {
     }
 
     /**
+     * The body is only executed if the user has access to the page the attributes point to
+     */
+    def ifUserHasAccess = { attrs, body ->
+        Page page = Page.findByControllerAndAction(attrs.controller, attrs.action)
+
+        if (page.hasAccess()) {
+            out << body()
+        }
+    }
+
+    /**
+     * The body is only executed if the user has no access to the page the attributes point to
+     */
+    def ifUserHasNoAccess = { attrs, body ->
+        Page page = Page.findByControllerAndAction(attrs.controller, attrs.action)
+
+        if (!page.hasAccess()) {
+            out << body()
+        }
+    }
+
+    /**
      * Prepares the link attributes
      * @param attrs The attributes of the called tag
      * @param params The request parameters
@@ -283,21 +305,23 @@ class UtilsTagLib {
      */
     private void printSubMenu(MarkupBuilder builder, Collection<Page> pages) {
         for (Page page : pages) {
-            if (page.controller && page.action) {
-                builder.dd {
-                    builder.mkp.yieldUnescaped(eca.link(controller: page.controller, action: page.action, page.toString()))
+            if (page.hasAccess()) {
+                if (page.controller && page.action) {
+                    builder.dd {
+                        builder.mkp.yieldUnescaped(eca.link(controller: page.controller, action: page.action, page.toString()))
+                    }
                 }
-            }
-            else {
-                builder.dd {
-                    builder.a(href: "#", page.toString())
+                else {
+                    builder.dd {
+                        builder.a(href: "#", page.toString())
+                    }
                 }
-            }
 
-            // If there is a sub menu, print it as well
-            if (page.subPages?.size() > 0) {
-                builder.dl {
-                    printSubMenu(builder, page.subPages)
+                // If there is a sub menu, print it as well
+                if (page.subPages?.size() > 0) {
+                    builder.dl {
+                        printSubMenu(builder, page.subPages)
+                    }
                 }
             }
         }

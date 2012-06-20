@@ -1,11 +1,14 @@
 package org.iisg.eca.domain
 
 import org.codehaus.groovy.grails.plugins.web.taglib.ValidationTagLib
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
 /**
  * Domain class of table holding all pages of this application
  */
 class Page extends DefaultDomain {
+    def springSecurityService
+
     static def pageInformation
     private static final ValidationTagLib MESSAGES = new ValidationTagLib()
 
@@ -73,6 +76,46 @@ class Page extends DefaultDomain {
 
     Set<User> getUsers() {
         UserPage.findAllByPage(this).collect { it.user } as Set
+    }
+
+    /**
+     * Determine if the currently logged in user has access to this page
+     * @return
+     */
+    boolean hasAccess() {
+        if (SpringSecurityUtils.ifNotGranted('superAdmin')) {
+            User user = User.get(springSecurityService.principal.id)
+            UserPage userPage = UserPage.findAllByUser(user).find { (it.page.controller == controller) && (it.page.action == action) }
+
+            // An individual rule for this page has been configured for this user
+            if (userPage) {
+                return !userPage.denied
+            }
+            else {
+                // Look in all the groups assigned to this user, whether the requested page is among them
+                List<Long> count = Group.withCriteria {
+                    cache(true)
+
+                    projections {
+                        count()
+                    }
+
+                    users {
+                        eq('id', user.id)
+                    }
+
+                    pages {
+                        eq('controller', controller)
+                        eq('action', action)
+                    }
+                }
+
+                // Ifd the page was not found, deny access
+                return (count.first() > 0)
+            }
+        }
+
+        return true
     }
 
     @Override

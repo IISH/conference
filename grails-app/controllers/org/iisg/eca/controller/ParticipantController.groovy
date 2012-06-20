@@ -16,6 +16,7 @@ import org.iisg.eca.domain.ParticipantVolunteering
 import grails.converters.JSON
 import grails.validation.ValidationException
 import org.springframework.web.multipart.commons.CommonsMultipartFile
+import org.iisg.eca.domain.SessionParticipant
 
 class ParticipantController {
     /**
@@ -180,6 +181,32 @@ class ParticipantController {
                                         networks: Network.list(),
                                         paperStates: PaperState.list(),
                                         equipmentList: Equipment.list()])
+    }
+
+    def delete() {
+        if (params.id) {
+            User user = User.get(params.id)
+            ParticipantDate participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
+
+            participant?.softDelete()
+            ParticipantVolunteering.findAllByParticipantDate(participant)*.delete()
+            SessionParticipant.findAllByUser(user).each {
+                it.softDelete()
+                it.save()
+            }
+
+            if (participant?.save(flush: true) && user?.save(flush: true)) {
+                flash.message =  message(code: 'default.deleted.message', args: [message(code: 'participantDate.label')])
+            }
+            else {
+                flash.message =  message(code: 'default.not.deleted.message', args: [message(code: 'participantDate.label')])
+            }
+        }
+        else {
+            flash.message =  message(code: 'default.no.id.message')
+        }
+
+        redirect(uri: eca.createLink(previous: true, noBase: true))
     }
 
     def downloadPaper() {

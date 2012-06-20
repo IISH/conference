@@ -64,7 +64,7 @@
                 <g:message code="network.chairs.label" />
               </label>
               <ul class="property-value">
-                <g:each in="${network.chairs}" var="instance" status="i">
+                <g:each in="${network.chairs.findAll { !it.deleted }}" var="instance" status="i">
                   <li>
                     <input type="hidden" name="NetworkChair_${i}.id" value="${instance.id}" />
                     <label class="property-label">
@@ -199,7 +199,10 @@
 
           <fieldset class="buttons">
             <eca:link controller="${params.prevController}" action="${params.prevAction}" id="${params.prevId}">
-              <g:message code="default.button.cancel.label" />
+                <g:message code="default.button.cancel.label" />
+            </eca:link>
+            <eca:link action="delete" id="${params.id}">
+                <g:message code="default.deleted.label" />
             </eca:link>
             <input type="submit" name="btn_save" class="btn_save" value="${message(code: 'default.button.save.label')}" />
           </fieldset>
