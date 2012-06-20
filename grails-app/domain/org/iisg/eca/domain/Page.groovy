@@ -49,8 +49,8 @@ class Page extends DefaultDomain {
         titleCode       nullable: true, maxSize: 50
         titleArg        nullable: true, maxSize: 50
         titleDefault    blank: false,   maxSize: 50
-        action          blank: false,   maxSize: 20
-        controller      blank: false,   maxSize: 20
+        controller      nullable: true, maxSize: 20
+        action          nullable: true, maxSize: 20
         description     nullable: true
         parent          nullable: true
         subPages        nullable: true

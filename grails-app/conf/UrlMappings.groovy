@@ -39,6 +39,8 @@ class UrlMappings {
         }
         
         // Errors:
-        "500" (view:'/error')
+        "403" (view: '/login/denied')
+        "404" (view: '/404')
+        "500" (view: '/error')
     }
 }

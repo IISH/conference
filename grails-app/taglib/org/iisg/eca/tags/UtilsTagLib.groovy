@@ -139,16 +139,10 @@ class UtilsTagLib {
      * Prints the menu
      */
     def menu = {
-        def pages = Page.menuPages.list()
+        MarkupBuilder builder = new MarkupBuilder(out)
+        builder.doubleQuotes = true
 
-        pages.each { page ->
-            if (page.subPages?.size() > 0) {
-                out << "<dd>${page.toString()}</dd>"
-            }
-            else {
-                out << "<dd>${eca.link(controller: page.controller, action: page.action, page.toString())}</dd>"
-            }
-        }
+        printSubMenu(builder, Page.menuPages.list())
     }
 
     /**
@@ -280,5 +274,32 @@ class UtilsTagLib {
         }
 
         attrs
+    }
+
+    /**
+     * Prints the menu and its sub menus
+     * @param builder The markup builder for the HTML output
+     * @param pages The pages to place in the menu
+     */
+    private void printSubMenu(MarkupBuilder builder, Collection<Page> pages) {
+        for (Page page : pages) {
+            if (page.controller && page.action) {
+                builder.dd {
+                    builder.mkp.yieldUnescaped(eca.link(controller: page.controller, action: page.action, page.toString()))
+                }
+            }
+            else {
+                builder.dd {
+                    builder.a(href: "#", page.toString())
+                }
+            }
+
+            // If there is a sub menu, print it as well
+            if (page.subPages?.size() > 0) {
+                builder.dl {
+                    printSubMenu(builder, page.subPages)
+                }
+            }
+        }
     }
 }

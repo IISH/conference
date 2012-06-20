@@ -19,13 +19,13 @@ class UserPage extends EventDateDomain implements Serializable {
     static mapping = {
         table 'users_pages'
         id composite: ['user', 'page']
+        cache true
         version false
 
         user        column: 'user_id'
         page        column: 'page_id'
         date        column: 'date_id'
         denied      column: 'denied'
-        showInMenu  column: 'show_in_menu'
     }
 
     static constraints = {

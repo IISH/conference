@@ -133,6 +133,10 @@ $(document).ready(function() {
         $("#usermenu").toggle();
     });
 
+    $('#menu dl').prev().click(function(e) {
+        $(this).next().slideToggle('fast');
+    });
+
     $('.export-data').change(function(e) {
         var urlParams = $(this).val();
 

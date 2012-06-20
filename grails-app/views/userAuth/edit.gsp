@@ -73,7 +73,7 @@
                                 <input type="hidden" name="Page_${i}.id" id="Page_${i}.id">
 
                                 <label class="property-label">
-                                    <g:select name="Page_${i}.page.id" from="${allPages}" optionKey="id" value="${page.page}" />
+                                    <g:select name="Page_${i}.page.id" from="${allPages}" optionKey="id" value="${page.page.id}" />
                                 </label>
 
                                 <label class="property-label">

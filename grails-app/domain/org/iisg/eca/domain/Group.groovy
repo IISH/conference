@@ -10,6 +10,7 @@ class Group extends EventDateDomain {
 
     static mapping = {
         table 'groups'
+        cache true
         version false
 
         id      column: 'group_id'

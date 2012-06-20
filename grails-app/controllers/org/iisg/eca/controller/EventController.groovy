@@ -53,10 +53,10 @@ class EventController {
      */
     def list() {
         // Get all event dates the user has access to, and sort the dates
-        def dates = User.get(springSecurityService.principal.id).dates
-        def datesSorted = new ArrayList()
+        Set<EventDate> dates = User.get(springSecurityService.principal.id).dates
+        List<EventDate> datesSorted = new ArrayList<EventDate>()
         EventDate.sortByEventAndDate.list().each { date ->
-            if (dates.contains(date)) {
+            if (dates.find { it.id == date.id }) {
                 datesSorted.add(date)
             }
         }

@@ -1,17 +1,24 @@
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Page
 import org.iisg.eca.domain.Event
+import org.iisg.eca.domain.UserPage
 import org.iisg.eca.domain.EventDate
 import org.iisg.eca.domain.EventDomain
 import org.iisg.eca.domain.EventDateDomain
-import org.iisg.eca.domain.DefaultDomain
 
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+import org.iisg.eca.domain.Group
+
+/**
+ * All filters for accessing a page
+ */
 class EcaFilters {
     def pageInformation
     def grailsApplication
     def springSecurityService
     
     def filters = {
+
         /**
          *  Every page (except login/logout/xhr) should be in the database, so lookup the page information from the database
          *  If it is there, cache the page information for this request
@@ -67,6 +74,54 @@ class EcaFilters {
             }
             afterView = { Exception e ->
                 pageInformation.removeDate()
+            }
+        }
+
+        /**
+         * The authorization filter
+         */
+        authFilter(controller: '*', action: '*', controllerExclude: 'login|logout') {
+            before = {
+                if (SpringSecurityUtils.ifNotGranted('superAdmin')) {
+                    User user = User.get(springSecurityService.principal.id)
+                    UserPage userPage = UserPage.findAllByUser(user).find { (it.page.controller == params.controller) && (it.page.action == params.action) }
+
+                    // An individual rule for this page has been configured for this user
+                    if (userPage) {
+                        if (userPage.denied) {
+                            response.sendError(403)
+                            return
+                        }
+                    }
+                    else {
+                        // Look in all the groups assigned to this user, whether the requested page is among them
+                        List<Long> count = Group.withCriteria {
+                            cache(true)
+
+                            projections {
+                                count()
+                            }
+
+                            users {
+                                eq('id', user.id)
+                            }
+
+                            pages {
+                                eq('controller', params.controller)
+                                eq('action', params.action)
+                            }
+                        }
+
+                        // Ifd the page was not found, deny access
+                        if (count.first() == 0) {
+                            response.sendError(403)
+                            return
+                        }
+                    }
+                }
+
+                // Access seems to be allowed
+                return true
             }
         }
         

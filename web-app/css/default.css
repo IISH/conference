@@ -440,6 +440,11 @@ span.remove-item {
     font-size: 8pt;	
 }
 
+#nav > dl dl {
+    display: none;
+    padding: 10px 20px;
+}
+
 /* MAIN CONTENT */
 
 #content {
