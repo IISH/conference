@@ -8,6 +8,7 @@ import org.iisg.eca.domain.EventDateDomain
 
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 import org.iisg.eca.domain.Group
+import org.iisg.eca.domain.Role
 
 /**
  * All filters for accessing a page
@@ -82,6 +83,18 @@ class EcaFilters {
          */
         authFilter(controller: '*', action: '*', controllerExclude: 'login|logout') {
             before = {
+                def roles = Role.findAllByFullRights(true)
+
+                // Check access on the event, if the user is not granted access to all events
+                // and is not granted access to this specific event, deny access
+                if (    pageInformation.date &&
+                        !SpringSecurityUtils.ifAnyGranted(roles*.role.join(',')) &&
+                        !UserPage.findAllByUserAndDate(User.get(springSecurityService.principal.id), pageInformation.date)) {
+                    response.sendError(403)
+                    return
+                }
+
+                // Now check access on page level
                 if (!pageInformation.page) {
                     return true
                 }

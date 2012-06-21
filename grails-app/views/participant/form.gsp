@@ -267,8 +267,10 @@
                             </fieldset>
                         </g:if>
                         <g:else>
-                            <g:message code="participantData.would.like.to.add.message" args="[curDate.toString()]" />
-                            <input type="checkbox" name="add-to-date" value="add" />
+                            <div>
+                                <g:message code="participantDate.not.yet.registered.message" args="[curDate.toString()]" /> <br />
+                                <g:message code="participantDate.would.like.to.add.message" /> <input type="checkbox" name="add-to-date" value="add" />
+                            </div>
                         </g:else>
                     </div>
                   
@@ -514,9 +516,6 @@
                     
                     <div class="clear empty"></div>
                 </g:if>
-                <g:else>
-                    <div style="font-weight:bold; color:red;">User did not sign up for this event date</div>
-                </g:else>
                 </div>
             </div>
           

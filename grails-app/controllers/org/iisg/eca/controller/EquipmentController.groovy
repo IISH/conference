@@ -1,5 +1,7 @@
 package org.iisg.eca.controller
 
+import org.iisg.eca.domain.Equipment
+
 class EquipmentController {
     def index() {
         redirect(action: 'list', params: params)
@@ -19,5 +21,24 @@ class EquipmentController {
 
     def edit() {
         forward(controller: 'dynamicPage', action: 'getAndPost', params: params)
+    }
+
+    def delete() {
+        if (params.id) {
+            Equipment equipment = Equipment.findById(params.id)
+            equipment?.softDelete()
+
+            if (equipment?.save(flush: true)) {
+                flash.message =  message(code: 'default.deleted.message', args: [message(code: 'equipment.label')])
+            }
+            else {
+                flash.message =  message(code: 'default.not.deleted.message', args: [message(code: 'equipment.label')])
+            }
+        }
+        else {
+            flash.message =  message(code: 'default.no.id.message')
+        }
+
+        redirect(uri: eca.createLink(action: 'index', noBase: true))
     }
 }

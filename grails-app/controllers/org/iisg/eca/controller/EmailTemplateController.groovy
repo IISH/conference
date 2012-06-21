@@ -66,4 +66,23 @@ class EmailTemplateController {
             redirect(uri: eca.createLink(action: "show", id: template.id, noBase: true))
         }
     }
+
+    def delete() {
+        if (params.id) {
+            EmailTemplate emailTemplate = EmailTemplate.findById(params.id)
+            emailTemplate?.softDelete()
+
+            if (emailTemplate?.save(flush: true)) {
+                flash.message =  message(code: 'default.deleted.message', args: [message(code: 'emailTemplate.label')])
+            }
+            else {
+                flash.message =  message(code: 'default.not.deleted.message', args: [message(code: 'emailTemplate.label')])
+            }
+        }
+        else {
+            flash.message =  message(code: 'default.no.id.message')
+        }
+
+        redirect(uri: eca.createLink(action: 'index', noBase: true))
+    }
 }

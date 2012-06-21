@@ -51,12 +51,6 @@
                     </label>
                     <g:checkBox class="property-value" name="Session.enabled" checked="${eventSession.enabled}" />
                 </div>
-                <div class="${hasErrors(bean: eventSession, field: 'deleted', 'error')}">
-                    <label class="property-label">
-                        <g:message code="default.deleted.label" />
-                    </label>
-                    <g:checkBox class="property-value" name="Session.deleted" checked="${eventSession.deleted}" />
-                </div>
                 <div>
                     <label class="property-label">                      
                         <g:message code="network.multiple.label" />                        
@@ -152,14 +146,14 @@
 
                             <div>
                                 <label class="property-label">
-                                    Paticipant
+                                    <g:message code="participantDate.label" />
                                 </label>
                                 <input type="text" name="participant" class="select-participant property-value" />
                             </div>
                             <g:if test="${type.withPaper && (maxPapers == null || maxPapers > 1)}">
                                 <div>
                                     <label class="property-label">
-                                        Paper
+                                        <g:message code="paper.label" />
                                     </label>
                                     <select class="paper-id property-value" name="paper-id"></select>
                                 </div>
@@ -175,6 +169,9 @@
             <fieldset class="buttons">
                 <eca:link previous="true">
                     <g:message code="default.button.cancel.label" />
+                </eca:link>
+                <eca:link controller="${params.controller}" action="delete" id="${params.id}">
+                    <g:message code="default.deleted.label" />
                 </eca:link>
                 <input type="submit" name="btn_save" class="btn_save" value="${g.message(code: 'default.button.save.label')}" />
             </fieldset>

@@ -187,15 +187,9 @@ class ParticipantController {
         if (params.id) {
             User user = User.get(params.id)
             ParticipantDate participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
-
             participant?.softDelete()
-            ParticipantVolunteering.findAllByParticipantDate(participant)*.delete()
-            SessionParticipant.findAllByUser(user).each {
-                it.softDelete()
-                it.save()
-            }
 
-            if (participant?.save(flush: true) && user?.save(flush: true)) {
+            if (participant?.save(flush: true)) {
                 flash.message =  message(code: 'default.deleted.message', args: [message(code: 'participantDate.label')])
             }
             else {
@@ -206,7 +200,7 @@ class ParticipantController {
             flash.message =  message(code: 'default.no.id.message')
         }
 
-        redirect(uri: eca.createLink(previous: true, noBase: true))
+        redirect(uri: eca.createLink(action: 'index', noBase: true))
     }
 
     def downloadPaper() {

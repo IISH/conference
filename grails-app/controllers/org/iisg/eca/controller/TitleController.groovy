@@ -1,5 +1,7 @@
 package org.iisg.eca.controller
 
+import org.iisg.eca.domain.Title
+
 class TitleController {
     def index() {
         redirect(action: 'list', params: params)
@@ -19,5 +21,24 @@ class TitleController {
 
     def edit() {
         forward(controller: 'dynamicPage', action: 'getAndPost')
+    }
+
+    def delete() {
+        if (params.id) {
+            Title title = Title.findById(params.id)
+            title?.softDelete()
+
+            if (title?.save(flush: true)) {
+                flash.message =  message(code: 'default.deleted.message', args: [message(code: 'title.label')])
+            }
+            else {
+                flash.message =  message(code: 'default.not.deleted.message', args: [message(code: 'title.label')])
+            }
+        }
+        else {
+            flash.message =  message(code: 'default.no.id.message')
+        }
+
+        redirect(uri: eca.createLink(action: 'index', noBase: true))
     }
 }

@@ -1,9 +1,9 @@
 package org.iisg.eca.controller
 
 import org.iisg.eca.domain.Room
-import org.iisg.eca.domain.RoomSessionDateTimeEquipment
-import org.iisg.eca.domain.SessionDateTime
 import org.iisg.eca.domain.Equipment
+import org.iisg.eca.domain.SessionDateTime
+import org.iisg.eca.domain.RoomSessionDateTimeEquipment
 
 class RoomController {
     def index() {
@@ -60,7 +60,7 @@ class RoomController {
         }
         
         if (request.get) {
-            render(view: "form", model: [room: Room.get(params.id), equipment: Equipment.list(), timeSlots: SessionDateTime.list()])
+            render(view: "form", model: [room: Room.findById(params.id), equipment: Equipment.list(), timeSlots: SessionDateTime.list()])
         }
         else if (request.post) {
             bindData(room, params, [include: ['roomName', 'roomNumber', 'noOfSeats', 'comment']])
@@ -82,5 +82,24 @@ class RoomController {
             flash.message = message(code: 'default.updated.message', args: [message(code: 'room.label'), room.id])
             redirect(uri: eca.createLink(action: "show", id: room.id, noBase: true))
         }
+    }
+
+    def delete() {
+        if (params.id) {
+            Room room = Room.findById(params.id)
+            room?.softDelete()
+
+            if (room?.save(flush: true)) {
+                flash.message =  message(code: 'default.deleted.message', args: [message(code: 'room.label')])
+            }
+            else {
+                flash.message =  message(code: 'default.not.deleted.message', args: [message(code: 'room.label')])
+            }
+        }
+        else {
+            flash.message =  message(code: 'default.no.id.message')
+        }
+
+        redirect(uri: eca.createLink(action: 'index', noBase: true))
     }
 }

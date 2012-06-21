@@ -2,8 +2,15 @@
 <html>
 	<head>
 		<meta name="layout" content="main">
+        <title><g:message code="event.multiple.label" /></title>
 	</head>
 	<body>
+        <h1><g:message code="event.multiple.label" /></h1>
+
+        <g:if test="${flash.message}">
+            <div class="message" role="status">${flash.message}</div>
+        </g:if>
+
         <div id="events">
             <g:each in="${events}" var="evt">
                 <div class="event">
@@ -22,9 +29,7 @@
                     <ul>
                         <g:each in="${dates.get(evt)}" var="eventDate">
                             <li>
-                                <eca:link event="${evt.url}" date="${eventDate.url}">
-                                    ${eventDate.yearCode}
-                                </eca:link>
+                                <eca:link event="${evt.url}" date="${eventDate.url}">${eventDate.yearCode}</eca:link>
                             </li>
                         </g:each>
 

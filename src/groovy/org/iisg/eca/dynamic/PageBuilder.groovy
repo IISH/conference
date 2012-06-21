@@ -91,7 +91,9 @@ class PageBuilder {
         builder.div(class: "tbl_container") {
             builder.input(type: "hidden", name: "default-action", value: element.action)
             builder.div(class: "tbl_toolbar right") {
-                builder.span("Export data: ")
+                builder.span {
+                    builder."g:message"(code: "default.export.data")
+                }
                 builder.select(class: "export-data") {
                     builder.option(value: "-1", " ")
                     builder.option(value: "export=${element.eid}&format=csv&sep=,", "CSV (,)")
@@ -404,7 +406,7 @@ class PageBuilder {
                         builder."eca:booleanSelect"(name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}")
                     }
                     else if (c.property.type == String)  {
-                        builder.input(type: "text", name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", placeholder: "Filter on \${eca.fallbackMessage(code: '${getCode(c.property)}', fbCode: '${getFbCode(c.property)}').toLowerCase()}")
+                        builder.input(type: "text", name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", placeholder: "\${g.message(code: 'default.filter.on', attrs: '[eca.fallbackMessage(code: '${getCode(c.property)}', fbCode: '${getFbCode(c.property)}').toLowerCase()]')}")
                     }
                 }
             }

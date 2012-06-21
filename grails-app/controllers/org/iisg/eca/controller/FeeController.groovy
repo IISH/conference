@@ -114,29 +114,21 @@ class FeeController {
     }
 
     def delete() {
-        if (!params.id) {
-            flash.message = message(code: 'default.no.id.message')
-            redirect(uri: eca.createLink(previous: true, noBase: true))
-            return
-        }
-        
-        FeeState feeState = FeeState.findById(params.id)
+        if (params.id) {
+            FeeState feeState = FeeState.findById(params.id)
+            feeState?.softDelete()
 
-        if (feeState) {
-            feeState.feeAmounts*.deleted = true
-            feeState.deleted = true
-
-            if (!feeState.save(flush: true)) {
-                flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'feestate.label'), feeState.id])
-                redirect(uri: eca.createLink(previous: true, noBase: true))
+            if (feeState?.save(flush: true)) {
+                flash.message =  message(code: 'default.deleted.message', args: [message(code: 'feeState.label')])
             }
-
-            flash.message = message(code: 'default.deleted.message', args: [message(code: 'feestate.label'), feeState.id])
-            redirect(uri: eca.createLink(previous: true, noBase: true))
+            else {
+                flash.message =  message(code: 'default.not.deleted.message', args: [message(code: 'feeState.label')])
+            }
         }
         else {
-            flash.message =  message(code: 'default.not.found.message', args: [message(code: 'feestate.label'), feeState.id])
-            redirect(uri: eca.createLink(previous: true, noBase: true))
+            flash.message =  message(code: 'default.no.id.message')
         }
+
+        redirect(uri: eca.createLink(action: 'index', noBase: true))
     }
 }

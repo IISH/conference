@@ -60,12 +60,25 @@ class Page extends DefaultDomain {
     }
 
     static namedQueries = {
-        menuPages() {
+        menuPages {
             cache(true)
 
             and {
                 eq('showInMenu', true)
                 isNull('parent')
+            }
+
+            order('sortOrder')
+            order('controller')
+            order('titleDefault')
+        }
+
+        subMenuPages { parentPage ->
+            cache(true)
+
+            and {
+                eq('showInMenu', true)
+                eq('parent', parentPage)
             }
 
             order('sortOrder')

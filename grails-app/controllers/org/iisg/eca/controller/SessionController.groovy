@@ -42,6 +42,7 @@ class SessionController {
         def participants = participantSessionService.getParticipantsForSession(session)
         def equipment = participantSessionService.getEquipmentForSession(session)
         render(view: "show", model: [   eventSession:   session,
+                                        networks:       Network.withCriteria { sessions { eq('id', session.id) } },
                                         participants:   participants,
                                         equipment:      equipment])
     }
@@ -100,6 +101,25 @@ class SessionController {
                                         participants:   participants,
                                         equipment:      equipment,
                                         networks:       Network.list()])
+    }
+
+    def delete() {
+        if (params.id) {
+            Session session = Session.findById(params.id)
+            session?.softDelete()
+
+            if (session?.save(flush: true)) {
+                flash.message =  message(code: 'default.deleted.message', args: [message(code: 'session.label')])
+            }
+            else {
+                flash.message =  message(code: 'default.not.deleted.message', args: [message(code: 'session.label')])
+            }
+        }
+        else {
+            flash.message =  message(code: 'default.no.id.message')
+        }
+
+        redirect(uri: eca.createLink(controller: 'session', action: 'index', noBase: true))
     }
 
     /**

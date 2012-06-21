@@ -84,12 +84,7 @@ class NetworkController {
     def delete() {
         if (params.id) {
             Network network = Network.findById(params.id)
-
             network?.softDelete()
-            network?.chairs?.each {
-                it.softDelete()
-                it.save()
-            }
 
             if (network?.save(flush: true)) {
                 flash.message =  message(code: 'default.deleted.message', args: [message(code: 'network.label')])
@@ -102,7 +97,7 @@ class NetworkController {
             flash.message =  message(code: 'default.no.id.message')
         }
 
-        redirect(uri: eca.createLink(previous: true, noBase: true))
+        redirect(uri: eca.createLink(action: 'index', noBase: true))
     }
 
     /**

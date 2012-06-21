@@ -41,7 +41,7 @@
               <g:message code="network.multiple.label"  />
             </span>
             <ul class="property-value" arial-labelledby="networks-label">
-              <g:each in="${eventSession.networks}" var="network">
+              <g:each in="${networks}" var="network">
                 <li>${network.encodeAsHTML()}</li>
               </g:each>
             </ul>

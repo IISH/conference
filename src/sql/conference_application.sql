@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 19, 2012 at 05:16 PM
+-- Generation Time: Jun 21, 2012 at 04:08 PM
 -- Server version: 5.0.86
 -- PHP Version: 5.2.10
 
@@ -423,25 +423,25 @@ INSERT INTO `dynamic_pages` (`dynamic_page_id`, `content`, `cache`, `page_id`, `
 (16, '<overview domain="Room" id="url">\r\n	<column name="roomName" />\r\n	<column name="roomNumber" />\r\n	<column name="noOfSeats" />\r\n	<column name="comment" />\r\n	<column name="enabled" />   \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>\r\n', NULL, 18, NULL, 1, 0),
 (17, '<form domain="Room" id="url">\r\n	<column name="roomName" />\r\n	<column name="roomNumber" />\r\n	<column name="noOfSeats" />\r\n	<column name="comment" />\r\n	<column name="enabled" />\r\n	<column name="deleted" /> \r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 16, NULL, 1, 0),
 (18, '<form domain="Room">\r\n	<column name="roomName" />\r\n	<column name="roomNumber" />\r\n	<column name="noOfSeats" />\r\n	<column name="comment" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 14, NULL, 1, 0),
-(19, '<table domain="Title">\r\n   <column name="title" />\r\n   <column name="enabled" />\r\n   <column name="deleted" />\r\n</table>\r\n\r\n<buttons>\r\n   <button type="back" />\r\n   <button action="create" />\r\n</buttons>', NULL, 20, NULL, 1, 0),
+(19, '<table domain="Title" index="true">\r\n   <column name="title" />\r\n</table>\r\n\r\n<buttons>\r\n   <button type="back" />\r\n   <button action="create" />\r\n</buttons>', NULL, 20, NULL, 1, 0),
 (20, '<table domain="Room" index="true">\r\n	<column name="roomName" />\r\n	<column name="roomNumber" />\r\n	<column name="noOfSeats" />  \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>\r\n', NULL, 21, NULL, 1, 0),
 (21, '<table domain="Network" index="true">\r\n	<column name="name" />\r\n	<column name="showOnline" />\r\n	<column name="showInternal" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>\r\n', NULL, 22, NULL, 1, 0),
-(22, '<table domain="Equipment" index="true">	\r\n	<column name="code" />\r\n	<column name="equipment" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>\r\n', NULL, 23, NULL, 1, 0),
-(24, '<table domain="Session" index="true">\r\n	<column name="code" />\r\n	<column name="name" /> \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>', NULL, 26, NULL, 1, 0),
+(22, '<table domain="Equipment" index="true">	\r\n	<column name="code" />\r\n	<column name="equipment" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>\r\n', '<div class="tbl_container">\n  <input type="hidden" name="default-action" value="show" />\n  <div class="tbl_toolbar right">\n    <span>\n      <g:message code="default.export.data" />\n    </span>\n    <select class="export-data">\n      <option value="-1"> </option>\n      <option value="export=0&amp;format=csv&amp;sep=,">CSV (,)</option>\n      <option value="export=0&amp;format=csv&amp;sep=;">CSV (;)</option>\n      <option value="export=0&amp;format=csv&amp;sep=tab">CSV (tab)</option>\n      <option value="export=0&amp;format=xls">XLS</option>\n      <option value="export=0&amp;format=xml">XML</option>\n    </select>\n  </div>\n  <table class="clear">\n    <thead>\n      <tr>\n        <th class="counter"></th>\n        <th class="id hidden"></th>\n        <th class="sortable">\n          <eca:fallbackMessage code="equipment.code.label" fbCode="equipment.code.label" />\n          <eca:linkAllParams params="[''sort_0_code'': ''asc'']">\n            <g:img dir="images/skin" file="sorted_asc.gif" class="sort_asc" />\n          </eca:linkAllParams>\n          <eca:linkAllParams params="[''sort_0_code'': ''desc'']">\n            <g:img dir="images/skin" file="sorted_desc.gif" class="sort_desc" />\n          </eca:linkAllParams>\n        </th>\n        <th class="sortable">\n          <eca:fallbackMessage code="equipment.equipment.label" fbCode="equipment.equipment.label" />\n          <eca:linkAllParams params="[''sort_0_equipment'': ''asc'']">\n            <g:img dir="images/skin" file="sorted_asc.gif" class="sort_asc" />\n          </eca:linkAllParams>\n          <eca:linkAllParams params="[''sort_0_equipment'': ''desc'']">\n            <g:img dir="images/skin" file="sorted_desc.gif" class="sort_desc" />\n          </eca:linkAllParams>\n        </th>\n      </tr>\n      <tr>\n        <th class="counter"></th>\n        <th class="id hidden"></th>\n        <th class="filter" value="${params.filter_0_code}">\n          <input type="text" name="filter_0_code" value="${params.filter_0_code}" placeholder="${g.message(code: ''default.filter.on'', attrs: [eca.fallbackMessage(code: ''equipment.code.label'', fbCode: ''equipment.code.label'').toLowerCase()])}" />\n        </th>\n        <th class="filter" value="${params.filter_0_equipment}">\n          <input type="text" name="filter_0_equipment" value="${params.filter_0_equipment}" placeholder="${g.message(code: ''default.filter.on'', attrs: [eca.fallbackMessage(code: ''equipment.equipment.label'', fbCode: ''equipment.equipment.label'').toLowerCase()])}" />\n        </th>\n      </tr>\n    </thead>\n    <tbody>\n      <g:each in="${results.get(0).get()}" var="row" status="i">\n        <tr>\n          <td class="counter">${i+1}</td>\n          <td class="id hidden">\n            <g:fieldValue bean="${row}" field="id" />\n          </td>\n          <td>${row.code}</td>\n          <td>${row.equipment}</td>\n        </tr>\n      </g:each>\n    </tbody>\n  </table>\n</div>\n<div class="buttons">\n  <eca:link controller="${params.prevController}" action="${params.prevAction}" id="${params.prevId}">\n    <g:message code="default.button.back.label" />\n  </eca:link>\n  <eca:ifUserHasAccess controller="${params.controller}" action="create">\n    <eca:link controller="${params.controller}" action="create" id="${params.id}">\n      <g:message code="default.button.create.label" />\n    </eca:link>\n  </eca:ifUserHasAccess>\n</div>', 23, NULL, 1, 0),
+(24, '<table domain="Session" index="true">\r\n	<column name="code" /> \r\n	<column name="name" /> \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>', NULL, 26, NULL, 1, 0),
 (25, '<form domain="Session" id="url">\r\n	<column name="id" />\r\n	<column name="name" />\r\n	<column name="code" />\r\n	<column name="comment" />\r\n	<column name="enabled" />\r\n	<column name="deleted" /> \r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 27, NULL, 1, 0),
 (26, '<form domain="Session">\r\n	<column name="name" />\r\n	<column name="code" />\r\n	<column name="comment" />\r\n	<column name="enabled" />\r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 28, NULL, 1, 0),
 (27, '<overview domain="Session" id="url">\r\n	<column name="id" />\r\n	<column name="name" />\r\n	<column name="code" />\r\n	<column name="comment" />\r\n	<column name="networks" />\r\n	<column name="sessionParticipants" />\r\n	<column name="papers" />\r\n	\r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 29, NULL, 1, 0),
 (28, '<form domain="ParticipantState">\r\n	<column name="state" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />    \r\n</form>', NULL, 33, NULL, 1, 0),
 (29, '<form domain="ParticipantState" id="url">\r\n	<column name="id" />\r\n	<column name="state" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />    \r\n</form>', NULL, 34, NULL, 1, 0),
 (30, '<overview domain="ParticipantState" id="url">\r\n	<column name="id" />\r\n	<column name="state" />\r\n	<column name="enabled" />\r\n	<column name="deleted" />\r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 35, NULL, 1, 0),
-(31, '<table domain="ParticipantState">\r\n	<column name="state" />\r\n	<column name="enabled" />  \r\n	<column name="deleted" />  \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>', NULL, 36, NULL, 1, 0),
-(34, '<table domain="EmailTemplate">\r\n	<column name="description" />\r\n	<column name="id" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>', NULL, 42, NULL, 1, 0),
+(31, '<table domain="ParticipantState" index="true">\r\n	<column name="state" /> \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>', NULL, 36, NULL, 1, 0),
+(34, '<table domain="EmailTemplate" index="true">\r\n	<column name="description" />\r\n	<column name="showInBackend" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>', NULL, 42, NULL, 1, 0),
 (35, '<overview domain="EmailTemplate" id="url">\r\n	<column name="id" />\r\n	<column name="description" />\r\n	<column name="subject" />\r\n	<column name="body" />\r\n	<column name="sender" />\r\n	<column name="comment" />\r\n	<column name="enabled" />\r\n	<column name="deleted" />\r\n</overview>\r\n\r\n<buttons>\r\n        <button type="back" />\r\n        <button action="edit" />\r\n</buttons>', NULL, 43, NULL, 1, 0),
 (36, '<form domain="EmailCode">\r\n	<column name="code" />\r\n	<column name="description" />\r\n	<column name="groovyScript" />\r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 44, NULL, 1, 0),
-(37, '<table domain="EmailCode">\r\n	<column name="id" />\r\n	<column name="code" />\r\n	<column name="description" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>\r\n\r\n\r\n', NULL, 46, NULL, 1, 0),
+(37, '<table domain="EmailCode" index="true">\r\n	<column name="code" />\r\n	<column name="description" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>\r\n\r\n\r\n', NULL, 46, NULL, 1, 0),
 (38, '<form domain="EmailCode" id="url">\r\n	<column name="id" />\r\n	<column name="code" />\r\n	<column name="description" />\r\n	<column name="groovyScript" />\r\n	<column name="enabled" />\r\n	<column name="deleted" /> \r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 45, NULL, 1, 0),
 (39, '<overview domain="EmailCode" id="url">\r\n	<column name="id" />\r\n	<column name="code" />\r\n	<column name="description" />\r\n	<column name="groovyScript" />\r\n	<column name="enabled" />\r\n	<column name="deleted" />\r\n</overview>\r\n\r\n<buttons>\r\n        <button type="back" />\r\n        <button action="edit" />\r\n</buttons>', NULL, 47, NULL, 1, 0),
-(40, '<table domain="Setting" action="edit" >\r\n	<column name="property" />\r\n	<column name="value" />\r\n	<column name="event" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n</buttons>', NULL, 48, NULL, 1, 0),
+(40, '<table domain="Setting" action="edit" index="true">\r\n	<column name="property" />\r\n	<column name="value" />\r\n	<column name="event" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n</buttons>', NULL, 48, NULL, 1, 0),
 (41, '<form domain="Setting" id="url">\r\n	<column name="property" />\r\n	<column name="value" />\r\n	<column name="event" />\r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 49, NULL, 1, 0),
 (42, '<form domain="RequestMap">\r\n	<column name="url" />\r\n	<column name="configAttribute" />\r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 50, NULL, 1, 0),
 (43, '<form domain="RequestMap" id="url">\r\n	<column name="url" />\r\n	<column name="configAttribute" />\r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 51, NULL, 1, 0),
@@ -688,14 +688,15 @@ CREATE TABLE IF NOT EXISTS `groups` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`group_id`),
   KEY `groups_date_id_idx` (`date_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `groups`
 --
 
 INSERT INTO `groups` (`group_id`, `name`, `date_id`, `enabled`, `deleted`) VALUES
-(1, 'Access to all', 13, 1, 0);
+(1, 'Access to all', 13, 1, 0),
+(2, 'test groep', 13, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -714,13 +715,6 @@ CREATE TABLE IF NOT EXISTS `groups_pages` (
 -- Dumping data for table `groups_pages`
 --
 
-INSERT INTO `groups_pages` (`group_id`, `page_id`) VALUES
-(1, 4),
-(1, 5),
-(1, 6),
-(1, 7),
-(1, 8),
-(1, 9);
 
 -- --------------------------------------------------------
 
@@ -749,7 +743,7 @@ CREATE TABLE IF NOT EXISTS `networks` (
 INSERT INTO `networks` (`network_id`, `date_id`, `name`, `comment`, `url`, `show_online`, `show_internal`, `enabled`, `deleted`) VALUES
 (4, 13, 'Culture', NULL, 'http://www.url.nl', 1, 1, 1, 0),
 (5, 13, 'Criminal Justice', NULL, 'http://www.url.nl', 1, 1, 1, 0),
-(6, 13, 'Africa', NULL, 'http://www.url.nl', 1, 1, 1, 0);
+(6, 13, 'Africa', NULL, 'http://www.url.nl', 1, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -774,7 +768,9 @@ CREATE TABLE IF NOT EXISTS `networks_chairs` (
 
 INSERT INTO `networks_chairs` (`network_id`, `user_id`, `is_main_chair`, `enabled`, `deleted`) VALUES
 (5, 1, 0, 1, 0),
-(5, 3, 1, 1, 0);
+(5, 3, 1, 1, 0),
+(6, 1, 0, 1, 0),
+(6, 2, 1, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -787,8 +783,8 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `title_code` varchar(50) collate utf8_unicode_ci default NULL,
   `title_arg` varchar(50) collate utf8_unicode_ci default NULL,
   `title_default` varchar(50) collate utf8_unicode_ci NOT NULL,
-  `controller` varchar(20) collate utf8_unicode_ci NOT NULL,
-  `action` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `controller` varchar(20) collate utf8_unicode_ci default NULL,
+  `action` varchar(20) collate utf8_unicode_ci default NULL,
   `sort_order` int(11) NOT NULL default '999',
   `show_in_menu` tinyint(1) NOT NULL default '0',
   `description` text collate utf8_unicode_ci,
@@ -797,7 +793,7 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`page_id`),
   KEY `pages_parent_page_id_idx` (`parent_page_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=66 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=71 ;
 
 --
 -- Dumping data for table `pages`
@@ -812,7 +808,6 @@ INSERT INTO `pages` (`page_id`, `title_code`, `title_arg`, `title_default`, `con
 (6, 'default.create.label', 'eventDate.label', 'Create event date', 'eventDate', 'create', 999, 0, NULL, NULL, 1, 0),
 (7, 'default.create.label', 'network.label', 'Create network', 'network', 'create', 999, 0, NULL, NULL, 1, 0),
 (8, 'default.create.label', 'title.label', 'Create title', 'title', 'create', 999, 0, NULL, NULL, 1, 0),
-(9, 'event.multiple.label', NULL, 'Events', 'event', 'list', 999, 0, NULL, NULL, 1, 0),
 (10, 'default.edit.label', 'network.label', 'Edit network', 'network', 'edit', 999, 0, NULL, NULL, 1, 0),
 (11, 'default.overview.label', 'network.label', 'Network overview', 'network', 'show', 999, 0, NULL, NULL, 1, 0),
 (12, 'default.edit.label', 'title.label', 'Edit title', 'title', 'edit', 999, 0, NULL, NULL, 1, 0),
@@ -823,51 +818,55 @@ INSERT INTO `pages` (`page_id`, `title_code`, `title_arg`, `title_default`, `con
 (17, 'default.edit.label', 'equipment.label', 'Edit equipment', 'equipment', 'edit', 999, 0, NULL, NULL, 1, 0),
 (18, 'default.overview.label', 'room.label', 'Room overview', 'room', 'show', 999, 0, NULL, NULL, 1, 0),
 (19, 'default.overview.label', 'equipment.label', 'Equipment overview', 'equipment', 'show', 999, 0, NULL, NULL, 1, 0),
-(20, 'default.list.label', 'title.label', 'Title list', 'title', 'list', 999, 0, NULL, NULL, 1, 0),
+(20, 'default.list.label', 'title.label', 'Title list', 'title', 'list', 65, 1, NULL, 66, 1, 0),
 (21, 'room.multiple.label', NULL, 'Rooms', 'room', 'list', 25, 1, NULL, NULL, 1, 0),
 (22, 'network.multiple.label', NULL, 'Networks', 'network', 'list', 10, 1, NULL, NULL, 1, 0),
-(23, 'default.list.label', 'equipment.label', 'Equipment list', 'equipment', 'list', 999, 0, NULL, NULL, 1, 0),
-(25, 'default.welcome.label', NULL, 'Welcome', 'event', 'index', 999, 0, NULL, NULL, 1, 0),
+(23, 'equipment.multiple.label', NULL, 'Equipment', 'equipment', 'list', 60, 1, NULL, 66, 1, 0),
 (26, 'session.multiple.label', NULL, 'Sessions', 'session', 'list', 15, 1, NULL, NULL, 1, 0),
 (27, 'default.edit.label', 'session.label', 'Edit session', 'session', 'edit', 999, 0, NULL, NULL, 1, 0),
 (28, 'default.create.label', 'session.label', 'Create session', 'session', 'create', 999, 0, NULL, NULL, 1, 0),
 (29, 'default.overview.label', 'session.label', 'Session overview', 'session', 'show', 999, 0, NULL, NULL, 1, 0),
 (30, 'default.create.label', 'feeState.label', 'Create fee state', 'fee', 'create', 999, 0, NULL, NULL, 1, 0),
 (31, 'default.edit.label', 'feeState.label', 'Edit fee state', 'fee', 'edit', 999, 0, NULL, NULL, 1, 0),
-(32, 'default.list.label', 'feeState.multiple.label', 'List fee states', 'fee', 'list', 999, 0, NULL, NULL, 1, 0),
+(32, 'feeState.multiple.label', NULL, 'Fee states', 'fee', 'list', 55, 1, NULL, 66, 1, 0),
 (33, 'default.create.label', 'participantState.label', 'Create participant state', 'participantState', 'create', 999, 0, NULL, NULL, 1, 0),
 (34, 'default.edit.label', 'participantState.label', 'Edit participant state', 'participantState', 'edit', 999, 0, NULL, NULL, 1, 0),
 (35, 'default.overview.label', 'participantState.label', 'Participant state overview', 'participantState', 'show', 999, 0, NULL, NULL, 1, 0),
-(36, 'default.list.label', 'participantState.multiple.label', 'Participant states list', 'participantState', 'list', 999, 0, NULL, NULL, 1, 0),
+(36, 'participantState.multiple.label', NULL, 'Participant states', 'participantState', 'list', 50, 1, NULL, 66, 1, 0),
 (37, 'participantDate.multiple.label', NULL, 'Participants', 'participant', 'list', 5, 1, NULL, NULL, 1, 0),
 (38, 'default.overview.label', 'participantDate.label', 'User overview', 'participant', 'show', 999, 0, NULL, NULL, 1, 0),
 (39, 'default.plan.drag.label', 'session.multiple.label', 'Plan sessions (Drag)', 'session', 'planDrag', 999, 0, NULL, NULL, 1, 0),
 (40, 'default.create.label', 'emailTemplate.label', 'Create email template', 'emailTemplate', 'create', 999, 0, NULL, NULL, 1, 0),
 (41, 'default.edit.label', 'emailTemplate.label', 'Edit email template', 'emailTemplate', 'edit', 999, 0, NULL, NULL, 1, 0),
-(42, 'default.list.label', 'emailTemplate.multiple.label', 'List email templates', 'emailTemplate', 'list', 999, 0, NULL, NULL, 1, 0),
+(42, 'default.list.label', 'emailTemplate.multiple.label', 'List email templates', 'emailTemplate', 'list', 70, 1, NULL, 66, 1, 0),
 (43, 'default.overview.label', 'emailTemplate.label', 'Show email template', 'emailTemplate', 'show', 999, 0, NULL, NULL, 1, 0),
 (44, 'default.create.label', 'emailCode.label', 'Create email code', 'emailCode', 'create', 999, 0, NULL, NULL, 1, 0),
 (45, 'default.edit.label', 'emailCode.label', 'Edit email code', 'emailCode', 'edit', 999, 0, NULL, NULL, 1, 0),
-(46, 'default.list.label', 'emailCode.multiple.label', 'List email code', 'emailCode', 'list', 999, 0, NULL, NULL, 1, 0),
+(46, 'default.list.label', 'emailCode.multiple.label', 'List email code', 'emailCode', 'list', 75, 1, NULL, 66, 1, 0),
 (47, 'default.overview.label', 'emailCode.label', 'Show email code', 'emailCode', 'show', 999, 0, NULL, NULL, 1, 0),
-(48, 'default.list.label', 'setting.multiple.label', 'List settings', 'setting', 'list', 999, 0, NULL, NULL, 1, 0),
+(48, 'default.list.label', 'setting.multiple.label', 'List settings', 'setting', 'list', 85, 1, NULL, 67, 1, 0),
 (49, 'default.edit.label', 'setting.label', 'Edit setting', 'setting', 'edit', 999, 0, NULL, NULL, 1, 0),
 (50, 'default.create.label', 'requestMap.label', 'Create request map', 'requestmap', 'create', 999, 0, NULL, NULL, 1, 0),
 (51, 'default.edit.label', 'requestMap.label', 'Edit request map', 'requestmap', 'edit', 999, 0, NULL, NULL, 1, 0),
-(52, 'default.list.label', 'requestMap.label', 'Request map list', 'requestmap', 'list', 999, 0, NULL, NULL, 1, 0),
+(52, 'default.list.label', 'requestMap.label', 'Request map list', 'requestmap', 'list', 90, 1, NULL, 67, 1, 0),
 (53, 'default.overview.label', 'requestMap.label', 'Show request map', 'requestmap', 'show', 999, 0, NULL, NULL, 1, 0),
-(54, 'default.list.label', 'extra.label', 'Extra list', 'extra', 'list', 999, 0, NULL, NULL, 1, 0),
+(54, 'extra.multiple.label', NULL, 'Extras', 'extra', 'list', 45, 1, NULL, 66, 1, 0),
 (55, 'default.list.label', 'participantDate.inventationLetter.label', 'Inventation letter list', 'participant', 'inventations', 999, 0, NULL, NULL, 1, 0),
 (56, 'default.list.label', 'participantDate.lowerFee.label', 'Lower fee list', 'participant', 'lowerFee', 999, 0, NULL, NULL, 1, 0),
 (57, 'default.list.label', 'participantDate.label', 'Participant list', 'participant', 'listAll', 999, 0, NULL, NULL, 1, 0),
 (58, 'default.plan.click.label', 'session.multiple.label', 'Plan sessions (Click)', 'session', 'planClick', 30, 1, NULL, NULL, 1, 0),
 (59, 'default.send.label', 'email.label', 'Send e-mail', 'email', 'list', 35, 1, NULL, NULL, 1, 0),
 (60, 'default.send.label', 'email.label', 'Send e-mail', 'email', 'send', 999, 0, NULL, NULL, 1, 0),
-(61, 'group.multiple.label', NULL, 'Authorization groups', 'authGroup', 'list', 999, 1, NULL, NULL, 1, 0),
+(61, 'group.multiple.label', NULL, 'Authorization groups', 'authGroup', 'list', 95, 1, NULL, 67, 1, 0),
 (62, 'default.create.label', 'group.label', 'Create group', 'authGroup', 'create', 999, 0, NULL, NULL, 1, 0),
 (63, 'default.edit.label', 'group.label', 'Edit group', 'authGroup', 'edit', 999, 0, NULL, NULL, 1, 0),
 (64, 'default.overview.label', 'group.label', 'Group overview', 'authGroup', 'show', 999, 0, NULL, NULL, 1, 0),
-(65, 'user.multiple.list', NULL, 'Users', 'userAuth', 'list', 999, 1, NULL, NULL, 1, 0);
+(65, 'user.multiple.label', NULL, 'Users', 'userAuth', 'list', 100, 1, NULL, 67, 1, 0),
+(66, 'default.edit.menu.label', NULL, 'Edit menu', NULL, NULL, 40, 1, NULL, NULL, 1, 0),
+(67, 'default.admin.menu.label', NULL, 'Admin menu', NULL, NULL, 80, 1, NULL, NULL, 1, 0),
+(68, 'default.overview.menu.label', NULL, 'Overviews menu', NULL, NULL, 105, 1, NULL, NULL, 1, 0),
+(69, 'default.overview.label', 'user.label', 'Show user', 'userAuth', 'show', 999, 0, NULL, NULL, 1, 0),
+(70, 'default.edit.label', 'user.label', 'Edit user', 'userAuth', 'edit', 999, 0, NULL, NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -901,7 +900,7 @@ CREATE TABLE IF NOT EXISTS `papers` (
   KEY `paper_state_id` (`paper_state_id`),
   KEY `session_id` (`session_id`),
   KEY `network_proposal_id` (`network_proposal_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `papers`
@@ -909,7 +908,8 @@ CREATE TABLE IF NOT EXISTS `papers` (
 
 INSERT INTO `papers` (`paper_id`, `user_id`, `paper_state_id`, `session_id`, `date_id`, `title`, `co_authors`, `abstract`, `comment`, `network_proposal_id`, `session_proposal`, `proposal_description`, `filename`, `content_type`, `filesize`, `file`, `equipment_comment`, `enabled`, `deleted`) VALUES
 (1, 2, 2, 2, 13, 'Test', NULL, 'Test abstract', NULL, NULL, NULL, NULL, 'Conference-application.iml', 'application/octet-stream', 6159, 0x3c3f786d6c2076657273696f6e3d22312e302220656e636f64696e673d225554462d38223f3e0d0a3c6d6f64756c6520747970653d224a4156415f4d4f44554c45222076657273696f6e3d2234223e0d0a20203c636f6d706f6e656e74206e616d653d2245636c697073654d6f64756c654d616e61676572223e0d0a202020203c636f6e656c656d656e742076616c75653d22636f6d2e737072696e67736f757263652e7374732e677261696c732e636f72652e434c415353504154485f434f4e5441494e455222202f3e0d0a202020203c7372635f6465736372697074696f6e2065787065637465645f706f736974696f6e3d2230223e0d0a2020202020203c7372635f666f6c6465722076616c75653d2266696c653a2f2f244d4f44554c455f444952242f7372632f6a617661222065787065637465645f706f736974696f6e3d223022202f3e0d0a2020202020203c7372635f666f6c6465722076616c75653d2266696c653a2f2f244d4f44554c455f444952242f7372632f67726f6f7679222065787065637465645f706f736974696f6e3d223122202f3e0d0a2020202020203c7372635f666f6c6465722076616c75653d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f636f6e66222065787065637465645f706f736974696f6e3d223222202f3e0d0a2020202020203c7372635f666f6c6465722076616c75653d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f636f6e74726f6c6c657273222065787065637465645f706f736974696f6e3d223322202f3e0d0a2020202020203c7372635f666f6c6465722076616c75653d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f646f6d61696e222065787065637465645f706f736974696f6e3d223422202f3e0d0a2020202020203c7372635f666f6c6465722076616c75653d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f7365727669636573222065787065637465645f706f736974696f6e3d223522202f3e0d0a2020202020203c7372635f666f6c6465722076616c75653d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f7461676c6962222065787065637465645f706f736974696f6e3d223622202f3e0d0a2020202020203c7372635f666f6c6465722076616c75653d2266696c653a2f2f244d4f44554c455f444952242f746573742f696e746567726174696f6e222065787065637465645f706f736974696f6e3d223722202f3e0d0a2020202020203c7372635f666f6c6465722076616c75653d2266696c653a2f2f244d4f44554c455f444952242f746573742f756e6974222065787065637465645f706f736974696f6e3d223822202f3e0d0a202020203c2f7372635f6465736372697074696f6e3e0d0a20203c2f636f6d706f6e656e743e0d0a20203c636f6d706f6e656e74206e616d653d2246616365744d616e61676572223e0d0a202020203c666163657420747970653d22537072696e6722206e616d653d22537072696e67223e0d0a2020202020203c636f6e66696775726174696f6e3e0d0a20202020202020203c66696c657365742069643d22477261696c7322206e616d653d22477261696c73222072656d6f7665643d2266616c7365223e0d0a202020202020202020203c66696c653e66696c653a2f2f244d4f44554c455f444952242f7765622d6170702f5745422d494e462f6170706c69636174696f6e436f6e746578742e786d6c3c2f66696c653e0d0a20202020202020203c2f66696c657365743e0d0a2020202020203c2f636f6e66696775726174696f6e3e0d0a202020203c2f66616365743e0d0a202020203c666163657420747970653d2277656222206e616d653d22477261696c73576562223e0d0a2020202020203c636f6e66696775726174696f6e3e0d0a20202020202020203c776562726f6f74733e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f7765622d617070222072656c61746976653d222f22202f3e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f7669657773222072656c61746976653d222f22202f3e0d0a20202020202020203c2f776562726f6f74733e0d0a20202020202020203c736f75726365526f6f7473202f3e0d0a2020202020203c2f636f6e66696775726174696f6e3e0d0a202020203c2f66616365743e0d0a202020203c666163657420747970653d2268696265726e61746522206e616d653d2248696265726e617465223e0d0a2020202020203c636f6e66696775726174696f6e3e0d0a20202020202020203c64617461736f757263652d6d6170202f3e0d0a20202020202020203c6465706c6f796d656e7444657363726970746f72206e616d653d2268696265726e6174652e6366672e786d6c222075726c3d2266696c653a2f2f244d4f44554c455f444952242f7372632f74656d706c617465732f6172746966616374732f68696265726e6174652e6366672e786d6c22202f3e0d0a2020202020203c2f636f6e66696775726174696f6e3e0d0a202020203c2f66616365743e0d0a202020203c666163657420747970653d2277656222206e616d653d22576562223e0d0a2020202020203c636f6e66696775726174696f6e3e0d0a20202020202020203c64657363726970746f72733e0d0a202020202020202020203c6465706c6f796d656e7444657363726970746f72206e616d653d227765622e786d6c222075726c3d2266696c653a2f2f244d4f44554c455f444952242f7372632f74656d706c617465732f7761722f7765622e786d6c22202f3e0d0a20202020202020203c2f64657363726970746f72733e0d0a20202020202020203c776562726f6f74733e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f7372632f74656d706c617465732f776172222072656c61746976653d222f5745422d494e4622202f3e0d0a20202020202020203c2f776562726f6f74733e0d0a20202020202020203c736f75726365526f6f74733e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f7372632f6a61766122202f3e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f7574696c7322202f3e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f7372632f67726f6f767922202f3e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f636f6e74726f6c6c65727322202f3e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f646f6d61696e22202f3e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f736572766963657322202f3e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f7461676c696222202f3e0d0a20202020202020203c2f736f75726365526f6f74733e0d0a2020202020203c2f636f6e66696775726174696f6e3e0d0a202020203c2f66616365743e0d0a20203c2f636f6d706f6e656e743e0d0a20203c636f6d706f6e656e74206e616d653d224e65774d6f64756c65526f6f744d616e616765722220696e68657269742d636f6d70696c65722d6f75747075743d2266616c7365223e0d0a202020203c6f75747075742075726c3d2266696c653a2f2f244d4f44554c455f444952242f7765622d6170702f5745422d494e462f636c617373657322202f3e0d0a202020203c6578636c7564652d6f7574707574202f3e0d0a202020203c636f6e74656e742075726c3d2266696c653a2f2f244d4f44554c455f44495224223e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f7372632f6a6176612220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f7574696c732220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f7372632f67726f6f76792220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f636f6e74726f6c6c6572732220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f646f6d61696e2220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f73657276696365732220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f7461676c69622220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f746573742f756e69742220697354657374536f757263653d227472756522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f746573742f696e746567726174696f6e2220697354657374536f757263653d227472756522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f636f6e662220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f746573742f696e746567726174696f6e2220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f746573742f756e69742220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c6578636c756465466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f7461726765742f636c617373657322202f3e0d0a2020202020203c6578636c756465466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f7461726765742f746573742d636c617373657322202f3e0d0a2020202020203c6578636c756465466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f7765622d6170702f706c7567696e7322202f3e0d0a202020203c2f636f6e74656e743e0d0a202020203c6f72646572456e74727920747970653d22736f75726365466f6c6465722220666f7254657374733d2266616c736522202f3e0d0a202020203c6f72646572456e74727920747970653d22696e686572697465644a646b22202f3e0d0a202020203c6f72646572456e74727920747970653d226c69627261727922206e616d653d22636f6d2e737072696e67736f757263652e7374732e677261696c732e636f72652e434c415353504154485f434f4e5441494e455222206c6576656c3d226170706c69636174696f6e22202f3e0d0a202020203c6f72646572456e74727920747970653d226c69627261727922206e616d653d22677261696c732d322e302e3122206c6576656c3d226170706c69636174696f6e22202f3e0d0a202020203c6f72646572456e74727920747970653d226d6f64756c652d6c69627261727922206578706f727465643d22223e0d0a2020202020203c6c696272617279206e616d653d22477261696c732055736572204c6962726172792028436f6e666572656e63652d6170706c69636174696f6e29223e0d0a20202020202020203c434c41535345533e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f6c696222202f3e0d0a202020202020202020203c726f6f742075726c3d226a61723a2f2f24555345525f484f4d45242f2e677261696c732f6976792d63616368652f6c6f67346a2f6c6f67346a2f6a6172732f6c6f67346a2d312e322e31342e6a6172212f22202f3e0d0a202020202020202020203c726f6f742075726c3d226a61723a2f2f24555345525f484f4d45242f2e677261696c732f6976792d63616368652f6e65742e736f75726365666f7267652e6a657863656c6170692f6a786c2f6a6172732f6a786c2d322e362e31322e6a6172212f22202f3e0d0a202020202020202020203c726f6f742075726c3d226a61723a2f2f24555345525f484f4d45242f2e677261696c732f6976792d63616368652f6f72672e68696265726e6174652f68696265726e6174652d746f6f6c732f6a6172732f68696265726e6174652d746f6f6c732d332e322e342e47412e6a6172212f22202f3e0d0a202020202020202020203c726f6f742075726c3d226a61723a2f2f24555345525f484f4d45242f2e677261696c732f6976792d63616368652f667265656d61726b65722f667265656d61726b65722f6a6172732f667265656d61726b65722d322e332e382e6a6172212f22202f3e0d0a202020202020202020203c726f6f742075726c3d226a61723a2f2f24555345525f484f4d45242f2e677261696c732f6976792d63616368652f6f72672e6265616e7368656c6c2f6273682f6a6172732f6273682d322e3062342e6a6172212f22202f3e0d0a202020202020202020203c726f6f742075726c3d226a61723a2f2f24555345525f484f4d45242f2e677261696c732f6976792d63616368652f6f72672e68696265726e6174652f6a746964792f6a6172732f6a746964792d72382d32303036303830312e6a6172212f22202f3e0d0a202020202020202020203c726f6f742075726c3d226a61723a2f2f24555345525f484f4d45242f2e677261696c732f6976792d63616368652f6f72672e737072696e676672616d65776f726b2e73656375726974792f737072696e672d73656375726974792d7765622f6a6172732f737072696e672d73656375726974792d7765622d332e302e372e52454c454153452e6a6172212f22202f3e0d0a202020202020202020203c726f6f742075726c3d226a61723a2f2f24555345525f484f4d45242f2e677261696c732f6976792d63616368652f6f72672e737072696e676672616d65776f726b2e73656375726974792f737072696e672d73656375726974792d636f72652f6a6172732f737072696e672d73656375726974792d636f72652d332e302e372e52454c454153452e6a6172212f22202f3e0d0a202020202020202020203c726f6f742075726c3d226a61723a2f2f24555345525f484f4d45242f2e677261696c732f6976792d63616368652f6d7973716c2f6d7973716c2d636f6e6e6563746f722d6a6176612f6a6172732f6d7973716c2d636f6e6e6563746f722d6a6176612d352e312e31382e6a6172212f22202f3e0d0a20202020202020203c2f434c41535345533e0d0a20202020202020203c4a415641444f43202f3e0d0a20202020202020203c534f5552434553202f3e0d0a20202020202020203c6a61724469726563746f72792075726c3d2266696c653a2f2f244d4f44554c455f444952242f6c696222207265637572736976653d2266616c736522202f3e0d0a2020202020203c2f6c6962726172793e0d0a202020203c2f6f72646572456e7472793e0d0a202020203c6f72646572456e74727920747970653d226d6f64756c6522206d6f64756c652d6e616d653d22436f6e666572656e63652d6170706c69636174696f6e2d677261696c73506c7567696e7322202f3e0d0a20203c2f636f6d706f6e656e743e0d0a3c2f6d6f64756c653e0d0a0d0a, NULL, 1, 0),
-(2, 5, 3, 3, 13, 'Another test paper', NULL, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0);
+(2, 5, 3, 3, 13, 'Another test paper', NULL, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0),
+(3, 1, 0, NULL, 13, 'Paper', NULL, 'paper', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -930,8 +930,10 @@ CREATE TABLE IF NOT EXISTS `paper_equipment` (
 
 INSERT INTO `paper_equipment` (`paper_id`, `equipment_id`) VALUES
 (1, 1),
+(3, 1),
 (1, 3),
 (2, 3),
+(3, 3),
 (2, 4);
 
 -- --------------------------------------------------------
@@ -997,7 +999,7 @@ CREATE TABLE IF NOT EXISTS `participant_date` (
 INSERT INTO `participant_date` (`participant_date_id`, `user_id`, `date_id`, `participant_state_id`, `fee_state_id`, `payment_id`, `date_added`, `invitation_letter`, `invitation_letter_sent`, `lower_fee_requested`, `lower_fee_answered`, `lower_fee_text`, `enabled`, `deleted`) VALUES
 (1, 2, 13, 2, 1, 0, '2012-04-26', 1, 0, 0, 0, NULL, 1, 0),
 (3, 3, 13, 1, 1, 0, '2012-04-27', 1, 0, 0, 0, NULL, 1, 0),
-(4, 4, 13, 999, 1, 0, '2012-04-27', 0, 0, 0, 0, NULL, 1, 0),
+(4, 4, 13, 999, 1, 0, '2012-04-27', 0, 0, 0, 0, NULL, 1, 1),
 (5, 5, 13, 2, 0, 0, '2012-04-27', 0, 0, 0, 0, NULL, 1, 0),
 (6, 6, 13, 2, 0, 0, '2012-04-27', 0, 0, 0, 0, NULL, 1, 0),
 (7, 7, 13, 1, 0, 0, '2012-04-27', 0, 0, 0, 0, NULL, 1, 0),
@@ -1042,8 +1044,12 @@ CREATE TABLE IF NOT EXISTS `participant_not_present` (
 
 INSERT INTO `participant_not_present` (`user_id`, `session_datetime_id`) VALUES
 (2, 4),
+(4, 6),
+(4, 8),
 (2, 9),
+(4, 11),
 (2, 12),
+(4, 13),
 (2, 17);
 
 -- --------------------------------------------------------
@@ -1165,7 +1171,7 @@ CREATE TABLE IF NOT EXISTS `request_map` (
   `config_attribute` varchar(255) collate utf8_unicode_ci NOT NULL,
   PRIMARY KEY  (`request_map_id`),
   UNIQUE KEY `url` (`url`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `request_map`
@@ -1173,7 +1179,8 @@ CREATE TABLE IF NOT EXISTS `request_map` (
 
 INSERT INTO `request_map` (`request_map_id`, `url`, `config_attribute`) VALUES
 (1, '/login/*', 'permitAll'),
-(2, '/**', 'hasRole(''user'')');
+(2, '/logout/*', 'permitAll'),
+(3, '/**', 'hasRole(''user'')');
 
 -- --------------------------------------------------------
 
@@ -1235,7 +1242,7 @@ INSERT INTO `rooms` (`room_id`, `date_id`, `room_name`, `room_number`, `number_o
 (12, 13, 'J', 'J', 999, NULL, 1, 0),
 (13, 13, 'K', 'K', 999, NULL, 1, 0),
 (14, 13, 'L', 'L', 999, NULL, 1, 0),
-(15, 13, 'M', 'M', 999, NULL, 1, 0),
+(15, 13, 'M', 'M', 999, NULL, 1, 1),
 (16, 13, 'N', 'N', 999, NULL, 1, 0),
 (17, 13, 'O', 'O', 999, NULL, 1, 0),
 (18, 13, 'P', 'P', 999, NULL, 1, 0),
@@ -1466,7 +1473,7 @@ CREATE TABLE IF NOT EXISTS `sessions` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`session_id`),
   KEY `date_id` (`date_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
 
 --
 -- Dumping data for table `sessions`
@@ -1476,7 +1483,8 @@ INSERT INTO `sessions` (`session_id`, `date_id`, `session_code`, `session_name`,
 (1, 13, 'AFR02', 'Knowledge, Culture and Empowerment', NULL, 1, 0),
 (2, 13, 'ANT02', 'Urban Labour in Roman Italy', NULL, 1, 0),
 (3, 13, 'ANT03', 'The Social Institution of Money in the Ancient World', NULL, 1, 0),
-(4, 13, 'ANT04', 'Social Networks Analysis and the Ancient Economy: Networks Around Commodities', NULL, 1, 0);
+(4, 13, 'ANT04', 'Social Networks Analysis and the Ancient Economy: Networks Around Commodities', NULL, 1, 1),
+(5, 13, 'TEST', 'Test session', NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1538,8 +1546,10 @@ INSERT INTO `session_in_network` (`network_id`, `session_id`) VALUES
 (5, 1),
 (6, 1),
 (5, 2),
+(6, 2),
 (5, 3),
-(5, 4);
+(5, 4),
+(5, 5);
 
 -- --------------------------------------------------------
 
@@ -1558,7 +1568,7 @@ CREATE TABLE IF NOT EXISTS `session_participant` (
   KEY `user_id` (`user_id`),
   KEY `session_id` (`session_id`),
   KEY `participant_type_id` (`participant_type_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=64 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=69 ;
 
 --
 -- Dumping data for table `session_participant`
@@ -1575,14 +1585,15 @@ INSERT INTO `session_participant` (`session_participant_id`, `user_id`, `session
 (49, 5, 3, 3, 1, 0),
 (51, 7, 3, 5, 1, 0),
 (52, 2, 4, 2, 1, 0),
-(53, 4, 4, 4, 1, 0),
+(53, 4, 4, 4, 1, 1),
 (54, 3, 2, 4, 1, 0),
 (55, 6, 3, 4, 1, 0),
 (57, 2, 2, 3, 1, 0),
 (58, 5, 2, 2, 1, 0),
 (59, 5, 3, 2, 1, 0),
 (60, 6, 3, 5, 1, 0),
-(62, 2, 2, 4, 1, 0);
+(62, 2, 2, 4, 1, 0),
+(68, 3, 2, 2, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1603,8 +1614,6 @@ CREATE TABLE IF NOT EXISTS `session_room_datetime` (
 -- Dumping data for table `session_room_datetime`
 --
 
-INSERT INTO `session_room_datetime` (`room_id`, `session_datetime_id`, `session_id`) VALUES
-(5, 5, 3);
 
 -- --------------------------------------------------------
 
@@ -1708,13 +1717,13 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`user_id`, `email`, `lastname`, `firstname`, `gender`, `title`, `address`, `city`, `country_id`, `language`, `password`, `salt`, `phone`, `fax`, `mobile`, `organisation`, `department`, `extra_info`, `date_added`, `enabled`, `deleted`) VALUES
-(1, 'testeca1@knoex.com', 'Haas', 'Lester', 'M', 'null', NULL, 'City', 169, 'nl', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, NULL, NULL, 'International Institute for Social History', 'Department', NULL, '2012-04-26', 1, 0),
-(2, 'testeca2@knoex.com', 'Jansen', 'Jan', 'M', 'Mr.', 'Astreet 5\r\n1234 AB', 'Amsterdam', 169, 'nl', 'e25aad0f7d9d00d2bc7d1ee8754cf7610e22edc1e5be813d3866263a5b2f483eac7891e74315a727bf79b6bdbb12d92073bdf4fdc273dafec771ec1c1e4fbfdf', 'our05jbtovlvgpqsmsisji9v3t', '0123456789', NULL, '0623456789', 'International Institute of Social History', NULL, NULL, '2012-04-26', 1, 0),
-(3, 'testeca3@knoex.com', 'Molens', 'Kees', 'M', NULL, NULL, 'Another City', 1, 'en', '9ff3d4a2607fce38eda4f17a2a86ecb4b2bdb598659540f132ec71066650a9590a66d4e658b61cb4823e9304ed8a916171426a51542c42104969ca9c231fd707', 'tc9u3d1rs1rtuoe2rv79hllv7h', NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
-(4, 'testeca4@knoex.com', 'Kloos', 'Joost', 'M', NULL, NULL, 'City', 169, 'nl', 'password', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
-(5, 'testeca5@knoex.com', 'Pier', 'Jonathan', NULL, NULL, NULL, 'CIty', 9, 'nl', 'password', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
-(6, 'testeca6@knoex.com', 'Jeest', 'Henk', NULL, NULL, NULL, 'City', 12, 'nl', 'pass', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
-(7, 'testeca7@knoex.com', 'Joker', 'Jaap', 'M', NULL, NULL, 'City', 98, 'nl', 'pw', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0);
+(1, 'testeca1@knoex.com', 'Haas', 'Lester', 'M', 'null', NULL, 'City', 169, 'en', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, NULL, NULL, 'International Institute for Social History', 'Department', NULL, '2012-04-26', 1, 0),
+(2, 'testeca2@knoex.com', 'Jansen', 'Jan', 'M', 'Mr.', 'Astreet 5\r\n1234 AB', 'Amsterdam', 169, 'nl', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', '0123456789', NULL, '0623456789', 'International Institute of Social History', NULL, NULL, '2012-04-26', 1, 0),
+(3, 'testeca3@knoex.com', 'Molens', 'Kees', 'M', NULL, NULL, 'Another City', 1, 'en', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
+(4, 'testeca4@knoex.com', 'Kloos', 'Joost', 'M', 'null', NULL, 'City', 169, 'nl', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
+(5, 'testeca5@knoex.com', 'Pier', 'Jonathan', NULL, NULL, NULL, 'CIty', 9, 'nl', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
+(6, 'testeca6@knoex.com', 'Jeest', 'Henk', NULL, NULL, NULL, 'City', 12, 'nl', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
+(7, 'testeca7@knoex.com', 'Joker', 'Jaap', 'M', NULL, NULL, 'City', 98, 'nl', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1733,8 +1742,6 @@ CREATE TABLE IF NOT EXISTS `users_groups` (
 -- Dumping data for table `users_groups`
 --
 
-INSERT INTO `users_groups` (`user_id`, `group_id`) VALUES
-(2, 1);
 
 -- --------------------------------------------------------
 
@@ -1776,7 +1783,7 @@ CREATE TABLE IF NOT EXISTS `users_roles` (
   KEY `users_roles_user_id_idx` (`user_id`),
   KEY `users_roles_role_id_idx` (`role_id`),
   KEY `users_roles_date_id_idx` (`date_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `users_roles`
@@ -1784,7 +1791,9 @@ CREATE TABLE IF NOT EXISTS `users_roles` (
 
 INSERT INTO `users_roles` (`user_role_id`, `user_id`, `role_id`, `date_id`, `enabled`, `deleted`) VALUES
 (1, 1, 1, NULL, 1, 0),
-(2, 2, 2, 13, 1, 0);
+(2, 2, 2, 13, 1, 0),
+(3, 3, 3, 13, 1, 0),
+(4, 4, 1, 13, 1, 0);
 
 -- --------------------------------------------------------
 

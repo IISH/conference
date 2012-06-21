@@ -580,7 +580,7 @@ span.remove-item {
     padding: 0;
 }
 
-#participant-form .column > * {
+#participant-form .column > fieldset, #participant-form .column > div {
     margin: 20px 0;
 }
 
