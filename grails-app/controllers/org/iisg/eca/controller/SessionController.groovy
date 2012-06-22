@@ -22,7 +22,7 @@ class SessionController {
     def sessionPlannerService
 
     def index() {
-        redirect(action: 'list', params: params)
+        redirect(uri: eca.createLink(action: 'list', noBase: true), params: params)
     }
 
     def show() {
@@ -119,7 +119,7 @@ class SessionController {
             flash.message =  message(code: 'default.no.id.message')
         }
 
-        redirect(uri: eca.createLink(controller: 'session', action: 'index', noBase: true))
+        redirect(uri: eca.createLink(controller: 'session', action: 'list', noBase: true))
     }
 
     /**

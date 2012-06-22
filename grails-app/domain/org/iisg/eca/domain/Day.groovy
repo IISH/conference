@@ -1,6 +1,5 @@
 package org.iisg.eca.domain
 
-import java.text.SimpleDateFormat
 import org.codehaus.groovy.grails.plugins.web.taglib.ValidationTagLib
 
 /**

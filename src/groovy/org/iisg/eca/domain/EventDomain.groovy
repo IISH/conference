@@ -31,7 +31,7 @@ abstract class EventDomain extends DefaultDomain {
     }
     
     def beforeUpdate() {
-        if (this.date != pageInformation.date) {
+        if (this.event != pageInformation.date?.event) {
             // TODO: Create trigger???
         }
     }

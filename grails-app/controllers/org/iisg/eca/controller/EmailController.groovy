@@ -9,7 +9,7 @@ class EmailController {
     def pageInformation
 
     def index() {
-        redirect(action: 'list', params: params)
+        redirect(uri: eca.createLink(action: 'list', noBase: true), params: params)
     }
 
     def list() { }

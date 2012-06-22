@@ -25,7 +25,7 @@ class EventController {
             render(view: "index")
         }
         else {
-            redirect(action: "list", params: params)
+            redirect(uri: eca.createLink(action: 'list', noBase: true), params: params)
         }
     }
 

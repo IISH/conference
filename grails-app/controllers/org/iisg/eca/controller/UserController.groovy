@@ -15,7 +15,7 @@ class UserController {
      * Default action: Redirects to 'show' method, which will display information of the logged in user
      */
     def index() {
-        redirect(action: "show", params: params)
+        redirect(uri: eca.createLink(action: 'show', noBase: true), params: params)
     }
 
     /**

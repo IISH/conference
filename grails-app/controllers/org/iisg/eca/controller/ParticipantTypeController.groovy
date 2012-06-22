@@ -1,8 +1,8 @@
 package org.iisg.eca.controller
 
-import org.iisg.eca.domain.Group
+import org.iisg.eca.domain.ParticipantType
 
-class AuthGroupController {
+class ParticipantTypeController {
     def index() {
         redirect(uri: eca.createLink(action: 'list', noBase: true), params: params)
     }
@@ -25,14 +25,14 @@ class AuthGroupController {
 
     def delete() {
         if (params.id) {
-            Group group = Group.findById(params.id)
-            group?.softDelete()
+            ParticipantType participantType = ParticipantType.findById(params.id)
+            participantType?.softDelete()
 
-            if (group?.save(flush: true)) {
-                flash.message =  message(code: 'default.deleted.message', args: [message(code: 'group.label')])
+            if (participantType?.save(flush: true)) {
+                flash.message =  message(code: 'default.deleted.message', args: [message(code: 'participantType.label')])
             }
             else {
-                flash.message =  message(code: 'default.not.deleted.message', args: [message(code: 'group.label')])
+                flash.message =  message(code: 'default.not.deleted.message', args: [message(code: 'participantType.label')])
             }
         }
         else {

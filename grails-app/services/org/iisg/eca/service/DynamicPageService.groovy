@@ -219,6 +219,9 @@ class DynamicPageService {
                     case 'save':
                         buttonType = Button.Type.SAVE
                         break
+                    case 'delete':
+                        buttonType = Button.Type.DELETE
+                        break
                     default:
                         buttonType = Button.Type.URL
                 }

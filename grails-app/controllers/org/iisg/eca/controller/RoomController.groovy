@@ -7,7 +7,7 @@ import org.iisg.eca.domain.RoomSessionDateTimeEquipment
 
 class RoomController {
     def index() {
-        redirect(action: 'list', params: params)
+        redirect(uri: eca.createLink(action: 'list', noBase: true), params: params)
     }
 
     def show() {
@@ -50,7 +50,7 @@ class RoomController {
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
         }
-        
+
         Room room = Room.findById(params.id)
 
         if (!room) {
@@ -60,7 +60,7 @@ class RoomController {
         }
         
         if (request.get) {
-            render(view: "form", model: [room: Room.findById(params.id), equipment: Equipment.list(), timeSlots: SessionDateTime.list()])
+            render(view: "form", model: [room: room, equipment: Equipment.list(), timeSlots: SessionDateTime.list()])
         }
         else if (request.post) {
             bindData(room, params, [include: ['roomName', 'roomNumber', 'noOfSeats', 'comment']])
@@ -100,6 +100,6 @@ class RoomController {
             flash.message =  message(code: 'default.no.id.message')
         }
 
-        redirect(uri: eca.createLink(action: 'index', noBase: true))
+        redirect(uri: eca.createLink(action: 'list', noBase: true))
     }
 }

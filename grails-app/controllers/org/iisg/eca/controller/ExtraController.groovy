@@ -4,7 +4,7 @@ import org.iisg.eca.domain.Extra
 
 class ExtraController {
     def index() {
-        redirect(action: 'list', params: params)
+        redirect(uri: eca.createLink(action: 'list', noBase: true), params: params, flash: flash)
     }
 
     def show() {
@@ -39,6 +39,6 @@ class ExtraController {
             flash.message =  message(code: 'default.no.id.message')
         }
 
-        redirect(uri: eca.createLink(action: 'index', noBase: true))
+        redirect(uri: eca.createLink(action: 'list', noBase: true))
     }
 }

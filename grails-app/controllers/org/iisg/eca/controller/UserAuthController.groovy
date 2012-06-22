@@ -11,7 +11,7 @@ import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
 class UserAuthController {
     def index() {
-       redirect(action: 'list', params: params)
+        redirect(uri: eca.createLink(action: 'list', noBase: true), params: params)
     }
 
     def show() {

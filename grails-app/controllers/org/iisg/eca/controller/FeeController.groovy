@@ -9,7 +9,7 @@ class FeeController {
     def pageInformation
 
     def index() {
-        redirect(action: 'create', params: params)
+        redirect(uri: eca.createLink(action: 'list', noBase: true), params: params)
     }
 
     def list() {
@@ -129,6 +129,6 @@ class FeeController {
             flash.message =  message(code: 'default.no.id.message')
         }
 
-        redirect(uri: eca.createLink(action: 'index', noBase: true))
+        redirect(uri: eca.createLink(action: 'list', noBase: true))
     }
 }

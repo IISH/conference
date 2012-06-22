@@ -2,7 +2,7 @@ package org.iisg.eca.controller
 
 class RequestmapController {
     def index() {
-        redirect(action: 'list', params: params)
+        redirect(uri: eca.createLink(action: 'list', noBase: true), params: params)
     }
 
     def show() {

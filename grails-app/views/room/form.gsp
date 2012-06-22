@@ -4,6 +4,16 @@
 		<meta name="layout" content="main">
 	</head>
 	<body>
+        <g:hasErrors bean="${room}">
+          <ul class="errors" role="alert">
+            <g:eachError bean="${room}" var="error">
+              <li>
+                <g:message error="${error}" />
+              </li>
+            </g:eachError>
+          </ul>
+        </g:hasErrors>
+
         <form method="post" action="#">
             <fieldset class="form">
                 <div class="${hasErrors(bean: room, field: 'roomName', 'error')} required">

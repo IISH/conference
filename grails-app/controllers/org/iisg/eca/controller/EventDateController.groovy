@@ -2,7 +2,7 @@ package org.iisg.eca.controller
 
 class EventDateController {
     def index() {
-        redirect(action: 'create', params: params)
+        redirect(uri: eca.createLink(action: 'create', noBase: true), params: params)
     }
 
     def show() {

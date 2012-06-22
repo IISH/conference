@@ -1,8 +1,8 @@
 package org.iisg.eca.controller
 
-import org.iisg.eca.domain.Group
+import org.iisg.eca.domain.Volunteering
 
-class AuthGroupController {
+class VolunteeringController {
     def index() {
         redirect(uri: eca.createLink(action: 'list', noBase: true), params: params)
     }
@@ -25,14 +25,14 @@ class AuthGroupController {
 
     def delete() {
         if (params.id) {
-            Group group = Group.findById(params.id)
-            group?.softDelete()
+            Volunteering volunteering = Volunteering.findById(params.id)
+            volunteering?.softDelete()
 
-            if (group?.save(flush: true)) {
-                flash.message =  message(code: 'default.deleted.message', args: [message(code: 'group.label')])
+            if (volunteering?.save(flush: true)) {
+                flash.message =  message(code: 'default.deleted.message', args: [message(code: 'volunteering.label')])
             }
             else {
-                flash.message =  message(code: 'default.not.deleted.message', args: [message(code: 'group.label')])
+                flash.message =  message(code: 'default.not.deleted.message', args: [message(code: 'volunteering.label')])
             }
         }
         else {

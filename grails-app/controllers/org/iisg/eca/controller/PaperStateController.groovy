@@ -1,8 +1,8 @@
 package org.iisg.eca.controller
 
-import org.iisg.eca.domain.Group
+import org.iisg.eca.domain.PaperState
 
-class AuthGroupController {
+class PaperStateController {
     def index() {
         redirect(uri: eca.createLink(action: 'list', noBase: true), params: params)
     }
@@ -25,14 +25,14 @@ class AuthGroupController {
 
     def delete() {
         if (params.id) {
-            Group group = Group.findById(params.id)
-            group?.softDelete()
+            PaperState paperState = PaperState.findById(params.id)
+            paperState?.softDelete()
 
-            if (group?.save(flush: true)) {
-                flash.message =  message(code: 'default.deleted.message', args: [message(code: 'group.label')])
+            if (paperState?.save(flush: true)) {
+                flash.message =  message(code: 'default.deleted.message', args: [message(code: 'paperState.label')])
             }
             else {
-                flash.message =  message(code: 'default.not.deleted.message', args: [message(code: 'group.label')])
+                flash.message =  message(code: 'default.not.deleted.message', args: [message(code: 'paperState.label')])
             }
         }
         else {

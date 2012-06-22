@@ -337,6 +337,11 @@ class PageBuilder {
                         builder."g:message"(code: "default.button.${button.name}.label")
                     }
                     break
+                case Button.Type.DELETE:
+                    builder."eca:link"(controller: "\${params.controller}", action: "delete", id: "\${params.id}") {
+                        builder."g:message"(code: "default.deleted.label")
+                    }
+                    break
                 case Button.Type.URL:
                 default:
                     builder."eca:ifUserHasAccess"(controller: button.controller, action: button.action) {

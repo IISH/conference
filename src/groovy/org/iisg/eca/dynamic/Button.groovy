@@ -13,10 +13,11 @@ class Button extends Element {
      * The possible button types
      * SAVE: A save button to send the information filled out in a form to the server
      * BACK: A back button to cancel the current request and return to the previous page
+     * DELETE: A delete button pointing to the delete action of the same controller
      * URL: A button taking the user to another page
      */
     enum Type {
-        SAVE, BACK, URL
+        SAVE, BACK, DELETE, URL
     }
     
     /**

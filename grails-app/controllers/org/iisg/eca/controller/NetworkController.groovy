@@ -9,7 +9,7 @@ class NetworkController {
     def participantSessionService
 
     def index() {
-        redirect(action: 'list', params: params)
+        redirect(uri: eca.createLink(action: 'list', noBase: true), params: params)
     }
 
     def show() {
@@ -97,7 +97,7 @@ class NetworkController {
             flash.message =  message(code: 'default.no.id.message')
         }
 
-        redirect(uri: eca.createLink(action: 'index', noBase: true))
+        redirect(uri: eca.createLink(action: 'list', noBase: true))
     }
 
     /**
