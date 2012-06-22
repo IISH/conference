@@ -406,7 +406,7 @@ class PageBuilder {
                         builder."eca:booleanSelect"(name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}")
                     }
                     else if (c.property.type == String)  {
-                        builder.input(type: "text", name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", placeholder: "\${g.message(code: 'default.filter.on', attrs: '[eca.fallbackMessage(code: '${getCode(c.property)}', fbCode: '${getFbCode(c.property)}').toLowerCase()]')}")
+                        builder.input(type: "text", name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", placeholder: "\${g.message(code: 'default.filter.on')} \${eca.fallbackMessage(code: '${getCode(c.property)}', fbCode: '${getFbCode(c.property)}').toLowerCase()}")
                     }
                 }
             }
