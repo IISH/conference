@@ -5,9 +5,11 @@
 *Db.script
 .settings
 .idea
+.project
 eclipse
 stacktrace.log
 target
 /plugins
 /web-app/plugins
 /web-app/WEB-INF/classes
+atlassian-ide-plugin.xml
