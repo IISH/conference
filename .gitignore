@@ -6,6 +6,7 @@
 .settings
 .idea
 .project
+.classpath
 eclipse
 stacktrace.log
 target
