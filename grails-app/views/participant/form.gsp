@@ -6,7 +6,7 @@
         <g:javascript src="participant.js" />
     </head>
     <body>
-        <eca:navigation prev="${eca.createLink(action: params.action, id: params.int('id')-1)}" next="${eca.createLink(action: params.action, id: params.int('id')+1)}" />
+        %{-- TODO: <eca:navigation ids="${participantIds}" /> --}%
 
         <g:hasErrors model="[participant: participant, user: user]">
             <ul class="errors" role="alert">

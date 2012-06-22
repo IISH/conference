@@ -2,13 +2,13 @@ package org.iisg.eca.domain
 
 import org.apache.commons.lang.builder.EqualsBuilder
 import org.apache.commons.lang.builder.HashCodeBuilder
-import org.codehaus.groovy.grails.plugins.web.taglib.ValidationTagLib
+import org.springframework.context.i18n.LocaleContextHolder
 
 /**
  * Domain class of table holding all extra rules concerning access to pages
  */
 class UserPage extends EventDateDomain implements Serializable {
-    private static final ValidationTagLib MESSAGES = new ValidationTagLib()
+    def messageSource
 
     User user
     Page page
@@ -57,6 +57,6 @@ class UserPage extends EventDateDomain implements Serializable {
     @Override
     String toString() {
         String code = (denied) ? "default.access.denied" : "default.access.not.denied"
-        "${page} (${MESSAGES.message(code: code)})"
+        "${page} (${messageSource.getMessage(code, null, LocaleContextHolder.locale)})"
     }
 }

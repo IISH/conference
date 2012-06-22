@@ -138,9 +138,11 @@
                 <eca:link controller="${params.prevController}" action="${params.prevAction}" id="${params.prevId}">
                     <g:message code="default.button.cancel.label" />
                 </eca:link>
-                <eca:link action="delete">
-                    <g:message code="default.button.delete.label" />
-                </eca:link>
+                <g:if test="${params.action != 'create'}">
+                    <eca:link action="delete">
+                        <g:message code="default.button.delete.label" />
+                    </eca:link>
+                </g:if>
                 <input type="submit" name="btn_save" class="btn_save" value="${message(code: 'default.button.save.label')}" />
                 <input type="button" name="btn_add" class="btn_add" value="${message(code: 'default.add.label', args: [message(code: 'feeAmount.label')])}">
             </fieldset>

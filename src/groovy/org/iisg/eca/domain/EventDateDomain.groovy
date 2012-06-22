@@ -29,7 +29,13 @@ abstract class EventDateDomain extends DefaultDomain {
     
     def beforeUpdate() {
         if (this.date != pageInformation.date) {
-            // TODO: Create trigger???
+           /* this.withNewSession {
+                def newInstance = this.newInstance()
+                newInstance.params = this.params
+                newInstance.date = pageInformation.date
+                newInstance.save()
+            }
+            return false   */
         }
     }
 

@@ -5,7 +5,7 @@
 	</head>
 	<body>
         <input type="hidden" name="id" value="${params.id}" />
-        <eca:navigation prev="${eca.createLink(action: params.action, id: params.int('id')-1)}" next="${eca.createLink(action: params.action, id: params.int('id')+1)}" />
+        <eca:navigation ids="${sessionIds}" />
 
         <ol class="property-list">
           <li>

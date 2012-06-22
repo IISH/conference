@@ -159,16 +159,6 @@ $(document).ready(function() {
         setDatePicker(this);
     });
 
-    /*$('input[name=deleted]:not(:checked)').click(function(e) {
-        var checkBox = $(this);
-        e.preventDefault();
-
-        $.getJSON('../../message?code=default.button.delete.confirm.message', function(data) {
-            var deleted = confirm(data.message);
-            checkBox.attr('checked', deleted);
-        });
-    });*/
-
     $('.add > span.ui-icon-circle-plus').click(function(e) {
         var parent = $(this).parent();
         var lastItem = parent.prev();
@@ -215,8 +205,8 @@ $(document).ready(function() {
 
     $('.tbl_container tbody tr').click(function(e) {
         var element = $(this);
-        var action = element.parents('.tbl_container').find('input[name=default-action]').val();
-        window.location =  "./" + action + "/" + element.find("td.id").text().trim() + window.location.search;
+        var link = element.parents('.tbl_container').find('input[name=url]').val();
+        window.location = link.replace('/0', "/" + element.find("td.id").text().trim());
     });
 
     $('.check-all').click(function(e) {

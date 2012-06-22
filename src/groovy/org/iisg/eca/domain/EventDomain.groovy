@@ -32,7 +32,13 @@ abstract class EventDomain extends DefaultDomain {
     
     def beforeUpdate() {
         if (this.event != pageInformation.date?.event) {
-            // TODO: Create trigger???
+           /* this.withNewSession {
+                def newInstance = this.newInstance()
+                newInstance.params = this.params
+                newInstance.event = pageInformation.date?.event
+                newInstance.save()
+            }
+            return false  */
         }
     }
 

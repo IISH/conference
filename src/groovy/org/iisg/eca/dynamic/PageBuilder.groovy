@@ -89,7 +89,8 @@ class PageBuilder {
      */
     private void buildTable(DataContainer element) {
         builder.div(class: "tbl_container") {
-            builder.input(type: "hidden", name: "default-action", value: element.action)
+            builder.input(type: "hidden", name: "url", value: "\${eca.createLinkAllParams(controller: params.controller, action: '${element.action}', id: 0, setPrev: true)}")
+
             builder.div(class: "tbl_toolbar right") {
                 builder.span {
                     builder."g:message"(code: "default.export.data")
@@ -103,6 +104,7 @@ class PageBuilder {
                     builder.option(value: "export=${element.eid}&format=xml", "XML")
                 }
             }
+
             builder.table(class: "clear") {
                 builder.thead {
                     builder.tr {
@@ -369,10 +371,11 @@ class PageBuilder {
                 if (c.name == "id") {
                     builder.th(class: "id sortable") {
                         builder.mkp.yield "#"
-                        builder."eca:linkAllParams"(params: "['sort_${element.eid}_${c.name}': 'asc']") {
+
+                        builder."eca:linkAllParams"(controller: "\${params.controller}", action: "\${params.action}", params: "['sort_${element.eid}_${c.name}': 'asc']") {
                             builder."g:img"(dir: "images/skin", file: "sorted_asc.gif", class: "sort_asc")
                         }
-                        builder."eca:linkAllParams"(params: "['sort_${element.eid}_${c.name}': 'desc']") {
+                        builder."eca:linkAllParams"(controller: "\${params.controller}", action: "\${params.action}", params: "['sort_${element.eid}_${c.name}': 'desc']") {
                             builder."g:img"(dir: "images/skin", file: "sorted_desc.gif", class: "sort_desc")
                         }
                     }
@@ -381,10 +384,10 @@ class PageBuilder {
                     builder.th(class: "sortable") {
                         builder."eca:fallbackMessage"(code: getCode(c.property), fbCode: getFbCode(c.property))
 
-                        builder."eca:linkAllParams"(params: "['sort_${element.eid}_${c.name}': 'asc']") {
+                        builder."eca:linkAllParams"(controller: "\${params.controller}", action: "\${params.action}", params: "['sort_${element.eid}_${c.name}': 'asc']") {
                             builder."g:img"(dir: "images/skin", file: "sorted_asc.gif", class: "sort_asc")
                         }
-                        builder."eca:linkAllParams"(params: "['sort_${element.eid}_${c.name}': 'desc']") {
+                        builder."eca:linkAllParams"(controller: "\${params.controller}", action: "\${params.action}", params: "['sort_${element.eid}_${c.name}': 'desc']") {
                             builder."g:img"(dir: "images/skin", file: "sorted_desc.gif", class: "sort_desc")
                         }
                     }

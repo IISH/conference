@@ -5,8 +5,8 @@
     </head>
     
     <body>
-        <h1><g:message code="default.does.not.exist" /><</h1>
+        <h1><g:message code="default.does.not.exist" /></h1>
         
-        <g:message code="default.does.not.exist.message" /><
+        <g:message code="default.does.not.exist.message" />
     </body>
 </html>

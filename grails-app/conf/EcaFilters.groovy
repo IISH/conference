@@ -71,7 +71,7 @@ class EcaFilters {
                 }
 
                 // Some event actions are allowed to have no date set, but they are the only ones
-                return (params.controller == 'event' && (params.action == 'index' || params.action == 'switchEvent' || params.action == 'list'))
+                return (params.controller == 'event')
             }
             afterView = { Exception e ->
                 pageInformation.removeDate()

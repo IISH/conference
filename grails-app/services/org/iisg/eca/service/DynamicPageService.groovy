@@ -16,6 +16,7 @@ import org.codehaus.groovy.grails.commons.GrailsDomainClass
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 
 import groovy.text.Template
+import org.iisg.eca.domain.Page
 
 /**
  * Service responsible for dynamic page related actions
@@ -47,20 +48,25 @@ class DynamicPageService {
     private static final String BUTTON =    'button'
 
     /**
-     * Returns the dynamic page with all described elements if there is one available
+     * Returns the dynamic page with all described elements, if there is one available
      */
-    def getDynamicPage() {
-        // Find out if there is are dynamic pages linked to this page
-        int noDynamicPages = pageInformation.page.dynamicPages.size()
-        if (noDynamicPages == 1) {
-            // Parse the xml content for the elements
-            DynamicPage dynamicPage = pageInformation.page.dynamicPages.toArray()[0]
-            dynamicPage.elements = gePageElements(dynamicPage.xml)
+    DynamicPage getDynamicPage() {
+        getDynamicPage(pageInformation.page)
+    }
 
-            return dynamicPage
+    /**
+     * Returns the dynamic page for a specific page with all described elements, if there is one available
+     */
+    DynamicPage getDynamicPage(Page page) {
+        // Get the dynamic page linked to this page
+        DynamicPage dynamicPage = (DynamicPage) DynamicPage.getByDate(page.dynamicPages as List)
+
+        // Parse the xml content for the elements
+        if (dynamicPage) {
+            dynamicPage.elements = gePageElements(dynamicPage.xml)
         }
 
-        return null
+        dynamicPage
     }
 
     /**

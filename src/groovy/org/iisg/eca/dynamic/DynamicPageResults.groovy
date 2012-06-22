@@ -15,6 +15,66 @@ class DynamicPageResults {
     private GrailsParameterMap params
     private List results
     private Map<String, Object> newInstances
+
+    /**
+     * A closure to filter on only one column,
+     * which can be used for all columns in a Hibernate criteria builder
+     * So delegate the criteria to this closure
+     */
+    static Closure criteriaForColumn = { params, dataContainer, c ->
+        // Only sort and filter on those that will be displayed anyway
+        if (!c.hasColumns() && (!c.constrainedProperty || c.constrainedProperty.display) && !c.hidden) {
+            String filter = params["filter_${dataContainer.eid}_${c.name}"]
+            String sort = params["sort_${dataContainer.eid}_${c.name}"]
+
+            // Place a filter on this column (currently only Strings and booleans) if specified by the user
+            if (filter && !filter.isEmpty()) {
+                if (c.property.type == Boolean || c.property.type == boolean) {
+                    if ((filter == "0") || (filter == "1")) {
+                        delegate.eq(c.name, filter.equals("1"))
+                    }
+                }
+                else if (c.property.type == String)  {
+                    String[] filters = filter.split()
+                    filter = "%${filters.join('%')}%"
+                    delegate.like(c.name, filter)
+                }
+            }
+            // Sort this column, if specified by the user
+            if (sort && !sort.isEmpty()) {
+                delegate.order(c.name, sort)
+            }
+        }
+
+        // Now apply the filter from the column description, if there is one
+        if (c.eq) {
+            String value = null
+            // Figure out the exact value to filter on, the given property or from the url...
+            if (c.eq.equalsIgnoreCase("url")) {
+                if (params.id) {
+                    value = params.id
+                }
+            }
+            else {
+                value = c.eq
+            }
+
+            // Figure out if we're filtering on a relationship to another domain class or not
+            if (c.property.otherSide instanceof GrailsDomainClassProperty && value) {
+                delegate."${c.name}" {
+                    delegate.eq("id", value.toLong())
+                }
+            }
+            else if (value) {
+                if (c.property.type == Boolean || c.property.type == boolean) {
+                    delegate.eq(c.name, value.equals("1"))
+                }
+                else {
+                    delegate.eq(c.name, value)
+                }
+            }
+        }
+    }
     
     /**
      * Creates a new <code>DynamicPageResults</code> instance
@@ -106,40 +166,6 @@ class DynamicPageResults {
         results.eachWithIndex { it, i -> model.put(i, it) }
         model
     }
-
-    /**
-     * Returns a model representation of the results
-     * @return A map of the results, numbered with an index as key
-     * TODO: Remove method?
-     */
-    List getTableList() {
-        results.collect { value ->
-            Map values = [:]
-            if (value.class.isArray()) {
-                value.each { it ->
-                    String name = it.class.simpleName
-                    int index = name.indexOf('_$$_javassist')
-                    if (index > -1) {
-                        name = name[0..index-1]
-                    }
-
-                    values.put(name, it)
-                }
-
-                values
-            }
-            else {
-                String name = value.class.simpleName
-                int index = name.indexOf('_$$_javassist')
-                if (index > -1) {
-                    name = name[0..index-1]
-                }
-
-                values.put(name, value)
-                values
-            }
-        }
-    }
     
     /**
      * Queries the database for the necessary data
@@ -157,63 +183,6 @@ class DynamicPageResults {
      * Returns a list of the requested data for use with a table
      */
     private void getList() {
-        // First let's define a closure to filter on only one column,
-        // which we will use for all columns in the Hibernate criteria builder later on
-        Closure criteriaForColumn = { c ->
-            // Only sort and filter on those that will be displayed anyway
-            if (!c.hasColumns() && (!c.constrainedProperty || c.constrainedProperty.display) && !c.hidden) {
-                String filter = params["filter_${dataContainer.eid}_${c.name}"]
-                String sort = params["sort_${dataContainer.eid}_${c.name}"]
-
-                // Place a filter on this column (currently only Strings and booleans) if specified by the user
-                if (filter && !filter.isEmpty()) {
-                    if (c.property.type == Boolean || c.property.type == boolean) {
-                        if ((filter == "0") || (filter == "1")) {
-                            delegate.eq(c.name, filter.equals("1"))
-                        }
-                    }
-                    else if (c.property.type == String)  {
-                        String[] filters = filter.split()
-                        filter = "%${filters.join('%')}%"
-                        delegate.like(c.name, filter)
-                    }
-                }
-                // Sort this column, if specified by the user
-                if (sort && !sort.isEmpty()) {
-                    delegate.order(c.name, sort)
-                }
-            }
-
-            // Now apply the filter from the column description, if there is one
-            if (c.eq) {
-                String value = null
-                // Figure out the exact value to filter on, the given property or from the url...
-                if (c.eq.equalsIgnoreCase("url")) {
-                    if (params.id) {
-                        value = params.id
-                    }
-                }
-                else {
-                    value = c.eq
-                }
-
-                // Figure out if we're filtering on a relationship to another domain class or not
-                if (c.property.otherSide instanceof GrailsDomainClassProperty && value) {
-                    delegate."${c.name}" {
-                        delegate.eq("id", value.toLong())
-                    }
-                }
-                else if (value) {
-                    if (c.property.type == Boolean || c.property.type == boolean) {
-                        delegate.eq(c.name, value.equals("1"))
-                    }
-                    else {
-                        delegate.eq(c.name, value)
-                    }
-                }
-            }
-        }
-
         // The criteria builder will be used to query the database, so delegate it to the closure we just defined
         HibernateCriteriaBuilder criteria = dataContainer.domainClass.clazz.createCriteria()
         criteriaForColumn.delegate = criteria
@@ -225,7 +194,7 @@ class DynamicPageResults {
                     and {
                         // Then Loop over all the columns and place filters if needed
                         dataContainer.getAllColumnsForDomainClass(withChild.property.referencedDomainClass).each { c ->
-                            criteriaForColumn(c)
+                            criteriaForColumn(params, dataContainer, c)
                         }
                     }
                 }
@@ -234,7 +203,7 @@ class DynamicPageResults {
             and {
                 // Loop over all the columns and place filters if needed
                 dataContainer.getAllColumnsForDomainClass(dataContainer.domainClass).each { c ->
-                    criteriaForColumn(c)
+                    criteriaForColumn(params, dataContainer, c)
                 }
             }
         }

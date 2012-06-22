@@ -71,9 +71,11 @@
                 <eca:link controller="${params.prevController}" action="${params.prevAction}" id="${params.prevId}">
                     <g:message code="default.button.cancel.label" />
                 </eca:link>
-                <eca:link controller="${params.controller}" action="delete" id="${params.id}">
-                    <g:message code="default.deleted.label" />
-                </eca:link>
+                <g:if test="${params.action != 'create'}">
+                    <eca:link controller="${params.controller}" action="delete" id="${params.id}">
+                        <g:message code="default.deleted.label" />
+                    </eca:link>
+                </g:if>
                 <input type="submit" name="btn_save" class="btn_save" value="${message(code: 'default.button.save.label')}" />
             </fieldset>
         </form>

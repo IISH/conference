@@ -1,12 +1,13 @@
 package org.iisg.eca.domain
 
-import org.codehaus.groovy.grails.plugins.web.taglib.ValidationTagLib
+import java.text.SimpleDateFormat
+import org.springframework.context.i18n.LocaleContextHolder
 
 /**
  * Domain class of table holding all event days
  */
 class Day extends EventDateDomain {
-    private static final ValidationTagLib MESSAGES = new ValidationTagLib()
+    def messageSource
 
     Date day
     int dayNumber
@@ -32,9 +33,8 @@ class Day extends EventDateDomain {
 
     @Override
     String toString() {
-        /*String dateFormat = MESSAGES.message(code: 'default.date.format').toString()
+        String dateFormat = messageSource.getMessage('default.date.format', null, LocaleContextHolder.locale)
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat)
-        "${dayNumber}: ${sdf.format(day)}"    */
-        "test"
+        "${dayNumber}: ${sdf.format(day)}"
     }
 }

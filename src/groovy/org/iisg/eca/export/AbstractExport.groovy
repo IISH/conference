@@ -1,7 +1,5 @@
 package org.iisg.eca.export
 
-import org.codehaus.groovy.grails.plugins.web.taglib.ValidationTagLib
-import org.iisg.eca.dynamic.ContainerElement
 import org.iisg.eca.tags.UtilsTagLib
 import org.iisg.eca.dynamic.PageBuilder
 

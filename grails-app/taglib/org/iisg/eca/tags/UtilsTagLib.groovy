@@ -14,7 +14,6 @@ import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
  * Utilities tag library
  */
 class UtilsTagLib {
-    def pageInformation
     def springSecurityService
 
     static namespace = "eca"
@@ -42,8 +41,24 @@ class UtilsTagLib {
         builder.doubleQuotes = true
         
         builder.div(class: "navigation") {
-            if (attrs.prev) {
-                builder.a(class: "prev", href: attrs.prev) {                    
+            def prev = attrs.prev
+            def next = attrs.next
+
+            if (attrs.ids) {
+                def index = null
+
+                attrs.ids.eachWithIndex { curId, i ->
+                    if (curId == params.id.toLong()) {
+                        index = i
+                    }
+                }
+
+                prev = (index-1 >= 0) ? attrs.ids.get(index-1) : null
+                next = (index+1 < attrs.ids.size()) ? attrs.ids.get(index+1) : null
+            }
+
+            if (prev) {
+                builder."a"(class: "prev", href: createLinkAllParams(action: params.action, id: prev, setPrev: true)) {
                     builder.span(class: "ui-icon ui-icon-arrowthick-1-w", "")                    
                     builder.span(g.message(code: "default.paginate.prev"))
                 }
@@ -51,8 +66,8 @@ class UtilsTagLib {
             
             builder.span(class: "ui-icon ui-icon-bullet", "")
             
-            if (attrs.next) {
-                builder.a(class: "next", href: attrs.next) {
+            if (next) {
+                builder."a"(class: "next", href: createLinkAllParams(action: params.action, id: next, setPrev: true)) {
                     builder.span(g.message(code: "default.paginate.next"))
                     builder.span(class: "ui-icon ui-icon-arrowthick-1-e", "")
                 }
@@ -138,11 +153,11 @@ class UtilsTagLib {
     /**
      * Prints the menu
      */
-    def menu = {
+    def menu = { attrs ->
         MarkupBuilder builder = new MarkupBuilder(out)
         builder.doubleQuotes = true
 
-        printSubMenu(builder, Page.menuPages.list())
+        printSubMenu(builder, Page.menuPages.list(), attrs.date)
     }
 
     /**
@@ -165,26 +180,16 @@ class UtilsTagLib {
      * An alternative to the g:link tag for a link to the same page with all existing parameters + parameters added
      */
     def linkAllParams = { attrs, body ->
-        if (!attrs.params) {
-            attrs.params = [:]
-        }
-
-        attrs.controller = params.controller
-        attrs.action = params.action
-        attrs.id = params.id
-
-        // Add event (date) information
-        attrs.params.event = params.event
-        attrs.params.date = params.date
-        attrs.mapping = 'eventDate'
-
-        Map tempParams = [:]
-        tempParams.putAll(params)
-        tempParams.putAll(attrs.params)
-        attrs.params = tempParams
-
-        out << g.link(attrs, body)
+        out << g.link(linkAllParamsPrep(attrs, params), body)
     }
+
+    /**
+     * An alternative to the g:link tag for a link to the same page with all existing parameters + parameters added
+     */
+    def createLinkAllParams = { attrs ->
+        out << g.createLink(linkAllParamsPrep(attrs, params))
+    }
+
 
     /**
      * If the message is not found in the language properties files, try the fall back code and attributes.
@@ -244,7 +249,7 @@ class UtilsTagLib {
      * @param params The request parameters
      * @return A prepared attrs object
      */
-    private static Object linkPrep(attrs, params) {
+    private static Map linkPrep(attrs, params) {
         if (!attrs.params) {
             attrs.params = [:]
         }
@@ -298,17 +303,53 @@ class UtilsTagLib {
         attrs
     }
 
+    private static Map linkAllParamsPrep(attrs, params) {
+        if (!attrs.params) {
+            attrs.params = [:]
+        }
+
+        // Add event (date) information
+        attrs.params.event = params.event
+        attrs.params.date = params.date
+        attrs.mapping = 'eventDate'
+
+        Map tempParams = [:]
+        tempParams.putAll(params)
+        tempParams.putAll(attrs.params)
+        attrs.params = tempParams
+
+        // Set previous info
+        if (attrs.setPrev) {
+            attrs.params.prevController = params.controller
+            attrs.params.prevAction = params.action
+
+            if (params.id) {
+                attrs.params.prevId = params.id
+            }
+        }
+        attrs.remove('setPrev')
+
+        attrs
+    }
+
     /**
      * Prints the menu and its sub menus
      * @param builder The markup builder for the HTML output
      * @param pages The pages to place in the menu
      */
-    private void printSubMenu(MarkupBuilder builder, Collection<Page> pages) {
+    private void printSubMenu(MarkupBuilder builder, Collection<Page> pages, EventDate date) {
         for (Page page : pages) {
             if (page.hasAccess()) {
                 if (page.controller && page.action) {
                     builder.dd {
-                        builder.mkp.yieldUnescaped(eca.link(controller: page.controller, action: page.action, page.toString()))
+                        def a = 1
+
+                        if (page.controller.equals('eventDate') && page.action.equals('show')) {
+                            builder.mkp.yieldUnescaped(eca.link(controller: page.controller, action: page.action, id: date?.id, page.toString()))
+                        }
+                        else {
+                            builder.mkp.yieldUnescaped(eca.link(controller: page.controller, action: page.action, page.toString()))
+                        }
                     }
                 }
                 else {
@@ -320,7 +361,7 @@ class UtilsTagLib {
                 // If there is a sub menu, print it as well
                 if (page.subPages?.size() > 0) {
                     builder.dl {
-                        printSubMenu(builder, Page.subMenuPages(page).list())
+                        printSubMenu(builder, Page.subMenuPages(page).list(), date)
                     }
                 }
             }

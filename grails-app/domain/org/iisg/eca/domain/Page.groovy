@@ -1,6 +1,6 @@
 package org.iisg.eca.domain
 
-import org.codehaus.groovy.grails.plugins.web.taglib.ValidationTagLib
+import org.springframework.context.i18n.LocaleContextHolder
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
 /**
@@ -8,9 +8,9 @@ import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
  */
 class Page extends DefaultDomain {
     def springSecurityService
+    def messageSource
 
     static def pageInformation
-    private static final ValidationTagLib MESSAGES = new ValidationTagLib()
 
     String titleCode
     String titleArg
@@ -133,6 +133,11 @@ class Page extends DefaultDomain {
 
     @Override
     def String toString() {
-        MESSAGES.message(code: titleCode, args: [MESSAGES.message(code: titleArg)], default: titleDefault).toString()
+        Object[] args = null
+        if (titleArg) {
+            args = [messageSource.getMessage(titleArg, null, LocaleContextHolder.locale)]
+        }
+
+        messageSource.getMessage(titleCode, args, titleDefault, LocaleContextHolder.locale)
     }
 }

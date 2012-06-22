@@ -14,12 +14,15 @@ import org.iisg.eca.domain.Room
 import org.iisg.eca.domain.Network
 import org.iisg.eca.domain.Equipment
 import org.iisg.eca.domain.SessionRoomDateTime
-import org.apache.catalina.ant.SessionsTask
+import org.iisg.eca.domain.DynamicPage
+import org.iisg.eca.domain.Page
+import org.iisg.eca.dynamic.DynamicPageResults
 
 class SessionController {
     def pageInformation
-    def participantSessionService
+    def dynamicPageService
     def sessionPlannerService
+    def participantSessionService
 
     def index() {
         redirect(uri: eca.createLink(action: 'list', noBase: true), params: params)
@@ -39,12 +42,17 @@ class SessionController {
             return
         }
 
+        DynamicPage dynamicPage = dynamicPageService.getDynamicPage(Page.findByControllerAndAction(params.controller, 'list'))
+        DynamicPageResults results = new DynamicPageResults(dynamicPage.elements.get(0), params)
+        List<Long> sessionIds = results.get()*.id
+
         def participants = participantSessionService.getParticipantsForSession(session)
         def equipment = participantSessionService.getEquipmentForSession(session)
         render(view: "show", model: [   eventSession:   session,
                                         networks:       Network.withCriteria { sessions { eq('id', session.id) } },
                                         participants:   participants,
-                                        equipment:      equipment])
+                                        equipment:      equipment,
+                                        sessionIds:     sessionIds])
     }
 
     def list() {

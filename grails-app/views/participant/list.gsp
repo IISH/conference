@@ -79,7 +79,8 @@
                         <g:each in="${participants.get(character)}" var="user">
                             <li>
                                 <eca:ifUserHasAccess controller="${params.controller}" action="show">
-                                    <eca:link action="show" id="${user[0]}">${user[1]}</eca:link> ${user[2]}
+                                    <eca:linkAllParams controller="${params.controller}" action="show" id="${user[0]}">${user[1]}</eca:linkAllParams>
+                                    ${user[2]}
                                 </eca:ifUserHasAccess>
                                 <eca:ifUserHasNoAccess controller="${params.controller}" action="show">
                                     ${user[1]} ${user[2]}

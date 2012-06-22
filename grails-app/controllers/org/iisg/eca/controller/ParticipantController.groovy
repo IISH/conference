@@ -46,7 +46,7 @@ class ParticipantController {
         forward(controller: "dynamicPage", action: "get")
     }
 
-    def listAll() {
+    def extras() {
         forward(controller: "dynamicPage", action: "get")
     }
 

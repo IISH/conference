@@ -1,5 +1,7 @@
 package org.iisg.eca.domain
 
+import org.springframework.context.i18n.LocaleContextHolder
+
 /**
  * Domain class of table holding all countries
  */
@@ -32,6 +34,13 @@ class Country {
 
     @Override
     String toString() {
-        nameEnglish
+        switch (LocaleContextHolder.locale.language) {
+            case 'nl':
+                nameDutch
+                break
+            case 'en':
+            default:
+                nameEnglish
+        }
     }
 }

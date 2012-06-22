@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 21, 2012 at 04:08 PM
+-- Generation Time: Jun 22, 2012 at 05:49 PM
 -- Server version: 5.0.86
 -- PHP Version: 5.2.10
 
@@ -343,7 +343,7 @@ INSERT INTO `dates` (`date_id`, `event_id`, `year_code`, `start_date`, `end_date
 (1, 1, '2012', '2012-04-11', '2012-04-14', '11 April - 14 April 2012', '9th European Social Science History Conference', '9th European Social Science History Conference\r\nGlasgow, Scotland, UK\r\nWednesday 11 - Saturday 14 April 2012', 1, 0),
 (2, 1, '2010', '2010-04-13', '2010-04-16', '13 April - 16 April 2010', '8th European Social Science History Conference', '8th European Social Science History Conference\r\nGhent, Belgium\r\nApril 2010', 1, 0),
 (3, 1, '2008', '2008-02-26', '2008-03-01', '26 February - 1 March 2008', '7th European Social Science History Conference', '7th European Social Science History Conference\r\nLisbon, Portugal\r\nMarch 2008', 1, 0),
-(4, 1, '2006', '2006-03-22', '2006-03-25', '22 - 25 March 2006', 'Sixth European Social Science History Conference', '', 1, 0),
+(4, 1, '2006', '2006-03-22', '2006-03-25', '22 - 25 March 2006', 'Sixth European Social Science History Conference', NULL, 1, 0),
 (5, 1, '2004', '2004-03-24', '2004-03-27', '24 - 27 March 2004', 'Fifth European Social Science History Conference', '', 1, 0),
 (6, 1, '2002', '2002-02-27', '2002-03-02', '27 February - 2 March 2002', 'Fourth European Social Science History Conference', '', 1, 0),
 (7, 1, '2000', '2000-04-12', '2000-04-15', '12 - 15 April 2000', 'Third European Social Science History Conference', '', 1, 0),
@@ -369,7 +369,7 @@ CREATE TABLE IF NOT EXISTS `days` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`day_id`),
   KEY `date_id` (`date_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
 
 --
 -- Dumping data for table `days`
@@ -379,7 +379,8 @@ INSERT INTO `days` (`day_id`, `day`, `date_id`, `day_number`, `enabled`, `delete
 (1, '2012-04-11', 13, 1, 1, 0),
 (2, '2012-04-12', 13, 2, 1, 0),
 (3, '2012-04-13', 13, 3, 1, 0),
-(4, '2012-04-14', 13, 4, 1, 0);
+(4, '2012-04-14', 13, 4, 1, 0),
+(5, '2012-06-01', 4, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -398,7 +399,7 @@ CREATE TABLE IF NOT EXISTS `dynamic_pages` (
   PRIMARY KEY  (`dynamic_page_id`),
   KEY `date_id` (`date_id`),
   KEY `page_id` (`page_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=55 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=75 ;
 
 --
 -- Dumping data for table `dynamic_pages`
@@ -406,55 +407,69 @@ CREATE TABLE IF NOT EXISTS `dynamic_pages` (
 
 INSERT INTO `dynamic_pages` (`dynamic_page_id`, `content`, `cache`, `page_id`, `date_id`, `enabled`, `deleted`) VALUES
 (1, '<overview domain="Event" id="url">\r\n	<column name="id" />\r\n	<column name="code" />\r\n	<column name="shortName" />\r\n	<column name="longName" />\r\n	<column name="enabled" />\r\n	<column name="dates" />    \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 1, NULL, 1, 0),
-(2, '<form domain="Event" id="url">\r\n	<column name="id" />\r\n	<column name="code" />\r\n	<column name="shortName" />\r\n	<column name="longName" />\r\n	<column name="enabled" />\r\n	<column name="deleted" /> \r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 2, NULL, 1, 0),
+(2, '<form domain="Event" id="url">\r\n	<column name="id" />\r\n	<column name="code" />\r\n	<column name="shortName" />\r\n	<column name="longName" />\r\n	<column name="enabled" />\r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 2, NULL, 1, 0),
 (3, '<overview domain="EventDate" id="url">\r\n	<column name="event" />\r\n	<column name="yearCode" />\r\n	<column name="startDate" />\r\n	<column name="endDate" />\r\n	<column name="days" />\r\n	<column name="dateAsText" />\r\n	<column name="description" />  \r\n	<column name="longDescription" />\r\n</overview>\r\n\r\n<buttons>\r\n        <button type="back" />\r\n        <button action="edit" />\r\n</buttons>', NULL, 3, NULL, 1, 0),
-(4, '<form domain="EventDate" id="url">\r\n	<column name="event" readonly="true" />\r\n	<column name="yearCode" />\r\n	<column name="startDate" />\r\n	<column name="endDate" />\r\n	<column name="days" multiple="true">\r\n		<column name="dayNumber" />\r\n		<column name="day" />	\r\n	</column>\r\n	<column name="dateAsText" />\r\n	<column name="description" />  \r\n	<column name="longDescription" />\r\n	<column name="enabled" />\r\n        <column name="deleted" />\r\n \r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 4, NULL, 1, 0),
+(4, '<form domain="EventDate" id="url">\r\n	<column name="event" readonly="true" />\r\n	<column name="yearCode" />\r\n	<column name="startDate" />\r\n	<column name="endDate" />\r\n	<column name="days" multiple="true">\r\n		<column name="dayNumber" />\r\n		<column name="day" />	\r\n	</column>\r\n	<column name="dateAsText" />\r\n	<column name="description" />  \r\n	<column name="longDescription" />\r\n	<column name="enabled" />\r\n \r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 4, NULL, 1, 0),
 (5, '<form domain="Event">\r\n	<column name="code" />\r\n	<column name="shortName" />\r\n	<column name="longName" />\r\n	<column name="enabled" />\r\n	\r\n	<column name="dates">\r\n		<column name="yearCode" />\r\n		<column name="startDate" />\r\n		<column name="endDate" />\r\n		<column name="dateAsText" />\r\n		<column name="description" />  \r\n		<column name="longDescription" />\r\n		<column name="enabled" />\r\n	</column>\r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 5, NULL, 1, 0),
 (6, '<form domain="EventDate">\r\n	<column name="event" id="url" />\r\n	<column name="yearCode" />\r\n	<column name="startDate" />\r\n	<column name="endDate" />\r\n	<column name="days" multiple="true">\r\n		<column name="dayNumber" />\r\n		<column name="day" />	\r\n	</column>\r\n	<column name="dateAsText" />\r\n	<column name="description" />  \r\n	<column name="longDescription" />\r\n	<column name="enabled" />\r\n \r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 6, NULL, 1, 0),
 (7, '<form domain="Network">\r\n	<column name="name" />\r\n	<column name="comment" />\r\n	<column name="url" />\r\n	<column name="showOnline" />\r\n	<column name="showInternal" />	\r\n	<column name="sessions" />\r\n	<column name="chairs" multiple="true">\r\n		<column name="chair" />\r\n		<column name="isMainChair" />\r\n	</column>\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 7, NULL, 1, 0),
 (8, '<form domain="Title">\r\n	<column name="title" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 8, NULL, 1, 0),
 (9, '<overview domain="Equipment" id="url">\r\n	<column name="id" />\r\n	<column name="code" />\r\n	<column name="equipment" />\r\n	<column name="description" />\r\n	<column name="imageUrl" />\r\n	<column name="enabled" />    \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 19, NULL, 1, 0),
-(10, '<form domain="Equipment" id="url">\r\n	<column name="id" />\r\n	<column name="code" />\r\n	<column name="equipment" />\r\n	<column name="description" />\r\n	<column name="imageUrl" />\r\n	<column name="enabled" />\r\n	<column name="deleted" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />    \r\n</form>', NULL, 17, NULL, 1, 0),
+(10, '<form domain="Equipment" id="url">\r\n	<column name="id" />\r\n	<column name="code" />\r\n	<column name="equipment" />\r\n	<column name="description" />\r\n	<column name="imageUrl" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="delete" />\r\n	<button type="save" />    \r\n</form>', NULL, 17, NULL, 1, 0),
 (11, '<form domain="Equipment">\r\n	<column name="code" />\r\n	<column name="equipment" />\r\n	<column name="description" />\r\n	<column name="imageUrl" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />	\r\n</form>', NULL, 15, NULL, 1, 0),
-(12, '<form domain="Network" id="url">\r\n	<column name="name" />\r\n	<column name="comment" />\r\n	<column name="url" />\r\n	<column name="showOnline" />\r\n	<column name="showInternal" />	\r\n	<column name="chairs" multiple="true">\r\n		<column name="chair" />\r\n		<column name="isMainChair" />\r\n	</column>\r\n	<column name="enabled" />\r\n	<column name="deleted" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 10, NULL, 1, 0),
-(13, '<overview domain="Network" id="url">\r\n	<column name="name" />\r\n	<column name="comment" />\r\n	<column name="url" />\r\n	<column name="showOnline" />\r\n	<column name="showInternal" />	\r\n	<column name="chairs" />\r\n	<column name="enabled" />\r\n	<column name="deleted" />\r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 11, NULL, 1, 0),
-(14, '<form domain="Title" id="url">\r\n   <column name="title" />\r\n   <column name="enabled" />\r\n\r\n   <button type="cancel" />\r\n   <button type="save" />  \r\n</form>', NULL, 12, NULL, 1, 0),
-(15, '<overview domain="Title" id="url">\r\n	<column name="title" />\r\n	<column name="enabled" />\r\n	<column name="deleted" />   \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 13, NULL, 1, 0),
+(14, '<form domain="Title" id="url">\r\n   <column name="title" />\r\n   <column name="enabled" />\r\n\r\n   <button type="cancel" />\r\n   <button type="delete" />\r\n   <button type="save" />  \r\n</form>', NULL, 12, NULL, 1, 0),
+(15, '<overview domain="Title" id="url">\r\n	<column name="id" />\r\n	<column name="title" />\r\n	<column name="enabled" />\r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 13, NULL, 1, 0),
 (16, '<overview domain="Room" id="url">\r\n	<column name="roomName" />\r\n	<column name="roomNumber" />\r\n	<column name="noOfSeats" />\r\n	<column name="comment" />\r\n	<column name="enabled" />   \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>\r\n', NULL, 18, NULL, 1, 0),
-(17, '<form domain="Room" id="url">\r\n	<column name="roomName" />\r\n	<column name="roomNumber" />\r\n	<column name="noOfSeats" />\r\n	<column name="comment" />\r\n	<column name="enabled" />\r\n	<column name="deleted" /> \r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 16, NULL, 1, 0),
-(18, '<form domain="Room">\r\n	<column name="roomName" />\r\n	<column name="roomNumber" />\r\n	<column name="noOfSeats" />\r\n	<column name="comment" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 14, NULL, 1, 0),
 (19, '<table domain="Title" index="true">\r\n   <column name="title" />\r\n</table>\r\n\r\n<buttons>\r\n   <button type="back" />\r\n   <button action="create" />\r\n</buttons>', NULL, 20, NULL, 1, 0),
 (20, '<table domain="Room" index="true">\r\n	<column name="roomName" />\r\n	<column name="roomNumber" />\r\n	<column name="noOfSeats" />  \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>\r\n', NULL, 21, NULL, 1, 0),
 (21, '<table domain="Network" index="true">\r\n	<column name="name" />\r\n	<column name="showOnline" />\r\n	<column name="showInternal" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>\r\n', NULL, 22, NULL, 1, 0),
-(22, '<table domain="Equipment" index="true">	\r\n	<column name="code" />\r\n	<column name="equipment" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>\r\n', '<div class="tbl_container">\n  <input type="hidden" name="default-action" value="show" />\n  <div class="tbl_toolbar right">\n    <span>\n      <g:message code="default.export.data" />\n    </span>\n    <select class="export-data">\n      <option value="-1"> </option>\n      <option value="export=0&amp;format=csv&amp;sep=,">CSV (,)</option>\n      <option value="export=0&amp;format=csv&amp;sep=;">CSV (;)</option>\n      <option value="export=0&amp;format=csv&amp;sep=tab">CSV (tab)</option>\n      <option value="export=0&amp;format=xls">XLS</option>\n      <option value="export=0&amp;format=xml">XML</option>\n    </select>\n  </div>\n  <table class="clear">\n    <thead>\n      <tr>\n        <th class="counter"></th>\n        <th class="id hidden"></th>\n        <th class="sortable">\n          <eca:fallbackMessage code="equipment.code.label" fbCode="equipment.code.label" />\n          <eca:linkAllParams params="[''sort_0_code'': ''asc'']">\n            <g:img dir="images/skin" file="sorted_asc.gif" class="sort_asc" />\n          </eca:linkAllParams>\n          <eca:linkAllParams params="[''sort_0_code'': ''desc'']">\n            <g:img dir="images/skin" file="sorted_desc.gif" class="sort_desc" />\n          </eca:linkAllParams>\n        </th>\n        <th class="sortable">\n          <eca:fallbackMessage code="equipment.equipment.label" fbCode="equipment.equipment.label" />\n          <eca:linkAllParams params="[''sort_0_equipment'': ''asc'']">\n            <g:img dir="images/skin" file="sorted_asc.gif" class="sort_asc" />\n          </eca:linkAllParams>\n          <eca:linkAllParams params="[''sort_0_equipment'': ''desc'']">\n            <g:img dir="images/skin" file="sorted_desc.gif" class="sort_desc" />\n          </eca:linkAllParams>\n        </th>\n      </tr>\n      <tr>\n        <th class="counter"></th>\n        <th class="id hidden"></th>\n        <th class="filter" value="${params.filter_0_code}">\n          <input type="text" name="filter_0_code" value="${params.filter_0_code}" placeholder="${g.message(code: ''default.filter.on'', attrs: [eca.fallbackMessage(code: ''equipment.code.label'', fbCode: ''equipment.code.label'').toLowerCase()])}" />\n        </th>\n        <th class="filter" value="${params.filter_0_equipment}">\n          <input type="text" name="filter_0_equipment" value="${params.filter_0_equipment}" placeholder="${g.message(code: ''default.filter.on'', attrs: [eca.fallbackMessage(code: ''equipment.equipment.label'', fbCode: ''equipment.equipment.label'').toLowerCase()])}" />\n        </th>\n      </tr>\n    </thead>\n    <tbody>\n      <g:each in="${results.get(0).get()}" var="row" status="i">\n        <tr>\n          <td class="counter">${i+1}</td>\n          <td class="id hidden">\n            <g:fieldValue bean="${row}" field="id" />\n          </td>\n          <td>${row.code}</td>\n          <td>${row.equipment}</td>\n        </tr>\n      </g:each>\n    </tbody>\n  </table>\n</div>\n<div class="buttons">\n  <eca:link controller="${params.prevController}" action="${params.prevAction}" id="${params.prevId}">\n    <g:message code="default.button.back.label" />\n  </eca:link>\n  <eca:ifUserHasAccess controller="${params.controller}" action="create">\n    <eca:link controller="${params.controller}" action="create" id="${params.id}">\n      <g:message code="default.button.create.label" />\n    </eca:link>\n  </eca:ifUserHasAccess>\n</div>', 23, NULL, 1, 0),
+(22, '<table domain="Equipment" index="true">	\r\n	<column name="code" />\r\n	<column name="equipment" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>\r\n', NULL, 23, NULL, 1, 0),
 (24, '<table domain="Session" index="true">\r\n	<column name="code" /> \r\n	<column name="name" /> \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>', NULL, 26, NULL, 1, 0),
-(25, '<form domain="Session" id="url">\r\n	<column name="id" />\r\n	<column name="name" />\r\n	<column name="code" />\r\n	<column name="comment" />\r\n	<column name="enabled" />\r\n	<column name="deleted" /> \r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 27, NULL, 1, 0),
 (26, '<form domain="Session">\r\n	<column name="name" />\r\n	<column name="code" />\r\n	<column name="comment" />\r\n	<column name="enabled" />\r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 28, NULL, 1, 0),
-(27, '<overview domain="Session" id="url">\r\n	<column name="id" />\r\n	<column name="name" />\r\n	<column name="code" />\r\n	<column name="comment" />\r\n	<column name="networks" />\r\n	<column name="sessionParticipants" />\r\n	<column name="papers" />\r\n	\r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 29, NULL, 1, 0),
 (28, '<form domain="ParticipantState">\r\n	<column name="state" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />    \r\n</form>', NULL, 33, NULL, 1, 0),
-(29, '<form domain="ParticipantState" id="url">\r\n	<column name="id" />\r\n	<column name="state" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />    \r\n</form>', NULL, 34, NULL, 1, 0),
+(29, '<form domain="ParticipantState" id="url">\r\n	<column name="id" />\r\n	<column name="state" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="delete" />	\r\n	<button type="save" />    \r\n</form>', NULL, 34, NULL, 1, 0),
 (30, '<overview domain="ParticipantState" id="url">\r\n	<column name="id" />\r\n	<column name="state" />\r\n	<column name="enabled" />\r\n	<column name="deleted" />\r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 35, NULL, 1, 0),
 (31, '<table domain="ParticipantState" index="true">\r\n	<column name="state" /> \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>', NULL, 36, NULL, 1, 0),
 (34, '<table domain="EmailTemplate" index="true">\r\n	<column name="description" />\r\n	<column name="showInBackend" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>', NULL, 42, NULL, 1, 0),
 (35, '<overview domain="EmailTemplate" id="url">\r\n	<column name="id" />\r\n	<column name="description" />\r\n	<column name="subject" />\r\n	<column name="body" />\r\n	<column name="sender" />\r\n	<column name="comment" />\r\n	<column name="enabled" />\r\n	<column name="deleted" />\r\n</overview>\r\n\r\n<buttons>\r\n        <button type="back" />\r\n        <button action="edit" />\r\n</buttons>', NULL, 43, NULL, 1, 0),
 (36, '<form domain="EmailCode">\r\n	<column name="code" />\r\n	<column name="description" />\r\n	<column name="groovyScript" />\r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 44, NULL, 1, 0),
 (37, '<table domain="EmailCode" index="true">\r\n	<column name="code" />\r\n	<column name="description" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>\r\n\r\n\r\n', NULL, 46, NULL, 1, 0),
-(38, '<form domain="EmailCode" id="url">\r\n	<column name="id" />\r\n	<column name="code" />\r\n	<column name="description" />\r\n	<column name="groovyScript" />\r\n	<column name="enabled" />\r\n	<column name="deleted" /> \r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 45, NULL, 1, 0),
+(38, '<form domain="EmailCode" id="url">\r\n	<column name="id" />\r\n	<column name="code" />\r\n	<column name="description" />\r\n	<column name="groovyScript" />\r\n	<column name="enabled" />\r\n	\r\n	<button type="cancel" />\r\n	<button type="delete" />\r\n	<button type="save" />  \r\n</form>', NULL, 45, NULL, 1, 0),
 (39, '<overview domain="EmailCode" id="url">\r\n	<column name="id" />\r\n	<column name="code" />\r\n	<column name="description" />\r\n	<column name="groovyScript" />\r\n	<column name="enabled" />\r\n	<column name="deleted" />\r\n</overview>\r\n\r\n<buttons>\r\n        <button type="back" />\r\n        <button action="edit" />\r\n</buttons>', NULL, 47, NULL, 1, 0),
 (40, '<table domain="Setting" action="edit" index="true">\r\n	<column name="property" />\r\n	<column name="value" />\r\n	<column name="event" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n</buttons>', NULL, 48, NULL, 1, 0),
-(41, '<form domain="Setting" id="url">\r\n	<column name="property" />\r\n	<column name="value" />\r\n	<column name="event" />\r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 49, NULL, 1, 0),
+(41, '<form domain="Setting" id="url">\r\n	<column name="property" />\r\n	<column name="value" />\r\n	<column name="event" />\r\n	\r\n	<button type="cancel" />\r\n	<button type="delete" />\r\n	<button type="save" />  \r\n</form>', NULL, 49, NULL, 1, 0),
 (42, '<form domain="RequestMap">\r\n	<column name="url" />\r\n	<column name="configAttribute" />\r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 50, NULL, 1, 0),
 (43, '<form domain="RequestMap" id="url">\r\n	<column name="url" />\r\n	<column name="configAttribute" />\r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 51, NULL, 1, 0),
 (44, '<table domain="RequestMap" index="true">\r\n	<column name="url" />\r\n	<column name="configAttribute" />\r\n</table>\r\n\r\n<buttons>\r\n   <button type="back" />\r\n   <button action="create" />\r\n</buttons>', NULL, 52, NULL, 1, 0),
 (45, '<overview domain="RequestMap" id="url">\r\n	<column name="url" />\r\n	<column name="configAttribute" /> \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 53, NULL, 1, 0),
-(46, '<table domain="ParticipantDate" index="true">\r\n	<column name="extras" eq="url" />\r\n	<column name="user" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>', NULL, 54, NULL, 1, 0),
+(46, '<table domain="Extra" index="true">\r\n	<column name="extra" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>', NULL, 54, NULL, 1, 0),
 (48, '<table domain="ParticipantDate" index="true">\r\n	<column name="user">\r\n		<column name="lastName" />\r\n		<column name="firstName" />\r\n		<column name="country" />\r\n	</column>\r\n	<column name="state" />\r\n	<column name="invitationLetter" eq="1" hidden="true" />\r\n	<column name="invitationLetterSent" />  \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n</buttons>', NULL, 55, NULL, 1, 0),
 (49, '<table domain="ParticipantDate" index="true">\r\n	<column name="user">\r\n		<column name="lastName" />\r\n		<column name="firstName" />\r\n	</column>\r\n	<column name="feeState" />\r\n	<column name="lowerFeeRequested" eq="1" hidden="true" />\r\n	<column name="lowerFeeAnswered" />  \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n</buttons>', NULL, 56, NULL, 1, 0),
 (50, '<table domain="User">\r\n	<column name="id" />\r\n	<column name="lastName" />\r\n	<column name="firstName" />\r\n	<column name="email" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n</buttons>', NULL, 65, NULL, 1, 0),
 (51, '<table domain="Group" index="true">	\r\n	<column name="name" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>', NULL, 61, NULL, 1, 0),
 (52, '<form domain="Group">\r\n	<column name="name" />\r\n	<column name="pages" />\r\n	<column name="users" />\r\n	<column name="enabled" />\r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 62, NULL, 1, 0),
-(53, '<form domain="Group" id="url">\r\n	<column name="name" />\r\n	<column name="pages" />\r\n	<column name="users" />\r\n	<column name="enabled" />\r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 63, NULL, 1, 0),
-(54, '<overview domain="Group" id="url">\r\n	<column name="name" />\r\n	<column name="pages" />\r\n	<column name="users" />\r\n	<column name="enabled" /> \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 64, NULL, 1, 0);
+(53, '<form domain="Group" id="url">\r\n	<column name="name" />\r\n	<column name="pages" />\r\n	<column name="users" />\r\n	<column name="enabled" />\r\n	\r\n	<button type="cancel" />\r\n	<button type="delete" />\r\n	<button type="save" />  \r\n</form>', NULL, 63, NULL, 1, 0),
+(54, '<overview domain="Group" id="url">\r\n	<column name="name" />\r\n	<column name="pages" />\r\n	<column name="users" />\r\n	<column name="enabled" /> \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 64, NULL, 1, 0),
+(55, '<form domain="Extra">\r\n	<column name="extra" />\r\n	<column name="enabled" />\r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 71, NULL, 1, 0),
+(56, '<form domain="Extra" id="url">\r\n	<column name="id" />\r\n	<column name="extra" />\r\n	<column name="enabled" />\r\n	\r\n	<button type="cancel" />\r\n	<button type="delete" />\r\n	<button type="save" />  \r\n</form>', NULL, 72, NULL, 1, 0),
+(57, '<overview domain="Extra" id="url">\r\n	<column name="id" />\r\n	<column name="extra" />\r\n	<column name="enabled" /> \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 73, NULL, 1, 0),
+(58, '<table domain="PaperState" index="true">\r\n	<column name="description" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>', NULL, 74, NULL, 1, 0),
+(59, '<form domain="PaperState">\r\n	<column name="description" />\r\n	<column name="enabled" />\r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 75, NULL, 1, 0),
+(60, '<form domain="PaperState" id="url">\r\n	<column name="description" />\r\n	<column name="enabled" />\r\n	\r\n	<button type="cancel" />\r\n	<button type="delete" />\r\n	<button type="save" />  \r\n</form>', NULL, 76, NULL, 1, 0),
+(61, '<overview domain="PaperState" id="url">\r\n	<column name="description" />\r\n	<column name="enabled" />\r\n</overview>\r\n\r\n<buttons>	\r\n	<button type="back" />\r\n	<button action="edit" />  \r\n</buttons>', NULL, 77, NULL, 1, 0),
+(62, '<table domain="ParticipantType" index="true">\r\n   <column name="type" />\r\n   <column name="withPaper" />\r\n</table>\r\n\r\n<buttons>\r\n   <button type="back" />\r\n   <button action="create" />\r\n</buttons>', NULL, 78, NULL, 1, 0),
+(63, '<form domain="ParticipantType">\r\n	<column name="type" />\r\n	<column name="withPaper" />\r\n	<column name="importance" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 79, NULL, 1, 0),
+(64, '<form domain="ParticipantType" id="url">\r\n	<column name="type" />\r\n	<column name="withPaper" />\r\n	<column name="importance" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="delete" />\r\n	<button type="save" />    \r\n</form>', NULL, 80, NULL, 1, 0),
+(65, '<overview domain="ParticipantType" id="url">\r\n	<column name="type" />\r\n	<column name="withPaper" />\r\n	<column name="importance" />\r\n	<column name="enabled" /> \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 81, NULL, 1, 0),
+(66, '<table domain="SessionDateTime" index="true">\r\n	<column name="day">\r\n		<column name="dayNumber" />\r\n		<column name="day" />\r\n	</column>\r\n	<column name="index" />\r\n	<column name="period" />\r\n</table>\r\n\r\n<buttons>\r\n   <button type="back" />\r\n   <button action="create" />\r\n</buttons>', NULL, 82, NULL, 1, 0),
+(67, '<form domain="SessionDateTime">\r\n	<column name="day" />\r\n	<column name="index" />\r\n	<column name="period" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 83, NULL, 1, 0),
+(68, '<form domain="SessionDateTime" id="url">\r\n	<column name="day" />\r\n	<column name="index" />\r\n	<column name="period" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="delete" />\r\n	<button type="save" />    \r\n</form>', NULL, 84, NULL, 1, 0),
+(69, '<overview domain="SessionDateTime" id="url">\r\n	<column name="day">\r\n		<column name="dayNumber" />\r\n		<column name="day" />\r\n	</column>\r\n	<column name="index" />\r\n	<column name="period" />\r\n	<column name="enabled" /> \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 85, NULL, 1, 0),
+(70, '<table domain="Volunteering" index="true">\r\n	<column name="description" />\r\n</table>\r\n\r\n<buttons>\r\n   <button type="back" />\r\n   <button action="create" />\r\n</buttons>', NULL, 86, NULL, 1, 0),
+(71, '<form domain="Volunteering">\r\n	<column name="description" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 87, NULL, 1, 0),
+(72, '<form domain="Volunteering" id="url">\r\n	<column name="description" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="delete" />\r\n	<button type="save" />    \r\n</form>', NULL, 88, NULL, 1, 0),
+(73, '<overview domain="Volunteering" id="url">\r\n	<column name="description" />\r\n	<column name="enabled" /> \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 89, NULL, 1, 0),
+(74, '<table domain="ParticipantDate" index="true">\r\n	<column name="user" />\r\n	<column name="extras" />	\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n</buttons>', NULL, 90, NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -593,7 +608,7 @@ CREATE TABLE IF NOT EXISTS `extras` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`extra_id`),
   KEY `date_id` (`date_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
 
 --
 -- Dumping data for table `extras`
@@ -603,7 +618,8 @@ INSERT INTO `extras` (`extra_id`, `date_id`, `extra`, `enabled`, `deleted`) VALU
 (1, 13, 'Concert', 1, 0),
 (2, 13, 'Theater', 1, 0),
 (3, 13, 'Museum', 1, 0),
-(4, 13, 'Reception', 1, 0);
+(4, 13, 'Reception', 1, 0),
+(5, 13, 'test extra', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -793,7 +809,7 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`page_id`),
   KEY `pages_parent_page_id_idx` (`parent_page_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=71 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=91 ;
 
 --
 -- Dumping data for table `pages`
@@ -802,7 +818,7 @@ CREATE TABLE IF NOT EXISTS `pages` (
 INSERT INTO `pages` (`page_id`, `title_code`, `title_arg`, `title_default`, `controller`, `action`, `sort_order`, `show_in_menu`, `description`, `parent_page_id`, `enabled`, `deleted`) VALUES
 (1, 'default.overview.label', 'event.label', 'Event overview', 'event', 'show', 999, 0, NULL, NULL, 1, 0),
 (2, 'default.edit.label', 'event.label', 'Edit event', 'event', 'edit', 999, 0, NULL, NULL, 1, 0),
-(3, 'default.overview.label', 'eventDate.label', 'Event date overview', 'eventDate', 'show', 999, 0, NULL, NULL, 1, 0),
+(3, 'default.overview.label', 'eventDate.label', 'Event date overview', 'eventDate', 'show', 105, 1, NULL, 67, 1, 0),
 (4, 'default.edit.label', 'eventDate.label', 'Edit event date', 'eventDate', 'edit', 999, 0, NULL, NULL, 1, 0),
 (5, 'default.create.label', 'event.label', 'Create event', 'event', 'create', 999, 0, NULL, NULL, 1, 0),
 (6, 'default.create.label', 'eventDate.label', 'Create event date', 'eventDate', 'create', 999, 0, NULL, NULL, 1, 0),
@@ -818,7 +834,7 @@ INSERT INTO `pages` (`page_id`, `title_code`, `title_arg`, `title_default`, `con
 (17, 'default.edit.label', 'equipment.label', 'Edit equipment', 'equipment', 'edit', 999, 0, NULL, NULL, 1, 0),
 (18, 'default.overview.label', 'room.label', 'Room overview', 'room', 'show', 999, 0, NULL, NULL, 1, 0),
 (19, 'default.overview.label', 'equipment.label', 'Equipment overview', 'equipment', 'show', 999, 0, NULL, NULL, 1, 0),
-(20, 'default.list.label', 'title.label', 'Title list', 'title', 'list', 65, 1, NULL, 66, 1, 0),
+(20, 'title.multiple.label', NULL, 'Titles', 'title', 'list', 65, 1, NULL, 66, 1, 0),
 (21, 'room.multiple.label', NULL, 'Rooms', 'room', 'list', 25, 1, NULL, NULL, 1, 0),
 (22, 'network.multiple.label', NULL, 'Networks', 'network', 'list', 10, 1, NULL, NULL, 1, 0),
 (23, 'equipment.multiple.label', NULL, 'Equipment', 'equipment', 'list', 60, 1, NULL, 66, 1, 0),
@@ -838,22 +854,21 @@ INSERT INTO `pages` (`page_id`, `title_code`, `title_arg`, `title_default`, `con
 (39, 'default.plan.drag.label', 'session.multiple.label', 'Plan sessions (Drag)', 'session', 'planDrag', 999, 0, NULL, NULL, 1, 0),
 (40, 'default.create.label', 'emailTemplate.label', 'Create email template', 'emailTemplate', 'create', 999, 0, NULL, NULL, 1, 0),
 (41, 'default.edit.label', 'emailTemplate.label', 'Edit email template', 'emailTemplate', 'edit', 999, 0, NULL, NULL, 1, 0),
-(42, 'default.list.label', 'emailTemplate.multiple.label', 'List email templates', 'emailTemplate', 'list', 70, 1, NULL, 66, 1, 0),
+(42, 'emailTemplate.multiple.label', NULL, 'Email templates', 'emailTemplate', 'list', 70, 1, NULL, 66, 1, 0),
 (43, 'default.overview.label', 'emailTemplate.label', 'Show email template', 'emailTemplate', 'show', 999, 0, NULL, NULL, 1, 0),
 (44, 'default.create.label', 'emailCode.label', 'Create email code', 'emailCode', 'create', 999, 0, NULL, NULL, 1, 0),
 (45, 'default.edit.label', 'emailCode.label', 'Edit email code', 'emailCode', 'edit', 999, 0, NULL, NULL, 1, 0),
-(46, 'default.list.label', 'emailCode.multiple.label', 'List email code', 'emailCode', 'list', 75, 1, NULL, 66, 1, 0),
+(46, 'emailCode.multiple.label', NULL, 'List email code', 'emailCode', 'list', 75, 1, NULL, 66, 1, 0),
 (47, 'default.overview.label', 'emailCode.label', 'Show email code', 'emailCode', 'show', 999, 0, NULL, NULL, 1, 0),
-(48, 'default.list.label', 'setting.multiple.label', 'List settings', 'setting', 'list', 85, 1, NULL, 67, 1, 0),
+(48, 'setting.multiple.label', NULL, 'Settings', 'setting', 'list', 85, 1, NULL, 67, 1, 0),
 (49, 'default.edit.label', 'setting.label', 'Edit setting', 'setting', 'edit', 999, 0, NULL, NULL, 1, 0),
 (50, 'default.create.label', 'requestMap.label', 'Create request map', 'requestmap', 'create', 999, 0, NULL, NULL, 1, 0),
 (51, 'default.edit.label', 'requestMap.label', 'Edit request map', 'requestmap', 'edit', 999, 0, NULL, NULL, 1, 0),
-(52, 'default.list.label', 'requestMap.label', 'Request map list', 'requestmap', 'list', 90, 1, NULL, 67, 1, 0),
+(52, 'requestMap.multiple.label', NULL, 'Request maps', 'requestmap', 'list', 90, 1, NULL, 67, 1, 0),
 (53, 'default.overview.label', 'requestMap.label', 'Show request map', 'requestmap', 'show', 999, 0, NULL, NULL, 1, 0),
 (54, 'extra.multiple.label', NULL, 'Extras', 'extra', 'list', 45, 1, NULL, 66, 1, 0),
-(55, 'default.list.label', 'participantDate.inventationLetter.label', 'Inventation letter list', 'participant', 'inventations', 999, 0, NULL, NULL, 1, 0),
-(56, 'default.list.label', 'participantDate.lowerFee.label', 'Lower fee list', 'participant', 'lowerFee', 999, 0, NULL, NULL, 1, 0),
-(57, 'default.list.label', 'participantDate.label', 'Participant list', 'participant', 'listAll', 999, 0, NULL, NULL, 1, 0),
+(55, 'default.list.label', 'participantDate.inventationLetter.label', 'Inventation letter list', 'participant', 'inventations', 115, 1, NULL, 68, 1, 0),
+(56, 'default.list.label', 'participantDate.lowerFee.label', 'Lower fee list', 'participant', 'lowerFee', 120, 1, NULL, 68, 1, 0),
 (58, 'default.plan.click.label', 'session.multiple.label', 'Plan sessions (Click)', 'session', 'planClick', 30, 1, NULL, NULL, 1, 0),
 (59, 'default.send.label', 'email.label', 'Send e-mail', 'email', 'list', 35, 1, NULL, NULL, 1, 0),
 (60, 'default.send.label', 'email.label', 'Send e-mail', 'email', 'send', 999, 0, NULL, NULL, 1, 0),
@@ -864,9 +879,29 @@ INSERT INTO `pages` (`page_id`, `title_code`, `title_arg`, `title_default`, `con
 (65, 'user.multiple.label', NULL, 'Users', 'userAuth', 'list', 100, 1, NULL, 67, 1, 0),
 (66, 'default.edit.menu.label', NULL, 'Edit menu', NULL, NULL, 40, 1, NULL, NULL, 1, 0),
 (67, 'default.admin.menu.label', NULL, 'Admin menu', NULL, NULL, 80, 1, NULL, NULL, 1, 0),
-(68, 'default.overview.menu.label', NULL, 'Overviews menu', NULL, NULL, 105, 1, NULL, NULL, 1, 0),
+(68, 'default.overview.menu.label', NULL, 'Overviews menu', NULL, NULL, 110, 1, NULL, NULL, 1, 0),
 (69, 'default.overview.label', 'user.label', 'Show user', 'userAuth', 'show', 999, 0, NULL, NULL, 1, 0),
-(70, 'default.edit.label', 'user.label', 'Edit user', 'userAuth', 'edit', 999, 0, NULL, NULL, 1, 0);
+(70, 'default.edit.label', 'user.label', 'Edit user', 'userAuth', 'edit', 999, 0, NULL, NULL, 1, 0),
+(71, 'default.create.label', 'extra.label', 'Create extra', 'extra', 'create', 999, 0, NULL, NULL, 1, 0),
+(72, 'default.edit.label', 'extra.label', 'Edit extra', 'extra', 'edit', 999, 0, NULL, NULL, 1, 0),
+(73, 'default.show.label', 'extra.label', 'Show extra', 'extra', 'show', 999, 0, NULL, NULL, 1, 0),
+(74, 'paperState.multiple.label', NULL, 'Paper states', 'paperState', 'list', 53, 1, NULL, 66, 1, 0),
+(75, 'default.create.label', 'paperState.label', 'Create paper state', 'paperState', 'create', 999, 0, NULL, NULL, 1, 0),
+(76, 'default.edit.label', 'paperState.label', 'Edit paper state', 'paperState', 'edit', 999, 0, NULL, NULL, 1, 0),
+(77, 'default.overview.label', 'paperState.label', 'Show paper state', 'paperState', 'show', 999, 0, NULL, NULL, 1, 0),
+(78, 'participantType.multiple.label', NULL, 'Participant types', 'participantType', 'list', 54, 1, NULL, 66, 1, 0),
+(79, 'default.create.label', 'participantType.label', 'Create participant type', 'participantType', 'create', 999, 0, NULL, NULL, 1, 0),
+(80, 'default.edit.label', 'participantType.label', 'Edit participant type', 'participantType', 'edit', 999, 0, NULL, NULL, 1, 0),
+(81, 'default.overview.label', 'participantType.label', 'Show participant type', 'participantType', 'show', 999, 0, NULL, NULL, 1, 0),
+(82, 'sessionDateTime.multiple.label', NULL, 'Dates/times', 'dateTime', 'list', 68, 1, NULL, 66, 1, 0),
+(83, 'default.create.label', 'sessionDateTime.label', 'Create date/time', 'dateTime', 'create', 999, 0, NULL, NULL, 1, 0),
+(84, 'default.edit.label', 'sessionDateTime.label', 'Edit date/time', 'dateTime', 'edit', 999, 0, NULL, NULL, 1, 0),
+(85, 'default.overview.label', 'sessionDateTime.label', 'Show date/time', 'dateTime', 'show', 999, 0, NULL, NULL, 1, 0),
+(86, 'volunteering.multiple.label', NULL, 'Volunteering', 'volunteering', 'list', 78, 1, NULL, 66, 1, 0),
+(87, 'default.create.label', 'volunteering.label', 'Create volunteering job', 'volunteering', 'create', 999, 0, NULL, NULL, 1, 0),
+(88, 'default.edit.label', 'volunteering.label', 'Edit volunteering job', 'volunteering', 'edit', 999, 0, NULL, NULL, 1, 0),
+(89, 'default.overview.label', 'volunteering.label', 'Show volunteering job', 'volunteering', 'show', 999, 0, NULL, NULL, 1, 0),
+(90, 'default.list.label', 'extra.label', 'Extra list', 'participant', 'extras', 125, 1, NULL, 68, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -950,7 +985,7 @@ CREATE TABLE IF NOT EXISTS `paper_states` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`paper_state_id`),
   KEY `date_id` (`date_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
 
 --
 -- Dumping data for table `paper_states`
@@ -961,7 +996,8 @@ INSERT INTO `paper_states` (`paper_state_id`, `date_id`, `description`, `enabled
 (1, NULL, 'New Paper', 1, 0),
 (2, NULL, 'Paper Accepted', 1, 0),
 (3, NULL, 'Paper Not Accepted', 1, 0),
-(4, NULL, 'Paper In Consideration', 1, 0);
+(4, NULL, 'Paper In Consideration', 1, 0),
+(5, 13, 'test', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -1003,7 +1039,7 @@ INSERT INTO `participant_date` (`participant_date_id`, `user_id`, `date_id`, `pa
 (5, 5, 13, 2, 0, 0, '2012-04-27', 0, 0, 0, 0, NULL, 1, 0),
 (6, 6, 13, 2, 0, 0, '2012-04-27', 0, 0, 0, 0, NULL, 1, 0),
 (7, 7, 13, 1, 0, 0, '2012-04-27', 0, 0, 0, 0, NULL, 1, 0),
-(8, 1, 13, 0, 0, 0, '2012-05-18', 0, 0, 0, 0, NULL, 1, 0);
+(8, 1, 13, 0, 0, 0, '2012-05-18', 0, 0, 1, 0, NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1664,7 +1700,7 @@ CREATE TABLE IF NOT EXISTS `titles` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`title_id`),
   KEY `titles_event_id_idx` (`event_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=12 ;
 
 --
 -- Dumping data for table `titles`
@@ -1677,7 +1713,11 @@ INSERT INTO `titles` (`title_id`, `event_id`, `title`, `enabled`, `deleted`) VAL
 (4, 4, 'Dr.', 1, 0),
 (5, 4, 'Prof. Dr.', 1, 0),
 (6, 4, 'Prof.', 1, 0),
-(7, 4, 'Mrs.', 1, 0);
+(7, 4, 'Mrs.', 1, 0),
+(8, 4, 'ik', 1, 1),
+(9, 4, 'test 2', 1, 1),
+(10, 4, 'sad', 1, 1),
+(11, 4, 'dsf', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -1720,7 +1760,7 @@ INSERT INTO `users` (`user_id`, `email`, `lastname`, `firstname`, `gender`, `tit
 (1, 'testeca1@knoex.com', 'Haas', 'Lester', 'M', 'null', NULL, 'City', 169, 'en', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, NULL, NULL, 'International Institute for Social History', 'Department', NULL, '2012-04-26', 1, 0),
 (2, 'testeca2@knoex.com', 'Jansen', 'Jan', 'M', 'Mr.', 'Astreet 5\r\n1234 AB', 'Amsterdam', 169, 'nl', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', '0123456789', NULL, '0623456789', 'International Institute of Social History', NULL, NULL, '2012-04-26', 1, 0),
 (3, 'testeca3@knoex.com', 'Molens', 'Kees', 'M', NULL, NULL, 'Another City', 1, 'en', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
-(4, 'testeca4@knoex.com', 'Kloos', 'Joost', 'M', 'null', NULL, 'City', 169, 'nl', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
+(4, 'testeca4@knoex.com', 'Kloos', 'Joost', 'M', NULL, NULL, 'City', 169, 'nl', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
 (5, 'testeca5@knoex.com', 'Pier', 'Jonathan', NULL, NULL, NULL, 'CIty', 9, 'nl', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
 (6, 'testeca6@knoex.com', 'Jeest', 'Henk', NULL, NULL, NULL, 'City', 12, 'nl', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
 (7, 'testeca7@knoex.com', 'Joker', 'Jaap', 'M', NULL, NULL, 'City', 98, 'nl', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0);
