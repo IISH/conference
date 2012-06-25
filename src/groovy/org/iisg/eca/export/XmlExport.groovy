@@ -37,11 +37,14 @@ class XmlExport extends AbstractExport {
         xml.doubleQuotes = true
 
         writer.write('<?xml version="1.0" encoding="utf-8" ?>\n')
+
         xml."${title.toLowerCase().replaceAll('\\s', '-')}"() {
             results.eachWithIndex { r, i ->
                 xml.row("${UTILS.message(code: 'default.count').toLowerCase()}": i+1) {
-                    columns.eachWithIndex { c, j ->
-                        xml."${columnNames[j].toLowerCase().replaceAll('\\s', '-')}"(r."${c.columnPath.join('.')}")
+                    columns.grep { it.canBeShown() }.eachWithIndex { c, j ->
+                        def value = r
+                        c.columnPath.each { value = value[it.toString()] }
+                        xml."${columnNames[j].toLowerCase().replaceAll('\\s', '-')}"(value)
                     }
                 }
             }

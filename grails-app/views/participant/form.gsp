@@ -6,7 +6,7 @@
         <g:javascript src="participant.js" />
     </head>
     <body>
-        %{-- TODO: <eca:navigation ids="${participantIds}" /> --}%
+        <eca:navigation ids="${participantIds}" />
 
         <g:hasErrors model="[participant: participant, user: user]">
             <ul class="errors" role="alert">

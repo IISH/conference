@@ -136,28 +136,21 @@ class Column extends ContainerElement {
     void setEq(String eq) {
         this.eq = eq
     }
-    
-    /*
-    void setChildren(List<Column> children) {
-        this.children = children
-
-        if (!children.isEmpty()) {
-            GrailsDomainClass domain = property.referencedDomainClass
-            children.each { c ->
-                if (domain && c.domainClass == domainClass) {
-                    c.domainClass = domain
-                }
-                c.parent = this
-            }
-        }
-    }*/
 
     /**
     * Returns all of the elements on the way to the root
     * @returns A list of all the elements on the way to the root
     */
-   List<Column> getColumnPath() {
-       List<Element> path = this.path
-       path.grep { it instanceof Column }
-   }
+    List<Column> getColumnPath() {
+        List<Element> path = this.path
+        path.grep { it instanceof Column }
+    }
+
+    /**
+     * Returns whether this column can be shown to the user
+     * @return Whether it can be shown
+     */
+    boolean canBeShown() {
+        (!hasColumns() && (!constrainedProperty || constrainedProperty.display) && !hidden)
+    }
 }

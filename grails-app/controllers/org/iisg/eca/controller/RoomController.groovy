@@ -66,6 +66,8 @@ class RoomController {
             bindData(room, params, [include: ['roomName', 'roomNumber', 'noOfSeats', 'comment']])
 
             room.roomSessionDateTimeEquipment.clear()
+            room.save(flush: true)
+
             Equipment.list().each { equip ->
                 SessionDateTime.list().each { timeSlot ->
                     if (params.timeslot.contains("${equip.id}_${timeSlot.id}")) {

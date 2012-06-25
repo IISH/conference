@@ -6,9 +6,7 @@ import org.iisg.eca.domain.Event
 import org.iisg.eca.domain.EventDate
 
 import groovy.xml.MarkupBuilder
-
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
-
 
 /**
  * Utilities tag library
@@ -35,6 +33,7 @@ class UtilsTagLib {
      * Tag creating navigation buttons
      * @attr prev The url to go to when the user wants to go to the previous page
      * @attr next The url to go to when the user wants to go to the next page
+     * @attr ids An array of id's to use for navigation
      */
     def navigation = { attrs -> 
         MarkupBuilder builder = new MarkupBuilder(out)
@@ -44,19 +43,23 @@ class UtilsTagLib {
             def prev = attrs.prev
             def next = attrs.next
 
+            // If there is an array of ids given, use that for navigation
             if (attrs.ids) {
                 def index = null
 
+                // Find the index value of the current id
                 attrs.ids.eachWithIndex { curId, i ->
                     if (curId == params.id.toLong()) {
                         index = i
                     }
                 }
 
-                prev = (index-1 >= 0) ? attrs.ids.get(index-1) : null
-                next = (index+1 < attrs.ids.size()) ? attrs.ids.get(index+1) : null
+                // Explicitly check if the index is not null, the index is allowed to be 0
+                prev = ((index != null) && (index-1 >= 0)) ? attrs.ids.get(index-1) : null
+                next = ((index != null) && (index+1 < attrs.ids.size())) ? attrs.ids.get(index+1) : null
             }
 
+            // Build prev link, if it exists
             if (prev) {
                 builder."a"(class: "prev", href: createLinkAllParams(action: params.action, id: prev, setPrev: true)) {
                     builder.span(class: "ui-icon ui-icon-arrowthick-1-w", "")                    
@@ -65,7 +68,8 @@ class UtilsTagLib {
             }
             
             builder.span(class: "ui-icon ui-icon-bullet", "")
-            
+
+            // Build next link, if it exists
             if (next) {
                 builder."a"(class: "next", href: createLinkAllParams(action: params.action, id: next, setPrev: true)) {
                     builder.span(g.message(code: "default.paginate.next"))
@@ -77,6 +81,7 @@ class UtilsTagLib {
 
     /**
      * Tag creating a boolean select box
+     * @attrs value The selected value
      */
     def booleanSelect = { attrs ->
         MarkupBuilder builder = new MarkupBuilder(out)
@@ -196,13 +201,13 @@ class UtilsTagLib {
      * If the message is still not found, then fall back to the default code
      */
     def fallbackMessage = { attrs ->
-        String msg = message(code: attrs.code, attrs: attrs.attrs)
+        String msg = message(code: attrs.code, attrs: attrs.attrs).toString()
 
-        if (msg.equals(attrs.code)) {
-            msg = message(code: attrs.fbCode, attrs: attrs.fbAttrs, default: attrs.default)
+        if (msg.equals(attrs.code.toString())) {
+            msg = message(code: attrs.fbCode, attrs: attrs.fbAttrs, default: attrs.default).toString()
         }
 
-        out << msg.toString()
+        out << msg
     }
     
     /**

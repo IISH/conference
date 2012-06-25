@@ -2,24 +2,17 @@ package org.iisg.eca.service
 
 import org.iisg.eca.domain.ParticipantDate
 
-import grails.orm.HibernateCriteriaBuilder
-
-import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
-import org.codehaus.groovy.grails.plugins.web.taglib.ValidationTagLib
 import groovy.sql.Sql
+import org.springframework.context.i18n.LocaleContextHolder
+import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 
 /**
  * Service responsible for requesting participant data
  */
 class ParticipantService {
-     /**
-     * Required for looking up the translated column names
-     */
-    protected static final ValidationTagLib MESSAGES = new ValidationTagLib()
-
-    def pageInformation
-
     def dataSource
+    def messageSource
+    def pageInformation
 
     /**
      * Returns all participants of the current event date with filters set by the user
@@ -27,14 +20,28 @@ class ParticipantService {
      * @return A map with characters A-Z as key, which lists all participants which last names start with the keys character
      */
     Map<String, Object[]> getParticipants(GrailsParameterMap params) {
-        HibernateCriteriaBuilder criteria = ParticipantDate.createCriteria()
         Map<String, Object[]> participants = [:]
 
+        // Now loop over all participants returned by the database and create a map out if it
+        getParticipantsWithFilters(params).each { participant ->
+            List list = participants.get(participant[2].toUpperCase()[0], new ArrayList())
+            list.add([participant[0], "${participant[1]} ${participant[2]}", "(#: ${participant[0]}, ${participant[3]})"])
+        }
+
+        participants
+    }
+
+    /**
+     * Returns all participants of the current event date with filters set by the user
+     * @param params The parameters of the current request containing the filters set by the user
+     * @return A list of all filtered participants
+     */
+    List<Object[]> getParticipantsWithFilters(GrailsParameterMap params) {
         Long stateId = params.long('filter-state')
         String type = params['filter-type']
         String filter = params['filter-text']
 
-        criteria.list {
+        (List<Object[]>) ParticipantDate.withCriteria {
             // Filter the results based on a category with keywords
             if (type && filter && !filter.isEmpty()) {
                 user {
@@ -58,6 +65,7 @@ class ParticipantService {
                 }
             }
 
+            // State which properties to return
             projections {
                 user {
                     property('id')
@@ -78,18 +86,7 @@ class ParticipantService {
                 order('lastName', 'asc')
                 order('firstName', 'asc')
             }
-        }.each { participant ->
-            // Now loop over all participants returned by the database and create a map out if it
-            List list = participants.get(participant[2].toUpperCase()[0], new ArrayList())
-            if (participant[3].isEmpty()) {
-                list.add([participant[0], "${participant[1]} ${participant[2]}", "(#: ${participant[0]})"])
-            }
-            else {
-                list.add([participant[0], "${participant[1]} ${participant[2]}", "(#: ${participant[0]}, ${participant[3]})"])
-            }
         }
-
-        participants
     }
 
     /**
@@ -113,7 +110,7 @@ class ParticipantService {
         ''', [dateId: pageInformation.date.id]).collect { it.values() as Object[] }
 
         states.each { count = count + it[2] }
-        states.add(0, [new Integer(-1), MESSAGES.message(code: 'default.all.label'), count])
+        states.add(0, [new Integer(-1), messageSource.getMessage('default.all.label', null, LocaleContextHolder.locale), count])
         states
     }
 }

@@ -2,7 +2,7 @@ import java.text.SimpleDateFormat
 import org.iisg.eca.domain.Setting
 
 class BootStrap {
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MMMMM yyyy")
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yy-MM-dd")
 
     def init = { servletContext ->
         // Set the last updated date in the database

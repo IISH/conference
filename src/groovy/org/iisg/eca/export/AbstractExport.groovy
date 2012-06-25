@@ -2,6 +2,7 @@ package org.iisg.eca.export
 
 import org.iisg.eca.tags.UtilsTagLib
 import org.iisg.eca.dynamic.PageBuilder
+import org.iisg.eca.dynamic.Column
 
 /**
  * An abstract implementation of the <code>Export</code> interface
@@ -27,13 +28,16 @@ abstract class AbstractExport implements Export {
         this.columns = columns
         this.results = results
         this.title = title
-        columnNames = columns.collect {
-            if (it.name == "id") {
-                "id"
-            }
-            else {
-                UTILS.fallbackMessage(code: PageBuilder.getCode(it.property), fbCode: PageBuilder.getFbCode(it.property))
+        columnNames = columns.collect { Column c ->
+            if (!c.hasColumns() && (!c.constrainedProperty || c.constrainedProperty.display) && !c.hidden) {
+                if (c.name == "id") {
+                    "id"
+                }
+                else {
+                    UTILS.fallbackMessage(code: PageBuilder.getCode(c.property), fbCode: PageBuilder.getFbCode(c.property))
+                }
             }
         }
+        columnNames.removeAll { it == null }
     }
 }

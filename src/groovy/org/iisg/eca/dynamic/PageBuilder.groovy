@@ -241,7 +241,7 @@ class PageBuilder {
                     }
                 }
                 element.forAllColumns { c ->
-                    if (!c.hasColumns() && (!c.constrainedProperty || c.constrainedProperty.display) && !c.hidden) {
+                    if (c.canBeShown()) {
                         if (c.name == "id") {
                             builder.td(class: "id") {
                                 builder."g:fieldValue"(bean: "\${row}", field: "id")

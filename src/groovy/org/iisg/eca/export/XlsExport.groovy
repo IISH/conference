@@ -60,8 +60,10 @@ class XlsExport extends AbstractExport {
         }
 
         results.eachWithIndex { result, i ->
-            columns.eachWithIndex { c, j ->
-                sheet.addCell(new Label(j, i+1, result."${c.columnPath.join('.')}".toString(), format))
+            columns.grep { it.canBeShown() }.eachWithIndex { c, j ->
+                def value = result
+                c.columnPath.each { value = value[it.toString()] }
+                sheet.addCell(new Label(j, i+1, value.toString(), format))
             }
         }
 

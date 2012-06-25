@@ -170,7 +170,8 @@ class ParticipantController {
                                                 volunteering: Volunteering.list(),
                                                 networks: Network.list(),
                                                 paperStates: PaperState.list(),
-                                                equipmentList: Equipment.list()])
+                                                equipmentList: Equipment.list(),
+                                                participantIds: participantService.getParticipantsWithFilters(params).collect { it[0] }])
             }
         }
 
@@ -180,7 +181,8 @@ class ParticipantController {
                                         volunteering: Volunteering.list(),
                                         networks: Network.list(),
                                         paperStates: PaperState.list(),
-                                        equipmentList: Equipment.list()])
+                                        equipmentList: Equipment.list(),
+                                        participantIds: participantService.getParticipantsWithFilters(params).collect { it[0] }])
     }
 
     def delete() {

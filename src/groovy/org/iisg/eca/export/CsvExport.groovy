@@ -1,5 +1,7 @@
 package org.iisg.eca.export
 
+import org.iisg.eca.dynamic.Column
+
 /**
  * Export csv files
  */
@@ -46,11 +48,16 @@ class CsvExport extends AbstractExport {
     @Override
     parse() {
         StringWriter writer = new StringWriter()
+        writer.write("${columnNames.join(separator)}\r\n")
 
-        writer.write("${columnNames.join(separator)}\n")
         results.each { result ->
-            String[] r = columns.collect { c -> result."${c.columnPath.join('.')}" }
-            writer.write("${r.join(separator)}\n")
+            List<String> r = columns.grep { it.canBeShown() }.collect { c ->
+                def value = result
+                c.columnPath.each { value = value[it.toString()] }
+                value
+            }
+
+            writer.write("${r.join(separator)}\r\n")
         }
 
         writer

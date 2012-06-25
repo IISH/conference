@@ -98,26 +98,21 @@ $(document).ready(function() {
         var element = $(this).parents('.participant-type-value');
         var parentElement = $(this).parents('li');
 
-        $.getJSON('../../message/index', {code: 'default.button.delete.confirm.message'}, function(data) {
-            var deleted = confirm(data.message);
-            if (deleted) {
-                $.getJSON(
-                    '../deleteParticipant',
-                    {   'session_id':   sessionId,
-                        'user_id':      parentElement.find('.user-id').val(),
-                        'type_id':      element.find('.type-id').val()
-                    },
-                    function(data) {
-                        if (data.success) {
-                            $('#tabs').tabs("option", "selected", -1);
-                            setParticipantDataForSession(data);
-                        }
-                        else {
-                            showErrors(data);
-                        }
-                    }
-                );
+        $.getJSON(
+            '../deleteParticipant',
+            {   'session_id':   sessionId,
+                'user_id':      parentElement.find('.user-id').val(),
+                'type_id':      element.find('.type-id').val()
+            },
+            function(data) {
+                if (data.success) {
+                    $('#tabs').tabs("option", "selected", -1);
+                    setParticipantDataForSession(data);
+                }
+                else {
+                    showErrors(data);
+                }
             }
-        });
+        );
     });
 });

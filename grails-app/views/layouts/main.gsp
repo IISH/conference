@@ -1,4 +1,4 @@
-<%@ page import="org.iisg.eca.domain.Setting;org.springframework.validation.FieldError" %>
+<%@ page import="java.text.SimpleDateFormat; org.iisg.eca.domain.Setting;org.springframework.validation.FieldError" %>
 <!doctype html>
 <!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
 <!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
@@ -92,7 +92,9 @@
         </div>
 
         <div id="footer" class="clear" role="contentinfo">
-            ${grailsApplication.config.grails.serverURL} - Last updated: ${Setting.findByProperty(Setting.LAST_UPDATED).value}
+            ${grailsApplication.config.grails.serverURL} -
+            <g:message code="default.last.updated" />:
+            <g:formatDate date="${new SimpleDateFormat("yy-MM-dd").parse(Setting.findByProperty(Setting.LAST_UPDATED).value)}" format="MMMMM yyyy" />
         </div>
 
         <div id="usermenu">
