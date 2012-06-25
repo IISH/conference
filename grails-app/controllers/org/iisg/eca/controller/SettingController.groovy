@@ -6,10 +6,10 @@ class SettingController {
     }
 
     def list() {
-        forward(controller: 'dynamicPage', action: 'get', params: params)
+        forward(controller: 'dynamicPage', action: 'dynamic', params: params)
     }
 
     def edit() {
-        forward(controller: 'dynamicPage', action: 'getAndPost', params: params)
+        forward(controller: 'dynamicPage', action: 'dynamic', params: params)
     }
 }

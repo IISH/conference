@@ -156,7 +156,16 @@ class DynamicPageResults {
     Object[] getArray(String domainClass) {
         results.findAll { it.class.simpleName == domainClass } as Object[]
     }
-    
+
+    /**
+     * If a record with the specified id cannot be found, null is returned
+     * This will return whether any null records were returned
+     * @return The results contain null records
+     */
+    boolean containsNullResults() {
+        results.contains(null)
+    }
+
     /**
      * Returns a model representation of the results
      * @return A map of the results, numbered with an index as key

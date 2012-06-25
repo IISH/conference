@@ -42,6 +42,12 @@ class EventDate extends DefaultDomain {
         sort            startDate: 'desc'
     }
 
+    static hibernateFilters = {
+        hideDeleted(condition: 'deleted = 0', default: true)
+        hideDisabled(condition: 'enabled = 1')
+        dateFilter(condition: '(date_id = :dateId OR date_id IS NULL)', types: 'long')
+    }
+
     static namedQueries = {
         sortByEventAndDate {
             event {

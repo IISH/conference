@@ -26,6 +26,12 @@ class UrlMappings {
             controller = 'event'
         }
 
+        // Creating an event date is separate as well, it does not exist yet
+        name createEventDate: "/eventDate/create/$id?" {
+            controller = 'eventDate'
+            action = 'create'
+        }
+
         // The index page of an event
         name eventIdx: "/$event/$date" {
             controller = 'event'

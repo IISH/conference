@@ -8,11 +8,11 @@ class EmailTemplateController {
     }
 
     def show() {
-        forward(controller: 'dynamicPage', action: 'get', params: params)
+        forward(controller: 'dynamicPage', action: 'dynamic', params: params)
     }
 
     def list() {
-        forward(controller: 'dynamicPage', action: 'get', params: params)
+        forward(controller: 'dynamicPage', action: 'dynamic', params: params)
     }
 
     def create() {

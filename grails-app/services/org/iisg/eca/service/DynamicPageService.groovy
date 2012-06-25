@@ -71,23 +71,13 @@ class DynamicPageService {
 
     /**
      * Returns a template of the dynamic page for the current request
-     * @param dynamicPage A dynamic page with the described elements
-     * @param params The parameters of the current request
-     * @return A template of the page with all the results
-     */
-    def getTemplate(DynamicPage dynamicPage, GrailsParameterMap params) {
-        getTemplate(dynamicPage, params, null)
-    }
-
-    /**
-     * Returns a template of the dynamic page for the current request
      * with the results of a particular element on the page
      * @param dynamicPage A dynamic page with the described elements
      * @param params The parameters of the current request
-     * @param results The result of a particular element on the page
+     * @param results The results to display
      * @return A template of the page with all the results
      */
-    def getTemplate(DynamicPage dynamicPage, GrailsParameterMap params, DynamicPageResults results) {
+    def getTemplate(DynamicPage dynamicPage, GrailsParameterMap params, Map<Integer, DynamicPageResults> results)  {
         // If there is no cache found in the database, create it now
         if (!dynamicPage.cache) {
             PageBuilder builder = new PageBuilder(dynamicPage.elements)
@@ -99,13 +89,7 @@ class DynamicPageService {
         Template tmpl = groovyPagesTemplateEngine.createTemplate(dynamicPage.cache, 'temp')
         StringWriter out = new StringWriter()
 
-        // Get all the results; overwrite the results of the element send along if present
-        Map<Integer, DynamicPageResults> allResults = dynamicPage.getResults(params)
-        if (results) {
-            allResults.put(params.int('eid'), results)
-        }
-
-        tmpl.make([page: dynamicPage, results: allResults]).writeTo(out)
+        tmpl.make([page: dynamicPage, results: results]).writeTo(out)
         out.toString()
     }
 

@@ -44,25 +44,27 @@ class EcaFilters {
          *  Lookup the event and event date for this request in the database
          *  If it is there, allow access and cache the event date information for this request
          */
-        eventDate(controller: '*', action: '*', controllerExclude: 'login|logout|user') {
+        eventDate(controller: '*', action: '*', controllerExclude: 'login|logout') {
             before = {
                 String eventCode = params.event?.replaceAll('-', ' ')
                 String dateCode = params.date?.replaceAll('-', ' ')
                 eventCode = eventCode ?: ""
                 dateCode = dateCode ?: ""
 
+                // Lookup the requested event and event date in the database
                 Event event = Event.findByCode(eventCode)
                 EventDate date = EventDate.findByEventAndYearCode(event, dateCode)
 
                 if (date) {
                     pageInformation.date = date
 
+                    // Enable Hibernate filters on the domain classes for this event date
                     grailsApplication.domainClasses.each { domainClass -> 
                         Class domain = domainClass.clazz
-                        if (EventDateDomain.class.isAssignableFrom(domain)) {
+                        if ((domainClass.name == "EventDate") || EventDateDomain.class.isAssignableFrom(domain)) {
                             domain.enableHibernateFilter('dateFilter').setParameter('dateId', date.id)
                         }
-                        else if (EventDomain.class.isAssignableFrom(domain)) {
+                        else if ((domainClass.name == "Event") || EventDomain.class.isAssignableFrom(domain)) {
                             domain.enableHibernateFilter('eventFilter').setParameter('eventId', date.event.id)  
                         }
                     }
@@ -70,8 +72,9 @@ class EcaFilters {
                     return true
                 }
 
-                // Some event actions are allowed to have no date set, but they are the only ones
-                return (params.controller == 'event')
+                // Event actions and user actions may be performed from outside a tenant
+                // Just like creating a new event date
+                return ((params.controller == 'event') || (params.controller == 'user') || ((params.controller == 'eventDate') && (params.action == 'create')))
             }
             afterView = { Exception e ->
                 pageInformation.removeDate()

@@ -56,11 +56,11 @@ class SessionController {
     }
 
     def list() {
-        forward(controller: 'dynamicPage', action: 'get')
+        forward(controller: 'dynamicPage', action: 'dynamic', params: params)
     }
 
     def create() {
-        forward(controller: 'dynamicPage', action: 'getAndPost')
+        forward(controller: 'dynamicPage', action: 'dynamic', params: params)
     }
 
     /**

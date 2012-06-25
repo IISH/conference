@@ -11,11 +11,11 @@ class RoomController {
     }
 
     def show() {
-        forward(controller: 'dynamicPage', action: 'get')
+        forward(controller: 'dynamicPage', action: 'dynamic', params: params)
     }
 
     def list() {
-        forward(controller: 'dynamicPage', action: 'get')
+        forward(controller: 'dynamicPage', action: 'dynamic', params: params)
     }
 
     def create() {

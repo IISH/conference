@@ -71,15 +71,15 @@ class EventController {
         [events: datesByEvent.keySet(), dates: datesByEvent]
     }
 
-    def show() {
-        forward(controller: 'dynamicPage', action: 'get', params: params)
+    def create() {
+        forward(controller: 'dynamicPage', action: 'dynamic', params: params)
     }
 
-    def create() {
-        forward(controller: 'dynamicPage', action: 'getAndPost', params: params)
+    def show() {
+        forward(controller: 'dynamicPage', action: 'dynamic', params: params)
     }
 
     def edit() {
-        forward(controller: 'dynamicPage', action: 'getAndPost', params: params)
+        forward(controller: 'dynamicPage', action: 'dynamic', params: params)
     }
 }
