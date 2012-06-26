@@ -115,8 +115,19 @@ class ParticipantController {
                         'department', 'email', 'address', 'city', 'country', 'phone', 'mobile', 'extraInfo']], "User")
 
                 if (!participant && params['add-to-date']?.equals('add')) {
-                    // This user is not a participant yet, but the user indicated he/she wants to make him/her one
-                    participant = new ParticipantDate(user: user, state: ParticipantState.get(0), feeState: FeeState.get(0))
+                    // Try to find out if this participant has been deleted before or is filtered for some other reason
+                    ParticipantDate.withoutHibernateFilters  {
+                        participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
+                    }
+
+                    // If we found the filtered participant, undo the deletion
+                    if (participant) {
+                        participant.deleted = false
+                    }
+                    else {
+                        // This user is not a participant yet, but the user indicated he/she wants to make him/her one
+                        participant = new ParticipantDate(user: user, state: ParticipantState.get(0), feeState: FeeState.get(0))
+                    }
 
                     participant.save(failOnError: true)
                     user.save(failOnError: true)

@@ -22,6 +22,7 @@ class Equipment extends EventDateDomain {
     static mapping = {
         table 'equipment'
         version false
+        sort code: 'asc'
 
         id          column: 'equipment_id'
         code        column: 'code'

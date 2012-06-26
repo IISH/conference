@@ -25,6 +25,7 @@ class Network extends EventDateDomain {
     static mapping = {
         table 'networks'
         version false
+        sort name: 'asc'
 
         id      column: 'network_id'
         date    column: 'date_id'
@@ -32,8 +33,8 @@ class Network extends EventDateDomain {
         comment column: 'comment',      type: 'text'
         url     column: 'url'
 
-        chairs      sort: 'isMainChair', order: 'desc', cascade: 'all-delete-orphan'
-        sessions    joinTable: 'session_in_network'
+        chairs                      sort: 'isMainChair', order: 'desc', cascade: 'all-delete-orphan'
+        sessions                    joinTable: 'session_in_network'
         participantVolunteering     cascade: 'all-delete-orphan'
     }
     

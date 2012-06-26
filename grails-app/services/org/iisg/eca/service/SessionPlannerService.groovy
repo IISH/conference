@@ -14,12 +14,13 @@ import org.iisg.eca.domain.RoomSessionDateTimeEquipment
  * Service responsible for session planning activities
  */
 class SessionPlannerService {
+
     /**
      * Finds out all possible combinations of equipment for the current event date
      * @return A set which contains a list of all possible equipment combinations
      */
     Set<List<Equipment>> getEquipmentCombinations() {
-        GroovyCollections.subsequences(Equipment.list(sort: 'code'))
+        GroovyCollections.subsequences(Equipment.list())
     }
 
     /**

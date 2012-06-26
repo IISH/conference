@@ -67,7 +67,7 @@
 
                         <li class="add">
                             <span class="ui-icon ui-icon-circle-plus"></span>
-                            <g:message code="default.add.label" args="[g.message(code: 'network.label')]" />
+                            <g:message code="default.add.label" args="[g.message(code: 'network.label').toLowerCase()]" />
                         </li>
 
                         <li class="hidden">
@@ -101,6 +101,7 @@
                                 <ul>
                                 <g:each in="${participant.types}" var="type">
                                     <li class="participant-type-value">
+                                        <input type="hidden" name="set-index" value="false" />
                                         <input type="hidden" name="type-id" class="type-id" value="${type.id}" />
                                         <span class="participant-type-val">${type}</span> <span class="ui-icon ui-icon-circle-minus"></span>
                                     </li>
@@ -122,6 +123,7 @@
 
                             <ul>
                                 <li class="participant-type-value">
+                                    <input type="hidden" name="set-index" value="false" />
                                     <input type="hidden" name="type-id" class="type-id" />
                                     <span class="participant-type-val"> </span> <span class="ui-icon ui-icon-circle-minus"></span>
                                 </li>

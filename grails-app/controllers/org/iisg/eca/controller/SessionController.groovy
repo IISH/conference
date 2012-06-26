@@ -2,52 +2,90 @@ package org.iisg.eca.controller
 
 import grails.converters.JSON
 
-import org.iisg.eca.domain.User
-import org.iisg.eca.domain.Session
-import org.iisg.eca.domain.ParticipantType
-import org.iisg.eca.domain.SessionParticipant
-import org.iisg.eca.domain.Paper
-import org.iisg.eca.domain.ParticipantDate
-import org.iisg.eca.domain.Setting
-import org.iisg.eca.domain.SessionDateTime
-import org.iisg.eca.domain.Room
-import org.iisg.eca.domain.Network
-import org.iisg.eca.domain.Equipment
-import org.iisg.eca.domain.SessionRoomDateTime
-import org.iisg.eca.domain.DynamicPage
 import org.iisg.eca.domain.Page
-import org.iisg.eca.dynamic.DynamicPageResults
+import org.iisg.eca.domain.User
+import org.iisg.eca.domain.Room
+import org.iisg.eca.domain.Paper
+import org.iisg.eca.domain.Setting
+import org.iisg.eca.domain.Network
+import org.iisg.eca.domain.Session
+import org.iisg.eca.domain.Equipment
+import org.iisg.eca.domain.DynamicPage
+import org.iisg.eca.domain.SessionDateTime
+import org.iisg.eca.domain.ParticipantType
+import org.iisg.eca.domain.ParticipantDate
+import org.iisg.eca.domain.SessionParticipant
+import org.iisg.eca.domain.SessionRoomDateTime
 
+import org.iisg.eca.dynamic.DataContainer
+import org.iisg.eca.dynamic.DynamicPageResults
+import org.iisg.eca.utils.ParticipantSessionInfo
+
+/**
+ * Controller responsible for handling requests on sessions
+ */
 class SessionController {
+    /**
+     * Includes information about this page, such as the current event date
+     */
     def pageInformation
+
+    /**
+     * The dynamic page service is responsible for dynamic page related actions
+     */
     def dynamicPageService
+
+    /**
+     * The session planner service is responsible for actions related to the planning of sessions
+     */
     def sessionPlannerService
+
+    /**
+     * Service taking care of participants and how they are added to a session
+     */
     def participantSessionService
 
+    /**
+     * Index action, redirects to the list action
+     */
     def index() {
         redirect(uri: eca.createLink(action: 'list', noBase: true), params: params)
     }
 
+    /**
+     * Shows all data on a particular session
+     */
     def show() {
+        // We need an id, check for the id
         if (!params.id) {
-            flash.message = message(code: 'default.no.id.message')
+            flash.message = g.message(code: 'default.no.id.message')
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
         }
 
         Session session = Session.findById(params.id)
+
+        // We also need a session to be able to show something
         if (!session) {
-            flash.message =  message(code: 'default.not.found.message', args: [message(code: 'session.label'), params.id])
+            flash.message = g.message(code: 'default.not.found.message', args: [g.message(code: 'session.label')])
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
         }
 
+        // If the user came to this page via the dynamic page listing all sessions, ask for the last results
+        // Otherwise just return all listed sessions in its default order
         DynamicPage dynamicPage = dynamicPageService.getDynamicPage(Page.findByControllerAndAction(params.controller, 'list'))
-        DynamicPageResults results = new DynamicPageResults(dynamicPage.elements.get(0), params)
+        DynamicPageResults results = new DynamicPageResults((DataContainer) dynamicPage.elements.get(0), params)
+
+        // Now we have the results, but we're only interested in the ids
+        // (Actually, just the prev/next ids for the navigation section)
         List<Long> sessionIds = results.get()*.id
 
-        def participants = participantSessionService.getParticipantsForSession(session)
-        def equipment = participantSessionService.getEquipmentForSession(session)
+        // Let the participantSessionService come up with all participants and equipment for this session
+        List<ParticipantSessionInfo> participants = participantSessionService.getParticipantsForSession(session)
+        List<Object[]> equipment = participantSessionService.getEquipmentForSession(session)
+
+        // Show the results to the user
         render(view: "show", model: [   eventSession:   session,
                                         networks:       Network.withCriteria { sessions { eq('id', session.id) } },
                                         participants:   participants,
@@ -55,19 +93,26 @@ class SessionController {
                                         sessionIds:     sessionIds])
     }
 
+    /**
+     * Shows a list of all sessions for the current event date
+     */
     def list() {
         forward(controller: 'dynamicPage', action: 'dynamic', params: params)
     }
 
+    /**
+     * Allows the user to create a new session for the current event date
+     */
     def create() {
         forward(controller: 'dynamicPage', action: 'dynamic', params: params)
     }
 
     /**
-     * Shows the edit page, which allows users to add participants to a session
+     * Shows the edit page, which furthermore allows users to add participants to a session
      * with a specific participant type (and paper)
      */
     def edit() {
+        // We need an id, check for the id
         if (!params.id) {
             flash.message = message(code: 'default.no.id.message')
             redirect(uri: eca.createLink(previous: true, noBase: true))
@@ -75,35 +120,47 @@ class SessionController {
         }
         
         Session session = Session.findById(params.id)
+
+        // We also need a session to be able to show something
         if (!session) {
             flash.message =  message(code: 'default.not.found.message', args: [message(code: 'session.label'), params.id])
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
         }
 
+        // The 'save' button was clicked, save all data
         if (request.post) {
+            // Save all session related data
             bindData(session, params, [include: ["code", "name", "comment", "enabeled"]], "Session")
 
+            // Remove all networks from the session (one by one, cause we don't want to delete the networks themselves)
             List<Network> networks = []
             networks += session.networks
             networks.each { it.removeFromSessions(session) }
             session.save(flush: true)
 
+            // Add all the networks send along to the session
             int i = 0
             while (params["Session_${i}"]) {
-                session.addToNetworks(Network.findById(params.long("Session_${i}.networks.id")))
+                if (params["Session_${i}.networks.id"]?.isLong()) {
+                    session.addToNetworks(Network.findById(params.long("Session_${i}.networks.id")))
+                }
                 i++
             }
 
+            // Save the session and redirect to the previous page if everything is ok
             if (session.save(flush: true)) {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'session.label')])
-                redirect(uri: eca.createLink(action: 'list', noBase: true))
+                redirect(uri: eca.createLink(previous: true, noBase: true))
                 return
             }
         }
 
-        def participants = participantSessionService.getParticipantsForSession(session)
-        def equipment = participantSessionService.getEquipmentForSession(session)
+        // Let the participantSessionService come up with all participants and equipment for this session
+        List<ParticipantSessionInfo> participants = participantSessionService.getParticipantsForSession(session)
+        List<Object[]> equipment = participantSessionService.getEquipmentForSession(session)
+
+        // Show the results to the user
         render(view: "form", model: [   eventSession:   session,
                                         types:          ParticipantType.list(),
                                         participants:   participants,
@@ -111,11 +168,16 @@ class SessionController {
                                         networks:       Network.list()])
     }
 
+    /**
+     * Removes the session from the current event date
+     */
     def delete() {
+        // Of course we need an id of the session
         if (params.id) {
             Session session = Session.findById(params.id)
             session?.softDelete()
 
+            // Try to remove the session, send back a success or failure message
             if (session?.save(flush: true)) {
                 flash.message =  message(code: 'default.deleted.message', args: [message(code: 'session.label')])
             }
@@ -131,20 +193,9 @@ class SessionController {
     }
 
     /**
-     * Shows tha plan sessions page, which allows one to plan sessions at a specific timeslot
+     * Shows tha plan sessions page, which allows one to plan sessions at a specific time slot
      */
-    def planDrag() {
-        [   equipment:              sessionPlannerService.equipmentCombinations,
-            schedule:               sessionPlannerService.schedule,
-            sessionsUnscheduled:    sessionPlannerService.unscheduledSessions,
-            dateTimes:              SessionDateTime.list(),
-            rooms:                  Room.list()]
-    }
-
-    /**
-     * Shows tha plan sessions page, which allows one to plan sessions at a specific timeslot
-     */
-    def planClick() {
+    def plan() {
         [   equipment:              sessionPlannerService.equipmentCombinations,
             schedule:               sessionPlannerService.schedule,
             sessionsUnscheduled:    sessionPlannerService.unscheduledSessions,
@@ -157,16 +208,19 @@ class SessionController {
      * (AJAX call)
      */
     def addParticipant() {
+        // If this is an AJAX call, continue
         if (request.xhr) {
             Map responseMap = null
 
-            if (params.session_id && params.participant_id && params.type_id) {
+            // If we have a session id, participant id and type id, try to find the records for these ids
+            if (params.session_id?.isLong() && params.participant_id?.isLong() && params.type_id?.isLong()) {
                 Session session = Session.findById(params.session_id)
                 User user = User.get(params.participant_id)
-                ParticipantDate participant = ParticipantDate.findWhere(user: user, date: pageInformation.date)
+                ParticipantDate participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
                 ParticipantType type = ParticipantType.findById(params.type_id)
                 Paper paper = null
 
+                // If we have found a session, user, participant and type, we can add the user to the session
                 if (session && user && participant && type) {
                     // Find out if the participant also needs to add a paper to the session
                     if (type.withPaper) {
@@ -176,7 +230,7 @@ class SessionController {
                             paper = Paper.findById(params.paper_id)
                         }
                         else {
-                            paper = user.papers.find { it.date.id == pageInformation.date.id }
+                            paper = Paper.findByUser(user)
                         }
 
                         // No paper found, then we can't add this participant to the session
@@ -189,17 +243,20 @@ class SessionController {
 
                     // Check if the participant with this type is blacklisted for this session
                     if (!participantSessionService.getBlacklistForTypeInSession(session, type).contains(user)) {
+                        // Everything is ok thus far, add the participant to the session
                         SessionParticipant sessionParticipant = new SessionParticipant(user: user, type: type)
                         session.addToSessionParticipants(sessionParticipant)
 
+                        // If we have a paper, make sure to add it to the session as well
                         if (paper) {
                             session.addToPapers(paper)
                         }
 
+                        // Save the session
                         if (session.save(flush: true)) {
                             // Everything is fine, return all updated data to the client
-                            def participants = participantSessionService.getParticipantsForSession(session)
-                            def equipment = participantSessionService.getEquipmentForSession(session)
+                            List<ParticipantSessionInfo> participants = participantSessionService.getParticipantsForSession(session)
+                            List<Object[]> equipment = participantSessionService.getEquipmentForSession(session)
                             responseMap = [success: true, participants: participants.collect {
                                 [   id:             it.participant.user.id,
                                     participant:    it.participant.user.toString(),
@@ -234,39 +291,53 @@ class SessionController {
      * (AJAX call)
      */
     def deleteParticipant() {
+        // If this is an AJAX call, continue
         if (request.xhr) {
             Map responseMap = null
-            User user = User.get(params.user_id)
-            ParticipantType type = ParticipantType.findById(params.type_id)
-            Session session = Session.findById(params.session_id)
-            SessionParticipant sessionParticipant = SessionParticipant.findWhere(user: user, type: type, session: session)
 
-            if (sessionParticipant) {
-                sessionParticipant.delete()
+             // If we have a session id, participant id and type id, try to find the records for these ids
+            if (params.session_id?.isLong() && params.user_id?.isLong() && params.type_id?.isLong()) {
+                User user = User.get(params.user_id)
+                ParticipantType type = ParticipantType.findById(params.type_id)
+                Session session = Session.findById(params.session_id)
 
-                if (type.withPaper) {
-                    session.papers.find { it.user.id == user.id }?.session = null
-                }
+                // Try to find the session participant
+                SessionParticipant sessionParticipant = SessionParticipant.findWhere(user: user, type: type, session: session)
 
-                if (session.save(flush: true)) {
-                    def participants = participantSessionService.getParticipantsForSession(session)
-                    def equipment = participantSessionService.getEquipmentForSession(session)
-                    responseMap = [success: true, participants: participants.collect {
-                        [   id:             it.participant.user.id,
-                            participant:    it.participant.user.toString(),
-                            state:          it.participant.state.toString(),
-                            types:          it.types.collect { pType ->
-                                                [id: pType.id, type:  pType.toString()]
-                                            },
-                            paper:          (it.paper) ? "${g.message(code: 'paper.label')}: ${it.paper?.toString()}" : ""]
-                    }, equipment: equipment]
+                // If found, delete it
+                if (sessionParticipant) {
+                    sessionParticipant.delete()
+
+                    // Make sure to remove the paper from the session as well
+                    if (type.withPaper) {
+                        Paper.findBySession(session).find { it.user.id == user.id }?.session = null
+                    }
+
+                    // Save the session
+                    if (session.save(flush: true)) {
+                        // Everything is fine, return all updated data to the client
+                        List<ParticipantSessionInfo> participants = participantSessionService.getParticipantsForSession(session)
+                        List<Object[]> equipment = participantSessionService.getEquipmentForSession(session)
+                        responseMap = [success: true, participants: participants.collect {
+                            [   id:             it.participant.user.id,
+                                participant:    it.participant.user.toString(),
+                                state:          it.participant.state.toString(),
+                                types:          it.types.collect { pType ->
+                                                    [id: pType.id, type:  pType.toString()]
+                                                },
+                                paper:          (it.paper) ? "${g.message(code: 'paper.label')}: ${it.paper?.toString()}" : ""]
+                        }, equipment: equipment]
+                    }
+                    else {
+                        responseMap = [success: false, message: session.errors.allErrors.collect { g.message(error: it) }]
+                    }
                 }
                 else {
-                    responseMap = [success: false, message: session.errors.allErrors.collect { g.message(error: it) }]
+                    responseMap = [success: false, message: g.message(code: 'default.not.found.message', args: [g.message(code: 'participantDate.label')])]
                 }
             }
             else {
-                responseMap = [success: false, message: g.message(code: 'default.not.found.message', args: [g.message(code: 'participantDate.label')])]
+                responseMap = [success:  false, message: g.message(code: 'default.not.allowed.message')]
             }
             
             render responseMap as JSON
@@ -278,8 +349,12 @@ class SessionController {
      * (AJAX call)
      */
     def participants() {
+        // If this is an AJAX call, continue
         if (request.xhr) {
+            // Let the participantSessionService come up with all the participants for the current event date
             List<User> participants = participantSessionService.allParticipants
+
+            // Return all participants and their paper, which are still not added to a session
             render participants.collect { user ->
                 def papers = Paper.findAllByUserAndSessionIsNull(user)
                 [label: "${user.firstName} ${user.lastName}", value: user.id, papers: papers.collect { [label: it.title, value: it.id] }]
@@ -292,9 +367,12 @@ class SessionController {
      * (AJAX call)
      */
     def participantsWithType() {
-        if (request.xhr && params.type_id && params.session_id) {
+        // If this is an AJAX call with a type id and session id, continue
+        if (request.xhr && params.type_id?.isLong() && params.session_id?.isLong()) {
             ParticipantType selectedType = ParticipantType.findById(params.long('type_id'))
             Session session = Session.findById(params.long('session_id'))
+
+            // Return the ids of all blacklisted participants for this type in this session
             render participantSessionService.getBlacklistForTypeInSession(session, selectedType).collect { it.id } as JSON
         }
     }
@@ -304,42 +382,59 @@ class SessionController {
      * (AJAX call)
      */
     def possibilities() {
-        if (request.xhr && params.session_id) {
+        // If this is an AJAX call with a session id, continue
+        if (request.xhr && params.session_id?.isLong()) {
             Map possibilitiesResponse = [:]
             Session session = Session.findById(params.long('session_id'))
 
+            // Collect all the equipment for this session
             List<Equipment> equipment = sessionPlannerService.getEquipment(session)
             possibilitiesResponse.put('equipment', equipment.collect { it.id })
 
+            // Collect all date/times of sessions with the same participants
             List<Session> sessions = sessionPlannerService.getSessionsWithSameParticipants(session)
             List<Long> dateTimeIds = sessions.collect { SessionRoomDateTime.findBySession(it)?.sessionDateTime?.id }
             dateTimeIds.addAll(sessionPlannerService.getTimesParticipantsNotPresent(session)*.id)
-            dateTimeIds.remove(null)
 
+            // Make sure null values are removed
+            dateTimeIds.remove(null)
             possibilitiesResponse.put('date-times', dateTimeIds.unique())
 
             render possibilitiesResponse as JSON
         }
     }
 
+    /**
+     * Plans a session in a specific room at a specific time slot
+     * (AJAX call)
+     */
     def planSession() {
-        if (request.xhr && params.session_id && params.room_id && params.date_time_id) {
+        // If this is an AJAX call with session id, room id and date/time id, continue
+        if (request.xhr && params.session_id?.isLong() && params.room_id?.isLong() && params.date_time_id?.isLong()) {
             Map possibilitiesResponse = null
+
+            // Try to find all records for these ids
             Session session = Session.findById(params.long('session_id'))
             Room room = Room.findById(params.long('room_id'))
             SessionDateTime sessionDateTime = SessionDateTime.findById(params.long('date_time_id'))
 
+            // If found, try to plan the session
             if (session && room && sessionDateTime) {
                 List<SessionRoomDateTime> sessionRoomDateTimes = SessionRoomDateTime.findAllByRoomAndSessionDateTime(room, sessionDateTime)
+
+                // Something is already planned at that time slot, un plan it.
                 if (sessionRoomDateTimes && !sessionRoomDateTimes.isEmpty()) {
                     sessionRoomDateTimes.get(0).delete(flush: true)
                 }
 
                 SessionRoomDateTime sessionRoomDateTime = SessionRoomDateTime.findBySession(session)
+
+                // Session is already planned somewhere, un plan it
                 if (sessionRoomDateTime) {
                     sessionRoomDateTime.delete(flush: true)
                 }
 
+                // Now, we can plan the session at the given time slot
                 sessionRoomDateTime = new SessionRoomDateTime(session: session, room: room, sessionDateTime: sessionDateTime)
                 possibilitiesResponse = [success: (boolean) sessionRoomDateTime.save(flush: true)]
             }
@@ -352,11 +447,17 @@ class SessionController {
         }
     }
 
+    /**
+     * Un plan an session
+     * (AJAX call)
+     */
     def returnSession() {
-        if (request.xhr && params.session_id) {
+        // If this is an AJAX call with session id, continue
+        if (request.xhr && params.session_id?.isLong()) {
             Session session = Session.findById(params.long('session_id'))
             SessionRoomDateTime sessionRoomDateTime = SessionRoomDateTime.findBySession(session)
 
+            // Un plan the session
             if (sessionRoomDateTime) {
                 sessionRoomDateTime.delete(flush: true)
             }
@@ -366,13 +467,20 @@ class SessionController {
         }
     }
 
+    /**
+     * Return all information about the session in JSON format
+     * (AJAX call)
+     */
     def sessionInfo() {
-        if (request.xhr && params.session_id) {
+        // If there is an AJAX call with session id, continue
+        if (request.xhr && params.session_id?.isLong()) {
             Map possibilitiesResponse = [:]
             Session session = Session.findById(params.long('session_id'))
-            def participants = participantSessionService.getParticipantsForSession(session)
 
+            // If the session is found, get all the info about the session
             if (session) {
+                List<ParticipantSessionInfo> participants = participantSessionService.getParticipantsForSession(session)
+
                 possibilitiesResponse.put('success',        true)
                 possibilitiesResponse.put('code',           session.code)
                 possibilitiesResponse.put('name',           session.name)
@@ -393,11 +501,17 @@ class SessionController {
         }
     }
 
+    /**
+     * Return all information about the room in JSON format
+     * (AJAX call)
+     */
     def roomInfo() {
-        if (request.xhr && params.room_id) {
+        // If there is an AJAX call with room id, continue
+        if (request.xhr && params.room_id?.isLong()) {
             Map possibilitiesResponse = [:]
             Room room = Room.findById(params.long('room_id'))
 
+            // If the room is found, get all the info about the room
             if (room) {
                 possibilitiesResponse.put('success', true)
                 possibilitiesResponse.put('number', room.roomNumber)
