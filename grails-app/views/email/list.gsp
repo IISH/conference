@@ -6,7 +6,7 @@
 	</head>
 	<body>
         <ol id="email-templates">
-        <g:each in="${EmailTemplate.findAllByShowInBackend(true)}" var="emailTemplate">
+        <g:each in="${templates}" var="emailTemplate">
             <li>
                 <eca:ifUserHasAccess controller="email" action="send">
                     <eca:link action="send" id="${emailTemplate.id}" params="${[type: emailTemplate.action]}">

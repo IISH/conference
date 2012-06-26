@@ -14,7 +14,7 @@ class CreateEmailJob {
     def emailService
 
     /**
-     * Make sure the job is only executed once, when explicitly triggered
+     * Make sure the job is only executed once, only when explicitly triggered
      */
     static triggers = {
         simple name: 'CreateEmail', group: 'createEmailGroup', repeatInterval: 1000, repeatCount: 0
@@ -25,12 +25,15 @@ class CreateEmailJob {
      * @param context The context containing a map with all participants and the template needed
      */
     def execute(context) {
+        // Load the participants to send to and template to use
         List<ParticipantDate> participants = context.mergedJobDataMap.get('participants')
         EmailTemplate template = context.mergedJobDataMap.get('template')
 
-        if (participants) {
+        // If they are correctly send, we can start creating the emails
+        if (participants && template) {
             try {
                 for (ParticipantDate participant : participants) {
+                    // Let the emailService create all the emails
                     SentEmail email = emailService.createEmail(participant.user, template, participant.date)
                     email.save()
                 }

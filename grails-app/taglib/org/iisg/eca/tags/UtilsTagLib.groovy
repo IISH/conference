@@ -347,8 +347,6 @@ class UtilsTagLib {
             if (page.hasAccess()) {
                 if (page.controller && page.action) {
                     builder.dd {
-                        def a = 1
-
                         if (page.controller.equals('eventDate') && page.action.equals('show')) {
                             builder.mkp.yieldUnescaped(eca.link(controller: page.controller, action: page.action, id: date?.id, page.toString()))
                         }

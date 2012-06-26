@@ -13,6 +13,9 @@ import javax.servlet.http.HttpServletResponse
  * Service responsible for exporting the results from the database to another format
  */
 class ExportService {
+    /**
+     * Information about the page, like the page name
+     */
     def pageInformation
 
     private static final String XML = "xml"
@@ -31,6 +34,7 @@ class ExportService {
     void getPage(format, response, columns, results, separator=',', fileName=pageInformation.page.toString()) {
         Export export = null
 
+        // To which format should we export the data?
         switch (format.toLowerCase()) {
             case XML:
                 export = new XmlExport(columns, results, fileName)
