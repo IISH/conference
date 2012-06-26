@@ -598,6 +598,7 @@ span.remove-item {
 
 #papers-tab .column {
     border-bottom: 1px solid #225496;
+    margin-top: 20px;
 }
 
 #participant-present {

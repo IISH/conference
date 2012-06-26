@@ -58,7 +58,7 @@
         </div>
         <div id="participants">
             <div class="alfabet">
-                <g:each in="${alfabet}" var="character">
+                <g:each in="${alphabet}" var="character">
                     <a href="#${character.toLowerCase()}">${character}</a>
                 </g:each>
             </div>
@@ -73,7 +73,7 @@
                   </g:elseif>
                 </ol>   
               
-                <g:each in="${alfabet}" var="character">
+                <g:each in="${alphabet}" var="character">
                     <ol>
                         <li class="char"><a name="${character.toLowerCase()}">${character}</a></li>
                         <g:each in="${participants.get(character)}" var="user">
@@ -92,7 +92,7 @@
             </div>
 
             <div class="alfabet">
-                <g:each in="${alfabet}" var="character">
+                <g:each in="${alphabet}" var="character">
                     <a href="#${character.toLowerCase()}">${character}</a>
                 </g:each>
             </div>

@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    $('.paper.ui-icon-circle-minus').click(function(e) {
+    $('.paper.ui-icon-circle-minus').bind("removed-item", function(e) {
         var paperId = $(this).parents('.column').children('input[type=hidden]:first').val();
         $.getJSON('../removePaper', {'paper-id': paperId});
 

@@ -78,7 +78,7 @@ $(document).ready(function() {
         );
     });
 
-    $('.remove-session').live("click", function(e) {
+    $('.remove-session').bind("removed-item", function(e) {
         $('.errors').hide();
         $('.message').hide();
 

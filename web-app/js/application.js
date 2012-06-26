@@ -84,6 +84,11 @@ var createNewItem = function(item, lastItem) {
 }
 
 var removeAnItem = function(toBeRemoved, classToStop) {
+    var setIndex = toBeRemoved.find('input[name=set-index]');
+    if ((setIndex.length > 0) && (setIndex.val() === 'false')) {
+        return;
+    }
+
     var next = toBeRemoved.next();
     while (!next.hasClass(classToStop)) {
         var elements = next.find('input, select')
@@ -177,26 +182,28 @@ $(document).ready(function() {
         newItem.insertBefore(item);
     });
 
-    $('fieldset li span.ui-icon-circle-minus').click(function(e) {
+    $('fieldset li span.ui-icon-circle-minus').live('click', function(e) {
+        var thisItem = $(this);
+        var item = $(this).parents('li');
+
         $.getJSON('../../message/index', {code: 'default.button.delete.confirm.message'}, function(data) {
             var deleted = confirm(data.message);
             if (deleted) {
-                removeAnItem($(this).parents('.column'), 'add');
-            }
-            else {
-                e.stopImmediatePropagation();
+                removeAnItem(item, 'add');
+                thisItem.trigger('removed-item');
             }
         });
     });
 
-    $('.columns.copy span.ui-icon-circle-minus').click(function(e) {
+    $('.columns.copy span.ui-icon-circle-minus').live('click', function(e) {
+        var thisItem = $(this);
+        var item = $(this).parents('.column');
+
         $.getJSON('../../message/index', {code: 'default.button.delete.confirm.message'}, function(data) {
             var deleted = confirm(data.message);
             if (deleted) {
-                removeAnItem($(this).parents('.column'), 'hidden');
-            }
-            else {
-                e.stopImmediatePropagation();
+                removeAnItem(item, 'hidden');
+                thisItem.trigger('removed-item');
             }
         });
     });

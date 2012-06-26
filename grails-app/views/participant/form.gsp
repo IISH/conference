@@ -61,7 +61,7 @@
                                 <label class="property-label">
                                     <g:message code="title.label" />
                                 </label>
-                                <g:select class="property-value" from="${Title.list()}" name="User.title" optionKey="title" optionValue="title" value="${user.title}" noSelection="${[null:' ']}" />
+                                <g:select class="property-value" from="${Title.list()}" name="User.title" optionKey="title" optionValue="title" value="${user.title}" noSelection="${['':' ']}" />
                             </div>
                             <div class="${hasErrors(bean: user, field: 'firstName', 'error')} required">
                                 <label class="property-label">
@@ -81,7 +81,7 @@
                                 <label class="property-label">
                                     <g:message code="user.gender.label" />
                                 </label>
-                                <g:select class="property-value" from="['M','F']" name="User.gender" value="${user.gender?.toString()}" noSelection="${[null:' ']}" />
+                                <g:select class="property-value" from="['M','F']" name="User.gender" value="${user.gender?.toString()}" noSelection="${['': ' ']}" />
                             </div>
                             <div class="${hasErrors(bean: user, field: 'organisation', 'error')} required">
                                 <label class="property-label">
@@ -120,7 +120,7 @@
                                     <g:message code="user.country.label" />
                                     <span class="required-indicator">*</span>
                                 </label>
-                                <g:select class="property-value" name="User.country.id" from="${Country.list(sort: 'nameEnglish')}" required="required" optionKey="id" optionValue="nameEnglish" value="${user.country.id}" noSelection="${[null:' ']}" />
+                                <g:select class="property-value" name="User.country.id" from="${Country.list(sort: 'nameEnglish')}" required="required" optionKey="id" value="${user.country?.id}" noSelection="${[null:' ']}" />
                             </div>
                             <div class="${hasErrors(bean: user, field: 'phone', 'error')}">
                                 <label class="property-label">

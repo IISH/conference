@@ -91,7 +91,7 @@ $(document).ready(function() {
         );
     });
 
-    $('.session-participants .ui-icon-circle-minus').live('click', function(e) {
+    $('.session-participants .ui-icon-circle-minus').bind("removed-item", function(e) {
         $('.errors').hide();
         $('.message').hide();
 

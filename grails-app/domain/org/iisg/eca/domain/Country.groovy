@@ -34,6 +34,7 @@ class Country {
 
     @Override
     String toString() {
+        // Find out the currently selected language by the user and return the country name in that language
         switch (LocaleContextHolder.locale.language) {
             case 'nl':
                 nameDutch

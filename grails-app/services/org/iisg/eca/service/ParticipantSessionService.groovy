@@ -3,12 +3,13 @@ package org.iisg.eca.service
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Paper
 import org.iisg.eca.domain.Session
-import org.iisg.eca.domain.ParticipantType
-import org.iisg.eca.domain.ParticipantTypeRule
-import org.iisg.eca.domain.SessionParticipant
-import org.iisg.eca.utils.ParticipantSessionInfo
-import org.iisg.eca.domain.ParticipantDate
 import org.iisg.eca.domain.Network
+import org.iisg.eca.domain.ParticipantType
+import org.iisg.eca.domain.ParticipantDate
+import org.iisg.eca.domain.SessionParticipant
+import org.iisg.eca.domain.ParticipantTypeRule
+
+import org.iisg.eca.utils.ParticipantSessionInfo
 
 /**
  * Service responsible for requesting participant data in order to allow them in a session
@@ -21,11 +22,12 @@ class ParticipantSessionService {
 
     /**
      * Returns a list of all participants for the current event date
-     * @return A list of participants
+     * @return A list of users who are participants in the current event date
      */
     List<User> getAllParticipants() {
         User.withCriteria {
             participantDates {
+                // Make sure the data is filtered here
                 eq('date.id', pageInformation.date.id)
                 eq('deleted', false)
             }
@@ -36,11 +38,12 @@ class ParticipantSessionService {
      * Returns all participants of the current event date and session with the given type
      * @param participantType The participant type
      * @param session The session to look for these participants
-     * @return A list of participants
+     * @return A list of users
      */
     List<User> getParticipantsOfType(ParticipantType type, Session session) {
         User.withCriteria {
             participantDates {
+                // Make sure the data is filtered here
                 eq('date.id', pageInformation.date.id)
                 eq('deleted', false)
             }
@@ -48,6 +51,8 @@ class ParticipantSessionService {
             sessionParticipants {
                 eq('session.id', session.id)
                 eq('type.id', type.id)
+
+                // Currently hard deleted, but just in case
                 eq('deleted', false)
             }
         }
@@ -55,7 +60,7 @@ class ParticipantSessionService {
 
     /**
      * Returns all participants with papers of the current event date which are still not assigned to a session
-     * @return A list of participants
+     * @return A list of users
      */
     List<User> getParticipantsWithoutOpenPapers() {
         User.executeQuery('''
@@ -70,13 +75,15 @@ class ParticipantSessionService {
     }
 
     /**
-     * Returns a set with information about every participant added to the given session
+     * Returns a list with information about every participant added to the given session
      * @param session The session in question
-     * @return A set of <code>ParticipantSessionInfo</code> objects
+     * @return A list of <code>ParticipantSessionInfo</code> objects
      */
     List<ParticipantSessionInfo> getParticipantsForSession(Session session) {
         List<ParticipantSessionInfo> sessionInformation = []
 
+        // Query the database for the information,
+        // then transform this into a list of <code>ParticipantSessionInfo</code> objects
         SessionParticipant.executeQuery('''
             SELECT sp.user, sp.type
             FROM SessionParticipant AS sp
@@ -84,13 +91,17 @@ class ParticipantSessionService {
             WHERE sp.session.id = :sessionId
             ORDER BY t.importance DESC
         ''', [sessionId: session.id]).each { sessionParticipant ->
+
+            // See if this user is already in the list somewhere, if so update that one with new information
             ParticipantSessionInfo sessionInfo = sessionInformation.find { it.participant?.user?.id == sessionParticipant[0]?.id }
 
+            // This user is not in the list already, so create a new <code>ParticipantSessionInfo</code> object for this user
             if (!sessionInfo) {
                 sessionInfo = new ParticipantSessionInfo(session, ParticipantDate.findByUserAndDate(sessionParticipant[0], pageInformation.date))
                 sessionInformation.add(sessionInfo)
             }
 
+            // Update the sessionInfo object with the new participant type and paper information
             sessionInfo.addType(sessionParticipant[1])
             sessionInfo.paper = Paper.findAllBySession(session).find { it.user?.id == sessionParticipant[0].id }
         }
@@ -102,11 +113,14 @@ class ParticipantSessionService {
      * Returns a map with information about every participant added to the network
      * The participant information is accessible by the sessions belonging to the network
      * @param network The network in question
-     * @return A set of <code>ParticipantSessionInfo</code> objects
+     * @return A map containing lists with <code>ParticipantSessionInfo</code> objects
+     * for every session added to the network
      */
-    Map<Session, ParticipantSessionInfo> getParticipantsForNetwork(Network network) {
+    Map<Session, List<ParticipantSessionInfo>> getParticipantsForNetwork(Network network) {
         Map sessions = [:]
 
+        // Get all sessions for this network from the database and add this session to the map,
+        // including the participant information for that session
         Session.executeQuery('''
             SELECT s
             FROM Session AS s
@@ -129,8 +143,7 @@ class ParticipantSessionService {
     Map<ParticipantDate, List<Paper>> getParticipantsNotInNetwork(Network network) {
         Map<ParticipantDate, List<Paper>> papersNotScheduled = [:]
 
-        // TODO Think what should happen in the future if participants have multiple papers, one paper could be
-        // assigned to a session but the other not, should the participant be shown in the list?
+        // Query the database for papers not scheduled yet in this network, though proposed
         ParticipantDate.executeQuery('''
             SELECT pd, p
             FROM ParticipantDate AS pd
@@ -140,7 +153,11 @@ class ParticipantSessionService {
             AND p.session IS NULL
             AND pd.state.id = 2
         ''', [networkId: network.id]).each { result ->
+
+            // See if the participant is already in the map, if so, get it, otherwise create a new one
             List<Paper> papers = papersNotScheduled.get(result[0], new ArrayList<Paper>())
+
+            // Add the paper to the papers of the participant
             papers.add(result[1])
         }
 

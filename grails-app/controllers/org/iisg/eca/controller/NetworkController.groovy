@@ -1,18 +1,32 @@
 package org.iisg.eca.controller
 
+import grails.converters.JSON
+
 import org.iisg.eca.domain.Network
 import org.iisg.eca.domain.Session
-import grails.converters.JSON
 import org.iisg.eca.domain.NetworkChair
 
+/**
+ * Controller responsible for handling requests on networks
+ */
 class NetworkController {
+    /**
+     * Service taking care of participants and how they are added to a session
+     */
     def participantSessionService
 
+    /**
+     * Index action, redirects to the list action
+     */
     def index() {
         redirect(uri: eca.createLink(action: 'list', noBase: true), params: params)
     }
 
+    /**
+     * Shows all data on a particular network
+     */
     def show() {
+        // We need an id, check for the id
         if (!params.id) {
             flash.message = message(code: 'default.no.id.message')
             redirect(uri: eca.createLink(previous: true, noBase: true))
@@ -20,26 +34,37 @@ class NetworkController {
         }
 
         Network network = Network.findById(params.id)
+
+        // We also need a network to be able to show something
         if (!network) {
             flash.message =  message(code: 'default.not.found.message', args: [message(code: 'network.label'), network.id])
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
         }
 
-        if (request.get) {
-            render(view: "show", model: [network: network, sessions: participantSessionService.getParticipantsForNetwork(network)])
-        }
+        // Show all network related information
+        render(view: "show", model: [network: network, sessions: participantSessionService.getParticipantsForNetwork(network)])
     }
 
+    /**
+     * Shows a list of all networks for the current event date
+     */
     def list() {
         forward(controller: 'dynamicPage', action: 'dynamic', params: params)
     }
 
+    /**
+     * Allows the user to create a new network for the current event date
+     */
     def create() {
         forward(controller: 'dynamicPage', action: 'dynamic', params: params)
     }
 
+    /**
+     * Allows the user to make changes to the network
+     */
     def edit() {
+        // We need an id, check for the id
         if (!params.id) {
             flash.message = message(code: 'default.no.id.message')
             redirect(uri: eca.createLink(previous: true, noBase: true))
@@ -47,45 +72,56 @@ class NetworkController {
         }
 
         Network network = Network.findById(params.id)
+
+        // We also need a network to be able to show something
         if (!network) {
             flash.message =  message(code: 'default.not.found.message', args: [message(code: 'network.label')])
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
         }
 
-        if (request.get) {
-            render(view: "edit", model: [network: network, sessions: participantSessionService.getParticipantsForNetwork(network)])
-        }
-        else if (request.post) {
+        // The 'save' button was clicked, save all data
+        if (request.post) {
+            // Save all network related data
             bindData(network, params, [include: ["name", "comment", "url", "showOnline", "showInternal", "enabeled"]], "Network")
 
+            // Remove all chairs from the network and save all new information
             int i = 0
             network.chairs.clear()
             network.save(flush: true)
             while (params["NetworkChair_${i}"]) {
                 NetworkChair chair = new NetworkChair()
                 bindData(chair, params, [include: ['chair', 'isMainChair']], "NetworkChair_${i}")
+
+                // A chair should only be added to a network once
                 if (!network.chairs.find { it.chair.id == chair.chair.id }) {
                     network.addToChairs(chair)
                 }
                 i++
             }
 
+            // Save the network and redirect to the previous page if everything is ok
             if (network.save()) {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'network.label')])
-                redirect(uri: eca.createLink(action: 'list', noBase: true))
+                redirect(uri: eca.createLink(previous: true, noBase: true))
                 return
             }
-
-            render(view: "edit", model: [network: network, sessions: participantSessionService.getParticipantsForNetwork(network)])
         }
+
+        // Show all network related information
+        render(view: "edit", model: [network: network, sessions: participantSessionService.getParticipantsForNetwork(network)])
     }
 
+    /**
+     * Removes the network from the current event date
+     */
     def delete() {
+        // Of course we need an id of the network
         if (params.id) {
             Network network = Network.findById(params.id)
             network?.softDelete()
 
+            // Try to remove the network, send back a success or failure message
             if (network?.save(flush: true)) {
                 flash.message =  message(code: 'default.deleted.message', args: [message(code: 'network.label')])
             }
@@ -105,10 +141,12 @@ class NetworkController {
      * (AJAX call)
      */
     def participantsNotScheduled() {
-        if (request.xhr && params.network_id) {
+        // If this is an AJAX call and includes a network id, continue
+        if (request.xhr && params.network_id?.isLong()) {
             Map responseMap = null
             Network network = Network.findById(params.long('network_id'))
 
+            // If the network is found, return a map of all unscheduled participants and their unscheduled papers
             if (network) {
                 responseMap = [success: true, participants: participantSessionService.getParticipantsNotInNetwork(network).collect { [
                     url:            eca.createLink(controller: 'participant', action: 'show', id: it.key.user.id),
@@ -132,11 +170,13 @@ class NetworkController {
      * (AJAX call)
      */
     def addSession() {
-        if (request.xhr && params.network_id && (params.session_id || (params.session_code && params.session_name))) {
+        // If this is an AJAX call and includes a network id and a session id to add or new session info, continue
+        if (request.xhr && params.network_id?.isLong() && (params.session_id?.isLong() || (params.session_code && params.session_name))) {
             Map responseMap = null
             Session session = null
 
-            if (params.session_id) {
+            // If there is a session id, find that session, otherwise create a new session
+            if (params.session_id?.isLong()) {
                 session = Session.findById(params.long('session_id'))
             }
             else {
@@ -145,9 +185,11 @@ class NetworkController {
 
             Network network = Network.findById(params.long('network_id'))
 
+            // If the network and session exists, add the session to the network
             if (network && session) {
                 network.addToSessions(session)
 
+                // Save the network
                 if (network.save(flush: true)) {
                     // Everything is fine, return all updated data to the client
                     def participants = participantSessionService.getParticipantsForNetwork(network)
@@ -181,14 +223,17 @@ class NetworkController {
      * (AJAX call)
      */
     def removeSession() {
-        if (request.xhr && params.network_id && params.session_id) {
+        // If this is an AJAX call and includes a network id and a session id to remove, continue
+        if (request.xhr && params.network_id?.isLong() && params.session_id?.isLong()) {
             Map responseMap = null
             Network network = Network.findById(params.long('network_id'))
             Session session = Session.findById(params.long('session_id'))
 
+            // Found both the network and session, then remove the session from the network
             if (network && session) {
                 network.removeFromSessions(session)
 
+                // Save the network
                 if (network.save(flush: true)) {
                     // Everything is fine, return all updated data to the client
                     def participants = participantSessionService.getParticipantsForNetwork(network)

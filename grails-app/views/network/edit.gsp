@@ -127,6 +127,7 @@
                   <ul id="network-sessions" class="property-value">
                     <g:each in="${sessions}" var="session">
                     <li>
+                        <input type="hidden" name="set-index" value="false" />
                         <input type="hidden" name="session-id" value="${session.key.id}" class="session-id" />
                         <span class="session">${session.key.toString()}</span>
                         <span class="ui-icon ui-icon-circle-minus remove-session"></span>
@@ -156,6 +157,7 @@
                     </li>
                     </g:each>
                     <li class="hidden">
+                      <input type="hidden" name="set-index" value="false" />
                       <input type="hidden" name="session-id" class="session-id" />
                       <span class="session"> </span>
                       <span class="ui-icon ui-icon-circle-minus remove-session"></span>

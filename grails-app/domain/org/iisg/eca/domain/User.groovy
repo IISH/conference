@@ -7,6 +7,9 @@ import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
  * Domain class of table holding all registered users
  */
 class User extends DefaultDomain {
+    /**
+     * Information about the current page
+     */
     def static pageInformation
 
     /**
@@ -19,25 +22,10 @@ class User extends DefaultDomain {
      */
     transient springSecurityService
 
-    enum Gender {
-        M("M"), F("F")
-
-        final String value
-
-        Gender(value) {
-            this.value = value
-        }
-
-        @Override
-        String toString() {
-            value
-        }
-    }
-
     String email
     String lastName
     String firstName
-    Gender gender
+    String gender
     String title
     String address
     String city
@@ -100,7 +88,7 @@ class User extends DefaultDomain {
         email           maxSize: 30,    blank: false,   unique: true,   email: true
         lastName        maxSize: 100,   blank: false
         firstName       maxSize: 100,   blank: false
-        gender                          nullable: true
+        gender                          nullable: true, inList: ['M', 'F']
         title           maxSize: 30,    nullable: true
         address                         nullable: true
         city            maxSize: 100,   blank: false
