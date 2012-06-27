@@ -236,9 +236,7 @@ class PageBuilder {
                     builder.td(class: "counter", "\${i+1}")
                 }
                 if (!element.columns.find { it.name.equalsIgnoreCase("id") }) {
-                    builder.td(class: "id hidden") {
-                        builder."g:fieldValue"(bean: "\${row}", field: "id")
-                    }
+                    builder.td(class: "id hidden", "\${row.id}")
                 }
                 element.forAllColumns { c ->
                     if (c.canBeShown()) {

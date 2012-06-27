@@ -9,6 +9,7 @@ import org.iisg.eca.domain.EventDateDomain
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 import org.iisg.eca.domain.Group
 import org.iisg.eca.domain.Role
+import org.iisg.eca.domain.UserRole
 
 /**
  * All filters for accessing a page
@@ -61,10 +62,10 @@ class EcaFilters {
                     // Enable Hibernate filters on the domain classes for this event date
                     grailsApplication.domainClasses.each { domainClass -> 
                         Class domain = domainClass.clazz
-                        if ((domainClass.name == "EventDate") || EventDateDomain.class.isAssignableFrom(domain)) {
+                        if (EventDateDomain.class.isAssignableFrom(domain)) {
                             domain.enableHibernateFilter('dateFilter').setParameter('dateId', date.id)
                         }
-                        else if ((domainClass.name == "Event") || EventDomain.class.isAssignableFrom(domain)) {
+                        else if (EventDomain.class.isAssignableFrom(domain)) {
                             domain.enableHibernateFilter('eventFilter').setParameter('eventId', date.event.id)  
                         }
                     }
@@ -86,28 +87,44 @@ class EcaFilters {
          */
         authFilter(controller: '*', action: '*', controllerExclude: 'login|logout') {
             before = {
-                def roles = Role.findAllByFullRights(true)
+                List<Role> roles = Role.findAllByFullRights(true)
 
-                // Check access on the event, if the user is not granted access to all events
-                // and is not granted access to this specific event, deny access
-                if (    pageInformation.date &&
-                        !SpringSecurityUtils.ifAnyGranted(roles*.role.join(',')) &&
-                        !UserPage.findAllByUserAndDate(User.get(springSecurityService.principal.id), pageInformation.date)) {
-                    response.sendError(403)
-                    return
+                // No full rights? Then find out if the user has access
+                if (!SpringSecurityUtils.ifAnyGranted(roles*.role.join(','))) {
+                    User user = User.get(springSecurityService.principal.id)
+
+                    // First check on a tenant (event date) level
+                    if (pageInformation.date && (UserRole.findAllByUserAndDate(user, pageInformation.date).size() == 0)) {
+                        // Unfortunately, no access to this event date specified in the database
+                        response.sendError(403)
+                        return
+                    }
+                    else if (   !pageInformation.date && params.id &&
+                                ((params.controller == 'event') && ((params.action == 'show') || (params.action == 'edit'))) ||
+                                ((params.controller == 'eventDate') && (params.action == 'create'))) {
+                        // Event and event date are tenants, but accessible from outside a tenant
+                        // So check these specific actions, which need an event id, now
+                        List<UserRole> access = UserRole.withCriteria {
+                            eq('user.id', user.id)
+                            inList('date.id', Event.get(params.id)?.dates*.id)
+                        }
+
+                        // If the user has access to one of the event dates of the given event, it is ok
+                        if (access.size() == 0) {
+                            response.sendError(403)
+                            return
+                        }
+                    }
+
+                    // Now check access on page level
+                    if (pageInformation.page && !pageInformation.page.hasAccess()) {
+                        response.sendError(403)
+                        return
+                    }
                 }
 
-                // Now check access on page level
-                if (!pageInformation.page) {
-                    return true
-                }
-                else if (pageInformation.page.hasAccess()) {
-                    return true
-                }
-                else {
-                    response.sendError(403)
-                    return
-                }
+                // Everything is ok, allow access
+                return true
             }
         }
         

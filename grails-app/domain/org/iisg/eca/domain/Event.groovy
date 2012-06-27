@@ -33,12 +33,6 @@ class Event extends DefaultDomain {
         type        maxSize: 20,    nullable: true
     }
 
-    static hibernateFilters = {
-        hideDeleted(condition: 'deleted = 0', default: true)
-        hideDisabled(condition: 'enabled = 1')
-        eventFilter(condition: '(event_id = :eventId OR event_id IS NULL)', types: 'long')
-    }
-
     String getUrl() {
         code.replaceAll('\\s', '-')
     }

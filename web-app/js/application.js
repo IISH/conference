@@ -139,7 +139,11 @@ $(document).ready(function() {
     });
 
     $('#menu dl').prev().click(function(e) {
-        $(this).next().slideToggle('fast');
+        var subMenu = $(this).next();
+
+        if (subMenu.hasClass('sub-menu')) {
+            subMenu.slideToggle('fast');
+        }
     });
 
     $('.export-data').change(function(e) {

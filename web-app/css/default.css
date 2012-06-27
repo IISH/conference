@@ -440,7 +440,7 @@ span.remove-item {
     font-size: 8pt;	
 }
 
-#nav > dl dl {
+#nav > dl dl.sub-menu {
     display: none;
     padding: 10px 20px;
 }

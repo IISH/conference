@@ -125,13 +125,14 @@ class UtilsTagLib {
 
         Set<EventDate> dates = User.get(springSecurityService.principal.id).dates
         List<EventDate> datesSorted = new ArrayList()
+
         EventDate.sortByEventAndDate.list().each { date ->
             if (dates.contains(date)) {
                 datesSorted.add(date)
             }
         }
 
-        Map<Event, EventDate> datesByEvent = [:]
+        Map<Event, List<EventDate>> datesByEvent = [:]
         datesSorted.each { date ->
             List<EventDate> list = (List<EventDate>) datesByEvent.get(date.event, new ArrayList<EventDate>())
             list.add(date)
@@ -158,11 +159,11 @@ class UtilsTagLib {
     /**
      * Prints the menu
      */
-    def menu = { attrs ->
+    def menu = {
         MarkupBuilder builder = new MarkupBuilder(out)
         builder.doubleQuotes = true
 
-        printSubMenu(builder, Page.menuPages.list(), attrs.date)
+        printSubMenu(builder, Page.menuPages.list())
     }
 
     /**
@@ -342,17 +343,12 @@ class UtilsTagLib {
      * @param builder The markup builder for the HTML output
      * @param pages The pages to place in the menu
      */
-    private void printSubMenu(MarkupBuilder builder, Collection<Page> pages, EventDate date) {
+    private void printSubMenu(MarkupBuilder builder, Collection<Page> pages) {
         for (Page page : pages) {
             if (page.hasAccess()) {
                 if (page.controller && page.action) {
                     builder.dd {
-                        if (page.controller.equals('eventDate') && page.action.equals('show')) {
-                            builder.mkp.yieldUnescaped(eca.link(controller: page.controller, action: page.action, id: date?.id, page.toString()))
-                        }
-                        else {
-                            builder.mkp.yieldUnescaped(eca.link(controller: page.controller, action: page.action, page.toString()))
-                        }
+                        builder.mkp.yieldUnescaped(eca.link(controller: page.controller, action: page.action, page.toString()))
                     }
                 }
                 else {
@@ -363,8 +359,9 @@ class UtilsTagLib {
 
                 // If there is a sub menu, print it as well
                 if (page.subPages?.size() > 0) {
-                    builder.dl {
-                        printSubMenu(builder, Page.subMenuPages(page).list(), date)
+                    builder.dl(class: "sub-menu") {
+                        builder.span('')
+                        printSubMenu(builder, Page.subMenuPages(page).list())
                     }
                 }
             }

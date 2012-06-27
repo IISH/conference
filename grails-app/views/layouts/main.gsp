@@ -70,7 +70,7 @@
 
                 <g:if test="${params.event && params.date}">
                     <dt class="esshc">CMS</dt>
-                    <eca:menu date="${curDate}" />
+                    <eca:menu />
                 </g:if>
             </dl>
         </div>
