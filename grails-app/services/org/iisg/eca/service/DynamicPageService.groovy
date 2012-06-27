@@ -82,6 +82,7 @@ class DynamicPageService {
         if (!dynamicPage.cache) {
             PageBuilder builder = new PageBuilder(dynamicPage.elements)
             dynamicPage.cache = builder.buildPage()
+            dynamicPage.internalUpdate = true
             dynamicPage.save()
         }
 

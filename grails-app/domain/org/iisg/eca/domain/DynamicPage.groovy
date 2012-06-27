@@ -17,10 +17,11 @@ class DynamicPage extends EventDateDomain {
     String cache
     Page page
 
+    boolean internalUpdate = false
     List<ContainerElement> elements
 
     static belongsTo = Page
-    static transients = ['elements']
+    static transients = ['elements', 'internalUpdate']
 
     static constraints = {
         content blank: false,   maxSize: 65540
@@ -59,5 +60,18 @@ class DynamicPage extends EventDateDomain {
             }
         }
         results
+    }
+
+    /**
+     * Make sure that when a dynamic page is cached, the date does not change
+     */
+    @Override
+    def beforeUpdate() {
+        if (internalUpdate) {
+            return true
+        }
+        else {
+            return super.beforeUpdate()
+        }
     }
 }

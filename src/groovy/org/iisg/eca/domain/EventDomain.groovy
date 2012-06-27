@@ -20,25 +20,35 @@ abstract class EventDomain extends DefaultDomain {
         hideDisabled(condition: 'enabled = 1')
         eventFilter(condition: '(event_id = :eventId OR event_id IS NULL)', types: 'long')
     }
-    
+
+    /**
+     * Make sure that when a new record is inserted in the database,
+     * the current event tenant is also set
+     */
     def beforeInsert() {
-        if (pageInformation.date) {
+        if (!event && pageInformation.date) {
             event = pageInformation.date.event
         }
-        else {
-            event = null 
-        }
     }
-    
+
+    /**
+     * Make sure that when a record is updated from a different event tenant (general setting),
+     * a new record is inserted with the changes for the current event tenant only
+     */
     def beforeUpdate() {
-        if (this.event != pageInformation.date?.event) {
-           /* this.withNewSession {
-                def newInstance = this.newInstance()
-                newInstance.params = this.params
+        // Make sure we can also reach 'this' from within a closure
+        def thizz = this
+
+        if (thizz.event != pageInformation.date?.event) {
+            // In a new Hibernate session, change the update to an insert for this event
+            thizz.withNewSession {
+                def newInstance = thizz.class.newInstance()
+                newInstance.properties = thizz.properties
                 newInstance.event = pageInformation.date?.event
                 newInstance.save()
             }
-            return false  */
+            // And cancel this update
+            return false
         }
     }
 
