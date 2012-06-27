@@ -12,9 +12,11 @@
             </g:if>
 
             <span class="action">
-                <eca:link controller="fee" action="edit" id="${feeState.id}">
-                    <g:message code="default.edit.label" args="[message(code: 'feeState.label').toLowerCase()]" />
-                </eca:link>
+                <eca:ifUserHasAccess controller="${params.controller}" action="edit">
+                    <eca:link controller="fee" action="edit" id="${feeState.id}">
+                        <g:message code="default.edit.label" args="[message(code: 'feeState.label').toLowerCase()]" />
+                    </eca:link>
+                </eca:ifUserHasAccess>
             </span>
 
             <table class="fee-list">

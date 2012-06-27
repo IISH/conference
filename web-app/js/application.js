@@ -50,7 +50,7 @@ var setDatePicker = function(element) {
 
 var createNewItem = function(item, lastItem) {
     var i = -1;
-    if ((lastItem.length !== 0) && (lastItem.hasClass('.column') || lastItem.is('li'))) {
+    if ((lastItem.length !== 0) && (lastItem.hasClass('column') || lastItem.is('li'))) {
         var nameSplit = lastItem.find('input, select, textarea').attr("name").split('.');
         var number = nameSplit[0].split('_')[1];
         if ($.isNumeric(number)) {
@@ -98,6 +98,7 @@ var removeAnItem = function(toBeRemoved, classToStop) {
             var newNumber = number - 1;
             elements.each(function() {
                 $(this).attr("name", $(this).attr("name").replace(number, newNumber));
+                $(this).attr("id", $(this).attr("id").replace(number, newNumber));
             });
         }
         next = next.next();
@@ -117,6 +118,17 @@ var removeAnItem = function(toBeRemoved, classToStop) {
     }
 
     toBeRemoved.remove();
+}
+
+var guessMessageUrl = function() {
+    var urlToCall = '../message/index';
+    var url = location.href.replace(location.search, '');
+
+    if ($.isNumeric(url.charAt(url.length-1))) {
+        urlToCall = '../' + urlToCall;
+    }
+
+    return urlToCall;
 }
 
 $(document).ready(function() {
@@ -190,7 +202,7 @@ $(document).ready(function() {
         var thisItem = $(this);
         var item = $(this).parents('li');
 
-        $.getJSON('../../message/index', {code: 'default.button.delete.confirm.message'}, function(data) {
+        $.getJSON(guessMessageUrl(), {code: 'default.button.delete.confirm.message'}, function(data) {
             var deleted = confirm(data.message);
             if (deleted) {
                 removeAnItem(item, 'add');
@@ -203,7 +215,7 @@ $(document).ready(function() {
         var thisItem = $(this);
         var item = $(this).parents('.column');
 
-        $.getJSON('../../message/index', {code: 'default.button.delete.confirm.message'}, function(data) {
+        $.getJSON(guessMessageUrl(), {code: 'default.button.delete.confirm.message'}, function(data) {
             var deleted = confirm(data.message);
             if (deleted) {
                 removeAnItem(item, 'hidden');

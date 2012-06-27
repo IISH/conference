@@ -180,27 +180,33 @@ class LoginController {
      * Gives the user a new password
      */
     def newPassword() {
+        // Find the user and create a new password
         User user = User.findByEmail(params.j_username)
         String newPassword = User.createSecureRandomString()
 
+        // We need a user to give him/her a new password
         if (!user) {
-            flash.message = message(code: 'springSecurity.forgot.fail')
+            flash.message = g.message(code: 'springSecurity.forgot.fail')
             render view: 'forgot'
             return
         }
 
+        // Assign the newly created password to the user
         user.password = newPassword
 
+        // Try to persist the new password to the database
         if (!user.save(flush: true)) {
-            flash.message = message(code: 'springSecurity.forgot.error')
+            flash.message = g.message(code: 'springSecurity.forgot.error')
             render view: 'forgot'
             return
         }
 
+        // So far so good, send an email to the user with his/her new password
         SentEmail email = emailService.createEmail(user, EmailTemplate.findByDescription("New password"), null, ['NewPassword': newPassword])
         emailService.sendEmail(email, false)
 
-        flash.message = message(code: 'springSecurity.forgot.success')
+        // Redirect to the login page with a success message
+        flash.message = g.message(code: 'springSecurity.forgot.success')
         redirect action: 'auth'
     }
 }

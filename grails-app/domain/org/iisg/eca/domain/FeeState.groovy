@@ -17,6 +17,7 @@ class FeeState extends EventDomain {
     static mapping = {
         table 'fee_states'
         version false
+        sort 'isDefaultFee': 'desc'
 
         id              column: 'fee_state_id'
         event           column: 'event_id'

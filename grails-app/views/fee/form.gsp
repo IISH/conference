@@ -44,7 +44,7 @@
                                 <g:message code="default.delete.label" args="[message(code: 'feeAmount.label').toLowerCase()]" />
                             </span>
 
-                            <input type="hidden" name="feeAmount_${i}.id" value="${amount?.id}" />
+                            <input type="hidden" name="feeAmount_${i}.id" value="${amount.id}" />
 
                             <div class="${hasErrors(bean: amount, field: 'feeAmount', 'error')} required">
                                 <label class="property-label">
@@ -75,11 +75,11 @@
                                     <g:message code="feeAmount.numDaysEnd.label" />
                                     <span class="required-indicator">*</span>
                                 </label>
-                                <g:select class="property-value" from="${1..days}" name="feeAmount_${i}.numDaysStart" required="required" value="${fieldValue(bean: amount, field: 'numDaysEnd')}" />
+                                <g:select class="property-value" from="${1..days}" name="feeAmount_${i}.numDaysEnd" required="required" value="${fieldValue(bean: amount, field: 'numDaysEnd')}" />
                             </div>
 
                             <div class="${hasErrors(bean: amount, field: 'enabled', 'error')} ">
-                                <label class="property-label" for="enabled">
+                                <label class="property-label">
                                     <g:message code="default.enabled.label" />
                                 </label>
                                 <g:checkBox class="property-value" name="feeAmount_${i}.enabled" value="${amount?.enabled}" />
@@ -125,7 +125,7 @@
                         </div>
 
                         <div>
-                            <label class="property-label" for="enabled">
+                            <label class="property-label">
                                 <g:message code="default.enabled.label" />
                             </label>
                             <g:checkBox class="property-value" name="feeAmount_null.enabled" />

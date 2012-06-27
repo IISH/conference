@@ -14,8 +14,8 @@ class FeeAmount extends EventDateDomain {
 
     static constraints = {
         date            nullable: true
-        numDaysStart    min: 1, validator: { val, object -> object.date.days*.dayNumber.max() <= val }
-        numDaysEnd      min: 1, validator: { val, object -> object.date.days*.dayNumber.max() <= val }
+        numDaysStart    min: 1
+        numDaysEnd      min: 1
         feeAmount       min: BigDecimal.ZERO
     }
 

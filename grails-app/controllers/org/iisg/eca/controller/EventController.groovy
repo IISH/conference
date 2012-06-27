@@ -1,7 +1,7 @@
 package org.iisg.eca.controller
 
-import org.iisg.eca.domain.EventDate
 import org.iisg.eca.domain.User
+import org.iisg.eca.domain.EventDate
 
 /**
  * Controller for event related actions
@@ -71,14 +71,23 @@ class EventController {
         [events: datesByEvent.keySet(), dates: datesByEvent]
     }
 
+    /**
+     * Allows the user to create a new event
+     */
     def create() {
         forward(controller: 'dynamicPage', action: 'dynamic', params: params)
     }
 
+    /**
+     * Shows all data on an event
+     */
     def show() {
         forward(controller: 'dynamicPage', action: 'dynamic', params: params)
     }
 
+    /**
+     * Allows the user to make changes to an event
+     */
     def edit() {
         forward(controller: 'dynamicPage', action: 'dynamic', params: params)
     }

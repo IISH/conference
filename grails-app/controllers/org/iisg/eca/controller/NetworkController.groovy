@@ -66,7 +66,7 @@ class NetworkController {
     def edit() {
         // We need an id, check for the id
         if (!params.id) {
-            flash.message = message(code: 'default.no.id.message')
+            flash.message = g.message(code: 'default.no.id.message')
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
         }
@@ -75,7 +75,7 @@ class NetworkController {
 
         // We also need a network to be able to show something
         if (!network) {
-            flash.message =  message(code: 'default.not.found.message', args: [message(code: 'network.label')])
+            flash.message = g.message(code: 'default.not.found.message', args: [message(code: 'network.label')])
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
         }
@@ -102,7 +102,7 @@ class NetworkController {
 
             // Save the network and redirect to the previous page if everything is ok
             if (network.save()) {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'network.label')])
+                flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'network.label')])
                 redirect(uri: eca.createLink(previous: true, noBase: true))
                 return
             }
