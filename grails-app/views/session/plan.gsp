@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<meta name="layout" content="main">
-        <g:javascript src="planClick.js" />
+        <g:javascript src="plan.js" />
         <g:javascript src="participants-in-sessions.js" />
 	</head>
 	<body>

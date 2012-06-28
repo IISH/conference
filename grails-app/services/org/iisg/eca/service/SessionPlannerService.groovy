@@ -82,7 +82,7 @@ class SessionPlannerService {
      * @return A list of time slots, where at least one of the participants from the given session is not present
      */
     List<SessionDateTime> getTimesParticipantsNotPresent(Session session) {
-        List<Long> userIds = session.sessionParticipants*.user.id
+        List<Long> userIds = SessionParticipant.findAllBySession(session)*.user.id
 
         // If there are no participants, then there is no point in executing the query
         if (userIds.isEmpty()) {
@@ -92,8 +92,10 @@ class SessionPlannerService {
         (List<SessionDateTime>) SessionParticipant.executeQuery('''
             SELECT dt
             FROM ParticipantDate AS p
-            INNER JOIN p.user.dateTimesNotPresent AS dt
-            WHERE p.user.id IN :userIds
+            INNER JOIN p.user AS u
+            INNER JOIN u.dateTimesNotPresent AS dt
+            WHERE u.id IN :userIds
+            AND u.deleted = false
             GROUP BY dt
         ''', [userIds: userIds])
     }

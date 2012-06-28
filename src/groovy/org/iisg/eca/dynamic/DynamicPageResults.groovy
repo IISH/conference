@@ -6,11 +6,20 @@ import org.codehaus.groovy.grails.commons.GrailsDomainClass
 import org.codehaus.groovy.grails.commons.GrailsDomainClassProperty
 
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
+import org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes
+
+import org.codehaus.groovy.grails.web.context.ServletContextHolder
+import org.iisg.eca.domain.EventDateDomain
+import org.iisg.eca.domain.EventDomain
+import org.iisg.eca.domain.DefaultDomain
 
 /**
  * Queries the database for results based on the information from the <code>DataContainer</code>
  */
 class DynamicPageResults {
+    def static ctx = ServletContextHolder.servletContext.getAttribute(GrailsApplicationAttributes.APPLICATION_CONTEXT)
+    def static pageInformation = ctx.getBean('pageInformation')
+
     private DataContainer dataContainer
     private GrailsParameterMap params
     private List results
@@ -72,6 +81,23 @@ class DynamicPageResults {
                 else {
                     delegate.eq(c.name, value)
                 }
+            }
+        }
+
+        // Make sure that referenced domain classes also filter events, event dates and soft deletes
+        if (c.hasColumns() && pageInformation.date && EventDateDomain.class.isAssignableFrom(c.property.referencedDomainClass.clazz)) {
+            "${c.name}" {
+                eq('date.id', pageInformation.date.id)
+            }
+        }
+        if (c.hasColumns() && pageInformation.date && EventDomain.class.isAssignableFrom(c.property.referencedDomainClass.clazz)) {
+            "${c.name}" {
+                eq('event.id', pageInformation.date.event.id)
+            }
+        }
+        if (c.hasColumns() && DefaultDomain.class.isAssignableFrom(c.property.referencedDomainClass.clazz)) {
+            "${c.name}" {
+                eq('deleted', false)
             }
         }
     }
