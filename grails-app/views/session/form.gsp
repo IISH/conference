@@ -172,7 +172,7 @@
                 <eca:link previous="true">
                     <g:message code="default.button.cancel.label" />
                 </eca:link>
-                <eca:link controller="${params.controller}" action="delete" id="${params.id}">
+                <eca:link controller="${params.controller}" action="delete" id="${params.id}" class="btn_delete">
                     <g:message code="default.deleted.label" />
                 </eca:link>
                 <input type="submit" name="btn_save" class="btn_save" value="${g.message(code: 'default.button.save.label')}" />

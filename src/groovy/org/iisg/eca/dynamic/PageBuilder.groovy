@@ -340,7 +340,7 @@ class PageBuilder {
                     }
                     break
                 case Button.Type.DELETE:
-                    builder."eca:link"(controller: "\${params.controller}", action: "delete", id: "\${params.id}") {
+                    builder."eca:link"(controller: "\${params.controller}", action: "delete", id: "\${params.id}", class: "btn_delete") {
                         builder."g:message"(code: "default.deleted.label")
                     }
                     break

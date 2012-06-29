@@ -149,9 +149,14 @@ $(document).ready(function() {
     $('#event_switcher').change(function(e) {
         $(this).parents('form').submit();
     });
-	
+
+    $('html').click(function() {
+        $("#usermenu").hide();
+     });
+
     $('#loggedin img').click(function(e) {
         $("#usermenu").toggle();
+        e.stopPropagation();
     });
 
     $('#menu dl').prev().click(function(e) {
@@ -228,6 +233,18 @@ $(document).ready(function() {
                     removeAnItem(item, 'hidden');
                 }
                 thisItem.trigger('removed-item');
+            }
+        });
+    });
+
+    $('a.btn_delete').click(function(e) {
+        e.preventDefault();
+        var thisItem = $(this);
+
+        $.getJSON(guessMessageUrl(), {code: 'default.button.delete.confirm.message'}, function(data) {
+            var deleted = confirm(data.message);
+            if (deleted) {
+                window.location = thisItem.attr('href');
             }
         });
     });

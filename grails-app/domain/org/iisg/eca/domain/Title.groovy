@@ -8,7 +8,7 @@ class Title extends EventDomain {
 
     static constraints = {
         event   nullable: true
-        title   blank: false,   maxSize: 30
+        title   blank: false,   maxSize: 20
     }
 
     static mapping = {

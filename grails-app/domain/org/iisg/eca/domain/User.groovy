@@ -89,7 +89,7 @@ class User extends DefaultDomain {
         lastName        maxSize: 100,   blank: false
         firstName       maxSize: 100,   blank: false
         gender                          nullable: true, inList: ['M', 'F']
-        title           maxSize: 30,    nullable: true
+        title           maxSize: 20,    nullable: true
         address                         nullable: true
         city            maxSize: 100,   blank: false
         language        maxSize: 10,    blank: false

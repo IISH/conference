@@ -72,7 +72,7 @@
                     <g:message code="default.button.cancel.label" />
                 </eca:link>
                 <g:if test="${params.action != 'create'}">
-                    <eca:link controller="${params.controller}" action="delete" id="${params.id}">
+                    <eca:link controller="${params.controller}" action="delete" id="${params.id}" class="btn_delete">
                         <g:message code="default.deleted.label" />
                     </eca:link>
                 </g:if>
