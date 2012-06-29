@@ -43,6 +43,12 @@
                     </label>
                     <textarea class="property-value" cols="40" rows="5" name="comment">${fieldValue(bean: room, field: 'comment')}</textarea>
                 </div>
+                <div>
+                    <label class="property-label">
+                        <g:message code="default.enabled.label" />
+                    </label>
+                    <g:checkBox class="property-value" name="enabled" />
+                </div>
 
                 <div id="room-equipment" class="columns">
                     <g:each in="${equipment}" var="equip">

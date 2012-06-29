@@ -84,7 +84,7 @@ class EmailController {
             // But in the background, as it could take a while
             CreateEmailJob.triggerNow([participants: participants, template: emailTemplate])
 
-            flash.message = g.message(code: 'email.background.message', attrs: "${[participants.size()]}")
+            flash.message = g.message(code: 'email.background.message', args: "${[participants.size()]}")
         }
 
         // What type of view to load?

@@ -91,8 +91,8 @@ environments {
     development {
         grails.logging.jul.usebridge = true
         grails.serverURL = "http://localhost:8080/${appName}"
-        grails.mail.default.from = "ECA conference application <esshc@iisg.nl>"
-        grails.mail.overrideAddress = "Test ECA <kerim.meijer@gmail.com>"
+        grails.mail.default.from = "ECA conference application <testeca1@knoex.com>"
+        grails.mail.overrideAddress = "Test ECA <testeca1@knoex.com>"
     }
     test {
         grails.mail.disabled = true

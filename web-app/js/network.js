@@ -63,10 +63,13 @@ $(document).ready(function() {
         var element = $(this);
         var parentElement = element.parent();
 
+        var code = parentElement.find('.session-code');
+        var name = parentElement.find('.session-name');
+
         $.getJSON('../addSession',
             {   network_id:     networkId,
-                session_code:   parentElement.find('.session-code').val(),
-                session_name:   parentElement.find('.session-name').val()},
+                session_code:   code.val(),
+                session_name:   name.val()},
             function(data) {
                 if (data.success) {
                     setParticipantDataForNetwork(data);
@@ -76,6 +79,9 @@ $(document).ready(function() {
                 }
             }
         );
+
+        code.val("");
+        name.val("");
     });
 
     $('.remove-session').live("removed-item", function(e) {

@@ -90,7 +90,7 @@ class RoomController {
         // The 'save' button was clicked, save all data
         if (request.post) {
             // Save all room related data
-            bindData(room, params, [include: ['roomName', 'roomNumber', 'noOfSeats', 'comment']])
+            bindData(room, params, [include: ['roomName', 'roomNumber', 'noOfSeats', 'comment', 'enabled']])
 
             // Remove all equipment availability from the room and save all new information
             room.roomSessionDateTimeEquipment.clear()

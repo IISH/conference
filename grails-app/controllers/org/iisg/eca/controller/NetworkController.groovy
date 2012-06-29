@@ -170,9 +170,10 @@ class NetworkController {
      * (AJAX call)
      */
     def addSession() {
+        Map responseMap = [success: false]
+
         // If this is an AJAX call and includes a network id and a session id to add or new session info, continue
         if (request.xhr && params.network_id?.isLong() && (params.session_id?.isLong() || (params.session_code && params.session_name))) {
-            Map responseMap = null
             Session session = null
 
             // If there is a session id, find that session, otherwise create a new session
@@ -211,11 +212,16 @@ class NetworkController {
                 }
             }
             else {
-                responseMap = [success: false, message: g.message(code: 'default.not.found.message', attrs: ["${g.message(code: 'session.label')}, ${g.message(code: 'network.label')}"])]
+                responseMap = [success: false, message: g.message(code: 'default.not.found.message', args: ["${g.message(code: 'session.label')}, ${g.message(code: 'network.label')}"])]
             }
 
-            render responseMap as JSON
+
         }
+        else if (params.session_code?.isEmpty() || params.session_name?.isEmpty()) {
+            responseMap = [success: false, message: g.message(code: 'default.blank.message', args: ["${g.message(code: 'session.code.label')}, ${g.message(code: 'session.name.label')}"])]
+        }
+
+        render responseMap as JSON
     }
 
     /**
