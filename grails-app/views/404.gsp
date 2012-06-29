@@ -1,7 +1,7 @@
 <html>
     <head>
         <meta name='layout' content='main' />
-        <title><g:message code="springSecurity.denied.title" /></title>
+        <title><g:message code="default.does.not.exist" /></title>
     </head>
     
     <body>

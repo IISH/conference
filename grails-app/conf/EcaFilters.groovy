@@ -100,8 +100,8 @@ class EcaFilters {
                         return
                     }
                     else if (   !pageInformation.date && params.id &&
-                                ((params.controller == 'event') && ((params.action == 'show') || (params.action == 'edit'))) ||
-                                ((params.controller == 'eventDate') && (params.action == 'create'))) {
+                                (((params.controller == 'event') && ((params.action == 'show') || (params.action == 'edit'))) ||
+                                ((params.controller == 'eventDate') && (params.action == 'create')))) {
                         // Event and event date are tenants, but accessible from outside a tenant
                         // So check these specific actions, which need an event id, now
                         List<UserRole> access = UserRole.withCriteria {

@@ -47,21 +47,21 @@ class ParticipantController {
      * Shows all inventations requests made by participants
      */
     def inventations() {
-        forward(controller: "dynamicPage", action: "get")
+        forward(controller: 'dynamicPage', action: 'dynamic', params: params)
     }
 
     /**
      * Shows all lower fee requests made by participants
      */
     def lowerFee() {
-        forward(controller: "dynamicPage", action: "get")
+        forward(controller: 'dynamicPage', action: 'dynamic', params: params)
     }
 
     /**
      * Shows all participants that showed interest for one of the extras
      */
     def extras() {
-        forward(controller: "dynamicPage", action: "get")
+        forward(controller: 'dynamicPage', action: 'dynamic', params: params)
     }
 
     /**

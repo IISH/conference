@@ -34,7 +34,7 @@ class Day extends EventDateDomain {
     @Override
     String toString() {
         String dateFormat = messageSource.getMessage('default.date.format', null, LocaleContextHolder.locale)
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat)
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, LocaleContextHolder.locale)
         "${dayNumber}: ${sdf.format(day)}"
     }
 }
