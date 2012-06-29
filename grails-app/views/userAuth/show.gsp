@@ -30,6 +30,22 @@
                 </span>
             </li>
             <li>
+                <span id="city-label" class="property-label">
+                    <g:message code="user.city.label" />
+                </span>
+                <span class="property-value" aria-labelledby="city-label">
+                    <g:fieldValue bean="${user}" field="city"/>
+                </span>
+            </li>
+            <li>
+                <span id="country-label" class="property-label">
+                    <g:message code="user.country.label" />
+                </span>
+                <span class="property-value" aria-labelledby="country-label">
+                    <g:fieldValue bean="${user}" field="country"/>
+                </span>
+            </li>
+            <li>
                 <span id="enabled-label" class="property-label">
                     <g:message code="default.enabled.label" />
                 </span>

@@ -30,7 +30,7 @@ class User extends DefaultDomain {
     String address
     String city
     Country country
-    String language
+    String language = 'en'
     String password
     String salt
     String phone

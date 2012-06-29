@@ -38,6 +38,20 @@
                     </label>
                     <input class="property-value" type="email" name="User.email" required="required" maxlength="50" value="${fieldValue(bean: user, field: 'email')}" />
                 </div>
+                <div class="${hasErrors(bean: user, field: 'city', 'error')} required">
+                    <label class="property-label">
+                        <g:message code="user.city.label" />
+                        <span class="required-indicator">*</span>
+                    </label>
+                    <input class="property-value" type="text" name="User.city" required="required" maxlength="50" value="${fieldValue(bean: user, field: 'city')}" />
+                </div>
+                <div class="${hasErrors(bean: user, field: 'country', 'error')} required">
+                    <label class="property-label">
+                        <g:message code="user.country.label" />
+                        <span class="required-indicator">*</span>
+                    </label>
+                    <g:select class="property-value" name="User.country.id" from="${Country.list(sort: 'nameEnglish')}" required="required" optionKey="id" value="${user.country?.id}" noSelection="${[null:' ']}" />
+                </div>
                 <div class="${hasErrors(bean: user, field: 'enabled', 'error')}">
                     <label class="property-label">
                         <g:message code="default.enabled.label" />
@@ -66,7 +80,7 @@
                                 <input type="hidden" name="Page_${i}.id" id="Page_${i}.id">
 
                                 <label class="property-label">
-                                    <g:select name="Page_${i}.page.id" from="${allPages}" optionKey="id" value="${page.page.id}" />
+                                    <g:select name="Page_${i}.page.id" from="${allPages}" optionKey="id" value="${page.page?.id}" />
                                 </label>
 
                                 <label class="property-label">

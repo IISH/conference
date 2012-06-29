@@ -86,7 +86,7 @@
                         <g:message code="user.country.label" />
                         <span class="required-indicator">*</span>
                     </label>
-                    <g:select class="property-value" name="User.country.id" from="${Country.list(sort: 'nameEnglish')}" required="required" optionKey="id" optionValue="nameEnglish" value="${user.country.id}" noSelection="${[null:' ']}" />
+                    <g:select class="property-value" name="User.country.id" from="${Country.list(sort: 'nameEnglish')}" required="required" optionKey="id" value="${user.country.id}" noSelection="${[null:' ']}" />
                 </div>
                 <div class="${hasErrors(bean: user, field: 'phone', 'error')}">
                     <label class="property-label">
