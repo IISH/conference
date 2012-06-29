@@ -116,7 +116,7 @@ class ParticipantController {
 
                 if (!participant && params['add-to-date']?.equals('add')) {
                     // Try to find out if this participant has been deleted before or is filtered for some other reason
-                    ParticipantDate.withoutHibernateFilters  {
+                    ParticipantDate.withoutHibernateFilters {
                         participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
                     }
 
@@ -150,6 +150,7 @@ class ParticipantController {
                     // Remove all date/times the user is not present and save all new information
                     // However, we are only interested in the dates/times the participant is NOT present
                     user.dateTimesNotPresent.clear()
+                    user.save(flush: true)
                     List<SessionDateTime> sessionDateTimes = SessionDateTime.list()
                     params.present.each { dateTimeId ->
                         sessionDateTimes.remove(sessionDateTimes.find { dateTimeId.isLong() && (it.id == dateTimeId.toLong()) })

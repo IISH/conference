@@ -77,7 +77,7 @@ class User extends DefaultDomain {
         dateAdded       column: 'date_added'
 
         groups              joinTable: 'users_groups'
-        dateTimesNotPresent joinTable: 'participant_not_present', cascade: 'all-delete-orphan'
+        dateTimesNotPresent joinTable: 'participant_not_present'
         userRoles           cascade: 'all-delete-orphan'
         userPages           cascade: 'all-delete-orphan'
         papers              cascade: 'all-delete-orphan'

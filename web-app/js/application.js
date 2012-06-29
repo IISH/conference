@@ -98,7 +98,11 @@ var removeAnItem = function(toBeRemoved, classToStop) {
             var newNumber = number - 1;
             elements.each(function() {
                 $(this).attr("name", $(this).attr("name").replace(number, newNumber));
-                $(this).attr("id", $(this).attr("id").replace(number, newNumber));
+
+                var id = $(this).attr("id");
+                if (id !== undefined && id !== null && id.trim().length > 0) {
+                    $(this).attr("id", id.replace(number, newNumber));
+                }
             });
         }
         next = next.next();
@@ -205,7 +209,9 @@ $(document).ready(function() {
         $.getJSON(guessMessageUrl(), {code: 'default.button.delete.confirm.message'}, function(data) {
             var deleted = confirm(data.message);
             if (deleted) {
-                removeAnItem(item, 'add');
+                if (!thisItem.hasClass('no-del')) {
+                    removeAnItem(item, 'add');
+                }
                 thisItem.trigger('removed-item');
             }
         });
@@ -218,7 +224,9 @@ $(document).ready(function() {
         $.getJSON(guessMessageUrl(), {code: 'default.button.delete.confirm.message'}, function(data) {
             var deleted = confirm(data.message);
             if (deleted) {
-                removeAnItem(item, 'hidden');
+                if (!thisItem.hasClass('no-del')) {
+                    removeAnItem(item, 'hidden');
+                }
                 thisItem.trigger('removed-item');
             }
         });

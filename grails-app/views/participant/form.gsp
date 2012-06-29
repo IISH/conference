@@ -316,7 +316,7 @@
                                         <span>
                                             <a target="_blank" href="${eca.createLink(action: 'downloadPaper', id: paper.id)}">${paper.fileName}</a> - ${paper.getReadableFileSize()}
                                         </span>
-                                        <span class="paper ui-icon ui-icon-circle-minus"></span>
+                                        <span class="paper no-del ui-icon ui-icon-circle-minus"></span>
                                         </g:if>
                                         <g:else>-</g:else>
                                     </div>

@@ -1,8 +1,18 @@
 package org.iisg.eca.domain
 
+/**
+ * The abstract domain class for all domain classes
+ * which contain data to be filtered per event date tenant
+ */
 abstract class EventDateDomain extends DefaultDomain {
+    /**
+     * Contains the tenant to filter on
+     */
     static def pageInformation
-    
+
+    /**
+     * The event date tenant
+     */
     EventDate date
     
     static belongsTo = EventDate

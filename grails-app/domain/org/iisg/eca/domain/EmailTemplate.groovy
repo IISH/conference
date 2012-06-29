@@ -23,7 +23,7 @@ class EmailTemplate extends EventDomain {
         subject     blank: false,   maxSize: 78
         body        blank: false
         sender      blank: false,   maxSize: 30
-        action      blank: false,   maxSize: 30
+        action      nullable: true, maxSize: 30
         queryType   nullable: true, maxSize: 30
         comment     nullable: true
 
@@ -71,7 +71,7 @@ class EmailTemplate extends EventDomain {
         }
         else {
             String subject = "Could not find the user for the given email address"
-            String message = "Could not find the user for the given email address. \nTesting the email template failed!"
+            String message = "Could not find the user for the given email address. \r\nTesting the email template failed!"
 
             emailService.sendInfoMail(subject, message, testEmail)
         }

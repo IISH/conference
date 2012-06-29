@@ -288,7 +288,9 @@ class PageBuilder {
                     }
                     builder.ul(class: "property-value", "arial-labelledby": "${c.name}-label") {
                         builder."g:each"(in: inVar, var: "element", status: "i") {
-                            builder.li("\${element.encodeAsHTML()}")
+                            builder."g:if"(test: "\${!element['deleted']}") {
+                                builder.li("\${element.encodeAsHTML()}")
+                            }
                         }
                     }
                 }

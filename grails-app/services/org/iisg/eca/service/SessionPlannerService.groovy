@@ -49,6 +49,7 @@ class SessionPlannerService {
             JOIN s.papers AS p
             JOIN p.equipment AS e
             WHERE s.id = :sessionId
+            GROUP BY e
         ''', [sessionId: session.id])
     }
 

@@ -3,15 +3,8 @@
 <html>
 	<head>
         <meta name="layout" content="main">
-        <title><g:message code="default.edit.label" args="${[message(code: 'user.label')]}" /></title>
 	</head>
 	<body>
-        <h1><g:message code="default.edit.label" args="${[message(code: 'user.label')]}" /></h1>
-
-        <g:if test="${flash.message}">
-            <div class="message" role="status">${flash.message}</div>
-        </g:if>
-
         <g:hasErrors bean="${user}">
           <ul class="errors" role="alert">
             <g:eachError bean="${user}" var="error">

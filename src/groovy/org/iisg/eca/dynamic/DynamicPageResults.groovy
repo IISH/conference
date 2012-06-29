@@ -263,7 +263,9 @@ class DynamicPageResults {
             domainClasses.add(instance)
             dataContainer.forAllColumnsWithChildren { c ->
                 if (c.domainClass == domainClass) {
-                    instance[c.name]?.each { domainClasses.add(it) }
+                    instance[c.name]?.each {
+                        domainClasses.add(it)
+                    }
                 }
             }
         }

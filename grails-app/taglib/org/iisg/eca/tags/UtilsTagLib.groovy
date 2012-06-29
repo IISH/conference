@@ -12,17 +12,20 @@ import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
  * Utilities tag library
  */
 class UtilsTagLib {
+    /**
+     * The Spring security service for authentication/authorization related information of the user
+     */
     def springSecurityService
 
     static namespace = "eca"
 
     /**
      * Tag responsible for formatting the given String
-     * @attr text The text to format
+     * @attr text REQUIRED The text to format
      */
     def formatText = { attrs ->
         if (attrs.text != null && (attrs.text.toString().trim().length() != 0)) {
-            out << attrs.text.encodeAsHTML().replaceAll("\n", "<br />").replaceAll("\t", "     ")
+            out << attrs.text.encodeAsHTML().replaceAll("\n", "<br />").replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
         }
         else {
             out << "-"
@@ -81,12 +84,13 @@ class UtilsTagLib {
 
     /**
      * Tag creating a boolean select box
-     * @attrs value The selected value
+     * @attr value REQUIRED The selected value
      */
     def booleanSelect = { attrs ->
         MarkupBuilder builder = new MarkupBuilder(out)
         builder.doubleQuotes = true
 
+        // Create a map of all options
         Map options =
             ["null": "${g.message(code: 'default.boolean.true')} & ${g.message(code: 'default.boolean.false')}",
             "0": "${g.message(code: 'default.boolean.false')}",
@@ -94,8 +98,10 @@ class UtilsTagLib {
         String value = attrs.value
         attrs.remove("value")
 
+        // Create the select box
         builder.select(attrs) {
             options.each { option ->
+                // Make sure the selected value is also selected in the select box
                 if (option.key == value) {
                     builder.option(value: option.key, selected: "selected", option.value)
                 }
@@ -110,7 +116,10 @@ class UtilsTagLib {
      * Tag printing all roles of the logged in user in a user-friendly way
      */
     def roles = {
+        // Get all the roles of the currently logged in user
         String userRoles = SpringSecurityUtils.getPrincipalAuthorities().collect { it.authority }.join(', ')
+
+        // If he has any roles, return them
         if (!userRoles.isEmpty()) {
             out << "(${userRoles})"
         }
@@ -118,31 +127,37 @@ class UtilsTagLib {
 
     /**
      * Creates an event switcher to make switching between different events and their dates easier
+     * @attr date The current/selected date
      */
     def eventSwitcher = { attrs ->
         MarkupBuilder builder = new MarkupBuilder(out)
         builder.doubleQuotes = true
 
+        // Get all dates the user has access to
         Set<EventDate> dates = User.get(springSecurityService.principal.id).dates
         List<EventDate> datesSorted = new ArrayList()
 
+        // Make sure the dates are properly sorted
         EventDate.sortByEventAndDate.list().each { date ->
             if (dates.contains(date)) {
                 datesSorted.add(date)
             }
         }
 
+        // Map the event dates to their specific event
         Map<Event, List<EventDate>> datesByEvent = [:]
         datesSorted.each { date ->
             List<EventDate> list = (List<EventDate>) datesByEvent.get(date.event, new ArrayList<EventDate>())
             list.add(date)
         }
 
+        // Now with all the information available, creeate the select box
         builder.form(method: "get", action: eca.createLink(controller: 'event', action: 'switchEvent')) {
             builder.select(id: "event_switcher", name: "event_switcher") {
                 datesByEvent.keySet().each { event ->
                     builder.optgroup(label: event.toString()) {
-                        datesByEvent.get(event).each { date -> 
+                        datesByEvent.get(event).each { date ->
+                            // If this is the current/selected date, make sure it is visible
                             if (attrs.date?.id == date.id) {
                                 builder.option(value: "${date.id}|${params.controller}", date.toString(), selected: "selected")
                             }
@@ -163,6 +178,7 @@ class UtilsTagLib {
         MarkupBuilder builder = new MarkupBuilder(out)
         builder.doubleQuotes = true
 
+        // Let the sub menu method take care of building it
         printSubMenu(builder, Page.menuPages.list())
     }
 
@@ -196,16 +212,20 @@ class UtilsTagLib {
         out << g.createLink(linkAllParamsPrep(attrs, params))
     }
 
-
     /**
      * If the message is not found in the language properties files, try the fall back code and attributes.
      * If the message is still not found, then fall back to the default code
+     * @attr code The code to resolve the message for
+     * @attr args A list of argument values to apply to the message when code is used
+     * @attr default The default message to output if the error or code cannot be found in messages.properties
+     * @attr fbCode The code to resolve the message for, if the other one could not be found
+     * @attr fbArgs A list of argument values to apply to the message when fallback code is used
      */
     def fallbackMessage = { attrs ->
-        String msg = message(code: attrs.code, attrs: attrs.attrs).toString()
+        String msg = g.message(code: attrs.code, attrs: attrs.attrs).toString()
 
         if (msg.equals(attrs.code.toString())) {
-            msg = message(code: attrs.fbCode, attrs: attrs.fbAttrs, default: attrs.default).toString()
+            msg = g.message(code: attrs.fbCode, attrs: attrs.fbAttrs, default: attrs.default).toString()
         }
 
         out << msg
@@ -213,6 +233,7 @@ class UtilsTagLib {
     
     /**
      * Creates a date field with the given attributes
+     * @attr date REQUIRED The date to be parsed
      */
     def dateField = { attrs -> 
         MarkupBuilder builder = new MarkupBuilder(out)
@@ -229,6 +250,8 @@ class UtilsTagLib {
 
     /**
      * The body is only executed if the user has access to the page the attributes point to
+     * @attr controller REQUIRED The controller of the page
+     * @attr action REQUIRED The action of the page
      */
     def ifUserHasAccess = { attrs, body ->
         Page page = Page.findByControllerAndAction(attrs.controller, attrs.action)
@@ -240,6 +263,8 @@ class UtilsTagLib {
 
     /**
      * The body is only executed if the user has no access to the page the attributes point to
+     * @attr controller REQUIRED The controller of the page
+     * @attr action REQUIRED The action of the page
      */
     def ifUserHasNoAccess = { attrs, body ->
         Page page = Page.findByControllerAndAction(attrs.controller, attrs.action)
@@ -309,6 +334,12 @@ class UtilsTagLib {
         attrs
     }
 
+    /**
+     * Prepares the link attributes, including all parameters
+     * @param attrs The attributes of the called tag
+     * @param params The request parameters
+     * @return A prepared attrs object
+     */
     private static Map linkAllParamsPrep(attrs, params) {
         if (!attrs.params) {
             attrs.params = [:]

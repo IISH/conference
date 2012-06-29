@@ -20,6 +20,7 @@ import org.iisg.eca.domain.SessionRoomDateTime
 import org.iisg.eca.dynamic.DataContainer
 import org.iisg.eca.dynamic.DynamicPageResults
 import org.iisg.eca.utils.ParticipantSessionInfo
+import org.iisg.eca.domain.Day
 
 /**
  * Controller responsible for handling requests on sessions
@@ -75,7 +76,7 @@ class SessionController {
         // If the user came to this page via the dynamic page listing all sessions, ask for the last results
         // Otherwise just return all listed sessions in its default order
         DynamicPage dynamicPage = dynamicPageService.getDynamicPage(Page.findByControllerAndAction(params.controller, 'list'))
-        DynamicPageResults results = new DynamicPageResults((DataContainer) dynamicPage.elements.get(0), params, pageInformation)
+        DynamicPageResults results = new DynamicPageResults((DataContainer) dynamicPage.elements.get(0), params)
 
         // Now we have the results, but we're only interested in the ids
         // (Actually, just the prev/next ids for the navigation section)
@@ -199,7 +200,7 @@ class SessionController {
         [   equipment:              sessionPlannerService.equipmentCombinations,
             schedule:               sessionPlannerService.schedule,
             sessionsUnscheduled:    sessionPlannerService.unscheduledSessions,
-            dateTimes:              SessionDateTime.list(),
+            dateTimes:              SessionDateTime.findAllByDayInList(Day.list()),
             rooms:                  Room.list()]
     }
 
@@ -416,7 +417,7 @@ class SessionController {
             // Try to find all records for these ids
             Session session = Session.findById(params.long('session_id'))
             Room room = Room.findById(params.long('room_id'))
-            SessionDateTime sessionDateTime = SessionDateTime.findById(params.long('date_time_id'))
+            SessionDateTime sessionDateTime = SessionDateTime.findByIdAndDayInList(params.long('date_time_id'), Day.list())
 
             // If found, try to plan the session
             if (session && room && sessionDateTime) {
