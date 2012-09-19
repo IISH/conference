@@ -358,7 +358,7 @@ span.remove-item {
 #event-header .hosted {
     position: absolute;	
     right: 0;
-    color: #880000;
+    color: #225496;
     font-size: 95%;
     font-weight: bold;
     margin-right: 30px;
@@ -390,6 +390,14 @@ span.remove-item {
     float: right;
 }
 
+#locales img {
+    border: 2px outset transparent;
+}
+
+#locales img.selected {
+    border-color: #7F9DB9;
+}
+
 #event-switcher select {
     width: 500px;
 }
@@ -403,6 +411,11 @@ span.remove-item {
 #loggedin img {
     margin-bottom: 1px;
     margin-left: 5px;
+}
+
+#loggedin .roles {
+    font-weight: normal;
+    font-style: italic;
 }
 
 #locales ul {
@@ -454,7 +467,6 @@ span.remove-item {
 }
 
 #content .top {
-    border-top: 1px solid #225496;
     margin: 10px 0;
     padding-left: 50px;
     float: right;
@@ -557,12 +569,12 @@ span.remove-item {
 }
 
 #list li {
-    margin: 0;
+    margin-left: 20px;
 }
 
 #list li.char {
     font-weight: bold;
-    margin-left: 20px;
+    margin-left: 0;
 }
 
 #list li.char a {

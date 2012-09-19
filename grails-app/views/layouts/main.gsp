@@ -1,4 +1,4 @@
-<%@ page import="java.text.SimpleDateFormat; org.iisg.eca.domain.Setting;org.springframework.validation.FieldError" %>
+<%@ page import="org.springframework.context.i18n.LocaleContextHolder; java.text.SimpleDateFormat; org.iisg.eca.domain.Setting;org.springframework.validation.FieldError" %>
 <!doctype html>
 <!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
 <!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
@@ -8,6 +8,12 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+        <meta http-equiv="cache-control" content="max-age=0" />
+        <meta http-equiv="cache-control" content="no-cache" />
+        <meta http-equiv="expires" content="-1" />
+        <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+        <meta http-equiv="pragma" content="no-cache" />
         
         <title>
             <g:layoutTitle default="${(curPage) ? curPage.toString() : 'ECA' }" />
@@ -29,7 +35,7 @@
                     ${grailsApplication.config.grails.serverURL}
                 </a>
                 
-                <a href="http://www.iisg.nl/" class="hosted">Hosted by IISH</a>
+                <a href="http://socialhistory.org/" target="_blank" class="hosted">Hosted by IISH</a>
             </div>
           
             <div id="banner-container">
@@ -44,17 +50,23 @@
                 </g:if>
 
                 <div id="locales">
-                    Select language:
+                    Language:
                     <ul>
-                        <li><a href="?lang=nl"><g:img dir="images/flags" file="nl.png" /></a></li>
-                        <li><a href="?lang=en"><g:img dir="images/flags" file="us.png" /></a></Li>
+                        <li><a href="?lang=nl">
+                            <g:img class="${(LocaleContextHolder.locale.language == 'nl') ? 'selected' : ''}" dir="images/flags" file="nl.png" />
+                        </a></li>
+                        <li><a href="?lang=en">
+                            <g:img class="${(LocaleContextHolder.locale.language == 'en') ? 'selected' : ''}" dir="images/flags" file="us.png" />
+                        </a></Li>
                     </ul>
                 </div>
 
                 <sec:ifLoggedIn>
                     <div id="loggedin">
                         <g:message code="springSecurity.loggedin.welcome" args="${[sec.loggedInUserInfo(field: 'fullName')]}" />
-                        <eca:roles />
+                        <span class="roles">
+                            <eca:roles />
+                        </span>
                         <g:img dir="images/skin" file="sorted_desc.gif" />
                     </div>
                 </sec:ifLoggedIn>
@@ -87,7 +99,7 @@
             <g:layoutBody />
             
             <span class="top right">
-                <a href="#top">Back to top</a>
+                <a href="#top">Back to top <span class="ui-icon ui-icon-triangle-1-n" /></a>
             </span>
         </div>
 

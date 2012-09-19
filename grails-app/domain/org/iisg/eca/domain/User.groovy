@@ -140,6 +140,9 @@ class User extends DefaultDomain {
     def beforeInsert() {
         // Before insertion of a user, hash the password
         encodePassword()
+
+        // Make sure the email address is in lowercase
+        emailToLowercase()
     }
 
     def beforeUpdate() {
@@ -147,6 +150,9 @@ class User extends DefaultDomain {
         if (isDirty('password')) {
             encodePassword()
         }
+
+        // Make sure the email address is in lowercase
+        emailToLowercase()
     }
 
     /**
@@ -174,6 +180,13 @@ class User extends DefaultDomain {
     protected void encodePassword() {
         salt = createSecureRandomString()
         password = springSecurityService.encodePassword(password, saltSource.getSalt(this))
+    }
+
+    /**
+     * Makes sure the email address is always saved in lowercase characters
+     */
+    private void emailToLowercase() {
+        this.email = this.email.toLowerCase()
     }
 
     @Override

@@ -69,6 +69,10 @@ class UtilsTagLib {
                     builder.span(g.message(code: "default.paginate.prev"))
                 }
             }
+            else {
+                builder.span(class: "ui-icon ui-icon-arrowthick-1-w", "")
+                builder.span(g.message(code: "default.paginate.prev"))
+            }
             
             builder.span(class: "ui-icon ui-icon-bullet", "")
 
@@ -78,6 +82,10 @@ class UtilsTagLib {
                     builder.span(g.message(code: "default.paginate.next"))
                     builder.span(class: "ui-icon ui-icon-arrowthick-1-e", "")
                 }
+            }
+            else {
+                builder.span(g.message(code: "default.paginate.next"))
+                builder.span(class: "ui-icon ui-icon-arrowthick-1-e", "")
             }
         }
     }
@@ -121,7 +129,7 @@ class UtilsTagLib {
 
         // If he has any roles, return them
         if (!userRoles.isEmpty()) {
-            out << "(${userRoles})"
+            out << "(${userRoles.toLowerCase()})"
         }
     }
 
@@ -157,12 +165,16 @@ class UtilsTagLib {
                 datesByEvent.keySet().each { event ->
                     builder.optgroup(label: event.toString()) {
                         datesByEvent.get(event).each { date ->
+                            String htmlReadyDate = "${date.description} &nbsp;&nbsp; ${date.dateAsText}"
+
                             // If this is the current/selected date, make sure it is visible
                             if (attrs.date?.id == date.id) {
-                                builder.option(value: "${date.id}|${params.controller}", date.toString(), selected: "selected")
+                                builder.option(value: "${date.id}|${params.controller}", selected: "selected")
+                                builder.mkp.yieldUnescaped htmlReadyDate
                             }
                             else {
-                                builder.option(value: "${date.id}|${params.controller}", date.toString())
+                                builder.option(value: "${date.id}|${params.controller}")
+                                builder.mkp.yieldUnescaped htmlReadyDate
                             }
                         }
                     }
