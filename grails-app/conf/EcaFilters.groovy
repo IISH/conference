@@ -1,15 +1,14 @@
 import org.iisg.eca.domain.User
+import org.iisg.eca.domain.Role
 import org.iisg.eca.domain.Page
 import org.iisg.eca.domain.Event
-import org.iisg.eca.domain.UserPage
+import org.iisg.eca.domain.UserRole
 import org.iisg.eca.domain.EventDate
 import org.iisg.eca.domain.EventDomain
 import org.iisg.eca.domain.EventDateDomain
 
+import org.springframework.context.i18n.LocaleContextHolder
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
-import org.iisg.eca.domain.Group
-import org.iisg.eca.domain.Role
-import org.iisg.eca.domain.UserRole
 
 /**
  * All filters for accessing a page
@@ -152,6 +151,9 @@ class EcaFilters {
                 // Add the pageInformation bean information to all models by default
                 model.put('curPage', pageInformation.page)
                 model.put('curDate', pageInformation.date)
+
+                // Also add current language information to the model
+                model.put('curLang', LocaleContextHolder.locale.language)
             }
         }
     }

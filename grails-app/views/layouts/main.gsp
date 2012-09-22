@@ -53,10 +53,10 @@
                     Language:
                     <ul>
                         <li><a href="?lang=nl">
-                            <g:img class="${(LocaleContextHolder.locale.language == 'nl') ? 'selected' : ''}" dir="images/flags" file="nl.png" />
+                            <g:img class="${(curLang == 'nl') ? 'selected' : ''}" dir="images/flags" file="nl.png" />
                         </a></li>
                         <li><a href="?lang=en">
-                            <g:img class="${(LocaleContextHolder.locale.language == 'en') ? 'selected' : ''}" dir="images/flags" file="us.png" />
+                            <g:img class="${(curLang == 'en') ? 'selected' : ''}" dir="images/flags" file="us.png" />
                         </a></Li>
                     </ul>
                 </div>
@@ -75,12 +75,12 @@
 
         <div id="nav" role="navigation">
             <dl id="menu">
-                <dt>Web</dt>
-                <dd><a href="http://www.iisg.nl/esshc">ESSHC</a></dd>
-
-                <dd>&nbsp;</dd>
-
                 <g:if test="${params.event && params.date}">
+                    <dt>Web</dt>
+                    <dd><a target="_blank" href="${Setting.findByProperty(Setting.WEB_ADDRESS).value}">${curDate.event.shortName}</a></dd>
+
+                    <dd>&nbsp;</dd>
+
                     <dt class="esshc">CMS</dt>
                     <eca:menu />
                 </g:if>

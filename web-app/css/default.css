@@ -390,12 +390,18 @@ span.remove-item {
     float: right;
 }
 
+#locales a:hover {
+    text-decoration: none;
+}
+
 #locales img {
-    border: 2px outset transparent;
+    border: 2px solid transparent;
+    margin-bottom: -5px;
+    padding-bottom: 2px;
 }
 
 #locales img.selected {
-    border-color: #7F9DB9;
+    border-bottom-color: #7F9DB9;
 }
 
 #event-switcher select {

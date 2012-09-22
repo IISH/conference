@@ -33,6 +33,7 @@ class User extends DefaultDomain {
     String language = 'en'
     String password
     String salt
+    String requestCode
     String phone
     String fax
     String mobile
@@ -68,6 +69,7 @@ class User extends DefaultDomain {
         language        column: 'language'
         password        column: 'password'
         salt            column: 'salt'
+        requestCode     column: 'request_code'
         phone           column: 'phone'
         fax             column: 'fax'
         mobile          column: 'mobile'
@@ -95,6 +97,7 @@ class User extends DefaultDomain {
         language        maxSize: 10,    blank: false
         password        maxSize: 128,   blank: false,   display: false, password: true
         salt            maxSize: 26,    nullable: true, display: false
+        requestCode     maxSize: 26,    nullable: true, display: false
         phone           maxSize: 50,    nullable: true
         fax             maxSize: 50,    nullable: true
         mobile          maxSize: 50,    nullable: true

@@ -21,7 +21,7 @@
                     <sec:ifAnyGranted roles="admin">
                         <span class="action">
                             <eca:link controller="event" action="edit" id="${evt.id}">
-                                <g:message code="default.edit.label" args="[message(code: 'event.label').toLowerCase()]" />
+                                <g:message code="default.edit.label" args="[message(code: 'event.label')]" />
                             </eca:link>
                         </span>
                     </sec:ifAnyGranted>

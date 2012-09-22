@@ -29,12 +29,22 @@ class Event extends DefaultDomain {
     static constraints = {
         code        maxSize: 20,    blank: false,   unique: true
         shortName   maxSize: 20,    blank: false
-        longName    maxSize: 50,    blank: false
+        longName    maxSize: 50,    blank: false,   widget: 'textarea'
         type        maxSize: 20,    nullable: true
     }
 
     String getUrl() {
         code.replaceAll('\\s', '-')
+    }
+
+    def beforeInsert() {
+        // Make sure the code is in lowercase
+        code = code.toLowerCase()
+    }
+
+    def beforeUpdate() {
+        // Make sure the code is in lowercase
+        code = code.toLowerCase()
     }
 
     @Override
