@@ -27,6 +27,7 @@ class UserAuthController {
     def show() {
         // We need an id, check for the id
         if (!params.id) {
+            flash.error = true
             flash.message = g.message(code: 'default.no.id.message')
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
@@ -36,6 +37,7 @@ class UserAuthController {
 
         // We also need a user to be able to show something
         if (!user) {
+            flash.error = true
             flash.message = g.message(code: 'default.not.found.message', args: [g.message(code: 'user.label')])
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
@@ -92,7 +94,7 @@ class UserAuthController {
 
             // Save the user and redirect to the previous page if everything is ok
             if (user.save(flush: true)) {
-                flash.message = g.message(code: 'default.created.message', args: [g.message(code: 'user.label')])
+                flash.message = g.message(code: 'default.created.message', args: [g.message(code: 'user.label'), user.toString()])
                 redirect(uri: eca.createLink(action: 'list', noBase: true))
                 return
             }
@@ -111,6 +113,7 @@ class UserAuthController {
     def edit() {
         // We need an id, check for the id
         if (!params.id) {
+            flash.error = true
             flash.message = g.message(code: 'default.no.id.message')
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
@@ -120,6 +123,7 @@ class UserAuthController {
 
         // We also need a user to be able to show something
         if (!user) {
+            flash.error = true
             flash.message = g.message(code: 'default.not.found.message', args: [g.message(code: 'user.label')])
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
@@ -160,7 +164,7 @@ class UserAuthController {
 
             // Save the user and redirect to the previous page if everything is ok
             if (user.save(flush: true)) {
-                flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'user.label')])
+                flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'user.label'), user.toString()])
                 redirect(uri: eca.createLink(action: 'list', noBase: true))
                 return
             }

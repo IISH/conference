@@ -127,6 +127,7 @@ class LoginController {
 			render([error: msg] as JSON)
 		}
 		else {
+            flash.error = true
 			flash.message = msg
 			redirect action: 'auth', params: params
 		}
@@ -186,6 +187,7 @@ class LoginController {
 
         // We need a user to give him/her a new request code
         if (!user) {
+            flash.error = true
             flash.message = g.message(code: 'springSecurity.forgot.fail')
             render view: 'forgot'
             return
@@ -196,6 +198,7 @@ class LoginController {
 
         // Try to persist the request code to the database
         if (!user.save(flush: true)) {
+            flash.error = true
             flash.message = g.message(code: 'springSecurity.forgot.error')
             render view: 'forgot'
             return
@@ -219,6 +222,7 @@ class LoginController {
 
         // We need a user to give him/her a new password
         if (!user) {
+            flash.error = true
             flash.message = g.message(code: 'springSecurity.forgot.fail')
             render view: 'auth'
             return
@@ -235,6 +239,7 @@ class LoginController {
 
             // Try to persist the changes to the database
             if (!user.save(flush: true)) {
+                flash.error = true
                 flash.message = g.message(code: 'springSecurity.forgot.error')
                 render view: 'auth'
                 return
@@ -250,6 +255,7 @@ class LoginController {
         }
         else {
             // Redirect to the login page with a failure message, the codes are not equal
+            flash.error = true
             flash.message = g.message(code: 'springSecurity.forgot.code.incorrect')
             redirect action: 'auth'
         }

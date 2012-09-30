@@ -33,6 +33,7 @@ class DynamicPageController {
         // If one of the data containers needs an id from the url, while there isn't one specified
         // Send back with a 'no id' message
         if ((params.id == null) && dynamicPage.elements.find { (it instanceof DataContainer) && (it.id == 'url') }) {
+            flash.error = true
             flash.message = g.message(code: 'default.no.id.message')
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
@@ -44,6 +45,7 @@ class DynamicPageController {
         // If one of the data containers did not find a record with the specified id, send back a message
         DynamicPageResults nullResults = allResults.values().find { it.containsNullResults() }
         if (nullResults) {
+            flash.error = true
             flash.message = g.message(code: 'default.not.found.message', args: [g.message(code: "${nullResults.dataContainer.domainClass.propertyName}.label")])
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
@@ -83,7 +85,7 @@ class DynamicPageController {
             }
 
             // Everything is fine, so redirect to either the previous page or the default page
-            flash.message = g.message(code: "default.successful.message")
+            flash.message = g.message(code: "default.successful.message", args: [results.get().get(0).toString()])
 
             // Redirect to previous page
             redirect(uri: eca.createLink(previous: true, noBase: true))

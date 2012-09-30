@@ -7,9 +7,15 @@
     <div id='login'>
         <h1><g:message code="springSecurity.login.title" /></h1>
 
-        <g:if test="${flash.message}">
-            <div class="message" role="status">${flash.message}</div>
+        <g:if test="${flash.message && flash.error}">
+            <ul class="errors" role="alert">
+                <li>${flash.message}</li>
+            </ul>
         </g:if>
+
+        <g:elseif test="${flash.message}">
+            <div class="message" role="status">${flash.message}</div>
+        </g:elseif>
 
         <form action='${postUrl}' method='post' id='loginForm' autocomplete='off'>
             <fieldset class="form">

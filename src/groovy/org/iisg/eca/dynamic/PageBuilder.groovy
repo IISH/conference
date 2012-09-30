@@ -118,6 +118,13 @@ class PageBuilder {
                     buildTableColumns(element)
                 }
             }
+
+            if (element.totals) {
+                builder.div(class: "tbl_totals") {
+                    builder.span("\${g.message(code: 'default.totals.filtered')}: \${${RESULTS}.get(${element.eid}).get().size()}")
+                    builder.span("\${g.message(code: 'default.totals.not.filtered')}: \${${RESULTS}.get(${element.eid}).getUnfiltered().size()}")
+                }
+            }
         }
     }
     

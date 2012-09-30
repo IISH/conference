@@ -35,6 +35,7 @@ class EmailController {
     def send() {
         // We need an id, check for the id
         if (!params.id) {
+            flash.error = true
             flash.message = g.message(code: 'default.no.id.message')
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
@@ -44,6 +45,7 @@ class EmailController {
 
         // We also need a email template to be able to send emails
         if (!emailTemplate) {
+            flash.error = true
             flash.message = g.message(code: 'default.not.found.message', args: [g.message(code: 'email.label')])
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return

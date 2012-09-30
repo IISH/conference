@@ -62,7 +62,7 @@ class FeeController {
 
             // Save the fee state and redirect to the previous page if everything is ok
             if (feeState.save(flush: true)) {
-                flash.message = g.message(code: 'default.created.message', args: [g.message(code: 'feeState.label')])
+                flash.message = g.message(code: 'default.created.message', args: [g.message(code: 'feeState.label'), feeState.toString()])
                 redirect(uri: eca.createLink(previous: true, noBase: true))
                 return
             }
@@ -75,6 +75,7 @@ class FeeController {
     def edit() {
          // We need an id, check for the id
         if (!params.id) {
+            flash.error = true
             flash.message = g.message(code: 'default.no.id.message')
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
@@ -86,6 +87,7 @@ class FeeController {
 
         // We also need a fee state to be able to show something
         if (!feeState) {
+            flash.error = true
             flash.message = g.message(code: 'default.not.found.message', args: [g.message(code: 'feeState.label')])
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
@@ -131,7 +133,7 @@ class FeeController {
 
             // Save the fee state and redirect to the previous page if everything is ok
             if (feeState.save(flush: true)) {
-                flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'feeState.label')])
+                flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'feeState.label'), feeState.toString()])
                 redirect(uri: eca.createLink(previous: true, noBase: true))
                 return
             }
@@ -152,14 +154,16 @@ class FeeController {
 
             // Try to remove the fee state, send back a success or failure message
             if (feeState?.save(flush: true)) {
-                flash.message =  message(code: 'default.deleted.message', args: [message(code: 'feeState.label')])
+                flash.message = g.message(code: 'default.deleted.message', args: [g.message(code: 'feeState.label'), feeState.toString()])
             }
             else {
-                flash.message =  message(code: 'default.not.deleted.message', args: [message(code: 'feeState.label')])
+                flash.error = true
+                flash.message = g.message(code: 'default.not.deleted.message', args: [g.message(code: 'feeState.label'), feeState.toString()])
             }
         }
         else {
-            flash.message =  message(code: 'default.no.id.message')
+            flash.error = true
+            flash.message = g.message(code: 'default.no.id.message')
         }
 
         redirect(uri: eca.createLink(action: 'list', noBase: true))

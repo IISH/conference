@@ -53,14 +53,16 @@ class EquipmentController {
 
             // Try to remove the type of equipment, send back a success or failure message
             if (equipment?.save(flush: true)) {
-                flash.message =  message(code: 'default.deleted.message', args: [message(code: 'equipment.label')])
+                flash.message = g.message(code: 'default.deleted.message', args: [g.message(code: 'equipment.label'), equipment.toString()])
             }
             else {
-                flash.message =  message(code: 'default.not.deleted.message', args: [message(code: 'equipment.label')])
+                flash.error = true
+                flash.message = g.message(code: 'default.not.deleted.message', args: [g.message(code: 'equipment.label'), equipment.toString()])
             }
         }
         else {
-            flash.message =  message(code: 'default.no.id.message')
+            flash.error = true
+            flash.message = g.message(code: 'default.no.id.message')
         }
 
         redirect(uri: eca.createLink(action: 'list', noBase: true))

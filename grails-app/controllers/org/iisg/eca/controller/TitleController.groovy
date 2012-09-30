@@ -53,13 +53,15 @@ class TitleController {
 
             // Try to remove the title, send back a success or failure message
             if (title?.save(flush: true)) {
-                flash.message = g.message(code: 'default.deleted.message', args: [message(code: 'title.label')])
+                flash.message = g.message(code: 'default.deleted.message', args: [g.message(code: 'title.label'), title.toString()])
             }
             else {
-                flash.message = g.message(code: 'default.not.deleted.message', args: [message(code: 'title.label')])
+                flash.error = true
+                flash.message = g.message(code: 'default.not.deleted.message', args: [g.message(code: 'title.label'), title.toString()])
             }
         }
         else {
+            flash.error = true
             flash.message = g.message(code: 'default.no.id.message')
         }
 

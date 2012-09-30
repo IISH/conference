@@ -2,6 +2,7 @@ package org.iisg.eca.controller
 
 import grails.converters.JSON
 
+import org.iisg.eca.domain.Day
 import org.iisg.eca.domain.Page
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Room
@@ -19,8 +20,8 @@ import org.iisg.eca.domain.SessionRoomDateTime
 
 import org.iisg.eca.dynamic.DataContainer
 import org.iisg.eca.dynamic.DynamicPageResults
+
 import org.iisg.eca.utils.ParticipantSessionInfo
-import org.iisg.eca.domain.Day
 
 /**
  * Controller responsible for handling requests on sessions
@@ -59,6 +60,7 @@ class SessionController {
     def show() {
         // We need an id, check for the id
         if (!params.id) {
+            flash.error = true
             flash.message = g.message(code: 'default.no.id.message')
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
@@ -68,6 +70,7 @@ class SessionController {
 
         // We also need a session to be able to show something
         if (!session) {
+            flash.error = true
             flash.message = g.message(code: 'default.not.found.message', args: [g.message(code: 'session.label')])
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
@@ -115,6 +118,7 @@ class SessionController {
     def edit() {
         // We need an id, check for the id
         if (!params.id) {
+            flash.error = true
             flash.message = message(code: 'default.no.id.message')
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
@@ -124,6 +128,7 @@ class SessionController {
 
         // We also need a session to be able to show something
         if (!session) {
+            flash.error = true
             flash.message =  message(code: 'default.not.found.message', args: [message(code: 'session.label'), params.id])
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
@@ -151,7 +156,7 @@ class SessionController {
 
             // Save the session and redirect to the previous page if everything is ok
             if (session.save(flush: true)) {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'session.label')])
+                flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'session.label'), session.toString()])
                 redirect(uri: eca.createLink(previous: true, noBase: true))
                 return
             }
@@ -180,14 +185,16 @@ class SessionController {
 
             // Try to remove the session, send back a success or failure message
             if (session?.save(flush: true)) {
-                flash.message =  message(code: 'default.deleted.message', args: [message(code: 'session.label')])
+                flash.message = g.message(code: 'default.deleted.message', args: [g.message(code: 'session.label'), session.toString()])
             }
             else {
-                flash.message =  message(code: 'default.not.deleted.message', args: [message(code: 'session.label')])
+                flash.error = true
+                flash.message = g.message(code: 'default.not.deleted.message', args: [g.message(code: 'session.label'), session.toString()])
             }
         }
         else {
-            flash.message =  message(code: 'default.no.id.message')
+            flash.error = true
+            flash.message = g.message(code: 'default.no.id.message')
         }
 
         redirect(uri: eca.createLink(controller: 'session', action: 'list', noBase: true))

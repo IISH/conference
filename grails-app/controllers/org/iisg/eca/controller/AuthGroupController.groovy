@@ -53,13 +53,15 @@ class AuthGroupController {
 
             // Try to remove the authentication group, send back a success or failure message
             if (group?.save(flush: true)) {
-                flash.message = g.message(code: 'default.deleted.message', args: [message(code: 'group.label')])
+                flash.message = g.message(code: 'default.deleted.message', args: [g.message(code: 'group.label'), group.toString()])
             }
             else {
-                flash.message = g.message(code: 'default.not.deleted.message', args: [message(code: 'group.label')])
+                flash.error = true
+                flash.message = g.message(code: 'default.not.deleted.message', args: [g.message(code: 'group.label'), group.toString()])
             }
         }
         else {
+            flash.error = true
             flash.message = g.message(code: 'default.no.id.message')
         }
 

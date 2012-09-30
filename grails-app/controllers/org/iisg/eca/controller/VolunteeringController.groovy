@@ -53,13 +53,15 @@ class VolunteeringController {
 
             // Try to remove the volunteering offer, send back a success or failure message
             if (volunteering?.save(flush: true)) {
-                flash.message = g.message(code: 'default.deleted.message', args: [message(code: 'volunteering.label')])
+                flash.message = g.message(code: 'default.deleted.message', args: [g.message(code: 'volunteering.label'), volunteering.toString()])
             }
             else {
-                flash.message = g.message(code: 'default.not.deleted.message', args: [message(code: 'volunteering.label')])
+                flash.error = true
+                flash.message = g.message(code: 'default.not.deleted.message', args: [g.message(code: 'volunteering.label'), volunteering.toString()])
             }
         }
         else {
+            flash.error = true
             flash.message = g.message(code: 'default.no.id.message')
         }
 

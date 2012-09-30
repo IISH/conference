@@ -30,9 +30,9 @@ class DynamicPageResults {
      * which can be used for all columns in a Hibernate criteria builder
      * So delegate the criteria to this closure
      */
-    static Closure criteriaForColumn = { params, dataContainer, c ->
+    static Closure criteriaForColumn = { params, dataContainer, c, filterAll = true ->
         // Only sort and filter on those that will be displayed anyway
-        if (!c.hasColumns() && (!c.constrainedProperty || c.constrainedProperty.display) && !c.hidden) {
+        if (!c.hasColumns() && (!c.constrainedProperty || c.constrainedProperty.display) && !c.hidden && filterAll) {
             String filter = params["filter_${dataContainer.eid}_${c.name}"]
             String sort = params["sort_${dataContainer.eid}_${c.name}"]
 
@@ -134,6 +134,14 @@ class DynamicPageResults {
     List get() {
         results
     }
+
+    /**
+     * Returns the list with unfiltered (from the users filter options) results from the database
+     * @return A list of results
+     */
+    List getUnfiltered() {
+        getList(false)
+    }
     
     /**
      * Returns the result of the given domain class name
@@ -207,29 +215,30 @@ class DynamicPageResults {
      */
     private void getResults() {
         if (dataContainer.type == DataContainer.Type.TABLE) {
-             getList()
+            results = getList()
         }
         else {                  
-            getInstance()
+            results = getInstance()
         }   
     }
     
     /**
      * Returns a list of the requested data for use with a table
+     * @return A list with results
      */
-    private void getList() {
+    private List getList(boolean filterAll = true) {
         // The criteria builder will be used to query the database, so delegate it to the closure we just defined
         HibernateCriteriaBuilder criteria = dataContainer.domainClass.clazz.createCriteria()
         criteriaForColumn.delegate = criteria
 
-        results = criteria.list {
+        criteria.list {
             // If there are child columns defined, then first set the level to the referencing domain class
             dataContainer.forAllColumnsWithChildren { withChild ->
                 "${withChild.name}" {
                     and {
                         // Then Loop over all the columns and place filters if needed
                         dataContainer.getAllColumnsForDomainClass(withChild.property.referencedDomainClass).each { c ->
-                            criteriaForColumn(params, dataContainer, c)
+                            criteriaForColumn(params, dataContainer, c, filterAll)
                         }
                     }
                 }
@@ -238,7 +247,7 @@ class DynamicPageResults {
             and {
                 // Loop over all the columns and place filters if needed
                 dataContainer.getAllColumnsForDomainClass(dataContainer.domainClass).each { c ->
-                    criteriaForColumn(params, dataContainer, c)
+                    criteriaForColumn(params, dataContainer, c, filterAll)
                 }
             }
         }
@@ -246,8 +255,9 @@ class DynamicPageResults {
 
     /**
      * Returns an instance from the database, based on a specified element
+     * @return A list with results
      */
-    private void getInstance() {
+    private List getInstance() {
         List<Object> domainClasses = new ArrayList<Object>()
         
         // If the id is specified in the url, get it from the parameters
@@ -275,7 +285,7 @@ class DynamicPageResults {
             newInstances.put(domainClass.name, domainClass)
         }
         
-        results = domainClasses
+        domainClasses
     }
 }
 

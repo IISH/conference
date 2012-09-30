@@ -53,13 +53,15 @@ class PaperStateController {
 
             // Try to remove the paper state, send back a success or failure message
             if (paperState?.save(flush: true)) {
-                flash.message = g.message(code: 'default.deleted.message', args: [message(code: 'paperState.label')])
+                flash.message = g.message(code: 'default.deleted.message', args: [g.message(code: 'paperState.label'), paperState.toString()])
             }
             else {
-                flash.message = g.message(code: 'default.not.deleted.message', args: [message(code: 'paperState.label')])
+                flash.error = true
+                flash.message = g.message(code: 'default.not.deleted.message', args: [g.message(code: 'paperState.label'), paperState.toString()])
             }
         }
         else {
+            flash.error = true
             flash.message = g.message(code: 'default.no.id.message')
         }
 

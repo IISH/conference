@@ -32,6 +32,7 @@ class EventDateController {
     def create() {
         // We need an id of the event to add it to, check for the id
         if (!params.id) {
+            flash.error = true
             flash.message = g.message(code: 'default.no.id.message')
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
@@ -61,7 +62,7 @@ class EventDateController {
 
                 // Save the event date and redirect to the previous page if everything is ok
                 if (eventDate.save()) {
-                    flash.message = g.message(code: 'default.created.message', args: [g.message(code: 'eventDate.label')])
+                    flash.message = g.message(code: 'default.created.message', args: [g.message(code: 'eventDate.label'), eventDate.toString()])
                     redirect(uri: eca.createLink(previous: true, noBase: true))
                     return
                 }

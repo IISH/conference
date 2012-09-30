@@ -62,7 +62,7 @@ class RoomController {
             }
 
             // Everything ok, so redirect to the previous page
-            flash.message = g.message(code: 'default.created.message', args: [message(code: 'room.label')])
+            flash.message = g.message(code: 'default.created.message', args: [g.message(code: 'room.label'), room.toString()])
             redirect(uri: eca.createLink(previous: true, noBase: true))
         }
     }
@@ -73,7 +73,8 @@ class RoomController {
     def edit() {
         // We need an id, check for the id
         if (!params.id) {
-            flash.message = message(code: 'default.no.id.message')
+            flash.error = true
+            flash.message = g.message(code: 'default.no.id.message')
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
         }
@@ -82,6 +83,7 @@ class RoomController {
 
         // We also need a room to be able to show something
         if (!room) {
+            flash.error = true
             flash.message = g.message(code: 'default.not.found.message', args: [g.message(code: 'room.label')])
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
@@ -108,7 +110,7 @@ class RoomController {
 
             // Save the room and redirect to the previous page if everything is ok
             if (room.save(flush: true)) {
-                flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'room.label')])
+                flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'room.label'), room.toString()])
                 redirect(uri: eca.createLink(previous: true, noBase: true))
                 return
             }
@@ -129,14 +131,16 @@ class RoomController {
 
             // Try to remove the room, send back a success or failure message
             if (room?.save(flush: true)) {
-                flash.message =  message(code: 'default.deleted.message', args: [message(code: 'room.label')])
+                flash.message = g.message(code: 'default.deleted.message', args: [g.message(code: 'room.label'), room.toString()])
             }
             else {
-                flash.message =  message(code: 'default.not.deleted.message', args: [message(code: 'room.label')])
+                flash.error = true
+                flash.message = g.message(code: 'default.not.deleted.message', args: [g.message(code: 'room.label'), room.toString()])
             }
         }
         else {
-            flash.message =  message(code: 'default.no.id.message')
+            flash.error = true
+            flash.message = g.message(code: 'default.no.id.message')
         }
 
         redirect(uri: eca.createLink(action: 'list', noBase: true))

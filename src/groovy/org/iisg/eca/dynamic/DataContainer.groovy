@@ -11,6 +11,7 @@ class DataContainer extends ContainerElement {
     private GrailsDomainClass domainClass    
     private String id
     private boolean index
+    private boolean totals
     private String action
     
     /**
@@ -35,6 +36,7 @@ class DataContainer extends ContainerElement {
         this.domainClass = domainClass
         this.id = null
         this.index = false
+        this.totals = false
         this.action = 'show'
     }    
     
@@ -145,10 +147,26 @@ class DataContainer extends ContainerElement {
 
     /**
      * Sets whether this data container simply shows the index value
-     * @param multiple Whether this data container should show the index value
+     * @param index Whether this data container should show the index value
      */
     void setIndex(boolean index) {
         this.index = index
+    }
+
+    /**
+     * Indicates whether this data container shows a totals row if it is a table
+     * @returns Whether this data container shows a totals row if it is a table
+     */
+    boolean showsTotals() {
+        totals
+    }
+
+    /**
+     * Sets whether this data container shows a totals row if it is a table
+     * @param totals Whether this data container should show the index value
+     */
+    void setTotals(boolean totals) {
+        this.totals = totals
     }
 
     /**

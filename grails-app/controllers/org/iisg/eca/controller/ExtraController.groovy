@@ -53,13 +53,15 @@ class ExtraController {
 
             // Try to remove the type of extra, send back a success or failure message
             if (extra?.save(flush: true)) {
-                flash.message = g.message(code: 'default.deleted.message', args: [g.message(code: 'extra.label')])
+                flash.message = g.message(code: 'default.deleted.message', args: [g.message(code: 'extra.label'), extra.toString()])
             }
             else {
-                flash.message = g.message(code: 'default.not.deleted.message', args: [g.message(code: 'extra.label')])
+                flash.error = true
+                flash.message = g.message(code: 'default.not.deleted.message', args: [g.message(code: 'extra.label'), extra.toString()])
             }
         }
         else {
+            flash.error = true
             flash.message = g.message(code: 'default.no.id.message')
         }
 

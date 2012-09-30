@@ -28,7 +28,8 @@ class NetworkController {
     def show() {
         // We need an id, check for the id
         if (!params.id) {
-            flash.message = message(code: 'default.no.id.message')
+            flash.error = true
+            flash.message = g.message(code: 'default.no.id.message')
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
         }
@@ -37,7 +38,8 @@ class NetworkController {
 
         // We also need a network to be able to show something
         if (!network) {
-            flash.message =  message(code: 'default.not.found.message', args: [message(code: 'network.label'), network.id])
+            flash.error = true
+            flash.message = g.message(code: 'default.not.found.message', args: [g.message(code: 'network.label'), network.id])
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
         }
@@ -66,6 +68,7 @@ class NetworkController {
     def edit() {
         // We need an id, check for the id
         if (!params.id) {
+            flash.error = true
             flash.message = g.message(code: 'default.no.id.message')
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
@@ -75,7 +78,8 @@ class NetworkController {
 
         // We also need a network to be able to show something
         if (!network) {
-            flash.message = g.message(code: 'default.not.found.message', args: [message(code: 'network.label')])
+            flash.error = true
+            flash.message = g.message(code: 'default.not.found.message', args: [g.message(code: 'network.label')])
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
         }
@@ -102,7 +106,7 @@ class NetworkController {
 
             // Save the network and redirect to the previous page if everything is ok
             if (network.save()) {
-                flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'network.label')])
+                flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'network.label'), network.toString()])
                 redirect(uri: eca.createLink(previous: true, noBase: true))
                 return
             }
@@ -123,14 +127,16 @@ class NetworkController {
 
             // Try to remove the network, send back a success or failure message
             if (network?.save(flush: true)) {
-                flash.message =  message(code: 'default.deleted.message', args: [message(code: 'network.label')])
+                flash.message = g.message(code: 'default.deleted.message', args: [g.message(code: 'network.label'), network.toString()])
             }
             else {
-                flash.message =  message(code: 'default.not.deleted.message', args: [message(code: 'network.label')])
+                flash.error = true
+                flash.message = g.message(code: 'default.not.deleted.message', args: [g.message(code: 'network.label'), network.toString()])
             }
         }
         else {
-            flash.message =  message(code: 'default.no.id.message')
+            flash.error = true
+            flash.message = g.message(code: 'default.no.id.message')
         }
 
         redirect(uri: eca.createLink(action: 'list', noBase: true))

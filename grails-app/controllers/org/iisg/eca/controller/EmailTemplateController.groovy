@@ -58,6 +58,7 @@ class EmailTemplateController {
     def edit() {
         // We need an id, check for the id
         if (!params.id) {
+            flash.error = true
             flash.message = g.message(code: 'default.no.id.message')
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
@@ -67,6 +68,7 @@ class EmailTemplateController {
 
         // We also need an email template to be able to show something
         if (!template) {
+            flash.error = true
             flash.message = g.message(code: 'default.not.found.message', args: [message(code: 'emailTemplate.label')])
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
@@ -80,7 +82,7 @@ class EmailTemplateController {
 
             // Save the email template and redirect to the previous page if everything is ok
             if (template.save(flush: true)) {
-                flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'emailTemplate.label')])
+                flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'emailTemplate.label'), template.toString()])
                 redirect(uri: eca.createLink(action: "show", id: template.id, noBase: true))
                 return
             }
@@ -101,13 +103,15 @@ class EmailTemplateController {
 
             // Try to remove the email template, send back a success or failure message
             if (emailTemplate?.save(flush: true)) {
-                flash.message = g.message(code: 'default.deleted.message', args: [message(code: 'emailTemplate.label')])
+                flash.message = g.message(code: 'default.deleted.message', args: [g.message(code: 'emailTemplate.label'), emailTemplate.toString()])
             }
             else {
-                flash.message = g.message(code: 'default.not.deleted.message', args: [message(code: 'emailTemplate.label')])
+                flash.error = true
+                flash.message = g.message(code: 'default.not.deleted.message', args: [g.message(code: 'emailTemplate.label'), emailTemplate.toString()])
             }
         }
         else {
+            flash.error = true
             flash.message = g.message(code: 'default.no.id.message')
         }
 

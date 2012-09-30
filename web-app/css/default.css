@@ -306,6 +306,18 @@ span.remove-item {
     margin: 0 15px;
 }
 
+.tbl_totals {
+    border-top: 1px solid #7F9DB9;
+    color: #225496;
+    font-weight: bold;
+}
+
+.tbl_totals span {
+    display: block;
+    text-align: right;
+    padding: 5px 10px;
+}
+
 .tbl_container thead {
     border-top: 1px solid #7F9DB9;
     border-bottom: 1px solid #7F9DB9;

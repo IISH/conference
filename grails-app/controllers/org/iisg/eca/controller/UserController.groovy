@@ -67,7 +67,7 @@ class UserController {
             // Update the security session, to correctly reflect the updated information
             springSecurityService.reauthenticate user.email
 
-            flash.message = message(code: 'default.updated.message', args: [message(code: 'user.label')])
+            flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'user.label'), user.toString()])
             redirect(uri: eca.createLink(previous: true, noBase: true))
         }
     }

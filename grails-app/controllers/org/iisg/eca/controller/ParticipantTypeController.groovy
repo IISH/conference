@@ -53,14 +53,16 @@ class ParticipantTypeController {
 
             // Try to remove the participant type, send back a success or failure message
             if (participantType?.save(flush: true)) {
-                flash.message =  message(code: 'default.deleted.message', args: [message(code: 'participantType.label')])
+                flash.message = g.message(code: 'default.deleted.message', args: [g.message(code: 'participantType.label'), participantType.toString()])
             }
             else {
-                flash.message =  message(code: 'default.not.deleted.message', args: [message(code: 'participantType.label')])
+                flash.error = true
+                flash.message = g.message(code: 'default.not.deleted.message', args: [g.message(code: 'participantType.label'), participantType.toString()])
             }
         }
         else {
-            flash.message =  message(code: 'default.no.id.message')
+            flash.error = true
+            flash.message = g.message(code: 'default.no.id.message')
         }
 
         redirect(uri: eca.createLink(action: 'list', noBase: true))

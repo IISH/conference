@@ -90,6 +90,7 @@ class ParticipantController {
     def show() {
         // We need an id, check for the id
         if (!params.id) {
+            flash.error = true
             flash.message = g.message(code: 'default.no.id.message')
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
@@ -99,6 +100,7 @@ class ParticipantController {
 
         // We also need a user to be able to show something
         if (!user) {
+            flash.error = true
             flash.message = g.message(code: 'default.not.found.message', args: [message(code: 'user.label'), params.id])
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
@@ -228,7 +230,7 @@ class ParticipantController {
 
                 // We arrived here, so everything should be fine
                 // Go back to the previous back with an update message
-                flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'participantDate.label')])
+                flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'participantDate.label'), participant.toString()])
                 redirect(uri: eca.createLink(action: 'list', noBase: true))
                 return
             }
@@ -268,14 +270,16 @@ class ParticipantController {
 
             // Try to remove the user as a participant, send back a success or failure message
             if (participant?.save(flush: true)) {
-                flash.message =  message(code: 'default.deleted.message', args: [message(code: 'participantDate.label')])
+                flash.message = g.message(code: 'default.deleted.message', args: [g.message(code: 'participantDate.label'), participant.toString()])
             }
             else {
-                flash.message =  message(code: 'default.not.deleted.message', args: [message(code: 'participantDate.label')])
+                flash.error = true
+                flash.message = g.message(code: 'default.not.deleted.message', args: [g.message(code: 'participantDate.label'), participant.toString()])
             }
         }
         else {
-            flash.message =  message(code: 'default.no.id.message')
+            flash.error = true
+            flash.message = g.message(code: 'default.no.id.message')
         }
 
         // The previous page probably does not exist anymore, so send back to the participant listing page

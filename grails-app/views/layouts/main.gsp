@@ -16,7 +16,7 @@
         <meta http-equiv="pragma" content="no-cache" />
         
         <title>
-            <g:layoutTitle default="${(curPage) ? curPage.toString() : 'ECA' }" />
+            <g:layoutTitle default="${(curPage) ? curPage.toString() : 'ECA'}" />
         </title>
         
         <link rel="stylesheet" href="${resource(dir: 'css', file: 'default.css')}" type="text/css">
@@ -92,9 +92,15 @@
                 <h1>${curPage.toString()}</h1>
             </g:if>
 
-            <g:if test="${flash.message && curPage}">
-                <div class="message" role="status">${flash.message}</div>
+            <g:if test="${flash.message && flash.error && curPage}">
+                <ul class="errors" role="alert">
+                    <li>${flash.message}</li>
+                </ul>
             </g:if>
+
+            <g:elseif test="${flash.message && curPage}">
+                <div class="message" role="status">${flash.message}</div>
+            </g:elseif>
 
             <g:layoutBody />
             
