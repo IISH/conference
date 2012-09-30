@@ -3,8 +3,8 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 29, 2012 at 04:04 PM
--- Server version: 5.0.86
+-- Generation Time: Sep 30, 2012 at 03:11 PM
+-- Server version: 5.0.95
 -- PHP Version: 5.2.10
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
@@ -335,26 +335,6 @@ CREATE TABLE IF NOT EXISTS `dates` (
   KEY `dates_event_id_idx` (`event_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=16 ;
 
---
--- Dumping data for table `dates`
---
-
-INSERT INTO `dates` (`date_id`, `event_id`, `year_code`, `start_date`, `end_date`, `date_as_text`, `description`, `long_description`, `enabled`, `deleted`) VALUES
-(1, 1, '2012', '2012-04-11', '2012-04-14', '11 April - 14 April 2012', '9th European Social Science History Conference', '9th European Social Science History Conference\r\nGlasgow, Scotland, UK\r\nWednesday 11 - Saturday 14 April 2012', 1, 0),
-(2, 1, '2010', '2010-04-13', '2010-04-16', '13 April - 16 April 2010', '8th European Social Science History Conference', '8th European Social Science History Conference\r\nGhent, Belgium\r\nApril 2010', 1, 0),
-(3, 1, '2008', '2008-02-26', '2008-03-01', '26 February - 1 March 2008', '7th European Social Science History Conference', '7th European Social Science History Conference\r\nLisbon, Portugal\r\nMarch 2008', 1, 0),
-(4, 1, '2006', '2006-03-22', '2006-03-25', '22 - 25 March 2006', 'Sixth European Social Science History Conference', NULL, 1, 0),
-(5, 1, '2004', '2004-03-24', '2004-03-27', '24 - 27 March 2004', 'Fifth European Social Science History Conference', '', 1, 0),
-(6, 1, '2002', '2002-02-27', '2002-03-02', '27 February - 2 March 2002', 'Fourth European Social Science History Conference', '', 1, 0),
-(7, 1, '2000', '2000-04-12', '2000-04-15', '12 - 15 April 2000', 'Third European Social Science History Conference', '', 1, 0),
-(8, 1, '1998', '1998-03-05', '1998-03-07', '5 - 7 March 1998', 'Second European Social Science History Conference', '', 1, 0),
-(9, 1, '1996', '1996-05-09', '1996-05-11', '9 - 11 May 1996', 'First European Social Science History Conference', '', 1, 0),
-(10, 3, '2014', NULL, NULL, 'yyy-zzz 2014', 'First NEHA Conference', '', 1, 0),
-(11, 2, 'januari 2012', '2012-01-26', '2012-01-26', '26 januari 2012', 'IISG Vriendendag 26 januari 2012', '', 1, 0),
-(12, 2, 'juni 2011', '2011-06-23', '2011-06-23', '23 juni 2011', 'IISG Vriendendag 23 juni 2011', '', 1, 0),
-(13, 4, '2014', '2014-06-01', '2014-06-04', '2014-06-01 - 2014-06-04', 'Event for test data', 'Event for test data', 1, 0),
-(14, 5, '9999', '2012-06-27', '2012-06-30', '27 - 30 June', '1st annual GCU conference', 'long bla bla', 1, 0),
-(15, 4, '2016', '2012-06-01', '2012-06-30', 'asdsd', 'sdsaddsad', 'sdasdsd', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -373,22 +353,6 @@ CREATE TABLE IF NOT EXISTS `days` (
   KEY `date_id` (`date_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=12 ;
 
---
--- Dumping data for table `days`
---
-
-INSERT INTO `days` (`day_id`, `day`, `date_id`, `day_number`, `enabled`, `deleted`) VALUES
-(1, '2012-04-11', 13, 1, 1, 0),
-(2, '2012-04-12', 13, 2, 1, 0),
-(3, '2012-04-13', 13, 3, 1, 0),
-(4, '2012-04-14', 13, 4, 1, 0),
-(5, '2012-06-27', 14, 1, 1, 0),
-(6, '2012-06-28', 14, 2, 1, 0),
-(7, '2012-06-29', 14, 3, 1, 0),
-(8, '2012-06-30', 14, 4, 1, 0),
-(9, '2012-06-01', 15, 1, 1, 0),
-(10, '2012-06-03', 15, 3, 1, 0),
-(11, '2012-06-02', 15, 2, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -450,8 +414,8 @@ INSERT INTO `dynamic_pages` (`dynamic_page_id`, `content`, `cache`, `page_id`, `
 (44, '<table domain="RequestMap" index="true">\r\n	<column name="url" />\r\n	<column name="configAttribute" />\r\n</table>\r\n\r\n<buttons>\r\n   <button type="back" />\r\n   <button action="create" />\r\n</buttons>', NULL, 52, NULL, 1, 0),
 (45, '<overview domain="RequestMap" id="url">\r\n	<column name="url" />\r\n	<column name="configAttribute" /> \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 53, NULL, 1, 0),
 (46, '<table domain="Extra" index="true">\r\n	<column name="extra" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>', NULL, 54, NULL, 1, 0),
-(48, '<table domain="ParticipantDate" index="true">\r\n	<column name="user">\r\n		<column name="lastName" />\r\n		<column name="firstName" />\r\n		<column name="country" />\r\n	</column>\r\n	<column name="state" />\r\n	<column name="invitationLetter" eq="1" hidden="true" />\r\n	<column name="invitationLetterSent" />  \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n</buttons>', NULL, 55, NULL, 1, 0),
-(49, '<table domain="ParticipantDate" index="true">\r\n	<column name="user">\r\n		<column name="lastName" />\r\n		<column name="firstName" />\r\n	</column>\r\n	<column name="feeState" />\r\n	<column name="lowerFeeRequested" eq="1" hidden="true" />\r\n	<column name="lowerFeeAnswered" />  \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n</buttons>', NULL, 56, NULL, 1, 0),
+(48, '<table domain="ParticipantDate" index="true" totals="true">\r\n	<column name="user">\r\n		<column name="lastName" />\r\n		<column name="firstName" />\r\n		<column name="country" />\r\n	</column>\r\n	<column name="state" />\r\n	<column name="invitationLetter" eq="1" hidden="true" />\r\n	<column name="invitationLetterSent" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n</buttons>', NULL, 55, NULL, 1, 0),
+(49, '<table domain="ParticipantDate" index="true" totals="true">\r\n	<column name="user">\r\n		<column name="lastName" />\r\n		<column name="firstName" />\r\n	</column>\r\n	<column name="feeState" />\r\n	<column name="lowerFeeRequested" eq="1" hidden="true" />\r\n	<column name="lowerFeeAnswered" />  \r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n</buttons>', NULL, 56, NULL, 1, 0),
 (50, '<table domain="User">\r\n	<column name="id" />\r\n	<column name="lastName" />\r\n	<column name="firstName" />\r\n	<column name="email" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>', NULL, 65, NULL, 1, 0),
 (51, '<table domain="Group" index="true">	\r\n	<column name="name" />\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="create" />\r\n</buttons>', NULL, 61, NULL, 1, 0),
 (52, '<form domain="Group">\r\n	<column name="name" />\r\n	<column name="pages" />\r\n	<column name="users" />\r\n	<column name="enabled" />\r\n	\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 62, NULL, 1, 0),
@@ -475,7 +439,7 @@ INSERT INTO `dynamic_pages` (`dynamic_page_id`, `content`, `cache`, `page_id`, `
 (70, '<table domain="Volunteering" index="true">\r\n	<column name="description" />\r\n</table>\r\n\r\n<buttons>\r\n   <button type="back" />\r\n   <button action="create" />\r\n</buttons>', NULL, 86, NULL, 1, 0),
 (71, '<form domain="Volunteering">\r\n	<column name="description" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="save" />  \r\n</form>', NULL, 87, NULL, 1, 0),
 (72, '<form domain="Volunteering" id="url">\r\n	<column name="description" />\r\n	<column name="enabled" />\r\n\r\n	<button type="cancel" />\r\n	<button type="delete" />\r\n	<button type="save" />    \r\n</form>', NULL, 88, NULL, 1, 0),
-(73, '<overview domain="Volunteering" id="url">\r\n	<column name="description" />\r\n	<column name="enabled" /> \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n</buttons>', NULL, 89, NULL, 1, 0),
+(73, '<overview domain="Volunteering" id="url">\r\n	<column name="description" />\r\n	<column name="enabled" /> \r\n</overview>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n	<button action="edit" />\r\n	<button type="delete" />\r\n</buttons>', NULL, 89, NULL, 1, 0),
 (74, '<table domain="ParticipantDate" index="true">\r\n	<column name="user" />\r\n	<column name="extras" />	\r\n</table>\r\n\r\n<buttons>\r\n	<button type="back" />\r\n</buttons>', NULL, 90, NULL, 1, 0);
 
 -- --------------------------------------------------------
@@ -506,7 +470,6 @@ INSERT INTO `email_codes` (`email_code_id`, `event_id`, `code`, `description`, `
 (3, 4, 'ParticipantData', 'Name, address, email, tel, organisation, department and papers of the participant', 'def personalData = sql.rows("SELECT user_id, title, firstname, lastname, organisation, department, email FROM users WHERE user_id = :userId", params)\r\n\r\ndef papers = sql.rows("""\r\n	SELECT n.name, p.session_proposal, p.title, p.abstract, p.co_authors, p.comment\r\n	FROM papers p\r\n	LEFT JOIN networks n\r\n	ON p.network_proposal_id = n.network_id\r\n	WHERE p.user_id = :userId\r\n	AND p.date_id = :dateId\r\n""", params)\r\n\r\nif (personalData?.size() == 1) {\r\n	def participant = personalData[0].subMap([''title'', ''firstname'', ''lastname'']).values()\r\n	participant.removeAll([''null'', null])\r\n\r\n	def text = """        \r\nParticipant:\r\nName: \\t\\t\\t ${participant.join('' '')}\r\nID: \\t\\t\\t ${personalData[0][''user_id'']}  \r\nOrganisation: \\t\\t\\t ${personalData[0][''organisation'']}     \r\nDepartment: \\t\\t\\t ${personalData[0][''department'']} \r\nEmail: \\t\\t\\t ${personalData[0][''email'']}  \r\n\r\nPapers:"""\r\n\r\n	papers.each { paper -> \r\n        \r\n		text += """        \r\nRegistered for network:  ${paper[''name'']}\r\nSession proposal:        ${paper[''session_proposal'']}\r\nPaper title:             ${paper[''title'']}\r\nPaper abstract:          ${paper[''abstract'']}\r\nCo-authors:              ${paper[''co_authors'']}\r\nComment:                 ${paper[''comment'']}\r\n\r\n"""\r\n        \r\n	}\r\n    \r\n	text.trim().replaceAll(''null'', ''-'')\r\n} \r\nelse {\r\n	''-''\r\n}', 1, 0),
 (4, 4, 'PaperData', 'Participants paper titles and the equipment needed', 'def papers = sql.rows("""\r\n    SELECT p.title, e.equipment\r\n	FROM papers p\r\n	INNER JOIN paper_equipment AS pe\r\n	ON p.paper_id = pe.paper_id\r\n	INNER JOIN equipment AS e\r\n	ON pe.equipment_id = e.equipment_id\r\n	WHERE p.user_id = :userId\r\n	AND p.date_id = :dateId\r\n""", params)\r\n\r\nif (papers?.size() > 0) {\r\n    def curPaper = null\r\n	def equipment = []\r\n	def text = ""\r\n	\r\n	papers.each { paper -> \r\n		if (!curPaper) {\r\n			curPaper = paper\r\n		}\r\n	\r\n		if (curPaper[''title''] == paper[''title'']) {\r\n			equipment.add(paper[''equipment''])\r\n		}\r\n		else {			\r\n			text += """  \r\n			\r\nPaper title: \\t ${curPaper[''title'']}\r\nEquipment: \\t ${equipment.join('', '')}   \r\n\r\n			""".trim()\r\n			\r\n			equipment.clear()\r\n			curPaper = paper\r\n		}    \r\n	}\r\n	\r\n	text += """  \r\n			\r\nPaper title: \\t ${curPaper[''title'']}\r\nEquipment: \\t ${equipment.join('', '')}   \r\n\r\n	""".trim()\r\n	\r\n    text.trim().replaceAll(''null'', ''-'')\r\n} \r\nelse {\r\n	"-"\r\n}', 1, 0),
 (5, 4, 'NetworkName', 'The name of the participants networks', 'def personalData = sql.rows("SELECT user_id, title, firstname, lastname, organisation, department, email FROM users WHERE user_id = :userId", params)\r\ndef networks = sql.rows("""\r\n	SELECT n.name\r\n	FROM papers p\r\n	LEFT JOIN networks n\r\n	ON p.network_proposal_id = n.network_id\r\n	WHERE p.user_id = :userId\r\n	AND p.date_id = :dateId\r\n""", params)\r\n\r\nif (networks?.size() > 0) {\r\n	networks.collect { it[''name''] }.join('', '').replaceAll(''null'', ''-'')\r\n} \r\nelse {\r\n	"-"\r\n}', 1, 0),
-(6, 5, 'gcutest', 'some bla bla', 'some code', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -530,7 +493,7 @@ CREATE TABLE IF NOT EXISTS `email_templates` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`email_template_id`),
   KEY `event_id` (`event_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=101 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=102 ;
 
 --
 -- Dumping data for table `email_templates`
@@ -542,9 +505,8 @@ INSERT INTO `email_templates` (`email_template_id`, `event_id`, `description`, `
 (3, 4, 'Paper not accepted', 'Paper not accepted', 'Dear [NameParticipant],\r\n\r\nYour paper is not accepted!\r\n\r\nWith kind regards,\r\n[NameParticipant] ', 'eca', 'participantState', 'paperNotAccepted', 30, 1, NULL, 1, 0),
 (6, 4, 'Participant session information', 'Participant session information', 'Dear [NameParticipant],\r\n\r\nParticipant session information...\r\n\r\nWith kind regards,\r\n[NameParticipant] ', 'eca', 'participantPaperState', NULL, 60, 1, NULL, 1, 0),
 (8, 4, 'Mail new registrations for Chairs', 'Mail new registrations for Chairs', 'Mail new registrations for Chairs', 'eca', NULL, NULL, 80, 1, NULL, 1, 0),
-(98, 4, 'Test email', 'Test', 'Dear [NameParticipant],\r\n\r\nYour email address is [EmailParticipant]!\r\nAnd your participant data is:\r\n[ParticipantData]\r\n\r\nBut your paper data is:\r\n[PaperData]\r\n\r\nAnd your networks are:\r\n[NetworkName]\r\n\r\nWith kind regards,\r\n[NameParticipant]', 'Me', NULL, NULL, 998, 1, NULL, 1, 0),
-(99, 4, 'Composed email', 'subject', 'Some message', 'Me', NULL, NULL, 999, 1, 'Some comments', 1, 0),
-(100, NULL, 'New password', 'New password requested', 'Dear [NameParticipant],\r\n\r\nYour new password is:\r\n[NewPassword]\r\n\r\nWith kind regards,\r\nECA conference application', 'ECA conference application', NULL, NULL, 0, 0, NULL, 1, 0);
+(100, NULL, 'New password', 'New password requested', 'Dear [NameParticipant],\r\n\r\nYour new password is:\r\n[NewPassword]\r\n\r\nWith kind regards,\r\nECA conference application', 'ECA conference application', NULL, NULL, 0, 0, NULL, 1, 0),
+(101, NULL, 'Request code', 'New password requested', 'Dear [NameParticipant],\r\n\r\nYou have requested a new password.\r\nIf you made the request, please verify by clicking on the following link and the new password will be emailed to you:\r\n[Link]\r\n\r\nWith kind regards,\r\nECA conference application', 'ECA conference application', NULL, NULL, 0, 0, NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -565,14 +527,6 @@ CREATE TABLE IF NOT EXISTS `equipment` (
   KEY `date_id` (`date_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
 
---
--- Dumping data for table `equipment`
---
-
-INSERT INTO `equipment` (`equipment_id`, `date_id`, `code`, `equipment`, `description`, `image_url`, `enabled`, `deleted`) VALUES
-(1, 13, 's', 'Slide Projector', NULL, NULL, 1, 0),
-(3, 13, 'v', 'Video recorder', NULL, NULL, 1, 0),
-(4, 13, 'd', 'DVD player', NULL, NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -592,16 +546,6 @@ CREATE TABLE IF NOT EXISTS `events` (
   UNIQUE KEY `code` (`code`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
 
---
--- Dumping data for table `events`
---
-
-INSERT INTO `events` (`event_id`, `code`, `short_name`, `long_name`, `type`, `enabled`, `deleted`) VALUES
-(1, 'esshc', 'ESSHC', 'European Social Science History Conference', NULL, 1, 0),
-(2, 'iisgvriendendag', 'IISG Vriendendag', 'IISG Vriendendag', NULL, 1, 0),
-(3, 'neha', 'NEHA', 'Nederlandsch Economisch-Historisch Archief', NULL, 1, 0),
-(4, 'test', 'TEST', 'Test event', NULL, 1, 0),
-(5, 'GCU', 'GCU is testing', 'GCU is testing BLA BLA BLA', NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -617,18 +561,8 @@ CREATE TABLE IF NOT EXISTS `extras` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`extra_id`),
   KEY `date_id` (`date_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=8 ;
 
---
--- Dumping data for table `extras`
---
-
-INSERT INTO `extras` (`extra_id`, `date_id`, `extra`, `enabled`, `deleted`) VALUES
-(1, 13, 'Concert', 1, 0),
-(2, 13, 'Theater', 1, 0),
-(3, 13, 'Museum', 1, 0),
-(4, 13, 'Reception', 1, 0),
-(5, 14, 'Concert', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -651,23 +585,6 @@ CREATE TABLE IF NOT EXISTS `fee_amounts` (
   KEY `fee_state_id` (`fee_state_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=17 ;
 
---
--- Dumping data for table `fee_amounts`
---
-
-INSERT INTO `fee_amounts` (`fee_amount_id`, `date_id`, `fee_state_id`, `end_date`, `nr_of_days_start`, `nr_of_days_end`, `fee_amount`, `enabled`, `deleted`) VALUES
-(1, 13, 1, '2011-12-31', 1, 1, 100.00, 1, 0),
-(2, 13, 1, '2011-12-31', 2, 4, 200.00, 1, 0),
-(5, 13, 1, '2012-04-30', 1, 1, 125.00, 1, 0),
-(6, 13, 1, '2012-04-30', 2, 4, 250.00, 1, 0),
-(9, 13, 2, '2012-04-30', 1, 4, 0.00, 1, 0),
-(10, 13, 3, '2012-04-30', 1, 4, 0.00, 1, 0),
-(11, 13, 4, '2012-04-30', 1, 4, 90.00, 1, 0),
-(12, 13, 5, '2012-04-30', 1, 4, 0.00, 1, 0),
-(13, 13, 8, '2012-04-30', 1, 1, 150.00, 1, 0),
-(14, 13, 8, '2012-04-30', 2, 4, 300.00, 1, 0),
-(15, 14, 9, '2012-07-31', 1, 2, 200.00, 1, 0),
-(16, 14, 9, '2012-07-31', 3, 4, 400.00, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -692,15 +609,7 @@ CREATE TABLE IF NOT EXISTS `fee_states` (
 
 INSERT INTO `fee_states` (`fee_state_id`, `event_id`, `name`, `is_default_fee`, `enabled`, `deleted`) VALUES
 (0, NULL, 'No fee selected', 0, 1, 0),
-(1, 4, 'Normal Fee', 1, 1, 0),
-(2, 4, 'No Fee', 0, 1, 0),
-(3, 4, 'No Fee and Beurs', 0, 1, 0),
-(4, 4, 'Student Fee', 0, 1, 0),
-(5, 4, 'IISG Fee', 0, 1, 0),
-(6, 4, 'Bijbetaling', 0, 1, 0),
-(7, 4, 'Book exhibit', 0, 1, 0),
-(8, 4, 'On Site', 0, 1, 0),
-(9, 5, 'Early bird', 0, 1, 0);
+
 
 -- --------------------------------------------------------
 
@@ -718,15 +627,6 @@ CREATE TABLE IF NOT EXISTS `groups` (
   KEY `groups_date_id_idx` (`date_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
 
---
--- Dumping data for table `groups`
---
-
-INSERT INTO `groups` (`group_id`, `name`, `date_id`, `enabled`, `deleted`) VALUES
-(1, 'Access to all', 13, 1, 0),
-(2, 'test groep', 13, 1, 0),
-(3, 'test group 2', 13, 1, 0),
-(4, 'GCU Groep 1', 14, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -741,91 +641,6 @@ CREATE TABLE IF NOT EXISTS `groups_pages` (
   KEY `groups_pages_page_id_fk` (`page_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Dumping data for table `groups_pages`
---
-
-INSERT INTO `groups_pages` (`group_id`, `page_id`) VALUES
-(3, 3),
-(3, 7),
-(3, 8),
-(3, 10),
-(3, 11),
-(3, 12),
-(3, 13),
-(3, 14),
-(3, 15),
-(3, 16),
-(3, 17),
-(3, 18),
-(3, 19),
-(3, 20),
-(3, 21),
-(3, 22),
-(3, 23),
-(3, 26),
-(3, 27),
-(3, 28),
-(3, 29),
-(3, 30),
-(3, 31),
-(3, 32),
-(3, 33),
-(3, 34),
-(3, 35),
-(3, 36),
-(3, 37),
-(3, 38),
-(3, 40),
-(3, 41),
-(3, 42),
-(3, 43),
-(3, 44),
-(3, 45),
-(3, 46),
-(3, 47),
-(3, 48),
-(3, 49),
-(3, 50),
-(3, 51),
-(3, 52),
-(3, 53),
-(3, 54),
-(3, 55),
-(3, 56),
-(3, 58),
-(3, 59),
-(3, 60),
-(3, 61),
-(3, 62),
-(3, 63),
-(3, 64),
-(3, 65),
-(3, 66),
-(3, 67),
-(3, 68),
-(3, 69),
-(3, 70),
-(3, 71),
-(3, 72),
-(3, 73),
-(3, 74),
-(3, 75),
-(3, 76),
-(3, 77),
-(3, 78),
-(3, 79),
-(3, 80),
-(3, 81),
-(3, 82),
-(3, 83),
-(3, 84),
-(3, 85),
-(3, 86),
-(3, 87),
-(3, 88),
-(3, 89),
-(3, 90);
 
 -- --------------------------------------------------------
 
@@ -847,15 +662,6 @@ CREATE TABLE IF NOT EXISTS `networks` (
   KEY `date_id` (`date_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=9 ;
 
---
--- Dumping data for table `networks`
---
-
-INSERT INTO `networks` (`network_id`, `date_id`, `name`, `comment`, `url`, `show_online`, `show_internal`, `enabled`, `deleted`) VALUES
-(4, 13, 'Culture', NULL, 'http://www.url.nl', 1, 1, 1, 0),
-(5, 13, 'Criminal Justice', NULL, 'http://www.url.nl', 1, 1, 1, 0),
-(6, 13, 'Africa', NULL, 'http://www.url.nl', 1, 1, 1, 0),
-(8, 14, 'Latin America', 'Network Latin America', 'http://www.nu.nl', 1, 1, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -874,16 +680,6 @@ CREATE TABLE IF NOT EXISTS `networks_chairs` (
   KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Dumping data for table `networks_chairs`
---
-
-INSERT INTO `networks_chairs` (`network_id`, `user_id`, `is_main_chair`, `enabled`, `deleted`) VALUES
-(5, 1, 0, 1, 0),
-(5, 3, 1, 1, 0),
-(6, 1, 0, 1, 0),
-(6, 2, 1, 1, 0),
-(8, 2, 1, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -980,7 +776,7 @@ INSERT INTO `pages` (`page_id`, `title_code`, `title_arg`, `title_default`, `con
 (70, 'default.edit.label', 'user.label', 'Edit user', 'userAuth', 'edit', 999, 0, NULL, NULL, 1, 0),
 (71, 'default.create.label', 'extra.label', 'Create extra', 'extra', 'create', 999, 0, NULL, NULL, 1, 0),
 (72, 'default.edit.label', 'extra.label', 'Edit extra', 'extra', 'edit', 999, 0, NULL, NULL, 1, 0),
-(73, 'default.show.label', 'extra.label', 'Show extra', 'extra', 'show', 999, 0, NULL, NULL, 1, 0),
+(73, 'default.overview.label', 'extra.label', 'Extra overview', 'extra', 'show', 999, 0, NULL, NULL, 1, 0),
 (74, 'paperState.multiple.label', NULL, 'Paper states', 'paperState', 'list', 53, 1, NULL, 66, 1, 0),
 (75, 'default.create.label', 'paperState.label', 'Create paper state', 'paperState', 'create', 999, 0, NULL, NULL, 1, 0),
 (76, 'default.edit.label', 'paperState.label', 'Edit paper state', 'paperState', 'edit', 999, 0, NULL, NULL, 1, 0),
@@ -1034,15 +830,6 @@ CREATE TABLE IF NOT EXISTS `papers` (
   KEY `network_proposal_id` (`network_proposal_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
 
---
--- Dumping data for table `papers`
---
-
-INSERT INTO `papers` (`paper_id`, `user_id`, `paper_state_id`, `session_id`, `date_id`, `title`, `co_authors`, `abstract`, `comment`, `network_proposal_id`, `session_proposal`, `proposal_description`, `filename`, `content_type`, `filesize`, `file`, `equipment_comment`, `enabled`, `deleted`) VALUES
-(1, 2, 2, 2, 13, 'Test', NULL, 'Test abstract', NULL, NULL, NULL, NULL, 'Conference-application.iml', 'application/octet-stream', 6159, 0x3c3f786d6c2076657273696f6e3d22312e302220656e636f64696e673d225554462d38223f3e0d0a3c6d6f64756c6520747970653d224a4156415f4d4f44554c45222076657273696f6e3d2234223e0d0a20203c636f6d706f6e656e74206e616d653d2245636c697073654d6f64756c654d616e61676572223e0d0a202020203c636f6e656c656d656e742076616c75653d22636f6d2e737072696e67736f757263652e7374732e677261696c732e636f72652e434c415353504154485f434f4e5441494e455222202f3e0d0a202020203c7372635f6465736372697074696f6e2065787065637465645f706f736974696f6e3d2230223e0d0a2020202020203c7372635f666f6c6465722076616c75653d2266696c653a2f2f244d4f44554c455f444952242f7372632f6a617661222065787065637465645f706f736974696f6e3d223022202f3e0d0a2020202020203c7372635f666f6c6465722076616c75653d2266696c653a2f2f244d4f44554c455f444952242f7372632f67726f6f7679222065787065637465645f706f736974696f6e3d223122202f3e0d0a2020202020203c7372635f666f6c6465722076616c75653d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f636f6e66222065787065637465645f706f736974696f6e3d223222202f3e0d0a2020202020203c7372635f666f6c6465722076616c75653d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f636f6e74726f6c6c657273222065787065637465645f706f736974696f6e3d223322202f3e0d0a2020202020203c7372635f666f6c6465722076616c75653d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f646f6d61696e222065787065637465645f706f736974696f6e3d223422202f3e0d0a2020202020203c7372635f666f6c6465722076616c75653d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f7365727669636573222065787065637465645f706f736974696f6e3d223522202f3e0d0a2020202020203c7372635f666f6c6465722076616c75653d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f7461676c6962222065787065637465645f706f736974696f6e3d223622202f3e0d0a2020202020203c7372635f666f6c6465722076616c75653d2266696c653a2f2f244d4f44554c455f444952242f746573742f696e746567726174696f6e222065787065637465645f706f736974696f6e3d223722202f3e0d0a2020202020203c7372635f666f6c6465722076616c75653d2266696c653a2f2f244d4f44554c455f444952242f746573742f756e6974222065787065637465645f706f736974696f6e3d223822202f3e0d0a202020203c2f7372635f6465736372697074696f6e3e0d0a20203c2f636f6d706f6e656e743e0d0a20203c636f6d706f6e656e74206e616d653d2246616365744d616e61676572223e0d0a202020203c666163657420747970653d22537072696e6722206e616d653d22537072696e67223e0d0a2020202020203c636f6e66696775726174696f6e3e0d0a20202020202020203c66696c657365742069643d22477261696c7322206e616d653d22477261696c73222072656d6f7665643d2266616c7365223e0d0a202020202020202020203c66696c653e66696c653a2f2f244d4f44554c455f444952242f7765622d6170702f5745422d494e462f6170706c69636174696f6e436f6e746578742e786d6c3c2f66696c653e0d0a20202020202020203c2f66696c657365743e0d0a2020202020203c2f636f6e66696775726174696f6e3e0d0a202020203c2f66616365743e0d0a202020203c666163657420747970653d2277656222206e616d653d22477261696c73576562223e0d0a2020202020203c636f6e66696775726174696f6e3e0d0a20202020202020203c776562726f6f74733e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f7765622d617070222072656c61746976653d222f22202f3e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f7669657773222072656c61746976653d222f22202f3e0d0a20202020202020203c2f776562726f6f74733e0d0a20202020202020203c736f75726365526f6f7473202f3e0d0a2020202020203c2f636f6e66696775726174696f6e3e0d0a202020203c2f66616365743e0d0a202020203c666163657420747970653d2268696265726e61746522206e616d653d2248696265726e617465223e0d0a2020202020203c636f6e66696775726174696f6e3e0d0a20202020202020203c64617461736f757263652d6d6170202f3e0d0a20202020202020203c6465706c6f796d656e7444657363726970746f72206e616d653d2268696265726e6174652e6366672e786d6c222075726c3d2266696c653a2f2f244d4f44554c455f444952242f7372632f74656d706c617465732f6172746966616374732f68696265726e6174652e6366672e786d6c22202f3e0d0a2020202020203c2f636f6e66696775726174696f6e3e0d0a202020203c2f66616365743e0d0a202020203c666163657420747970653d2277656222206e616d653d22576562223e0d0a2020202020203c636f6e66696775726174696f6e3e0d0a20202020202020203c64657363726970746f72733e0d0a202020202020202020203c6465706c6f796d656e7444657363726970746f72206e616d653d227765622e786d6c222075726c3d2266696c653a2f2f244d4f44554c455f444952242f7372632f74656d706c617465732f7761722f7765622e786d6c22202f3e0d0a20202020202020203c2f64657363726970746f72733e0d0a20202020202020203c776562726f6f74733e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f7372632f74656d706c617465732f776172222072656c61746976653d222f5745422d494e4622202f3e0d0a20202020202020203c2f776562726f6f74733e0d0a20202020202020203c736f75726365526f6f74733e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f7372632f6a61766122202f3e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f7574696c7322202f3e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f7372632f67726f6f767922202f3e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f636f6e74726f6c6c65727322202f3e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f646f6d61696e22202f3e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f736572766963657322202f3e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f7461676c696222202f3e0d0a20202020202020203c2f736f75726365526f6f74733e0d0a2020202020203c2f636f6e66696775726174696f6e3e0d0a202020203c2f66616365743e0d0a20203c2f636f6d706f6e656e743e0d0a20203c636f6d706f6e656e74206e616d653d224e65774d6f64756c65526f6f744d616e616765722220696e68657269742d636f6d70696c65722d6f75747075743d2266616c7365223e0d0a202020203c6f75747075742075726c3d2266696c653a2f2f244d4f44554c455f444952242f7765622d6170702f5745422d494e462f636c617373657322202f3e0d0a202020203c6578636c7564652d6f7574707574202f3e0d0a202020203c636f6e74656e742075726c3d2266696c653a2f2f244d4f44554c455f44495224223e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f7372632f6a6176612220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f7574696c732220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f7372632f67726f6f76792220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f636f6e74726f6c6c6572732220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f646f6d61696e2220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f73657276696365732220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f7461676c69622220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f746573742f756e69742220697354657374536f757263653d227472756522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f746573742f696e746567726174696f6e2220697354657374536f757263653d227472756522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f677261696c732d6170702f636f6e662220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f746573742f696e746567726174696f6e2220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c736f75726365466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f746573742f756e69742220697354657374536f757263653d2266616c736522202f3e0d0a2020202020203c6578636c756465466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f7461726765742f636c617373657322202f3e0d0a2020202020203c6578636c756465466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f7461726765742f746573742d636c617373657322202f3e0d0a2020202020203c6578636c756465466f6c6465722075726c3d2266696c653a2f2f244d4f44554c455f444952242f7765622d6170702f706c7567696e7322202f3e0d0a202020203c2f636f6e74656e743e0d0a202020203c6f72646572456e74727920747970653d22736f75726365466f6c6465722220666f7254657374733d2266616c736522202f3e0d0a202020203c6f72646572456e74727920747970653d22696e686572697465644a646b22202f3e0d0a202020203c6f72646572456e74727920747970653d226c69627261727922206e616d653d22636f6d2e737072696e67736f757263652e7374732e677261696c732e636f72652e434c415353504154485f434f4e5441494e455222206c6576656c3d226170706c69636174696f6e22202f3e0d0a202020203c6f72646572456e74727920747970653d226c69627261727922206e616d653d22677261696c732d322e302e3122206c6576656c3d226170706c69636174696f6e22202f3e0d0a202020203c6f72646572456e74727920747970653d226d6f64756c652d6c69627261727922206578706f727465643d22223e0d0a2020202020203c6c696272617279206e616d653d22477261696c732055736572204c6962726172792028436f6e666572656e63652d6170706c69636174696f6e29223e0d0a20202020202020203c434c41535345533e0d0a202020202020202020203c726f6f742075726c3d2266696c653a2f2f244d4f44554c455f444952242f6c696222202f3e0d0a202020202020202020203c726f6f742075726c3d226a61723a2f2f24555345525f484f4d45242f2e677261696c732f6976792d63616368652f6c6f67346a2f6c6f67346a2f6a6172732f6c6f67346a2d312e322e31342e6a6172212f22202f3e0d0a202020202020202020203c726f6f742075726c3d226a61723a2f2f24555345525f484f4d45242f2e677261696c732f6976792d63616368652f6e65742e736f75726365666f7267652e6a657863656c6170692f6a786c2f6a6172732f6a786c2d322e362e31322e6a6172212f22202f3e0d0a202020202020202020203c726f6f742075726c3d226a61723a2f2f24555345525f484f4d45242f2e677261696c732f6976792d63616368652f6f72672e68696265726e6174652f68696265726e6174652d746f6f6c732f6a6172732f68696265726e6174652d746f6f6c732d332e322e342e47412e6a6172212f22202f3e0d0a202020202020202020203c726f6f742075726c3d226a61723a2f2f24555345525f484f4d45242f2e677261696c732f6976792d63616368652f667265656d61726b65722f667265656d61726b65722f6a6172732f667265656d61726b65722d322e332e382e6a6172212f22202f3e0d0a202020202020202020203c726f6f742075726c3d226a61723a2f2f24555345525f484f4d45242f2e677261696c732f6976792d63616368652f6f72672e6265616e7368656c6c2f6273682f6a6172732f6273682d322e3062342e6a6172212f22202f3e0d0a202020202020202020203c726f6f742075726c3d226a61723a2f2f24555345525f484f4d45242f2e677261696c732f6976792d63616368652f6f72672e68696265726e6174652f6a746964792f6a6172732f6a746964792d72382d32303036303830312e6a6172212f22202f3e0d0a202020202020202020203c726f6f742075726c3d226a61723a2f2f24555345525f484f4d45242f2e677261696c732f6976792d63616368652f6f72672e737072696e676672616d65776f726b2e73656375726974792f737072696e672d73656375726974792d7765622f6a6172732f737072696e672d73656375726974792d7765622d332e302e372e52454c454153452e6a6172212f22202f3e0d0a202020202020202020203c726f6f742075726c3d226a61723a2f2f24555345525f484f4d45242f2e677261696c732f6976792d63616368652f6f72672e737072696e676672616d65776f726b2e73656375726974792f737072696e672d73656375726974792d636f72652f6a6172732f737072696e672d73656375726974792d636f72652d332e302e372e52454c454153452e6a6172212f22202f3e0d0a202020202020202020203c726f6f742075726c3d226a61723a2f2f24555345525f484f4d45242f2e677261696c732f6976792d63616368652f6d7973716c2f6d7973716c2d636f6e6e6563746f722d6a6176612f6a6172732f6d7973716c2d636f6e6e6563746f722d6a6176612d352e312e31382e6a6172212f22202f3e0d0a20202020202020203c2f434c41535345533e0d0a20202020202020203c4a415641444f43202f3e0d0a20202020202020203c534f5552434553202f3e0d0a20202020202020203c6a61724469726563746f72792075726c3d2266696c653a2f2f244d4f44554c455f444952242f6c696222207265637572736976653d2266616c736522202f3e0d0a2020202020203c2f6c6962726172793e0d0a202020203c2f6f72646572456e7472793e0d0a202020203c6f72646572456e74727920747970653d226d6f64756c6522206d6f64756c652d6e616d653d22436f6e666572656e63652d6170706c69636174696f6e2d677261696c73506c7567696e7322202f3e0d0a20203c2f636f6d706f6e656e743e0d0a3c2f6d6f64756c653e0d0a0d0a, NULL, 1, 0),
-(2, 5, 3, 3, 13, 'Another test paper', NULL, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0),
-(3, 1, 0, 2, 13, 'Paper', NULL, 'paper', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0),
-(4, 6, 2, 4, 13, 'test', 'Co-author, another co-author', 'test', 'No additional comments', 5, 'Criminal Justice session', 'Concerning Criminal Justice', NULL, NULL, NULL, NULL, NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1057,18 +844,6 @@ CREATE TABLE IF NOT EXISTS `paper_equipment` (
   KEY `equipment_id` (`equipment_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Dumping data for table `paper_equipment`
---
-
-INSERT INTO `paper_equipment` (`paper_id`, `equipment_id`) VALUES
-(1, 1),
-(1, 3),
-(2, 3),
-(3, 3),
-(4, 3),
-(2, 4),
-(3, 4);
 
 -- --------------------------------------------------------
 
@@ -1126,18 +901,6 @@ CREATE TABLE IF NOT EXISTS `participant_date` (
   KEY `payment_id` (`payment_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=9 ;
 
---
--- Dumping data for table `participant_date`
---
-
-INSERT INTO `participant_date` (`participant_date_id`, `user_id`, `date_id`, `participant_state_id`, `fee_state_id`, `payment_id`, `date_added`, `invitation_letter`, `invitation_letter_sent`, `lower_fee_requested`, `lower_fee_answered`, `lower_fee_text`, `enabled`, `deleted`) VALUES
-(1, 2, 13, 2, 1, 0, '2012-04-26', 1, 0, 0, 0, NULL, 1, 0),
-(3, 3, 13, 1, 1, 0, '2012-04-27', 1, 0, 0, 0, NULL, 1, 0),
-(4, 4, 13, 999, 1, 0, '2012-04-27', 0, 0, 0, 0, NULL, 1, 0),
-(5, 5, 13, 2, 0, 0, '2012-04-27', 0, 0, 0, 0, NULL, 1, 0),
-(6, 6, 13, 2, 1, 0, '2012-04-27', 1, 1, 1, 0, NULL, 1, 0),
-(7, 7, 13, 1, 0, 0, '2012-04-27', 0, 0, 0, 0, NULL, 1, 0),
-(8, 1, 13, 0, 0, 0, '2012-05-18', 0, 0, 1, 0, NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1152,14 +915,6 @@ CREATE TABLE IF NOT EXISTS `participant_date_extra` (
   KEY `extra_id` (`extra_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Dumping data for table `participant_date_extra`
---
-
-INSERT INTO `participant_date_extra` (`participant_date_id`, `extra_id`) VALUES
-(6, 1),
-(1, 3),
-(6, 4);
 
 -- --------------------------------------------------------
 
@@ -1174,21 +929,6 @@ CREATE TABLE IF NOT EXISTS `participant_not_present` (
   KEY `session_datetime_id` (`session_datetime_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Dumping data for table `participant_not_present`
---
-
-INSERT INTO `participant_not_present` (`user_id`, `session_datetime_id`) VALUES
-(6, 3),
-(2, 4),
-(6, 5),
-(4, 6),
-(4, 8),
-(2, 9),
-(4, 11),
-(2, 12),
-(4, 13),
-(2, 17);
 
 -- --------------------------------------------------------
 
@@ -1239,16 +979,6 @@ CREATE TABLE IF NOT EXISTS `participant_types` (
   KEY `event_id` (`event_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
 
---
--- Dumping data for table `participant_types`
---
-
-INSERT INTO `participant_types` (`participant_type_id`, `event_id`, `type`, `importance`, `with_paper`, `enabled`, `deleted`) VALUES
-(1, 4, 'Chair', 5, 0, 1, 0),
-(2, 4, 'Organizer', 4, 0, 1, 0),
-(3, 4, 'Author', 3, 1, 1, 0),
-(4, 4, 'Co-Author', 2, 0, 1, 0),
-(5, 4, 'Discussant', 1, 0, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1269,13 +999,6 @@ CREATE TABLE IF NOT EXISTS `participant_type_rules` (
   KEY `event_id` (`event_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
 
---
--- Dumping data for table `participant_type_rules`
---
-
-INSERT INTO `participant_type_rules` (`participant_type_rule_id`, `participant_type_1_id`, `participant_type_2_id`, `event_id`, `enabled`, `deleted`) VALUES
-(1, 3, 1, 4, 1, 0),
-(2, 3, 5, 4, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1292,14 +1015,6 @@ CREATE TABLE IF NOT EXISTS `participant_volunteering` (
   KEY `network_id` (`network_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Dumping data for table `participant_volunteering`
---
-
-INSERT INTO `participant_volunteering` (`participant_date_id`, `volunteering_id`, `network_id`) VALUES
-(6, 1, 5),
-(6, 2, 4),
-(6, 3, 4);
 
 -- --------------------------------------------------------
 
@@ -1367,38 +1082,6 @@ CREATE TABLE IF NOT EXISTS `rooms` (
   KEY `date_id` (`date_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=30 ;
 
---
--- Dumping data for table `rooms`
---
-
-INSERT INTO `rooms` (`room_id`, `date_id`, `room_name`, `room_number`, `number_of_seets`, `comment`, `enabled`, `deleted`) VALUES
-(1, 13, 'A', 'A', 999, NULL, 1, 0),
-(4, 13, 'B', 'B', 999, NULL, 1, 0),
-(5, 13, 'C', 'C', 999, NULL, 1, 0),
-(6, 13, 'D', 'D', 999, NULL, 1, 0),
-(7, 13, 'E', 'E', 999, 'No more comments', 1, 0),
-(8, 13, 'F', 'F', 999, NULL, 1, 0),
-(9, 13, 'G', 'G', 999, NULL, 1, 0),
-(10, 13, 'H', 'H', 999, NULL, 1, 0),
-(11, 13, 'I', 'I', 999, NULL, 1, 0),
-(12, 13, 'J', 'J', 999, NULL, 1, 0),
-(13, 13, 'K', 'K', 999, NULL, 1, 0),
-(14, 13, 'L', 'L', 999, NULL, 1, 0),
-(15, 13, 'M', 'M', 999, NULL, 1, 1),
-(16, 13, 'N', 'N', 999, NULL, 1, 0),
-(17, 13, 'O', 'O', 999, NULL, 1, 0),
-(18, 13, 'P', 'P', 999, NULL, 1, 0),
-(19, 13, 'Q', 'Q', 999, NULL, 1, 0),
-(20, 13, 'R', 'R', 999, NULL, 1, 0),
-(21, 13, 'S', 'S', 999, NULL, 1, 0),
-(22, 13, 'T', 'T', 999, NULL, 1, 0),
-(23, 13, 'U', 'U', 999, NULL, 1, 0),
-(24, 13, 'V', 'V', 999, NULL, 1, 0),
-(25, 13, 'W', 'W', 999, NULL, 1, 0),
-(26, 13, 'X', 'X', 999, NULL, 1, 0),
-(27, 13, 'Y', 'Y', 999, NULL, 1, 0),
-(28, 13, 'Z', 'Z', 999, NULL, 1, 0),
-(29, 14, 'Nikolaevsky zaal', 'Niko', 12, NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1418,161 +1101,6 @@ CREATE TABLE IF NOT EXISTS `room_sessiondatetime_equipment` (
   KEY `equipment_id` (`equipment_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Dumping data for table `room_sessiondatetime_equipment`
---
-
-INSERT INTO `room_sessiondatetime_equipment` (`room_id`, `session_datetime_id`, `equipment_id`, `enabled`, `deleted`) VALUES
-(1, 1, 3, 1, 0),
-(1, 3, 3, 1, 0),
-(1, 4, 3, 1, 0),
-(1, 5, 3, 1, 0),
-(1, 6, 3, 1, 0),
-(1, 7, 3, 1, 0),
-(1, 8, 3, 1, 0),
-(1, 9, 3, 1, 0),
-(1, 10, 3, 1, 0),
-(1, 11, 3, 1, 0),
-(1, 12, 3, 1, 0),
-(1, 13, 3, 1, 0),
-(1, 14, 3, 1, 0),
-(1, 15, 3, 1, 0),
-(1, 16, 3, 1, 0),
-(1, 17, 3, 1, 0),
-(4, 1, 1, 1, 0),
-(4, 3, 1, 1, 0),
-(4, 4, 1, 1, 0),
-(4, 5, 1, 1, 0),
-(4, 6, 1, 1, 0),
-(4, 7, 1, 1, 0),
-(4, 8, 1, 1, 0),
-(4, 9, 1, 1, 0),
-(4, 10, 1, 1, 0),
-(4, 11, 1, 1, 0),
-(4, 12, 1, 1, 0),
-(4, 13, 1, 1, 0),
-(4, 14, 1, 1, 0),
-(4, 15, 1, 1, 0),
-(4, 16, 1, 1, 0),
-(4, 17, 1, 1, 0),
-(5, 1, 3, 1, 0),
-(5, 1, 4, 1, 0),
-(5, 3, 3, 1, 0),
-(5, 3, 4, 1, 0),
-(5, 4, 3, 1, 0),
-(5, 4, 4, 1, 0),
-(5, 5, 3, 1, 0),
-(5, 5, 4, 1, 0),
-(5, 6, 3, 1, 0),
-(5, 6, 4, 1, 0),
-(5, 7, 3, 1, 0),
-(5, 7, 4, 1, 0),
-(5, 8, 3, 1, 0),
-(5, 8, 4, 1, 0),
-(5, 9, 3, 1, 0),
-(5, 9, 4, 1, 0),
-(5, 10, 3, 1, 0),
-(5, 10, 4, 1, 0),
-(5, 11, 3, 1, 0),
-(5, 11, 4, 1, 0),
-(5, 12, 3, 1, 0),
-(5, 12, 4, 1, 0),
-(5, 13, 3, 1, 0),
-(5, 13, 4, 1, 0),
-(5, 14, 3, 1, 0),
-(5, 14, 4, 1, 0),
-(5, 15, 3, 1, 0),
-(5, 15, 4, 1, 0),
-(5, 16, 3, 1, 0),
-(5, 16, 4, 1, 0),
-(5, 17, 3, 1, 0),
-(5, 17, 4, 1, 0),
-(6, 1, 1, 1, 0),
-(6, 1, 4, 1, 0),
-(6, 3, 1, 1, 0),
-(6, 3, 4, 1, 0),
-(6, 4, 1, 1, 0),
-(6, 4, 4, 1, 0),
-(6, 5, 1, 1, 0),
-(6, 5, 4, 1, 0),
-(6, 6, 1, 1, 0),
-(6, 6, 4, 1, 0),
-(6, 7, 1, 1, 0),
-(6, 7, 4, 1, 0),
-(6, 8, 1, 1, 0),
-(6, 8, 4, 1, 0),
-(6, 9, 1, 1, 0),
-(6, 9, 4, 1, 0),
-(6, 10, 1, 1, 0),
-(6, 10, 4, 1, 0),
-(6, 11, 1, 1, 0),
-(6, 11, 4, 1, 0),
-(6, 12, 1, 1, 0),
-(6, 12, 4, 1, 0),
-(6, 13, 1, 1, 0),
-(6, 13, 4, 1, 0),
-(6, 14, 1, 1, 0),
-(6, 14, 4, 1, 0),
-(6, 15, 1, 1, 0),
-(6, 15, 4, 1, 0),
-(6, 16, 1, 1, 0),
-(6, 16, 4, 1, 0),
-(6, 17, 1, 1, 0),
-(6, 17, 4, 1, 0),
-(7, 1, 3, 1, 0),
-(7, 1, 4, 1, 0),
-(7, 3, 3, 1, 0),
-(7, 3, 4, 1, 0),
-(7, 5, 1, 1, 0),
-(7, 6, 1, 1, 0),
-(7, 12, 4, 1, 0),
-(7, 14, 4, 1, 0),
-(7, 16, 1, 1, 0),
-(8, 1, 1, 1, 0),
-(8, 1, 3, 1, 0),
-(8, 3, 1, 1, 0),
-(8, 3, 3, 1, 0),
-(8, 4, 1, 1, 0),
-(8, 4, 3, 1, 0),
-(8, 5, 1, 1, 0),
-(8, 5, 3, 1, 0),
-(8, 6, 1, 1, 0),
-(8, 6, 3, 1, 0),
-(8, 7, 1, 1, 0),
-(8, 7, 3, 1, 0),
-(8, 8, 1, 1, 0),
-(8, 8, 3, 1, 0),
-(8, 9, 1, 1, 0),
-(8, 9, 3, 1, 0),
-(8, 10, 1, 1, 0),
-(8, 10, 3, 1, 0),
-(8, 11, 1, 1, 0),
-(8, 11, 3, 1, 0),
-(8, 12, 1, 1, 0),
-(8, 12, 3, 1, 0),
-(8, 13, 1, 1, 0),
-(8, 13, 3, 1, 0),
-(8, 14, 1, 1, 0),
-(8, 14, 3, 1, 0),
-(8, 15, 1, 1, 0),
-(8, 15, 3, 1, 0),
-(8, 16, 1, 1, 0),
-(8, 16, 3, 1, 0),
-(8, 17, 1, 1, 0),
-(8, 17, 3, 1, 0),
-(9, 1, 1, 1, 0),
-(9, 1, 3, 1, 0),
-(9, 5, 1, 1, 0),
-(9, 5, 3, 1, 0),
-(9, 5, 4, 1, 0),
-(9, 6, 1, 1, 0),
-(9, 6, 3, 1, 0),
-(9, 6, 4, 1, 0),
-(9, 10, 1, 1, 0),
-(9, 10, 4, 1, 0),
-(9, 12, 1, 1, 0),
-(9, 12, 3, 1, 0),
-(9, 12, 4, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1597,10 +1125,6 @@ CREATE TABLE IF NOT EXISTS `sent_emails` (
   KEY `date_id` (`date_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
---
--- Dumping data for table `sent_emails`
---
-
 
 -- --------------------------------------------------------
 
@@ -1618,27 +1142,8 @@ CREATE TABLE IF NOT EXISTS `sessions` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`session_id`),
   KEY `date_id` (`date_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=15 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=16 ;
 
---
--- Dumping data for table `sessions`
---
-
-INSERT INTO `sessions` (`session_id`, `date_id`, `session_code`, `session_name`, `session_comment`, `enabled`, `deleted`) VALUES
-(1, 13, 'AFR02', 'Knowledge, Culture and Empowerment', NULL, 1, 0),
-(2, 13, 'ANT02', 'Urban Labour in Roman Italy', NULL, 1, 0),
-(3, 13, 'ANT03', 'The Social Institution of Money in the Ancient World', NULL, 1, 0),
-(4, 13, 'ANT04', 'Social Networks Analysis and the Ancient Economy: Networks Around Commodities', NULL, 1, 0),
-(5, 14, 'LAT01', 'Latin America', 'bla bla', 1, 0),
-(6, 14, 'LAT02', 'Latin America session 2', NULL, 1, 0),
-(7, 14, 'LAT02', 'Latin America session 2', NULL, 1, 0),
-(8, 14, 'LAT02', 'Latin America session 2', NULL, 1, 0),
-(9, 14, 'Lat03', 'Lat America 3', NULL, 1, 0),
-(10, 14, 'Lat03', 'Lat America 3', NULL, 1, 0),
-(11, 14, 'Lat03', 'Lat America 3', NULL, 1, 0),
-(12, 14, 'Lat03', 'Lat America 3', NULL, 1, 0),
-(13, 14, 'Lat03', 'Lat America 3', NULL, 1, 0),
-(14, 13, 'teste', 'test', NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1657,27 +1162,6 @@ CREATE TABLE IF NOT EXISTS `session_datetime` (
   KEY `day_id` (`day_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=18 ;
 
---
--- Dumping data for table `session_datetime`
---
-
-INSERT INTO `session_datetime` (`session_datetime_id`, `day_id`, `index_number`, `period`, `enabled`, `deleted`) VALUES
-(1, 1, 1, '8.30 - 10.30', 1, 0),
-(3, 1, 2, '11.00 - 13.00', 1, 0),
-(4, 1, 3, '14.00 - 16.00', 1, 0),
-(5, 1, 4, '16.30 -18.30', 1, 0),
-(6, 2, 5, '8.30 - 10.30', 1, 0),
-(7, 2, 6, '11.00 - 13.00', 1, 0),
-(8, 2, 7, '14.00 - 16.00', 1, 0),
-(9, 2, 8, '16.00 - 18.30', 1, 0),
-(10, 3, 9, '8.30 - 10.30', 1, 0),
-(11, 3, 10, '11.00 - 13.00', 1, 0),
-(12, 3, 11, '14.00 - 16.00', 1, 0),
-(13, 3, 12, '16.30 - 18.30', 1, 0),
-(14, 4, 13, '8.30 - 10.30', 1, 0),
-(15, 4, 14, '11.00 - 13.00', 1, 0),
-(16, 4, 15, '14.00 - 16.00', 1, 0),
-(17, 4, 16, '16.30 - 18.30', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1692,21 +1176,6 @@ CREATE TABLE IF NOT EXISTS `session_in_network` (
   KEY `session_id` (`session_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Dumping data for table `session_in_network`
---
-
-INSERT INTO `session_in_network` (`network_id`, `session_id`) VALUES
-(5, 1),
-(5, 2),
-(6, 2),
-(5, 3),
-(4, 4),
-(5, 4),
-(8, 5),
-(8, 6),
-(8, 9),
-(6, 14);
 
 -- --------------------------------------------------------
 
@@ -1727,28 +1196,6 @@ CREATE TABLE IF NOT EXISTS `session_participant` (
   KEY `participant_type_id` (`participant_type_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=74 ;
 
---
--- Dumping data for table `session_participant`
---
-
-INSERT INTO `session_participant` (`session_participant_id`, `user_id`, `session_id`, `participant_type_id`, `enabled`, `deleted`) VALUES
-(33, 2, 2, 2, 1, 0),
-(34, 3, 2, 5, 1, 0),
-(35, 6, 2, 1, 1, 0),
-(44, 2, 3, 1, 1, 0),
-(49, 5, 3, 3, 1, 0),
-(51, 7, 3, 5, 1, 0),
-(53, 4, 4, 4, 1, 1),
-(54, 3, 2, 4, 1, 0),
-(55, 6, 3, 4, 1, 0),
-(57, 2, 2, 3, 1, 0),
-(58, 5, 2, 2, 1, 0),
-(59, 5, 3, 2, 1, 0),
-(60, 6, 3, 5, 1, 0),
-(62, 2, 2, 4, 1, 0),
-(68, 3, 2, 2, 1, 0),
-(71, 1, 2, 3, 1, 0),
-(73, 6, 4, 3, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1765,10 +1212,6 @@ CREATE TABLE IF NOT EXISTS `session_room_datetime` (
   KEY `session_id` (`session_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Dumping data for table `session_room_datetime`
---
-
 
 -- --------------------------------------------------------
 
@@ -1781,30 +1224,31 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `property` varchar(50) collate utf8_unicode_ci NOT NULL,
   `value` varchar(255) collate utf8_unicode_ci default NULL,
   `event_id` bigint(20) default NULL,
+  `show_in_backend` tinyint(1) NOT NULL default '0',
   `enabled` tinyint(1) NOT NULL default '1',
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`setting_id`),
   KEY `settings_event_id_idx` (`event_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=14 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=17 ;
 
 --
 -- Dumping data for table `settings`
 --
 
-INSERT INTO `settings` (`setting_id`, `property`, `value`, `event_id`, `enabled`, `deleted`) VALUES
-(1, 'last_updated', '12-06-29', NULL, 1, 0),
-(2, 'max_papers_per_person_per_session', '1', 4, 1, 0),
-(3, 'max_papers_per_person_per_session', NULL, NULL, 1, 0),
-(4, 'salt', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, 1, 0),
-(5, 'role_hierarchy', 'superAdmin > admin admin > user', NULL, 1, 0),
-(6, 'show_programme_online', '0', NULL, 1, 0),
-(7, 'email_max_num_tries', '3', NULL, 1, 0),
-(8, 'email_min_minutes_between_sending', '15', NULL, 1, 0),
-(9, 'email_max_num_emails_per_session', '200', NULL, 1, 0),
-(10, 'disable_email_sessions', '0', NULL, 1, 0),
-(11, 'default_organisation_email', '******', NULL, 1, 0),
-(12, 'email_address_info_errors', '******', NULL, 1, 0),
-(13, 'disable_email_sessions', '2', 5, 1, 0);
+INSERT INTO `settings` (`setting_id`, `property`, `value`, `event_id`, `show_in_backend`, `enabled`, `deleted`) VALUES
+(1, 'last_updated', '12-09-30', NULL, 1, 1, 0),
+(3, 'max_papers_per_person_per_session', NULL, NULL, 1, 1, 0),
+(4, 'salt', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, 0, 1, 0),
+(5, 'role_hierarchy', 'superAdmin > admin admin > user', NULL, 1, 1, 0),
+(6, 'show_programme_online', '0', NULL, 1, 1, 0),
+(7, 'email_max_num_tries', '3', NULL, 1, 1, 0),
+(8, 'email_min_minutes_between_sending', '15', NULL, 1, 1, 0),
+(9, 'email_max_num_emails_per_session', '200', NULL, 1, 1, 0),
+(10, 'disable_email_sessions', '0', NULL, 1, 1, 0),
+(11, 'default_organisation_email', '******', NULL, 1, 1, 0),
+(12, 'email_address_info_errors', '******', NULL, 1, 1, 0),
+(13, 'disable_email_sessions', '2', 5, 1, 1, 0),
+(14, 'web_address', NULL, NULL, 1, 1, 0),
 
 -- --------------------------------------------------------
 
@@ -1822,18 +1266,6 @@ CREATE TABLE IF NOT EXISTS `titles` (
   KEY `titles_event_id_idx` (`event_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=8 ;
 
---
--- Dumping data for table `titles`
---
-
-INSERT INTO `titles` (`title_id`, `event_id`, `title`, `enabled`, `deleted`) VALUES
-(1, 4, 'Mr.', 1, 0),
-(2, 4, 'Ms.', 1, 0),
-(3, 4, 'Drs.', 1, 0),
-(4, 4, 'Dr.', 1, 0),
-(5, 4, 'Prof. Dr.', 1, 0),
-(6, 4, 'Prof.', 1, 0),
-(7, 4, 'Mrs.', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1854,6 +1286,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `language` varchar(10) collate utf8_unicode_ci NOT NULL default 'en',
   `password` varchar(128) collate utf8_unicode_ci NOT NULL,
   `salt` varchar(26) collate utf8_unicode_ci default NULL,
+  `request_code` varchar(26) collate utf8_unicode_ci default NULL,
   `phone` varchar(50) collate utf8_unicode_ci default NULL,
   `fax` varchar(50) collate utf8_unicode_ci default NULL,
   `mobile` varchar(50) collate utf8_unicode_ci default NULL,
@@ -1868,18 +1301,6 @@ CREATE TABLE IF NOT EXISTS `users` (
   KEY `users_country_id_idx` (`country_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=8 ;
 
---
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`user_id`, `email`, `lastname`, `firstname`, `gender`, `title`, `address`, `city`, `country_id`, `language`, `password`, `salt`, `phone`, `fax`, `mobile`, `organisation`, `department`, `extra_info`, `date_added`, `enabled`, `deleted`) VALUES
-(1, 'testeca1@knoex.com', 'Haas', 'Lester', 'M', 'Mr.', NULL, 'City', 169, 'en', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, NULL, NULL, 'International Institute for Social History', 'Department', NULL, '2012-04-26', 1, 0),
-(2, 'testeca2@knoex.com', 'Jansen', 'Jan', 'M', 'Mr.', 'Astreet 5\r\n1234 AB', 'Amsterdam', 169, 'nl', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', '0123456789', NULL, '0623456789', 'International Institute of Social History', NULL, NULL, '2012-04-26', 1, 0),
-(3, 'testeca3@knoex.com', 'Molens', 'Kees', 'M', NULL, NULL, 'Another City', 1, 'en', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
-(4, 'testeca4@knoex.com', 'Kloos', 'Joost', 'M', 'Mr.', NULL, 'City', 169, 'nl', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
-(5, 'testeca5@knoex.com', 'Pier', 'Jonathan', NULL, NULL, NULL, 'CIty', 9, 'nl', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
-(6, 'testeca6@knoex.com', 'Jeest', 'Henk', NULL, NULL, NULL, 'City', 4, 'nl', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0),
-(7, 'testeca7@knoex.com', 'Joker', 'Jaap', 'M', NULL, NULL, 'City', 98, 'nl', '230e337572084fc40fdc869f53deadeff591861428a2ed1b48f267565c3c1f58f41b49aa671cc9d2e5de9a35b7285a8786192a0da646cd48d9d0c1be4e7a5819', 'l806hw0aJp6PcXKh3aelytHM0C', NULL, NULL, NULL, NULL, NULL, NULL, '2012-04-26', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1894,18 +1315,6 @@ CREATE TABLE IF NOT EXISTS `users_groups` (
   KEY `users_groups_group_id_fk` (`group_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Dumping data for table `users_groups`
---
-
-INSERT INTO `users_groups` (`user_id`, `group_id`) VALUES
-(2, 3),
-(3, 3),
-(4, 3),
-(5, 3),
-(6, 3),
-(7, 3),
-(1, 4);
 
 -- --------------------------------------------------------
 
@@ -1925,17 +1334,6 @@ CREATE TABLE IF NOT EXISTS `users_pages` (
   KEY `users_pages_page_id_idx` (`page_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Dumping data for table `users_pages`
---
-
-INSERT INTO `users_pages` (`user_id`, `page_id`, `denied`, `date_id`, `enabled`, `deleted`) VALUES
-(2, 1, 0, 13, 1, 0),
-(2, 2, 0, 13, 1, 0),
-(2, 3, 0, 13, 1, 0),
-(2, 4, 0, 13, 1, 0),
-(2, 5, 0, 13, 1, 0),
-(2, 6, 0, 13, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1954,17 +1352,8 @@ CREATE TABLE IF NOT EXISTS `users_roles` (
   KEY `users_roles_user_id_idx` (`user_id`),
   KEY `users_roles_role_id_idx` (`role_id`),
   KEY `users_roles_date_id_idx` (`date_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
 
---
--- Dumping data for table `users_roles`
---
-
-INSERT INTO `users_roles` (`user_role_id`, `user_id`, `role_id`, `date_id`, `enabled`, `deleted`) VALUES
-(1, 1, 1, NULL, 1, 0),
-(2, 2, 2, 13, 1, 0),
-(3, 3, 3, 13, 1, 0),
-(4, 4, 1, 13, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1980,22 +1369,7 @@ CREATE TABLE IF NOT EXISTS `volunteering` (
   `deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`volunteering_id`),
   KEY `event_id` (`event_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
-
---
--- Dumping data for table `volunteering`
---
-
-INSERT INTO `volunteering` (`volunteering_id`, `event_id`, `description`, `enabled`, `deleted`) VALUES
-(1, 4, 'Chair', 1, 0),
-(2, 4, 'Discussant', 1, 0),
-(3, 4, 'Language coach', 1, 0),
-(4, 4, 'Language pupil', 1, 0),
-(5, 5, 'Buurtwacht', 1, 1);
-
---
--- Constraints for dumped tables
---
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=9 ;
 
 --
 -- Constraints for table `admin_pages`
