@@ -126,7 +126,6 @@ log4j = {
 
     trace   'org.hibernate.type'
     debug   'org.hibernate.SQL'
-
 }
 
 // Spring Security Core config

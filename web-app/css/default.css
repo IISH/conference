@@ -13,7 +13,7 @@ ol, ul, li, dl, dt, dd {
     list-style: none;
 }
 
-a, img, fieldset, div {
+a, img, fieldset, div, form, fieldset {
     border: none; 
     outline: none;
     margin: 0;
@@ -39,7 +39,6 @@ input, textarea, select {
     font-size: 9pt;
     background: #FFFFFF;
     border: 1px solid #7F9DB9;
-   /* vertical-align: middle;*/
 }
 
 input[type=text], input[type=password], input[type=number], input[type=email], input[type=url] {
@@ -223,21 +222,21 @@ a:hover {
     width: 25%;
     float: left;  
     color: #666666;
-    text-align: right;    
+    text-align: right;
 }
 
 .form > div > .property-value, .property-list li > .property-value {
     display: block;
+    text-align: left;
     margin-left: 26%;
-    text-align: left; 
 }
 
-.form > div > input[type=checkbox].property-value, .form > div > input[type=radio].property-value {
+/* .form > div > input[type=checkbox].property-value, .form > div > input[type=radio].property-value {
     height: 22px;
-}
+} */
 
 .column.form > div > .property-label {
-    width: 33%;   
+    width: 33%;
 }
 
 .column.form > div > .property-value {
@@ -245,7 +244,7 @@ a:hover {
 }
 
 ul input[type=text], ul input[type=password], ul input[type=number],
-ul input[type=email], ul input[type=url]/*, ul select */{
+ul input[type=email], ul input[type=url] {
     width: 120px;
 }
 
@@ -441,7 +440,7 @@ span.remove-item {
 }
 
 #locales li {
-    display: inline;
+    display: inline-block;
     margin-left: 5px;
     margin-right: 5px;
 }

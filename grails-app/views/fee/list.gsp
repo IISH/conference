@@ -14,7 +14,7 @@
             <span class="action">
                 <eca:ifUserHasAccess controller="${params.controller}" action="edit">
                     <eca:link controller="fee" action="edit" id="${feeState.id}">
-                        <g:message code="default.edit.label" args="[message(code: 'feeState.label').toLowerCase()]" />
+                        <g:message code="default.edit.label" args="[g.message(code: 'feeState.label')]" />
                     </eca:link>
                 </eca:ifUserHasAccess>
             </span>

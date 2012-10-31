@@ -45,12 +45,15 @@ class CreateEmailJob {
                 """)
             }
             catch (Exception e) {
+                PrintWriter pw = new PrintWriter(new StringWriter())
+                e.printStackTrace(pw)
+
                 // Failed to create the emails, send a notification email with the exception thrown
                 emailService.sendInfoMail("Failed to create the emails for ${participants.size()} participants", """
                     Failed to create the emails for ${participants.size()} participants.
                     Template used: ${template.description}
                     Exception: ${e.message}
-                    ${e.toString()}
+                    ${pw.toString()}
                 """)
             }
         }

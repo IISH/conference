@@ -105,7 +105,7 @@
             <g:layoutBody />
             
             <span class="top right">
-                <a href="#top">Back to top <span class="ui-icon ui-icon-triangle-1-n" /></a>
+                <a href="#top"><g:message code="default.back.to.top" /> <span class="ui-icon ui-icon-triangle-1-n" /></a>
             </span>
         </div>
 
