@@ -1,10 +1,10 @@
 <%@ page import="org.iisg.eca.domain.EmailTemplate" %>
 <!doctype html>
 <html>
-	<head>
-		<meta name="layout" content="main">
-	</head>
-	<body>
+    <head>
+        <meta name="layout" content="main">
+    </head>
+    <body>
         <ol id="email-templates">
         <g:each in="${templates}" var="emailTemplate">
             <li>

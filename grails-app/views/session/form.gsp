@@ -1,11 +1,12 @@
 <%@ page import="org.iisg.eca.domain.Setting; org.iisg.eca.domain.ParticipantType; org.iisg.eca.domain.User" %>
-<html xmlns="http://www.w3.org/1999/html">
-	<head>
+<!doctype html>
+<html>
+    <head>
         <meta name="layout" content="main">
         <g:javascript src="session.js" />
         <g:javascript src="participants-in-sessions.js" />
-	</head>
-	<body>
+    </head>
+    <body>
         <input type="hidden" name="id" value="${params.id}" />
         <g:set var="maxPapers" value="${Setting.getByEvent(Setting.findAllByProperty(Setting.MAX_PAPERS_PER_PERSON_PER_SESSION)).value?.toInteger()}" />
         
@@ -22,34 +23,46 @@
         <form method="post" action="#">
             <fieldset class="form">
                 <div>
-                    <label class="property-label">#</label>
-                    <span class="property-value">${eventSession.id}</span>
+                    <label class="property-label">
+                        #
+                    </label>
+                    <span class="property-value">
+                        ${eventSession.id}
+                    </span>
                 </div>
                 <div class="${hasErrors(bean: eventSession, field: 'code', 'error')} required">
                     <label class="property-label">
                         <g:message code="session.code.label" />
                         <span class="required-indicator">*</span>
                     </label>
-                    <input class="property-value" type="text" maxlength="10" name="Session.code" value="${fieldValue(bean: eventSession, field: 'code')}" required="required" />
+                    <span class="property-value">
+                        <input type="text" maxlength="10" name="Session.code" value="${fieldValue(bean: eventSession, field: 'code')}" required="required" />
+                    </span>
                 </div>
                 <div class="${hasErrors(bean: eventSession, field: 'name', 'error')} required">
                     <label class="property-label">
                         <g:message code="session.name.label" />
                         <span class="required-indicator">*</span>
                     </label>
-                    <input class="property-value" type="text" name="Session.name" required="required" value="${fieldValue(bean: eventSession, field: 'name')}" />
+                    <span class="property-value">
+                        <input type="text" name="Session.name" required="required" value="${fieldValue(bean: eventSession, field: 'name')}" />
+                    </span>
                 </div>
                 <div class="${hasErrors(bean: eventSession, field: 'comment', 'error')}">
                     <label class="property-label">
                         <g:message code="session.comment.label" />
                     </label>
-                    <textarea class="property-value" cols="40" rows="5" name="Session.comment">${fieldValue(bean: eventSession, field: 'comment')}</textarea>
+                    <span class="property-value">
+                        <textarea cols="40" rows="5" name="Session.comment">${fieldValue(bean: eventSession, field: 'comment')}</textarea>
+                    </span>
                 </div>
                 <div class="${hasErrors(bean: eventSession, field: 'enabled', 'error')}">
                     <label class="property-label">
                         <g:message code="default.enabled.label" />
                     </label>
-                    <g:checkBox class="property-value" name="Session.enabled" checked="${eventSession.enabled}" />
+                    <span class="property-value">
+                        <g:checkBox name="Session.enabled" checked="${eventSession.enabled}" />
+                    </span>
                 </div>
                 <div>
                     <label class="property-label">                      
@@ -150,14 +163,18 @@
                                 <label class="property-label">
                                     <g:message code="participantDate.label" />
                                 </label>
-                                <input type="text" name="participant" class="select-participant property-value" />
+                                <span class="property-value">
+                                    <input type="text" name="participant" class="select-participant" />
+                                </span>
                             </div>
                             <g:if test="${type.withPaper && (maxPapers == null || maxPapers > 1)}">
                                 <div>
                                     <label class="property-label">
                                         <g:message code="paper.label" />
                                     </label>
-                                    <select class="paper-id property-value" name="paper-id"></select>
+                                    <span class="property-value">
+                                        <select class="paper-id" name="paper-id"></select>
+                                    </span>
                                 </div>
                             </g:if>
                             <div>

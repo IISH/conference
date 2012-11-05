@@ -1,12 +1,12 @@
 <%@ page import="org.iisg.eca.domain.Session; org.iisg.eca.domain.User" %>
 <!doctype html>
 <html>
-	<head>
-		<meta name="layout" content="main">
+    <head>
+        <meta name="layout" content="main">
         <g:javascript src="network.js" />
         <g:javascript src="participants-in-sessions.js" />
-	</head>
-	<body>
+    </head>
+    <body>
         <input type="hidden" name="id" value="${params.id}" />
 
         <g:hasErrors bean="${network}">
@@ -26,38 +26,50 @@
                 <g:message code="network.name.label" />
                 <span class="required-indicator">*</span>
               </label>
-              <input id="Network.name" maxlength="30" name="Network.name" value="${network.name}" class="property-value" type="text" required="required" />
+              <span class="property-value">
+                <input id="Network.name" maxlength="30" name="Network.name" value="${network.name}" type="text" required="required" />
+              </span>
             </div>
             <div class="${hasErrors(bean: network, field: 'comment', 'error')} ">
               <label class="property-label" for="Network.comment">
                 <g:message code="network.comment.label" />
               </label>
-              <textarea id="Network.comment" cols="40" name="Network.comment" class="property-value" rows="5">${network.comment}</textarea>
+              <span class="property-value">
+                <textarea id="Network.comment" cols="40" name="Network.comment" rows="5">${network.comment}</textarea>
+              </span>
             </div>
             <div class="${hasErrors(bean: network, field: 'url', 'error')} required">
               <label class="property-label" for="Network.url">
                 <g:message code="network.url.label" />
                 <span class="required-indicator">*</span>
               </label>
-              <input id="Network.url" maxlength="255" name="Network.url" value="${network.url}" class="property-value" type="url" required="required" />
+              <span class="property-value">
+                <input id="Network.url" maxlength="255" name="Network.url" value="${network.url}" type="url" required="required" />
+              </span>
             </div>
             <div class="${hasErrors(bean: network, field: 'showOnline', 'error')} ">
               <label class="property-label" for="Network.showOnline">
                 <g:message code="network.showOnline.label" />
               </label>
-              <g:checkBox id="Network.showOnline" name="Network.showOnline" value="${network.showOnline}" class="property-value" />
+              <span class="property-value">
+                <g:checkBox id="Network.showOnline" name="Network.showOnline" value="${network.showOnline}" />
+              </span>
             </div>
             <div class="${hasErrors(bean: network, field: 'showInternal', 'error')} ">
               <label class="property-label" for="Network.showInternal">
                 <g:message code="network.showInternal.label" />
               </label>
-              <g:checkBox id="Network.showInternal" name="Network.showInternal" value="${network.showInternal}" class="property-value" />
+              <span class="property-value">
+                <g:checkBox id="Network.showInternal" name="Network.showInternal" value="${network.showInternal}" />
+              </span>
             </div>
               <div class="${hasErrors(bean: network, field: 'enabled', 'error')} ">
                 <label class="property-label" for="Network.enabled">
                   <g:message code="default.enabled.label" />
                 </label>
-                <g:checkBox id="Network.enabled" name="Network.enabled" value="${network.enabled}" class="property-value" />
+                <span class="property-value">
+                  <g:checkBox id="Network.enabled" name="Network.enabled" value="${network.enabled}" />
+                </span>
               </div>
             <div class="${hasErrors(bean: network, field: 'chairs', 'error')} ">
               <label class="property-label" for="Network.chairs">
@@ -208,6 +220,6 @@
             </eca:link>
             <input type="submit" name="btn_save" class="btn_save" value="${message(code: 'default.button.save.label')}" />
           </fieldset>
-        </form>
-	</body>
+    </form>
+    </body>
 </html>

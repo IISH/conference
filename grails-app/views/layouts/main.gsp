@@ -1,10 +1,6 @@
 <%@ page import="org.springframework.context.i18n.LocaleContextHolder; java.text.SimpleDateFormat; org.iisg.eca.domain.Setting;org.springframework.validation.FieldError" %>
 <!doctype html>
-<!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
-<!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
-<!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]-->
-<!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js"><!--<![endif]-->
+<html lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -16,7 +12,7 @@
         <meta http-equiv="pragma" content="no-cache" />
         
         <title>
-            <g:layoutTitle default="${(curPage) ? curPage.toString() : 'ECA'}" />
+            <g:layoutTitle default="${(curPage) ? message(code: curPage.titleCode, args: [message(code: curPage.titleArg)], default: curPage.titleDefault) : 'ECA'}" />
         </title>
         
         <link rel="stylesheet" href="${resource(dir: 'css', file: 'default.css')}" type="text/css">
@@ -25,7 +21,7 @@
         <g:javascript library="jquery" plugin="jquery" />
         <r:layoutResources />
         <g:javascript src="jquery-ui.js"  />
-        <g:layoutHead/>
+        <g:layoutHead />
         <g:javascript src="application.js" />
     </head>
     <body>
@@ -57,10 +53,10 @@
                         </a></li>
                         <li><a href="?lang=en">
                             <g:img class="${(curLang == 'en') ? 'selected' : ''}" dir="images/flags" file="us.png" />
-                        </a></Li>
+                        </a></li>
                     </ul>
                 </div>
-
+                
                 <sec:ifLoggedIn>
                     <div id="loggedin">
                         <g:message code="springSecurity.loggedin.welcome" args="${[sec.loggedInUserInfo(field: 'fullName')]}" />
@@ -81,7 +77,7 @@
 
                     <dd>&nbsp;</dd>
 
-                    <dt class="esshc">CMS</dt>
+                    <dt>CMS</dt>
                     <eca:menu />
                 </g:if>
             </dl>
@@ -89,7 +85,7 @@
 
         <div id="content" role="main">
             <g:if test="${curPage}">
-                <h1>${curPage.toString()}</h1>
+                <h1><g:message code="${curPage.titleCode}" args="${[message(code: curPage.titleArg)]}" default="${curPage.titleDefault}" /></h1>
             </g:if>
 
             <g:if test="${flash.message && flash.error && curPage}">

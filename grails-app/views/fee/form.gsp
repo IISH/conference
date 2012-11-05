@@ -19,21 +19,27 @@
                         <g:message code="feeState.name.label" />
                         <span class="required-indicator">*</span>
                     </label>
-                    <input class="property-value" type="text" name="feeState.name" maxlength="50" required="required" value="${fieldValue(bean: feeState, field: 'name')}" />
+                    <span class="property-value">
+                        <input type="text" name="feeState.name" maxlength="50" required="required" value="${fieldValue(bean: feeState, field: 'name')}" />
+                    </span>
                 </div>
 
                 <div class="${hasErrors(bean: feeState, field: 'isDefaultFee', 'error')} ">
                     <label class="property-label">
                         <g:message code="feeState.isDefaultFee.label" />
                     </label>
-                    <g:checkBox class="property-value"  name="feeState.isDefaultFee" value="${feeState?.isDefaultFee}" />
+                    <span class="property-value">
+                        <g:checkBox name="feeState.isDefaultFee" value="${feeState?.isDefaultFee}" />
+                    </span>
                 </div>
 
                 <div class="${hasErrors(bean: feeState, field: 'enabled', 'error')} ">
                     <label class="property-label">
                         <g:message code="default.enabled.label" />
                     </label>
-                    <g:checkBox class="property-value"  name="feeState.enabled" value="${fee?.enabled}" />
+                    <span class="property-value">
+                        <g:checkBox name="feeState.enabled" value="${fee?.enabled}" />
+                    </span>
                 </div>
 
                 <div class="columns copy">
@@ -51,7 +57,9 @@
                                     <g:message code="feeAmount.feeAmount.label" />
                                     <span class="required-indicator">*</span>
                                 </label>
-                                <g:field class="property-value" type="number" name="feeAmount_${i}.feeAmount" min="0" required="required" value="${fieldValue(bean: amount, field: 'feeAmount')}" />
+                                <span class="property-value">
+                                    <g:field type="number" name="feeAmount_${i}.feeAmount" min="0" required="required" value="${fieldValue(bean: amount, field: 'feeAmount')}" />
+                                </span>
                             </div>
 
                             <div class="${hasErrors(bean: amount, field: 'endDate', 'error')} required">
@@ -59,7 +67,9 @@
                                     <g:message code="feeAmount.endDate.label" />
                                     <span class="required-indicator">*</span>
                                 </label>
-                                <eca:dateField class="property-value" name="feeAmount_${i}.endDate" date="${amount?.endDate}" /> 
+                                <span class="property-value">
+                                    <eca:dateField name="feeAmount_${i}.endDate" date="${amount?.endDate}" /> 
+                                </span>
                             </div>
 
                             <div class="${hasErrors(bean: amount, field: 'numDaysStart', 'error')} required">
@@ -67,7 +77,9 @@
                                     <g:message code="feeAmount.numDaysStart.label" />
                                     <span class="required-indicator">*</span>
                                 </label>
-                                <g:select class="property-value" from="${1..days}" name="feeAmount_${i}.numDaysStart" required="required" value="${fieldValue(bean: amount, field: 'numDaysStart')}" />
+                                <span class="property-value">
+                                    <g:select from="${1..days}" name="feeAmount_${i}.numDaysStart" required="required" value="${fieldValue(bean: amount, field: 'numDaysStart')}" />
+                                </span>
                             </div>
 
                             <div class="${hasErrors(bean: amount, field: 'numDaysEnd', 'error')} required">
@@ -75,17 +87,22 @@
                                     <g:message code="feeAmount.numDaysEnd.label" />
                                     <span class="required-indicator">*</span>
                                 </label>
-                                <g:select class="property-value" from="${1..days}" name="feeAmount_${i}.numDaysEnd" required="required" value="${fieldValue(bean: amount, field: 'numDaysEnd')}" />
+                                <span class="property-value">
+                                    <g:select from="${1..days}" name="feeAmount_${i}.numDaysEnd" required="required" value="${fieldValue(bean: amount, field: 'numDaysEnd')}" />
+                                </span>
                             </div>
 
                             <div class="${hasErrors(bean: amount, field: 'enabled', 'error')} ">
                                 <label class="property-label">
                                     <g:message code="default.enabled.label" />
                                 </label>
-                                <g:checkBox class="property-value" name="feeAmount_${i}.enabled" value="${amount?.enabled}" />
+                                <span class="property-value">
+                                    <g:checkBox name="feeAmount_${i}.enabled" value="${amount?.enabled}" />
+                                </span>
                             </div>
                         </fieldset>
                     </g:each>
+                    
                     <fieldset class="form column hidden">
                         <span class="remove-item">
                             <span class="ui-icon ui-icon-circle-minus"></span>
@@ -97,7 +114,9 @@
                                 <g:message code="feeAmount.feeAmount.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <g:field class="property-value" type="number" name="feeAmount_null.feeAmount" min="0" required="required" />
+                            <span class="property-value">
+                                <g:field type="number" name="feeAmount_null.feeAmount" min="0" required="required" />
+                            </span>
                         </div>
 
                         <div class="required">
@@ -105,7 +124,9 @@
                                 <g:message code="feeAmount.endDate.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <eca:dateField class="property-value" name="feeAmount_null.endDate" /> 
+                            <span class="property-value">
+                                <eca:dateField name="feeAmount_null.endDate" /> 
+                            </span>
                         </div>
 
                         <div class="required">
@@ -113,7 +134,9 @@
                                 <g:message code="feeAmount.numDaysStart.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <g:select class="property-value" from="${1..days}" name="feeAmount_null.numDaysStart" required="required" />
+                            <span class="property-value">
+                                <g:select from="${1..days}" name="feeAmount_null.numDaysStart" required="required" />
+                            </span>
                         </div>
 
                         <div class="required">
@@ -121,19 +144,24 @@
                                 <g:message code="feeAmount.numDaysEnd.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <g:select class="property-value" from="${1..days}" name="feeAmount_null.numDaysEnd" required="required" />
+                            <span class="property-value">
+                                <g:select from="${1..days}" name="feeAmount_null.numDaysEnd" required="required" />
+                            </span>
                         </div>
 
                         <div>
                             <label class="property-label">
                                 <g:message code="default.enabled.label" />
                             </label>
-                            <g:checkBox class="property-value" name="feeAmount_null.enabled" />
+                            <span class="property-value">
+                                <g:checkBox name="feeAmount_null.enabled" />
+                            </span>
                         </div>
                     </fieldset>
                     <div class="clear empty"></div>
                 </div>
             </fieldset>
+            
             <fieldset class="buttons">
                 <eca:link controller="${params.prevController}" action="${params.prevAction}" id="${params.prevId}">
                     <g:message code="default.button.cancel.label" />

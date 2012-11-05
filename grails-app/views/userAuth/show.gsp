@@ -1,9 +1,9 @@
 <!doctype html>
 <html>
-	<head>
+    <head>
         <meta name="layout" content="main">
-	</head>
-	<body>
+    </head>
+    <body>
         <ol class="property-list">
             <li>
                 <span id="firstName-label" class="property-label">
@@ -97,5 +97,5 @@
                 </eca:ifUserHasAccess>
             </fieldset>
         </div>
-	</body>
+    </body>
 </html>

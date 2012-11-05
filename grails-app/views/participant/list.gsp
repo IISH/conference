@@ -12,13 +12,17 @@
                             <label class="property-label" for="filter-type">
                                 <g:message code="default.button.searchin.label" />
                             </label>
-                            <g:select class="property-value" id="filter-type" name="filter-type" valueMessagePrefix="search.for" from="['name', 'organisation', 'address']" value="${params['filter-type']}" />
+                            <span class="property-value">
+                                <g:select id="filter-type" name="filter-type" valueMessagePrefix="search.for" from="['name', 'organisation', 'address']" value="${params['filter-type']}" />
+                            </span>
                         </div>
                         <div>
                             <label class="property-label" for="filter-text">
                                 <g:message code="default.button.search.label" />
                             </label>
-                            <input class="property-value" type="text" id="filter-text" name="filter-text" value="${params['filter-text']}" />
+                            <span class="property-value">
+                                <input type="text" id="filter-text" name="filter-text" value="${params['filter-text']}" />
+                            </span>
                         </div>
                     </fieldset>
 

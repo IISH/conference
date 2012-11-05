@@ -7,17 +7,15 @@ body {
     margin: 0;
 }
 
-ol, ul, li, dl, dt, dd {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-a, img, fieldset, div, form, fieldset {
+a, img, fieldset, div, span, form, fieldset, input, textarea, select, ol, ul, li, dl, dt, dd {
     border: none; 
     outline: none;
     margin: 0;
     padding: 0;
+}
+
+ol, ul {
+    list-style: none;
 }
 
 table {
@@ -30,21 +28,24 @@ td {
 }
 
 label {
-    color: #666666;
-    text-align: right;    
+    color: #666666;  
 }
 
 input, textarea, select {
     font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
     font-size: 9pt;
     background: #FFFFFF;
-    border: 1px solid #7F9DB9;
+    border: 1px solid #7F9DB9;    
 }
 
 input[type=text], input[type=password], input[type=number], input[type=email], input[type=url] {
-    height: 18px;
+    height: 20px;
     width: 200px;
     padding-left: 2px;
+}
+
+textarea {
+    padding: 2px;
 }
 
 select {
@@ -207,15 +208,15 @@ a:hover {
 
 /* LISTS AND FORMS */
 
-.form > div, .form div ul > li, .property-list > li , .property-list li ul > li {
+.form > div, .form div ul > li, .property-list > li, .property-list li ul > li {
     min-height: 22px;
-    margin: 5px 0;
+    margin: 5px 0 0;
     line-height: 1.8;
     overflow: hidden;
 }
 
 .form > div ul > li:first-child, .property-list li ul > li:first-child {
-    margin: 0;
+    margin-top: 0;
 }
 
 .form > div > .property-label, .property-list li > .property-label {
@@ -228,19 +229,15 @@ a:hover {
 .form > div > .property-value, .property-list li > .property-value {
     display: block;
     text-align: left;
-    margin-left: 26%;
+    margin: 0 0 0 26%;
 }
-
-/* .form > div > input[type=checkbox].property-value, .form > div > input[type=radio].property-value {
-    height: 22px;
-} */
 
 .column.form > div > .property-label {
     width: 33%;
 }
 
 .column.form > div > .property-value {
-    margin-left: 36%;
+    margin: 0 0 0 36%;
 }
 
 ul input[type=text], ul input[type=password], ul input[type=number],

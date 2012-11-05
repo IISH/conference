@@ -1,5 +1,7 @@
 import java.text.SimpleDateFormat
+
 import org.iisg.eca.domain.Setting
+import org.iisg.eca.domain.DynamicPage
 
 class BootStrap {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yy-MM-dd")
@@ -14,6 +16,12 @@ class BootStrap {
             lastUpdated.value = DATE_FORMAT.format(new Date())
         }
         lastUpdated.save()
+        
+        // Make sure the cache of the dynamic pages are emptied
+        DynamicPage.list().each {
+            it.cache = null
+            it.save()
+        }
     }
     
     def destroy = {

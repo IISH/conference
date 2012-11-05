@@ -1,9 +1,9 @@
 <!doctype html>
 <html>
-	<head>
-		<meta name="layout" content="main">
-	</head>
-	<body>
+    <head>
+        <meta name="layout" content="main">
+    </head>
+    <body>
         <input type="hidden" name="id" value="${params.id}" />
         <eca:navigation ids="${sessionIds}" />
 
@@ -103,5 +103,5 @@
                 </eca:link>
             </eca:ifUserHasAccess>
         </div>
-	</body>
+    </body>
 </html>

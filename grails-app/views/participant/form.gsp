@@ -61,84 +61,110 @@
                                 <label class="property-label">
                                     <g:message code="title.label" />
                                 </label>
-                                <g:select class="property-value" from="${Title.list()}" name="User.title" optionKey="title" optionValue="title" value="${user.title}" noSelection="${['':' ']}" />
+                                <span class="property-value">
+                                    <g:select from="${Title.list()}" name="User.title" optionKey="title" optionValue="title" value="${user.title}" noSelection="${['':' ']}" />
+                                </span>
                             </div>
                             <div class="${hasErrors(bean: user, field: 'firstName', 'error')} required">
                                 <label class="property-label">
                                     <g:message code="user.firstName.label" />
                                     <span class="required-indicator">*</span>
                                 </label>
-                                <input class="property-value" type="text" name="User.firstName" required="required" maxlength="50" value="${fieldValue(bean: user, field: 'firstName')}" />
+                                <span class="property-value">
+                                    <input type="text" name="User.firstName" required="required" maxlength="50" value="${fieldValue(bean: user, field: 'firstName')}" />
+                                </span>
                             </div>
                             <div class="${hasErrors(bean: user, field: 'lastName', 'error')} required">
                                 <label class="property-label">
                                     <g:message code="user.lastName.label" />
                                     <span class="required-indicator">*</span>
                                 </label>
-                                <input class="property-value" type="text" name="User.lastName" required="required" maxlength="50" value="${fieldValue(bean: user, field: 'lastName')}" />
+                                <span class="property-value">
+                                    <input type="text" name="User.lastName" required="required" maxlength="50" value="${fieldValue(bean: user, field: 'lastName')}" />
+                                </span>
                             </div>
                             <div class="${hasErrors(bean: user, field: 'gender', 'error')} required">
                                 <label class="property-label">
                                     <g:message code="user.gender.label" />
                                 </label>
-                                <g:select class="property-value" from="['M','F']" name="User.gender" value="${user.gender?.toString()}" noSelection="${['': ' ']}" />
+                                <span class="property-value">
+                                    <g:select from="['M','F']" name="User.gender" value="${user.gender?.toString()}" noSelection="${['': ' ']}" />
+                                </span>
                             </div>
                             <div class="${hasErrors(bean: user, field: 'organisation', 'error')} required">
                                 <label class="property-label">
                                     <g:message code="user.organisation.label" />
                                 </label>
-                                <input class="property-value" type="text" name="User.organisation" maxlength="50" value="${fieldValue(bean: user, field: 'organisation')}" />
+                                <span class="property-value">
+                                    <input type="text" name="User.organisation" maxlength="50" value="${fieldValue(bean: user, field: 'organisation')}" />
+                                </span>
                             </div>
                             <div class="${hasErrors(bean: user, field: 'department', 'error')} required">
                                 <label class="property-label">
                                     <g:message code="user.department.label" />
                                 </label>
-                                <input class="property-value" type="text" name="User.department" maxlength="50" value="${fieldValue(bean: user, field: 'department')}" />
+                                <span class="property-value">
+                                    <input type="text" name="User.department" maxlength="50" value="${fieldValue(bean: user, field: 'department')}" />
+                                </span>
                             </div>
                             <div class="${hasErrors(bean: user, field: 'email', 'error')} required">
                                 <label class="property-label">
                                     <g:message code="user.email.label" />
                                     <span class="required-indicator">*</span>
                                 </label>
-                                <input class="property-value" type="email" name="User.email" required="required" maxlength="50" value="${fieldValue(bean: user, field: 'email')}" />
+                                <span class="property-value">
+                                    <input type="email" name="User.email" required="required" maxlength="50" value="${fieldValue(bean: user, field: 'email')}" />
+                                </span>
                             </div>
                             <div class="${hasErrors(bean: user, field: 'address', 'error')} required">
                                 <label class="property-label">
                                     <g:message code="user.address.label" />
                                 </label>
-                                <textarea class="property-value" name="User.address" cols="40" rows="5">${fieldValue(bean: user, field: 'address')}</textarea>
+                                <span class="property-value">
+                                    <textarea name="User.address" cols="40" rows="5">${fieldValue(bean: user, field: 'address')}</textarea>
+                                </span>
                             </div>
                             <div class="${hasErrors(bean: user, field: 'city', 'error')} required">
                                 <label class="property-label">
                                     <g:message code="user.city.label" />
                                     <span class="required-indicator">*</span>
                                 </label>
-                                <input class="property-value" type="text" name="User.city" required="required" maxlength="50" value="${fieldValue(bean: user, field: 'city')}" />
+                                <span class="property-value">
+                                    <input type="text" name="User.city" required="required" maxlength="50" value="${fieldValue(bean: user, field: 'city')}" />
+                                </span>
                             </div>
                             <div class="${hasErrors(bean: user, field: 'country', 'error')} required">
                                 <label class="property-label">
                                     <g:message code="user.country.label" />
                                     <span class="required-indicator">*</span>
                                 </label>
-                                <g:select class="property-value" name="User.country.id" from="${Country.list(sort: 'nameEnglish')}" required="required" optionKey="id" value="${user.country?.id}" noSelection="${[null:' ']}" />
+                                <span class="property-value">
+                                    <g:select name="User.country.id" from="${Country.list(sort: 'nameEnglish')}" required="required" optionKey="id" value="${user.country?.id}" noSelection="${[null:' ']}" />
+                                </span>
                             </div>
                             <div class="${hasErrors(bean: user, field: 'phone', 'error')}">
                                 <label class="property-label">
                                     <g:message code="user.phone.label" />
                                 </label>
-                                <input class="property-value" type="text" name="User.phone" maxlength="50" value="${fieldValue(bean: user, field: 'phone')}" />
+                                <span class="property-value">
+                                    <input type="text" name="User.phone" maxlength="50" value="${fieldValue(bean: user, field: 'phone')}" />
+                                </span>
                             </div>
                             <div class="${hasErrors(bean: user, field: 'mobile', 'error')}">
                                 <label class="property-label">
                                     <g:message code="user.mobile.label" />
                                 </label>
-                                <input class="property-value" type="text" name="User.mobile" maxlength="50" value="${fieldValue(bean: user, field: 'mobile')}" />
+                                <span class="property-value">
+                                    <input type="text" name="User.mobile" maxlength="50" value="${fieldValue(bean: user, field: 'mobile')}" />
+                                </span>
                             </div>
                             <div class="${hasErrors(bean: user, field: 'extraInfo', 'error')}">
                                 <label class="property-label">
                                     <g:message code="user.extraInfo.label" />
                                 </label>
-                                <textarea class="property-value" name="User.extraInfo" cols="40" rows="5">${fieldValue(bean: user, field: 'extraInfo')}</textarea>
+                                <span class="property-value">
+                                    <textarea name="User.extraInfo" cols="40" rows="5">${fieldValue(bean: user, field: 'extraInfo')}</textarea>
+                                </span>
                             </div>
                         </fieldset>
                     </div>
@@ -151,13 +177,17 @@
                                     <label class="property-label">
                                         <g:message code="participantDate.invitationLetter.label" />
                                     </label>
-                                    <g:checkBox class="property-value" name="ParticipantDate.invitationLetter" checked="${participant.invitationLetter}" />
+                                    <span class="property-value">
+                                        <g:checkBox name="ParticipantDate.invitationLetter" checked="${participant.invitationLetter}" />
+                                    </span>
                                 </div>
                                 <div class="${hasErrors(bean: participant, field: 'invitationLetterSent', 'error')}">
                                     <label class="property-label">
                                         <g:message code="participantDate.invitationLetterSent.label" />
                                     </label>
-                                    <g:checkBox class="property-value" name="ParticipantDate.invitationLetterSent" checked="${participant.invitationLetterSent}" />
+                                    <span class="property-value">
+                                        <g:checkBox name="ParticipantDate.invitationLetterSent" checked="${participant.invitationLetterSent}" />
+                                    </span>
                                 </div>
                             </fieldset>
 
@@ -171,7 +201,9 @@
                                         <label class="property-label">
                                             ${extra.toString()}
                                         </label>
-                                        <g:checkBox class="property-value" name="ParticipantDate.extras" checked="${participant.extras.find { it == extra }}" value="${extra.id}" />
+                                        <span class="property-value">
+                                            <g:checkBox name="ParticipantDate.extras" checked="${participant.extras.find { it == extra }}" value="${extra.id}" />
+                                        </span>
                                     </div>
                                 </g:each>
                             </fieldset> 
@@ -182,13 +214,17 @@
                                     <label class="property-label">
                                         <g:message code="participantDate.lowerFeeRequested.label" />
                                     </label>
-                                    <g:checkBox class="property-value" name="ParticipantDate.lowerFeeRequested" checked="${participant.lowerFeeRequested}" />
+                                    <span class="property-value">
+                                        <g:checkBox name="ParticipantDate.lowerFeeRequested" checked="${participant.lowerFeeRequested}" />
+                                    </span>
                                 </div>
                                 <div class="${hasErrors(bean: participant, field: 'lowerFeeAnswered', 'error')}">
                                     <label class="property-label">
                                         <g:message code="participantDate.lowerFeeAnswered.label" />
                                     </label>
-                                    <g:checkBox class="property-value" name="ParticipantDate.lowerFeeAnswered" checked="${participant.lowerFeeAnswered}" />
+                                    <span class="property-value">
+                                        <g:checkBox name="ParticipantDate.lowerFeeAnswered" checked="${participant.lowerFeeAnswered}" />
+                                    </span>
                                 </div>
                             </fieldset> 
 
@@ -198,13 +234,17 @@
                                     <label class="property-label">
                                         <g:message code="participantDate.state.label" />
                                     </label>
-                                    <g:select class="property-value" name="ParticipantDate.state.id" from="${ParticipantState.list()}" optionKey="id" optionValue="state" value="${participant.state.id}" />
+                                    <span class="property-value">
+                                        <g:select name="ParticipantDate.state.id" from="${ParticipantState.list()}" optionKey="id" optionValue="state" value="${participant.state.id}" />
+                                    </span>
                                 </div>
                                 <div class="${hasErrors(bean: participant, field: 'feeState', 'error')} required">
                                     <label class="property-label">
                                         <g:message code="participantDate.feeState.label" />
                                     </label>
-                                    <g:select class="property-value" name="ParticipantDate.feeState.id" from="${FeeState.list()}" optionKey="id" optionValue="name" value="${participant.feeState.id}" />
+                                    <span class="property-value">
+                                        <g:select name="ParticipantDate.feeState.id" from="${FeeState.list()}" optionKey="id" optionValue="name" value="${participant.feeState.id}" />
+                                    </span>                                
                                 </div>
                                 <div class="${hasErrors(bean: user, field: 'dateTimesNotPresent', 'error')}">
                                     <table id="participant-present">
@@ -298,20 +338,24 @@
                                         <g:message code="paper.title.label" />
                                         <span class="required-indicator">*</span>
                                     </label>
-                                    <input class="property-value" type="text" name="Paper_${i}.title" maxlength="500" required="required" value="${fieldValue(bean: paper, field: 'title')}" />
+                                    <span class="property-value">
+                                        <input type="text" name="Paper_${i}.title" maxlength="500" required="required" value="${fieldValue(bean: paper, field: 'title')}" />
+                                    </span>
                                 </div>
                                 <div class="${hasErrors(bean: paper, field: 'abstr', 'error')}">
                                     <label class="property-label">
                                         <g:message code="paper.abstr.label" />
                                         <span class="required-indicator">*</span>
                                     </label>
-                                    <textarea class="property-value" name="Paper_${i}.abstr" required="required" cols="40" rows="5">${fieldValue(bean: paper, field: 'abstr')}</textarea>
+                                    <span class="property-value">
+                                        <textarea name="Paper_${i}.abstr" required="required" cols="40" rows="5">${fieldValue(bean: paper, field: 'abstr')}</textarea>
+                                    </span>
                                 </div>
                                 <div>
                                     <label class="property-label">
                                         <g:message code="paper.file.label" />
                                     </label>
-                                    <div class="property-value">
+                                    <span class="property-value">
                                         <g:if test="${paper.file}">
                                         <span>
                                             <a target="_blank" href="${eca.createLink(action: 'downloadPaper', id: paper.id)}">${paper.fileName}</a> - ${paper.getReadableFileSize()}
@@ -319,31 +363,39 @@
                                         <span class="paper no-del ui-icon ui-icon-circle-minus"></span>
                                         </g:if>
                                         <g:else>-</g:else>
-                                    </div>
+                                    </span>
                                 </div>
                                 <div class="${hasErrors(bean: paper, field: 'file', 'error')}">
                                     <label class="property-label">
                                         <g:message code="paper.file.upload.label" />
                                     </label>
-                                    <input class="property-value" type="file" name="Paper_${i}.file" />
+                                    <span class="property-value">
+                                        <input type="file" name="Paper_${i}.file" />
+                                    </span>
                                 </div>
                                 <div class="${hasErrors(bean: paper, field: 'coAuthors', 'error')}">
                                     <label class="property-label">
                                         <g:message code="paper.coAuthors.label" />
                                     </label>
-                                    <input class="property-value" type="text" name="Paper_${i}.coAuthors" maxlength="500" value="${fieldValue(bean: paper, field: 'coAuthors')}" />
+                                    <span class="property-value">
+                                        <input type="text" name="Paper_${i}.coAuthors" maxlength="500" value="${fieldValue(bean: paper, field: 'coAuthors')}" />
+                                    </span>
                                 </div>
                                 <div class="${hasErrors(bean: paper, field: 'state', 'error')}">
                                     <label class="property-label">
                                         <g:message code="paper.state.label" />
                                     </label>
-                                    <g:select class="property-value" from="${paperStates}" name="Paper_${i}.state.id" optionKey="id" optionValue="description" value="${paper.state.id}" />
+                                    <span class="property-value">
+                                        <g:select from="${paperStates}" name="Paper_${i}.state.id" optionKey="id" optionValue="description" value="${paper.state.id}" />
+                                    </span>
                                 </div>
                                 <div class="${hasErrors(bean: paper, field: 'comment', 'error')}">
                                     <label class="property-label">
                                         <g:message code="paper.comment.label" />
                                     </label>
-                                    <textarea class="property-value" name="Paper_${i}.comment" cols="40" rows="5">${fieldValue(bean: paper, field: 'comment')}</textarea>
+                                    <span class="property-value">
+                                        <textarea name="Paper_${i}.comment" cols="40" rows="5">${fieldValue(bean: paper, field: 'comment')}</textarea>
+                                    </span>
                                 </div>
                             </fieldset>
 
@@ -353,28 +405,32 @@
                                     <label class="property-label">
                                         <g:message code="paper.networkProposal.label" />
                                     </label>
-                                    <div class="property-value">
+                                    <span class="property-value">
                                         <g:select from="${networks}" name="Paper_${i}.networkProposal.id" optionKey="id" optionValue="name" value="${paper.networkProposal?.id}" noSelection="${['': ' ']}" />
                                         <input type="button" id="btn_network" name="btn_network" value="${g.message(code: "default.goto")}" />
-                                    </div>
+                                    </span>
                                 </div>
                                 <div class="${hasErrors(bean: paper, field: 'sessionProposal', 'error')}">
                                     <label class="property-label">
                                         <g:message code="paper.sessionProposal.label" />
                                     </label>
-                                    <input class="property-value" type="text" name="Paper_${i}.sessionProposal" maxlength="500" value="${fieldValue(bean: paper, field: 'sessionProposal')}" />
+                                    <span class="property-value">
+                                        <input type="text" name="Paper_${i}.sessionProposal" maxlength="500" value="${fieldValue(bean: paper, field: 'sessionProposal')}" />
+                                    </span>
                                 </div>
                                 <div class="${hasErrors(bean: paper, field: 'proposalDescription', 'error')}">
                                     <label class="property-label">
                                         <g:message code="paper.proposalDescription.label" />
                                     </label>
-                                    <textarea class="property-value" name="Paper_${i}.proposalDescription" cols="40" rows="5">${fieldValue(bean: paper, field: 'proposalDescription')}</textarea>
+                                    <span class="property-value">
+                                        <textarea name="Paper_${i}.proposalDescription" cols="40" rows="5">${fieldValue(bean: paper, field: 'proposalDescription')}</textarea>
+                                    </span>
                                 </div>
                                 <div class="${hasErrors(bean: paper, field: 'session', 'error')}">
                                     <label class="property-label">
                                         <g:message code="session.label" />
                                     </label>
-                                    <div class="property-value">
+                                    <span class="property-value">
                                         <span>
                                             <g:if test="${paper.session}">
                                                 <eca:link controller="session" action="show" id="${paper.session.id}">
@@ -383,10 +439,10 @@
                                             </g:if>
                                             <g:else>-</g:else>
                                         </span>
-                                    </div>
+                                    </span>
                                 </div>
                             </fieldset>
-
+                            
                             <fieldset class="form">
                                 <legend><g:message code="equipment.label" /></legend>
                                 <g:each in="${equipmentList}" var="equipment">
@@ -394,14 +450,18 @@
                                         <label class="property-label">
                                             ${equipment.equipment}
                                         </label>
-                                        <g:checkBox class="property-value" name="Paper_${i}.equipment" value="${equipment.id}" checked="${paper.equipment.find { it == equipment }}" />
+                                        <span class="property-value">
+                                            <g:checkBox name="Paper_${i}.equipment" value="${equipment.id}" checked="${paper.equipment.find { it == equipment }}" />
+                                        </span>
                                     </div>
                                 </g:each>
                                 <div class="${hasErrors(bean: paper, field: 'equipmentComment', 'error')}">
                                     <label class="property-label">
                                         <g:message code="paper.equipmentComment.label" />
                                     </label>
-                                    <textarea class="property-value" name="Paper_${i}.equipmentComment" cols="40" rows="5">${fieldValue(bean: paper, field: 'equipmentComment')}</textarea>
+                                    <span class="property-value">
+                                        <textarea name="Paper_${i}.equipmentComment" cols="40" rows="5">${fieldValue(bean: paper, field: 'equipmentComment')}</textarea>
+                                    </span>
                                 </div>
                             </fieldset>
                         </div>
@@ -420,44 +480,56 @@
                                     <g:message code="paper.title.label" />
                                     <span class="required-indicator">*</span>
                                 </label>
-                                <input class="property-value" type="text" name="Paper_null.title" maxlength="500" required="required" />
+                                <span class="property-value">
+                                    <input type="text" name="Paper_null.title" maxlength="500" required="required" />
+                                </span>
                             </div>
                             <div>
                                 <label class="property-label">
                                     <g:message code="paper.abstr.label" />
                                     <span class="required-indicator">*</span>
                                 </label>
-                                <textarea class="property-value" name="Paper_null.abstr" required="required" cols="40" rows="5"></textarea>
+                                <span class="property-value">
+                                    <textarea name="Paper_null.abstr" required="required" cols="40" rows="5"></textarea>
+                                </span>
                             </div>
                             <div>
                                 <label class="property-label">
                                     <g:message code="paper.file.label" />
                                 </label>
-                                <div class="property-value"> - </div>
+                                <span class="property-value"> - </span>
                             </div>
                             <div>
                                 <label class="property-label">
                                     <g:message code="paper.file.upload.label" />
                                 </label>
-                                <input class="property-value" type="file" name="Paper_null.file" />
+                                <span class="property-value">
+                                    <input type="file" name="Paper_null.file" />
+                                </span>
                             </div>
                             <div>
                                 <label class="property-label">
                                     <g:message code="paper.coAuthors.label" />
                                 </label>
-                                <input class="property-value" type="text" name="Paper_null.coAuthors" maxlength="500" />
+                                <span class="property-value">
+                                    <input type="text" name="Paper_null.coAuthors" maxlength="500" />
+                                </span>
                             </div>
                             <div>
                                 <label class="property-label">
                                     <g:message code="paper.state.label" />
                                 </label>
-                                <g:select class="property-value" from="${paperStates}" name="Paper_null.state.id" optionKey="id" optionValue="description" value="${paperStates.find { it.id == 1 }}" />
+                                <span class="property-value">
+                                    <g:select from="${paperStates}" name="Paper_null.state.id" optionKey="id" optionValue="description" value="${paperStates.find { it.id == 1 }}" />
+                                </span>
                             </div>
                             <div>
                                 <label class="property-label">
                                     <g:message code="paper.comment.label" />
                                 </label>
-                                <textarea class="property-value" name="Paper_null.comment" cols="40" rows="5"></textarea>
+                                <span class="property-value">
+                                    <textarea name="Paper_null.comment" cols="40" rows="5"></textarea>
+                                </span>
                             </div>
                         </fieldset>
 
@@ -467,31 +539,35 @@
                                 <label class="property-label">
                                     <g:message code="paper.networkProposal.label" />
                                 </label>
-                                <div class="property-value">
+                                <span class="property-value">
                                     <g:select from="${networks}" name="Paper_null.networkProposal" optionKey="id" optionValue="name" noSelection="${['': ' ']}" />
                                     <input type="button" id="btn_network" name="btn_network" value="${g.message(code: "default.goto")}" />
-                                </div>
+                                </span>
                             </div>
                             <div>
                                 <label class="property-label">
                                     <g:message code="paper.sessionProposal.label" />
                                 </label>
-                                <input class="property-value" type="text" name="Paper_null.sessionProposal" maxlength="500" />
+                                <span class="property-value">
+                                    <input type="text" name="Paper_null.sessionProposal" maxlength="500" />
+                                </span>
                             </div>
                             <div>
                                 <label class="property-label">
                                     <g:message code="paper.proposalDescription.label" />
                                 </label>
-                                <textarea class="property-value" name="Paper_null.proposalDescription" cols="40" rows="5"></textarea>
+                                <span class="property-value">
+                                    <textarea name="Paper_null.proposalDescription" cols="40" rows="5"></textarea>
+                                </span>
                             </div>
                             <div>
                                 <label class="property-label">
                                     <g:message code="session.label" />
                                 </label>
-                                <div class="property-value">
+                                <span class="property-value">
                                   <span>-</span>
                                   <input type="button" class="btn_session" name="btn_session" value="${g.message(code: "default.goto")}" />
-                                </div>
+                                </span>
                             </div>
                         </fieldset>
 
@@ -502,14 +578,18 @@
                                     <label class="property-label">
                                         ${equipment.equipment}
                                     </label>
-                                    <input class="property-value" type="checkbox" name="Paper_null.equipment" />
+                                    <span class="property-value">
+                                        <input type="checkbox" name="Paper_null.equipment" />
+                                    </span>
                                 </div>
                             </g:each>
                             <div>
                                 <label class="property-label">
                                     <g:message code="paper.equipmentComment.label" />
                                 </label>
-                                <textarea class="property-value" name="Paper_null.equipmentComment" cols="40" rows="5"></textarea>
+                                <span class="property-value">
+                                    <textarea name="Paper_null.equipmentComment" cols="40" rows="5"></textarea>
+                                </span>
                             </div>
                         </fieldset>
                     </div>

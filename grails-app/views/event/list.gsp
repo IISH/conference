@@ -1,10 +1,10 @@
 <!doctype html>
 <html>
-	<head>
-		<meta name="layout" content="main">
+    <head>
+        <meta name="layout" content="main">
         <title><g:message code="event.multiple.label" /></title>
-	</head>
-	<body>
+    </head>
+    <body>
         <h1><g:message code="event.multiple.label" /></h1>
 
         <g:if test="${flash.message}">

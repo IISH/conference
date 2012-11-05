@@ -1,7 +1,7 @@
 <html>
 <head>
-	<meta name='layout' content='main'/>
-	<title><g:message code="springSecurity.forgot.title" /></title>
+    <meta name='layout' content='main'/>
+    <title><g:message code="springSecurity.forgot.title" /></title>
 </head>
 <body>
     <div id='login'>
@@ -14,10 +14,15 @@
         <g:form controller="login" action="newPassword" method="POST" id="loginForm" autocomplete="off">
             <fieldset class="form">
                 <div>
-                    <label for='username' class="property-label"><g:message code="springSecurity.forgot.username.label" /></label>
-                    <input type='text' class='property-value' name='j_username' id='username'/>
+                    <label for='username' class="property-label">
+                        <g:message code="springSecurity.forgot.username.label" />
+                    </label>
+                    <span class="property-value">
+                        <input type='text' name='j_username' id='username'/>
+                    </span>
                 </div>
             </fieldset>
+            
             <fieldset class="buttons">
                 <eca:link previous="true">
                     <g:message code="default.button.back.label" />

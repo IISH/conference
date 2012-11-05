@@ -225,7 +225,9 @@ class PageBuilder {
                         builder.span(class: "property-value", "\${${RESULTS}.get(${c.root.eid}).get('${c.domainClass.name}')['${c.name}'].encodeAsHTML()}")
                     }
                     else {
-                        renderEditor.render(c)
+                        builder.span(class: "property-value") {
+                            renderEditor.render(c)
+                        }                        
                     }
                 }
             }

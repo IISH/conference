@@ -1,10 +1,11 @@
+<!doctype html>
 <html>
-	<head>
-		<meta name="layout" content="main">
+    <head>
+        <meta name="layout" content="main">
         <g:javascript src="plan.js" />
         <g:javascript src="participants-in-sessions.js" />
-	</head>
-	<body>
+    </head>
+    <body>
         <div id="sessions-unscheduled">
             <g:each in="${sessionsUnscheduled}" var="session">
             <div class="session-block">

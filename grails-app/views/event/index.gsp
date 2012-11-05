@@ -1,16 +1,16 @@
 <!doctype html>
 <html>
-	<head>
-		<meta name="layout" content="main">
+    <head>
+        <meta name="layout" content="main">
         <title><g:message code="default.welcome.label" /></title>
-	</head>
-	<body>
+    </head>
+    <body>
         <h1><g:message code="default.welcome.label" /></h1>
 
         <g:if test="${flash.message}">
             <div class="message" role="status">${flash.message}</div>
         </g:if>
-
+    
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas elit felis, feugiat egestas commodo eu, consequat placerat est. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras tempus arcu faucibus leo aliquet vitae egestas ipsum lacinia. Etiam suscipit mauris lacinia nibh scelerisque facilisis. Maecenas pulvinar rutrum pharetra. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Morbi ante sem, egestas ut feugiat ac, vulputate fringilla mauris. Cras eleifend egestas facilisis. Nunc mattis magna eu nibh eleifend porta. Cras et magna id nisl blandit feugiat. Nulla nec laoreet lacus.</p>
 
         <p>Sed vel libero velit. Curabitur ut neque sem, vel cursus mi. Nam iaculis tellus eget tortor auctor dictum. Suspendisse fermentum lacinia feugiat. Nam blandit elit non mauris accumsan vel sollicitudin nunc semper. Praesent eget metus vitae mauris rutrum porta nec a tortor. Donec at neque nunc. Ut tincidunt tristique felis. Vestibulum sed neque non justo pellentesque rhoncus eu nec orci. Duis mi mi, aliquet nec aliquet eget, sodales vitae nisi. Cras consectetur diam dapibus justo adipiscing fringilla. Vivamus sodales tristique massa vel fermentum. Nullam tincidunt tempus justo, in imperdiet mi tempor et. Nullam nec risus nibh, ac adipiscing ligula. Nam iaculis augue ac ipsum pretium interdum.</p>

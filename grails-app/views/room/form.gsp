@@ -1,9 +1,9 @@
 <!doctype html>
 <html>
-	<head>
-		<meta name="layout" content="main">
-	</head>
-	<body>
+    <head>
+        <meta name="layout" content="main">
+    </head>
+    <body>
         <g:hasErrors bean="${room}">
           <ul class="errors" role="alert">
             <g:eachError bean="${room}" var="error">
@@ -21,33 +21,43 @@
                         <g:message code="room.roomName.label" />
                         <span class="required-indicator">*</span>
                     </label>
-                    <input class="property-value" type="text" name="roomName" maxlength="30" required="required" value="${fieldValue(bean: room, field: 'roomName')}" />
+                    <span class="property-value">
+                        <input type="text" name="roomName" maxlength="30" required="required" value="${fieldValue(bean: room, field: 'roomName')}" />
+                    </span>
                 </div>
                 <div class="${hasErrors(bean: room, field: 'roomNumber', 'error')} required">
                     <label class="property-label" for="roomNumber">
                         <g:message code="room.roomNumber.label" />
                         <span class="required-indicator">*</span>
                     </label>
-                    <input class="property-value" type="text" name="roomNumber" maxlength="10" required="required" value="${fieldValue(bean: room, field: 'roomNumber')}" />
+                    <span class="property-value">
+                        <input type="text" name="roomNumber" maxlength="10" required="required" value="${fieldValue(bean: room, field: 'roomNumber')}" />
+                    </span>
                 </div>
                 <div class="${hasErrors(bean: room, field: 'noOfSeats', 'error')} required">
                     <label class="property-label" for="noOfSeats">
                         <g:message code="room.noOfSeats.label" />
                         <span class="required-indicator">*</span>
                     </label>
-                    <input class="property-value" type="number" name="noOfSeats" required="required" value="${fieldValue(bean: room, field: 'noOfSeats')}"/>
+                    <span class="property-value">
+                        <input type="number" name="noOfSeats" required="required" value="${fieldValue(bean: room, field: 'noOfSeats')}"/>
+                    </span>
                 </div>
                 <div class="${hasErrors(bean: room, field: 'comment', 'error')} ">
                     <label class="property-label" for="comment">
                         <g:message code="room.comment.label" />
                     </label>
-                    <textarea class="property-value" cols="40" rows="5" name="comment">${fieldValue(bean: room, field: 'comment')}</textarea>
+                    <span class="property-value">
+                        <textarea cols="40" rows="5" name="comment">${fieldValue(bean: room, field: 'comment')}</textarea>
+                    </span>
                 </div>
                 <div>
                     <label class="property-label">
                         <g:message code="default.enabled.label" />
                     </label>
-                    <g:checkBox class="property-value" name="enabled" />
+                    <span class="property-value">
+                        <g:checkBox name="enabled" />
+                    </span>
                 </div>
 
                 <div id="room-equipment" class="columns">
@@ -72,7 +82,8 @@
                     </g:each>
                     <div class="clear empty" />
                 </div>
-           </fieldset>
+            </fieldset>
+          
             <fieldset class="buttons">
                 <eca:link controller="${params.prevController}" action="${params.prevAction}" id="${params.prevId}">
                     <g:message code="default.button.cancel.label" />
@@ -85,5 +96,5 @@
                 <input type="submit" name="btn_save" class="btn_save" value="${message(code: 'default.button.save.label')}" />
             </fieldset>
         </form>
-	</body>
+    </body>
 </html>

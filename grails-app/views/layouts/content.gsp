@@ -1,9 +1,9 @@
 <!doctype html>
 <html>
-	<head>
-		<meta name="layout" content="main">
-	</head>
-	<body>
+    <head>
+        <meta name="layout" content="main">
+    </head>
+    <body>
         ${content}
-	</body>
+    </body>
 </html>

@@ -391,12 +391,12 @@ class UtilsTagLib {
             if (page.hasAccess()) {
                 if (page.controller && page.action) {
                     builder.dd {
-                        builder.mkp.yieldUnescaped(eca.link(controller: page.controller, action: page.action, page.toString()))
+                        builder.mkp.yieldUnescaped(eca.link(controller: page.controller, action: page.action, g.message(code: page.titleCode, args: [g.message(code: page.titleArg)], default: page.titleDefault)))
                     }
                 }
                 else {
                     builder.dd {
-                        builder.a(href: "#", page.toString())
+                        builder.a(href: "#", g.message(code: page.titleCode, args: [g.message(code: page.titleArg)], default: page.titleDefault))
                     }
                 }
 

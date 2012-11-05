@@ -1,10 +1,10 @@
 <!doctype html>
 <html>
-	<head>
+    <head>
         <meta name="layout" content="main">
         <title><g:message code="default.show.label" args="${[message(code: 'user.label')]}" /></title>
-	</head>
-	<body>
+    </head>
+    <body>
         <h1><g:message code="default.show.label" args="${[message(code: 'user.label')]}" /></h1>
 
         <g:if test="${flash.message}">
@@ -128,5 +128,5 @@
                 </eca:link>
             </fieldset>
         </div>
-	</body>
+    </body>
 </html>
