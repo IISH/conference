@@ -12,12 +12,6 @@ hibernate {
 }
 // environment specific settings
 environments {
-    development {
-        dataSource {
-            logSql = true
-            formatSql = true
-        }
-    }
     test {
         dataSource {
             driverClassName = "org.h2.Driver"

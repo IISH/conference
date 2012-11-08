@@ -234,10 +234,10 @@ class UtilsTagLib {
      * @attr fbArgs A list of argument values to apply to the message when fallback code is used
      */
     def fallbackMessage = { attrs ->
-        String msg = g.message(code: attrs.code, attrs: attrs.attrs).toString()
+        String msg = message(code: attrs.code, attrs: attrs.attrs).toString()
 
         if (msg.equals(attrs.code.toString())) {
-            msg = g.message(code: attrs.fbCode, attrs: attrs.fbAttrs, default: attrs.default).toString()
+            msg = message(code: attrs.fbCode, attrs: attrs.fbAttrs, default: attrs.default).toString()
         }
 
         out << msg

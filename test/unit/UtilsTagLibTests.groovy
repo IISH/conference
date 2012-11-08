@@ -38,7 +38,7 @@ class UtilsTagLibTests {
         String secondText = "Aaaaa \n \t Bbbbb"
 
         assert applyTemplate('<eca:formatText text="${text}" />', [text: firstText]) == "Aaaaa <br /> Bbbbb <br />"
-        assert applyTemplate('<eca:formatText text="${text}" />', [text: secondText]) == "Aaaaa <br />       Bbbbb"
+        assert applyTemplate('<eca:formatText text="${text}" />', [text: secondText]) == "Aaaaa <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Bbbbb"
         assert applyTemplate('<eca:formatText text="${text}" />', [text: "     "]) == "-"
         assert applyTemplate('<eca:formatText text="${text}" />', [text: null]) == "-"
     }
@@ -101,6 +101,7 @@ class UtilsTagLibTests {
      */
     void testFallbackMessageTag() {
         UtilsTagLib taglib = applicationContext.getBean(UtilsTagLib)
+
         // Simulate the standard message tag
         taglib.metaClass.message = { Map map -> return (map.code == 'default.home.label') ? 'Home' : map.code }
 

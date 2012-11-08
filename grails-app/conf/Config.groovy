@@ -60,9 +60,6 @@ grails.exceptionresolver.params.exclude = ['password']
 // enable query caching by default
 grails.hibernate.cache.queries = true
 
-// MySQL driver for reverse engineering
-grails.plugin.reveng.jdbcDriverJarDep = 'mysql:mysql-connector-java:5.1.18'
-
 // Make sure grails.config.locations is initialized
 if (!grails.config.locations || !(grails.config.locations instanceof Collection)) {
     grails.config.locations = []
@@ -90,7 +87,6 @@ if (GrailsUtil.getEnvironment() != GrailsApplication.ENV_TEST) {
 environments {
     development {
         grails.logging.jul.usebridge = true
-        grails.serverURL = "http://localhost:8080/${appName}"
         grails.mail.default.from = "ECA conference application <testeca1@knoex.com>"
         grails.mail.overrideAddress = "Test ECA <testeca1@knoex.com>"
     }
@@ -99,7 +95,7 @@ environments {
     }
     production {
         grails.logging.jul.usebridge = false
-        // TODO: grails.serverURL = "http://www.changeme.com"
+        grails.mail.disabled = true // TODO: Temporarily disabled
     }
 }
 
@@ -123,9 +119,6 @@ log4j = {
            'org.springframework',
            'org.hibernate',
            'net.sf.ehcache.hibernate'
-
-    trace   'org.hibernate.type'
-    debug   'org.hibernate.SQL'
 }
 
 // Spring Security Core config
