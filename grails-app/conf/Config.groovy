@@ -100,26 +100,37 @@ environments {
 }
 
 // log4j configuration
-log4j = {
-    // Example of changing the log pattern for the default console
-    // appender:
-    //
-    //appenders {
-    //    console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
-    //}
+// We assume the production environment is running in an tomcat container. If not we use the application path's target folder.
+final String catalinaBase = System.properties.getProperty('catalina.base', './target') + "/logs"
+File logFile = new File(catalinaBase)
+logFile.mkdirs()
+println("log directory: " + logFile.absolutePath)
 
-    error  'org.codehaus.groovy.grails.web.servlet',  //  controllers
-           'org.codehaus.groovy.grails.web.pages', //  GSP
-           'org.codehaus.groovy.grails.web.sitemesh', //  layouts
-           'org.codehaus.groovy.grails.web.mapping.filter', // URL mapping
-           'org.codehaus.groovy.grails.web.mapping', // URL mapping
-           'org.codehaus.groovy.grails.commons', // core / classloading
-           'org.codehaus.groovy.grails.plugins', // plugins
-           'org.codehaus.groovy.grails.orm.hibernate', // hibernate integration
-           'org.springframework',
-           'org.hibernate',
-           'net.sf.ehcache.hibernate'
+String loglevel = System.properties.getProperty('loglevel', 'warn')
+log4j = {
+
+    appenders {
+        console name: 'StackTrace'
+        rollingFile name: 'stacktrace', maxFileSize: 1024,
+                file: logFile.absolutePath + '/objectrepository-admin-stacktrace.log'
+    }
+
+    root {
+        "$loglevel"()
+    }
+    "$loglevel" 'org.codehaus.groovy.grails.web.servlet',  //  controllers
+               'org.codehaus.groovy.grails.web.pages', //  GSP
+               'org.codehaus.groovy.grails.web.sitemesh', //  layouts
+               'org.codehaus.groovy.grails.web.mapping.filter', // URL mapping
+               'org.codehaus.groovy.grails.web.mapping', // URL mapping
+               'org.codehaus.groovy.grails.commons', // core / classloading
+               'org.codehaus.groovy.grails.plugins', // plugins
+               'org.codehaus.groovy.grails.orm.hibernate', // hibernate integration
+               'org.springframework',
+               'org.hibernate',
+               'net.sf.ehcache.hibernate'
 }
+
 
 // Spring Security Core config
 grails.plugins.springsecurity.userLookup.userDomainClassName = 'org.iisg.eca.domain.User'
