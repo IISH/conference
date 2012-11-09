@@ -112,7 +112,7 @@ log4j = {
     appenders {
         console name: 'StackTrace'
         rollingFile name: 'stacktrace', maxFileSize: 1024,
-                file: logFile.absolutePath + '/objectrepository-admin-stacktrace.log'
+                file: logFile.absolutePath + '/stacktrace.log'
     }
 
     root {
