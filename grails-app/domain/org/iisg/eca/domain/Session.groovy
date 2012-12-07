@@ -6,6 +6,7 @@ package org.iisg.eca.domain
 class Session extends EventDateDomain {
     String code
     String name
+    String abstr
     String comment
 
     static belongsTo = Network
@@ -23,6 +24,7 @@ class Session extends EventDateDomain {
         date        column: 'date_id'
         code        column: 'session_code'
         name        column: 'session_name'
+        abstr       column: 'session_abstract', type: 'text'
         comment     column: 'session_comment',  type: 'text'
 
         networks                joinTable: 'session_in_network'
@@ -34,6 +36,7 @@ class Session extends EventDateDomain {
         date        nullable: true
         code        blank: false,   maxSize: 10
         name        blank: false,   maxSize: 255
+        abstr       nullable: true
         comment     nullable: true
     }
     

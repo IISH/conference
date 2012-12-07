@@ -141,7 +141,8 @@ class ParticipantController {
                 else {
                     // He/she is a participant, save all of that information as well
                     bindData(participant, params, [include: ['invitationLetter', 'invitationLetterSent', 'lowerFeeRequested',
-                            'lowerFeeAnswered', 'state', 'feeState']], "ParticipantDate")
+                            'lowerFeeAnswered', 'lowerFeeText', 'student', 'studentConfirmed', 'award',
+                            'state', 'feeState']], "ParticipantDate")
 
                     // Remove all extras the participant is interested in and save all new information
                     participant.extras.clear()
@@ -198,7 +199,7 @@ class ParticipantController {
 
                         // Save all paper information
                         bindData(paper, params, [include: ['title', 'abstr', 'coAuthors', 'state', 'comment',
-                                'networkProposal', 'sessionProposal', 'proposalDescription',
+                                'sessionProposal', 'proposalDescription',
                                 'equipmentComment']], "Paper_${i}")
 
                         // If a paper file is uploaded, save all file information

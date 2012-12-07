@@ -137,7 +137,7 @@ class SessionController {
         // The 'save' button was clicked, save all data
         if (request.post) {
             // Save all session related data
-            bindData(session, params, [include: ["code", "name", "comment", "enabeled"]], "Session")
+            bindData(session, params, [include: ["code", "name", "abstr", "comment", "enabeled"]], "Session")
 
             // Remove all networks from the session (one by one, cause we don't want to delete the networks themselves)
             List<Network> networks = []
@@ -492,6 +492,7 @@ class SessionController {
                 possibilitiesResponse.put('success',        true)
                 possibilitiesResponse.put('code',           session.code)
                 possibilitiesResponse.put('name',           session.name)
+                possibilitiesResponse.put('abstract',       session.abstr)
                 possibilitiesResponse.put('comment',        session.comment)
                 possibilitiesResponse.put('equipment',      sessionPlannerService.getEquipment(session).collect { it.toString() })
                 possibilitiesResponse.put('participants',   participants.collect {

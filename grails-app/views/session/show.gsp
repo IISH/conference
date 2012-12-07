@@ -29,6 +29,14 @@
             </span>
           </li>
           <li>
+            <span id="abstr-label" class="property-label">
+              <g:message code="session.abstr.label" />
+            </span>
+            <span class="property-value" arial-labelledby="abstr-label">
+              <eca:formatText text="${eventSession.abstr}" />
+            </span>
+          </li>
+          <li>
             <span id="comment-label" class="property-label">
               <g:message code="session.comment.label" />
             </span>

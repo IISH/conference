@@ -226,7 +226,43 @@
                                         <g:checkBox name="ParticipantDate.lowerFeeAnswered" checked="${participant.lowerFeeAnswered}" />
                                     </span>
                                 </div>
-                            </fieldset> 
+                                <div class="${hasErrors(bean: participant, field: 'lowerFeeText', 'error')}">
+                                    <label class="property-label">
+                                        <g:message code="participantDate.lowerFeeText.label" />
+                                    </label>
+                                    <span class="property-value">
+                                        <textarea name="ParticipantDate.lowerFeeText" cols="40" rows="5">${participant.lowerFeeText}</textarea>
+                                    </span>
+                                </div>
+                            </fieldset>
+
+                            <fieldset class="form">
+                                <legend><g:message code="participantDate.student.label" /></legend>
+                                <div class="${hasErrors(bean: participant, field: 'student', 'error')}">
+                                    <label class="property-label">
+                                        <g:message code="participantDate.studentRequested.label" />
+                                    </label>
+                                    <span class="property-value">
+                                        <g:checkBox name="ParticipantDate.student" checked="${participant.student}" />
+                                    </span>
+                                </div>
+                                <div class="${hasErrors(bean: participant, field: 'studentConfirmed', 'error')}">
+                                    <label class="property-label">
+                                        <g:message code="participantDate.studentConfirmed.label" />
+                                    </label>
+                                    <span class="property-value">
+                                        <g:checkBox name="ParticipantDate.studentConfirmed" checked="${participant.studentConfirmed}" />
+                                    </span>
+                                </div>
+                                <div class="${hasErrors(bean: participant, field: 'award', 'error')}">
+                                    <label class="property-label">
+                                        <g:message code="participantDate.award.label" />
+                                    </label>
+                                    <span class="property-value">
+                                        <g:checkBox name="ParticipantDate.award" checked="${participant.award}" />
+                                    </span>
+                                </div>
+                            </fieldset>
 
                             <fieldset class="form"> 
                                 <legend><g:message code="participantDate.attendance.label" /></legend>

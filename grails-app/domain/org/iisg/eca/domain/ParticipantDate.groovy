@@ -13,6 +13,9 @@ class ParticipantDate extends EventDateDomain {
     boolean lowerFeeRequested = false
     boolean lowerFeeAnswered = false
     String lowerFeeText
+    boolean student = false
+    boolean studentConfirmed = false
+    boolean award = false
 
     static belongsTo = [User, ParticipantState, FeeState]
     static hasMany = [extras: Extra, participantVolunteering: ParticipantVolunteering]
@@ -32,6 +35,9 @@ class ParticipantDate extends EventDateDomain {
         lowerFeeRequested       column: 'lower_fee_requested'
         lowerFeeAnswered        column: 'lower_fee_answered'
         lowerFeeText            column: 'lower_fee_text'
+        student                 column: 'student'
+        studentConfirmed        column: 'student_confirmed'
+        award                   column: 'award'
 
         extras                  joinTable: 'participant_date_extra'
         participantVolunteering cascade: 'all-delete-orphan'
