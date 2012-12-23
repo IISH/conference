@@ -48,6 +48,10 @@ textarea {
     padding: 2px;
 }
 
+textarea + .ui-resizable-se {
+    bottom: 17px;
+}
+
 select {
     height: 22px;
     min-width: 150px;

@@ -21,7 +21,7 @@ class BootStrap {
         DynamicPage.list().each {
             it.cache = null
             it.save()
-        }
+        }        
     }
     
     def destroy = {

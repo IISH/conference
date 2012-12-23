@@ -179,7 +179,7 @@ class NetworkController {
         Map responseMap = [success: false]
 
         // If this is an AJAX call and includes a network id and a session id to add or new session info, continue
-        if (request.xhr && params.network_id?.isLong() && (params.session_id?.isLong() || (params.session_code && params.session_name))) {
+        if (request.xhr && params.network_id?.isLong() && (params.session_id?.isLong() || params.session_name)) {
             Session session = null
 
             // If there is a session id, find that session, otherwise create a new session
@@ -224,7 +224,7 @@ class NetworkController {
 
         }
         else if (params.session_code?.isEmpty() || params.session_name?.isEmpty()) {
-            responseMap = [success: false, message: g.message(code: 'default.blank.message', args: ["${g.message(code: 'session.code.label')}, ${g.message(code: 'session.name.label')}"])]
+            responseMap = [success: false, message: g.message(code: 'default.blank.message', args: [g.message(code: 'session.name.label')])]
         }
 
         render responseMap as JSON

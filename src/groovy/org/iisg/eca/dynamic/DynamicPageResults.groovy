@@ -270,6 +270,16 @@ class DynamicPageResults {
         // Fetch the instances
         dataContainer.domainClasses.each { domainClass ->
             Object instance = (rId) ? domainClass.clazz.findById(rId) : domainClass.newInstance()
+            
+            dataContainer.forAllColumns { c ->
+                if (c.eq && (c.property.type == Boolean || c.property.type == boolean)) {                    
+                    instance = (c.eq.equals("1") == instance[c.name]) ? instance : null         
+                }
+                else if (c.eq) {
+                    instance = (c.eq == instance[c.name]) ? instance : null     
+                }               
+            }
+            
             domainClasses.add(instance)
             dataContainer.forAllColumnsWithChildren { c ->
                 if (c.domainClass == domainClass) {

@@ -13,8 +13,9 @@ var decodeUrlParameters = function(urlParameters) {
 }
 
 var setContentWidth = function() {
-    var bodyWidth = body.outerWidth();
-    var newContentWidth = bodyWidth - navWidth - (contentMargin * 2);
+    var bodyWidth = body.outerWidth(true);
+    var newContentWidth = bodyWidth - navWidth - contentMargin;
+    newContentWidth = (newContentWidth < 950) ? 950 : newContentWidth;
     content.css("width", newContentWidth + "px");
 }
 
@@ -39,13 +40,19 @@ var showErrors = function(data) {
     errorsBox.show();
 }
 
-var setDatePicker = function(element) {
+var setDatePicker = function(element, increaseDay) {
     element = $(element);
 
     element.datepicker("destroy");
     element.datepicker({
         dateFormat: element.attr('placeholder').replace('yyyy', 'yy')
     });
+    
+    if (increaseDay && (element.val().length > 0)) {
+        var date = element.datepicker('getDate'); 
+        date.setDate(date.getDate()+1); 
+        element.datepicker('setDate', date);
+    }
 }
 
 var createNewItem = function(item, lastItem) {
@@ -73,12 +80,20 @@ var createNewItem = function(item, lastItem) {
             $(this).attr("name", name.replace("null", i));
             $(this).attr("id", name.replace("null", i));
         }
+        
+        if (name.match(/day$/)) {
+            $(this).val(lastItem.find('.datepicker').val());
+        }
+        if (name.match(/dayNumber$/)) {
+            $(this).val(eval(lastItem.find('input[type=number]').val())+1);
+        }        
     });
 
     clone.find('.datepicker').each(function() {
-        setDatePicker(this);
+        hasDate = ($(this).val().length > 0);        
+        setDatePicker(this, hasDate);
     });
-
+    
     clone.removeClass("hidden");
     return clone;
 }
@@ -138,14 +153,23 @@ var guessMessageUrl = function() {
 $(document).ready(function() {
     content = $('#content');
     body = $('body');
-    navWidth = $('#nav').outerWidth();
-    contentMargin = parseInt(content.css('margin-left').replace('px', ''));
+    navWidth = $('#nav').outerWidth(true);
+    contentMargin = parseInt(content.css('margin-left').replace('px', '')) * 2;
     
     $(window).resize(setContentWidth);
     setContentWidth();
 	
     $('#tabs').tabs();
-
+    
+    $('textarea').each(function() {
+        var maxSize = parseInt($(this).css('max-width').replace('px', '')) + 8;
+        
+        $(this).resizable({
+            handles: "se",
+            maxWidth: maxSize
+        });
+    });
+    
     $('#event_switcher').change(function(e) {
         $(this).parents('form').submit();
     });
@@ -193,7 +217,7 @@ $(document).ready(function() {
         var parent = $(this).parent();
         var lastItem = parent.prev();
         var item = parent.next();
-
+        
         var newItem = createNewItem(item, lastItem);
         newItem.insertBefore(parent);
     });

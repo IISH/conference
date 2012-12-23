@@ -113,7 +113,7 @@
                                     <span class="required-indicator">*</span>
                                 </label>
                                 <span class="property-value">
-                                    <input type="email" name="User.email" required="required" maxlength="50" value="${fieldValue(bean: user, field: 'email')}" />
+                                    <input type="email" name="User.email" required="required" maxlength="100" value="${fieldValue(bean: user, field: 'email')}" />
                                 </span>
                             </div>
                             <div class="${hasErrors(bean: user, field: 'address', 'error')} required">
@@ -127,19 +127,17 @@
                             <div class="${hasErrors(bean: user, field: 'city', 'error')} required">
                                 <label class="property-label">
                                     <g:message code="user.city.label" />
-                                    <span class="required-indicator">*</span>
                                 </label>
                                 <span class="property-value">
-                                    <input type="text" name="User.city" required="required" maxlength="50" value="${fieldValue(bean: user, field: 'city')}" />
+                                    <input type="text" name="User.city" maxlength="50" value="${fieldValue(bean: user, field: 'city')}" />
                                 </span>
                             </div>
                             <div class="${hasErrors(bean: user, field: 'country', 'error')} required">
                                 <label class="property-label">
                                     <g:message code="user.country.label" />
-                                    <span class="required-indicator">*</span>
                                 </label>
                                 <span class="property-value">
-                                    <g:select name="User.country.id" from="${Country.list(sort: 'nameEnglish')}" required="required" optionKey="id" value="${user.country?.id}" noSelection="${[null:' ']}" />
+                                    <g:select name="User.country.id" from="${Country.list(sort: 'nameEnglish')}" optionKey="id" value="${user.country?.id}" noSelection="${[null:' ']}" />
                                 </span>
                             </div>
                             <div class="${hasErrors(bean: user, field: 'phone', 'error')}">

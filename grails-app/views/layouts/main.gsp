@@ -20,7 +20,7 @@
         
         <g:javascript library="jquery" plugin="jquery" />
         <r:layoutResources />
-        <g:javascript src="jquery-ui.js"  />
+        <g:javascript src="jquery-ui.js" />
         <g:layoutHead />
         <g:javascript src="application.js" />
     </head>
@@ -68,41 +68,43 @@
                 </sec:ifLoggedIn>
             </div>
         </div>
+      
+        <div id="container">
+            <div id="nav" role="navigation">
+                <dl id="menu">
+                    <g:if test="${params.event && params.date}">
+                        <dt>Web</dt>
+                        <dd><a target="_blank" href="${Setting.findByProperty(Setting.WEB_ADDRESS).value}">${curDate.event.shortName}</a></dd>
 
-        <div id="nav" role="navigation">
-            <dl id="menu">
-                <g:if test="${params.event && params.date}">
-                    <dt>Web</dt>
-                    <dd><a target="_blank" href="${Setting.findByProperty(Setting.WEB_ADDRESS).value}">${curDate.event.shortName}</a></dd>
+                        <dd>&nbsp;</dd>
 
-                    <dd>&nbsp;</dd>
+                        <dt>CMS</dt>
+                        <eca:menu />
+                    </g:if>
+                </dl>
+            </div>
 
-                    <dt>CMS</dt>
-                    <eca:menu />
+            <div id="content" role="main">
+                <g:if test="${curPage}">
+                    <h1><g:message code="${curPage.titleCode}" args="${[message(code: curPage.titleArg)]}" default="${curPage.titleDefault}" /></h1>
                 </g:if>
-            </dl>
-        </div>
 
-        <div id="content" role="main">
-            <g:if test="${curPage}">
-                <h1><g:message code="${curPage.titleCode}" args="${[message(code: curPage.titleArg)]}" default="${curPage.titleDefault}" /></h1>
-            </g:if>
+                <g:if test="${flash.message && flash.error && curPage}">
+                    <ul class="errors" role="alert">
+                        <li>${flash.message}</li>
+                    </ul>
+                </g:if>
 
-            <g:if test="${flash.message && flash.error && curPage}">
-                <ul class="errors" role="alert">
-                    <li>${flash.message}</li>
-                </ul>
-            </g:if>
+                <g:elseif test="${flash.message && curPage}">
+                    <div class="message" role="status">${flash.message}</div>
+                </g:elseif>
 
-            <g:elseif test="${flash.message && curPage}">
-                <div class="message" role="status">${flash.message}</div>
-            </g:elseif>
+                <g:layoutBody />
 
-            <g:layoutBody />
-            
-            <span class="top right">
-                <a href="#top"><g:message code="default.back.to.top" /> <span class="ui-icon ui-icon-triangle-1-n" /></a>
-            </span>
+                <span class="top right">
+                    <a href="#top"><g:message code="default.back.to.top" /> <span class="ui-icon ui-icon-triangle-1-n" /></a>
+                </span>
+            </div>
         </div>
 
         <div id="footer" class="clear" role="contentinfo">

@@ -87,13 +87,14 @@ class User extends DefaultDomain {
     }
 
     static constraints = {
-        email           maxSize: 30,    blank: false,   unique: true,   email: true
+        email           maxSize: 100,   blank: false,   unique: true,   email: true
         lastName        maxSize: 100,   blank: false
         firstName       maxSize: 100,   blank: false
         gender                          nullable: true, inList: ['M', 'F']
         title           maxSize: 20,    nullable: true
         address                         nullable: true
-        city            maxSize: 100,   blank: false
+        city            maxSize: 100,   nullable: true
+        country                         nullable: true
         language        maxSize: 10,    blank: false
         password        maxSize: 128,   blank: false,   display: false, password: true
         salt            maxSize: 26,    nullable: true, display: false

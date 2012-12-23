@@ -33,10 +33,9 @@
                 <div class="${hasErrors(bean: eventSession, field: 'code', 'error')} required">
                     <label class="property-label">
                         <g:message code="session.code.label" />
-                        <span class="required-indicator">*</span>
                     </label>
                     <span class="property-value">
-                        <input type="text" maxlength="10" name="Session.code" value="${fieldValue(bean: eventSession, field: 'code')}" required="required" />
+                        <input type="text" maxlength="10" name="Session.code" value="${fieldValue(bean: eventSession, field: 'code')}" />
                     </span>
                 </div>
                 <div class="${hasErrors(bean: eventSession, field: 'name', 'error')} required">

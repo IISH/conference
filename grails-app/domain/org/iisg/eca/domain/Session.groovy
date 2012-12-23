@@ -34,7 +34,7 @@ class Session extends EventDateDomain {
 
     static constraints = {
         date        nullable: true
-        code        blank: false,   maxSize: 10
+        code        nullable: true, maxSize: 10
         name        blank: false,   maxSize: 255
         abstr       nullable: true
         comment     nullable: true
@@ -42,6 +42,7 @@ class Session extends EventDateDomain {
     
     @Override
     String toString() {
-        "${code}: ${name}"
+        String readCode = (code) ? code : "-";        
+        "${readCode}: ${name}"
     }
 }
