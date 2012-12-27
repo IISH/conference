@@ -574,7 +574,7 @@
                                     <g:message code="paper.networkProposal.label" />
                                 </label>
                                 <span class="property-value">
-                                    <g:select from="${networks}" name="Paper_null.networkProposal" optionKey="id" optionValue="name" noSelection="${['': ' ']}" />
+                                    <g:select from="${networks}" name="Paper_null.networkProposal.id" optionKey="id" optionValue="name" noSelection="${['': ' ']}" />
                                     <input type="button" id="btn_network" name="btn_network" value="${g.message(code: "default.goto")}" />
                                 </span>
                             </div>
@@ -613,7 +613,7 @@
                                         ${equipment.equipment}
                                     </label>
                                     <span class="property-value">
-                                        <input type="checkbox" name="Paper_null.equipment" />
+                                        <input type="checkbox" name="Paper_null.equipment" value="${equipment.id}" />
                                     </span>
                                 </div>
                             </g:each>

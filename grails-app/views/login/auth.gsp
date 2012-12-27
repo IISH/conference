@@ -17,7 +17,7 @@
                 <div class="message" role="status">${flash.message}</div>
             </g:elseif>
 
-            <form action='${postUrl}' method='post' id='loginForm' autocomplete='off'>
+            <form action='${postUrl}' method='post' id='loginForm'>
                 <fieldset class="form">
                     <div>
                         <label class="property-label" for='username'>
@@ -38,7 +38,13 @@
                 </fieldset>
                 
                 <fieldset class="buttons">
-                    <input type='submit' value='${message(code: "springSecurity.login.button")}'/>
+                    <span class="value">
+                        <input type='submit' id="login" value='${message(code: "springSecurity.login.button")}'/>
+                    </span>
+                </fieldset>
+                
+                <fieldset>
+                    <g:message code="springSecurity.login.lost.password" />
                     <eca:link controller="login" action="forgotPassword"><g:message code="springSecurity.login.reset" /></eca:link>
                 </fieldset>
             </form>

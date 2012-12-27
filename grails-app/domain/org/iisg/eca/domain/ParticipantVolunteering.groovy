@@ -50,4 +50,15 @@ class ParticipantVolunteering implements Serializable {
         builder.append network, other.network
         builder.isEquals()
     }
+    
+    boolean equalsWithoutParticipant(other) {
+        if (other == null || !(other instanceof ParticipantVolunteering)) {
+            return false
+        }
+
+        def builder = new EqualsBuilder()
+        builder.append volunteering, other.volunteering
+        builder.append network, other.network
+        builder.isEquals()
+    }
 }

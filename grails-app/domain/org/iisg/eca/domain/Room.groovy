@@ -6,11 +6,11 @@ package org.iisg.eca.domain
 class Room extends EventDateDomain {
     String roomName
     String roomNumber
-    int noOfSeats
+    Integer noOfSeats
     String comment
     
     static hasMany = [roomSessionDateTimeEquipment: RoomSessionDateTimeEquipment, sessionRoomDateTime: SessionRoomDateTime]
-
+    
     static constraints = {
         date        nullable: true
         roomName    blank: false,       maxSize: 30

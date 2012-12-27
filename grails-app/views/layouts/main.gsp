@@ -105,9 +105,11 @@
                     <a href="#top"><g:message code="default.back.to.top" /> <span class="ui-icon ui-icon-triangle-1-n" /></a>
                 </span>
             </div>
+          
+            <div class="clear"></div>
         </div>
 
-        <div id="footer" class="clear" role="contentinfo">
+        <div id="footer" role="contentinfo">
             ${grailsApplication.config.grails.serverURL} -
             <g:message code="default.last.updated" />:
             <g:formatDate date="${new SimpleDateFormat("yy-MM-dd").parse(Setting.findByProperty(Setting.LAST_UPDATED).value)}" format="MMMMM yyyy" />

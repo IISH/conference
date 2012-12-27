@@ -1,9 +1,9 @@
 package org.iisg.eca.controller
 
-import org.iisg.eca.domain.Event
-import org.iisg.eca.domain.User
-import org.iisg.eca.domain.EventDate
 import org.iisg.eca.domain.Day
+import org.iisg.eca.domain.User
+import org.iisg.eca.domain.Event
+import org.iisg.eca.domain.EventDate
 
 /**
  * Controller for event date related actions
@@ -91,9 +91,57 @@ class EventDateController {
      * Allows the user to make changes to an event date
      */
     def edit() {
-        // Only the current tenant event date
-        params.id = pageInformation.date.id
+        EventDate date = pageInformation.date
+        
+        // The 'save' button was clicked, save all data
+        if (request.post) {
+            // Save all event date related data
+            bindData(date, params, [include: ['yearCode', 'startDate', 'endDate',
+                    'dateAsText', 'description', 'longDescription']], 'EventDate')
 
-        forward(controller: 'dynamicPage', action: 'dynamic', params: params)
+            // Get a list of all days for this event date
+            // If they do not come up, they have to be deleted
+            Set<Day> toBeDeleted = new HashSet<Day>(date.days)
+            
+            // Save all possible days
+            int i = 0
+            while (params."Day_${i}") {
+                Day day = null
+
+                // Try to find the day in the database
+                Long id = params.long("Day_${i}.id")
+                if (id) {
+                    day = Day.findById(id)
+                    day.deleted = false
+                }
+
+                // Otherwise create a new one
+                if (!day) {
+                    day = new Day()
+                }
+                
+                // Save the day, add it to the event date and remove it from the deletion list
+                bindData(day, params, [include: ['dayNumber', 'day']], "Day_${i}")
+                date.addToDays(day)
+                toBeDeleted.remove(day)
+                i++
+            }
+
+            // Everything left in the deletion list must be deleted
+            toBeDeleted.each { day ->
+                day.softDelete()
+                day.save()
+            }
+
+            // Save the event date and redirect to the previous page if everything is ok
+            if (date.save(flush: true)) {
+                flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'eventDate.label'), date.toString()])
+                redirect(uri: eca.createLink(previous: true, noBase: true))
+                return
+            }
+        }
+        
+        // Show all event date related information
+        render(view: "form", model: [eventDate: date])
     }
 }

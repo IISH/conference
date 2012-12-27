@@ -15,7 +15,11 @@ class Day extends EventDateDomain {
     static hasMany = [sessionDateTimes: SessionDateTime]
     
     static constraints = {
-        dayNumber   min: 0
+        dayNumber   min: 0, validator: { val, obj ->
+                        if (obj.date?.startDate && obj.date?.endDate && ((obj.day < obj.date.startDate) || (obj.day > obj.date.endDate))) {                            
+                            ["day.validation.between.message", obj.getFormat().format(obj.date?.startDate), obj.getFormat().format(obj.date?.endDate)]
+                        }
+                    }
     }
 
     static mapping = {
@@ -30,11 +34,14 @@ class Day extends EventDateDomain {
         
         sessionDateTimes cascade: 'all-delete-orphan'
     }
+    
+    SimpleDateFormat getFormat() {
+        String dateFormat = messageSource.getMessage('default.date.format', null, LocaleContextHolder.locale)
+        new SimpleDateFormat(dateFormat, LocaleContextHolder.locale)      
+    }
 
     @Override
-    String toString() {
-        String dateFormat = messageSource.getMessage('default.date.format', null, LocaleContextHolder.locale)
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, LocaleContextHolder.locale)
-        "${dayNumber}: ${sdf.format(day)}"
+    String toString() {        
+        "${dayNumber}: ${getFormat().format(day)}"
     }
 }

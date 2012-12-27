@@ -73,7 +73,7 @@ class FeeController {
     }
 
     def edit() {
-         // We need an id, check for the id
+        // We need an id, check for the id
         if (!params.id) {
             flash.error = true
             flash.message = g.message(code: 'default.no.id.message')

@@ -55,6 +55,19 @@ var setDatePicker = function(element, increaseDay) {
     }
 }
 
+var makeResizable = function(element) {
+    element = $(element);
+    var maxSize = parseInt(element.css('max-width').replace('px', '')) + 8;
+        
+    if (!element.is(':hidden')) {
+        element.resizable({
+            handles: "se",
+            maxWidth: maxSize
+        });
+        element.parent().css("padding-bottom", "0");
+    }
+}
+
 var createNewItem = function(item, lastItem) {
     var i = -1;
     if ((lastItem.length !== 0) && (lastItem.hasClass('column') || lastItem.is('li'))) {
@@ -85,7 +98,10 @@ var createNewItem = function(item, lastItem) {
             $(this).val(lastItem.find('.datepicker').val());
         }
         if (name.match(/dayNumber$/)) {
-            $(this).val(eval(lastItem.find('input[type=number]').val())+1);
+            var number = eval(lastItem.find('input[type=number]').val());
+            if (number) {
+                $(this).val(number+1);
+            }
         }        
     });
 
@@ -94,7 +110,8 @@ var createNewItem = function(item, lastItem) {
         setDatePicker(this, hasDate);
     });
     
-    clone.removeClass("hidden");
+    clone.removeClass("hidden");  
+    
     return clone;
 }
 
@@ -143,7 +160,7 @@ var guessMessageUrl = function() {
     var urlToCall = '../message/index';
     var url = location.href.replace(location.search, '');
 
-    if ($.isNumeric(url.charAt(url.length-1))) {
+    if ($.isNumeric(url.charAt(url.length-1)) || (url.charAt(url.length-1) === '#')) {
         urlToCall = '../' + urlToCall;
     }
 
@@ -158,17 +175,12 @@ $(document).ready(function() {
     
     $(window).resize(setContentWidth);
     setContentWidth();
-	
-    $('#tabs').tabs();
     
     $('textarea').each(function() {
-        var maxSize = parseInt($(this).css('max-width').replace('px', '')) + 8;
-        
-        $(this).resizable({
-            handles: "se",
-            maxWidth: maxSize
-        });
+        makeResizable(this);
     });
+    
+    $('#tabs').tabs();
     
     $('#event_switcher').change(function(e) {
         $(this).parents('form').submit();
@@ -220,6 +232,10 @@ $(document).ready(function() {
         
         var newItem = createNewItem(item, lastItem);
         newItem.insertBefore(parent);
+        
+        newItem.find('textarea').each(function() {
+            makeResizable(this);
+        });
     });
 
     $('.buttons .btn_add').click(function(e) {
@@ -229,6 +245,10 @@ $(document).ready(function() {
 
         var newItem = createNewItem(item, lastItem);
         newItem.insertBefore(item);
+        
+        newItem.find('textarea').each(function() {
+            makeResizable(this);
+        });
     });
 
     $('fieldset li span.ui-icon-circle-minus').live('click', function(e) {

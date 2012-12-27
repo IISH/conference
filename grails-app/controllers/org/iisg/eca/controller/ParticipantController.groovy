@@ -8,13 +8,14 @@ import org.iisg.eca.domain.FeeState
 import org.iisg.eca.domain.Equipment
 import org.iisg.eca.domain.PaperState
 import org.iisg.eca.domain.Volunteering
-import org.iisg.eca.domain.ParticipantDate
 import org.iisg.eca.domain.SessionDateTime
+import org.iisg.eca.domain.ParticipantDate
 import org.iisg.eca.domain.ParticipantState
 import org.iisg.eca.domain.ParticipantVolunteering
 
 import grails.converters.JSON
 import grails.validation.ValidationException
+
 import org.springframework.web.multipart.commons.CommonsMultipartFile
 
 /**
@@ -105,7 +106,7 @@ class ParticipantController {
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
         }
-
+        
         // Try to look up this user as a participant for the current event date
         ParticipantDate participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
 
@@ -115,7 +116,8 @@ class ParticipantController {
                 // Save all user information
                 bindData(user, params, [include: ['title', 'firstName', 'lastName', 'gender', 'organisation',
                         'department', 'email', 'address', 'city', 'country', 'phone', 'mobile', 'extraInfo']], "User")
-
+                user.save(failOnError: true)
+                
                 if (!participant && params['add-to-date']?.equals('add')) {
                     // Try to find out if this participant has been deleted before or is filtered for some other reason
                     ParticipantDate.withoutHibernateFilters {
@@ -132,34 +134,32 @@ class ParticipantController {
                     }
 
                     participant.save(failOnError: true)
-                    user.save(failOnError: true)
                 }
-                else if (!participant) {
-                    // Not a participant, so just save the user information
-                    user.save(failOnError: true)
-                }
-                else {
+                else if (participant) {
                     // He/she is a participant, save all of that information as well
                     bindData(participant, params, [include: ['invitationLetter', 'invitationLetterSent', 'lowerFeeRequested',
                             'lowerFeeAnswered', 'lowerFeeText', 'student', 'studentConfirmed', 'award',
                             'state', 'feeState']], "ParticipantDate")
-
+                    participant.save(failOnError: true)
+                    
                     // Remove all extras the participant is interested in and save all new information
                     participant.extras.clear()
                     params."ParticipantDate.extras".each { extraId ->
                         participant.addToExtras(Extra.get(extraId))
                     }
-
+                    participant.save(failOnError: true)    
+                    
                     // Remove all date/times the user is not present and save all new information
                     // However, we are only interested in the dates/times the participant is NOT present
                     user.dateTimesNotPresent.clear()
-                    user.save(flush: true)
+                    user.save(failOnError: true)
                     List<SessionDateTime> sessionDateTimes = SessionDateTime.list()
                     params.present.each { dateTimeId ->
                         sessionDateTimes.remove(sessionDateTimes.find { dateTimeId.isLong() && (it.id == dateTimeId.toLong()) })
                     }
                     user.dateTimesNotPresent.addAll(sessionDateTimes)
-
+                    user.save(failOnError: true)
+                    
                     // Remove all volunteering offers from the participant and save all new information
                     int i = 0
                     participant.participantVolunteering.clear()
@@ -167,9 +167,13 @@ class ParticipantController {
                     while (params["ParticipantVolunteering_${i}"]) {
                         ParticipantVolunteering pv = new ParticipantVolunteering()
                         bindData(pv, params, [include: ['volunteering', 'network']], "ParticipantVolunteering_${i}")
-                        participant.addToParticipantVolunteering(pv)
                         i++
+                        
+                        if (!participant.participantVolunteering.find { it.equalsWithoutParticipant(pv) }) {
+                            participant.addToParticipantVolunteering(pv)
+                        }
                     }
+                    participant.save(failOnError: true)
 
                     // Check which papers have to be deleted, try to soft delete them
                     String[] ids = params["to-be-deleted"].split(';')
@@ -196,12 +200,17 @@ class ParticipantController {
                             paper = new Paper(state: PaperState.get(0))
                             user.addToPapers(paper)
                         }
-
-                        // Save all paper information
-                        bindData(paper, params, [include: ['title', 'abstr', 'coAuthors', 'state', 'comment',
-                                'sessionProposal', 'proposalDescription',
+                        
+                        // Make sure that the paper can be saved first
+                        bindData(paper, params, [include: ['title', 'abstr']], "Paper_${i}")
+                        paper.save(failOnError: true, flush: true)
+                        
+                        // Also save all other paper information
+                        bindData(paper, params, [include: ['coAuthors', 'state', 'comment',
+                                'sessionProposal', 'proposalDescription', 'networkProposal',
                                 'equipmentComment']], "Paper_${i}")
-
+                        paper.save(failOnError: true)
+                        
                         // If a paper file is uploaded, save all file information
                         CommonsMultipartFile file = (CommonsMultipartFile) params["Paper_${i}.file"]
                         if (file?.size > 0) {
@@ -210,6 +219,7 @@ class ParticipantController {
                             paper.fileName = file.originalFilename
                             paper.file = file.bytes
                         }
+                        paper.save(failOnError: true)
 
                         // Remove all equipment and save all new equipment information for this paper
                         paper.equipment?.clear()
@@ -231,7 +241,7 @@ class ParticipantController {
 
                 // We arrived here, so everything should be fine
                 // Go back to the previous back with an update message
-                flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'participantDate.label'), participant.toString()])
+                flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'participantDate.label'), user.toString()])
                 redirect(uri: eca.createLink(action: 'list', noBase: true))
                 return
             }

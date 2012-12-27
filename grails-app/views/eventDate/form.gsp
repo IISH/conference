@@ -1,3 +1,4 @@
+<%@ page import="org.iisg.eca.domain.Day" %>
 <!doctype html>
 <html>
     <head>
@@ -36,7 +37,7 @@
             <div class="${hasErrors(bean: eventDate, field: 'endDate', 'error')} ">
               <label class="property-label" for="EventDate.endDate">
                 <eca:fallbackMessage code="eventDate.endDate.label" fbCode="eventDate.endDate.label" />
-              </label
+              </label>
               <span class="property-value">
                 <input id="EventDate.endDate" placeholder="${g.message(code: 'default.date.form.format').toLowerCase()}" name="EventDate.endDate" value="${g.formatDate(formatName: 'default.date.form.format', date: eventDate?.endDate)}" type="text" />
               </span>
@@ -46,7 +47,7 @@
                 <eca:fallbackMessage code="day.multiple.label" fbCode="eventDate.days.label" />
               </label>
               <ul class="property-value">
-                <g:each in="${eventDate.days}" var="instance" status="i">
+                <g:each in="${Day.findAllByDate(eventDate)}" var="instance" status="i">
                     <li>
                       <input type="hidden" name="Day_${i}.id" value="${instance.id}" />
                       <label class="property-label">
@@ -55,7 +56,7 @@
                       </label>
                       <label class="property-label">
                         <eca:fallbackMessage code="day.day.label" fbCode="day.day.label" />
-                        <input id="Day_${i}.day" placeholder="${g.message(code: 'default.date.form.format').toLowerCase()}" name="Day_${i}.day" value="${g.formatDate(formatName: 'default.date.form.format', date: instance?.day)}" required="required" type="text" />
+                        <input id="Day_${i}.day" placeholder="${g.message(code: 'default.date.form.format').toLowerCase()}" name="Day_${i}.day" value="${g.formatDate(formatName: 'default.date.form.format', date: instance?.day)}" required="required" class="datepicker" type="text" />
                       </label>
                       <span class="ui-icon ui-icon-circle-minus"></span>
                     </li>
