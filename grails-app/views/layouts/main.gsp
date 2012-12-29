@@ -20,6 +20,7 @@
         
         <g:javascript library="jquery" plugin="jquery" />
         <r:layoutResources />
+        <g:javascript src="jquery.cookie.js" />
         <g:javascript src="jquery-ui.js" />
         <g:layoutHead />
         <g:javascript src="application.js" />
@@ -74,7 +75,7 @@
                 <dl id="menu">
                     <g:if test="${params.event && params.date}">
                         <dt>Web</dt>
-                        <dd><a target="_blank" href="${Setting.findByProperty(Setting.WEB_ADDRESS).value}">${curDate.event.shortName}</a></dd>
+                        <dd><a target="_blank" href="${Setting.getByEvent(Setting.findAllByProperty(Setting.WEB_ADDRESS)).value}">${curDate.event.shortName}</a></dd>
 
                         <dd>&nbsp;</dd>
 

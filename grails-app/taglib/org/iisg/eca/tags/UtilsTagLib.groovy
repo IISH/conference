@@ -396,14 +396,13 @@ class UtilsTagLib {
                 }
                 else {
                     builder.dd {
-                        builder.a(href: "#", g.message(code: page.titleCode, args: [g.message(code: page.titleArg)], default: page.titleDefault))
+                        builder.a(href: "#${page.id}", g.message(code: page.titleCode, args: [g.message(code: page.titleArg)], default: page.titleDefault))
                     }
                 }
 
                 // If there is a sub menu, print it as well
                 if (page.subPages?.size() > 0) {
                     builder.dl(class: "sub-menu") {
-                        builder.span('')
                         printSubMenu(builder, Page.subMenuPages(page).list())
                     }
                 }

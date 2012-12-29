@@ -7,7 +7,12 @@ import org.iisg.eca.domain.EventDate
 import org.iisg.eca.domain.EmailCode
 import org.iisg.eca.domain.EmailTemplate
 
+import javax.mail.internet.MimeMessage
+
+import org.springframework.mail.MailMessage
 import org.springframework.mail.MailException
+
+import org.springframework.mail.javamail.MimeMailMessage
 
 /**
  * Service responsible for all email related actions
@@ -102,6 +107,48 @@ class EmailService {
             to recipients
             subject emailSubject
             text message
+        }
+    }
+    
+    /**
+     * Send a test email and return relevant information about the email
+     * @param f From email address
+     * @param t To email address
+     * @param s Subject of the email
+     * @param body Body of the email
+     * @return Relevant information about the email
+     */
+    synchronized String testEmailService(String f, String t, String s, String body) {
+        String info = "";       
+        
+        try {
+            // Send the email
+            MimeMailMessage mailMessage = mailService.sendMail {
+                from f
+                to t
+                subject s
+                text body
+            }
+            
+            // Get the info from the email message
+            MimeMessage message = mailMessage.getMimeMessage()
+            
+            // Get header information
+            for (String header : message.getAllHeaderLines()) {
+                info += "${header} \n"
+            }
+            info += "\n"
+            
+            // Get content information
+            info += "Content: \n${message.getContent()} \n\n"            
+        }
+        catch (Exception e) {
+            StringWriter sw = new StringWriter()
+            e.printStackTrace(new PrintWriter(sw))
+            info += "Exception: ${sw.toString()} \n"
+        }
+        finally {
+            return info.trim()
         }
     }
 

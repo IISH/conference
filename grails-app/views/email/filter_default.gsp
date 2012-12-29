@@ -22,7 +22,7 @@
                 <eca:link previous="true">
                     <g:message code="default.button.cancel.label" />
                 </eca:link>
-                <input type="submit" name="btn_send" class="btn_send" value="Send emails" />
+                <input type="submit" name="btn_send" class="btn_send" value="${message(code: 'email.send.multiple.label')}" />
             </fieldset>
         </form>
     </body>

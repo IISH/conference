@@ -2,6 +2,7 @@ package org.iisg.eca.controller
 
 import org.iisg.eca.jobs.CreateEmailJob
 
+import org.iisg.eca.domain.Setting
 import org.iisg.eca.domain.EmailTemplate
 import org.iisg.eca.domain.ParticipantDate
 
@@ -13,6 +14,11 @@ class EmailController {
      * Holds all page information, like the current event date
      */
     def pageInformation
+    
+    /**
+     * Service responsible for sending the emails
+     */
+    def emailService
 
     /**
      * Index action, redirects to the list action
@@ -97,5 +103,20 @@ class EmailController {
         // Show the page to select the participant recipients
         // Note: for some reason, ParticipantDate.list() does not work and throws an ArrayIndexOutOfBoundsException
         render view: "filter_${params.type}", model: [emailTemplate: emailTemplate, participants: ParticipantDate.createCriteria().list {}]
+    }
+    
+    /**
+     * Allows the user to test the email service
+     */
+    def test() {
+        String statusInfo = null
+        params.from = (params.from) ? params.from : Setting.getByEvent(Setting.findAllByProperty(Setting.DEFAULT_ORGANISATION_EMAIL)).value
+        
+        // The 'send' button was clicked, create and send the emails
+        if (request.post) {
+            statusInfo = emailService.testEmailService(params.from, params.to, params.subject, params.body)
+        }
+        
+        render view: "test", model: [statusInfo: statusInfo]
     }
 }
