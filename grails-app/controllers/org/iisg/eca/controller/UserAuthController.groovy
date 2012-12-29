@@ -3,6 +3,7 @@ package org.iisg.eca.controller
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Role
 import org.iisg.eca.domain.Page
+import org.iisg.eca.domain.Group
 
 import org.iisg.eca.domain.UserRole
 import org.iisg.eca.domain.UserPage
@@ -44,7 +45,7 @@ class UserAuthController {
         }
 
         // Show all user authentication related information
-        [user: user, roles: user.roles, groups: user.groups, pages: user.userPages]
+        [user: user, roles: user.roles, groups: Group.withCriteria { users { eq('id', user.id) } }, pages: UserPage.findAllByUser(user)]
     }
 
     /**
@@ -104,7 +105,7 @@ class UserAuthController {
         }
 
         // Show all user authentication related information
-        render(view: "form", model: [user: user, roles: assignedRoles, groups: user.groups, pages: user.userPages, allRoles: allRoles, allPages: Page.list()])
+        render(view: "form", model: [user: user, roles: assignedRoles, groups: Group.withCriteria { users { eq('id', user.id) } }, pages: UserPage.findAllByUser(user), allRoles: allRoles, allPages: Page.list()])
     }
 
     /**
@@ -171,6 +172,6 @@ class UserAuthController {
         }
 
         // Show all user authentication related information
-        render(view: "form", model: [user: user, roles: user.roles, groups: user.groups, pages: user.userPages, allRoles: allRoles, allPages: Page.list()])
+        render(view: "form", model: [user: user, roles: user.roles, groups: Group.withCriteria { users { eq('id', user.id) } }, pages: UserPage.findAllByUser(user), allRoles: allRoles, allPages: Page.list()])
     }
 }
