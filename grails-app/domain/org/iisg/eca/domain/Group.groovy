@@ -12,6 +12,7 @@ class Group extends EventDateDomain {
         table 'groups'
         cache true
         version false
+        sort name: 'asc'
 
         id      column: 'group_id'
         name    column: 'name'

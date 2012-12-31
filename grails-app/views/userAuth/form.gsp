@@ -91,7 +91,7 @@
                     <ul class="property-value">
                         <g:each in="${pages}" var="page" status="i">
                             <li>
-                                <input type="hidden" name="Page_${i}.id" id="Page_${i}.id">
+                              <input type="hidden" name="Page_${i}.id" id="Page_${i}.id" value="${page.page?.id}">
 
                                 <label class="property-label">
                                     <g:select name="Page_${i}.page.id" from="${allPages}" optionKey="id" value="${page.page?.id}" />

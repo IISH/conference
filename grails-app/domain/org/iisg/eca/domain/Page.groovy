@@ -32,7 +32,7 @@ class Page extends DefaultDomain {
         table 'pages'
         cache true
         version false
-        sort sortOrder: 'asc'
+        sort controller: 'asc'
 
         id              column: 'page_id'
         titleCode       column: 'title_code'
@@ -87,10 +87,10 @@ class Page extends DefaultDomain {
         }
     }
     
-    static Set<Page> getAllPagesWithAccess() {
-        Set<Page> pages = []
+    static List<Page> getAllPagesWithAccess() {
+        List<Page> pages = []
         Page.list().each { 
-            if (it.hasAccess()) {
+            if (it.hasAccess() && (it.controller != null) && (it.action != null)) {
                 pages.add(it) 
             }
         }

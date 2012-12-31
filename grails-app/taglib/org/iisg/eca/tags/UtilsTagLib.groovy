@@ -403,6 +403,7 @@ class UtilsTagLib {
                 // If there is a sub menu, print it as well
                 if (page.subPages?.size() > 0) {
                     builder.dl(class: "sub-menu") {
+                        builder.span()
                         printSubMenu(builder, Page.subMenuPages(page).list())
                     }
                 }
