@@ -250,9 +250,7 @@ class PageBuilder {
                 element.forAllColumns { c ->
                     if (c.canBeShown()) {
                         if (c.name == "id") {
-                            builder.td(class: "id") {
-                                builder."g:fieldValue"(bean: "\${row}", field: "id")
-                            }
+                            builder.td(class: "id", "\${row.id}")
                         }
                         else if (c.property.type == Date || c.property.type == java.sql.Date || c.property.type == java.sql.Time || c.property.type == Calendar) {
                             builder.td {

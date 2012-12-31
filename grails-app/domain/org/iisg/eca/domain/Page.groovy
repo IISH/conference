@@ -86,6 +86,16 @@ class Page extends DefaultDomain {
             order('titleDefault')
         }
     }
+    
+    static Set<Page> getAllPagesWithAccess() {
+        Set<Page> pages = []
+        Page.list().each { 
+            if (it.hasAccess()) {
+                pages.add(it) 
+            }
+        }
+        pages
+    }
 
     Set<User> getUsers() {
         UserPage.findAllByPage(this).collect { it.user } as Set
@@ -93,7 +103,7 @@ class Page extends DefaultDomain {
 
     /**
      * Determine if the currently logged in user has access to this page
-     * @return
+     * @return A boolean indicating access or not
      */
     boolean hasAccess() {
         if (SpringSecurityUtils.ifNotGranted('superAdmin') && !(controller == null && action == null)) {
@@ -123,7 +133,7 @@ class Page extends DefaultDomain {
                     }
                 }
 
-                // Ifd the page was not found, deny access
+                // If the page was not found, deny access
                 return (count.first() > 0)
             }
         }

@@ -41,25 +41,23 @@
                         <span class="required-indicator">*</span>
                     </label>
                     <span class="property-value">
-                        <input type="email" name="User.email" required="required" maxlength="50" value="${fieldValue(bean: user, field: 'email')}" />
+                        <input type="email" name="User.email" required="required" maxlength="100" value="${fieldValue(bean: user, field: 'email')}" />
                     </span>
                 </div>
                 <div class="${hasErrors(bean: user, field: 'city', 'error')} required">
                     <label class="property-label">
                         <g:message code="user.city.label" />
-                        <span class="required-indicator">*</span>
                     </label>
                     <span class="property-value">
-                        <input type="text" name="User.city" required="required" maxlength="50" value="${fieldValue(bean: user, field: 'city')}" />
+                        <input type="text" name="User.city" maxlength="50" value="${fieldValue(bean: user, field: 'city')}" />
                     </span>
                 </div>
                 <div class="${hasErrors(bean: user, field: 'country', 'error')} required">
                     <label class="property-label">
                         <g:message code="user.country.label" />
-                        <span class="required-indicator">*</span>
                     </label>
                     <span class="property-value">
-                        <g:select name="User.country.id" from="${Country.list(sort: 'nameEnglish')}" required="required" optionKey="id" value="${user.country?.id}" noSelection="${[null:' ']}" />
+                        <g:select name="User.country.id" from="${Country.list(sort: 'nameEnglish')}" optionKey="id" value="${user.country?.id}" noSelection="${[null:' ']}" />
                     </span>
                 </div>
                 <div class="${hasErrors(bean: user, field: 'enabled', 'error')}">
@@ -83,7 +81,7 @@
                         <g:message code="group.multiple.label" />
                     </label>
                     <span class="property-value">
-                        <g:select name="User.groups" from="${Group.list()}" multiple="true" optionKey="id" optionValue="name" value="${groups}" />
+                        <g:select name="User.groups" from="${allGroups}" multiple="true" optionKey="id" optionValue="name" value="${groups}" />
                     </span>
                 </div>
                 <div class="${hasErrors(bean: user, field: 'pages', 'error')}">

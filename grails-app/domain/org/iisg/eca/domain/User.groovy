@@ -80,7 +80,6 @@ class User extends DefaultDomain {
 
         groups              joinTable: 'users_groups'
         dateTimesNotPresent joinTable: 'participant_not_present'
-        userRoles           cascade: 'all-delete-orphan'
         userPages           cascade: 'all-delete-orphan'
         papers              cascade: 'all-delete-orphan'
         sessionParticipants cascade: 'all-delete-orphan'

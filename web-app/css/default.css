@@ -853,6 +853,16 @@ ul input.session-name {
     margin-top: 10px;
 }
 
+#status-info {
+    border: 1px solid #225496;
+    margin: 10px;
+    padding: 10px;
+}
+
+#status-info h3 {
+    display: block;
+}
+
 /* LOGIN */
 
 #login {

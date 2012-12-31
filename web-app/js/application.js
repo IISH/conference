@@ -209,6 +209,15 @@ $(document).ready(function() {
         $("#usermenu").toggle();
         e.stopPropagation();
     });
+    
+    $("select[multiple] option").mousedown(function() {
+        if ($(this).attr("selected")) {
+            $(this).attr("selected", "");
+        }               
+        else {
+            $(this).attr("selected", "selected");
+        }
+    });
 
     $('#menu dl.sub-menu').prev().click(function(e) {
         var subMenu = $(this).next();

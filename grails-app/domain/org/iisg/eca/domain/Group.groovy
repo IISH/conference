@@ -25,6 +25,24 @@ class Group extends EventDateDomain {
         name    blank: false,   maxSize: 30
         date    nullable: true
     }
+    
+    static Set<Group> getAllGroupsOfUser(User user) {
+        Group.withCriteria { 
+            users { 
+                eq('id', user.id) 
+            } 
+        }
+    }
+    
+    static Set<Group> getAllGroupsWithAccess() {
+        Set<Group> groups = []
+        Group.list().each { 
+            if (it.pages.findAll { p -> !p.hasAccess() }.size() == 0) {
+                groups.add(it) 
+            }
+        }
+        groups
+    }
 
     @Override
     String toString() {
