@@ -19,6 +19,11 @@ import org.springframework.mail.javamail.MimeMailMessage
  */
 class EmailService {
     /**
+     * Grails application service to access configuration values
+     */
+    def grailsApplication
+    
+    /**
      * The standard mail service
      */
     def mailService
@@ -122,6 +127,20 @@ class EmailService {
         String info = "";       
         
         try {
+            // Make sure that the mail service is enabled.
+            if (grailsApplication.config.grails.mail.disabled) {
+                throw new Exception("The mail service is disabled. " +
+                    "Please change the value of 'grails.mail.disabled' " +
+                    "in Config.groovy.");
+            }
+            
+            // Make sure that the mail service is also enabled in the database.
+            if (Setting.getByEvent(Setting.findAllByProperty(Setting.DISABLE_EMAIL_SESSIONS)).value.equals('1')) {
+                throw new Exception("The mail service is disabled. " +
+                    "Please change the value of '${Setting.DISABLE_EMAIL_SESSIONS}' " +
+                    "in the Settings table of the database.");
+            }
+            
             // Send the email
             MimeMailMessage mailMessage = mailService.sendMail {
                 from f

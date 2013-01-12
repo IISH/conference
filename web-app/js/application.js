@@ -15,6 +15,7 @@ var decodeUrlParameters = function(urlParameters) {
 var setContentWidth = function() {
     var bodyWidth = body.outerWidth(true);
     var newContentWidth = bodyWidth - navWidth - contentMargin;
+    newContentWidth -= 15; // Add extra space if scrollbar appears
     newContentWidth = (newContentWidth < 950) ? 950 : newContentWidth;
     content.css("width", newContentWidth + "px");
 }

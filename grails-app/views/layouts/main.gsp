@@ -106,8 +106,6 @@
                     <a href="#top"><g:message code="default.back.to.top" /> <span class="ui-icon ui-icon-triangle-1-n" /></a>
                 </span>
             </div>
-          
-            <div class="clear"></div>
         </div>
 
         <div id="footer" role="contentinfo">

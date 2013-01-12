@@ -449,7 +449,7 @@ span.remove-item {
 /* NAVIGATION */
 
 #nav {	
-    float: left;
+    display: inline-block;
     width: 150px;
     max-width: 150px;
     padding: 0 8px;
@@ -478,10 +478,15 @@ span.remove-item {
 
 /* MAIN CONTENT */
 
+#container {
+    white-space: nowrap;    
+}
+
 #content {
     position: relative;
     margin-left: 16px;
-    float: left;
+    display: inline-block;
+    vertical-align: top;
 }
 
 #content .top {
