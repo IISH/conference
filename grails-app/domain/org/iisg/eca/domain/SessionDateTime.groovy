@@ -37,12 +37,16 @@ class SessionDateTime extends DefaultDomain {
      * Searches for all date times and tries to order them in a table layout
      * @return A list with SessionDateTime rows
      */
-    static List<List<SessionDateTime>> getTableList() {
+    static List<List<SessionDateTime>> getTableList(EventDate date) {
         List<List<SessionDateTime>> mainList = new ArrayList<List<SessionDateTime>>()
         List<SessionDateTime> curList = new ArrayList<SessionDateTime>()
         int curDayId = -1
 
-        SessionDateTime.listOrderByIndex().each { sessionDateTime ->
+        Set<Day> daysInTenant = date.days
+        SessionDateTime.withCriteria {
+            'in'('day', daysInTenant)
+            order('index', 'asc')
+        }.each { sessionDateTime ->
             if ((curDayId != -1) && (sessionDateTime.day.id != curDayId)) {
                 mainList.add(curList)
                 curList =  new ArrayList<SessionDateTime>()

@@ -56,7 +56,7 @@
                         <g:message code="default.enabled.label" />
                     </label>
                     <span class="property-value">
-                        <g:checkBox name="enabled" />
+                        <g:checkBox name="enabled" value="${room.enabled}" />
                     </span>
                 </div>
 

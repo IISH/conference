@@ -282,7 +282,7 @@
                                 </div>
                                 <div class="${hasErrors(bean: user, field: 'dateTimesNotPresent', 'error')}">
                                     <table id="participant-present">
-                                        <g:each in="${SessionDateTime.tableList}" var="dateTimeRow">
+                                        <g:each in="${SessionDateTime.getTableList(curDate)}" var="dateTimeRow">
                                             <tr>
                                             <g:each in="${dateTimeRow}" var="sessionDateTime" status="i">
                                                 <g:if test="${i==0}">

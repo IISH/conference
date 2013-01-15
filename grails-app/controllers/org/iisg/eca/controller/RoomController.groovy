@@ -43,13 +43,13 @@ class RoomController {
         }
         else if (request.post) {
             // Save all room related data
-            bindData(room, params, [include: ['roomName', 'roomNumber', 'noOfSeats', 'comment']])
+            bindData(room, params, [include: ['roomName', 'roomNumber', 'noOfSeats', 'comment', 'enabled']])
 
             // Loop over all equipment and time slots to find out if we have
             // to add that type of equipment to this room on the given time slot
             Equipment.list().each { equip ->
                 SessionDateTime.list().each { timeSlot ->
-                    if (params.timeslot.contains("${equip.id}_${timeSlot.id}")) {
+                    if (params.timeslot?.contains("${equip.id}_${timeSlot.id}")) {
                         room.addToRoomSessionDateTimeEquipment(new RoomSessionDateTimeEquipment(sessionDateTime: timeSlot, equipment: equip))
                     }
                 }
@@ -102,7 +102,7 @@ class RoomController {
             // to add that type of equipment to this room on the given time slot
             Equipment.list().each { equip ->
                 SessionDateTime.list().each { timeSlot ->
-                    if (params.timeslot.contains("${equip.id}_${timeSlot.id}")) {
+                    if (params.timeslot?.contains("${equip.id}_${timeSlot.id}")) {
                         room.addToRoomSessionDateTimeEquipment(new RoomSessionDateTimeEquipment(room: room, sessionDateTime: timeSlot, equipment: equip))
                     }
                 }
