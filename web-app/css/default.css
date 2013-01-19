@@ -167,7 +167,7 @@ a:hover {
     position: static;
 }
 
-#tabs > ul {
+#tabs > ul, #tabs > ol {
     border-top: none;
     border-left: none;
     border-right: none;

@@ -84,7 +84,7 @@ $(document).ready(function() {
         name.val("");
     });
 
-    $('.remove-session').live("removed-item", function(e) {
+    $('.remove-session').on("removed-item", function(e) {
         $('.errors').hide();
         $('.message').hide();
 

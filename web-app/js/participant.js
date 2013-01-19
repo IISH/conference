@@ -14,7 +14,7 @@ $(document).ready(function() {
     var tabsHeight = parseInt(tabs.css('top').replace('px', ''));
     tabs.css('top', tabsHeight-size + 'px');
     
-    $('.paper.ui-icon-circle-minus').live("removed-item", function(e) {
+    $('.paper.ui-icon-circle-minus').on("removed-item", function(e) {
         var paperId = $(this).parents('.column').children('input[type=hidden]:first').val();
         $.getJSON('../removePaper', {'paper-id': paperId});
 

@@ -155,11 +155,11 @@
                 </div>
                 
                 <div id="tabs">
-                    <ul>
+                    <ol>
                         <g:each in="${types}" var="type">
                             <li><a href="#${type.toString().toLowerCase()}-tab"><g:message code="default.add.label" args="[type]" /></a></li>
                         </g:each>
-                    </ul>
+                    </ol>
 
                     <g:each in="${types}" var="type">
                         <div id="${type.toString().toLowerCase()}-tab" class="form <g:if test="${type.type.equalsIgnoreCase('author')}">author</g:if>">
@@ -189,7 +189,7 @@
                             </div>
                         </div>
                     </g:each>
-                </div>
+              </div>
             </fieldset>
 
             <fieldset class="buttons">

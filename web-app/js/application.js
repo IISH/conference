@@ -296,7 +296,7 @@ $(document).ready(function() {
         });
     });
 
-    $('fieldset li span.ui-icon-circle-minus').live('click', function(e) {
+    $('fieldset li span.ui-icon-circle-minus').on('click', function(e) {
         var thisItem = $(this);
         var item = $(this).parents('li');
 
@@ -311,7 +311,7 @@ $(document).ready(function() {
         });
     });
 
-    $('.columns.copy span.ui-icon-circle-minus').live('click', function(e) {
+    $('.columns.copy span.ui-icon-circle-minus').on('click', function(e) {
         var thisItem = $(this);
         var item = $(this).parents('.column');
 

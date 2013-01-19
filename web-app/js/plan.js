@@ -184,7 +184,7 @@ $(document).ready(function() {
         }
     });
 
-    $('.time-slot.click-to-plan').live("click", function(e) {
+    $('.time-slot.click-to-plan').on("click", function(e) {
         disableTableWithLoading(true);
 
         var element = $(this);
@@ -215,7 +215,7 @@ $(document).ready(function() {
         );
     });
 
-    $('#sessions-unscheduled.click-to-plan').live("click", function(e) {
+    $('#sessions-unscheduled.click-to-plan').on("click", function(e) {
         disableTableWithLoading(true);
         var element = $(this);
 

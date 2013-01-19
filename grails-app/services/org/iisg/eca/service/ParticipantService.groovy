@@ -45,20 +45,38 @@ class ParticipantService {
             // Filter the results based on a category with keywords
             if (type && filter && !filter.isEmpty()) {
                 user {
-                    filter = filter.split().join('%')
-                    or {
+                    String[] words = filter.split()
+                    and {
                         switch (type) {
                             case "organisation":
-                                like('organisation', "%${filter}%")
-                                like('department', "%${filter}%")
+                                for (String w : words) {
+                                    if (!w.isEmpty()) {
+                                        or {
+                                            like('organisation', "%${w}%")
+                                            like('department', "%${w}%")
+                                        }
+                                    }
+                                }
                                 break
                             case "name":
-                                like('lastName', "%${filter}%")
-                                like('firstName', "%${filter}%")
+                                for (String w : words) {
+                                    if (!w.trim().isEmpty()) {
+                                        or {
+                                            like('lastName', "%${w}%")
+                                            like('firstName', "%${w}%")
+                                        }
+                                    }
+                                }
                                 break
                             case "address":
-                                like('address', "%${filter}%")
-                                like('city', "%${filter}%")
+                                for (String w : words) {
+                                    if (!w.trim().isEmpty()) {
+                                        or {
+                                            like('address', "%${w}%")
+                                            like('city', "%${w}%")
+                                        }                                        
+                                    }
+                                }
                                 break
                         }
                     }

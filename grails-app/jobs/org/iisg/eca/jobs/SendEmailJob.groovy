@@ -1,6 +1,7 @@
 package org.iisg.eca.jobs
 
 import org.quartz.Trigger
+import org.quartz.TriggerKey
 
 import org.iisg.eca.domain.Setting
 import org.iisg.eca.domain.SentEmail
@@ -63,11 +64,12 @@ class SendEmailJob {
      */
     private void rescheduleJob() {
         // Get the trigger and adjust the repeat interval
-        Trigger trigger = quartzScheduler.getTrigger("SendEmail", "sendEmailGroup")
+        TriggerKey key = new TriggerKey("SendEmail", "sendEmailGroup")
+        Trigger trigger = quartzScheduler.getTrigger(key)
         trigger.repeatInterval = getTimeBetweenSending()
 
         // And reschedule the job
-        quartzScheduler.rescheduleJob(trigger.name, trigger.group, trigger)
+        quartzScheduler.rescheduleJob(key, trigger)
     }
 
     /**

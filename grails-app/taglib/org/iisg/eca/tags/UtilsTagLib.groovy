@@ -6,6 +6,8 @@ import org.iisg.eca.domain.Event
 import org.iisg.eca.domain.EventDate
 
 import groovy.xml.MarkupBuilder
+
+import org.codehaus.groovy.grails.web.util.WebUtils
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
 /**
@@ -214,14 +216,14 @@ class UtilsTagLib {
      * An alternative to the g:link tag for a link to the same page with all existing parameters + parameters added
      */
     def linkAllParams = { attrs, body ->
-        out << g.link(linkAllParamsPrep(attrs, params), body)
+        out << g.link(linkAllParamsPrep(attrs, params, request), body)
     }
 
     /**
      * An alternative to the g:link tag for a link to the same page with all existing parameters + parameters added
      */
     def createLinkAllParams = { attrs ->
-        out << g.createLink(linkAllParamsPrep(attrs, params))
+        out << g.createLink(linkAllParamsPrep(attrs, params, request))
     }
 
     /**
@@ -350,9 +352,10 @@ class UtilsTagLib {
      * Prepares the link attributes, including all parameters
      * @param attrs The attributes of the called tag
      * @param params The request parameters
+     * @param request The request object
      * @return A prepared attrs object
      */
-    private static Map linkAllParamsPrep(attrs, params) {
+    private static Map linkAllParamsPrep(attrs, params, request) {
         if (!attrs.params) {
             attrs.params = [:]
         }
@@ -361,12 +364,12 @@ class UtilsTagLib {
         attrs.params.event = params.event
         attrs.params.date = params.date
         attrs.mapping = 'eventDate'
-
-        Map tempParams = [:]
-        tempParams.putAll(params)
-        tempParams.putAll(attrs.params)
-        attrs.params = tempParams
-
+        
+        // Only take parameters from the query string
+        Map filteredParams = WebUtils.fromQueryString(request.queryString)
+        filteredParams.putAll(attrs.params)
+        attrs.params = filteredParams
+        
         // Set previous info
         if (attrs.setPrev) {
             attrs.params.prevController = params.controller
