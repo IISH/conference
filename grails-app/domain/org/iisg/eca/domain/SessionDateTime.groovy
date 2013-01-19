@@ -43,19 +43,21 @@ class SessionDateTime extends DefaultDomain {
         int curDayId = -1
 
         Set<Day> daysInTenant = date.days
-        SessionDateTime.withCriteria {
-            'in'('day', daysInTenant)
-            order('index', 'asc')
-        }.each { sessionDateTime ->
-            if ((curDayId != -1) && (sessionDateTime.day.id != curDayId)) {
-                mainList.add(curList)
-                curList =  new ArrayList<SessionDateTime>()
+        if (daysInTenant.size() > 0) {
+            SessionDateTime.withCriteria {           
+                'in'('day', daysInTenant)
+                order('index', 'asc')
+            }.each { sessionDateTime ->
+                if ((curDayId != -1) && (sessionDateTime.day.id != curDayId)) {
+                    mainList.add(curList)
+                    curList = new ArrayList<SessionDateTime>()
+                }
+
+                curDayId = sessionDateTime.day.id
+                curList.add(sessionDateTime)
             }
-
-            curDayId = sessionDateTime.day.id
-            curList.add(sessionDateTime)
         }
-
+         
         mainList.add(curList)
         mainList
     }

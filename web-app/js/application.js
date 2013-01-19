@@ -49,7 +49,10 @@ var setDatePicker = function(element, increaseDay) {
         dateFormat: element.attr('placeholder').replace('yyyy', 'yy')
     });
     
-    if (increaseDay && (element.val().length > 0)) {
+    if (element.val().match(/sd$/)) {
+        element.val(element.val().replace('sd', ''));
+    }
+    else if (increaseDay && (element.val().length > 0)) {
         var date = element.datepicker('getDate'); 
         date.setDate(date.getDate()+1); 
         element.datepicker('setDate', date);
@@ -97,11 +100,18 @@ var createNewItem = function(item, lastItem) {
         
         if (name.match(/day$/)) {
             $(this).val(lastItem.find('.datepicker').val());
+            if ($(this).val().trim() === "") {
+                var startDate = item.parents('.form').find('input[name$=startDate]');
+                $(this).val(startDate.val() + "sd");
+            }
         }
         if (name.match(/dayNumber$/)) {
             var number = eval(lastItem.find('input[type=number]').val());
             if (number) {
                 $(this).val(number+1);
+            }
+            else {
+                $(this).val(1);
             }
         }        
     });
