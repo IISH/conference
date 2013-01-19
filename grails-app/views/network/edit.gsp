@@ -219,6 +219,7 @@
                 <g:message code="default.deleted.label" />
             </eca:link>
             <input type="submit" name="btn_save" class="btn_save" value="${message(code: 'default.button.save.label')}" />
+            <input type="submit" name="btn_save_close" class="btn_save_close" value="${message(code: 'default.button.save.close.label')}" />
           </fieldset>
     </form>
     </body>

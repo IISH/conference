@@ -87,8 +87,13 @@ class DynamicPageController {
             // Everything is fine, so redirect to either the previous page or the default page
             flash.message = g.message(code: "default.successful.message", args: [results.get().get(0).toString()])
 
-            // Redirect to previous page
-            redirect(uri: eca.createLink(previous: true, noBase: true))
+            if ((params.action == 'create') || params['btn_save_close']) {
+                // Redirect to previous page
+                redirect(uri: eca.createLink(previous: true, noBase: true))
+            }
+            else {
+                render(view: '../layouts/content.gsp', model: [page: dynamicPage, content: dynamicPageService.getTemplate(dynamicPage, params, allResults)])
+            }
         }
     }
 }

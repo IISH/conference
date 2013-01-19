@@ -172,6 +172,9 @@
                     </eca:link>
                 </g:if>
                 <input type="submit" name="btn_save" class="btn_save" value="${message(code: 'default.button.save.label')}" />
+                <g:if test="${params.action != 'create'}">
+                  <input type="submit" name="btn_save_close" class="btn_save_close" value="${message(code: 'default.button.save.close.label')}" />
+                </g:if>
                 <input type="button" name="btn_add" class="btn_add" value="${message(code: 'default.add.label', args: [message(code: 'feeAmount.label')])}">
             </fieldset>
         </form>

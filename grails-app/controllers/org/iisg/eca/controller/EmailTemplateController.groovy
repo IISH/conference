@@ -83,8 +83,10 @@ class EmailTemplateController {
             // Save the email template and redirect to the previous page if everything is ok
             if (template.save(flush: true)) {
                 flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'emailTemplate.label'), template.toString()])
-                redirect(uri: eca.createLink(action: "show", id: template.id, noBase: true))
-                return
+                if (params['btn_save_close']) {
+                    redirect(uri: eca.createLink(action: "show", id: template.id, noBase: true))
+                    return
+                }
             }
         }
 

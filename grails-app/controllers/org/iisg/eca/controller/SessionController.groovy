@@ -157,8 +157,10 @@ class SessionController {
             // Save the session and redirect to the previous page if everything is ok
             if (session.save(flush: true)) {
                 flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'session.label'), session.toString()])
-                redirect(uri: eca.createLink(previous: true, noBase: true))
-                return
+                if (params['btn_save_close']) {
+                    redirect(uri: eca.createLink(previous: true, noBase: true))
+                    return
+                }
             }
         }
 

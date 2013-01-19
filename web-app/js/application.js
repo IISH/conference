@@ -252,8 +252,8 @@ $(document).ready(function() {
     $('input[type=submit]').click(function(e) {
         var form = $(this).parents('form');
         var children = form.find('.hidden input, .hidden select, .hidden textarea');
-        children.removeAttr('required');
-        form.submit();
+        children.removeAttr('required');        
+        this.click();
     });
 
     $('.datepicker').each(function() {

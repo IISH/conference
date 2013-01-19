@@ -23,7 +23,15 @@ class EventDateController {
      * Index action, redirects to the create action
      */
     def index() {
-        redirect(uri: eca.createLink(action: 'create', noBase: true), params: params)
+        if (pageInformation.date) {
+            redirect(uri: eca.createLink(action: 'show', noBase: true), params: params)
+        }
+        else if (params.id) {
+            redirect(uri: eca.createLink(action: 'create', noBase: true), params: params)
+        }
+        else {
+            redirect(uri: eca.createLink(controller: 'event', action: 'index', noBase: true), params: params)
+        }
     }
 
     /**
@@ -136,8 +144,10 @@ class EventDateController {
             // Save the event date and redirect to the previous page if everything is ok
             if (date.save(flush: true)) {
                 flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'eventDate.label'), date.toString()])
-                redirect(uri: eca.createLink(previous: true, noBase: true))
-                return
+                if (params['btn_save_close']) {
+                    redirect(uri: eca.createLink(previous: true, noBase: true))
+                    return
+                }
             }
         }
         

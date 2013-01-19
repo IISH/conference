@@ -221,8 +221,10 @@ class UserAuthController {
                 sessionFactory.queryCache.clear()
                 
                 flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'user.label'), user.toString()])
-                redirect(uri: eca.createLink(previous: true, noBase: true))
-                return
+                if (params['btn_save_close']) {
+                    redirect(uri: eca.createLink(previous: true, noBase: true))
+                    return
+                }
             }
         }
         

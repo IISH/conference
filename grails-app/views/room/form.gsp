@@ -94,6 +94,9 @@
                     </eca:link>
                 </g:if>
                 <input type="submit" name="btn_save" class="btn_save" value="${message(code: 'default.button.save.label')}" />
+                <g:if test="${params.action != 'create'}">
+                  <input type="submit" name="btn_save_close" class="btn_save_close" value="${message(code: 'default.button.save.close.label')}" />
+                </g:if>
             </fieldset>
         </form>
     </body>

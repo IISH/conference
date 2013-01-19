@@ -134,8 +134,10 @@ class FeeController {
             // Save the fee state and redirect to the previous page if everything is ok
             if (feeState.save(flush: true)) {
                 flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'feeState.label'), feeState.toString()])
-                redirect(uri: eca.createLink(previous: true, noBase: true))
-                return
+                if (params['btn_save_close']) {
+                    redirect(uri: eca.createLink(previous: true, noBase: true))
+                    return
+                }
             }
         }
 

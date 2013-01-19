@@ -68,7 +68,12 @@ class UserController {
             springSecurityService.reauthenticate user.email
 
             flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'user.label'), user.toString()])
-            redirect(uri: eca.createLink(previous: true, noBase: true))
+            if (params['btn_save_close']) {
+                redirect(uri: eca.createLink(previous: true, noBase: true))
+            }
+            else {
+                render(view: "edit", model: [user: user])
+            }
         }
     }
 }

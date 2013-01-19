@@ -340,6 +340,9 @@ class PageBuilder {
             switch (button.type) {
                 case Button.Type.SAVE:
                     builder.input(type: "submit", name: "btn_${button.name}", class: "btn_${button.name}", value: "\${message(code: 'default.button.${button.name}.label')}")
+                    builder."g:if"(test: "\${params.action != 'create'}") {
+                        builder.input(type: "submit", name: "btn_${button.name}_close", class: "btn_${button.name}_close", value: "\${message(code: 'default.button.${button.name}.close.label')}")
+                    }
                     break
                 case Button.Type.BACK:
                     builder."eca:link"(controller: "\${params.prevController}", action: "\${params.prevAction}", id: "\${params.prevId}") {

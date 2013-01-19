@@ -242,8 +242,10 @@ class ParticipantController {
                 // We arrived here, so everything should be fine
                 // Go back to the previous back with an update message
                 flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'participantDate.label'), user.toString()])
-                redirect(uri: eca.createLink(action: 'list', noBase: true))
-                return
+                if (params['btn_save_close']) {
+                    redirect(uri: eca.createLink(action: 'list', noBase: true))
+                    return
+                }
             }
             catch (ValidationException ve) {
                 // Validation failed, just send back the page and show all errors
