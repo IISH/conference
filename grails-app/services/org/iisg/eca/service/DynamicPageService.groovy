@@ -190,7 +190,8 @@ class DynamicPageService {
 
                 // Create a new column element object and add the remaining properties
                 Column column = new Column(name, curDomainClass, children)
-
+                
+                column.id       = element.@id.text().equalsIgnoreCase("true")
                 column.readOnly = element.@readonly.text().equalsIgnoreCase("true")
                 column.multiple = element.@multiple.text().equalsIgnoreCase("true")
                 column.hidden   = element.@hidden.text().equalsIgnoreCase("true")

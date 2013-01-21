@@ -2,6 +2,7 @@ package org.iisg.eca.controller
 
 import grails.converters.JSON
 
+import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Network
 import org.iisg.eca.domain.Session
 import org.iisg.eca.domain.NetworkChair
@@ -115,7 +116,12 @@ class NetworkController {
         }
 
         // Show all network related information
-        render(view: "edit", model: [network: network, sessions: participantSessionService.getParticipantsForNetwork(network)])
+        render(view: "edit", model: [   network:    network, 
+                                        sessions:   participantSessionService.getParticipantsForNetwork(network),
+                                        users:      User.withCriteria { 
+                                            order('lastName', 'asc')
+                                            order('firstName', 'asc')
+                                        }])
     }
 
     /**

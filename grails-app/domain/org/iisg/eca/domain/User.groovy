@@ -56,6 +56,7 @@ class User extends DefaultDomain {
     static mapping = {
         table 'users'
         version false
+        sort "lastName"
 
         id              column: 'user_id'
         email           column: 'email'

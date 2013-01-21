@@ -244,7 +244,11 @@ class PageBuilder {
                 if (element.index) {
                     builder.td(class: "counter", "\${i+1}")
                 }
-                if (!element.columns.find { it.name.equalsIgnoreCase("id") }) {
+                if (element.getAllColumns().find { it.isId() }) {
+                    Column column = element.getAllColumns().find { it.isId() }
+                    builder.td(class: "id hidden", "\${row.${column.columnPath.join('.')}}")
+                }
+                else if (!element.columns.find { it.name.equalsIgnoreCase("id") }) {
                     builder.td(class: "id hidden", "\${row.id}")
                 }
                 element.forAllColumns { c ->

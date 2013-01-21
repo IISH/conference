@@ -19,7 +19,7 @@ class Network extends EventDateDomain {
         date    nullable: true
         name    blank: false,   maxSize: 30
         comment nullable: true
-        url     blank: false,   maxSize: 255,   url: true
+        url     blank: false,   maxSize: 255
     }
 
     static mapping = {

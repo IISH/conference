@@ -44,7 +44,7 @@
                 <span class="required-indicator">*</span>
               </label>
               <span class="property-value">
-                <input id="Network.url" maxlength="255" name="Network.url" value="${network.url}" type="url" required="required" />
+                <input id="Network.url" maxlength="255" name="Network.url" value="${network.url}" type="text" required="required" />
               </span>
             </div>
             <div class="${hasErrors(bean: network, field: 'showOnline', 'error')} ">
@@ -81,7 +81,7 @@
                     <input type="hidden" name="NetworkChair_${i}.id" value="${instance.id}" />
                     <label class="property-label">
                       <g:message code="user.multiple.label" />
-                      <g:select id="chair" name="NetworkChair_${i}.chair.id" value="${instance.chair.id}" optionKey="id" class="property-value" from="${User.list()}" required="required" />
+                      <g:select id="chair" name="NetworkChair_${i}.chair.id" value="${instance.chair.id}" optionKey="id" class="property-value" from="${users}" required="required" />
                     </label>
                     <label class="property-label">
                       <g:message code="networkChair.isMainChair.label" />
@@ -98,7 +98,7 @@
                   <input type="hidden" name="NetworkChair_null.id" />
                   <label class="property-label">
                     <g:message code="user.multiple.label" />
-                    <g:select id="chair" name="NetworkChair_${i}.chair.id" optionKey="id" class="property-value" from="${User.list()}" required="required" />
+                    <g:select id="chair" name="NetworkChair_${i}.chair.id" optionKey="id" class="property-value" from="${users}" required="required" />
                   </label>
                   <label class="property-label">
                     <g:message code="networkChair.isMainChair.label" />

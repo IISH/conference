@@ -9,6 +9,7 @@ import org.codehaus.groovy.grails.validation.ConstrainedProperty
  */
 class Column extends ContainerElement {
     private GrailsDomainClass domainClass
+    private boolean id
     private boolean readOnly
     private boolean multiple
     private boolean hidden
@@ -24,6 +25,7 @@ class Column extends ContainerElement {
     Column(String name, GrailsDomainClass domainClass, List<Column> elements) {
         super(name, elements)
         this.domainClass = domainClass
+        this.id = false
         this.readOnly = false
         this.multiple = false
         this.hidden = false
@@ -54,7 +56,11 @@ class Column extends ContainerElement {
     ConstrainedProperty getConstrainedProperty() {
         domainClass?.getConstrainedProperties()?.get(name)
     }
-
+    
+    boolean isId() {
+        id
+    }
+    
     /**
      * Indicates whether it is allowed to change this value in a form
      * @returns Whether this column is read only
@@ -77,6 +83,10 @@ class Column extends ContainerElement {
      */
     boolean isHidden() {
         hidden
+    }
+    
+    void setId(boolean id) {
+        this.id = id
     }
 
     /**
