@@ -31,7 +31,7 @@
                                 <li>
                                     <span id="id-label" class="property-label">#</span>
                                     <span class="property-value" arial-labelledby="id-label">
-                                        <g:fieldValue bean="${user}" field="id" />
+                                        ${user.id}
                                     </span>
                                 </li>
                                 <li>
