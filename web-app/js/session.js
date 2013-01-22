@@ -10,10 +10,10 @@ $(document).ready(function() {
 
     $('#tabs').tabs({
         collapsible: true,
-        selected: -1,
-        select: function(event, ui) {
+        active: false,
+        activate: function(event, ui) {
             var participantsCopy;
-            var selected = $(ui.panel);
+            var selected = $(ui.newPanel);
             var textBox = selected.find('.select-participant');
             var typeId = selected.find('.type-id').val();
 
@@ -42,7 +42,7 @@ $(document).ready(function() {
 
     $('.select-participant').each(function(e) {
         $(this).autocomplete({
-            src: [],
+            source: [],
             search: function(event, ui) {
                 $(this).parents('.ui-tabs-panel').find('.participant-id').val("");
             },
@@ -81,7 +81,7 @@ $(document).ready(function() {
             },
             function(data) {
                 if (data.success) {
-                    $('#tabs').tabs("option", "selected", -1);
+                    $('#tabs').tabs("option", "active", false);
                     setParticipantDataForSession(data);
                 }
                 else {
@@ -106,7 +106,7 @@ $(document).ready(function() {
             },
             function(data) {
                 if (data.success) {
-                    $('#tabs').tabs("option", "selected", -1);
+                    $('#tabs').tabs("option", "active", false);
                     setParticipantDataForSession(data);
                 }
                 else {

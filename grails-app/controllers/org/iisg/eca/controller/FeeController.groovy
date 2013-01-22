@@ -96,7 +96,7 @@ class FeeController {
         // The 'save' button was clicked, save all data
         if (request.post) {
             // Save all fee state related data
-            bindData(feeState, params, [include: ['name', 'isDefaultFee', 'enabled']], 'FeeState')
+            bindData(feeState, params, [include: ['name', 'isDefaultFee', 'enabled']], 'feeState')
 
             // Get a list of all fee amounts for this fee state
             // If they do not come up, they have to be deleted
