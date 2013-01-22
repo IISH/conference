@@ -27,7 +27,7 @@ class Room extends EventDateDomain {
         date        column: 'date_id'
         roomName    column: 'room_name'
         roomNumber  column: 'room_number'
-        noOfSeats   column: 'number_of_seets'
+        noOfSeats   column: 'number_of_seats'
         comment     column: 'comment',          type: 'text'
         
         roomSessionDateTimeEquipment    cascade: 'all-delete-orphan'
