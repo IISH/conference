@@ -19,21 +19,7 @@ class ParticipantSessionService {
      * Service with information about the current page, such as the current event date
      */
     def pageInformation
-
-    /**
-     * Returns a list of all participants for the current event date
-     * @return A list of users who are participants in the current event date
-     */
-    List<User> getAllParticipants() {
-        User.withCriteria {
-            participantDates {
-                // Make sure the data is filtered here
-                eq('date.id', pageInformation.date.id)
-                eq('deleted', false)
-            }
-        }
-    }
-
+    
     /**
      * Returns all participants of the current event date and session with the given type
      * @param participantType The participant type

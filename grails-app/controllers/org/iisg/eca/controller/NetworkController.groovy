@@ -99,7 +99,7 @@ class NetworkController {
                 bindData(chair, params, [include: ['chair', 'isMainChair']], "NetworkChair_${i}")
 
                 // A chair should only be added to a network once
-                if (!network.chairs.find { it.chair.id == chair.chair.id }) {
+                if (chair.chair && (!network.chairs || !network.chairs.find { it.chair.id == chair.chair.id })) {
                     network.addToChairs(chair)
                 }
                 i++
@@ -117,11 +117,7 @@ class NetworkController {
 
         // Show all network related information
         render(view: "edit", model: [   network:    network, 
-                                        sessions:   participantSessionService.getParticipantsForNetwork(network),
-                                        users:      User.withCriteria { 
-                                            order('lastName', 'asc')
-                                            order('firstName', 'asc')
-                                        }])
+                                        sessions:   participantSessionService.getParticipantsForNetwork(network)])
     }
 
     /**

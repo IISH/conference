@@ -38,12 +38,12 @@
                         <g:message code="default.enabled.label" />
                     </label>
                     <span class="property-value">
-                        <g:checkBox name="feeState.enabled" value="${fee?.enabled}" />
+                        <g:checkBox name="feeState.enabled" value="${feeState?.enabled}" />
                     </span>
                 </div>
 
                 <div class="columns copy">
-                    <g:each in="${feeState.feeAmounts}" var="amount" status="i">
+                    <g:each in="${feeAmounts}" var="amount" status="i">
                         <fieldset class="form column">
                             <span class="remove-item">
                                 <span class="ui-icon ui-icon-circle-minus"></span>

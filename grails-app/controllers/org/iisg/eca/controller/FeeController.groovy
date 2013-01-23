@@ -69,7 +69,9 @@ class FeeController {
         }
 
         // Show all fee state related information
-        render(view: "form", model: [feeState: feeState, days: nrOfDays])
+        render(view: "form", model: [   feeState: feeState, 
+                                        days: nrOfDays,
+                                        feeAmounts: FeeAmount.findAllByFeeState(feeState)])
     }
 
     def edit() {
@@ -142,7 +144,9 @@ class FeeController {
         }
 
         // Show all fee state related information
-        render(view: "form", model: [feeState: feeState, days: nrOfDays])
+        render(view: "form", model: [   feeState: feeState, 
+                                        days: nrOfDays,
+                                        feeAmounts: FeeAmount.findAllByFeeState(feeState)])
     }
 
     /**

@@ -880,6 +880,22 @@ ul input.session-name {
     margin: 0;    
 }
 
+/* AUTOCOMPLETE */
+
+.ui-autocomplete {
+    max-height: 100px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+* html .ui-autocomplete {
+    height: 100px;
+}
+
+.ui-autocomplete-loading { 
+    background: url('../images/spinner.gif') no-repeat right center;
+}
+
 /* HELPERS */
 
 .left {

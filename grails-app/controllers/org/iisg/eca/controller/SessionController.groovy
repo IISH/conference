@@ -41,6 +41,11 @@ class SessionController {
      * The session planner service is responsible for actions related to the planning of sessions
      */
     def sessionPlannerService
+    
+    /**
+     * Service taking care of participants
+     */
+    def participantService
 
     /**
      * Service taking care of participants and how they are added to a session
@@ -353,7 +358,7 @@ class SessionController {
             render responseMap as JSON
         }
     }
-
+    
     /**
      * Returns a list will all participants that have signed up for the current event date
      * (AJAX call)
@@ -361,8 +366,8 @@ class SessionController {
     def participants() {
         // If this is an AJAX call, continue
         if (request.xhr) {
-            // Let the participantSessionService come up with all the participants for the current event date
-            List<User> participants = participantSessionService.allParticipants
+            // Let the participantService come up with all the participants for the current event date
+            List<User> participants = participantService.allParticipants
 
             // Return all participants and their paper, which are still not added to a session
             render participants.collect { user ->
@@ -371,7 +376,7 @@ class SessionController {
             } as JSON
         }
     }
-
+    
     /**
      * Returns a blacklist for participants with a specific type in a specific session
      * (AJAX call)

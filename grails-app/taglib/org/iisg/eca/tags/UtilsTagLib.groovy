@@ -261,6 +261,25 @@ class UtilsTagLib {
         
         builder.input(attrs)
     }
+    
+    def participantAutoComplete = { attrs -> 
+        MarkupBuilder builder = new MarkupBuilder(out)
+        builder.doubleQuotes = true
+        
+        String name = attrs['name']
+        String value = attrs['idValue']
+        
+        attrs['value'] = attrs['labelValue']
+        attrs['type'] = "text"
+        attrs['class'] = "${attrs['class']} participant-autocomplete ui-autocomplete-loading"
+        
+        attrs.remove('name')
+        attrs.remove('idValue')
+        attrs.remove('labelValue')
+        
+        builder.input(type: "hidden", name: name, value: value)
+        builder.input(attrs)        
+    }
 
     /**
      * The body is only executed if the user has access to the page the attributes point to

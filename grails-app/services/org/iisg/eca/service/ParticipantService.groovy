@@ -1,5 +1,6 @@
 package org.iisg.eca.service
 
+import org.iisg.eca.domain.User
 import org.iisg.eca.domain.ParticipantDate
 
 import groovy.sql.Sql
@@ -14,6 +15,23 @@ class ParticipantService {
     def messageSource
     def pageInformation
 
+    /**
+     * Returns a list of all participants for the current event date
+     * @return A list of users who are participants in the current event date
+     */
+    List<User> getAllParticipants() {
+        User.withCriteria {
+            participantDates {
+                // Make sure the data is filtered here
+                eq('date.id', pageInformation.date.id)
+                eq('deleted', false)
+            }
+            
+            order('lastName', 'asc')
+            order('firstName', 'asc')
+        }
+    }
+    
     /**
      * Returns all participants of the current event date with filters set by the user
      * @param params The parameters of the current request containing the filters set by the user
