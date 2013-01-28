@@ -71,7 +71,7 @@ class FeeController {
         // Show all fee state related information
         render(view: "form", model: [   feeState: feeState, 
                                         days: nrOfDays,
-                                        feeAmounts: FeeAmount.findAllByFeeState(feeState)])
+                                        feeAmounts: []])
     }
 
     def edit() {
