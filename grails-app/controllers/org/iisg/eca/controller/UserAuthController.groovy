@@ -52,7 +52,8 @@ class UserAuthController {
      * Shows a list of all the users
      */
     def list() {
-        forward(controller: 'dynamicPage', action: 'dynamic', params: params)
+        Map newParams = params + ['sort_0_lastName': 'asc', 'sort_0_firstName': 'asc'];
+        forward(controller: 'dynamicPage', action: 'dynamic', params: newParams)
     }
 
     /**
