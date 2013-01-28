@@ -17,6 +17,14 @@
 
         <form action="#" method="post">
             <fieldset class="form">
+                <div class="${hasErrors(bean: user, field: 'title', 'error')} required">
+                    <label class="property-label">
+                        <g:message code="title.label" />
+                    </label>
+                    <span class="property-value">
+                        <g:select from="${Title.list()}" name="User.title" optionKey="title" optionValue="title" value="${user.title}" noSelection="${['':' ']}" />
+                    </span>
+                </div>
                 <div class="${hasErrors(bean: user, field: 'firstName', 'error')} required">
                     <label class="property-label">
                         <g:message code="user.firstName.label" />
@@ -35,6 +43,30 @@
                         <input type="text" name="User.lastName" required="required" maxlength="50" value="${fieldValue(bean: user, field: 'lastName')}" />
                     </span>
                 </div>
+                <div class="${hasErrors(bean: user, field: 'gender', 'error')} required">
+                    <label class="property-label">
+                        <g:message code="user.gender.label" />
+                    </label>
+                    <span class="property-value">
+                        <g:select from="['M','F']" name="User.gender" value="${user.gender?.toString()}" noSelection="${['': ' ']}" />
+                    </span>
+                </div>
+                <div class="${hasErrors(bean: user, field: 'organisation', 'error')} required">
+                    <label class="property-label">
+                        <g:message code="user.organisation.label" />
+                    </label>
+                    <span class="property-value">
+                        <input type="text" name="User.organisation" maxlength="50" value="${fieldValue(bean: user, field: 'organisation')}" />
+                    </span>
+                </div>
+                <div class="${hasErrors(bean: user, field: 'department', 'error')} required">
+                    <label class="property-label">
+                        <g:message code="user.department.label" />
+                    </label>
+                    <span class="property-value">
+                        <input type="text" name="User.department" maxlength="50" value="${fieldValue(bean: user, field: 'department')}" />
+                    </span>
+                </div>
                 <div class="${hasErrors(bean: user, field: 'email', 'error')} required">
                     <label class="property-label">
                         <g:message code="user.email.label" />
@@ -42,6 +74,14 @@
                     </label>
                     <span class="property-value">
                         <input type="email" name="User.email" required="required" maxlength="100" value="${fieldValue(bean: user, field: 'email')}" />
+                    </span>
+                </div>
+                <div class="${hasErrors(bean: user, field: 'address', 'error')} required">
+                    <label class="property-label">
+                        <g:message code="user.address.label" />
+                    </label>
+                    <span class="property-value">
+                        <textarea name="User.address" cols="40" rows="5">${fieldValue(bean: user, field: 'address')}</textarea>
                     </span>
                 </div>
                 <div class="${hasErrors(bean: user, field: 'city', 'error')} required">
@@ -58,6 +98,30 @@
                     </label>
                     <span class="property-value">
                         <g:select name="User.country.id" from="${Country.list(sort: 'nameEnglish')}" optionKey="id" value="${user.country?.id}" noSelection="${[null:' ']}" />
+                    </span>
+                </div>
+                <div class="${hasErrors(bean: user, field: 'phone', 'error')}">
+                    <label class="property-label">
+                        <g:message code="user.phone.label" />
+                    </label>
+                    <span class="property-value">
+                        <input type="text" name="User.phone" maxlength="50" value="${fieldValue(bean: user, field: 'phone')}" />
+                    </span>
+                </div>
+                <div class="${hasErrors(bean: user, field: 'mobile', 'error')}">
+                    <label class="property-label">
+                        <g:message code="user.mobile.label" />
+                    </label>
+                    <span class="property-value">
+                        <input type="text" name="User.mobile" maxlength="50" value="${fieldValue(bean: user, field: 'mobile')}" />
+                    </span>
+                </div>
+                <div class="${hasErrors(bean: user, field: 'extraInfo', 'error')}">
+                    <label class="property-label">
+                        <g:message code="user.extraInfo.label" />
+                    </label>
+                    <span class="property-value">
+                        <textarea name="User.extraInfo" cols="40" rows="5">${fieldValue(bean: user, field: 'extraInfo')}</textarea>
                     </span>
                 </div>
                 <div class="${hasErrors(bean: user, field: 'enabled', 'error')}">

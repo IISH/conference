@@ -76,7 +76,8 @@ class UserAuthController {
         // The 'save' button was clicked, save all data
         if (request.post) {
             // Save all user related data
-            bindData(user, params, [include: ["firstName", "lastName", "email", "city", "country", "enabeled"]], "User")
+            bindData(user, params, [include: ['title', 'firstName', 'lastName', 'gender', 'organisation',
+                        'department', 'email', 'address', 'city', 'country', 'phone', 'mobile', 'extraInfo', 'enabled']], "User")
             user.save()
             
             // Check for all the possible roles, whether they have to be added to the user
@@ -163,8 +164,8 @@ class UserAuthController {
         // The 'save' button was clicked, save all data
         if (request.post) {
             // Save all user related data
-            bindData(user, params, [include: ["firstName", "lastName", "email", 
-                    "city", "country", "enabeled"]], "User")
+            bindData(user, params, [include: ['title', 'firstName', 'lastName', 'gender', 'organisation',
+                        'department', 'email', 'address', 'city', 'country', 'phone', 'mobile', 'extraInfo', 'enabled']], "User")
             
             // Check for all the possible roles, whether they have to be removed or added to the user
             UserRole.removeAll(user)
