@@ -38,7 +38,7 @@ $(document).ready(function() {
         });
         
         $('#tabs').tabs("enable");
-        $('#tabs').on( "tabsactivate", tabActivate);
+        $('#tabs').on("tabsactivate", tabActivate);
     });
     
     $('#tabs').tabs({
@@ -72,12 +72,12 @@ $(document).ready(function() {
         );
     });
 
-    $('.session-participants .ui-icon-circle-minus').on("removed-item", function(e) {
+    $(document).on("removed-item", '.session-participants .ui-icon-circle-minus', function(e) {
         $('.errors').hide();
         $('.message').hide();
 
-        var element = $(this).parents('.participant-type-value');
-        var parentElement = $(this).parents('li');
+        var element = $(e.target).parents('.participant-type-value');
+        var parentElement = element.parents('li');
 
         $.getJSON(
             '../deleteParticipant',

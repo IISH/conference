@@ -140,7 +140,12 @@ class EcaFilters {
                         user.save()
                     }
                 }
-
+                
+                // Make sure IE does not cache AJAX responses
+                if (request.xhr) {
+                    response.setHeader('expires', '-1')
+                }
+                
                 return true
             }
             after = { Map model ->

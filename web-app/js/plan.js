@@ -184,10 +184,10 @@ $(document).ready(function() {
         }
     });
 
-    $('.time-slot.click-to-plan').on("click", function(e) {
+    $(document).on("click", '.time-slot.click-to-plan', function(e) {
         disableTableWithLoading(true);
 
-        var element = $(this);
+        var element = $(e.target);
         var roomId = element.find('input[name=room-id]').val();
         var dateTimeId = element.find('input[name=date-time-id]').val();
 
@@ -215,9 +215,9 @@ $(document).ready(function() {
         );
     });
 
-    $('#sessions-unscheduled.click-to-plan').on("click", function(e) {
+    $(document).on("click", '#sessions-unscheduled.click-to-plan', function(e) {
         disableTableWithLoading(true);
-        var element = $(this);
+        var element = $(e.target);
 
         $.getJSON(
             './returnSession', {'session_id': curSessionId}, function(data) {

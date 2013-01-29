@@ -1,7 +1,8 @@
 var setParticipantDataForSession = function(data) {
     var participantsContainer = $('.session-participants');
     var item = participantsContainer.find('li.hidden');
-
+    item = item.clone(true);
+    
     participantsContainer.html("");
     setParticipants(data.participants, participantsContainer, item);
     participantsContainer.append(item);
@@ -16,6 +17,7 @@ var setParticipantDataForSession = function(data) {
 var setParticipantDataForNetwork = function(data) {
     var networkSessionsContainer = $('#network-sessions');
     var clone = networkSessionsContainer.find('li.hidden');
+    clone = clone.clone(true);
 
     networkSessionsContainer.html("");
     for (var i=0; i<data.sessions.length; i++) {
@@ -36,6 +38,7 @@ var setParticipantDataForNetwork = function(data) {
         networkSessionsContainer.append(item);
         item.removeClass('hidden');
     }
+    
     networkSessionsContainer.append(clone);
 }
 

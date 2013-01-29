@@ -325,7 +325,9 @@ class SessionController {
 
                     // Make sure to remove the paper from the session as well
                     if (type.withPaper) {
-                        Paper.findBySession(session).find { it.user.id == user.id }?.session = null
+                        Paper paper = Paper.findBySessionAndUser(session, user)
+                        paper?.session = null
+                        paper?.save()
                     }
 
                     // Save the session

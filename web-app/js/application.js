@@ -179,9 +179,9 @@ var removeAnItem = function(toBeRemoved, classToStop) {
 
 var guessMessageUrl = function() {
     var urlToCall = '../message/index';
-    var url = location.href.replace(location.search, '');
+    var url = location.href.replace(location.search, '').replace(location.hash, '');
 
-    if ($.isNumeric(url.charAt(url.length-1)) || (url.charAt(url.length-1) === '#')) {
+    if ($.isNumeric(url.charAt(url.length-1))) {
         urlToCall = '../' + urlToCall;
     }
 
@@ -306,9 +306,9 @@ $(document).ready(function() {
         });
     });
 
-    $('fieldset li span.ui-icon-circle-minus').on('click', function(e) {
-        var thisItem = $(this);
-        var item = $(this).parents('li');
+    $(document).on('click', 'fieldset li span.ui-icon-circle-minus', function(e) {
+        var thisItem = $(e.target);
+        var item = thisItem.parents('li');
 
         $.getJSON(guessMessageUrl(), {code: 'default.button.delete.confirm.message'}, function(data) {
             var deleted = confirm(data.message);
@@ -321,9 +321,9 @@ $(document).ready(function() {
         });
     });
 
-    $('.columns.copy span.ui-icon-circle-minus').on('click', function(e) {
-        var thisItem = $(this);
-        var item = $(this).parents('.column');
+    $(document).on('click', '.columns.copy span.ui-icon-circle-minus', function(e) {
+        var thisItem = $(e.target);
+        var item = thisItem.parents('.column');
 
         $.getJSON(guessMessageUrl(), {code: 'default.button.delete.confirm.message'}, function(data) {
             var deleted = confirm(data.message);

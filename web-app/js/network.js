@@ -8,10 +8,8 @@ $(document).ready(function() {
 
         $.getJSON('../participantsNotScheduled', {network_id: networkId}, function(data) {
             var participantsContainer = $('#not-in-session');
-            var clone = participantsContainer.find('li:eq(0)')
+            var clone = participantsContainer.find('li:eq(0)');
             var item;
-
-            participantsContainer.html("");
 
             if (data.participants.length === 0) {
                 participantsContainer.text('-');
@@ -31,9 +29,11 @@ $(document).ready(function() {
                     papersContainer.append(paperItem);
                 }
                 paperClone.remove();
-
+                
+                participantsContainer.html("");
                 participantsContainer.append(item);
             }
+            
             clone.remove();
             element.remove();
             participantsContainer.show();
@@ -84,16 +84,16 @@ $(document).ready(function() {
         name.val("");
     });
 
-    $('.remove-session').on("removed-item", function(e) {
+    $(document).on("removed-item", '.remove-session', function(e) {
         $('.errors').hide();
         $('.message').hide();
 
-        var element = $(this);
+        var element = $(e.target);
         var parentElement = element.parent();
 
         $.getJSON('../removeSession',
             {   network_id:     networkId,
-                session_id:   parentElement.find('.session-id').val()},
+                session_id:     parentElement.find('.session-id').val()},
             function(data) {
                 if (data.success) {
                     setParticipantDataForNetwork(data);
