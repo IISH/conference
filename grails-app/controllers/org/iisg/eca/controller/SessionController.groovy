@@ -214,8 +214,7 @@ class SessionController {
         [   equipment:              sessionPlannerService.equipmentCombinations,
             schedule:               sessionPlannerService.schedule,
             sessionsUnscheduled:    sessionPlannerService.unscheduledSessions,
-            dateTimes:              SessionDateTime.findAllByDayInList(Day.list()),
-            rooms:                  Room.list()]
+            dateTimes:              SessionDateTime.findAllByDayInList(Day.list())]
     }
 
     /**

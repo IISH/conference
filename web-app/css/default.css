@@ -239,7 +239,9 @@ a:hover {
 .form > div > .property-value, .property-list li > .property-value, .value {
     display: block;
     text-align: left;
-    margin: 0 0 0 26%;
+    margin: 0 0 0 26%;    
+    white-space: normal;
+    word-wrap: break-word;
 }
 
 .column.form > div > .property-label {

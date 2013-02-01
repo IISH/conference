@@ -2,6 +2,7 @@ package org.iisg.eca.service
 
 import org.iisg.eca.utils.TimeSlot
 
+import org.iisg.eca.domain.Day
 import org.iisg.eca.domain.Room
 import org.iisg.eca.domain.Session
 import org.iisg.eca.domain.Equipment
@@ -111,7 +112,8 @@ class SessionPlannerService {
         List<Object[]> roomDateTimes = (List<Object[]>) Room.executeQuery('''
             SELECT r, dt
             FROM Room AS r, SessionDateTime AS dt
-            ORDER BY r.roomName, dt.index''')
+            WHERE dt.day IN :days
+            ORDER BY r.roomName, dt.index''', [days: Day.list()])
 
         // ... then retrieve all equipment available in the rooms at specific dates and times
         List<Object[]> equipment = (List<Object[]>) RoomSessionDateTimeEquipment.executeQuery('''
