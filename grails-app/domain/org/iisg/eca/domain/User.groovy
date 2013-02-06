@@ -96,7 +96,7 @@ class User extends DefaultDomain {
         city            maxSize: 100,   nullable: true
         country                         nullable: true
         language        maxSize: 10,    blank: false
-        password        maxSize: 128,   blank: false,   display: false, password: true
+        password        maxSize: 128,   nullable: true, display: false, password: true
         salt            maxSize: 26,    nullable: true, display: false
         requestCode     maxSize: 26,    nullable: true, display: false
         phone           maxSize: 50,    nullable: true
