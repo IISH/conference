@@ -47,26 +47,34 @@ class UtilsTagLib {
         builder.div(class: "navigation") {
             def prev = attrs.prev
             def next = attrs.next
+            
+            Integer prevIndex = null
+            Integer nextIndex = null
 
             // If there is an array of ids given, use that for navigation
             if (attrs.ids) {
-                def index = null
-
                 // Find the index value of the current id
                 attrs.ids.eachWithIndex { curId, i ->
                     if (curId == params.id.toLong()) {
-                        index = i
+                        prevIndex = i-1
+                        nextIndex = i+1
                     }
                 }
-
+                
+                // Id is not in the list anymore, so update the index
+                if (!prevIndex && !nextIndex && attrs.index?.isInteger()) {
+                    prevIndex = attrs.index.toInteger() - 1
+                    nextIndex = attrs.index.toInteger()
+                }
+                
                 // Explicitly check if the index is not null, the index is allowed to be 0
-                prev = ((index != null) && (index-1 >= 0)) ? attrs.ids.get(index-1) : null
-                next = ((index != null) && (index+1 < attrs.ids.size())) ? attrs.ids.get(index+1) : null
+                prev = ((prevIndex != null) && (prevIndex >= 0)) ? attrs.ids.get(prevIndex) : null   
+                next = ((nextIndex != null) && (nextIndex < attrs.ids.size())) ? attrs.ids.get(nextIndex) : null
             }
 
             // Build prev link, if it exists
             if (prev) {
-                builder."a"(class: "prev", href: createLinkAllParams(action: params.action, id: prev, setPrev: true)) {
+                builder."a"(class: "prev", href: createLinkAllParams(action: params.action, id: prev, params: [index: prevIndex], setPrev: true)) {
                     builder.span(class: "ui-icon ui-icon-arrowthick-1-w", "")                    
                     builder.span(g.message(code: "default.paginate.prev"))
                 }
@@ -80,7 +88,7 @@ class UtilsTagLib {
 
             // Build next link, if it exists
             if (next) {
-                builder."a"(class: "next", href: createLinkAllParams(action: params.action, id: next, setPrev: true)) {
+                builder."a"(class: "next", href: createLinkAllParams(action: params.action, id: next, params: [index: nextIndex], setPrev: true)) {
                     builder.span(g.message(code: "default.paginate.next"))
                     builder.span(class: "ui-icon ui-icon-arrowthick-1-e", "")
                 }
