@@ -45,7 +45,8 @@ class ParticipantSessionService {
     }
 
     /**
-     * Returns all participants with papers of the current event date which are still not assigned to a session
+     * Returns all participants with papers of the current event date 
+     * that cannot be added to a session anymore
      * @return A list of users
      */
     List<User> getParticipantsWithoutOpenPapers() {
@@ -53,10 +54,14 @@ class ParticipantSessionService {
             SELECT u
             FROM User AS u
             LEFT JOIN u.papers AS p
-            WHERE p.id IS NULL
-            OR p.session.id IS NOT NULL
-            OR p.date.id <> :dateId
-            OR p.deleted = true
+            LEFT JOIN u.participantDates AS pd
+            WHERE pd.date.id = :dateId
+            AND pd.deleted = false
+            AND (   p.id IS NULL
+                OR  p.session.id IS NOT NULL
+                OR  p.date.id <> :dateId
+                OR  p.deleted = true
+            )
         ''', [dateId: pageInformation.date.id])
     }
 
@@ -175,7 +180,7 @@ class ParticipantSessionService {
      */
     List<User> getBlacklistForTypeInSession(Session session, ParticipantType type) {
         List<User> participants = new ArrayList<User>()
-
+        
         // Check for every individual rule, which participants with what type should be added to the blacklist
         ParticipantTypeRule.getRulesForParticipantType(type).each { rule ->
             if (rule.firstType.id == type.id) {
@@ -189,12 +194,12 @@ class ParticipantSessionService {
         // And of course, participants who are already in the specified session
         // with the specified type cannot be added twice
         participants.addAll(getParticipantsOfType(type, session))
-
+        
         // In case the participant should be added with an paper, blacklist those without (open) papers
         if (type.withPaper) {
             participants.addAll(getParticipantsWithoutOpenPapers())
         }
-
+        
         participants.unique()
     }
 }
