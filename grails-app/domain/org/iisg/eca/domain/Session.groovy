@@ -8,8 +8,9 @@ class Session extends EventDateDomain {
     String name
     String abstr
     String comment
+    SessionState state
 
-    static belongsTo = Network
+    static belongsTo = [Network, SessionState]
     static hasMany = [  sessionParticipants: SessionParticipant,
                         papers: Paper,
                         sessionRoomDateTime: SessionRoomDateTime,
@@ -26,6 +27,7 @@ class Session extends EventDateDomain {
         name        column: 'session_name'
         abstr       column: 'session_abstract', type: 'text'
         comment     column: 'session_comment',  type: 'text'
+        state       column: 'session_state_id'
 
         networks                joinTable: 'session_in_network'
         sessionParticipants     cascade: 'all-delete-orphan'

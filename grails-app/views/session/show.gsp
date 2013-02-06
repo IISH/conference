@@ -45,6 +45,14 @@
             </span>
           </li>
           <li>
+            <span id="state-label" class="property-label">
+              <g:message code="session.state.label" />
+            </span>
+            <span class="property-value" arial-labelledby="state-label">
+              <eca:formatText text="${eventSession.state}" />
+            </span>
+          </li>
+          <li>
             <span id="enabled-label" class="property-label">
               <g:message code="default.enabled.label" />
             </span>

@@ -63,6 +63,14 @@
                         <textarea cols="40" rows="5" name="Session.comment">${fieldValue(bean: eventSession, field: 'comment')}</textarea>
                     </span>
                 </div>
+                <div class="${hasErrors(bean: eventSession, field: 'state', 'error')}">
+                    <label class="property-label">
+                        <g:message code="session.state.label" />
+                    </label>
+                    <span class="property-value">
+                        <g:select from="${sessionStates}" name="Session.state.id" optionKey="id" optionValue="description" value="${eventSession.state.id}" />
+                    </span>
+                </div>
                 <div class="${hasErrors(bean: eventSession, field: 'enabled', 'error')}">
                     <label class="property-label">
                         <g:message code="default.enabled.label" />

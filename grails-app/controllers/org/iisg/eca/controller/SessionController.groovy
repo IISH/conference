@@ -12,6 +12,7 @@ import org.iisg.eca.domain.Network
 import org.iisg.eca.domain.Session
 import org.iisg.eca.domain.Equipment
 import org.iisg.eca.domain.DynamicPage
+import org.iisg.eca.domain.SessionState
 import org.iisg.eca.domain.SessionDateTime
 import org.iisg.eca.domain.ParticipantType
 import org.iisg.eca.domain.ParticipantDate
@@ -142,7 +143,7 @@ class SessionController {
         // The 'save' button was clicked, save all data
         if (request.post) {
             // Save all session related data
-            bindData(session, params, [include: ["code", "name", "abstr", "comment", "enabeled"]], "Session")
+            bindData(session, params, [include: ["code", "name", "abstr", "comment", "state", "enabeled"]], "Session")
 
             // Remove all networks from the session (one by one, cause we don't want to delete the networks themselves)
             List<Network> networks = []
@@ -178,7 +179,8 @@ class SessionController {
                                         types:          ParticipantType.list(),
                                         participants:   participants,
                                         equipment:      equipment,
-                                        networks:       Network.list()])
+                                        networks:       Network.list(),
+                                        sessionStates:  SessionState.list()])
     }
 
     /**
