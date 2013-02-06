@@ -2,10 +2,10 @@
 <html>
     <head>
         <meta name="layout" content="main">
-        <title><g:message code="default.show.label" args="${[message(code: 'user.label')]}" /></title>
+        <title><g:message code="user.label" /></title>
     </head>
     <body>
-        <h1><g:message code="default.show.label" args="${[message(code: 'user.label')]}" /></h1>
+        <h1><g:message code="user.label" /></h1>
 
         <g:if test="${flash.message}">
             <div class="message" role="status">${flash.message}</div>

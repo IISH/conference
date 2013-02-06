@@ -20,7 +20,7 @@
             </ul>
         </g:hasErrors>
 
-        <form action="#" method="post">
+        <form action="#" method="post" autocomplete="off">
             <fieldset class="form">
                 <legend><g:message code="user.personalInfo.label" /></legend>
                 <div class="${hasErrors(bean: user, field: 'title', 'error')} required">
