@@ -13,14 +13,6 @@
             <span class="property-value" arial-labelledby="id-label">${eventSession.id}</span>
           </li>
           <li>
-            <span id="name-label" class="property-label">
-              <g:message code="session.name.label" />
-            </span>
-            <span class="property-value" arial-labelledby="name-label">
-              <eca:formatText text="${eventSession.name}" />
-            </span>
-          </li>
-          <li>
             <span id="code-label" class="property-label">
               <g:message code="session.code.label" />
             </span>
@@ -28,6 +20,14 @@
               <eca:formatText text="${eventSession.code}" />
             </span>
           </li>
+          <li>
+            <span id="name-label" class="property-label">
+              <g:message code="session.name.label" />
+            </span>
+            <span class="property-value" arial-labelledby="name-label">
+              <eca:formatText text="${eventSession.name}" />
+            </span>
+          </li>          
           <li>
             <span id="abstr-label" class="property-label">
               <g:message code="session.abstr.label" />
