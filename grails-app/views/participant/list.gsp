@@ -30,6 +30,9 @@
                         <eca:link controller="${params.prevController}" action="${params.prevAction}" id="${params.prevId}">
                             <g:message code="default.button.cancel.label" />
                         </eca:link>
+                        <eca:link action="add">
+                            <g:message code="default.add.label" args="[g.message(code: 'participantDate.label')]" />
+                        </eca:link>
                         <input type="submit" value="${message(code: 'default.button.search.label')}" />
                     </fieldset>
                 </div>

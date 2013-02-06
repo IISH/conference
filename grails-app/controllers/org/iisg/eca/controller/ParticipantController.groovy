@@ -84,7 +84,62 @@ class ParticipantController {
                                         alphabet:       participants.keySet(),
                                         states:         participantService.getParticipantCounts()])
     }
+    
+    /**
+     * Add a new participant to the current event date
+     */
+    def add() {
+        if (request.post) {
+            // We need an email address, check for the email
+            if (!params.email) {
+                flash.error = true
+                flash.message = g.message(code: 'default.no.email.message')                
+                return
+            }
+            
+            ParticipantDate participant = null
+            User user = User.findByEmail(params.email)
+            
+            if (!user) {
+                user = new User(lastName: "n/a", firstName: "n/a", email: params.email)                
+            }
+            else {            
+                // Does the participant exist in the database already
+                participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
 
+                if (participant) {
+                    flash.message = g.message(code: 'default.exists.message', args: [user.toString(), g.message(code: 'participantDate.label')]) 
+                    redirect(uri: eca.createLink(action: 'show', id: user.id, noBase: true))
+                    return
+                }
+
+                // Look for the participant, maybe he is deleted
+                ParticipantDate.withoutHibernateFilters {
+                    participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
+                }
+
+                // If we found the filtered participant, undo the deletion
+                if (participant) {
+                    participant.deleted = false
+                }
+            } 
+            
+            // This user is not a participant yet, but the user indicated he/she wants to make him/her one
+            if (!participant) {                
+                participant = new ParticipantDate(user: user, state: ParticipantState.get(0), feeState: FeeState.get(0))
+            }
+            
+            if (user.save(flush: true) && participant.save(flush: true)) {
+                flash.message = g.message(code: 'default.created.message', args: [g.message(code: 'participantDate.label'), participant.toString()])
+                redirect(uri: eca.createLink(action: 'show', id: user.id, noBase: true))
+                return
+            }
+            else {
+                return [participant: participant]
+            }
+        }    
+    }
+    
     /**
      * Shows all participant information and allows for editing
      */
