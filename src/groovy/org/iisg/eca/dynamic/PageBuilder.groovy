@@ -386,24 +386,16 @@ class PageBuilder {
                     builder.th(class: "id sortable") {
                         builder.mkp.yield "#"
 
-                        builder."eca:linkAllParams"(controller: "\${params.controller}", action: "\${params.action}", params: "['sort_${element.eid}_${c.name}': 'asc']") {
-                            builder."g:img"(dir: "images/skin", file: "sorted_asc.gif", class: "sort_asc")
-                        }
-                        builder."eca:linkAllParams"(controller: "\${params.controller}", action: "\${params.action}", params: "['sort_${element.eid}_${c.name}': 'desc']") {
-                            builder."g:img"(dir: "images/skin", file: "sorted_desc.gif", class: "sort_desc")
-                        }
+                        builder.span(class: "sort_asc asc_unselected", name: "${element.eid}|${c.name}", "")
+                        builder.span(class: "sort_desc desc_unselected", name: "${element.eid}|${c.name}", "")
                     }
                 }
                 else {
                     builder.th(class: "sortable") {
                         builder."eca:fallbackMessage"(code: getCode(c.property), fbCode: getFbCode(c.property))
 
-                        builder."eca:linkAllParams"(controller: "\${params.controller}", action: "\${params.action}", params: "['sort_${element.eid}_${c.name}': 'asc']") {
-                            builder."g:img"(dir: "images/skin", file: "sorted_asc.gif", class: "sort_asc")
-                        }
-                        builder."eca:linkAllParams"(controller: "\${params.controller}", action: "\${params.action}", params: "['sort_${element.eid}_${c.name}': 'desc']") {
-                            builder."g:img"(dir: "images/skin", file: "sorted_desc.gif", class: "sort_desc")
-                        }
+                        builder.span(class: "sort_asc asc_unselected", name: "${element.eid}|${c.name}", "")
+                        builder.span(class: "sort_desc desc_unselected", name: "${element.eid}|${c.name}", "")
                     }
                 }
             }

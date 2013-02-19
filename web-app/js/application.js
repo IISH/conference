@@ -218,6 +218,22 @@ $(document).ready(function() {
         }
     });
     
+    var urlParameters = decodeUrlParameters(window.location.search.substring(1));
+    $('.sort_asc, .sort_desc').each(function() {
+        var element = $(this);
+        var values = element.attr("name").split('|');
+        
+        var order = element.hasClass("sort_asc") ? "asc" : "desc";         
+        var paramName = "sort_" + values[0];
+        if (urlParameters[paramName]) {
+            var sortedFields = urlParameters[paramName].split(';');
+            if ($.inArray(values[1]+":"+order, sortedFields) >= 0) {
+                element.removeClass(order + "_unselected");
+                element.addClass(order + "_selected");
+            }
+        }
+    });
+    
     $('#event_switcher').change(function(e) {
         $(this).parents('form').submit();
     });
@@ -363,6 +379,36 @@ $(document).ready(function() {
         $('.filter input, .filter select').each(function() {
             urlParameters[$(this).attr("name")] = $(this).val();
         });
+        window.location.search = "?" + $.param(urlParameters);
+    });
+    
+    $('.sort_asc, .sort_desc').click(function(e) {  
+        var element = $(this);
+        var values = element.attr("name").split('|');        
+        var urlParameters = decodeUrlParameters(window.location.search.substring(1));
+        
+        var order = element.hasClass("sort_asc") ? "asc" : "desc";         
+        var paramName = "sort_" + values[0];
+        var sortedFields = [];
+        if (urlParameters[paramName]) {
+            sortedFields = urlParameters[paramName].split(';');
+        }
+        
+        var i = $.inArray(values[1]+":"+order, sortedFields);
+        if (i >= 0) {
+            sortedFields.splice(i, 1);
+        }
+        else {
+            sortedFields.push(values[1] + ":" + order);
+        }
+        
+        var oppositeOrder = (order === "desc") ? "asc" : "desc";
+        var j = $.inArray(values[1]+":"+oppositeOrder, sortedFields);
+        if (j >= 0) {
+            sortedFields.splice(j, 1);
+        }
+                
+        urlParameters[paramName] = sortedFields.join(';');
         window.location.search = "?" + $.param(urlParameters);
     });
 

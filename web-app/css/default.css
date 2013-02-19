@@ -361,6 +361,29 @@ span.remove-item {
     text-align: right;
 }
 
+.asc_selected, .asc_unselected, .desc_selected, .desc_unselected {
+    display: inline-block;
+    cursor: pointer;
+    width: 6px;
+    height: 6px;
+}
+
+.asc_unselected {
+    background: url("../images/skin/sorted_asc.png") no-repeat;
+}
+
+.asc_selected {
+    background: url("../images/skin/sorted_asc_selected.png") no-repeat;
+}
+
+.desc_unselected {
+    background: url("../images/skin/sorted_desc.png") no-repeat;
+}
+
+.desc_selected {
+    background: url("../images/skin/sorted_desc_selected.png") no-repeat;
+}
+
 /* HEADER */
 
 #header {

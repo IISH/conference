@@ -28,7 +28,7 @@
                 <span class="required-indicator">*</span>
               </label>
               <span class="property-value">
-                <input id="Network.name" maxlength="30" name="Network.name" value="${network.name}" type="text" required="required" />
+                <input id="Network.name" maxlength="100" name="Network.name" value="${network.name}" type="text" required="required" />
               </span>
             </div>
             <div class="${hasErrors(bean: network, field: 'comment', 'error')} ">
@@ -79,7 +79,7 @@
               <ul class="property-value">
                 <g:each in="${network.chairs.findAll { !it.deleted }}" var="instance" status="i">
                   <li>
-                    <input type="hidden" name="NetworkChair_${i}.id" value="${instance.id}" />
+                    <input type="hidden" name="NetworkChair_${i}.id" value="${instance.chair.id}" />
                     <label class="property-label">
                       <g:message code="user.multiple.label" />
                       <eca:participantAutoComplete name="NetworkChair_${i}.chair.id" labelValue="${instance.chair.lastName + ', ' + instance.chair.firstName}" idValue="${instance.chair.id}" required="required" />
@@ -95,6 +95,7 @@
                 <li class="add">
                   <span class="ui-icon ui-icon-circle-plus"></span>
                   <g:message code="default.add.label" args="[g.message(code: 'network.chairs.label').toLowerCase()]" />
+                  <input type="hidden" name="NetworkChair.to-be-deleted" class="to-be-deleted" />
                 </li>
                 <li class="hidden">
                   <input type="hidden" name="NetworkChair_null.id" />

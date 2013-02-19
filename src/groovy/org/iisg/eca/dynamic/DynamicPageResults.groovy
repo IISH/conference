@@ -33,8 +33,7 @@ class DynamicPageResults {
     static Closure criteriaForColumn = { params, dataContainer, c, filterAll = true ->
         // Only sort and filter on those that will be displayed anyway
         if (!c.hasColumns() && (!c.constrainedProperty || c.constrainedProperty.display) && !c.hidden && filterAll) {
-            String filter = params["filter_${dataContainer.eid}_${c.name}"]
-            String sort = params["sort_${dataContainer.eid}_${c.name}"]
+            String filter = params["filter_${dataContainer.eid}_${c.name}"]            
 
             // Place a filter on this column (currently only Strings and booleans) if specified by the user
             if (filter && !filter.isEmpty()) {
@@ -48,10 +47,6 @@ class DynamicPageResults {
                     filter = "%${filters.join('%')}%"
                     delegate.like(c.name, filter)
                 }
-            }
-            // Sort this column, if specified by the user
-            if (sort && !sort.isEmpty()) {
-                delegate.order(c.name, sort)
             }
         }
 
@@ -248,6 +243,14 @@ class DynamicPageResults {
                 // Loop over all the columns and place filters if needed
                 dataContainer.getAllColumnsForDomainClass(dataContainer.domainClass).each { c ->
                     criteriaForColumn(params, dataContainer, c, filterAll)
+                }
+            }
+            
+            // Sort the columns
+            params["sort_${dataContainer.eid}"]?.split(';').each { sortInfo -> 
+                sortInfo = sortInfo?.split(':')
+                if (sortInfo[0] && sortInfo[1]) {
+                    order(sortInfo[0], sortInfo[1])
                 }
             }
         }

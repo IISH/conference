@@ -17,7 +17,7 @@ class Network extends EventDateDomain {
 
     static constraints = {
         date    nullable: true
-        name    blank: false,   maxSize: 30
+        name    blank: false,   maxSize: 100
         comment nullable: true
         url     blank: false,   maxSize: 255
     }

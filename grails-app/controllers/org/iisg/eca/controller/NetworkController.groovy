@@ -7,6 +7,8 @@ import org.iisg.eca.domain.Network
 import org.iisg.eca.domain.Session
 import org.iisg.eca.domain.NetworkChair
 
+import org.iisg.eca.utils.ParticipantSessionInfo
+
 /**
  * Controller responsible for handling requests on networks
  */
@@ -84,7 +86,9 @@ class NetworkController {
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
         }
-
+        
+        Map<Session, List<ParticipantSessionInfo>> sessions = participantSessionService.getParticipantsForNetwork(network)
+        
         // The 'save' button was clicked, save all data
         if (request.post) {
             // Save all network related data
@@ -99,7 +103,7 @@ class NetworkController {
                 bindData(chair, params, [include: ['chair', 'isMainChair']], "NetworkChair_${i}")
 
                 // A chair should only be added to a network once
-                if (chair.chair && (!network.chairs || !network.chairs.find { it.chair.id == chair.chair.id })) {
+                if (!network.chairs?.find { it.chair?.id == chair.chair?.id }) {
                     network.addToChairs(chair)
                 }
                 i++
@@ -117,7 +121,7 @@ class NetworkController {
 
         // Show all network related information
         render(view: "edit", model: [   network:    network, 
-                                        sessions:   participantSessionService.getParticipantsForNetwork(network)])
+                                        sessions:   sessions])
     }
 
     /**

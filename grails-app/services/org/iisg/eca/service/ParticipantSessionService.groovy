@@ -109,10 +109,10 @@ class ParticipantSessionService {
      */
     Map<Session, List<ParticipantSessionInfo>> getParticipantsForNetwork(Network network) {
         Map sessions = [:]
-
+        
         // Get all sessions for this network from the database and add this session to the map,
         // including the participant information for that session
-        Session.executeQuery('''
+       Session.executeQuery('''
             SELECT s
             FROM Session AS s
             INNER JOIN s.networks AS n

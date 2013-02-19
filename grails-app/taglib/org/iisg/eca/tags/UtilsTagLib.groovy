@@ -421,7 +421,12 @@ class UtilsTagLib {
             if (page.hasAccess()) {
                 if (page.controller && page.action) {
                     builder.dd {
-                        builder.mkp.yieldUnescaped(eca.link(controller: page.controller, action: page.action, g.message(code: page.titleCode, args: [g.message(code: page.titleArg)], default: page.titleDefault)))
+                        if ((page.controller == "userAuth") && (page.action == "list")) {
+                            builder.mkp.yieldUnescaped(eca.link(params: ["sort_0" : "lastName:asc;firstName:asc"], controller: page.controller, action: page.action, g.message(code: page.titleCode, args: [g.message(code: page.titleArg)], default: page.titleDefault)))
+                        }
+                        else {
+                            builder.mkp.yieldUnescaped(eca.link(controller: page.controller, action: page.action, g.message(code: page.titleCode, args: [g.message(code: page.titleArg)], default: page.titleDefault)))
+                        }                        
                     }
                 }
                 else {
