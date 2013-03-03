@@ -64,7 +64,7 @@
                         <span class="roles">
                             <eca:roles />
                         </span>
-                        <g:img dir="images/skin" file="sorted_desc.gif" />
+                        <g:img dir="images/skin" file="sorted_desc.png" />
                     </div>
                 </sec:ifLoggedIn>
             </div>

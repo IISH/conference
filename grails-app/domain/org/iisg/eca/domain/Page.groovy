@@ -1,5 +1,6 @@
 package org.iisg.eca.domain
 
+import org.iisg.eca.utils.MenuItem
 import org.springframework.context.i18n.LocaleContextHolder
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
@@ -95,6 +96,21 @@ class Page extends DefaultDomain {
             }
         }
         pages
+    }
+    
+    static List<MenuItem> getMenu() {
+        getSubMenu(Page.menuPages().list())
+    }
+    
+    private static List<MenuItem> getSubMenu(List<Page> pages) {
+        List<MenuItem> menu = []
+        pages.each { page -> 
+            if (page.hasAccess()) {
+                MenuItem item = new MenuItem(page, getSubMenu(Page.subMenuPages(page).list()))       
+                menu.add(item)
+            }
+        }
+        menu
     }
 
     Set<User> getUsers() {

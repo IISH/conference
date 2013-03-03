@@ -1,4 +1,6 @@
-$(document).ready(function() {
+var tabsHeight = 0;
+
+var moveTabs = function() {
     var size = 0;
     var errors = $('ul.errors');
     var message = $('div.message');
@@ -10,9 +12,17 @@ $(document).ready(function() {
         size += message.outerHeight(true) - parseInt(message.css('margin-top').replace('px', ''));
     }
     
+    $('#participant-form #tabs > ul:first-child').css('top', tabsHeight-size + 'px');
+}
+
+$(document).ready(function() {
     var tabs = $('#participant-form #tabs > ul:first-child');
-    var tabsHeight = parseInt(tabs.css('top').replace('px', ''));
-    tabs.css('top', tabsHeight-size + 'px');
+    tabsHeight = parseInt(tabs.css('top').replace('px', ''));
+    moveTabs();
+    
+    $(document).on("error", function(e) {
+        moveTabs();
+    });
     
     $(document).on("removed-item", '.paper.ui-icon-circle-minus', function(e) {
         var paperId = $(e.target).parents('.column').children('input[type=hidden]:first').val();

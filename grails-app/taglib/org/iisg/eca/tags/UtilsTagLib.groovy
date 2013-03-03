@@ -5,6 +5,8 @@ import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Event
 import org.iisg.eca.domain.EventDate
 
+import org.iisg.eca.utils.MenuItem
+
 import groovy.xml.MarkupBuilder
 
 import org.codehaus.groovy.grails.web.util.WebUtils
@@ -201,7 +203,7 @@ class UtilsTagLib {
         builder.doubleQuotes = true
 
         // Let the sub menu method take care of building it
-        printSubMenu(builder, Page.menuPages.list())
+        printSubMenu(builder, Page.getMenu())
     }
 
     /**
@@ -414,33 +416,29 @@ class UtilsTagLib {
     /**
      * Prints the menu and its sub menus
      * @param builder The markup builder for the HTML output
-     * @param pages The pages to place in the menu
+     * @param menu The menu items to print
      */
-    private void printSubMenu(MarkupBuilder builder, Collection<Page> pages) {
-        for (Page page : pages) {
-            if (page.hasAccess()) {
-                if (page.controller && page.action) {
-                    builder.dd {
-                        if ((page.controller == "userAuth") && (page.action == "list")) {
-                            builder.mkp.yieldUnescaped(eca.link(params: ["sort_0" : "lastName:asc;firstName:asc"], controller: page.controller, action: page.action, g.message(code: page.titleCode, args: [g.message(code: page.titleArg)], default: page.titleDefault)))
-                        }
-                        else {
-                            builder.mkp.yieldUnescaped(eca.link(controller: page.controller, action: page.action, g.message(code: page.titleCode, args: [g.message(code: page.titleArg)], default: page.titleDefault)))
-                        }                        
+    private void printSubMenu(MarkupBuilder builder, List<MenuItem> menu) {
+         menu.each { menuItem -> 
+            builder.dd {
+                Page page = menuItem.page
+                if (page.controller && page.action) {                    
+                    if ((page.controller == "userAuth") && (page.action == "list")) {
+                        builder.mkp.yieldUnescaped(eca.link(params: ["sort_0" : "lastName:asc;firstName:asc"], controller: page.controller, action: page.action, g.message(code: page.titleCode, args: [g.message(code: page.titleArg)], default: page.titleDefault)))
+                    }
+                    else {
+                        builder.mkp.yieldUnescaped(eca.link(controller: page.controller, action: page.action, g.message(code: page.titleCode, args: [g.message(code: page.titleArg)], default: page.titleDefault)))
                     }
                 }
-                else {
-                    builder.dd {
-                        builder.a(href: "#${page.id}", g.message(code: page.titleCode, args: [g.message(code: page.titleArg)], default: page.titleDefault))
-                    }
+                else if (menuItem.children.size() > 0) {
+                    builder.a(href: "#${page.id}", g.message(code: page.titleCode, args: [g.message(code: page.titleArg)], default: page.titleDefault))
                 }
-
-                // If there is a sub menu, print it as well
-                if (page.subPages?.size() > 0) {
-                    builder.dl(class: "sub-menu") {
-                        builder.span()
-                        printSubMenu(builder, Page.subMenuPages(page).list())
-                    }
+            }
+            
+            // If there is a sub menu, print it as well
+            if (menuItem.children.size() > 0) {
+                builder.dl(class: "sub-menu") {
+                    printSubMenu(builder, menuItem.children)
                 }
             }
         }

@@ -15,7 +15,11 @@ class FeeAmount extends EventDateDomain {
     static constraints = {
         date            nullable: true
         numDaysStart    min: 1
-        numDaysEnd      min: 1
+        numDaysEnd      min: 1, validator: { val, obj ->
+                            if (obj.numDaysEnd < obj.numDaysStart) {                            
+                                ["feeAmount.validation.end.message"]
+                            }
+                        }
         feeAmount       min: BigDecimal.ZERO
     }
 

@@ -8,6 +8,8 @@ import org.iisg.eca.domain.Group
 import org.iisg.eca.domain.UserRole
 import org.iisg.eca.domain.UserPage
 
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+
 /**
  * Controller responsible for handling requests on user authentication
  */
@@ -129,7 +131,8 @@ class UserAuthController {
 
         // Show all user authentication related information
         render(view: "form", model: [user: user, roles: assignedRoles, groups: assignedGroups, 
-                pages: assignedPages, allRoles: roles, allGroups: groups, allPages: pages])
+                pages: assignedPages, allRoles: roles, allGroups: groups, 
+                allPages: pages, mayAuthorizeUser: true])
     }
     
     /**
@@ -153,67 +156,73 @@ class UserAuthController {
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
         }
-
+        
         // A user can only be assigned a role which is equal or lower in the hierarchy
         // And pages which the current user can access already
         Set<Role> roles = Role.getPossibleRoles()
         List<Page> pages = Page.getAllPagesWithAccess()
         Set<Group> groups = Group.getAllGroupsWithAccess()
-
+        
+        // Find out if this user may be authorized by the accessing user
+        String userRoles = UserRole.findByUser(user)*.role?.join(',')
+        boolean mayAuthorizeUser = (!userRoles || SpringSecurityUtils.ifAnyGranted(userRoles))
+        
         // The 'save' button was clicked, save all data
         if (request.post) {
             // Save all user related data
             bindData(user, params, [include: ['title', 'firstName', 'lastName', 'gender', 'organisation',
                         'department', 'email', 'address', 'city', 'country', 'phone', 'mobile', 'extraInfo', 'enabled']], "User")
-            
-            // Check for all the possible roles, whether they have to be removed or added to the user
-            UserRole.removeAll(user)
-            roles.each { role ->                
-                if (params["User.roles"]?.contains(role.id.toString())) {
-                    UserRole.create(user, role)
+                        
+            if (mayAuthorizeUser) {
+                // Check for all the possible roles, whether they have to be removed or added to the user
+                UserRole.removeAll(user)
+                roles.each { role ->                
+                    if (params["User.roles"]?.contains(role.id.toString())) {
+                        UserRole.create(user, role)
+                    }
                 }
-            }
-            
-            // Check for all the possible groups, whether they have to be removed or added to the user
-            Set<Long> groupIds = (params["User.groups"]) ? params["User.groups"]*.toLong() : []            
-            groups.each { group -> 
-                if (user.groups.contains(group) && !groupIds.contains(group.id)) {
-                    user.removeFromGroups(group)                    
+
+                // Check for all the possible groups, whether they have to be removed or added to the user
+                Set<Long> groupIds = (params["User.groups"]) ? params["User.groups"]*.toLong() : []            
+                groups.each { group -> 
+                    if (user.groups.contains(group) && !groupIds.contains(group.id)) {
+                        user.removeFromGroups(group)                    
+                    }
+                    if (!user.groups.contains(group) && groupIds.contains(group.id)) {
+                        user.addToGroups(group)
+                    }
                 }
-                if (!user.groups.contains(group) && groupIds.contains(group.id)) {
-                    user.addToGroups(group)
+
+                // Remove all user pages the user indicated to be deleted
+                Set<Long> toBeRemoved = (params["Page.to-be-deleted"]) ? params["Page.to-be-deleted"].split(';')*.toLong() : []
+                UserPage.findAllByUser(user).each { userPage -> 
+                    if (toBeRemoved.contains(userPage.page.id)) {
+                        UserPage.executeUpdate("DELETE FROM UserPage WHERE user=? AND page=? AND date=?", 
+                            [user, userPage.page, pageInformation.date])
+                    }
                 }
-            }
-            
-            // Remove all user pages the user indicated to be deleted
-            Set<Long> toBeRemoved = (params["Page.to-be-deleted"]) ? params["Page.to-be-deleted"].split(';')*.toLong() : []
-            UserPage.findAllByUser(user).each { userPage -> 
-                if (toBeRemoved.contains(userPage.page.id)) {
-                    UserPage.executeUpdate("DELETE FROM UserPage WHERE user=? AND page=? AND date=?", 
-                        [user, userPage.page, pageInformation.date])
+
+                // Update the users individual rules list
+                int i = 0
+                while (params["Page_${i}"]) {
+                    UserPage userPage = new UserPage()
+                    bindData(userPage, params, [include: ['page', 'denied']], "Page_${i}")
+
+                    // Only add pages that are allowed and not in the list
+                    boolean pageIsAllowed = pages.find { it.id == userPage.page.id }
+                    UserPage existingUserPage = user.userPages.find { (it.page.id == userPage.page.id) && 
+                                                                      (it.date == pageInformation.date) }
+
+                    if (pageIsAllowed && !existingUserPage) {
+                       user.addToUserPages(userPage)
+                    }
+                    else if (existingUserPage) {
+                        bindData(existingUserPage, params, [include: ['denied']], "Page_${i}")
+                        existingUserPage.save()
+                    }
+
+                    i++
                 }
-            }
-            
-            // Update the users individual rules list
-            int i = 0
-            while (params["Page_${i}"]) {
-                UserPage userPage = new UserPage()
-                bindData(userPage, params, [include: ['page', 'denied']], "Page_${i}")
-                
-                // Only add pages that are allowed and not in the list
-                boolean pageIsAllowed = pages.find { it.id == userPage.page.id }
-                UserPage existingUserPage = user.userPages.find { (it.page.id == userPage.page.id) && 
-                                                                  (it.date == pageInformation.date) }
-                
-                if (pageIsAllowed && !existingUserPage) {
-                   user.addToUserPages(userPage)
-                }
-                else if (existingUserPage) {
-                    bindData(existingUserPage, params, [include: ['denied']], "Page_${i}")
-                    existingUserPage.save()
-                }
-                
-                i++
             }
 
             // Save the user and redirect to the previous page if everything is ok
@@ -231,6 +240,7 @@ class UserAuthController {
         
         // Show all user authentication related information
         render(view: "form", model: [user: user, roles: user.roles, groups: Group.getAllGroupsOfUser(user), 
-                pages: UserPage.findAllByUser(user), allRoles: roles, allGroups: groups, allPages: pages])
+                pages: UserPage.findAllByUser(user), allRoles: roles, allGroups: groups, 
+                allPages: pages, mayAuthorizeUser: mayAuthorizeUser])
     }
 }

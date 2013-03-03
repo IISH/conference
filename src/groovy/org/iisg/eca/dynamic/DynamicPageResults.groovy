@@ -9,6 +9,7 @@ import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 import org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes
 
 import org.codehaus.groovy.grails.web.context.ServletContextHolder
+
 import org.iisg.eca.domain.EventDateDomain
 import org.iisg.eca.domain.EventDomain
 import org.iisg.eca.domain.DefaultDomain
@@ -249,8 +250,22 @@ class DynamicPageResults {
             // Sort the columns
             params["sort_${dataContainer.eid}"]?.split(';').each { sortInfo -> 
                 sortInfo = sortInfo?.split(':')
-                if (sortInfo[0] && sortInfo[1]) {
-                    order(sortInfo[0], sortInfo[1])
+                Column column = dataContainer.getColumnInHierarchy(sortInfo[0]?.trim())
+                
+                String sort = null
+                if (sortInfo.length == 2) {
+                    sort = sortInfo[1]?.toLowerCase()?.trim()
+                }
+                
+                if (column && (sort == "asc" || sort == "desc")) {
+                    if (column.parent instanceof Column) {
+                        "${column.parent.name}" {
+                            order(column.name, sort)
+                        }
+                    }
+                    else {
+                        order(column.name, sort)
+                    }
                 }
             }
         }

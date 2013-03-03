@@ -97,6 +97,21 @@ class ContainerElement extends Element {
     }
     
     /**
+     * Returns a column this element hierarchy contains by name
+     * @param name The name of the column
+     * @return The column with the given name
+     */  
+    Column getColumnInHierarchy(String name) {
+        Column column = null
+        forAllColumns { c -> 
+            if (c.name.equalsIgnoreCase(name)) {
+                column = c
+            }
+        }
+        column
+    }
+    
+    /**
      * Helper method to loop over all columns of this container, 
      * as columns can contain other columns as well
      * @param callable A closure to call for every single column of this container

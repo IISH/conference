@@ -132,65 +132,68 @@
                         <g:checkBox name="User.enabled" checked="${user.enabled}" />
                     </span>
                 </div>
-                <div class="${hasErrors(bean: user, field: 'roles', 'error')}">
-                    <label class="property-label">
-                        <g:message code="role.multiple.label" />
-                    </label>
-                    <span class="property-value">
-                        <g:select name="User.roles" from="${allRoles}" multiple="true" optionKey="id" optionValue="role" value="${roles}" />
-                    </span>
-                </div>
-                <div class="${hasErrors(bean: user, field: 'groups', 'error')}">
-                    <label class="property-label">
-                        <g:message code="group.multiple.label" />
-                    </label>
-                    <span class="property-value">
-                        <g:select name="User.groups" from="${allGroups}" multiple="true" optionKey="id" optionValue="name" value="${groups}" />
-                    </span>
-                </div>
-                <div class="${hasErrors(bean: user, field: 'pages', 'error')}">
-                    <label class="property-label">
-                        <g:message code="page.multiple.label" />
-                    </label>
-                    <ul class="property-value">
-                        <g:each in="${pages}" var="page" status="i">
-                            <li>
-                              <input type="hidden" name="Page_${i}.id" id="Page_${i}.id" value="${page.page?.id}">
+              
+                <g:if test="${mayAuthorizeUser}">
+                    <div class="${hasErrors(bean: user, field: 'roles', 'error')}">
+                        <label class="property-label">
+                            <g:message code="role.multiple.label" />
+                        </label>
+                        <span class="property-value">
+                            <g:select name="User.roles" from="${allRoles}" multiple="true" optionKey="id" optionValue="role" value="${roles}" />
+                        </span>
+                    </div>
+                    <div class="${hasErrors(bean: user, field: 'groups', 'error')}">
+                        <label class="property-label">
+                            <g:message code="group.multiple.label" />
+                        </label>
+                        <span class="property-value">
+                            <g:select name="User.groups" from="${allGroups}" multiple="true" optionKey="id" optionValue="name" value="${groups}" />
+                        </span>
+                    </div>
+                    <div class="${hasErrors(bean: user, field: 'pages', 'error')}">
+                        <label class="property-label">
+                            <g:message code="page.multiple.label" />
+                        </label>
+                        <ul class="property-value">
+                            <g:each in="${pages}" var="page" status="i">
+                                <li>
+                                  <input type="hidden" name="Page_${i}.id" id="Page_${i}.id" value="${page.page?.id}">
+
+                                    <label class="property-label">
+                                        <g:select name="Page_${i}.page.id" from="${allPages}" optionKey="id" value="${page.page?.id}" />
+                                    </label>
+
+                                    <label class="property-label">
+                                        <g:message code="default.access.denied" />
+                                        <g:checkBox name="Page_${i}.denied" checked="${page.denied}" />
+                                    </label>
+
+                                    <span class="ui-icon ui-icon-circle-minus"></span>
+                                </li>
+                            </g:each>
+
+                            <li class="add">
+                                <span class="ui-icon ui-icon-circle-plus"></span>
+                                <g:message code="default.add.label" args="[g.message(code: 'page.label').toLowerCase()]"  />
+                                <input type="hidden" class="to-be-deleted" name="Page.to-be-deleted">
+                            </li>
+
+                            <li class="hidden">
+                                <input type="hidden" name="Page_null.id" id="Page_null.id">
 
                                 <label class="property-label">
-                                    <g:select name="Page_${i}.page.id" from="${allPages}" optionKey="id" value="${page.page?.id}" />
+                                    <g:select name="Page_null.page.id" from="${allPages}" optionKey="id" />
                                 </label>
 
                                 <label class="property-label">
                                     <g:message code="default.access.denied" />
-                                    <g:checkBox name="Page_${i}.denied" checked="${page.denied}" />
+                                    <g:checkBox name="Page_null.denied" />
                                 </label>
 
                                 <span class="ui-icon ui-icon-circle-minus"></span>
                             </li>
-                        </g:each>
-
-                        <li class="add">
-                            <span class="ui-icon ui-icon-circle-plus"></span>
-                            <g:message code="default.add.label" args="[g.message(code: 'page.label').toLowerCase()]"  />
-                            <input type="hidden" class="to-be-deleted" name="Page.to-be-deleted">
-                        </li>
-
-                        <li class="hidden">
-                            <input type="hidden" name="Page_null.id" id="Page_null.id">
-
-                            <label class="property-label">
-                                <g:select name="Page_null.page.id" from="${allPages}" optionKey="id" />
-                            </label>
-
-                            <label class="property-label">
-                                <g:message code="default.access.denied" />
-                                <g:checkBox name="Page_null.denied" />
-                            </label>
-
-                            <span class="ui-icon ui-icon-circle-minus"></span>
-                        </li>
-                </div>
+                    </div>
+                </g:if>
             </fieldset>
             
             <fieldset class="buttons">

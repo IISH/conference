@@ -1,4 +1,4 @@
-var content, body, navWidth, contentMargin;
+var content, body, navWidth, contentMargin, emailValue;
 
 var decodeUrlParameters = function(urlParameters) {
     var parameters = {};
@@ -39,6 +39,7 @@ var showErrors = function(data) {
     }
 
     errorsBox.show();
+    errorsBox.trigger('error');
 }
 
 var setDatePicker = function(element, increaseDay) {
@@ -177,8 +178,7 @@ var removeAnItem = function(toBeRemoved, classToStop) {
     toBeRemoved.remove();
 }
 
-var guessMessageUrl = function() {
-    var urlToCall = '../message/index';
+var guessUrl = function(urlToCall) {
     var url = location.href.replace(location.search, '').replace(location.hash, '');
 
     if ($.isNumeric(url.charAt(url.length-1))) {
@@ -186,6 +186,14 @@ var guessMessageUrl = function() {
     }
 
     return urlToCall;
+}
+
+var guessMessageUrl = function() {
+    return guessUrl('../ajax/message');
+}
+
+var guessUniqueEmailUrl = function() {
+    return guessUrl('../ajax/uniqueEmail');
 }
 
 $(document).ready(function() {
@@ -421,5 +429,27 @@ $(document).ready(function() {
     $('.check-all').click(function(e) {
         var checked = $(this).is(':checked');
         $(this).parents('.column').find('input[type=checkbox]').attr('checked', checked);
+    });
+    
+    var email = $('input[type=email]');
+    emailValue = (email.length > 0) ? email.val().toLowerCase().trim() : "";
+    
+    $('input[type=email]').blur(function(e) {
+        var element = $(this);
+        var email = element.val().toLowerCase().trim();
+        
+        $('.errors').hide();
+        element.parent().removeClass('error');
+        
+        if (email !== emailValue) {
+            $.getJSON(guessUniqueEmailUrl(), {email: email}, function(data) {            
+                if (!data.success) {
+                    element.parent().addClass('error');
+                    showErrors(data);
+                }
+            });
+        }
+        
+        element.trigger('error');
     });
 });
