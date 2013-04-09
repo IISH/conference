@@ -40,9 +40,10 @@
                   &nbsp;
                 </label>
                 <ul class="property-value">
-                <g:each in="${EmailCode.list()}" var="emailCode">
-                    <li>${emailCode.toString()}</li>
-                </g:each>
+                  <li>[SenderName] : Value of the field &quot;<g:message code="emailTemplate.sender.label" />&quot;</li>
+                  <g:each in="${EmailCode.list()}" var="emailCode">
+                      <li>${emailCode.toString()}</li>
+                  </g:each>
                 </ul>
             </div>
             <div class="${hasErrors(bean: template, field: 'body', 'error')} required">

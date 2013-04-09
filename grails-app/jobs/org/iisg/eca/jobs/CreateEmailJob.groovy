@@ -39,21 +39,21 @@ class CreateEmailJob {
                 }
 
                 // Successfully created the emails, send a notification email
-                emailService.sendInfoMail("Succesfully created the emails for ${participants.size()} participants", """
+                emailService.sendInfoMail("Succesfully created the emails for ${participants.size()} participants", """\
                     Succesfully created the emails for ${participants.size()} participants.
                     The emails will be emailed soon.
-                """)
+                """.stripIndent())
             }
             catch (Exception e) {
                 StringWriter sw = new StringWriter()
                 e.printStackTrace(new PrintWriter(sw))
 
                 // Failed to create the emails, send a notification email with the exception thrown
-                emailService.sendInfoMail("Failed to create the emails for ${participants.size()} participants", """
+                emailService.sendInfoMail("Failed to create the emails for ${participants.size()} participants", """\
                     Failed to create the emails for ${participants.size()} participants.
                     Template used: ${template.description}
                     Exception: ${sw.toString()}
-                """)
+                """.stripIndent())
             }
         }
     }

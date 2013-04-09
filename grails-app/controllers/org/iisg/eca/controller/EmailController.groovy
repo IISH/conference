@@ -64,11 +64,12 @@ class EmailController {
 
             // The email template chosen could contain a query type (a named query to call)
             // Otherwise create a new empty criteria object
-            if (emailTemplate.queryType) {
-                criteria = ParticipantDate."${emailTemplate.queryType}"(pageInformation.date)
+            // Note: If a participant is chosen, the named query is not called
+            if (params.participant?.isLong() || !emailTemplate.queryType) {
+                criteria = ParticipantDate.createCriteria()
             }
             else {
-                criteria = ParticipantDate.createCriteria()
+                criteria = ParticipantDate."${emailTemplate.queryType}"(pageInformation.date)
             }
 
             // Now extend the criteria with the filters set by the user
@@ -92,7 +93,7 @@ class EmailController {
             // But in the background, as it could take a while
             CreateEmailJob.triggerNow([participants: participants, template: emailTemplate])
 
-            flash.message = g.message(code: 'email.background.message', args: "${[participants.size()]}")
+            flash.message = g.message(code: 'email.background.message', args: [participants.size()])
         }
 
         // What type of view to load?

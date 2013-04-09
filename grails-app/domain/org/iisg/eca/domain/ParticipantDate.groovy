@@ -4,6 +4,8 @@ package org.iisg.eca.domain
  * Domain class of table holding all participants (users) who signed up for an event date
  */
 class ParticipantDate extends EventDateDomain {
+    private static final String QUERY_LOWER_FEE_NOT_ANSWERED = "lowerFeeNotAnswered";
+    
     User user
     ParticipantState state
     FeeState feeState
@@ -73,6 +75,20 @@ class ParticipantDate extends EventDateDomain {
                     eq('date.id', date.id)
                 }
             }
+        }
+        
+        lowerFeeNotAnswered { date -> 
+            eq('lowerFeeRequested', true)
+            eq('lowerFeeAnswered', false)
+        }
+    }
+    
+    void updateByQueryType(String queryType) {
+        switch (queryType) {
+            case QUERY_LOWER_FEE_NOT_ANSWERED:
+                lowerFeeRequested = true
+                lowerFeeAnswered = true
+                break
         }
     }
 

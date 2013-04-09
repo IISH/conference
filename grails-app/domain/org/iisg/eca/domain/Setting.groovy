@@ -40,7 +40,21 @@ class Setting extends EventDomain {
         property        blank: false,   maxSize: 50
         value           blank: false,   maxSize: 255
     }
-
+    
+    def beforeUpdate() {
+        switch (property) {
+            case MAX_PAPERS_PER_PERSON_PER_SESSION:
+            case SHOW_PROGRAMME_ONLINE:
+            case DEFAULT_ORGANISATION_EMAIL:
+            case EMAIL_ADDRESS_INFO_ERRORS:
+            case WEB_ADDRESS:
+                super.beforeUpdate()
+                break
+            default:
+                return true
+        }
+    }
+    
     def afterInsert() {
         setSetting()
     }

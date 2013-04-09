@@ -6,6 +6,7 @@ class SentEmail extends EventDateDomain {
     String fromEmail
     String subject
     String body
+    //String queryType
     Date dateTimeSent
     int numTries = 0
 
@@ -16,6 +17,7 @@ class SentEmail extends EventDateDomain {
         fromEmail       blank: false
         subject         blank: false
         body            blank: false
+        //queryType       nullable: true
         dateTimeSent    nullable: true
         numTries        min: 0
     }
@@ -30,6 +32,7 @@ class SentEmail extends EventDateDomain {
         fromEmail       column: 'from_email'
         subject         column: 'subject'
         body            column: 'body',             type: 'text'
+        //queryType       column: 'query_type'
         dateTimeSent    column: 'date_time_sent'
         numTries        column: 'num_tries'
     }

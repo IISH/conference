@@ -15,7 +15,11 @@ abstract class EventDomain extends DefaultDomain {
      */
     Event event
     
+    boolean internalUpdate = false
+    
     static belongsTo = Event
+    
+    static transients = ['internalUpdate']
     
     static constraints = {
         event   nullable: true
@@ -40,7 +44,7 @@ abstract class EventDomain extends DefaultDomain {
             event = pageInformation.date.event
         }
     }
-
+    
     /**
      * Make sure that when a record is updated from a different event tenant (general setting),
      * a new record is inserted with the changes for the current event tenant only
@@ -48,8 +52,11 @@ abstract class EventDomain extends DefaultDomain {
     def beforeUpdate() {
         // Make sure we can also reach 'this' from within a closure
         def thizz = this
-
-        if (thizz.event != pageInformation.date?.event) {
+        
+        if (internalUpdate) {
+            return true
+        }
+        else if (thizz.event != pageInformation.date?.event) {
             // In a new Hibernate session, change the update to an insert for this event
             thizz.withNewSession {
                 def newInstance = thizz.class.newInstance()

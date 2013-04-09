@@ -15,7 +15,11 @@ abstract class EventDateDomain extends DefaultDomain {
      */
     EventDate date
     
+    boolean internalUpdate = false
+    
     static belongsTo = EventDate
+    
+    static transients = ['internalUpdate']
     
     static constraints = {
         date   nullable: true
@@ -49,7 +53,10 @@ abstract class EventDateDomain extends DefaultDomain {
         // Make sure we can also reach 'this' from within a closure
         def thizz = this
 
-        if (thizz.date != pageInformation.date) {
+        if (internalUpdate) {
+            return true
+        }
+        else if (thizz.date != pageInformation.date) {
             // In a new Hibernate session, change the update to an insert for this event date
             thizz.withNewSession {
                 def newInstance = thizz.class.newInstance()

@@ -6,6 +6,7 @@ import org.iisg.eca.domain.SentEmail
 import org.iisg.eca.domain.EventDate
 import org.iisg.eca.domain.EmailCode
 import org.iisg.eca.domain.EmailTemplate
+import org.iisg.eca.domain.ParticipantDate
 
 import javax.mail.internet.MimeMessage
 
@@ -51,6 +52,7 @@ class EmailService {
         email.subject = emailTemplate.subject
         email.date = date
         email.body = createEmailBody(user, emailTemplate, date, additionalValues)
+        //email.queryType = emailTemplate.queryType
 
         email
     }
@@ -79,15 +81,24 @@ class EmailService {
 
                 // Successfully send, so set the date and time of sending
                 sentEmail.dateTimeSent = new Date()
+                
+                // TODO: Update the participant
+                /*ParticipantDate participant = ParticipantDate.findByUserAndDate(email.user, email.date)
+                participant.updateByQueryType(email.queryType)   
+                participant.save()  */
             }
             catch (MailException me) {
                 // Make sure, the date/time is set to null, cause it failed to send the email
                 sentEmail.dateTimeSent = null
             }
-
-            // Some mails shouldn't be saved in the database
-            if (saveToDb) {
-                sentEmail.save()
+            finally {
+                // Some mails shouldn't be saved in the database
+                if (saveToDb) {
+                    SentEmail.withNewSession { session ->
+                        sentEmail.internalUpdate = true
+                        sentEmail.save()
+                    }
+                }
             }
         }
     }
@@ -182,7 +193,7 @@ class EmailService {
      */
     String createEmailBody(User user, EmailTemplate emailTemplate, EventDate date=pageInformation.date, Map<String, String> additionalValues=[:]) {
         String emailBody = emailTemplate.body.toString()
-
+        
         // Collect all available codes and check for each one whether the email uses the code
         EmailCode.list().each { code ->
             if (emailBody.contains("[${code.code}]")) {
@@ -190,7 +201,7 @@ class EmailService {
                 emailBody = emailBody.replaceAll("\\[${code.code}\\]", code.translateForUser(user, date))
             }
         }
-
+        
         // Do the same for additional values
         additionalValues.each { additionalValue ->
             if (emailBody.contains("[${additionalValue.key}]")) {
@@ -198,7 +209,13 @@ class EmailService {
                 emailBody = emailBody.replaceAll("\\[${additionalValue.key}\\]", additionalValue.value)
             }
         }
-
+        
+        // Also update the special code SenderName
+        if (emailBody.contains("[SenderName]")) {
+            // If the email contains the code, replace all occurrences with the value
+            emailBody = emailBody.replaceAll("\\[SenderName\\]", emailTemplate.sender?.trim())
+        }
+        
         emailBody
     }
 }
