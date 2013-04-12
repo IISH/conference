@@ -12,14 +12,14 @@ class CreateEmailJob {
      * The email service responsible for the creation of the emails
      */
     def emailService
-
+    
     /**
      * Make sure the job is only executed once, only when explicitly triggered
      */
-    static triggers = {
-        simple name: 'CreateEmail', group: 'createEmailGroup', repeatInterval: 1000, repeatCount: 0
+    def triggers = {
+        simple repeatCount: 0
     }
-
+    
     /**
      * Create emails for all participants specified, with the template specified,
      * @param context The context containing a map with all participants and the template needed

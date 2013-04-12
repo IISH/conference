@@ -160,3 +160,16 @@ grails.plugins.springsecurity.roleHierarchy = '''
         superAdmin > admin
         admin > user
 '''
+
+// Quartz plugin config
+grails.plugin.quartz2.autoStartup = true 
+
+org {
+    quartz {
+        scheduler.instanceName = 'MyAppScheduler'
+        threadPool.class = 'org.quartz.simpl.SimpleThreadPool'
+        threadPool.threadCount = 2
+        threadPool.threadsInheritContextClassLoaderOfInitializingThread = true
+        jobStore.class = 'org.quartz.simpl.RAMJobStore'
+    }
+}

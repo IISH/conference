@@ -1,9 +1,12 @@
 package org.iisg.eca.domain
 
+import groovy.sql.Sql
 /**
  * Domain class of table holding all participants (users) who signed up for an event date
  */
 class ParticipantDate extends EventDateDomain {
+    def dataSource
+    
     private static final String QUERY_LOWER_FEE_NOT_ANSWERED = "lowerFeeNotAnswered";
     
     User user
@@ -84,10 +87,17 @@ class ParticipantDate extends EventDateDomain {
     }
     
     void updateByQueryType(String queryType) {
+        // Workaround for Hibernate excpetion "two open sessions" when using Quartz
+        Sql sql = new Sql(dataSource)
+        
         switch (queryType) {
             case QUERY_LOWER_FEE_NOT_ANSWERED:
-                lowerFeeRequested = true
-                lowerFeeAnswered = true
+                sql.executeUpdate("""
+                    UPDATE  participant_date
+                    SET     lower_fee_requested = 1,
+                            lower_fee_answered = 1
+                    WHERE   participant_date_id = ?
+                """, [id])
                 break
         }
     }

@@ -52,7 +52,7 @@ class EmailService {
         email.subject = emailTemplate.subject
         email.date = date
         email.body = createEmailBody(user, emailTemplate, date, additionalValues)
-        //email.queryType = emailTemplate.queryType
+        email.queryType = emailTemplate.queryType
 
         email
     }
@@ -82,10 +82,9 @@ class EmailService {
                 // Successfully send, so set the date and time of sending
                 sentEmail.dateTimeSent = new Date()
                 
-                // TODO: Update the participant
-                /*ParticipantDate participant = ParticipantDate.findByUserAndDate(email.user, email.date)
-                participant.updateByQueryType(email.queryType)   
-                participant.save()  */
+                // Update the participant
+                ParticipantDate participant = ParticipantDate.findByUserAndDate(sentEmail.user, sentEmail.date)
+                participant.updateByQueryType(sentEmail.queryType)
             }
             catch (MailException me) {
                 // Make sure, the date/time is set to null, cause it failed to send the email

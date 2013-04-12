@@ -1,15 +1,12 @@
 package org.iisg.eca.jobs
 
 import org.quartz.Trigger
+import static org.quartz.TriggerBuilder.*
+import static org.quartz.SimpleScheduleBuilder.*
 
 import org.iisg.eca.domain.Setting
 import org.iisg.eca.domain.SentEmail
 import org.iisg.eca.domain.ParticipantDate
-
-import org.hibernate.FlushMode
-import org.hibernate.Session
-import org.springframework.orm.hibernate3.SessionFactoryUtils
-import org.springframework.orm.hibernate3.SessionHolder
 
 /**
  * SendEmailJob runs in the background, checking the database for emails waiting to be send and tries to send them
@@ -27,22 +24,22 @@ class SendEmailJob {
     
     /**
      * Set the triggers for the time between sending emails
-     * Defaults to a start delay of one minute and a minimum of 15 minutes between sending
+     * Defaults to a minimum of 15 minutes between sending
      */
     static triggers = {
-        simple name: 'SendEmail', group: 'sendEmailGroup', startDelay: 60000, repeatInterval: 60000
+        simple name: "SendEmail", repeatInterval: 900000, repeatCount: 0
     }
     
     // No concurrent jobs, wait until the previous one is finished
     def concurrent = false
     
     // Group name
-    def group = 'sendEmailGroup'
+    def group = "sendEmailGroup"
     
     /**
      * Check the database for emails waiting to be send and try to send them
      */
-    def execute() {
+    def execute(context) {
         Setting emailDisabled = Setting.findByProperty(Setting.DISABLE_EMAIL_SESSIONS)
         
         // If not disabled, start sending emails
@@ -64,36 +61,40 @@ class SendEmailJob {
                 emailService.sendEmail(email)
             }
         }
-
-        // Reschedule the job, in case settings were changed
-        rescheduleJob()
-    }
-
-    /**
-     * Reschedules the job
-     */
-    private void rescheduleJob() { 
-        // Get the trigger and adjust the repeat interval
-        Trigger trigger = quartzScheduler.getTrigger("SendEmail", "sendEmailGroup")
-        trigger.repeatInterval = getTimeBetweenSending()
         
-        // And reschedule the job
-        quartzScheduler.rescheduleJob(trigger.name, trigger.group, trigger)
+        // Reschedule the job, in case settings were changed
+        int seconds = getSecondsBetweenSending() 
+        Trigger newTrigger = getTrigger(seconds)
+        reschedule(newTrigger)
     }
-
+    
     /**
      * Gets the minimum time between sending from the database in minutes and returns it in milliseconds
-     * @return The minimum time between sending in milliseconds, defaults to 15 minutes
+     * @return The minimum time between sending in seconds, defaults to 15 minutes
      */
-    Long getTimeBetweenSending() {
-        Long interval = new Long(Setting.getByEvent(Setting.findAllByProperty(Setting.EMAIL_MIN_MINUTES_BETWEEN_SENDING)).value)
+    int getSecondsBetweenSending() {
+        Integer interval = new Integer(Setting.findByProperty(Setting.EMAIL_MIN_MINUTES_BETWEEN_SENDING).value)
 
         if (interval) {
-            Long intervalInMs = interval * 60000L
-            intervalInMs
+            interval * 60
         }
         else {
-            900000L
+            900
         }
+    }
+    
+    /**
+     * Create a new trigger for the time between sending emails
+     */
+    static Trigger getTrigger(int seconds) {
+        newTrigger()
+            .withIdentity("SendEmail")
+            .withSchedule(
+                simpleSchedule()
+                    .withIntervalInSeconds(seconds)
+                    .repeatForever()
+            )
+            .startNow()
+            .build()
     }
 }
