@@ -20,7 +20,7 @@ class DynamicPage extends EventDateDomain {
     List<ContainerElement> elements
 
     static belongsTo = Page
-    static transients = ['elements']
+    static transients = EventDateDomain.transients + ['elements']
 
     static constraints = {
         content blank: false,   maxSize: 65540

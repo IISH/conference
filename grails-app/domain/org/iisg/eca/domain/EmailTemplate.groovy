@@ -16,7 +16,7 @@ class EmailTemplate extends EventDomain {
     String testEmail
     boolean testAfterSave = false
 
-    static transients = ['testEmail', 'testAfterSave']
+    static transients = EventDomain.transients + ['testEmail', 'testAfterSave']
 
     static constraints = {
         description blank: false,   maxSize: 255
