@@ -84,7 +84,7 @@ class EmailService {
                 
                 // Update the participant
                 ParticipantDate participant = ParticipantDate.findByUserAndDate(sentEmail.user, sentEmail.date)
-                participant.updateByQueryType(sentEmail.queryType)
+                participant?.updateByQueryType(sentEmail.queryType)
             }
             catch (MailException me) {
                 // Make sure, the date/time is set to null, cause it failed to send the email
