@@ -266,6 +266,9 @@ class PageBuilder {
                                 builder."g:formatBoolean"(boolean: "\${row.${c.columnPath.join('.')}}")
                             }
                         }
+                        else if (c.property.oneToMany || c.property.manyToMany) {
+                            builder.td("\${row.${c.columnPath.join('.')}.join(', ')}")
+                        }
                         else  {
                             builder.td("\${row.${c.columnPath.join('.')}}")
                         }

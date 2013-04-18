@@ -156,6 +156,23 @@ class Page extends DefaultDomain {
 
         return true
     }
+    
+    /**
+     * Determine whether this page should display first and last name sorted
+     * @return A boolean indicating whether it should be sorted
+     */
+    boolean sortByName() {
+        switch (controller) {
+            case "userAuth":
+                return (action == "list")
+            case "participant":
+                return ((action == "inventations")  ||
+                        (action == "lowerFee")      ||
+                        (action == "extras"))
+            default:
+                return false
+        }
+    }
 
     @Override
     def String toString() {

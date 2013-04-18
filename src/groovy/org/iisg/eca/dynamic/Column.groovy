@@ -13,6 +13,7 @@ class Column extends ContainerElement {
     private boolean readOnly
     private boolean multiple
     private boolean hidden
+    private boolean notEmpty
     private String textarea
     private String eq
 
@@ -29,6 +30,7 @@ class Column extends ContainerElement {
         this.readOnly = false
         this.multiple = false
         this.hidden = false
+        this.notEmpty = false
         this.textarea = null
         this.eq = null
     }
@@ -111,6 +113,14 @@ class Column extends ContainerElement {
      */
     void setHidden(boolean hidden) {
         this.hidden = hidden
+    }
+    
+    void setNotEmpty(boolean notEmpty) {
+        this.notEmpty = notEmpty
+    }
+    
+    boolean getNotEmpty() {
+        notEmpty
     }
 
     /**

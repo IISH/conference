@@ -423,7 +423,7 @@ class UtilsTagLib {
             builder.dd {
                 Page page = menuItem.page
                 if (page.controller && page.action) {                    
-                    if ((page.controller == "userAuth") && (page.action == "list")) {
+                    if (page.sortByName()) {
                         builder.mkp.yieldUnescaped(eca.link(params: ["sort_0" : "lastName:asc;firstName:asc"], controller: page.controller, action: page.action, g.message(code: page.titleCode, args: [g.message(code: page.titleArg)], default: page.titleDefault)))
                     }
                     else {

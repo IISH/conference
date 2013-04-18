@@ -79,6 +79,11 @@ class DynamicPageResults {
                 }
             }
         }
+        
+        // Also check for empty values
+        if (c.notEmpty) {
+            delegate.isNotEmpty(c.name)
+        }
 
         // Make sure that referenced domain classes also filter events, event dates and soft deletes
         if (c.hasColumns() && pageInformation.date && EventDateDomain.class.isAssignableFrom(c.property.referencedDomainClass.clazz)) {
