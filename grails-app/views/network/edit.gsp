@@ -48,6 +48,14 @@
                 <input id="Network.url" maxlength="255" name="Network.url" value="${network.url}" type="text" required="required" />
               </span>
             </div>
+            <div class="${hasErrors(bean: network, field: 'email', 'error')} required">
+              <label class="property-label" for="Network.email">
+                <g:message code="network.email.label" />
+              </label>
+              <span class="property-value">
+                <input id="Network.email" maxlength="100" name="Network.email" value="${network.email}" type="email" />
+              </span>
+            </div>
             <div class="${hasErrors(bean: network, field: 'showOnline', 'error')} ">
               <label class="property-label" for="Network.showOnline">
                 <g:message code="network.showOnline.label" />

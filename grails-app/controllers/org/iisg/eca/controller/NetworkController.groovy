@@ -92,7 +92,8 @@ class NetworkController {
         // The 'save' button was clicked, save all data
         if (request.post) {
             // Save all network related data
-            bindData(network, params, [include: ["name", "comment", "url", "showOnline", "showInternal", "enabeled"]], "Network")
+            bindData(network, params, [include: ["name", "comment", "url", "email", 
+                    "showOnline", "showInternal", "enabeled"]], "Network")
 
             // Remove all chairs from the network and save all new information
             int i = 0

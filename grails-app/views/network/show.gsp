@@ -34,6 +34,14 @@
             </span>
           </li>
           <li>
+            <span id="email-label" class="property-label">
+              <g:message code="network.email.label" />
+            </span>
+            <span class="property-value" arial-labelledby="email-label">
+              <eca:formatText text="${network.email}" />
+            </span>
+          </li>
+          <li>
             <span id="showOnline-label" class="property-label">
               <g:message code="network.showOnline.label" />
             </span>
