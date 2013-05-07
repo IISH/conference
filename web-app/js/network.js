@@ -8,33 +8,32 @@ $(document).ready(function() {
 
         $.getJSON('../participantsNotScheduled', {network_id: networkId}, function(data) {
             var participantsContainer = $('#not-in-session');
-            var clone = participantsContainer.find('li:eq(0)');
-            var item;
 
             if (data.participants.length === 0) {
                 participantsContainer.text('-');
             }
-
-            for (var i=0; i<data.participants.length; i++) {
-                item = clone.clone(true);
-                item.find('.participant').text(data.participants[i].participant);
-                item.find('.participant').attr('href', data.participants[i].url);
-
-                var papersContainer = item.find('.participants');
-                var paperClone = papersContainer.find('li');
-                var paperItem;
-                for (var j=0; j<data.participants[i].papers.length; j++) {
-                    paperItem = paperClone.clone(true);
-                    paperItem.text(data.participants[i].papers[j].name + " (" + data.participants[i].papers[j].state + ")");
-                    papersContainer.append(paperItem);
-                }
-                paperClone.remove();
-                
+            else {                
+                var clone = participantsContainer.find('li:eq(0)').clone(true);
                 participantsContainer.html("");
-                participantsContainer.append(item);
+                
+                for (var i=0; i<data.participants.length; i++) {
+                    var item = clone.clone(true);
+                    item.find('.participant').text(data.participants[i].participant);
+                    item.find('.participant').attr('href', data.participants[i].url);
+
+                    var papersContainer = item.find('.participants');
+                    var paperClone = papersContainer.find('li');
+                    for (var j=0; j<data.participants[i].papers.length; j++) {
+                        var paperItem = paperClone.clone(true);
+                        paperItem.text(data.participants[i].papers[j].name + " (" + data.participants[i].papers[j].state + ")");
+                        papersContainer.append(paperItem);
+                    }
+                    paperClone.remove();
+                    
+                    participantsContainer.append(item);
+                }
             }
             
-            clone.remove();
             element.remove();
             participantsContainer.show();
         });
