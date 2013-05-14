@@ -22,6 +22,7 @@ class Page extends DefaultDomain {
     boolean showInMenu = false
     String description
     Page parent
+    String urlQuery
 
     static hasMany = [  adminPages:     AdminPage,
                         dynamicPages:   DynamicPage,
@@ -45,6 +46,7 @@ class Page extends DefaultDomain {
         showInMenu      column: 'show_in_menu'
         description     column: 'description',      type: 'text'
         parent          column: 'parent_page_id'
+        urlQuery        column: 'url_query'
 
         groups  joinTable: 'groups_pages'
     }
@@ -58,6 +60,7 @@ class Page extends DefaultDomain {
         description     nullable: true
         parent          nullable: true
         subPages        nullable: true
+        urlQuery        nullable: true, maxSize: 100
     }
 
     static namedQueries = {
@@ -158,20 +161,17 @@ class Page extends DefaultDomain {
     }
     
     /**
-     * Determine whether this page should display first and last name sorted
-     * @return A boolean indicating whether it should be sorted
+     * Return the query part of the URL for this page
+     * @return The query part of a URL
      */
-    boolean sortByName() {
-        switch (controller) {
-            case "userAuth":
-                return (action == "list")
-            case "participant":
-                return ((action == "inventations")  ||
-                        (action == "lowerFee")      ||
-                        (action == "extras"))
-            default:
-                return false
+    def String getUrlQuery() {
+        String cleanUrlQuery = urlQuery
+        
+        if (cleanUrlQuery != null && (cleanUrlQuery.startsWith("?") || cleanUrlQuery.startsWith("&"))) {
+            cleanUrlQuery = cleanUrlQuery[1..-1]
         }
+        
+        cleanUrlQuery 
     }
 
     @Override

@@ -422,13 +422,15 @@ class UtilsTagLib {
          menu.each { menuItem -> 
             builder.dd {
                 Page page = menuItem.page
-                if (page.controller && page.action) {                    
-                    if (page.sortByName()) {
-                        builder.mkp.yieldUnescaped(eca.link(params: ["sort_0" : "lastName:asc;firstName:asc"], controller: page.controller, action: page.action, g.message(code: page.titleCode, args: [g.message(code: page.titleArg)], default: page.titleDefault)))
+                if (page.controller && page.action) {
+                    String link = eca.createLink(controller: page.controller, action: page.action)
+                    if (page.urlQuery && link.contains('?')) {
+                        link += '&' + page.urlQuery
                     }
-                    else {
-                        builder.mkp.yieldUnescaped(eca.link(controller: page.controller, action: page.action, g.message(code: page.titleCode, args: [g.message(code: page.titleArg)], default: page.titleDefault)))
+                    else if (page.urlQuery) {
+                        link += '?' + page.urlQuery
                     }
+                    builder.a(href: link, g.message(code: page.titleCode, args: [g.message(code: page.titleArg)], default: page.titleDefault))
                 }
                 else if (menuItem.children.size() > 0) {
                     builder.a(href: "#${page.id}", g.message(code: page.titleCode, args: [g.message(code: page.titleArg)], default: page.titleDefault))
