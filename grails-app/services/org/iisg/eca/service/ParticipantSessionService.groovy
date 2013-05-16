@@ -88,13 +88,16 @@ class ParticipantSessionService {
 
             // This user is not in the list already, so create a new <code>ParticipantSessionInfo</code> object for this user
             if (!sessionInfo) {
-                sessionInfo = new ParticipantSessionInfo(session, ParticipantDate.findByUserAndDate(sessionParticipant[0], pageInformation.date))
-                sessionInformation.add(sessionInfo)
+                ParticipantDate participant = ParticipantDate.findByUserAndDate(sessionParticipant[0],  pageInformation.date)
+                if (participant) {
+                    sessionInfo = new ParticipantSessionInfo(session, participant)
+                    sessionInformation.add(sessionInfo)
+                }
             }
 
             // Update the sessionInfo object with the new participant type and paper information
-            sessionInfo.addType(sessionParticipant[1])
-            sessionInfo.paper = Paper.findAllBySession(session).find { it.user?.id == sessionParticipant[0].id }
+            sessionInfo?.addType(sessionParticipant[1])
+            sessionInfo?.paper = Paper.findAllBySession(session).find { it.user?.id == sessionParticipant[0].id }
         }
 
         sessionInformation
