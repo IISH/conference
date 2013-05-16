@@ -62,7 +62,7 @@ class Setting extends EventDomain {
     def afterUpdate() {
         setSetting()
     }
-
+    
     private void setSetting() {
         switch (property) {
             case ROLE_HIERARCHY:
@@ -70,13 +70,29 @@ class Setting extends EventDomain {
                 break
         }
     }
-
+    
     private void setHierarchy() {
         if (property == ROLE_HIERARCHY) {
             RoleHierarchyImpl roleHierarchy = (RoleHierarchyImpl) roleHierarchy
             roleHierarchy.setHierarchy(value)
         }
     }
+    
+    @Override
+    protected EventDomain getTenantRecord(Event event) {
+        EventDomain[] domains = executeQuery(
+                    """ FROM Setting 
+                        WHERE property = :property
+                        AND event.id = :eventID""", 
+                        [property: property, eventID: event.id, max: 1])
+                    
+        if (domains.length == 0) {
+            return null
+        }
+        else {
+            return domains[0]
+        }
+    } 
     
     @Override
     String toString() {

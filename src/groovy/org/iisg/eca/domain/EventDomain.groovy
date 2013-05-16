@@ -57,13 +57,18 @@ abstract class EventDomain extends DefaultDomain {
             return true
         }
         else if (thizz.event != pageInformation.date?.event) {
+            // Delete the old tenant record if it exists: we'll make a new one
+            def tenantRecord = thizz.getTenantRecord(pageInformation.date?.event)
+            tenantRecord?.delete()
+            
             // In a new Hibernate session, change the update to an insert for this event
             thizz.withNewSession {
-                def newInstance = thizz.class.newInstance()
-                newInstance.properties = thizz.properties
-                newInstance.event = pageInformation.date?.event
-                newInstance.save()
+                def instance = thizz.class.newInstance()
+                instance.properties = thizz.properties
+                instance.event = pageInformation.date?.event
+                instance.save()
             }
+            
             // And cancel this update
             return false
         }
@@ -84,5 +89,15 @@ abstract class EventDomain extends DefaultDomain {
         }
 
         element
+    }
+    
+    /**
+     * When a record is changed from a global update to a tenant update, 
+     * make sure that the tenant record exists.
+     * @param event The event to check against
+     * @return The tenant record of this object, if it exists
+     */
+    protected EventDomain getTenantRecord(Event event) {
+        return null
     }
 }
