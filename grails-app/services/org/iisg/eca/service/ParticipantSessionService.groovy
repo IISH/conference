@@ -142,7 +142,7 @@ class ParticipantSessionService {
             INNER JOIN u.papers AS p
             WHERE p.networkProposal.id = :networkId
             AND p.session IS NULL
-            AND pd.state.id = 2
+            AND pd.state.id IN (1,2)
         ''', [networkId: network.id]).each { result ->
 
             // See if the participant is already in the map, if so, get it, otherwise create a new one
