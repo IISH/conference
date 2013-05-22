@@ -73,21 +73,25 @@ abstract class EventDomain extends DefaultDomain {
             return false
         }
     }
+    
+    static def getByEvent(List list) {
+        getByEvent(list, pageInformation.date?.event)
+    }
 
     /**
      * Searches the list and will try to return the one specifically specified for the current event
      * @return The element from the list for the current event if available
      */
-    static def getByEvent(List list) {
+    static def getByEvent(List list, Event event) {
         def element = null
 
         if (list.size() > 0) {
-            element = list.find { it.event?.id == pageInformation.date?.event?.id }
+            element = list.find { it.event?.id == event?.id }
             if (!element) {
                 element = list.get(0)
             }
         }
-
+        
         element
     }
     

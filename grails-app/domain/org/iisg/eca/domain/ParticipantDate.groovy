@@ -53,7 +53,16 @@ class ParticipantDate extends EventDateDomain {
     }
 
     static namedQueries = {
+        allParticipants { 
+            user {
+                order("lastName", "asc")
+                order("firstName", "asc")
+            }
+        }
+        
         paperAccepted { date ->
+            allParticipants()
+            
             user {
                 papers {
                     eq('state.id', 2L)
@@ -63,6 +72,8 @@ class ParticipantDate extends EventDateDomain {
         }
 
         paperInConsideration { date ->
+            allParticipants()
+            
             user {
                 papers {
                     eq('state.id', 4L)
@@ -72,6 +83,8 @@ class ParticipantDate extends EventDateDomain {
         }
 
         paperNotAccepted { date ->
+            allParticipants()
+            
             user {
                 papers {
                     eq('state.id', 3L)
@@ -81,6 +94,8 @@ class ParticipantDate extends EventDateDomain {
         }
         
         lowerFeeNotAnswered { date -> 
+            allParticipants()
+            
             eq('lowerFeeRequested', true)
             eq('lowerFeeAnswered', false)
         }

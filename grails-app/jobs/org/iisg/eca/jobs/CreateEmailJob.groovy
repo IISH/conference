@@ -3,6 +3,7 @@ package org.iisg.eca.jobs
 import org.iisg.eca.domain.SentEmail
 import org.iisg.eca.domain.EmailTemplate
 import org.iisg.eca.domain.ParticipantDate
+import org.iisg.eca.domain.EventDate
 
 /**
  * CreateEmailJob is responsible for the creation of a large amount of emails ready to be send in a separate thread
@@ -25,10 +26,11 @@ class CreateEmailJob {
      * @param context The context containing a map with all participants and the template needed
      */
     def execute(context) {
-        // Load the participants to send to and template to use
+        // Load the participants to send to, template to use and the event date
         List<ParticipantDate> participants = context.mergedJobDataMap.get('participants')
         EmailTemplate template = context.mergedJobDataMap.get('template')
-
+        EventDate date = context.mergedJobDataMap.get('date')
+        
         // If they are correctly send, we can start creating the emails
         if (participants && template) {
             try {
@@ -42,7 +44,7 @@ class CreateEmailJob {
                 emailService.sendInfoMail("Succesfully created the emails for ${participants.size()} participants", """\
                     Succesfully created the emails for ${participants.size()} participants.
                     The emails will be emailed soon.
-                """.stripIndent())
+                """.stripIndent(), date?.event)
             }
             catch (Exception e) {
                 StringWriter sw = new StringWriter()
@@ -53,7 +55,7 @@ class CreateEmailJob {
                     Failed to create the emails for ${participants.size()} participants.
                     Template used: ${template.description}
                     Exception: ${sw.toString()}
-                """.stripIndent())
+                """.stripIndent(), date?.event)
             }
         }
     }

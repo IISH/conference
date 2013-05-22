@@ -45,9 +45,9 @@ class SendEmailJob {
         // If not disabled, start sending emails
         if (emailDisabled.value.equals('0')) {
             // Find out the maximum number of emails that may be send
-            Integer maxMails = new Integer(Setting.getByEvent(Setting.findAllByProperty(Setting.EMAIL_MAX_NUM_EMAILS_PER_SESSION)).value)
+            Integer maxMails = new Integer(Setting.findByProperty(Setting.EMAIL_MAX_NUM_EMAILS_PER_SESSION).value)
             // Find out the maximum number of tries
-            Integer maxNumTries = new Integer(Setting.getByEvent(Setting.findAllByProperty(Setting.EMAIL_MAX_NUM_TRIES)).value)
+            Integer maxNumTries = new Integer(Setting.findByProperty(Setting.EMAIL_MAX_NUM_TRIES).value)
 
             // Get all emails that are waiting to be send
             List<SentEmail> emailsWaiting = SentEmail.executeQuery("""
@@ -74,7 +74,7 @@ class SendEmailJob {
      */
     int getSecondsBetweenSending() {
         Integer interval = new Integer(Setting.findByProperty(Setting.EMAIL_MIN_MINUTES_BETWEEN_SENDING).value)
-
+        
         if (interval) {
             interval * 60
         }

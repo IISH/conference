@@ -14,6 +14,7 @@ import org.springframework.mail.MailMessage
 import org.springframework.mail.MailException
 
 import org.springframework.mail.javamail.MimeMailMessage
+import org.iisg.eca.domain.Event
 
 /**
  * Service responsible for all email related actions
@@ -48,7 +49,7 @@ class EmailService {
         // Set all the email properties
         email.user = user
         email.fromName = emailTemplate.sender
-        email.fromEmail = Setting.getByEvent(Setting.findAllByProperty(Setting.DEFAULT_ORGANISATION_EMAIL)).value
+        email.fromEmail = Setting.getByEvent(Setting.findAllByProperty(Setting.DEFAULT_ORGANISATION_EMAIL), date?.event).value
         email.subject = emailTemplate.subject
         email.date = date
         email.body = createEmailBody(user, emailTemplate, date, additionalValues)
@@ -64,7 +65,7 @@ class EmailService {
      */
     synchronized void sendEmail(SentEmail sentEmail, boolean saveToDb=true) {
         // How often may we try before giving up?
-        Integer maxNumTries = new Integer(Setting.getByEvent(Setting.findAllByProperty(Setting.EMAIL_MAX_NUM_TRIES)).value)
+        Integer maxNumTries = new Integer(Setting.findByProperty(Setting.EMAIL_MAX_NUM_TRIES).value)
 
         // Only send the email if the maximum number of tries is not reached
         if (sentEmail.numTries < maxNumTries) {
@@ -106,14 +107,15 @@ class EmailService {
      * Send an information email to the organizers as configured in the settings
      * @param emailSubject The subject of the email to send
      * @param message The message of the email to send
+     * @param event From which event is the email originating
      * @param emailAddress Specify from which email address the email originated
      */
-    synchronized void sendInfoMail(String emailSubject, String message, String emailAddress = null) {
-        String[] recipients = Setting.getByEvent(Setting.findAllByProperty(Setting.EMAIL_ADDRESS_INFO_ERRORS)).value.split(';')
+    synchronized void sendInfoMail(String emailSubject, String message, Event event = pageInformation.date?.event, String emailAddress = null) {
+        String[] recipients = Setting.getByEvent(Setting.findAllByProperty(Setting.EMAIL_ADDRESS_INFO_ERRORS), event).value.split(';')
 
         // If no email address is set, use the default info email address from the settings
         if (!emailAddress) {
-            emailAddress = "Info email <${Setting.getByEvent(Setting.findAllByProperty(Setting.DEFAULT_ORGANISATION_EMAIL)).value}>"
+            emailAddress = "Info email <${Setting.getByEvent(Setting.findAllByProperty(Setting.DEFAULT_ORGANISATION_EMAIL), event).value}>"
         }
 
         // Send the email
@@ -145,7 +147,7 @@ class EmailService {
             }
             
             // Make sure that the mail service is also enabled in the database.
-            if (Setting.getByEvent(Setting.findAllByProperty(Setting.DISABLE_EMAIL_SESSIONS)).value.equals('1')) {
+            if (Setting.findAllByProperty(Setting.DISABLE_EMAIL_SESSIONS).value.equals('1')) {
                 throw new Exception("The mail service is disabled. " +
                     "Please change the value of '${Setting.DISABLE_EMAIL_SESSIONS}' " +
                     "in the Settings table of the database.");

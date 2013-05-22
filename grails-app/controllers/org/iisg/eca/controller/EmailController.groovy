@@ -66,7 +66,7 @@ class EmailController {
             // Otherwise create a new empty criteria object
             // Note: If a participant is chosen, the named query is not called
             if (params.participant?.isLong() || !emailTemplate.queryType) {
-                criteria = ParticipantDate.createCriteria()
+                criteria = ParticipantDate.allParticipants(pageInformation.date)
             }
             else {
                 criteria = ParticipantDate."${emailTemplate.queryType}"(pageInformation.date)
@@ -91,7 +91,7 @@ class EmailController {
 
             // We have found all the participants/recipients, so we can create all the individual emails
             // But in the background, as it could take a while
-            CreateEmailJob.triggerNow([participants: participants, template: emailTemplate])
+            CreateEmailJob.triggerNow([participants: participants, template: emailTemplate, date: pageInformation.date])
 
             flash.message = g.message(code: 'email.background.message', args: [participants.size()])
         }
@@ -103,7 +103,7 @@ class EmailController {
 
         // Show the page to select the participant recipients
         // Note: for some reason, ParticipantDate.list() does not work and throws an ArrayIndexOutOfBoundsException
-        render view: "filter_${params.type}", model: [emailTemplate: emailTemplate, participants: ParticipantDate.createCriteria().list {}]
+        render view: "filter_${params.type}", model: [emailTemplate: emailTemplate, participants: ParticipantDate.allParticipants(pageInformation.date).list()]
     }
     
     /**

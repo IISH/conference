@@ -72,16 +72,20 @@ abstract class EventDateDomain extends DefaultDomain {
             return false
         }
     }
-
+    
+    static def getByDate(List list) {
+        getByDate(list, pageInformation.date)
+    }
+    
     /**
      * Searches the list and will try to return the one specifically specified for the current event date
      * @return The element from the list for the current event date if available
      */
-    static def getByDate(List list) {
+    static def getByDate(List list, EventDate date) {
         def element = null
 
         if (list.size() > 0) {
-            element = list.find { it.date?.id == pageInformation.date?.id }
+            element = list.find { it.date?.id == date?.id }
             if (!element) {
                 element = list.get(0)
             }
