@@ -42,7 +42,7 @@ input, textarea, select {
     font-size: 9pt;
     background: #FFFFFF;
     border: 1px solid #7F9DB9; 
-    line-height: 1;
+    line-height: 1;    
 }
 
 input[type=text], input[type=password], input[type=number], input[type=email], input[type=url] {
@@ -59,6 +59,7 @@ textarea {
 select {
     height: 22px;
     min-width: 150px;
+    max-width: 400px;
     vertical-align: middle;
 }
 

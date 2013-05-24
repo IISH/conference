@@ -53,14 +53,15 @@ class ParticipantSessionService {
         User.executeQuery('''
             SELECT u
             FROM User AS u
-            LEFT JOIN u.papers AS p
             LEFT JOIN u.participantDates AS pd
             WHERE pd.date.id = :dateId
             AND pd.deleted = false
-            AND (   p.id IS NULL
-                OR  p.session.id IS NOT NULL
-                OR  p.date.id <> :dateId
-                OR  p.deleted = true
+            AND u NOT IN (
+                SELECT p.user
+                FROM Paper AS p
+                WHERE p.session.id IS NULL
+                AND p.date.id = :dateId
+                AND p.deleted = false
             )
         ''', [dateId: pageInformation.date.id])
     }
