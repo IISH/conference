@@ -1,9 +1,10 @@
 var sessionId = 0;
 var participants = [];
+var loaded = false;
 
 $(document).ready(function() {
     sessionId = parseInt($('input[name=id]').val());
-    
+        
     $('.select-participant').addClass('ui-autocomplete-loading');
     
     $.getJSON('../participants', function(data) {
@@ -34,11 +35,13 @@ $(document).ready(function() {
                 }
             });
             
+            loaded = true;
+            disableWithLoading(false);
             $(this).removeClass('ui-autocomplete-loading');
         });
-        
+                
         $('#tabs').tabs("enable");
-        $('#tabs').on("tabsactivate", tabActivate);
+        $('#tabs').on("tabsactivate", tabActivate);        
     });
     
     $('#tabs').tabs({
@@ -47,12 +50,18 @@ $(document).ready(function() {
         disabled: true     
     });
     
+    if (!loaded) {
+        disableWithLoading(true);
+    }
+    
     $('#tabs input[type=button]').click(function(e) {
+        disableWithLoading(true);
+        
         $('.errors').hide();
         $('.message').hide();
-
+        
         var element = $(this).parents('.ui-tabs-panel');
-
+        
         $.getJSON(
             '../addParticipant',
             {   'session_id':       sessionId,
@@ -61,7 +70,9 @@ $(document).ready(function() {
                 'paper_id':         element.find('.paper-id').val()
             },
             function(data) {
-                if (data.success) {
+                disableWithLoading(false);
+                
+                if (data.success) {                    
                     $('#tabs').tabs("option", "active", false);
                     setParticipantDataForSession(data);
                 }
@@ -100,6 +111,8 @@ $(document).ready(function() {
 
 var tabActivate = function(event, ui) {
     if (ui.newPanel.length > 0) {
+        disableWithLoading(true);
+        
         var participantsCopy;
         var selected = $(ui.newPanel);
         var textBox = selected.find('.select-participant');
@@ -113,7 +126,7 @@ var tabActivate = function(event, ui) {
             '../participantsWithType',
             {   'type_id':      typeId,
                 'session_id':   sessionId},
-            function(data) {
+            function(data) {  
                 participantsCopy = $.grep(participants, function(n) {
                     for (var i=0; i<data.length; i++) {
                         if (data[i] === n.value) {
@@ -122,10 +135,32 @@ var tabActivate = function(event, ui) {
                     }
                     return n;
                 });
-
+                
                 textBox.autocomplete("option", "source", participantsCopy);
                 textBox.removeClass('ui-autocomplete-loading');
+                disableWithLoading(false);
             }
         );
     }
 };
+
+var disableWithLoading = function(enable) {
+    var overlay = $('#loading');
+    
+    if (enable) {
+        var schedule = $('#tabs');
+        var position = schedule.position();
+
+        overlay.css({
+            top:        position.top,
+            left:       position.left,
+            width:      schedule.outerWidth(),
+            height:     schedule.outerHeight()
+        });
+
+        overlay.show();
+    }
+    else {
+        overlay.hide();
+    }
+}

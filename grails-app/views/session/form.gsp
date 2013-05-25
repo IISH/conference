@@ -198,6 +198,11 @@
                         </div>
                     </g:each>
               </div>
+                  <div id="loading">
+                      <div class="loading-helper">
+                          <span class="loading-text"><g:message code="default.please.wait" /></span>
+                      </div>
+                  </div>
             </fieldset>
 
             <fieldset class="buttons">

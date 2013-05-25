@@ -94,7 +94,11 @@
             </g:each>
         </table>
 
-        <div id="loading">LOADING...</div>
+        <div id="loading">
+            <div class="loading-helper">
+                <span class="loading-text"><g:message code="default.please.wait" /></span>
+            </div>
+        </div>
 
         <div id="session-info-container">
             <div class="pointer"></div>

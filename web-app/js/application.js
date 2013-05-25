@@ -205,6 +205,8 @@ $(document).ready(function() {
     $(window).resize(setContentWidth);
     setContentWidth();
     
+    $('#loading').hide();
+    
     var cookieValue = $.cookie("submenus");
     var openSubMenus = (cookieValue) ? cookieValue.split(';') : [];
     $('#menu dl.sub-menu').each(function() {

@@ -827,12 +827,23 @@ ul input.session-name {
 
 #loading {
     background-color: rgba(255, 255, 255, 0.7);
-    display: none;
+    display: table;
+    margin: 0;
+    padding: 0;    
+    position: absolute;
+    overflow: hidden;   
+}
+
+.loading-helper {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.loading-text {
+    display: block;
     font-size: 14pt;
     font-weight: bold;
-    line-height: 5;
-    position: absolute;
-    text-align: center;
+    text-align: center;     
 }
 
 #session-info-container, #room-info-container {

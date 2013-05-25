@@ -80,8 +80,9 @@ class ParticipantSessionService {
             SELECT sp.user, sp.type
             FROM SessionParticipant AS sp
             INNER JOIN sp.type AS t
+            INNER JOIN sp.user AS u
             WHERE sp.session.id = :sessionId
-            ORDER BY t.importance DESC
+            ORDER BY t.importance DESC, u.lastName, u.firstName
         ''', [sessionId: session.id]).each { sessionParticipant ->
 
             // See if this user is already in the list somewhere, if so update that one with new information
