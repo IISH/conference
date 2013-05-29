@@ -72,25 +72,60 @@ class ParticipantSessionService {
      * @return A list of <code>ParticipantSessionInfo</code> objects
      */
     List<ParticipantSessionInfo> getParticipantsForSession(Session session) {
-        List<ParticipantSessionInfo> sessionInformation = []
-
         // Query the database for the information,
         // then transform this into a list of <code>ParticipantSessionInfo</code> objects
-        SessionParticipant.executeQuery('''
-            SELECT sp.user, sp.type
-            FROM SessionParticipant AS sp
-            INNER JOIN sp.type AS t
-            INNER JOIN sp.user AS u
-            WHERE sp.session.id = :sessionId
-            ORDER BY t.importance DESC, u.lastName, u.firstName
-        ''', [sessionId: session.id]).each { sessionParticipant ->
-
+        getParticipantSessionInfoList(
+            SessionParticipant.executeQuery('''
+                SELECT sp.session, sp.user, sp.type
+                FROM SessionParticipant AS sp
+                INNER JOIN sp.type AS t
+                INNER JOIN sp.user AS u
+                WHERE sp.session.id = :sessionId
+                ORDER BY t.importance DESC, u.lastName, u.firstName
+            ''', [sessionId: session.id])
+        )
+    }
+    
+    /**
+     * Returns a list with information about every session the given participant is added to
+     * @param participant The participant in question
+     * @return A list of <code>ParticipantSessionInfo</code> objects
+     */
+    List<ParticipantSessionInfo> getSessionsForParticipant(ParticipantDate participant) {
+        // Query the database for the information,
+        // then transform this into a list of <code>ParticipantSessionInfo</code> objects
+        getParticipantSessionInfoList(
+            SessionParticipant.executeQuery('''
+                SELECT sp.session, sp.user, sp.type
+                FROM SessionParticipant AS sp
+                INNER JOIN sp.type AS t
+                INNER JOIN sp.user AS u
+                WHERE sp.user.id = :userId
+                ORDER BY t.importance DESC, u.lastName, u.firstName
+            ''', [userId: participant?.user?.id])
+        )
+    }
+    
+    /**
+     * Transforms a list with information about every session into a list of ParticipantSessionInfo objects
+     * @param sessionParticipant An collection with the Session object, the User object and the ParticipantType object
+     * @return A list of <code>ParticipantSessionInfo</code> objects
+     */
+    private List<ParticipantSessionInfo> getParticipantSessionInfoList(Collection<Object[]> sessionParticipants) {
+        List<ParticipantSessionInfo> sessionInformation = []
+        
+        sessionParticipants.each { sessionParticipant ->
+            Session session = sessionParticipant[0]
+            User user = sessionParticipant[1]
+            ParticipantType type = sessionParticipant[2]
+            
             // See if this user is already in the list somewhere, if so update that one with new information
-            ParticipantSessionInfo sessionInfo = sessionInformation.find { it.participant?.user?.id == sessionParticipant[0]?.id }
+            ParticipantSessionInfo sessionInfo = sessionInformation.find { 
+                (it.participant?.user?.id == user?.id) && (it.session?.id == session?.id) }
 
             // This user is not in the list already, so create a new <code>ParticipantSessionInfo</code> object for this user
             if (!sessionInfo) {
-                ParticipantDate participant = ParticipantDate.findByUserAndDate(sessionParticipant[0],  pageInformation.date)
+                ParticipantDate participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
                 if (participant) {
                     sessionInfo = new ParticipantSessionInfo(session, participant)
                     sessionInformation.add(sessionInfo)
@@ -98,8 +133,8 @@ class ParticipantSessionService {
             }
 
             // Update the sessionInfo object with the new participant type and paper information
-            sessionInfo?.addType(sessionParticipant[1])
-            sessionInfo?.paper = Paper.findAllBySession(session).find { it.user?.id == sessionParticipant[0].id }
+            sessionInfo?.addType(type)
+            sessionInfo?.paper = Paper.findAllBySession(session).find { it.user?.id == user.id }
         }
 
         sessionInformation

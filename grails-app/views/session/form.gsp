@@ -123,7 +123,9 @@
                             <li>
                                 <input type="hidden" name="user-id" class="user-id" value="${participant.participant.user.id}" />
 
-                                <span class="participant-value">${participant.participant}</span>
+                                <eca:link controller="participant" action="show" id="${participant?.participant?.user?.id}">
+                                    ${participant?.participant}
+                                </eca:link>
                                 <span class="participant-state-value">(${participant.participant.state})</span>
 
                                 <ul>
@@ -146,7 +148,9 @@
                         <li class="hidden">
                             <input type="hidden" name="user-id" class="user-id" />
 
-                            <span class="participant-value"> </span>
+                            <span class="participant-value">
+                                <eca:link controller="participant" action="show" id="*id*"></eca:link>
+                            </span>
                             <span class="participant-state-value"> </span>
 
                             <ul>

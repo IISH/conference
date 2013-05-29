@@ -22,11 +22,13 @@ var setParticipantDataForNetwork = function(data) {
     networkSessionsContainer.html("");
     for (var i=0; i<data.sessions.length; i++) {
         var item = clone.clone(true);
+        var link = item.find('.session a').attr("href").replace("*id*", data.sessions[i].id);
+        
         item.find('.session-id').val(data.sessions[i].id);
-        item.find('.session').text(data.sessions[i].name);
+        item.find('.session a').attr("href", link).text(data.sessions[i].name);
 
         var participantsContainer = item.find('.session-participants');
-        if (data.sessions[i].participants.length > 1) {
+        if (data.sessions[i].participants.length > 0) {
             var participantClone = participantsContainer.find('> li');
             setParticipants(data.sessions[i].participants, participantsContainer, participantClone.clone(true));
             participantClone.remove();
@@ -45,8 +47,10 @@ var setParticipantDataForNetwork = function(data) {
 var setParticipants = function(data, container, clone) {
     for (var i=0; i<data.length; i++) {
         var item = clone.clone(true);
+        var link = item.find('.participant-value a').attr("href").replace("*id*", data[i].id);
+        
         item.find('.user-id').val(data[i].id);
-        item.find('.participant-value').text(data[i].participant);
+        item.find('.participant-value a').attr("href", link).text(data[i].participant);
         item.find('.participant-state-value').text("("+data[i].state+")");
 
         if (data[i].paper.trim().length === 0) {

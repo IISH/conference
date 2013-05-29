@@ -71,7 +71,11 @@
             </span>
             <ul class="property-value" arial-labelledby="chairs-label">
               <g:each in="${network.chairs}" var="chair">
-                <li>${chair.encodeAsHTML()}</li>
+                <li>
+                  <eca:link controller="participant" action="show" id="${chair.chair.id}">
+                    ${chair.encodeAsHTML()}
+                  </eca:link>
+                </li>
               </g:each>
             </ul>
           </li>
@@ -83,12 +87,20 @@
             <ul id="network-sessions" class="property-value" arial-labelledby="sessions-label">
                 <g:each in="${sessions}" var="session">
                 <li>
-                    <span class="session">${session.key.toString()}</span>
+                    <span class="session">
+                        <eca:link controller="session" action="show" id="${session.key.id}">
+                            ${session.key.toString()}
+                        </eca:link>
+                    </span>
 
                     <ul class="session-participants" class="property-value">
                       <g:each in="${session.value}" var="participant" status="i">
                           <li>
-                              <span class="participant-value">${participant?.participant}</span>
+                              <span class="participant-value">
+                                  <eca:link controller="participant" action="show" id="${participant?.participant?.user?.id}">
+                                      ${participant?.participant}
+                                  </eca:link>
+                              </span>
                               <span class="participant-state-value">(${participant?.participant?.state})</span>
 
                               <ul>

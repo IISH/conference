@@ -213,7 +213,8 @@ class NetworkController {
                         id:             curSession.key.id,
                         name:           curSession.key.toString(),
                         participants:   curSession.value.collect {
-                                        [   participant:    it.participant.user.toString(),
+                                        [   id:             it.participant.user.id,
+                                            participant:    it.participant.user.toString(),
                                             state:          it.participant.state.toString(),
                                             types:          it.types.collect { pType ->
                                                                 [id: pType.id, type:  pType.toString()]

@@ -261,7 +261,8 @@ ul input[type=email], ul input[type=url] {
 .columns > .column {
     float: left;
     width: 350px;
-    margin: 20px 5px;
+    margin: 20px 5px;    
+    overflow: auto;
 }
 
 .column > .ui-icon {
@@ -641,7 +642,7 @@ span.remove-item {
     color: #000000;
 }
 
-#personal-tab, #papers-tab {
+#personal-tab, #papers-tab, #sessions-tab {
     margin: 0;
     padding: 0;
 }
@@ -684,9 +685,17 @@ span.remove-item {
     max-width: 250px;
 }
 
-#papers-tab .column {
+#papers-tab .column, #sessions-tab .column {
     border-bottom: 1px solid #225496;
     margin-bottom: 20px;
+}
+
+#papers-tab .column {
+    height: 850px;
+}
+
+#sessions-tab .column {
+    height: 250px;
 }
 
 #participant-present {

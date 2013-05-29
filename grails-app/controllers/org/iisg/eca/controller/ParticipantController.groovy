@@ -31,7 +31,12 @@ class ParticipantController {
      * Service taking care of participant information
      */
     def participantService
-
+    
+    /**
+     * Service taking care of participant in session related information
+     */
+    def participantSessionService
+    
     /**
      * Service taking care of exporting the participants paper
      */
@@ -311,7 +316,9 @@ class ParticipantController {
                                                 networks: Network.list(),
                                                 paperStates: PaperState.list(),
                                                 equipmentList: Equipment.list(),
-                                                participantIds: participantService.getParticipantsWithFilters(params).collect { it[0] }])
+                                                participantIds: participantService.getParticipantsWithFilters(params).collect { it[0] },
+                                                sessions: participantSessionService.getSessionsForParticipant(participant)
+                ])
             }
         }
 
@@ -323,7 +330,9 @@ class ParticipantController {
                                         networks: Network.list(),
                                         paperStates: PaperState.list(),
                                         equipmentList: Equipment.list(),
-                                        participantIds: participantService.getParticipantsWithFilters(params).collect { it[0] }])
+                                        participantIds: participantService.getParticipantsWithFilters(params).collect { it[0] },
+                                        sessions: participantSessionService.getSessionsForParticipant(participant)
+        ])
     }
 
     /**

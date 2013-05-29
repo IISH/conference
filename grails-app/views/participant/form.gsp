@@ -21,6 +21,7 @@
                 <ul>
                     <li><a href="#personal-tab"><g:message code="participantDate.personal.info.label" /></a></li>
                     <li><a href="#papers-tab"><g:message code="paper.multiple.label" /></a></li>
+                    <li><a href="#sessions-tab"><g:message code="session.multiple.label" /></a></li>
                 </ul>
                 
                 <div id="personal-tab" class="columns">
@@ -630,6 +631,51 @@
                     
                     <div class="clear empty"></div>
                 </g:if>
+                </div>
+              
+                <div id="sessions-tab" class="columns">
+                    <g:each in="${sessions}" var="participantSessionInfo">
+                        <div class="participant-session column">
+                            <div>
+                                <ol class="property-list">
+                                    <li>
+                                      <span id="id-label" class="property-label">#</span>
+                                      <span class="property-value" arial-labelledby="id-label">${participantSessionInfo.session.id}</span>
+                                    </li>
+                                    <li>
+                                      <span id="code-label" class="property-label">
+                                        <g:message code="session.code.label" />
+                                      </span>
+                                      <span class="property-value" arial-labelledby="code-label">
+                                        <eca:formatText text="${participantSessionInfo.session.code}" />
+                                      </span>
+                                    </li>
+                                    <li>
+                                      <span id="name-label" class="property-label">                                        
+                                        <g:message code="session.name.label" />
+                                      </span>
+                                      <span class="property-value" arial-labelledby="name-label">
+                                        <eca:link controller="session" action="show" id="${participantSessionInfo.session.id}">
+                                          <eca:formatText text="${participantSessionInfo.session.name}" />
+                                        </eca:link>
+                                      </span>
+                                    </li> 
+                                    <li>
+                                      <span id="type-label" class="property-label">
+                                        <g:message code="participantType.function.label" />
+                                      </span>
+                                      <span class="property-value" arial-labelledby="type-label">
+                                        <ol>
+                                          <g:each in="${participantSessionInfo.types}" var="type">
+                                            <li>${type.toString()}</li>
+                                          </g:each>
+                                        </ol>
+                                      </span>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+                    </g:each>
                 </div>
             </div>
           
