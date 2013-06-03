@@ -5,6 +5,7 @@ import grails.converters.JSON
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Network
 import org.iisg.eca.domain.Session
+import org.iisg.eca.domain.SessionState
 import org.iisg.eca.domain.NetworkChair
 
 import org.iisg.eca.utils.ParticipantSessionInfo
@@ -48,7 +49,9 @@ class NetworkController {
         }
 
         // Show all network related information
-        render(view: "show", model: [network: network, sessions: participantSessionService.getParticipantsForNetwork(network)])
+        render(view: "show", model: [   network:        network, 
+                                        sessionStates:  SessionState.list(),
+                                        sessions:       participantSessionService.getParticipantsForNetwork(network)])
     }
 
     /**

@@ -76,7 +76,7 @@ class ParticipantSessionService {
         // then transform this into a list of <code>ParticipantSessionInfo</code> objects
         getParticipantSessionInfoList(
             SessionParticipant.executeQuery('''
-                SELECT sp.session, sp.user, sp.type
+                SELECT sp.session, u, t
                 FROM SessionParticipant AS sp
                 INNER JOIN sp.type AS t
                 INNER JOIN sp.user AS u
@@ -96,12 +96,12 @@ class ParticipantSessionService {
         // then transform this into a list of <code>ParticipantSessionInfo</code> objects
         getParticipantSessionInfoList(
             SessionParticipant.executeQuery('''
-                SELECT sp.session, sp.user, sp.type
+                SELECT s, sp.user, t
                 FROM SessionParticipant AS sp
                 INNER JOIN sp.type AS t
-                INNER JOIN sp.user AS u
+                INNER JOIN sp.session AS s
                 WHERE sp.user.id = :userId
-                ORDER BY t.importance DESC, u.lastName, u.firstName
+                ORDER BY s.code, s.name, t.importance DESC
             ''', [userId: participant?.user?.id])
         )
     }

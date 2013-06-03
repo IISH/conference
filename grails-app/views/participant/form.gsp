@@ -661,6 +661,14 @@
                                       </span>
                                     </li> 
                                     <li>
+                                      <span id="state-label" class="property-label">
+                                        <g:message code="session.state.label" />
+                                      </span>
+                                      <span class="property-value" arial-labelledby="state-label">
+                                        <eca:formatText text="${participantSessionInfo.session.state}" />
+                                      </span>
+                                    </li>
+                                    <li>
                                       <span id="type-label" class="property-label">
                                         <g:message code="participantType.function.label" />
                                       </span>

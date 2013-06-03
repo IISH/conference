@@ -91,6 +91,11 @@
                         <eca:link controller="session" action="show" id="${session.key.id}">
                             ${session.key.toString()}
                         </eca:link>
+                        
+                        &nbsp;
+                        
+                        <input type="hidden" name="session-id" value="${session.key.id}" />
+                        <g:select from="${sessionStates}" class="session-state-select" name="session.state.id" optionKey="id" optionValue="description" value="${session.key?.state?.id}" />
                     </span>
 
                     <ul class="session-participants" class="property-value">

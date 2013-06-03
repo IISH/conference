@@ -217,6 +217,44 @@ class SessionController {
             schedule:               sessionPlannerService.schedule,
             sessionsUnscheduled:    sessionPlannerService.unscheduledSessions,
             dateTimes:              SessionDateTime.findAllByDayInList(Day.list())]
+    }   
+    
+    /**
+     * Changes the session state of the given session
+     * (AJAX call)
+     */
+    def changeState() {
+        // If this is an AJAX call, continue
+        if (request.xhr) {
+            Map responseMap = null
+            
+            // If we have a session id and state id, try to find the records for these ids
+            if (params.session_id?.isLong() && params.state_id?.isLong()) {
+                Session session = Session.findById(params.session_id)
+                SessionState state = SessionState.findById(params.state_id)
+                
+                // Change the session state if they both exist
+                if (session && state) {
+                    session.state = state
+                    
+                    // Save the session
+                    if (session.save(flush: true)) {
+                        // Everything is fine                        
+                        responseMap = [success: true]
+                    }
+                    else {
+                        responseMap = [success: false, message: session.errors.allErrors.collect { g.message(error: it) }]
+                    }
+                }
+            }
+            
+            // If there is no responseMap defined yet, it can only mean the session or state could not be found
+            if (!responseMap) {
+                responseMap = [success: false, message: g.message(code: 'default.not.found.message', args: ["${g.message(code: 'session.label')}, ${g.message(code: 'session.state.label')}"])]
+            }
+
+            render responseMap as JSON
+        }
     }
 
     /**

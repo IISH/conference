@@ -454,4 +454,17 @@ $(document).ready(function() {
         
         element.trigger('error');
     });
+    
+    $('.session-state-select').change(function(e) {
+        $('.errors').hide();
+        $('.message').hide();
+
+        var element = $(this);
+
+        $.getJSON('../../session/changeState', {session_id: element.prev().val(), state_id: element.val()}, function(data) {
+            if (!data.success) {
+                showErrors(data);
+            }
+        });
+    });
 });
