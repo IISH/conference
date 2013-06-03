@@ -22,6 +22,9 @@ class ParticipantService {
     List<User> getAllParticipants() {
         User.withCriteria {
             participantDates {
+                // TODO: Perhaps replace by extra column in database
+                'in'('state.id', [0L,1L,2L,999L])
+                
                 // Make sure the data is filtered here
                 eq('date.id', pageInformation.date.id)
                 eq('deleted', false)

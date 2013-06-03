@@ -222,7 +222,8 @@ class NetworkController {
                                             types:          it.types.collect { pType ->
                                                                 [id: pType.id, type:  pType.toString()]
                                                             },
-                                            paper:          (it.paper) ? "${g.message(code: 'paper.label')}: ${it.paper?.toString()}" : ""] }
+                                            paper:          (it.paper) ? "${g.message(code: 'paper.label')}: ${it.paper?.toString()}" : "",
+                                            coauthors:      (it.paper) ? "${g.message(code: 'paper.coAuthors.label')}: ${it.paper.coAuthors ?: '-'}" : ""] }
                         ] }
                     ]
                 }
@@ -271,7 +272,8 @@ class NetworkController {
                                             types:          it.types.collect { pType ->
                                                                 [id: pType.id, type:  pType.toString()]
                                                             },
-                                            paper:          (it.paper) ? "${g.message(code: 'paper.label')}: ${it.paper?.toString()}" : ""] }
+                                            paper:          (it.paper) ? "${g.message(code: 'paper.label')}: ${it.paper?.toString()}" : "",
+                                            coauthors:      (it.paper) ? "${g.message(code: 'paper.coAuthors.label')}: ${it.paper.coAuthors ?: '-'}" : ""] }
                         ] }
                     ]
                 }

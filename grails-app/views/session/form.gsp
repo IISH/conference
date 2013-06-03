@@ -142,6 +142,9 @@
                                     <span class="participant-paper-value">
                                         <g:message code="paper.label" />: ${participant.paper}
                                     </span>
+                                    <span class="participant-paper-value">
+                                        <g:message code="paper.coAuthors.label" />: <eca:formatText text="${participant.paper.coAuthors}" />
+                                    </span>
                                 </g:if>
                             </li>
                         </g:each>
@@ -161,6 +164,7 @@
                                 </li>
                             </ul>
 
+                            <span class="participant-paper-value"> </span>
                             <span class="participant-paper-value"> </span>
                         </li>
                     </ul>

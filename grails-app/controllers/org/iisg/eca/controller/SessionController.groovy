@@ -318,7 +318,8 @@ class SessionController {
                                     types:          it.types.collect { pType ->
                                                         [id: pType.id, type:  pType.toString()]
                                                     },
-                                    paper:          (it.paper) ? "${g.message(code: 'paper.label')}: ${it.paper?.toString()}" : ""]
+                                    paper:          (it.paper) ? "${g.message(code: 'paper.label')}: ${it.paper.toString()}" : "",
+                                    coauthors:      (it.paper) ? "${g.message(code: 'paper.coAuthors.label')}: ${it.paper.coAuthors ?: '-'}" : ""]
                             }, equipment: equipment]
                         }
                         else {
@@ -381,7 +382,8 @@ class SessionController {
                                 types:          it.types.collect { pType ->
                                                     [id: pType.id, type:  pType.toString()]
                                                 },
-                                paper:          (it.paper) ? "${g.message(code: 'paper.label')}: ${it.paper?.toString()}" : ""]
+                                paper:          (it.paper) ? "${g.message(code: 'paper.label')}: ${it.paper?.toString()}" : "",
+                                coauthors:      (it.paper) ? "${g.message(code: 'paper.coAuthors.label')}: ${it.paper.coAuthors ?: '-'}" : ""]
                         }, equipment: equipment]
                     }
                     else {
@@ -547,7 +549,8 @@ class SessionController {
                     [   participant:    it.participant.user.toString(),
                         state:          it.participant.state.toString(),
                         types:          it.types.collect { pType -> [type: pType.toString()] },
-                        paper:          (it.paper) ? "${g.message(code: 'paper.label')}: ${it.paper?.toString()}" : ""] }
+                        paper:          (it.paper) ? "${g.message(code: 'paper.label')}: ${it.paper?.toString()}" : "",
+                        coauthors:      (it.paper) ? "${g.message(code: 'paper.coAuthors.label')}: ${it.paper.coAuthors ?: '-'}" : ""] }
                 )
             }
             else {

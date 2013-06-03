@@ -861,7 +861,9 @@ ul input.session-name {
 #session-info-container, #room-info-container {
     display: none;
     position: absolute;
-    background-color: transparent;
+    background-color: transparent;    
+    max-width: 700px;
+    max-height: 500px;
 }
 
 #session-info, #room-info {

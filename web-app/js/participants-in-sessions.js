@@ -21,7 +21,7 @@ var setParticipantDataForNetwork = function(data) {
 
     networkSessionsContainer.html("");
     for (var i=0; i<data.sessions.length; i++) {
-        var item = clone.clone(true);
+        var item = clone.clone(true);        
         var link = item.find('.session a').attr("href").replace("*id*", data.sessions[i].id);
         
         item.find('.session-id').val(data.sessions[i].id);
@@ -47,7 +47,14 @@ var setParticipantDataForNetwork = function(data) {
 var setParticipants = function(data, container, clone) {
     for (var i=0; i<data.length; i++) {
         var item = clone.clone(true);
-        var link = item.find('.participant-value a').attr("href").replace("*id*", data[i].id);
+        
+        if (item.find('.participant-value a').size > 0) {
+            var link = item.find('.participant-value a').attr("href").replace("*id*", data[i].id);
+            item.find('.participant-value a').attr("href", link).text(data[i].participant);
+        }
+        else {
+            item.find('.participant-value').text(data[i].participant);
+        }
         
         item.find('.user-id').val(data[i].id);
         item.find('.participant-value a').attr("href", link).text(data[i].participant);
@@ -57,7 +64,9 @@ var setParticipants = function(data, container, clone) {
             item.find('.participant-paper-value').remove();
         }
         else {
-            item.find('.participant-paper-value').text(data[i].paper);
+            var paperItems = item.find('.participant-paper-value'); 
+            paperItems.last().text(data[i].coauthors);
+            paperItems.first().text(data[i].paper);
         }
 
         setTypes(data[i].types, item);
