@@ -253,8 +253,19 @@ class PageBuilder {
                 }
                 element.forAllColumns { c ->
                     if (c.canBeShown()) {
-                        if (c.name == "id") {
+                        if (c.hidden) {
+                             builder.td(class: "hidden", "\${row.${c.columnPath.join('.')}}")
+                        }
+                        else if (c.name == "id") {
                             builder.td(class: "id", "\${row.id}")
+                        }
+                        else if (c.interactive && c.property.manyToOne || c.property.oneToOne) {
+                            builder.td {
+                                renderEditor.render(c, ["class": c.interactive, "value": "\${row.${c.columnPath.join('.')}.id}"])
+                                                                
+                                builder."span"(class: "ui-icon ui-icon-check invisible", "")
+                                builder."span"(class: "ui-icon ui-icon-alert invisible", "")
+                            }
                         }
                         else if (c.property.type == Date || c.property.type == java.sql.Date || c.property.type == java.sql.Time || c.property.type == Calendar) {
                             builder.td {
@@ -424,6 +435,9 @@ class PageBuilder {
                     }
                     else if (c.property.type == String)  {
                         builder.input(type: "text", name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", placeholder: "\${g.message(code: 'default.filter.on')} \${eca.fallbackMessage(code: '${getCode(c.property)}', fbCode: '${getFbCode(c.property)}').toLowerCase()}")
+                    }
+                    else if (c.property.manyToOne || c.property.oneToOne) {
+                        renderEditor.render(c, [name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", noSelection: "\${[null: '']}"])
                     }
                 }
             }

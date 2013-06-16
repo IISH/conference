@@ -191,13 +191,14 @@ class DynamicPageService {
                 // Create a new column element object and add the remaining properties
                 Column column = new Column(name, curDomainClass, children)
                 
-                column.id       = element.@id.text().equalsIgnoreCase("true")
-                column.readOnly = element.@readonly.text().equalsIgnoreCase("true")
-                column.multiple = element.@multiple.text().equalsIgnoreCase("true")
-                column.hidden   = element.@hidden.text().equalsIgnoreCase("true")
-                column.notEmpty = element.@notEmpty.text().equalsIgnoreCase("true")
-                column.textarea = element.@textarea.text()
-                column.eq       = element.@eq.text()
+                column.id           = element.@id.text().equalsIgnoreCase("true")
+                column.readOnly     = element.@readonly.text().equalsIgnoreCase("true")
+                column.multiple     = element.@multiple.text().equalsIgnoreCase("true")
+                column.hidden       = element.@hidden.text().equalsIgnoreCase("true")
+                column.notEmpty     = element.@notEmpty.text().equalsIgnoreCase("true")
+                column.interactive  = element.@interactive.text()
+                column.textarea     = element.@textarea.text()
+                column.eq           = element.@eq.text()
 
                 elements.add(column)
             }  

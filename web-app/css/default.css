@@ -358,6 +358,10 @@ span.remove-item {
     padding: 5px 10px;
 }
 
+.tbl_container td select {
+    height: 20px;
+}
+
 .tbl_container td.counter {
     width: 25px;
     border-right: 1px solid #7F9DB9;
@@ -981,6 +985,10 @@ ul input.session-name {
 
 .hidden {
     display: none;
+}
+
+.invisible {
+    visibility: hidden;
 }
 
 .bold {

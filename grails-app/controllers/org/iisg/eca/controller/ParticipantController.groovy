@@ -334,7 +334,14 @@ class ParticipantController {
                                         sessions: participantSessionService.getSessionsForParticipant(participant)
         ])
     }
-
+    
+    /**
+     * Shows all participants and allows to change their paper state
+     */
+    def paperstate() {
+        forward(controller: 'dynamicPage', action: 'dynamic', params: params)
+    }
+    
     /**
      * Removes the user as a participant from the current event date
      */
@@ -412,6 +419,44 @@ class ParticipantController {
             // That's it
             Map returnMap = [success: true]
             render returnMap as JSON
+        }
+    }
+    
+    /**
+     * Change the paper state of the given paper
+     * (AJAX call)
+     */
+    def changePaperState() {
+        // If this is an AJAX call, continue
+        if (request.xhr) {
+            Map responseMap = null
+            
+            // If we have a paper id and state id, try to find the records for these ids
+            if (params.paper_id?.isLong() && params.state_id?.isLong()) {
+                Paper paper = Paper.findById(params.paper_id)
+                PaperState state = PaperState.findById(params.state_id)
+                
+                // Change the paper state if they both exist
+                if (paper && state) {
+                    paper.state = state
+                    
+                    // Save the paper
+                    if (paper.save(flush: true)) {
+                        // Everything is fine                        
+                        responseMap = [success: true]
+                    }
+                    else {
+                        responseMap = [success: false, message: paper.errors.allErrors.collect { g.message(error: it) }]
+                    }
+                }
+            }
+            
+            // If there is no responseMap defined yet, it can only mean the paper or state could not be found
+            if (!responseMap) {
+                responseMap = [success: false, message: g.message(code: 'default.not.found.message', args: ["${g.message(code: 'paper.label')}, ${g.message(code: 'paper.state.label')}"])]
+            }
+
+            render responseMap as JSON
         }
     }
 }

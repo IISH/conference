@@ -20,53 +20,62 @@ class RenderEditor {
         this.builder = builder
         this.resultsLink = resultsLink
     }
-
+    
     /**
      * Renders the column based on the properties as defined in the domain class
      * @param column The column to render
      */
     void render(Column column) {
+        render(column, [:])
+    }
+
+    /**
+     * Renders the column based on the properties as defined in the domain class
+     * @param column The column to render
+     * @param extraProperties Extra properties to apply
+     */
+    void render(Column column, Map extraProperties) {
         if (column.property.type == Boolean || column.property.type == boolean) {
-            renderBooleanEditor(column)
+            renderBooleanEditor(column, extraProperties)
         }
         else if (column.property.type && Number.isAssignableFrom(column.property.type) || (column.property.type?.isPrimitive() && column.property.type != boolean)) {
-            renderNumberEditor(column)
+            renderNumberEditor(column, extraProperties)
         }
         else if (column.property.type == String) {
-            renderStringEditor(column)
+            renderStringEditor(column, extraProperties)
         }
         else if (column.property.type == Date || column.property.type == java.sql.Date || column.property.type == java.sql.Time || column.property.type == Calendar) {
-            renderDateEditor(column)
+            renderDateEditor(column, extraProperties)
         }
         else if (column.property.type == URL) {
-            renderStringEditor(column)
+            renderStringEditor(column, extraProperties)
         }
         else if (column.property.type && column.property.isEnum()) {
-            renderEnumEditor(column)
+            renderEnumEditor(column, extraProperties)
         }
         else if (column.property.type == TimeZone) {
-            renderSelectTypeEditor("timeZone", column)
+            renderSelectTypeEditor("timeZone", column, extraProperties)
         }
         else if (column.property.type == Locale) {
-            renderSelectTypeEditor("locale", column)
+            renderSelectTypeEditor("locale", column, extraProperties)
         }
         else if (column.property.type == Currency) {
-            renderSelectTypeEditor("currency", column)
+            renderSelectTypeEditor("currency", column, extraProperties)
         }
         else if (column.property.type == ([] as Byte[]).class) {
-            renderByteArrayEditor(column)
+            renderByteArrayEditor(column, extraProperties)
         }
         else if (column.property.type == ([] as byte[]).class) {
-            renderByteArrayEditor(column)
+            renderByteArrayEditor(column, extraProperties)
         }
         else if (column.property.manyToOne || column.property.oneToOne) {
-            renderManyToOne(column)
+            renderManyToOne(column, extraProperties)
         }
         else if ((column.property.oneToMany && !column.property.bidirectional) || (column.property.manyToMany && column.property.isOwningSide())) {
-            renderManyToMany(column)
+            renderManyToMany(column, extraProperties)
         }
         else if (column.property.oneToMany) {
-            renderOneToMany(column)
+            renderOneToMany(column, extraProperties)
         }
     }
 
@@ -105,8 +114,14 @@ class RenderEditor {
 
         props
     }
-
-    private void renderEnumEditor(Column column) {
+    
+    public void renderHidden(Column column, Map extraProperties) {
+        Map props = createPropertiesMap(column)   
+        props.put("type", "hidden")
+        builder."input"(props + extraProperties)
+    }
+    
+    private void renderEnumEditor(Column column, Map extraProperties) {
         Map props = createPropertiesMap(column)
         props.put("from",   "${column.property.type.name}?.values()")
         props.put("keys",   "${column.property.type.name}.values()*.name()}")
@@ -114,10 +129,10 @@ class RenderEditor {
         (isOptional(column)) ?: props.put("required", "required")
         renderNoSelection(column, props)
 
-        builder."g:select"(props)
+        builder."g:select"(props + extraProperties)
     }
 
-    private void renderStringEditor(Column column) {
+    private void renderStringEditor(Column column, Map extraProperties) {
         if (!column.constrainedProperty) {
             builder.input(type: "text", name: getName(column), value: getValue(column))
         }
@@ -146,7 +161,7 @@ class RenderEditor {
                 (!column.constrainedProperty.maxSize)   ?: props.put("maxlength",   column.constrainedProperty.maxSize.toString())
                 (isOptional(column))                    ?: props.put("required",    "required")
 
-                builder.textarea(props, getValue(column))
+                builder.textarea(props + extraProperties, getValue(column))
             }
             else if (column.constrainedProperty.inList) {
                 props.put("from",               "\${${getResult(column)}.constraints.${column.property.name}.inList}")
@@ -155,7 +170,7 @@ class RenderEditor {
                 (isOptional(column)) ?: props.put("required", "required")
                 renderNoSelection(column, props)
 
-                builder."g:select"(props)
+                builder."g:select"(props + extraProperties)
             }
             else {
                 (!column.constrainedProperty.maxSize)   ?: props.put("maxlength",   column.constrainedProperty.maxSize)
@@ -176,16 +191,18 @@ class RenderEditor {
                     props.put("type", "text")
                 }
 
-                builder.input(props)
+                builder.input(props + extraProperties)
             }
         }
     }
 
-    private void renderByteArrayEditor(Column column) {
-        builder.input(type: "file", id: column.property.name, name: getName(column))
+    private void renderByteArrayEditor(Column column, Map extraProperties) {
+        Map props = createPropertiesMap(column)
+        props.put("type", "file")
+        builder.input(props + extraProperties)
     }
 
-    private void renderManyToOne(Column column) {
+    private void renderManyToOne(Column column, Map extraProperties) {
         if (column.property.association) {
             Map props = createPropertiesMap(column)
             props.put("value",      "\${${getValueReady(column)}?.id}")
@@ -197,11 +214,11 @@ class RenderEditor {
             (isOptional(column)) ?: props.put("required", "required")
             renderNoSelection(column, props)
 
-            builder."g:select"(props)
+            builder."g:select"(props + extraProperties)
         }
     }
 
-    private void renderManyToMany(Column column) {
+    private void renderManyToMany(Column column, Map extraProperties) {
         Class cls = column.property.referencedDomainClass?.clazz
 
         if (cls == null) {
@@ -220,11 +237,11 @@ class RenderEditor {
 
             (isOptional(column)) ?: props.put("required", "required")
 
-            builder."g:select"(props)
+            builder."g:select"(props + extraProperties)
         }
     }
 
-    private void renderOneToMany(Column column) {
+    private void renderOneToMany(Column column, Map extraProperties) {
         builder.ul {
             builder."g:each"(in: "\${${getResult(column)}.${column.property.name}?}", var: "instance") {
                 builder.li {
@@ -239,13 +256,15 @@ class RenderEditor {
         }
     }
 
-    private void renderNumberEditor(Column column) {
+    private void renderNumberEditor(Column column, Map extraProperties) {
         if (!column.constrainedProperty) {
             if (column.property.type == Byte) {
-                builder."g:select"(name: getName(column), from: "\${-128..127}", value: getValue(column))
+                Map props = [name: getName(column), from: "\${-128..127}", value: getValue(column)]
+                builder."g:select"(props + extraProperties)
             }
             else {
-                builder."g:field"(type: "number", name: getName(column), value: getValue(column))
+                Map props = [type: "number", name: getName(column), value: getValue(column)]
+                builder."g:field"(props + extraProperties)
             }
         }
         else {
@@ -257,13 +276,13 @@ class RenderEditor {
             if (column.constrainedProperty.range) {
                 props.put("from",   "\${${column.constrainedProperty.range.from}..${column.constrainedProperty.range.to}}")
 
-                builder."g:select"(props)
+                builder."g:select"(props + extraProperties)
             }
             else if (column.constrainedProperty.inList) {
                 props.put("from",               "\${${getResult(column)}.constraints.${column.property.name}.inList}")
                 props.put("valueMessagePrefix", getValue(column))
 
-                builder."g:select"(props)
+                builder."g:select"(props + extraProperties)
             }
             else {
                 props.put("type",   "number")
@@ -272,14 +291,15 @@ class RenderEditor {
                 (!column.constrainedProperty.min)   ?: props.put("min",     column.constrainedProperty.min)
                 (!column.constrainedProperty.max)   ?: props.put("max",     column.constrainedProperty.max)
 
-                builder."g:field"(props)
+                builder."g:field"(props + extraProperties)
             }
         }
      }
 
-    private void renderBooleanEditor(Column column) {
+    private void renderBooleanEditor(Column column, Map extraProperties) {
         if (!column.constrainedProperty) {
-            builder.input(type: "checkbox", name: getName(column), value: getValue(column))
+            Map props = [type: "checkbox", name: getName(column), value: getValue(column)]
+            builder.input(props + extraProperties)
         }
         else {
             Map props = createPropertiesMap(column)
@@ -290,19 +310,20 @@ class RenderEditor {
                 props.put(k, v)
             }
 
-            builder."g:checkBox"(props)
+            builder."g:checkBox"(props + extraProperties)
         }
     }
 
-    private void renderDateEditor(Column column) {
+    private void renderDateEditor(Column column, Map extraProperties) {
         String precision = (column.property.type == Date || column.property.type == java.sql.Date || column.property.type == Calendar) ? "day" : "minute"
 
         if (!column.constrainedProperty) {
-            builder."g:datePicker"(name: getName(column), precision: precision, value: getValue(column))
+            Map props = [name: getName(column), precision: precision, value: getValue(column)]
+            builder."g:datePicker"(props + extraProperties)
         }
         else {
             if (!column.constrainedProperty.editable) {
-                builder.span(getValue(column))
+                builder.span(extraProperties, getValue(column))
             }
             else {
                 Map props = createPropertiesMap(column)
@@ -313,14 +334,15 @@ class RenderEditor {
 
                 (isOptional(column)) ?: props.put("required", "required")
 
-                builder.input(props)
+                builder.input(props + extraProperties)
             }
         }
     }
 
-    private void renderSelectTypeEditor(String type, Column column) {
+    private void renderSelectTypeEditor(String type, Column column, Map extraProperties) {
         if (!column.constrainedProperty) {
-            builder."g:${type}Select"(name: getName(column), value: getValue(column))
+            Map props = [name: getName(column), value: getValue(column)]
+            builder."g:${type}Select"(props + extraProperties)
         }
         else {
             Map props = createPropertiesMap(column)
@@ -332,7 +354,7 @@ class RenderEditor {
                 props.put(k, v)
             }
 
-            builder."g:${type}Select"(props)
+            builder."g:${type}Select"(props + extraProperties)
         }
     }
 
@@ -349,6 +371,10 @@ class RenderEditor {
                 map.put("noSelection",  "['': '']")
             }
         }
+    }
+    
+    private static void cleanMap(Map map) {
+        map.values().removeAll([null, 'null', ''] as Set)
     }
 
     static boolean isRequired(Column column) {

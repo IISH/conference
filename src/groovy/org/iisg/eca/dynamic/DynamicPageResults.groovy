@@ -48,6 +48,11 @@ class DynamicPageResults {
                     filter = "%${filters.join('%')}%"
                     delegate.like(c.name, filter)
                 }
+                else if (c.property.manyToOne || c.property.oneToOne)  {
+                    if (filter?.isLong()) {
+                        delegate.eq(c.name + ".id", new Long(filter))
+                    }
+                }
             }
         }
 

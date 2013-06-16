@@ -196,6 +196,24 @@ var guessUniqueEmailUrl = function() {
     return guessUrl('../ajax/uniqueEmail');
 }
 
+var ajaxCall = function(url, params, onSuccess, onFailure) {
+    $('.errors').hide();
+    $('.message').hide();
+    
+    $.getJSON(guessUrl(url), params, function(data) {
+        if (!data.success) {
+            showErrors(data);
+            
+            if ($.isFunction(onFailure)) {
+                onFailure();
+            }
+        }
+        else if ($.isFunction(onSuccess)) {
+            onSuccess();
+        }
+    });
+}
+
 $(document).ready(function() {
     content = $('#content');
     body = $('body');
@@ -424,8 +442,12 @@ $(document).ready(function() {
 
     $('.tbl_container tbody tr').click(function(e) {
         var element = $(this);
-        var link = element.parents('.tbl_container').find('input[name=url]').val();
-        window.location = link.replace('/0', "/" + element.find("td.id").text().trim());
+        var target = $(e.target);
+        
+        if (target[0] === element[0] || target.parent()[0] === element[0]) {            
+            var link = element.parents('.tbl_container').find('input[name=url]').val();        
+            window.location = link.replace('/0', "/" + element.find("td.id").text().trim());
+        }
     });
 
     $('.check-all').click(function(e) {
@@ -456,15 +478,19 @@ $(document).ready(function() {
     });
     
     $('.session-state-select').change(function(e) {
-        $('.errors').hide();
-        $('.message').hide();
-
         var element = $(this);
-
-        $.getJSON('../../session/changeState', {session_id: element.prev().val(), state_id: element.val()}, function(data) {
-            if (!data.success) {
-                showErrors(data);
+        ajaxCall('../session/changeState', {session_id: element.prev().val(), state_id: element.val()});
+    });
+    
+    $('.tbl_container .paper-state-select').change(function(e) {
+        var element = $(this);
+        ajaxCall('../participant/changePaperState', {paper_id: element.parent().prev().text(), state_id: element.val()},
+            function() {
+                element.parent().find("span.ui-icon-check").css('visibility', 'visible');
+            },
+            function() {
+                element.parent().find("span.ui-icon-alert").css('visibility', 'visible');
             }
-        });
+        ); 
     });
 });

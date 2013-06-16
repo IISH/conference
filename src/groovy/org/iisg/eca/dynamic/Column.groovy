@@ -14,6 +14,7 @@ class Column extends ContainerElement {
     private boolean multiple
     private boolean hidden
     private boolean notEmpty
+    private String interactive
     private String textarea
     private String eq
 
@@ -122,7 +123,15 @@ class Column extends ContainerElement {
     boolean getNotEmpty() {
         notEmpty
     }
-
+    
+    void setInteractive(String interactive) {
+        this.interactive = interactive
+    }
+    
+    String getInteractive() {
+        interactive
+    }
+    
     /**
      * Indicates whether this column should be a textarea if not null and with what size
      * @returns Either null, 'normal' or 'large'
@@ -171,6 +180,6 @@ class Column extends ContainerElement {
      * @return Whether it can be shown
      */
     boolean canBeShown() {
-        (!hasColumns() && (!constrainedProperty || constrainedProperty.display) && !hidden)
+        (!hasColumns() && (!constrainedProperty || constrainedProperty.display))
     }
 }
