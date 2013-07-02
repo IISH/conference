@@ -38,9 +38,14 @@ grails.project.dependency.resolution = {
 
     plugins {
         runtime ":hibernate:$grailsVersion"
-        runtime ":jquery:1.9.0"
-        runtime ":resources:1.1.6"
-
+        runtime ":jquery:1.10.0"
+        runtime ":resources:1.1.6"  
+        
+        compile ":hibernate-filter:0.3.2"
+        compile ":mail:1.0.1"
+        compile ":quartz2:2.1.6.2"
+        compile ":spring-security-core:1.2.7.3"
+        
         // Uncomment these (or add new ones) to enable additional resources capabilities
         //runtime ":zipped-resources:1.0"
         //runtime ":cached-resources:1.0"

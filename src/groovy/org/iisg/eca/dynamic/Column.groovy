@@ -125,7 +125,9 @@ class Column extends ContainerElement {
     }
     
     void setInteractive(String interactive) {
-        this.interactive = interactive
+        if (interactive && (interactive.trim().length() > 0)) {
+            this.interactive = interactive.trim()
+        }
     }
     
     String getInteractive() {
@@ -163,7 +165,9 @@ class Column extends ContainerElement {
      * @param eq What the column should have for value
      */
     void setEq(String eq) {
-        this.eq = eq
+        if (eq && (eq.trim().length() > 0)) {
+            this.eq = eq.trim()
+        }
     }
 
     /**

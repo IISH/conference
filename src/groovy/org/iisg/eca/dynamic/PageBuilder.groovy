@@ -259,7 +259,7 @@ class PageBuilder {
                         else if (c.name == "id") {
                             builder.td(class: "id", "\${row.id}")
                         }
-                        else if (c.interactive && c.property.manyToOne || c.property.oneToOne) {
+                        else if (c.interactive && (c.property.manyToOne || c.property.oneToOne)) {
                             builder.td {
                                 renderEditor.render(c, ["class": c.interactive, "value": "\${row.${c.columnPath.join('.')}.id}"])
                                                                 
