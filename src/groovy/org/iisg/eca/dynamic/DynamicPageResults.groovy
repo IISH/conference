@@ -52,6 +52,9 @@ class DynamicPageResults {
                     if (filter?.isLong()) {
                         delegate.eq(c.name + ".id", new Long(filter))
                     }
+                    else if (c.filter) {
+                        delegate.isNull(c.name + ".id")
+                    }
                 }
             }
         }

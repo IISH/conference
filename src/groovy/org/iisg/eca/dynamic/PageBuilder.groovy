@@ -437,7 +437,12 @@ class PageBuilder {
                         builder.input(type: "text", name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", placeholder: "\${g.message(code: 'default.filter.on')} \${eca.fallbackMessage(code: '${getCode(c.property)}', fbCode: '${getFbCode(c.property)}').toLowerCase()}")
                     }
                     else if (c.property.manyToOne || c.property.oneToOne) {
-                        renderEditor.render(c, [name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", noSelection: "\${[null: '']}"])
+                        if (c.filter) {
+                            renderEditor.render(c, [name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", noSelection: "\${[null: '']}"])
+                        }
+                        else {
+                            renderEditor.render(c, [name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", noSelection: "\${[null: 'No filter']}"])
+                        }
                     }
                 }
             }

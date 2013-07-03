@@ -14,6 +14,7 @@ class Column extends ContainerElement {
     private boolean multiple
     private boolean hidden
     private boolean notEmpty
+    private boolean filter
     private String interactive
     private String textarea
     private String eq
@@ -122,6 +123,14 @@ class Column extends ContainerElement {
     
     boolean getNotEmpty() {
         notEmpty
+    }
+
+    void setFilter(boolean filter) {
+        this.filter = filter
+    }
+
+    boolean getFilter() {
+        filter
     }
     
     void setInteractive(String interactive) {
