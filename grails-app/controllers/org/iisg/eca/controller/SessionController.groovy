@@ -85,7 +85,7 @@ class SessionController {
         // If the user came to this page via the dynamic page listing all sessions, ask for the last results
         // Otherwise just return all listed sessions in its default order
         DynamicPage dynamicPage = dynamicPageService.getDynamicPage(Page.findByControllerAndAction(params.controller, 'list'))
-        DynamicPageResults results = new DynamicPageResults((DataContainer) dynamicPage.elements.get(0), params)
+        DynamicPageResults results = new DynamicPageResults((DataContainer) dynamicPage.elements.get(1), params)
 
         // Now we have the results, but we're only interested in the ids
         // (Actually, just the prev/next ids for the navigation section)

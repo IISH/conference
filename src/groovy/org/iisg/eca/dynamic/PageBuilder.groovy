@@ -441,7 +441,7 @@ class PageBuilder {
                             renderEditor.render(c, [name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", noSelection: "\${[null: '']}"])
                         }
                         else {
-                            renderEditor.render(c, [name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", noSelection: "\${[null: 'No filter']}"])
+                            renderEditor.render(c, [name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", noSelection: "\${[null: 'No filter selected']}"])
                         }
                     }
                 }

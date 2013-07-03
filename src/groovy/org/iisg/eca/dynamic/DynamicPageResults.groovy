@@ -57,6 +57,9 @@ class DynamicPageResults {
                     }
                 }
             }
+            else if (c.filter) {
+                delegate.isNull(c.name + ".id") 
+            }
         }
 
         // Now apply the filter from the column description, if there is one

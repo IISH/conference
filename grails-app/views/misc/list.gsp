@@ -24,7 +24,7 @@
                 <tbody>
                     <g:each in="${data}" var="row" status="i">
                         <tr>
-                            <td class="counter">${i}</td>
+                            <td class="counter">${i+1}</td>
                             <g:each in="${row.values()}" var="column" status="j">
                                 <g:if test="${j == 0}">
                                     <td class="id hidden">
