@@ -337,6 +337,10 @@ span.remove-item {
     background-color: #D8E2EB;
 }
 
+.tbl_container thead.no-filters {
+    text-align: left;
+}
+
 .tbl_container tbody tr:hover {
     background-color: #D8E2EB;
     cursor: pointer;

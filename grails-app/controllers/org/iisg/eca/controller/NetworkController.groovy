@@ -223,7 +223,7 @@ class NetworkController {
                                                                 [id: pType.id, type:  pType.toString()]
                                                             },
                                             paper:          (it.paper) ? "${g.message(code: 'paper.label')}: ${it.paper?.toString()}" : "",
-                                            coauthors:      (it.paper) ? "${g.message(code: 'paper.coAuthors.label')}: ${it.paper.coAuthors ?: '-'}" : ""] }
+                                            coauthors:      (it.paper?.coAuthors) ? "${g.message(code: 'paper.coAuthors.label')}: ${it.paper.coAuthors}" : ""] }
                         ] }
                     ]
                 }
@@ -273,7 +273,7 @@ class NetworkController {
                                                                 [id: pType.id, type:  pType.toString()]
                                                             },
                                             paper:          (it.paper) ? "${g.message(code: 'paper.label')}: ${it.paper?.toString()}" : "",
-                                            coauthors:      (it.paper) ? "${g.message(code: 'paper.coAuthors.label')}: ${it.paper.coAuthors ?: '-'}" : ""] }
+                                            coauthors:      (it.paper?.coAuthors) ? "${g.message(code: 'paper.coAuthors.label')}: ${it.paper.coAuthors}" : ""] }
                         ] }
                     ]
                 }

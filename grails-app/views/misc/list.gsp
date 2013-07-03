@@ -9,29 +9,25 @@
         <div class="tbl_container">
             <input type="hidden" name="url" value="${eca.createLink(controller: controller, action: action, id: 0)}" />
             <table class="clear">
-                <thead>
+                <thead class="no-filters">
                     <tr>
                         <th class="counter"></th>
                         <g:each in="${headers}" var="header" status="i">
                             <g:if test="${i == 0}">
-                                <th class="id">
+                                <th class="id hidden"></th>
                             </g:if>
-                            <g:else>
-                                <th>
-                            </g:else>
 
-                                ${header}
-                            </th>
+                            <th>${header}</th>
                         </g:each>
                     </tr>
                 </thead>
                 <tbody>
-                    <g:each in="${data}" var="row">
+                    <g:each in="${data}" var="row" status="i">
                         <tr>
                             <td class="counter">${i}</td>
-                            <g:each in="${row.values()}" var="column" status="i">
-                                <g:if test="${i == 0}">
-                                    <td class="id">
+                            <g:each in="${row.values()}" var="column" status="j">
+                                <g:if test="${j == 0}">
+                                    <td class="id hidden">
                                 </g:if>
                                 <g:else>
                                     <td>

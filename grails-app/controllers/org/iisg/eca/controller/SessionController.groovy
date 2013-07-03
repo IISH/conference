@@ -319,7 +319,7 @@ class SessionController {
                                                         [id: pType.id, type:  pType.toString()]
                                                     },
                                     paper:          (it.paper) ? "${g.message(code: 'paper.label')}: ${it.paper.toString()}" : "",
-                                    coauthors:      (it.paper) ? "${g.message(code: 'paper.coAuthors.label')}: ${it.paper.coAuthors ?: '-'}" : ""]
+                                    coauthors:      (it.paper?.coAuthors) ? "${g.message(code: 'paper.coAuthors.label')}: ${it.paper.coAuthors}" : ""]
                             }, equipment: equipment]
                         }
                         else {
@@ -383,7 +383,7 @@ class SessionController {
                                                     [id: pType.id, type:  pType.toString()]
                                                 },
                                 paper:          (it.paper) ? "${g.message(code: 'paper.label')}: ${it.paper?.toString()}" : "",
-                                coauthors:      (it.paper) ? "${g.message(code: 'paper.coAuthors.label')}: ${it.paper.coAuthors ?: '-'}" : ""]
+                                coauthors:      (it.paper?.coAuthors) ? "${g.message(code: 'paper.coAuthors.label')}: ${it.paper.coAuthors}" : ""]
                         }, equipment: equipment]
                     }
                     else {
@@ -550,7 +550,7 @@ class SessionController {
                         state:          it.participant.state.toString(),
                         types:          it.types.collect { pType -> [type: pType.toString()] },
                         paper:          (it.paper) ? "${g.message(code: 'paper.label')}: ${it.paper?.toString()}" : "",
-                        coauthors:      (it.paper) ? "${g.message(code: 'paper.coAuthors.label')}: ${it.paper.coAuthors ?: '-'}" : ""] }
+                        coauthors:      (it.paper?.coAuthors) ? "${g.message(code: 'paper.coAuthors.label')}: ${it.paper.coAuthors}" : ""] }
                 )
             }
             else {

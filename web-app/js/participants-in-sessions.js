@@ -65,7 +65,14 @@ var setParticipants = function(data, container, clone) {
         }
         else {
             var paperItems = item.find('.participant-paper-value'); 
-            paperItems.last().text(data[i].coauthors);
+
+            if (data[i].coauthors.trim().length === 0) {
+                paperItems.last().remove();
+            }
+            else {
+                paperItems.last().text(data[i].coauthors);
+            }
+
             paperItems.first().text(data[i].paper);
         }
 

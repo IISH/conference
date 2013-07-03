@@ -4,7 +4,8 @@ import groovy.sql.Sql
 import groovy.sql.GroovyRowResult
 
 /*
- *
+ * Misc queries
+ * First returned column is assumed to be the id
  */
 class MiscController {
     def dataSource
@@ -29,7 +30,7 @@ class MiscController {
 
         render(view: "list", model: [
                 data:       result,
-                headers:    ["#", "Last Name", "First Name"],
+                headers:    ["Last Name", "First Name"],
                 controller: "participant",
                 action:     "show",
                 info:       "Overview of participants with all lowercase or uppercase lastname."
@@ -56,7 +57,7 @@ class MiscController {
 
         render(view: "list", model: [
                 data:       result,
-                headers:    ["#", "Last Name", "First Name"],
+                headers:    ["Last Name", "First Name"],
                 controller: "participant",
                 action:     "show",
                 info:       "Overview of participants with all lowercase or uppercase firstname."
@@ -83,7 +84,7 @@ class MiscController {
 
         render(view: "list", model: [
                 data:       result,
-                headers:    ["#", "Last Name", "First Name", "City"],
+                headers:    ["Last Name", "First Name", "City"],
                 controller: "participant",
                 action:     "show",
                 info:       "Overview of participants with all lowercase or uppercase city."
@@ -111,7 +112,7 @@ class MiscController {
 
         render(view: "list", model: [
                 data:       result,
-                headers:    ["#", "Last Name", "First Name", "City", "Organisation"],
+                headers:    ["Last Name", "First Name", "City", "Organisation"],
                 controller: "participant",
                 action:     "show",
                 info:       "Overview of participants with all lowercase or uppercase organisation (containing a space)."
@@ -133,7 +134,7 @@ class MiscController {
 
         render(view: "list", model: [
                 data:       result,
-                headers:    ["#", "Session name"],
+                headers:    ["Session name"],
                 controller: "session",
                 action:     "show",
                 info:       "Overview of sessions with exact the same names."
@@ -153,7 +154,7 @@ class MiscController {
 
         render(view: "list", model: [
                 data:       result,
-                headers:    ["#", "Session name"],
+                headers:    ["Session name"],
                 controller: "session",
                 action:     "show",
                 info:       "Overview of sessions with no network."
@@ -178,7 +179,7 @@ class MiscController {
 
         render(view: "list", model: [
                 data:       result,
-                headers:    ["#", "Session name"],
+                headers:    ["Session name"],
                 controller: "session",
                 action:     "show",
                 info:       "Overview of sessions with a co-author."
@@ -203,7 +204,7 @@ class MiscController {
 
         render(view: "list", model: [
                 data:       result,
-                headers:    ["#", "Last name", "First name"],
+                headers:    ["Last name", "First name"],
                 controller: "participant",
                 action:     "show",
                 info:       "Overview of participants who have multiple papers with exact the same title."
@@ -230,7 +231,7 @@ class MiscController {
 
         render(view: "list", model: [
                 data:       result,
-                headers:    ["#", "Last name", "First name"],
+                headers:    ["Last name", "First name"],
                 controller: "participant",
                 action:     "show",
                 info:       "Overview of participants with multiple papers."
@@ -252,10 +253,32 @@ class MiscController {
 
         render(view: "list", model: [
                 data:       result,
-                headers:    ["#", "Last name", "First name"],
+                headers:    ["Last name", "First name"],
                 controller: "participant",
                 action:     "show",
                 info:       "Overview of (co)authors in deleted sessions."
+        ])
+    }
+
+    def award() {
+        Sql sql = new Sql(dataSource)
+        List<GroovyRowResult> result = sql.rows("""
+          SELECT users.user_id, lastname, firstname
+          FROM users INNER JOIN participant_date ON users.user_id=participant_date.user_id
+          WHERE users.enabled=1 AND users.deleted=0
+          AND participant_date.enabled=1 and participant_date.deleted=0
+          AND participant_date.participant_state_id IN (0,1,2,999)
+          AND participant_date.date_id=1
+          AND participant_date.award=1
+          ORDER BY lastname, firstname
+        """)
+
+        render(view: "list", model: [
+                data:       result,
+                headers:    ["Last name", "First name"],
+                controller: "participant",
+                action:     "show",
+                info:       "Overview of students participating in the 'Award'."
         ])
     }
 }

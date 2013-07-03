@@ -120,9 +120,11 @@
                                   <span class="participant-paper-value">
                                       <g:message code="paper.label" />: ${participant.paper}
                                   </span>
-                                  <span class="participant-paper-value">
-                                      <g:message code="paper.coAuthors.label" />: <eca:formatText text="${participant.paper.coAuthors}" />
-                                  </span>
+                                  <g:if test="${participant.paper.coAuthors && !participant.paper.coAuthors.isEmpty()}">
+                                      <span class="participant-paper-value">
+                                          <g:message code="paper.coAuthors.label" />: <eca:formatText text="${participant.paper.coAuthors}" />
+                                      </span>
+                                  </g:if>
                               </g:if>
                           </li>
                       </g:each>
