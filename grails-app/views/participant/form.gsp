@@ -312,11 +312,11 @@
                                             <input type="hidden" name="ParticipantVolunteering_${i}.id" value="${instance.id}" />
                                             <label>
                                                 <g:message code="participantDate.volunteering.select.label" />
-                                                <g:select from="${volunteering}" name="ParticipantVolunteering_${i}.volunteering.id" optionKey="id" optionValue="description" value="${instance.volunteering.id}" />
+                                                <g:select from="${volunteering}" name="ParticipantVolunteering_${i}.volunteering.id" optionKey="id" optionValue="description" value="${instance?.volunteering?.id}" noSelection="[null:'']" />
                                             </label>
                                             <label>
                                                 <g:message code="network.label" />
-                                                <g:select from="${networks}" name="ParticipantVolunteering_${i}.network.id" optionKey="id" optionValue="name" value="${instance.network.id}" />
+                                                <g:select from="${networks}" name="ParticipantVolunteering_${i}.network.id" optionKey="id" optionValue="name" value="${instance?.network?.id}" noSelection="[null:'']" />
                                             </label>
                                             <span class="ui-icon ui-icon-circle-minus"></span>
                                         </li>
@@ -329,11 +329,11 @@
                                             <input type="hidden" name="ParticipantVolunteering_null.id" />
                                             <label>
                                                 <g:message code="participantDate.volunteering.select.label" />
-                                                <g:select from="${volunteering}" name="ParticipantVolunteering_null.volunteering.id" optionKey="id" optionValue="description" />
+                                                <g:select from="${volunteering}" name="ParticipantVolunteering_null.volunteering.id" optionKey="id" optionValue="description" noSelection="[null:'']" />
                                             </label>
                                             <label>
                                                 <g:message code="network.label" />
-                                                <g:select from="${networks}" name="ParticipantVolunteering_null.network.id" optionKey="id" optionValue="name" />
+                                                <g:select from="${networks}" name="ParticipantVolunteering_null.network.id" optionKey="id" optionValue="name" noSelection="[null:'']" />
                                             </label>
                                             <span class="ui-icon ui-icon-circle-minus"></span>
                                         </li>

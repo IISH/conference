@@ -26,7 +26,12 @@ class ParticipantVolunteering implements Serializable {
     }
 
     Long getId() {
-        "${participantDate.id}${volunteering.id}${network.id}".toLong()
+        if (participantDate?.id && volunteering?.id && network?.id) {
+            "${participantDate.id}${volunteering.id}${network.id}".toLong()
+        }
+        else {
+            null
+        }
     }
 
      @Override
