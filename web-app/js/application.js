@@ -481,6 +481,18 @@ $(document).ready(function() {
         var element = $(this);
         ajaxCall('../session/changeState', {session_id: element.prev().val(), state_id: element.val()});
     });
+
+    $('.tbl_container .session-state-select-tbl').change(function(e) {
+        var element = $(this);
+        ajaxCall('../session/changeState', {session_id: element.parent().prev().text(), state_id: element.val()},
+            function() {
+                element.parent().find("span.ui-icon-check").css('visibility', 'visible');
+            },
+            function() {
+                element.parent().find("span.ui-icon-alert").css('visibility', 'visible');
+            }
+        );
+    });
     
     $('.tbl_container .paper-state-select').change(function(e) {
         var element = $(this);
