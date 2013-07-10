@@ -10,6 +10,10 @@
         
         <ol class="property-list">
           <li>
+            <span id="id-label" class="property-label">#</span>
+            <span class="property-value" arial-labelledby="id-label">${network.id}</span>
+          </li>
+          <li>
             <span id="name-label" class="property-label">
               <g:message code="network.name.label" />
             </span>

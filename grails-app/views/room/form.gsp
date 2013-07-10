@@ -16,6 +16,14 @@
 
         <form method="post" action="#">
             <fieldset class="form">
+                <div>
+                    <label class="property-label">
+                        #
+                    </label>
+                    <span class="property-value">
+                        ${room.id}
+                    </span>
+                </div>
                 <div class="${hasErrors(bean: room, field: 'roomName', 'error')} required">
                     <label class="property-label" for="roomName">
                         <g:message code="room.roomName.label" />

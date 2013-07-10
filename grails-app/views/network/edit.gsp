@@ -22,6 +22,14 @@
 
         <form method="post" action="#">
           <fieldset class="form">
+            <div>
+              <label class="property-label">
+                  #
+              </label>
+              <span class="property-value">
+                  ${network.id}
+              </span>
+            </div>
             <div class="${hasErrors(bean: network, field: 'name', 'error')} required">
               <label class="property-label" for="Network.name">
                 <g:message code="network.name.label" />
