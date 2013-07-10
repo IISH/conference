@@ -263,7 +263,7 @@ class MiscController {
     def award() {
         Sql sql = new Sql(dataSource)
         List<GroovyRowResult> result = sql.rows("""
-          SELECT users.user_id, lastname, firstname
+          SELECT users.user_id, lastname, firstname, email
           FROM users INNER JOIN participant_date ON users.user_id=participant_date.user_id
           WHERE users.enabled=1 AND users.deleted=0
           AND participant_date.enabled=1 and participant_date.deleted=0
@@ -275,7 +275,7 @@ class MiscController {
 
         render(view: "list", model: [
                 data:       result,
-                headers:    ["Last name", "First name"],
+                headers:    ["Last name", "First name", "E-mail"],
                 controller: "participant",
                 action:     "show",
                 info:       "Overview of students participating in the 'Award'."
