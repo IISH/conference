@@ -1,3 +1,4 @@
+<%@page defaultCodec="none" %>
 <!doctype html>
 <html>
     <head>
@@ -11,6 +12,6 @@
             <div class="message" role="status">${flash.message}</div>
         </g:if>
     
-    
+        ${statistics}
     </body>
 </html>

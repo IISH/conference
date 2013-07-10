@@ -2,6 +2,8 @@ package org.iisg.eca.controller
 
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.EventDate
+import org.iisg.eca.domain.StatisticsTemplate
+import org.iisg.eca.domain.Statistic
 
 /**
  * Controller for event related actions
@@ -22,7 +24,23 @@ class EventController {
      */
     def index() {
         if (pageInformation.date) {
-            render(view: "index")
+            StatisticsTemplate statisticsTemplate = StatisticsTemplate.getByEvent(StatisticsTemplate.list())
+            String statistics = statisticsTemplate?.template
+
+            if (statistics) {
+                // Collect all available statistics and check for each one whether the template uses the property
+                Statistic.list().each { statistic ->
+                    if (statistics.contains("[${statistic.property}]")) {
+                        // If the template contains the property, replace all occurrences with the specific value
+                        statistics = statistics.replaceAll("\\[${statistic.property}\\]", statistic.value)
+                    }
+                }
+
+                // Any properties not found are replaced by 0
+                statistics = statistics.replaceAll("\\[.+\\]", "0")
+            }
+
+            render(view: "index", model: [statistics: statistics])
         }
         else {
             redirect(uri: eca.createLink(action: 'list', noBase: true), params: params)
