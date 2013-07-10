@@ -37,7 +37,7 @@ class EventController {
                 }
 
                 // Any properties not found are replaced by 0
-                statistics = statistics.replaceAll("\\[.+\\]", "0")
+                statistics = statistics.replaceAll("\\[[^\\[\\]]+\\]", "0")
             }
 
             render(view: "index", model: [statistics: statistics])
