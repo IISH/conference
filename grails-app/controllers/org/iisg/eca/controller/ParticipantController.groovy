@@ -170,6 +170,10 @@ class ParticipantController {
         // Try to look up this user as a participant for the current event date
         ParticipantDate participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
 
+        // Already collect participant ids in the case of an error
+        List participantIds = participantService.getParticipantsWithFilters(params).collect { it[0] }
+        List sessions = participantSessionService.getSessionsForParticipant(participant)
+
         // The 'save' button was clicked, save all data
         if (request.post) {
             try {
@@ -259,6 +263,7 @@ class ParticipantController {
                         if (!paper) {
                             paper = new Paper(state: PaperState.get(0))
                             user.addToPapers(paper)
+                            paper.setDate(pageInformation.date)
                         }
                         
                         // Make sure that the paper can be saved first
@@ -316,8 +321,8 @@ class ParticipantController {
                                                 networks: Network.list(),
                                                 paperStates: PaperState.list(),
                                                 equipmentList: Equipment.list(),
-                                                participantIds: participantService.getParticipantsWithFilters(params).collect { it[0] },
-                                                sessions: participantSessionService.getSessionsForParticipant(participant)
+                                                participantIds: participantIds,
+                                                sessions: sessions
                 ])
             }
         }
@@ -330,8 +335,8 @@ class ParticipantController {
                                         networks: Network.list(),
                                         paperStates: PaperState.list(),
                                         equipmentList: Equipment.list(),
-                                        participantIds: participantService.getParticipantsWithFilters(params).collect { it[0] },
-                                        sessions: participantSessionService.getSessionsForParticipant(participant)
+                                        participantIds: participantIds,
+                                        sessions: sessions
         ])
     }
     

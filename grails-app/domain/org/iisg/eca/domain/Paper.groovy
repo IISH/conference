@@ -50,7 +50,12 @@ class Paper extends EventDateDomain {
 
     static constraints = {
         session             nullable: true
-        title               blank: false,   maxSize: 500
+        title               blank: false,   maxSize: 500, validator: { val, obj ->
+            Integer maxPapers = Setting.getByEvent(Setting.findAllByProperty(Setting.MAX_PAPERS_PER_PERSON_PER_SESSION))?.value?.toInteger()
+            if (maxPapers && !obj?.id && (obj?.user?.papers?.findAll { !it?.deleted && (it?.date?.id == pageInformation.date.id) }?.size() > maxPapers)) {
+                "paper.validation.max.message"
+            }
+        }
         coAuthors           nullable: true, maxSize: 500
         abstr               blank: false
         comment             nullable: true
