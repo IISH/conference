@@ -168,7 +168,7 @@ org {
     quartz {
         scheduler.instanceName = 'MyAppScheduler'
         threadPool.class = 'org.quartz.simpl.SimpleThreadPool'
-        threadPool.threadCount = 2
+        threadPool.threadCount = 5
         threadPool.threadsInheritContextClassLoaderOfInitializingThread = true
         jobStore.class = 'org.quartz.simpl.RAMJobStore'
     }
