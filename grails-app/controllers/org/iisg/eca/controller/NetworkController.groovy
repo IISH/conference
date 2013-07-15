@@ -122,10 +122,14 @@ class NetworkController {
                 }
             }
         }
+        
+        // All sessions, but ordered by code and by name
+        List<Session> allSessions = Session.findAll("FROM Session AS s ORDER BY code, name")
 
         // Show all network related information
-        render(view: "edit", model: [   network:    network, 
-                                        sessions:   sessions])
+        render(view: "edit", model: [   network:        network, 
+                                        sessions:       sessions,
+                                        allSessions:    allSessions])
     }
 
     /**

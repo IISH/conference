@@ -134,7 +134,7 @@
                 </label>
                 <ul class="property-value">
                     <li>
-                        <g:select name="Network_${i}.sessions.id" from="${Session.list()}" optionKey="id" value="${session.id}" />
+                        <g:select name="Network_${i}.sessions.id" from="${allSessions}" optionKey="id" value="${session.id}" />
                         <span class="ui-icon ui-icon-circle-plus add-session"></span>
                     </li>
                     <li>

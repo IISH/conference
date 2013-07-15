@@ -157,7 +157,7 @@ class ParticipantSessionService {
             FROM Session AS s
             INNER JOIN s.networks AS n
             WHERE n.id = :networkId
-            ORDER BY s.code
+            ORDER BY s.code, s.name
         ''', [networkId: network.id]).each { session ->
             sessions.put(session, getParticipantsForSession(session))
         }
