@@ -140,7 +140,7 @@
 
                                 <g:if test="${participant.paper}">
                                     <span class="participant-paper-value">
-                                        <g:message code="paper.label" />: ${participant.paper}
+                                        <g:message code="paper.label" />: ${participant.paper} (${participant.paper.state})
                                     </span>
                                     <g:if test="${participant.paper.coAuthors && !participant.paper.coAuthors.isEmpty()}">
                                         <span class="participant-paper-value">
