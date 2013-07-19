@@ -106,6 +106,14 @@
                 <textarea id="EventDate.longDescription" cols="40" name="EventDate.longDescription" rows="5">${eventDate?.longDescription}</textarea>
               </span>
             </div>
+            <div class="${hasErrors(bean: eventDate, field: 'createStatistics', 'error')} ">
+                <label class="property-label" for="EventDate.createStatistics">
+                  <eca:fallbackMessage code="eventDate.createStatistics.label" fbCode="eventDate.createStatistics.label" />
+                </label>
+                <span class="property-value">
+                  <g:checkBox id="EventDate.createStatistics" name="EventDate.createStatistics" value="${eventDate?.createStatistics}" />
+                </span>
+            </div>
             <div class="${hasErrors(bean: eventDate, field: 'enabled', 'error')} ">
               <label class="property-label" for="EventDate.enabled">
                 <eca:fallbackMessage code="default.enabled.label" fbCode="eventDate.enabled.label" />

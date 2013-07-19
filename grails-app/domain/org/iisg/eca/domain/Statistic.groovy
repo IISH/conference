@@ -3,12 +3,10 @@ package org.iisg.eca.domain
 class Statistic extends EventDateDomain {
     String property
     String value
-    String lastUpdated
 
     static constraints = {
         property    blank: false,   maxSize: 50
-        value       blank: false,   maxSize: 255
-        lastUpdated blank: false,   maxSize: 20
+        value       nullable: true
     }
 
     static mapping = {
@@ -17,7 +15,6 @@ class Statistic extends EventDateDomain {
 
         id          column: 'statistic_id'
         property    column: 'property'
-        value       column: 'value'
-        lastUpdated column: 'last_updated'
+        value       column: 'value',        type: 'text'
     }
 }

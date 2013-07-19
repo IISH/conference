@@ -10,6 +10,7 @@ class EventDate extends DefaultDomain {
     String dateAsText
     String description
     String longDescription
+    boolean createStatistics = false
     Event event
 
     static hasMany = [days: Day]
@@ -29,17 +30,18 @@ class EventDate extends DefaultDomain {
         cache true
         version false
 
-        id              column: 'date_id'
-        yearCode        column: 'year_code'
-        startDate       column: 'start_date',       sqlType: 'date'
-        endDate         column: 'end_date',         sqlType: 'date'
-        dateAsText      column: 'date_as_text'
-        description     column: 'description'
-        longDescription column: 'long_description', sqlType: 'text'
-        event           column: 'event_id'
+        id                  column: 'date_id'
+        yearCode            column: 'year_code'
+        startDate           column: 'start_date',       sqlType: 'date'
+        endDate             column: 'end_date',         sqlType: 'date'
+        dateAsText          column: 'date_as_text'
+        description         column: 'description'
+        longDescription     column: 'long_description', sqlType: 'text'
+        createStatistics    column: 'create_statistics'
+        event               column: 'event_id'
 
-        days            sort: 'dayNumber',  order: 'asc'
-        sort            startDate: 'desc'
+        days                sort: 'dayNumber',  order: 'asc'
+        sort                startDate: 'desc'
     }
 
     static namedQueries = {

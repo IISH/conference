@@ -57,7 +57,7 @@ class EventDateController {
             if (request.post) {
                 // Save all event date related data
                 bindData(eventDate, params, [include: ["yearCode", "startDate", "endDate", "dateAsText",
-                        "description", "longDescription"]], "EventDate")
+                        "description", "longDescription", "createStatistics"]], "EventDate")
 
                 // Save all the days
                 int i = 0
@@ -105,7 +105,7 @@ class EventDateController {
         if (request.post) {
             // Save all event date related data
             bindData(date, params, [include: ['yearCode', 'startDate', 'endDate',
-                    'dateAsText', 'description', 'longDescription']], 'EventDate')
+                    'dateAsText', 'description', 'longDescription', 'createStatistics']], 'EventDate')
 
             // Get a list of all days for this event date
             // If they do not come up, they have to be deleted
