@@ -6,7 +6,7 @@ class Statistic extends EventDateDomain {
 
     static constraints = {
         property    blank: false,   maxSize: 50
-        value       nullable: true
+        value       blank: false
     }
 
     static mapping = {
