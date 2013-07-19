@@ -41,6 +41,27 @@ class Session extends EventDateDomain {
         abstr       nullable: true
         comment     nullable: true
     }
+
+    /**
+     * Updates the paper state of all papers of this session when the state of this session has been changed
+     */
+    def beforeUpdate() {
+        if (isDirty('state')) {
+            // Find the corresponding paper state of this session state
+            PaperState correspondingPaperState = state.correspondingPaperState
+
+            // Change all paper states of this session
+            Paper.findAllBySession(this).each { paper ->
+                PaperState paperState = paper.state
+
+                // Only update papers that may be changed
+                if (paperState.sessionStateTrigger) {
+                    paper.state = correspondingPaperState
+                    paper.save()
+                }
+            }
+        }
+    }
     
     @Override
     String toString() {

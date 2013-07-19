@@ -5,6 +5,8 @@ package org.iisg.eca.domain
  */
 class SessionState extends EventDateDomain {
     String description
+    String shortDescription
+    PaperState correspondingPaperState
 
     static hasMany = [sessions: Session]
 
@@ -12,12 +14,16 @@ class SessionState extends EventDateDomain {
         table 'session_states'
         version false
 
-        id          column: 'session_state_id'
-        description column: 'description'
+        id                      column: 'session_state_id'
+        description             column: 'description'
+        shortDescription        column: 'short_description'
+        correspondingPaperState column: 'corresponding_paper_state_id'
     }
     
     static constraints = {
-        description blank: false,   maxSize: 50
+        description             blank: false,   maxSize: 50
+        shortDescription        blank: false,   maxSize: 10
+        correspondingPaperState nullable: true
     }
 
     @Override

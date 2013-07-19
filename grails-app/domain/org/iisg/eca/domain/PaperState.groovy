@@ -5,6 +5,8 @@ package org.iisg.eca.domain
  */
 class PaperState extends EventDateDomain {
     String description
+    String shortDescription
+    boolean sessionStateTrigger = false
 
     static hasMany = [papers: Paper]
 
@@ -12,12 +14,15 @@ class PaperState extends EventDateDomain {
         table 'paper_states'
         version false
 
-        id          column: 'paper_state_id'
-        description column: 'description'
+        id                  column: 'paper_state_id'
+        description         column: 'description'
+        shortDescription    column: 'short_description'
+        sessionStateTrigger column: 'session_state_trigger'
     }
 
     static constraints = {
-        description blank: false,   maxSize: 50
+        description         blank: false,   maxSize: 50
+        shortDescription    blank: false,   maxSize: 10
     }
 
     @Override
