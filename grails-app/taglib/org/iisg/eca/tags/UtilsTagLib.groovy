@@ -133,6 +133,22 @@ class UtilsTagLib {
     }
 
     /**
+     * Tag for creating a radio buttons alternative to select buttons
+     * @attr name REQUIRED The name of the radio boxes
+     * @attr values REQUIRED The values to choose from
+     * @attr labelName REQUIRED The label name
+     * @attr value REQUIRED The selected value
+     * @attr class The class to add
+     */
+    def radioSelect = { attrs ->
+        def ids = attrs.values*.id
+
+        out << g.radioGroup(name: attrs.name, class: attrs.class, values: ids, labels: attrs.values, value: attrs.value) {
+            out << "<label title=\"${it.label.toString()}\" >${it.radio} ${it.label."${attrs.labelName}"}</label> &nbsp;"
+        }
+    }
+
+    /**
      * Tag printing all roles of the logged in user in a user-friendly way
      */
     def roles = {

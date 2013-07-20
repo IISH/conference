@@ -483,25 +483,29 @@ $(document).ready(function() {
     });
 
     $('.tbl_container .session-state-select-tbl').change(function(e) {
-        var element = $(this);
-        ajaxCall('../session/changeState', {session_id: element.parent().prev().text(), state_id: element.val()},
+        var state_id = $(this).val();
+        var column = $(this).parents("td");
+
+        ajaxCall('../session/changeState', {session_id: column.prev().text(), state_id: state_id},
             function() {
-                element.parent().find("span.ui-icon-check").css('visibility', 'visible');
+                column.find("span.ui-icon-check").css('visibility', 'visible');
             },
             function() {
-                element.parent().find("span.ui-icon-alert").css('visibility', 'visible');
+                column.find("span.ui-icon-alert").css('visibility', 'visible');
             }
         );
     });
     
     $('.tbl_container .paper-state-select').change(function(e) {
-        var element = $(this);
-        ajaxCall('../participant/changePaperState', {paper_id: element.parent().prev().text(), state_id: element.val()},
+        var state_id = $(this).val();
+        var column = $(this).parents("td");
+
+        ajaxCall('../participant/changePaperState', {paper_id: column.prev().text(), state_id: state_id},
             function() {
-                element.parent().find("span.ui-icon-check").css('visibility', 'visible');
+                column.parent().find("span.ui-icon-check").css('visibility', 'visible');
             },
             function() {
-                element.parent().find("span.ui-icon-alert").css('visibility', 'visible');
+                column.parent().find("span.ui-icon-alert").css('visibility', 'visible');
             }
         ); 
     });
