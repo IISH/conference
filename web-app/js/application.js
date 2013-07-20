@@ -205,11 +205,11 @@ var ajaxCall = function(url, params, onSuccess, onFailure) {
             showErrors(data);
             
             if ($.isFunction(onFailure)) {
-                onFailure();
+                onFailure(data);
             }
         }
         else if ($.isFunction(onSuccess)) {
-            onSuccess();
+            onSuccess(data);
         }
     });
 }
@@ -477,11 +477,6 @@ $(document).ready(function() {
         element.trigger('error');
     });
     
-    $('.session-state-select').change(function(e) {
-        var element = $(this);
-        ajaxCall('../session/changeState', {session_id: element.prev().val(), state_id: element.val()});
-    });
-
     $('.tbl_container .session-state-select-tbl').change(function(e) {
         var state_id = $(this).val();
         var column = $(this).parents("td");

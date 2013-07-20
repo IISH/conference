@@ -11,6 +11,8 @@ import org.iisg.eca.domain.ParticipantTypeRule
 
 import org.iisg.eca.utils.ParticipantSessionInfo
 
+import org.springframework.context.i18n.LocaleContextHolder
+
 /**
  * Service responsible for requesting participant data in order to allow them in a session
  */
@@ -19,6 +21,11 @@ class ParticipantSessionService {
      * Service with information about the current page, such as the current event date
      */
     def pageInformation
+    
+    /**
+     * Service to access i18n messages
+     */
+    def messageSource
     
     /**
      * Returns all participants of the current event date and session with the given type
@@ -163,6 +170,25 @@ class ParticipantSessionService {
         }
 
         sessions
+    }
+    
+    /**
+     * Returns a map object for a list of <code>ParticipantSessionInfo</code> objects
+     * @param info A list with participant session information
+     * @return A map object for a list of <code>ParticipantSessionInfo</code> objects
+     */
+    List<Map<String, Object>> getParticipantSessionInfoMap(List<ParticipantSessionInfo> info) {
+        info.collect {
+            [   id:             it.participant.user.id,
+                participant:    it.participant.user.toString(),
+                state:          it.participant.state.toString(),
+                types:          it.types.collect { pType ->
+                                    [id: pType.id, type:  pType.toString()]
+                                },
+                paper:          (it.paper) ? "${messageSource.getMessage('paper.label', null, LocaleContextHolder.locale)}: ${it.paper?.toString()}  (${it.paper.state.toString()})" : "",
+                coauthors:      (it.paper?.coAuthors) ? "${messageSource.getMessage('paper.coAuthors.label', null, LocaleContextHolder.locale)}: ${it.paper.coAuthors}" : ""
+            ] 
+        }
     }
 
     /**

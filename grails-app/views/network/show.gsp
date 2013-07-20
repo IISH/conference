@@ -8,6 +8,11 @@
     <body>
         <input type="hidden" name="id" value="${params.id}" />
         
+        <div class="toggle-session-participants">
+            <span class="ui-icon ui-icon-person"></span>
+            <a><g:message code="default.toggle.label" args="${[g.message(code: 'session.sessionParticipants.label').toLowerCase()]}" /></a>
+        </div>
+        
         <ol class="property-list">
           <li>
             <span id="id-label" class="property-label">#</span>
@@ -99,9 +104,11 @@
                         &nbsp;
                         
                         <input type="hidden" name="session-id" value="${session.key.id}" />
-                        <g:select from="${sessionStates}" class="session-state-select" name="session.state.id" optionKey="id" optionValue="description" value="${session.key?.state?.id}" />
+                        <span>
+                            <eca:radioSelect name="session-state-select-${session.key.id}" class="session-state-select" value="${session.key?.state?.id}" values="${sessionStates}" labelName="shortDescription" />
+                        </span>                        
                     </span>
-
+                    
                     <ul class="session-participants" class="property-value">
                       <g:each in="${session.value}" var="participant" status="i">
                           <li>
@@ -132,6 +139,21 @@
                               </g:if>
                           </li>
                       </g:each>
+                      <li class="hidden">
+                          <span class="participant-value">
+                              <eca:link controller="participant" action="show" id="*id*"> </eca:link>
+                          </span>
+                          <span class="participant-state-value"> </span>
+
+                          <ul>
+                              <li class="participant-type-value">
+                                  <span class="participant-type-val"> </span>
+                              </li>
+                          </ul>
+
+                          <span class="participant-paper-value"> </span>
+                          <span class="participant-paper-value"> </span>
+                      </li>
                   </ul>
                 </li>
                 </g:each>

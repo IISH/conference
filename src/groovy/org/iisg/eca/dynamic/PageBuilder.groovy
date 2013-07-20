@@ -261,7 +261,7 @@ class PageBuilder {
                         }
                         else if (c.interactive && (c.property.manyToOne || c.property.oneToOne)) {
                             builder.td {
-                                builder."eca:radioSelect"(name: c.interactive, class: c.interactive, labelName: "shortDescription", "value": "\${row.${c.columnPath.join('.')}.id}", values: "\${${c.property.type.name}.list()}")
+                                builder."eca:radioSelect"(name: c.interactive + "\${i+1}", class: c.interactive, labelName: "shortDescription", "value": "\${row.${c.columnPath.join('.')}.id}", values: "\${${c.property.type.name}.list()}")
 
                                 builder."span"(class: "ui-icon ui-icon-check invisible", "")
                                 builder."span"(class: "ui-icon ui-icon-alert invisible", "")

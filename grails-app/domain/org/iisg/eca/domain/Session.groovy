@@ -46,20 +46,27 @@ class Session extends EventDateDomain {
      * Updates the paper state of all papers of this session when the state of this session has been changed
      */
     def beforeUpdate() {
-        if (isDirty('state')) {
-            // Find the corresponding paper state of this session state
-            PaperState correspondingPaperState = state.correspondingPaperState
+        if (isDirty('state') && state.correspondingPaperState) { 
+            //long sessionId = this.id
+            //long paperStateId = state.correspondingPaperState.id
+            
+            //Paper.withNewSession { hSession -> 
+                // Find the corresponding paper state of this session state
+               // Session session = Session.findById(sessionId)
+               // PaperState correspondingPaperState = PaperState.findById(paperStateId)
+                PaperState correspondingPaperState = state.correspondingPaperState
+            
+                // Change all paper states of this session
+                Paper.findAllBySession(this).each { paper ->
+                    PaperState paperState = paper.state
 
-            // Change all paper states of this session
-            Paper.findAllBySession(this).each { paper ->
-                PaperState paperState = paper.state
-
-                // Only update papers that may be changed
-                if (paperState.sessionStateTrigger) {
-                    paper.state = correspondingPaperState
-                    paper.save()
+                    // Only update papers that may be changed
+                    if (paperState.sessionStateTrigger) {
+                        paper.state = correspondingPaperState
+                        paper.save()
+                    }
                 }
-            }
+          //  }            
         }
     }
     

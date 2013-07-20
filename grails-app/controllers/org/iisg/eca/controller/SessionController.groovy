@@ -24,6 +24,8 @@ import org.iisg.eca.dynamic.DynamicPageResults
 
 import org.iisg.eca.utils.ParticipantSessionInfo
 
+import org.hibernate.FlushMode
+
 /**
  * Controller responsible for handling requests on sessions
  */
@@ -230,22 +232,30 @@ class SessionController {
             
             // If we have a session id and state id, try to find the records for these ids
             if (params.session_id?.isLong() && params.state_id?.isLong()) {
-                Session session = Session.findById(params.session_id)
-                SessionState state = SessionState.findById(params.state_id)
-                
-                // Change the session state if they both exist
-                if (session && state) {
-                    session.state = state
+               // Session.withSession { hSession -> 
+             //       hSession.flushMode = FlushMode.MANUAL
                     
-                    // Save the session
-                    if (session.save(flush: true)) {
-                        // Everything is fine                        
-                        responseMap = [success: true]
+                    Session session = Session.findById(params.session_id)
+                    SessionState state = SessionState.findById(params.state_id)
+
+                    // Change the session state if they both exist
+                    if (session && state) {
+                        session.state = state
+
+                        // Save the session
+                        if (session.save(flush: true)) {
+                            // Everything is fine
+                            //SessionParticipant.withNewSession { hSession -> 
+                                //List<ParticipantSessionInfo> participants = participantSessionService.getParticipantsForSession(session)
+                                responseMap = [ success:        true/*, 
+                                                participants:   participantSessionService.getParticipantSessionInfoMap(participants)*/]
+                           // }
+                        }
+                        else {
+                            responseMap = [success: false, message: session.errors.allErrors.collect { g.message(error: it) }]
+                        }
                     }
-                    else {
-                        responseMap = [success: false, message: session.errors.allErrors.collect { g.message(error: it) }]
-                    }
-                }
+             //   }
             }
             
             // If there is no responseMap defined yet, it can only mean the session or state could not be found
@@ -310,17 +320,10 @@ class SessionController {
                         if (session.save(flush: true)) {
                             // Everything is fine, return all updated data to the client
                             List<ParticipantSessionInfo> participants = participantSessionService.getParticipantsForSession(session)
-                            List<Object[]> equipment = participantSessionService.getEquipmentForSession(session)
-                            responseMap = [success: true, participants: participants.collect {
-                                [   id:             it.participant.user.id,
-                                    participant:    it.participant.user.toString(),
-                                    state:          it.participant.state.toString(),
-                                    types:          it.types.collect { pType ->
-                                                        [id: pType.id, type:  pType.toString()]
-                                                    },
-                                    paper:          (it.paper) ? "${g.message(code: 'paper.label')}: ${it.paper.toString()} (${it.paper.state.toString()})" : "",
-                                    coauthors:      (it.paper?.coAuthors) ? "${g.message(code: 'paper.coAuthors.label')}: ${it.paper.coAuthors}" : ""]
-                            }, equipment: equipment]
+                            List<Object[]> equipment = participantSessionService.getEquipmentForSession(session)                            
+                            responseMap = [ success:        true, 
+                                            participants:   participantSessionService.getParticipantSessionInfoMap(participants), 
+                                            equipment:      equipment]
                         }
                         else {
                             responseMap = [success: false, message: session.errors.allErrors.collect { g.message(error: it) }]
@@ -375,16 +378,9 @@ class SessionController {
                         // Everything is fine, return all updated data to the client
                         List<ParticipantSessionInfo> participants = participantSessionService.getParticipantsForSession(session)
                         List<Object[]> equipment = participantSessionService.getEquipmentForSession(session)
-                        responseMap = [success: true, participants: participants.collect {
-                            [   id:             it.participant.user.id,
-                                participant:    it.participant.user.toString(),
-                                state:          it.participant.state.toString(),
-                                types:          it.types.collect { pType ->
-                                                    [id: pType.id, type:  pType.toString()]
-                                                },
-                                paper:          (it.paper) ? "${g.message(code: 'paper.label')}: ${it.paper?.toString()} (${it.paper.state.toString()})" : "",
-                                coauthors:      (it.paper?.coAuthors) ? "${g.message(code: 'paper.coAuthors.label')}: ${it.paper.coAuthors}" : ""]
-                        }, equipment: equipment]
+                        responseMap = [ success:        true, 
+                                        participants:   participantSessionService.getParticipantSessionInfoMap(participants), 
+                                        equipment:      equipment]
                     }
                     else {
                         responseMap = [success: false, message: session.errors.allErrors.collect { g.message(error: it) }]
@@ -545,13 +541,7 @@ class SessionController {
                 possibilitiesResponse.put('abstract',       session.abstr)
                 possibilitiesResponse.put('comment',        session.comment)
                 possibilitiesResponse.put('equipment',      sessionPlannerService.getEquipment(session).collect { it.toString() })
-                possibilitiesResponse.put('participants',   participants.collect {
-                    [   participant:    it.participant.user.toString(),
-                        state:          it.participant.state.toString(),
-                        types:          it.types.collect { pType -> [type: pType.toString()] },
-                        paper:          (it.paper) ? "${g.message(code: 'paper.label')}: ${it.paper?.toString()} (${it.paper.state.toString()})" : "",
-                        coauthors:      (it.paper?.coAuthors) ? "${g.message(code: 'paper.coAuthors.label')}: ${it.paper.coAuthors}" : ""] }
-                )
+                possibilitiesResponse.put('participants',   participantSessionService.getParticipantSessionInfoMap(participants))
             }
             else {
                 possibilitiesResponse = [success: false, message: g.message(code: 'default.not.found.message', args: [g.message(code: 'session.label')])]

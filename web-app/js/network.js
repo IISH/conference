@@ -103,4 +103,17 @@ $(document).ready(function() {
             }
         );
     });
+    
+    $('.session-state-select').change(function(e) {
+        var element = $(this);
+        ajaxCall('../session/changeState', {session_id: element.parents("span").prev().val(), state_id: element.val()}, 
+            function(data) {
+                //setParticipantDataForSession(data, element.parents("span.session").next());
+            }
+        );
+    });
+    
+    $(".toggle-session-participants").click(function(e) {
+        $("ul.session-participants").toggle();       
+    });
 });

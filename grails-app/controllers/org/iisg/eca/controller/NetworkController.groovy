@@ -216,19 +216,11 @@ class NetworkController {
                 if (network.save(flush: true)) {
                     // Everything is fine, return all updated data to the client
                     def participants = participantSessionService.getParticipantsForNetwork(network)
-                    responseMap = [success: true, sessions: participants.collect { curSession -> [
-                        id:             curSession.key.id,
-                        name:           curSession.key.toString(),
-                        participants:   curSession.value.collect {
-                                        [   id:             it.participant.user.id,
-                                            participant:    it.participant.user.toString(),
-                                            state:          it.participant.state.toString(),
-                                            types:          it.types.collect { pType ->
-                                                                [id: pType.id, type:  pType.toString()]
-                                                            },
-                                            paper:          (it.paper) ? "${g.message(code: 'paper.label')}: ${it.paper?.toString()} (${it.paper.state.toString()})" : "",
-                                            coauthors:      (it.paper?.coAuthors) ? "${g.message(code: 'paper.coAuthors.label')}: ${it.paper.coAuthors}" : ""] }
-                        ] }
+                    responseMap = [success: true, sessions: participants.collect { curSession -> 
+                            [   id:             curSession.key.id,
+                                name:           curSession.key.toString(),
+                                participants:   participantSessionService.getParticipantSessionInfoMap(curSession.value)
+                            ] }
                     ]
                 }
                 else {
@@ -267,18 +259,11 @@ class NetworkController {
                 if (network.save(flush: true)) {
                     // Everything is fine, return all updated data to the client
                     def participants = participantSessionService.getParticipantsForNetwork(network)
-                    responseMap = [success: true, sessions: participants.collect { curSession -> [
-                        id:             curSession.key.id,
-                        name:           curSession.key.toString(),
-                        participants:   curSession.value.collect {
-                                        [   participant:    it.participant.user.toString(),
-                                            state:          it.participant.state.toString(),
-                                            types:          it.types.collect { pType ->
-                                                                [id: pType.id, type:  pType.toString()]
-                                                            },
-                                            paper:          (it.paper) ? "${g.message(code: 'paper.label')}: ${it.paper?.toString()}  (${it.paper.state.toString()})" : "",
-                                            coauthors:      (it.paper?.coAuthors) ? "${g.message(code: 'paper.coAuthors.label')}: ${it.paper.coAuthors}" : ""] }
-                        ] }
+                    responseMap = [success: true, sessions: participants.collect { curSession -> 
+                            [   id:             curSession.key.id,
+                                name:           curSession.key.toString(),
+                                participants:   participantSessionService.getParticipantSessionInfoMap(curSession.value)
+                            ] }
                     ]
                 }
                 else {

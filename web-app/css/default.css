@@ -145,6 +145,18 @@ a:hover {
     color: #cc0000;
 }
 
+/* TOGGLE */
+
+.toggle-session-participants {
+    cursor: pointer;
+    position: absolute;
+    color: #225496;
+    font-weight: bold; 
+    text-align: center;
+    top: 5px;
+    right: 0;    
+}
+
 /* NAVIGATION */
 
 .navigation {

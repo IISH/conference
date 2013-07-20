@@ -1,5 +1,8 @@
-var setParticipantDataForSession = function(data) {
-    var participantsContainer = $('.session-participants');
+var setParticipantDataForSession = function(data, participantsContainer) {
+    if (participantsContainer === undefined) {
+        participantsContainer = $('.session-participants');
+    }
+    
     var item = participantsContainer.find('li.hidden');
     item = item.clone(true);
     
@@ -14,8 +17,11 @@ var setParticipantDataForSession = function(data) {
     }
 }
 
-var setParticipantDataForNetwork = function(data) {
-    var networkSessionsContainer = $('#network-sessions');
+var setParticipantDataForNetwork = function(data, networkSessionsContainer) {
+    if (networkSessionsContainer === undefined) {
+        networkSessionsContainer = $('#network-sessions');
+    }
+    
     var clone = networkSessionsContainer.find('li.hidden');
     clone = clone.clone(true);
 
@@ -48,7 +54,7 @@ var setParticipants = function(data, container, clone) {
     for (var i=0; i<data.length; i++) {
         var item = clone.clone(true);
         
-        if (item.find('.participant-value a').size > 0) {
+        if (item.find('.participant-value a').size() > 0) {
             var link = item.find('.participant-value a').attr("href").replace("*id*", data[i].id);
             item.find('.participant-value a').attr("href", link).text(data[i].participant);
         }
