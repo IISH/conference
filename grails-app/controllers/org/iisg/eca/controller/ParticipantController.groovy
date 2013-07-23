@@ -448,7 +448,7 @@ class ParticipantController {
                     // Save the paper
                     if (paper.save(flush: true)) {
                         // Everything is fine                        
-                        responseMap = [success: true]
+                        responseMap = [success: true, paper: "${g.message(code: 'paper.label')}: ${paper.toString()} (${state.toString()})"]
                     }
                     else {
                         responseMap = [success: false, message: paper.errors.allErrors.collect { g.message(error: it) }]

@@ -1,4 +1,4 @@
-<%@ page import="org.iisg.eca.domain.Setting; org.iisg.eca.domain.ParticipantType; org.iisg.eca.domain.User" %>
+<%@ page import="org.iisg.eca.domain.Setting; org.iisg.eca.domain.ParticipantType; org.iisg.eca.domain.User; org.iisg.eca.domain.PaperState" %>
 <!doctype html>
 <html>
     <head>
@@ -140,7 +140,10 @@
 
                                 <g:if test="${participant.paper}">
                                     <span class="participant-paper-value">
-                                        <g:message code="paper.label" />: ${participant.paper} (${participant.paper.state})
+                                        <span class="paper-text"><g:message code="paper.label" />: ${participant.paper} (${participant.paper.state})</span>
+                                        <input type="hidden" name="paper-id" class="paper-id" value="${participant.paper.id}" />
+                                        <input type="hidden" name="paper-state-id" value="${participant.paper.state.id}" />
+                                        <span class="ui-icon ui-icon-pencil edit-paper-icon"></span>
                                     </span>
                                     <g:if test="${participant.paper.coAuthors && !participant.paper.coAuthors.isEmpty()}">
                                         <span class="participant-paper-value">
@@ -166,7 +169,12 @@
                                 </li>
                             </ul>
 
-                            <span class="participant-paper-value"> </span>
+                            <span class="participant-paper-value">
+                                <span class="paper-text"></span>
+                                <input type="hidden" name="paper-id" class="paper-id" value="" />
+                                <input type="hidden" name="paper-state-id" value="" />
+                                <span class="ui-icon ui-icon-pencil edit-paper-icon"></span>
+                            </span>
                             <span class="participant-paper-value"> </span>
                         </li>
                     </ul>
@@ -228,5 +236,24 @@
                 </g:if>
             </fieldset>
         </form>
+        
+        <div id="edit-paper" class="info">
+          <input type="hidden" name="paper-id" value="" />
+          <form method="post" action="#">
+            <fieldset class="form">
+              <div class="participant-paper-value"></div>
+              <g:each in="${PaperState.list()}" var="paperState">
+                <div>
+                  <span class="property-label">
+                    <g:radio name="paper-state" value="${paperState.id}" id="edit-paper-${paperState.id}" />
+                  </span>
+                  <label class="property-value" for="edit-paper-${paperState.id}">
+                    ${paperState.toString()}                    
+                  </label>
+                </div>
+              </g:each>
+            </fieldset>
+          </form>
+        </div>
     </body>
 </html>

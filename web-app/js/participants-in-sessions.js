@@ -79,7 +79,10 @@ var setParticipants = function(data, container, clone) {
                 paperItems.last().text(data[i].coauthors);
             }
 
-            paperItems.first().text(data[i].paper);
+            var paperItem = paperItems.first();
+            paperItem.find('.paper-text').text(data[i].paper);
+            paperItem.find('input[name=paper-id]').val(data[i].paperId)
+            paperItem.find('input[name=paper-state-id]').val(data[i].paperStateId)
         }
 
         setTypes(data[i].types, item);

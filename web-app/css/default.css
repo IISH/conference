@@ -157,6 +157,12 @@ a:hover {
     right: 0;    
 }
 
+/* DIALOGS */
+
+.edit-paper-icon {
+    cursor: pointer;    
+}
+
 /* NAVIGATION */
 
 .navigation {

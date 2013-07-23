@@ -185,8 +185,10 @@ class ParticipantSessionService {
                 types:          it.types.collect { pType ->
                                     [id: pType.id, type:  pType.toString()]
                                 },
-                paper:          (it.paper) ? "${messageSource.getMessage('paper.label', null, LocaleContextHolder.locale)}: ${it.paper?.toString()}  (${it.paper.state.toString()})" : "",
-                coauthors:      (it.paper?.coAuthors) ? "${messageSource.getMessage('paper.coAuthors.label', null, LocaleContextHolder.locale)}: ${it.paper.coAuthors}" : ""
+                paper:          (it.paper) ? "${messageSource.getMessage('paper.label', null, LocaleContextHolder.locale)}: ${it.paper?.toString()} (${it.paper.state.toString()})" : "",
+                coauthors:      (it.paper?.coAuthors) ? "${messageSource.getMessage('paper.coAuthors.label', null, LocaleContextHolder.locale)}: ${it.paper.coAuthors}" : "",
+                paperId:        (it.paper) ? it.paper.id : "",
+                paperStateId:   (it.paper) ? it.paper.state.id : ""
             ] 
         }
     }

@@ -1,3 +1,4 @@
+<%@ page import="org.iisg.eca.domain.PaperState" %>
 <!doctype html>
 <html>
     <head>
@@ -57,15 +58,7 @@
             <span class="property-value" arial-labelledby="showOnline-label">
               <g:checkBox name="showOnline" value="${network.showOnline}" disabled="true" />
             </span>
-          </li>
-          <li>
-            <span id="showInternal-label" class="property-label">
-              <g:message code="network.showInternal.label" />
-            </span>
-            <span class="property-value" arial-labelledby="showInternal-label">
-              <g:checkBox name="showInternal" value="${network.showInternal}" disabled="true" />
-            </span>
-          </li>
+          </li>          
           <li>
            <span id="enabled-label" class="property-label">
              <g:message code="default.enabled.label" />
@@ -129,8 +122,11 @@
 
                               <g:if test="${participant.paper}">
                                   <span class="participant-paper-value">
-                                      <g:message code="paper.label" />: ${participant.paper} (${participant.paper.state})
-                                  </span>
+                                      <span class="paper-text"><g:message code="paper.label" />: ${participant.paper} (${participant.paper.state})</span>
+                                      <input type="hidden" name="paper-id" class="paper-id" value="${participant.paper.id}" />
+                                      <input type="hidden" name="paper-state-id" value="${participant.paper.state.id}" />
+                                      <span class="ui-icon ui-icon-pencil edit-paper-icon"></span>
+                                  </span>                                  
                                   <g:if test="${participant.paper.coAuthors && !participant.paper.coAuthors.isEmpty()}">
                                       <span class="participant-paper-value">
                                           <g:message code="paper.coAuthors.label" />: <eca:formatText text="${participant.paper.coAuthors}" />
@@ -151,7 +147,12 @@
                               </li>
                           </ul>
 
-                          <span class="participant-paper-value"> </span>
+                          <span class="participant-paper-value"> 
+                              <span class="paper-text"></span>
+                              <input type="hidden" name="paper-id" class="paper-id" value="" />
+                              <input type="hidden" name="paper-state-id" value="" />
+                              <span class="ui-icon ui-icon-pencil edit-paper-icon"></span>
+                          </span>
                           <span class="participant-paper-value"> </span>
                       </li>
                   </ul>
@@ -189,5 +190,24 @@
                 </eca:link>
             </eca:ifUserHasAccess>
         </div>
-	</body>
+        
+        <div id="edit-paper" class="info">
+          <input type="hidden" name="paper-id" value="" />
+          <form method="post" action="#">
+            <fieldset class="form">
+              <div class="participant-paper-value"></div>
+              <g:each in="${PaperState.list()}" var="paperState">
+                <div>
+                  <span class="property-label">
+                    <g:radio name="paper-state" value="${paperState.id}" id="edit-paper-${paperState.id}" />
+                  </span>
+                  <label class="property-value" for="edit-paper-${paperState.id}">
+                    ${paperState.toString()}                    
+                  </label>
+                </div>
+              </g:each>
+            </fieldset>
+          </form>
+        </div>
+    </body>
 </html>

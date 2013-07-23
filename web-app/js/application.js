@@ -504,4 +504,45 @@ $(document).ready(function() {
             }
         ); 
     });
+    
+    $('#edit-paper').dialog({
+        autoOpen: false,
+        modal: true,   
+        minWidth: 520,
+        minHeight: 220,
+        title: "Change paper state",
+        buttons: {
+            "Save" : function() {
+                var dialog = $(this);
+                var paperId = dialog.find('input[name=paper-id]').val();
+                var stateId = dialog.find('input[name=paper-state]:checked').val();
+                                
+                ajaxCall('../participant/changePaperState', {paper_id: paperId, state_id: stateId},
+                    function(data) {
+                        $('.paper-id[value=' + paperId + ']').parent().find('.paper-text').text(data.paper);                        
+                        dialog.dialog("close");
+                    },
+                    function(data) {
+                        alert(data.message);
+                    }
+                ); 
+            },
+            Cancel: function() {
+                $(this).dialog("close");
+            }
+        }
+    });
+    
+    $(document).on('click', '.edit-paper-icon', function(e) {
+        var dialog = $('#edit-paper');
+        var paper = $(this).prev().prev().prev().text();
+        var paperId = $(this).prev().prev().val();
+        var paperStateId = $(this).prev().val();        
+        
+        dialog.find("input[name=paper-id]").val(paperId);
+        dialog.find(':radio[value='+ paperStateId +']').attr('checked', true);
+        dialog.find(".participant-paper-value").text(paper);
+        
+        dialog.dialog('open');
+    });
 });
