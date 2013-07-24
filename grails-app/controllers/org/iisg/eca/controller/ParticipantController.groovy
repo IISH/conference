@@ -346,6 +346,13 @@ class ParticipantController {
     def paperstate() {
         forward(controller: 'dynamicPage', action: 'dynamic', params: params)
     }
+
+    /**
+     * Shows all participants with unknown gender, allowing the user to change the gender of these participants
+     */
+    def gender() {
+        forward(controller: 'dynamicPage', action: 'dynamic', params: params)
+    }
     
     /**
      * Removes the user as a participant from the current event date
@@ -459,6 +466,48 @@ class ParticipantController {
             // If there is no responseMap defined yet, it can only mean the paper or state could not be found
             if (!responseMap) {
                 responseMap = [success: false, message: g.message(code: 'default.not.found.message', args: ["${g.message(code: 'paper.label')}, ${g.message(code: 'paper.state.label')}"])]
+            }
+
+            render responseMap as JSON
+        }
+    }
+
+    /**
+     * Change the gender of the given user
+     * (AJAX call)
+     */
+    def changeGender() {
+        // If this is an AJAX call, continue
+        if (request.xhr) {
+            Map responseMap = null
+
+            // If we have a user, find the user
+            if (params.user_id?.isLong()) {
+                User user = User.findById(params.user_id)
+
+                // Change the gender of the user
+                if (user) {
+                    if (!params.gender || "null".equals(params.gender)) {
+                        user.gender = null
+                    }
+                    else {
+                        user.gender = params.gender
+                    }
+
+                    // Save the paper
+                    if (user.save(flush: true)) {
+                        // Everything is fine
+                        responseMap = [success: true]
+                    }
+                    else {
+                        responseMap = [success: false, message: user.errors.allErrors.collect { g.message(error: it) }]
+                    }
+                }
+            }
+
+            // If there is no responseMap defined yet, it can only mean the paper or state could not be found
+            if (!responseMap) {
+                responseMap = [success: false, message: g.message(code: 'default.not.found.message', args: ["${g.message(code: 'user.label')}"])]
             }
 
             render responseMap as JSON

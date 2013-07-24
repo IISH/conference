@@ -25,7 +25,11 @@ $(document).ready(function() {
                     var paperClone = papersContainer.find('li');
                     for (var j=0; j<data.participants[i].papers.length; j++) {
                         var paperItem = paperClone.clone(true);
-                        paperItem.text(data.participants[i].papers[j].name + " (" + data.participants[i].papers[j].state + ")");
+
+                        paperItem.find('.paper-text').text(data.participants[i].papers[j].name + " (" + data.participants[i].papers[j].state + ")");
+                        paperItem.find('input[name=paper-id]').val(data.participants[i].papers[j].paperId);
+                        paperItem.find('input[name=paper-state-id]').val(data.participants[i].papers[j].paperStateId);
+
                         papersContainer.append(paperItem);
                     }
                     paperClone.remove();

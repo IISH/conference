@@ -545,4 +545,22 @@ $(document).ready(function() {
         
         dialog.dialog('open');
     });
+
+    $('.tbl_container .change-gender').change(function(e) {
+        var gender = $(this).val();
+        var column = $(this).parents("td");
+
+        ajaxCall('../participant/changeGender', {user_id: column.prev().text(), gender: gender},
+            function() {
+                column.parent().find("span.ui-icon-check").css('visibility', 'visible');
+            },
+            function() {
+                column.parent().find("span.ui-icon-alert").css('visibility', 'visible');
+            }
+        );
+    });
+
+    $("#network-select").change(function(e) {
+        $(this).parents('form').submit();
+    });
 });

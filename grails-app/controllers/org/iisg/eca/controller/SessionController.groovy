@@ -185,6 +185,24 @@ class SessionController {
                                         sessionStates:  SessionState.list()])
     }
 
+    def paperMismatch() {
+        Network network = null
+
+        if (params.network?.isLong()) {
+            network = Network.findById(params.network)
+        }
+        else {
+            network = Network.find("FROM Network")
+        }
+
+        // Let the participantSessionService come up with all mismatches
+        Map<Session, List<ParticipantSessionInfo>> sessions = participantSessionService.getParticipantsForSessionMismatches(network)
+
+        render(view: "paperMismatch", model: [  network:    network,
+                                                networks:   Network.list(),
+                                                sessions:   sessions])
+    }
+
     /**
      * Removes the session from the current event date
      */

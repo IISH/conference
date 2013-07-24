@@ -242,7 +242,12 @@
                     <li>
                         <a class="participant" href="#"> </a>
                         <ul class="participants">
-                            <li class="participant-paper-value"> </li>
+                            <li class="participant-paper-value">
+                                <span class="paper-text"></span>
+                                <input type="hidden" name="paper-id" class="paper-id" value="" />
+                                <input type="hidden" name="paper-state-id" value="" />
+                                <span class="ui-icon ui-icon-pencil edit-paper-icon"></span>
+                            </li>
                         </ul>
                     </li>
                 </ul>

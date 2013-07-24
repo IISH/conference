@@ -174,8 +174,10 @@ class NetworkController {
                     url:            eca.createLink(controller: 'participant', action: 'show', id: it.key.user.id),
                     participant:    it.key.toString(),
                     papers:         it.value.collect() { paper -> [
-                                        name:   "${g.message(code: 'paper.label')}: ${paper.toString()}",
-                                        state:  paper.state.toString()
+                                        name:           "${g.message(code: 'paper.label')}: ${paper.toString()}",
+                                        state:          paper.state.toString(),
+                                        paperId:        paper.id,
+                                        paperStateId:   paper.state.id
                                     ] }
                 ] }]
             }

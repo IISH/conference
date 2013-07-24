@@ -267,6 +267,28 @@ class PageBuilder {
                                 builder."span"(class: "ui-icon ui-icon-alert invisible", "")
                             }
                         }
+                        else if (c.interactive && c.name.equals("gender")) {
+                            builder.td {
+                                builder."label" {
+                                    builder."g:radio"(name: c.interactive + "\${i+1}", class: c.interactive, value: "M", checked: "\${row.${c.columnPath.join('.')}.equals('M')}")
+                                    builder.mkp.yield " M"
+                                }
+                                builder.mkp.yieldUnescaped "&nbsp;"
+                                builder."label" {
+                                    builder."g:radio"(name: c.interactive + "\${i+1}", class: c.interactive, value: "F", checked: "\${row.${c.columnPath.join('.')}.equals('F')}")
+                                    builder.mkp.yield " F"
+                                }
+                                builder.mkp.yieldUnescaped "&nbsp;"
+                                builder."label" {
+                                    builder."g:radio"(name: c.interactive + "\${i+1}", class: c.interactive, value: "null", checked: "\${row.${c.columnPath.join('.')} == null}")
+                                    builder.mkp.yield " Unknown"
+                                }
+                                builder.mkp.yieldUnescaped "&nbsp;"
+
+                                builder."span"(class: "ui-icon ui-icon-check invisible", "")
+                                builder."span"(class: "ui-icon ui-icon-alert invisible", "")
+                            }
+                        }
                         else if (c.property.type == Date || c.property.type == java.sql.Date || c.property.type == java.sql.Time || c.property.type == Calendar) {
                             builder.td {
                                 builder."g:formatDate"(date: "\${row.${c.columnPath.join('.')}}")
@@ -430,18 +452,20 @@ class PageBuilder {
         element.forAllColumns { c ->
             if (!c.hasColumns() && (!c.constrainedProperty || c.constrainedProperty.display) && !c.hidden) {
                 builder.th(class: "filter", value: "\${params.filter_${element.eid}_${c.name}}") {
-                    if (c.property.type == Boolean || c.property.type == boolean) {
-                        builder."eca:booleanSelect"(name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}")
-                    }
-                    else if (c.property.type == String)  {
-                        builder.input(type: "text", name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", placeholder: "\${g.message(code: 'default.filter.on')} \${eca.fallbackMessage(code: '${getCode(c.property)}', fbCode: '${getFbCode(c.property)}').toLowerCase()}")
-                    }
-                    else if (c.property.manyToOne || c.property.oneToOne) {
-                        if (c.filter) {
-                            renderEditor.render(c, [name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", noSelection: "\${[null: '']}"])
+                    if (!c.hideFilter) {
+                        if (c.property.type == Boolean || c.property.type == boolean) {
+                            builder."eca:booleanSelect"(name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}")
                         }
-                        else {
-                            renderEditor.render(c, [name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", noSelection: "\${[null: 'No filter selected']}"])
+                        else if (c.property.type == String)  {
+                            builder.input(type: "text", name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", placeholder: "\${g.message(code: 'default.filter.on')} \${eca.fallbackMessage(code: '${getCode(c.property)}', fbCode: '${getFbCode(c.property)}').toLowerCase()}")
+                        }
+                        else if (c.property.manyToOne || c.property.oneToOne) {
+                            if (c.filter) {
+                                renderEditor.render(c, [name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", noSelection: "\${[null: '']}"])
+                            }
+                            else {
+                                renderEditor.render(c, [name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", noSelection: "\${[null: 'No filter selected']}"])
+                            }
                         }
                     }
                 }

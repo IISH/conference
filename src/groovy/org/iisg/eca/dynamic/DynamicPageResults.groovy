@@ -85,6 +85,9 @@ class DynamicPageResults {
                 if (c.property.type == Boolean || c.property.type == boolean) {
                     delegate.eq(c.name, value.equals("1"))
                 }
+                else if (value.equalsIgnoreCase("null")) {
+                    delegate.isNull(c.name)
+                }
                 else {
                     delegate.eq(c.name, value)
                 }

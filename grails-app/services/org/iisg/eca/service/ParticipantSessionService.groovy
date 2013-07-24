@@ -21,12 +21,12 @@ class ParticipantSessionService {
      * Service with information about the current page, such as the current event date
      */
     def pageInformation
-    
+
     /**
      * Service to access i18n messages
      */
     def messageSource
-    
+
     /**
      * Returns all participants of the current event date and session with the given type
      * @param participantType The participant type
@@ -52,7 +52,7 @@ class ParticipantSessionService {
     }
 
     /**
-     * Returns all participants with papers of the current event date 
+     * Returns all participants with papers of the current event date
      * that cannot be added to a session anymore
      * @return A list of users
      */
@@ -92,7 +92,7 @@ class ParticipantSessionService {
             ''', [sessionId: session.id])
         )
     }
-    
+
     /**
      * Returns a list with information about every session the given participant is added to
      * @param participant The participant in question
@@ -112,7 +112,27 @@ class ParticipantSessionService {
             ''', [userId: participant?.user?.id])
         )
     }
-    
+
+    List<ParticipantSessionInfo> getParticipantsForSessionMismatches(Session session) {
+        // Query the database for the information,
+        // then transform this into a list of <code>ParticipantSessionInfo</code> objects
+        getParticipantSessionInfoList(
+            SessionParticipant.executeQuery('''
+                SELECT s, u, t
+                FROM SessionParticipant AS sp
+                INNER JOIN sp.session AS s
+                INNER JOIN sp.type AS t
+                INNER JOIN sp.user AS u
+                INNER JOIN u.papers AS p
+                INNER JOIN s.state AS st
+                WHERE s.id = :sessionId
+                AND t.withPaper = true
+                AND p.state <> st.correspondingPaperState
+                ORDER BY u.lastName, u.firstName
+            ''', [sessionId: session.id])
+        )
+    }
+
     /**
      * Transforms a list with information about every session into a list of ParticipantSessionInfo objects
      * @param sessionParticipant An collection with the Session object, the User object and the ParticipantType object
@@ -120,14 +140,14 @@ class ParticipantSessionService {
      */
     private List<ParticipantSessionInfo> getParticipantSessionInfoList(Collection<Object[]> sessionParticipants) {
         List<ParticipantSessionInfo> sessionInformation = []
-        
+
         sessionParticipants.each { sessionParticipant ->
             Session session = sessionParticipant[0]
             User user = sessionParticipant[1]
             ParticipantType type = sessionParticipant[2]
-            
+
             // See if this user is already in the list somewhere, if so update that one with new information
-            ParticipantSessionInfo sessionInfo = sessionInformation.find { 
+            ParticipantSessionInfo sessionInfo = sessionInformation.find {
                 (it.participant?.user?.id == user?.id) && (it.session?.id == session?.id) }
 
             // This user is not in the list already, so create a new <code>ParticipantSessionInfo</code> object for this user
@@ -156,7 +176,7 @@ class ParticipantSessionService {
      */
     Map<Session, List<ParticipantSessionInfo>> getParticipantsForNetwork(Network network) {
         Map sessions = [:]
-        
+
         // Get all sessions for this network from the database and add this session to the map,
         // including the participant information for that session
        Session.executeQuery('''
@@ -171,7 +191,25 @@ class ParticipantSessionService {
 
         sessions
     }
-    
+
+    Map<Session, List<ParticipantSessionInfo>> getParticipantsForSessionMismatches(Network network) {
+        Map sessions = [:]
+
+        // Get all sessions for this network from the database and add this session to the map,
+        // including the participant information for that session
+        Session.executeQuery('''
+            SELECT s
+            FROM Session AS s
+            INNER JOIN s.networks AS n
+            WHERE n.id = :networkId
+            ORDER BY s.code, s.name
+        ''', [networkId: network.id]).each { session ->
+            sessions.put(session, getParticipantsForSessionMismatches(session))
+        }
+
+        sessions
+    }
+
     /**
      * Returns a map object for a list of <code>ParticipantSessionInfo</code> objects
      * @param info A list with participant session information
@@ -189,7 +227,7 @@ class ParticipantSessionService {
                 coauthors:      (it.paper?.coAuthors) ? "${messageSource.getMessage('paper.coAuthors.label', null, LocaleContextHolder.locale)}: ${it.paper.coAuthors}" : "",
                 paperId:        (it.paper) ? it.paper.id : "",
                 paperStateId:   (it.paper) ? it.paper.state.id : ""
-            ] 
+            ]
         }
     }
 
@@ -248,7 +286,7 @@ class ParticipantSessionService {
      */
     List<User> getBlacklistForTypeInSession(Session session, ParticipantType type) {
         List<User> participants = new ArrayList<User>()
-        
+
         // Check for every individual rule, which participants with what type should be added to the blacklist
         ParticipantTypeRule.getRulesForParticipantType(type).each { rule ->
             if (rule.firstType.id == type.id) {
@@ -262,12 +300,12 @@ class ParticipantSessionService {
         // And of course, participants who are already in the specified session
         // with the specified type cannot be added twice
         participants.addAll(getParticipantsOfType(type, session))
-        
+
         // In case the participant should be added with an paper, blacklist those without (open) papers
         if (type.withPaper) {
             participants.addAll(getParticipantsWithoutOpenPapers())
         }
-        
+
         participants.unique()
     }
 }

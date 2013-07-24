@@ -15,6 +15,7 @@ class Column extends ContainerElement {
     private boolean hidden
     private boolean notEmpty
     private boolean filter
+    private boolean hideFilter
     private String interactive
     private String textarea
     private String eq
@@ -33,6 +34,8 @@ class Column extends ContainerElement {
         this.multiple = false
         this.hidden = false
         this.notEmpty = false
+        this.filter = false
+        this.hideFilter = false
         this.textarea = null
         this.eq = null
     }
@@ -132,7 +135,15 @@ class Column extends ContainerElement {
     boolean getFilter() {
         filter
     }
-    
+
+    void setHideFilter(boolean hideFilter) {
+        this.hideFilter = hideFilter
+    }
+
+    boolean getHideFilter() {
+        hideFilter
+    }
+
     void setInteractive(String interactive) {
         if (interactive && (interactive.trim().length() > 0)) {
             this.interactive = interactive.trim()
