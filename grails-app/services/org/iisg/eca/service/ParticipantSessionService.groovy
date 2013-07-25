@@ -249,6 +249,9 @@ class ParticipantSessionService {
             WHERE p.networkProposal.id = :networkId
             AND p.session IS NULL
             AND pd.state.id IN (1,2)
+            AND p.deleted = false
+            AND p.date.id = pd.date.id
+            ORDER BY u.lastName, u.firstName
         ''', [networkId: network.id]).each { result ->
 
             // See if the participant is already in the map, if so, get it, otherwise create a new one
