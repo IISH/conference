@@ -266,8 +266,9 @@ $(document).ready(function() {
         $(this).parents('form').submit();
     });
 
-    $('html').click(function() {
-        $("#usermenu").hide();
+    $('html').click(function(e) {
+        $(".menu").hide();         
+        document.oncontextmenu = null;
      });
 
     $('#loggedin img').click(function(e) {
@@ -440,13 +441,36 @@ $(document).ready(function() {
         window.location.search = "?" + $.param(urlParameters);
     });
 
-    $('.tbl_container tbody tr').click(function(e) {
+    $('.tbl_container tbody tr').mousedown(function(e) {
         var element = $(this);
         var target = $(e.target);
         
-        if (target[0] === element[0] || target.parent()[0] === element[0]) {            
-            var link = element.parents('.tbl_container').find('input[name=url]').val();        
-            window.location = link.replace('/0', "/" + element.find("td.id").text().trim());
+        if (target[0] === element[0] || target.parent()[0] === element[0]) {
+            var container = element.parents('.tbl_container');
+            var link = container.find('input[name=url]').val();        
+            var id = element.find("td.id").text().trim();
+            
+            link = link.replace('/0', "/" + id);
+            
+            switch (e.which) {
+                case 1:
+                    window.location = link;
+                    break;
+                case 3:
+                    document.oncontextmenu = function() { return false; }; 
+                    e.preventDefault();
+                    
+                    var menu = container.find(".menu");
+                    
+                    menu.find('a').each(function(index, value) {
+                        $(value).attr('href', link);
+                    });
+                    
+                    var left = e.pageX - element.offset().left;
+                    var top = element.position().top;
+                                            
+                    menu.css({left: left + "px", top: top + "px"}).show();
+            }
         }
     });
 

@@ -114,7 +114,7 @@
             <g:formatDate date="${new SimpleDateFormat("yy-MM-dd").parse(Setting.findByProperty(Setting.LAST_UPDATED).value)}" format="MMMMM yyyy" />
         </div>
 
-        <div id="usermenu">
+        <div class="menu" id="usermenu">
             <ul>
                 <li><eca:link controller="user" action="show"><g:message code="menu.personalpage" /></eca:link></li>
                 <li><eca:link controller="logout"><g:message code="menu.logout" /></eca:link></li>

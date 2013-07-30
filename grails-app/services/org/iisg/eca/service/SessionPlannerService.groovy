@@ -35,6 +35,7 @@ class SessionPlannerService {
                 FROM SessionRoomDateTime AS srdt
                 WHERE srdt.session.id = s.id
             )
+            ORDER BY s.code
         ''')
     }
 
@@ -114,7 +115,7 @@ class SessionPlannerService {
             FROM Room AS r, SessionDateTime AS dt
             WHERE dt.day IN :days
             ORDER BY r.roomName, dt.index''', [days: Day.list()])
-
+        
         // ... then retrieve all equipment available in the rooms at specific dates and times
         List<Object[]> equipment = (List<Object[]>) RoomSessionDateTimeEquipment.executeQuery('''
             SELECT rsdte.room.id, rsdte.sessionDateTime.id, rsdte.equipment

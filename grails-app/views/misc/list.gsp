@@ -8,6 +8,14 @@
 
         <div class="tbl_container">
             <input type="hidden" name="url" value="${eca.createLink(controller: controller, action: action, id: 0)}" />
+            
+            <div class="menu">
+                <ul>
+                    <li><a href="">Open link</a></li>
+                    <li><a href="" target="_blank">Open link in new tab</a></li>
+                </ul>
+            </div>
+            
             <table class="clear">
                 <thead class="no-filters">
                     <tr>

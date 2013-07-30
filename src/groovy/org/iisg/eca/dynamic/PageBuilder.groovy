@@ -90,7 +90,18 @@ class PageBuilder {
     private void buildTable(DataContainer element) {
         builder.div(class: "tbl_container") {
             builder.input(type: "hidden", name: "url", value: "\${eca.createLinkAllParams(controller: params.controller, action: '${element.action}', id: 0, setPrev: true)}")
-
+            
+            builder.div(class: "menu") {
+                builder.ul {
+                    builder.li {
+                        builder.a(href: "", "Open link")                        
+                    }
+                    builder.li {
+                        builder.a(href: "", target: "_blank", "Open link in new tab")
+                    }
+                }
+            }
+            
             builder.div(class: "tbl_toolbar right") {
                 builder.span {
                     builder."g:message"(code: "default.export.data")

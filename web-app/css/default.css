@@ -569,19 +569,25 @@ span.remove-item {
     clear: both;
 }
 
-/* USER MENU */
+/* MENUS */
 
-#usermenu {
+.menu {
     display: none;
     background-color: #FFFFFF;
     box-shadow: 0 0 3px 1px #225496;
     position: absolute;
+}
+
+.menu li {
+    padding: 5px;    
+}
+
+#usermenu {    
     right: 175px;
     top: 125px;
 }
 
 #usermenu li {
-    padding: 5px;
     text-align: right;
 }
 

@@ -1,4 +1,4 @@
-<%@ page import="org.iisg.eca.domain.SessionDateTime; org.iisg.eca.domain.Setting; org.iisg.eca.domain.Title; org.iisg.eca.domain.FeeState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Extra; org.iisg.eca.domain.Country" %>
+<%@ page import="org.iisg.eca.domain.SessionDateTime; org.iisg.eca.domain.Setting; org.iisg.eca.domain.Title; org.iisg.eca.domain.FeeState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Extra; org.iisg.eca.domain.Country; org.iisg.eca.domain.SessionParticipant" %>
 <!doctype html>
 <html>
     <head>
@@ -461,7 +461,7 @@
                                         <textarea name="Paper_${i}.proposalDescription" cols="40" rows="5">${fieldValue(bean: paper, field: 'proposalDescription')}</textarea>
                                     </span>
                                 </div>
-                                <div class="${hasErrors(bean: paper, field: 'session', 'error')}">
+                                <div>
                                     <label class="property-label">
                                         <g:message code="session.label" />
                                     </label>
@@ -472,6 +472,35 @@
                                                     ${fieldValue(bean: paper, field: 'session')}
                                                 </eca:link>
                                             </g:if>
+                                            <g:else>-</g:else>
+                                        </span>
+                                    </span>
+                                </div>
+                                <div>
+                                    <label class="property-label">
+                                        <g:message code="session.state.label" />
+                                    </label>
+                                    <span class="property-value">
+                                        <span>
+                                            <g:if test="${paper.session}">                                                
+                                                ${fieldValue(bean: paper.session, field: 'state')}                                                
+                                            </g:if>
+                                            <g:else>-</g:else>
+                                        </span>
+                                    </span>
+                                </div> 
+                                <div>
+                                    <label class="property-label">
+                                        <g:message code="participantType.function.label" />
+                                    </label>
+                                    <span class="property-value">
+                                        <span>
+                                            <g:if test="${paper.session}"> 
+                                                <g:set var="functionInSession" value="${SessionParticipant.findAllByUserAndSession(user, paper.session)}" />
+                                                <g:if test="${functionInSession.size() > 0}">                                                
+                                                    ${functionInSession.find { it.type.withPaper == true }.type}                                                
+                                                </g:if>
+                                            </g:if> 
                                             <g:else>-</g:else>
                                         </span>
                                     </span>
