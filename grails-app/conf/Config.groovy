@@ -131,7 +131,6 @@ log4j = {
                'net.sf.ehcache.hibernate'
 }
 
-
 // Spring Security Core config
 grails.plugins.springsecurity.userLookup.userDomainClassName = 'org.iisg.eca.domain.User'
 grails.plugins.springsecurity.userLookup.usernamePropertyName = 'email'

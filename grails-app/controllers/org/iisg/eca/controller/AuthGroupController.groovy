@@ -1,6 +1,8 @@
 package org.iisg.eca.controller
 
 import org.iisg.eca.domain.Group
+import org.iisg.eca.domain.Page
+import org.iisg.eca.domain.User
 
 /**
  * Controller responsible for handling requests on authentication groups
@@ -18,7 +20,43 @@ class AuthGroupController {
      * Shows all data on a particular authentication group
      */
     def show() {
-        forward(controller: 'dynamicPage', action: 'dynamic', params: params)
+        // We need an id, check for the id
+        if (!params.id) {
+            flash.error = true
+            flash.message = g.message(code: 'default.no.id.message')
+            redirect(uri: eca.createLink(previous: true, noBase: true))
+            return
+        }
+
+        Group group = Group.findById(params.id)
+
+        // We also need a group to be able to show something
+        if (!group) {
+            flash.error = true
+            flash.message = g.message(code: 'default.not.found.message', args: [g.message(code: 'group.label'), params.id])
+            redirect(uri: eca.createLink(previous: true, noBase: true))
+            return
+        }
+
+        List<Page> pages = Page.withCriteria {
+            groups {
+                eq('id', group.id)
+            }
+            order('titleDefault', "asc")
+        }
+
+        List<User> users = User.withCriteria {
+            groups {
+                eq('id', group.id)
+            }
+            order('lastName', "asc")
+            order('firstName', "asc")
+        }
+
+        // Show all group related information
+        render(view: "show", model: [   group:  group,
+                                        pages:  pages,
+                                        users:  users])
     }
 
     /**
