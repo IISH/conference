@@ -556,7 +556,7 @@ class SessionController {
                 possibilitiesResponse.put('success',        true)
                 possibilitiesResponse.put('code',           session.code)
                 possibilitiesResponse.put('name',           session.name)
-                possibilitiesResponse.put('abstract',       session.abstr)
+                possibilitiesResponse.put('state',          session.state.toString())
                 possibilitiesResponse.put('comment',        session.comment)
                 possibilitiesResponse.put('equipment',      sessionPlannerService.getEquipment(session).collect { it.toString() })
                 possibilitiesResponse.put('participants',   participantSessionService.getParticipantSessionInfoMap(participants))

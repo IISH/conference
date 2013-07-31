@@ -243,7 +243,7 @@ $(document).ready(function() {
                 if (data.success) {
                     sessionInfo.find('#code-label').next().text(data.code);
                     sessionInfo.find('#name-label').next().text(data.name);
-                    sessionInfo.find('#abstr-label').next().text(data.abstract);
+                    sessionInfo.find('#state-label').next().text(data.state);
                     sessionInfo.find('#commnent-label').next().text(data.comment);
                     sessionInfo.find('#equipment-label').next().html('<li>'+data.equipment.join('</li><li>')+'</li>');
                     setParticipantDataForSession(data);

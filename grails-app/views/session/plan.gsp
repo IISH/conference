@@ -116,7 +116,12 @@
                         </span>
                         <span class="property-value" aria-labelledby="name-label"> </span>
                     </li>
-                    
+                    <li>
+                        <span id="state-label" class="property-label">
+                            <g:message code="session.state.label" />
+                        </span>
+                        <span class="property-value" aria-labelledby="state-label"> </span>
+                    </li>
                     <li>
                         <span id="commnent-label" class="property-label">
                             <g:message code="session.comment.label" />
