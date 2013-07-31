@@ -7,7 +7,9 @@
         <h3>${info}</h3>
 
         <div class="tbl_container">
-            <input type="hidden" name="url" value="${eca.createLink(controller: controller, action: action, id: 0)}" />
+            <g:if test="${controller && action}">
+                <input type="hidden" name="url" value="${eca.createLink(controller: controller, action: action, id: 0)}" />
+            </g:if>
             
             <div class="menu">
                 <ul>

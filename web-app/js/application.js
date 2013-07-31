@@ -447,29 +447,33 @@ $(document).ready(function() {
         
         if (target[0] === element[0] || target.parent()[0] === element[0]) {
             var container = element.parents('.tbl_container');
-            var link = container.find('input[name=url]').val();        
-            var id = element.find("td.id").text().trim();
-            
-            link = link.replace('/0', "/" + id);
-            
-            switch (e.which) {
-                case 1:
-                    window.location = link;
-                    break;
-                case 3:
-                    document.oncontextmenu = function() { return false; }; 
-                    e.preventDefault();
-                    
-                    var menu = container.find(".menu");
-                    
-                    menu.find('a').each(function(index, value) {
-                        $(value).attr('href', link);
-                    });
-                    
-                    var left = e.pageX - element.offset().left;
-                    var top = element.position().top;
-                                            
-                    menu.css({left: left + "px", top: top + "px"}).show();
+            var linkElement = container.find('input[name=url]')
+
+            if (linkElement.size() > 0) {
+                var link = linkElement.val();
+                var id = element.find("td.id").text().trim();
+
+                link = link.replace('/0', "/" + id);
+
+                switch (e.which) {
+                    case 1:
+                        window.location = link;
+                        break;
+                    case 3:
+                        document.oncontextmenu = function() { return false; };
+                        e.preventDefault();
+
+                        var menu = container.find(".menu");
+
+                        menu.find('a').each(function(index, value) {
+                            $(value).attr('href', link);
+                        });
+
+                        var left = e.pageX - element.offset().left;
+                        var top = element.position().top;
+
+                        menu.css({left: left + "px", top: top + "px"}).show();
+                }
             }
         }
     });

@@ -89,8 +89,10 @@ class PageBuilder {
      */
     private void buildTable(DataContainer element) {
         builder.div(class: "tbl_container") {
-            builder.input(type: "hidden", name: "url", value: "\${eca.createLinkAllParams(controller: params.controller, action: '${element.action}', id: 0, setPrev: true)}")
-            
+            if (element.action) {
+                builder.input(type: "hidden", name: "url", value: "\${eca.createLinkAllParams(controller: params.controller, action: '${element.action}', id: 0, setPrev: true)}")
+            }
+
             builder.div(class: "menu") {
                 builder.ul {
                     builder.li {

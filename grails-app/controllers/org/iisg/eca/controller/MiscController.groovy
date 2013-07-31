@@ -9,6 +9,7 @@ import groovy.sql.GroovyRowResult
  */
 class MiscController {
     def dataSource
+    def pageInformation
 
     def lastNameUpperCase() {
         Sql sql = new Sql(dataSource)
@@ -18,7 +19,7 @@ class MiscController {
            WHERE users.enabled=1 AND users.deleted=0
            AND participant_date.enabled=1 and participant_date.deleted=0
            AND participant_date.participant_state_id IN (0,1,2,999)
-           AND participant_date.date_id=1
+           AND participant_date.date_id = :date_id
            AND
            (
                lastname <> ""
@@ -26,7 +27,7 @@ class MiscController {
                AND ( binary lastname = binary upper( lastname ) OR binary lastname = binary lower( lastname ) )
            )
            ORDER BY lastname
-        """)
+        """, [date_id: pageInformation.date.id])
 
         render(view: "list", model: [
                 data:       result,
@@ -45,7 +46,7 @@ class MiscController {
            WHERE users.enabled=1 AND users.deleted=0
            AND participant_date.enabled=1 and participant_date.deleted=0
            AND participant_date.participant_state_id IN (0,1,2,999)
-           AND participant_date.date_id=1
+           AND participant_date.date_id = :date_id
            AND
            (
            firstname <> ""
@@ -53,7 +54,7 @@ class MiscController {
            AND ( binary firstname = binary upper( firstname ) OR binary firstname = binary lower( firstname ) )
            )
            ORDER BY firstname
-        """)
+        """, [date_id: pageInformation.date.id])
 
         render(view: "list", model: [
                 data:       result,
@@ -72,7 +73,7 @@ class MiscController {
            WHERE users.enabled=1 AND users.deleted=0
            AND participant_date.enabled=1 and participant_date.deleted=0
            AND participant_date.participant_state_id IN (0,1,2,999)
-           AND participant_date.date_id=1
+           AND participant_date.date_id = :date_id
            AND
            (
            city <> ""
@@ -80,7 +81,7 @@ class MiscController {
            AND ( binary city = binary upper( city ) OR binary city = binary lower( city ) )
            )
            ORDER BY city
-        """)
+        """, [date_id: pageInformation.date.id])
 
         render(view: "list", model: [
                 data:       result,
@@ -99,7 +100,7 @@ class MiscController {
            WHERE users.enabled=1 AND users.deleted=0
            AND participant_date.enabled=1 and participant_date.deleted=0
            AND participant_date.participant_state_id IN (0,1,2,999)
-           AND participant_date.date_id=1
+           AND participant_date.date_id = :date_id
            AND
            (
            organisation <> ""
@@ -108,7 +109,7 @@ class MiscController {
            AND ( binary organisation = binary upper( organisation ) OR binary organisation = binary lower( organisation ) )
            )
            ORDER BY organisation
-        """)
+        """, [date_id: pageInformation.date.id])
 
         render(view: "list", model: [
                 data:       result,
@@ -124,13 +125,13 @@ class MiscController {
         List<GroovyRowResult> result = sql.rows("""
            SELECT A.session_id, A.session_name
            FROM sessions A, sessions B
-           WHERE A.date_id=1 AND B.date_id =1
+           WHERE A.date_id=1 AND B.date_id = :date_id
            AND A.session_name = B.session_name
            AND A.enabled=1 AND A.deleted=0
            AND B.enabled=1 AND B.deleted=0
            AND A.session_id <> B.session_id
            ORDER BY A.session_name, A.session_id
-        """)
+        """, [date_id: pageInformation.date.id])
 
         render(view: "list", model: [
                 data:       result,
@@ -146,11 +147,11 @@ class MiscController {
         List<GroovyRowResult> result = sql.rows("""
            SELECT session_id, session_name
            FROM `sessions`
-           WHERE date_id=1
+           WHERE date_id = :date_id
            AND deleted= 0
            AND session_id NOT IN (SELECT session_id FROM session_in_network)
            ORDER BY session_name
-        """)
+        """, [date_id: pageInformation.date.id])
 
         render(view: "list", model: [
                 data:       result,
@@ -167,7 +168,7 @@ class MiscController {
            SELECT session_id, session_name
            FROM sessions
            WHERE enabled=1 AND deleted=0
-           AND date_id=1
+           AND date_id = :date_id
            AND session_id IN (
                SELECT session_id
                FROM session_participant
@@ -175,7 +176,7 @@ class MiscController {
                GROUP BY session_id
            )
            ORDER BY session_name, session_id
-        """)
+        """, [date_id: pageInformation.date.id])
 
         render(view: "list", model: [
                 data:       result,
@@ -194,13 +195,13 @@ class MiscController {
            WHERE users.enabled=1 AND users.deleted=0
            AND participant_date.enabled=1 and participant_date.deleted=0
            AND participant_date.participant_state_id IN (0,1,2,999)
-           AND participant_date.date_id=1
+           AND participant_date.date_id = :date_id
            AND users.user_id IN (
                SELECT A.user_id FROM papers A, papers B WHERE A.user_id = B.user_id and A.paper_id <> B.paper_id and A.title = B.title and A.paper_id > B.paper_id
                AND A.enabled=1 AND A.deleted=0
                AND B.enabled=1 AND B.deleted=0
            )
-        """)
+        """, [date_id: pageInformation.date.id])
 
         render(view: "list", model: [
                 data:       result,
@@ -219,15 +220,15 @@ class MiscController {
            WHERE users.enabled=1 AND users.deleted=0
            AND participant_date.enabled=1 and participant_date.deleted=0
            AND participant_date.participant_state_id IN (0,1,2,999)
-           AND participant_date.date_id=1
+           AND participant_date.date_id = :date_id
            AND users.user_id IN (
                SELECT user_id
                FROM `papers`
-               WHERE enabled=1 AND deleted=0 AND date_id=1
+               WHERE enabled=1 AND deleted=0 AND date_id = :date_id
                GROUP BY user_id
                HAVING count(*) > 1
            ) ORDER BY lastname, firstname
-        """)
+        """, [date_id: pageInformation.date.id])
 
         render(view: "list", model: [
                 data:       result,
@@ -246,10 +247,10 @@ class MiscController {
           WHERE users.enabled=1 AND users.deleted=0
           AND participant_date.enabled=1 and participant_date.deleted=0
           AND participant_date.participant_state_id IN (0,1,2,999)
-          AND participant_date.date_id=1
+          AND participant_date.date_id = :date_id
           AND users.user_id IN (
             SELECT user_id FROM `papers` WHERE session_id IN (SELECT session_id FROM sessions WHERE deleted=1 ) OR session_id NOT IN (SELECT session_id FROM sessions) ) ;
-        """)
+        """, [date_id: pageInformation.date.id])
 
         render(view: "list", model: [
                 data:       result,
@@ -268,10 +269,10 @@ class MiscController {
           WHERE users.enabled=1 AND users.deleted=0
           AND participant_date.enabled=1 and participant_date.deleted=0
           AND participant_date.participant_state_id IN (0,1,2,999)
-          AND participant_date.date_id=1
+          AND participant_date.date_id = :date_id
           AND participant_date.award=1
           ORDER BY lastname, firstname
-        """)
+        """, [date_id: pageInformation.date.id])
 
         render(view: "list", model: [
                 data:       result,
@@ -279,6 +280,29 @@ class MiscController {
                 controller: "participant",
                 action:     "show",
                 info:       "Overview of students participating in the 'Award'."
+        ])
+    }
+
+    def notRegisteredChairs() {
+        Sql sql = new Sql(dataSource)
+        List<GroovyRowResult> result = sql.rows("""
+          SELECT users.user_id, lastname, firstname, email
+          FROM networks_chairs
+          INNER JOIN users ON networks_chairs.user_id = users.user_id
+          WHERE users.user_id NOT IN (
+              SELECT user_id
+              FROM participant_date WHERE date_id = :date_id
+              AND enabled=1 AND deleted=0
+          )
+          ORDER BY lastname, firstname
+        """, [date_id: pageInformation.date.id])
+
+        render(view: "list", model: [
+                data:       result,
+                headers:    ["Last name", "First name", "E-mail"],
+                controller: null,
+                action:     null,
+                info:       "Not Registered Chairs."
         ])
     }
 }
