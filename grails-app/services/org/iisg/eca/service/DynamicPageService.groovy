@@ -198,6 +198,7 @@ class DynamicPageService {
                 column.notEmpty     = element.@notEmpty.text().equalsIgnoreCase("true")
                 column.filter       = element.@filter.text().equalsIgnoreCase("true")
                 column.hideFilter   = element.@hideFilter.text().equalsIgnoreCase("true")
+                column.hideSorting  = element.@hideSorting.text().equalsIgnoreCase("true")
                 column.interactive  = element.@interactive.text()
                 column.textarea     = element.@textarea.text()
                 column.eq           = element.@eq.text()

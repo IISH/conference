@@ -25,8 +25,8 @@ class SessionPlannerService {
     }
 
     /**
-     * Returns all sessions that are not scheduled yet
-     * @return All sessions that are not scheduled yet
+     * Returns all accepted sessions that are not scheduled yet
+     * @return All accepted sessions that are not scheduled yet
      */
     List<Session> getUnscheduledSessions() {
         Session.executeQuery('''
@@ -35,6 +35,7 @@ class SessionPlannerService {
                 FROM SessionRoomDateTime AS srdt
                 WHERE srdt.session.id = s.id
             )
+            AND state.id = 2
             ORDER BY s.code
         ''')
     }
@@ -114,20 +115,20 @@ class SessionPlannerService {
             SELECT r, dt
             FROM Room AS r, SessionDateTime AS dt
             WHERE dt.day IN :days
-            ORDER BY r.roomName, dt.index''', [days: Day.list()])
+            ORDER BY r.roomNumber, dt.index''', [days: Day.list()])
         
         // ... then retrieve all equipment available in the rooms at specific dates and times
         List<Object[]> equipment = (List<Object[]>) RoomSessionDateTimeEquipment.executeQuery('''
             SELECT rsdte.room.id, rsdte.sessionDateTime.id, rsdte.equipment
             FROM RoomSessionDateTimeEquipment AS rsdte
-            ORDER BY rsdte.room.roomName, rsdte.sessionDateTime.index, rsdte.equipment.code
+            ORDER BY rsdte.room.roomNumber, rsdte.sessionDateTime.index, rsdte.equipment.code
         ''')
 
         // ... then retrieve all sessions already scheduled in the rooms at specific dates and times
         List<Object[]> sessions = (List<Object[]>) SessionRoomDateTime.executeQuery('''
             SELECT srdt.room.id, srdt.sessionDateTime.id, srdt.session
             FROM SessionRoomDateTime AS srdt
-            ORDER BY srdt.room.roomName, srdt.sessionDateTime.index
+            ORDER BY srdt.room.roomNumber, srdt.sessionDateTime.index
         ''')
 
         // Now combine them all in one list

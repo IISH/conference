@@ -435,16 +435,20 @@ class PageBuilder {
                     builder.th(class: "id sortable") {
                         builder.mkp.yield "#"
 
-                        builder.span(class: "sort_asc asc_unselected", name: "${element.eid}|${c.name}", "")
-                        builder.span(class: "sort_desc desc_unselected", name: "${element.eid}|${c.name}", "")
+                        if (!c.hideSorting) {
+                            builder.span(class: "sort_asc asc_unselected", name: "${element.eid}|${c.name}", "")
+                            builder.span(class: "sort_desc desc_unselected", name: "${element.eid}|${c.name}", "")
+                        }
                     }
                 }
                 else {
                     builder.th(class: "sortable") {
                         builder."eca:fallbackMessage"(code: getCode(c.property), fbCode: getFbCode(c.property))
 
-                        builder.span(class: "sort_asc asc_unselected", name: "${element.eid}|${c.name}", "")
-                        builder.span(class: "sort_desc desc_unselected", name: "${element.eid}|${c.name}", "")
+                        if (!c.hideSorting) {
+                            builder.span(class: "sort_asc asc_unselected", name: "${element.eid}|${c.name}", "")
+                            builder.span(class: "sort_desc desc_unselected", name: "${element.eid}|${c.name}", "")
+                        }
                     }
                 }
             }

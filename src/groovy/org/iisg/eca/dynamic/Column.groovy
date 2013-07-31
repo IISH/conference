@@ -16,6 +16,7 @@ class Column extends ContainerElement {
     private boolean notEmpty
     private boolean filter
     private boolean hideFilter
+    private boolean hideSorting
     private String interactive
     private String textarea
     private String eq
@@ -142,6 +143,14 @@ class Column extends ContainerElement {
 
     boolean getHideFilter() {
         hideFilter
+    }
+
+    void setHideSorting(boolean hideSorting) {
+        this.hideSorting = hideSorting
+    }
+
+    boolean getHideSorting() {
+        hideSorting
     }
 
     void setInteractive(String interactive) {
