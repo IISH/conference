@@ -21,6 +21,7 @@ class Paper extends EventDateDomain {
     Long fileSize
     byte[] file
     String equipmentComment
+    boolean mailPaperState = true
 
     static belongsTo = [User, PaperState, Session, Network]
     static hasMany = [equipment: Equipment]
@@ -44,6 +45,7 @@ class Paper extends EventDateDomain {
         fileSize            column: 'filesize'
         file                column: 'file',                 sqlType: 'mediumblob'
         equipmentComment    column: 'equipment_comment',    type: 'text'
+        mailPaperState      column: 'mail_paper_state'
 
         equipment           joinTable: 'paper_equipment'
     }
@@ -85,6 +87,15 @@ class Paper extends EventDateDomain {
             return "${(fileSize/1024).setScale(2, RoundingMode.HALF_UP)} KB"
         }
         return "${fileSize} bytes"
+    }
+
+    /**
+     * Updates the mailPaperState when the state of this paper has been changed
+     */
+    def beforeUpdate() {
+        if (isDirty('state')) {
+            mailPaperState = true
+        }
     }
 
     @Override
