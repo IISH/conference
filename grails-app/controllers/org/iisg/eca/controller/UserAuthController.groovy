@@ -67,7 +67,7 @@ class UserAuthController {
         // And pages which the current user can access already
         Set<Role> roles = Role.getPossibleRoles()
         List<Page> pages = Page.getAllPagesWithAccess()
-        Set<Group> groups = Group.getAllGroupsWithAccess()
+        List<Group> groups = Group.getAllGroupsWithAccess()
         
         // Transient problems with relations
         Set<Role> assignedRoles = []
@@ -161,7 +161,7 @@ class UserAuthController {
         // And pages which the current user can access already
         Set<Role> roles = Role.getPossibleRoles()
         List<Page> pages = Page.getAllPagesWithAccess()
-        Set<Group> groups = Group.getAllGroupsWithAccess()
+        List<Group> groups = Group.getAllGroupsWithAccess()
         
         // Find out if this user may be authorized by the accessing user
         String userRoles = UserRole.findByUser(user)*.role?.join(',')
@@ -228,7 +228,7 @@ class UserAuthController {
             // Save the user and redirect to the previous page if everything is ok
             if (user.save(flush: true)) {
                 // Make sure the cache is cleared
-                sessionFactory.queryCache.clear()
+                //sessionFactory.queryCache.clear()
                 
                 flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'user.label'), user.toString()])
                 if (params['btn_save_close']) {

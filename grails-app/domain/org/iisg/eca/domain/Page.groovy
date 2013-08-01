@@ -93,7 +93,7 @@ class Page extends DefaultDomain {
     
     static List<Page> getAllPagesWithAccess() {
         List<Page> pages = []
-        Page.list().each { 
+        Page.listOrderByTitleDefault().each {
             if (it.hasAccess() && (it.controller != null) && (it.action != null)) {
                 pages.add(it) 
             }

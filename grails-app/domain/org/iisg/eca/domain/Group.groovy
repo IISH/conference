@@ -37,12 +37,7 @@ class Group extends EventDateDomain {
     }
 
     List<Page> getAllPagesNotInGroup() {
-        List<Page> pagesNotInGroup = Page.withCriteria {
-            isNotNull('action')
-            isNotNull('controller')
-            order('titleDefault', "asc")
-        }
-
+        List<Page> pagesNotInGroup = Page.getAllPagesWithAccess()
         List<Long> allPageIds = getAllPagesInGroup()*.id
         pagesNotInGroup.removeAll { allPageIds.contains(it.id) }
 
@@ -59,17 +54,18 @@ class Group extends EventDateDomain {
         }
     }
     
-    static Set<Group> getAllGroupsOfUser(User user) {
+    static List<Group> getAllGroupsOfUser(User user) {
         Group.withCriteria { 
             users { 
                 eq('id', user.id) 
-            } 
+            }
+            order('name', 'asc')
         }
     }
     
-    static Set<Group> getAllGroupsWithAccess() {
-        Set<Group> groups = []
-        Group.list().each { 
+    static List<Group> getAllGroupsWithAccess() {
+        List<Group> groups = []
+        Group.listOrderByName().each {
             if (it.pages.findAll { p -> !p.hasAccess() }.size() == 0) {
                 groups.add(it) 
             }
