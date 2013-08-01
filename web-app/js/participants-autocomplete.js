@@ -19,7 +19,7 @@ $.getJSON('../../participant/participants', function(data) {
             }));
         },
         search: function(event, ui) {
-            $(event.target).prev().val("");
+            $(event.target).prevAll("input").val("");
         },
         focus: function(event, ui) {
             $(event.target).val(ui.item.label);
@@ -27,7 +27,7 @@ $.getJSON('../../participant/participants', function(data) {
         },
         select: function(event, ui) {
             $(event.target).val(ui.item.label);
-            $(event.target).prev().val(ui.item.value);
+            $(event.target).prevAll("input").val(ui.item.value);
             return false;
         }
     }
