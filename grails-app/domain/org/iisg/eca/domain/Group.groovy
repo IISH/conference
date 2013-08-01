@@ -26,6 +26,38 @@ class Group extends EventDateDomain {
         name    blank: false,   maxSize: 30
         date    nullable: true
     }
+
+    List<Page> getAllPagesInGroup() {
+        Page.withCriteria {
+            groups {
+                eq('id', id)
+            }
+            order('titleDefault', "asc")
+        }
+    }
+
+    List<Page> getAllPagesNotInGroup() {
+        List<Page> pagesNotInGroup = Page.withCriteria {
+            isNotNull('action')
+            isNotNull('controller')
+            order('titleDefault', "asc")
+        }
+
+        List<Long> allPageIds = getAllPagesInGroup()*.id
+        pagesNotInGroup.removeAll { allPageIds.contains(it.id) }
+
+        pagesNotInGroup
+    }
+
+    List<User> getAllUsersInGroup() {
+        User.withCriteria {
+            groups {
+                eq('id', id)
+            }
+            order('lastName', "asc")
+            order('firstName', "asc")
+        }
+    }
     
     static Set<Group> getAllGroupsOfUser(User user) {
         Group.withCriteria { 

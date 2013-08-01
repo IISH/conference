@@ -70,6 +70,12 @@ select[size], select[multiple] {
     height: 100%;
 }
 
+input.moveItems {
+    display: block;
+    padding: 3px;
+    margin-top: 5px;
+}
+
 input[type=checkbox], input[type=radio] {
     border: 0;
     outline: 0;

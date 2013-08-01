@@ -316,8 +316,13 @@ $(document).ready(function() {
 
     $('input[type=submit]').click(function(e) {
         var form = $(this).parents('form');
+
         var children = form.find('.hidden input, .hidden select, .hidden textarea');
-        children.removeAttr('required');        
+        children.removeAttr('required');
+
+        var selectBox = form.find('.moveSelectBox.primary');
+        selectBox.find('option').prop('selected', true);
+
         this.click();
     });
 
@@ -590,5 +595,12 @@ $(document).ready(function() {
 
     $("#network-select").change(function(e) {
         $(this).parents('form').submit();
+    });
+
+    $('.moveItems').click(function(e) {
+        var selectBox = $(this).prev();
+        var otherSelectBox = $(".moveSelectBox").not(selectBox);
+
+        selectBox.find('option:selected').remove().appendTo(otherSelectBox);
     });
 });

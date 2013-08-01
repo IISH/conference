@@ -164,7 +164,7 @@ class Page extends DefaultDomain {
      * Return the query part of the URL for this page
      * @return The query part of a URL
      */
-    def String getUrlQuery() {
+    String getUrlQuery() {
         String cleanUrlQuery = urlQuery
         
         if (cleanUrlQuery != null && (cleanUrlQuery.startsWith("?") || cleanUrlQuery.startsWith("&"))) {
@@ -174,8 +174,16 @@ class Page extends DefaultDomain {
         cleanUrlQuery 
     }
 
+    /**
+     * The title of the page with action
+     * @return The title of the page with action
+     */
+    String getTitleWithAction() {
+        "${toString()} (${action})"
+    }
+
     @Override
-    def String toString() {
+    String toString() {
         Object[] args = null
         if (titleArg) {
             args = [messageSource.getMessage(titleArg, null, LocaleContextHolder.locale)]

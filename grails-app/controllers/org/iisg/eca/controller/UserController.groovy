@@ -1,6 +1,7 @@
 package org.iisg.eca.controller
 
 import org.iisg.eca.domain.User
+import grails.converters.JSON
 
 /**
  * Controller for user related actions
@@ -74,6 +75,23 @@ class UserController {
             else {
                 render(view: "edit", model: [user: user])
             }
+        }
+    }
+
+    /**
+     * Returns a list will all users
+     * (AJAX call)
+     */
+    def users() {
+        // If this is an AJAX call, continue
+        if (request.xhr) {
+            // Return all users
+            render User.withCriteria {
+                order('lastName', 'asc')
+                order('firstName', 'asc')
+            }.collect { user ->
+                [label: "${user.lastName}, ${user.firstName}", value: user.id]
+            } as JSON
         }
     }
 }
