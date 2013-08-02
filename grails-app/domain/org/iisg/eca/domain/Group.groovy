@@ -23,7 +23,7 @@ class Group extends EventDateDomain {
     }
 
     static constraints = {
-        name    blank: false,   maxSize: 30
+        name    blank: false,   maxSize: 50
         date    nullable: true
     }
 

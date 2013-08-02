@@ -13,7 +13,7 @@
                         <span class="required-indicator">*</span>
                     </label>
                     <span class="property-value">
-                        <input id="Group.name" maxlength="30" name="Group.name" value="${group.name}" required="required" type="text" />
+                        <input id="Group.name" maxlength="50" name="Group.name" value="${group.name}" required="required" type="text" />
                     </span>
                 </div>
                 <div>
@@ -22,7 +22,7 @@
                     </label>
                     <span class="property-value">
                         <g:select id="Group.pages" name="Group.pages" class="moveSelectBox primary" optionKey="id" optionValue="titleWithAction" from="${pages}" multiple="multiple" size="10" />
-                        <input type="button" class="moveItems" value="${g.message(code: 'group.select.label', args: [g.message(code: 'group.pagesNotInGroup.label').toLowerCase()])}" />
+                        <input type="button" class="moveItems" value="${g.message(code: 'default.remove.selected.label', args: [g.message(code: 'group.pagesInGroup.label')]).encodeAsHTML()}" />
                     </span>
                 </div>
                 <div>
@@ -31,7 +31,7 @@
                     </label>
                     <span class="property-value">
                         <g:select id="Group.availablePages" name="Group.availablePages" class="moveSelectBox" optionKey="id" optionValue="titleWithAction" from="${pagesNotInGroup}" multiple="multiple" size="10" />
-                        <input type="button" class="moveItems" value="${g.message(code: 'group.select.label', args: [g.message(code: 'group.pagesInGroup.label').toLowerCase()])}" />
+                        <input type="button" class="moveItems" value="${g.message(code: 'default.add.selected.label', args: [g.message(code: 'group.pagesInGroup.label')]).encodeAsHTML()}" />
                     </span>
                 </div>
                 <div>
