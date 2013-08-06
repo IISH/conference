@@ -47,6 +47,7 @@
                 <eca:fallbackMessage code="day.multiple.label" fbCode="eventDate.days.label" />
               </label>
               <ul class="property-value">
+                <g:if test="${params.action != 'create'}">
                 <g:each in="${Day.findAllByDate(eventDate)}" var="instance" status="i">
                     <li>
                       <input type="hidden" name="Day_${i}.id" value="${instance.id}" />
@@ -61,6 +62,7 @@
                       <span class="ui-icon ui-icon-circle-minus"></span>
                     </li>
                 </g:each>
+                </g:if>
                 <li class="add">
                   <span class="ui-icon ui-icon-circle-plus"></span>
                   <g:message code="default.add.label" args="[eca.fallbackMessage(code: 'day.multiple.label', fbCode: 'eventDate.days.label').toLowerCase()]" />
