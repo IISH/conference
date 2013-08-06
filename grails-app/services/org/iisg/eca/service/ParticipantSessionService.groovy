@@ -128,6 +128,7 @@ class ParticipantSessionService {
                 WHERE s.id = :sessionId
                 AND t.withPaper = true
                 AND p.state <> st.correspondingPaperState
+                AND p.deleted = false
                 ORDER BY u.lastName, u.firstName
             ''', [sessionId: session.id])
         )
