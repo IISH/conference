@@ -250,30 +250,29 @@ class SessionController {
             
             // If we have a session id and state id, try to find the records for these ids
             if (params.session_id?.isLong() && params.state_id?.isLong()) {
-               // Session.withSession { hSession -> 
-             //       hSession.flushMode = FlushMode.MANUAL
-                    
-                    Session session = Session.findById(params.session_id)
-                    SessionState state = SessionState.findById(params.state_id)
+                Session session = Session.findById(params.session_id)
+                SessionState state = SessionState.findById(params.state_id)
 
-                    // Change the session state if they both exist
-                    if (session && state) {
-                        session.state = state
+                // Change the session state if they both exist
+                if (session && state) {
+                    session.state = state
 
-                        // Save the session
-                        if (session.save(flush: true)) {
-                            // Everything is fine
-                            //SessionParticipant.withNewSession { hSession -> 
-                                //List<ParticipantSessionInfo> participants = participantSessionService.getParticipantsForSession(session)
-                                responseMap = [ success:        true/*, 
-                                                participants:   participantSessionService.getParticipantSessionInfoMap(participants)*/]
-                           // }
-                        }
-                        else {
-                            responseMap = [success: false, message: session.errors.allErrors.collect { g.message(error: it) }]
-                        }
+                    // Save the session
+                    if (session.save(flush: true)) {                        
+                        // Everything is fine
+                        /*Session.withNewSession { hSession ->
+                            Session newSession = Session.findById(session.id)
+                            newSession.updatePaperStates()
+                                                        
+                            List<ParticipantSessionInfo> participants = participantSessionService.getParticipantsForSession(newSession)*/
+                            responseMap = [ success:        true/*, 
+                                            participants:   participantSessionService.getParticipantSessionInfoMap(participants)*/]
+                      //  }
                     }
-             //   }
+                    else {
+                        responseMap = [success: false, message: session.errors.allErrors.collect { g.message(error: it) }]
+                    }
+                }
             }
             
             // If there is no responseMap defined yet, it can only mean the session or state could not be found

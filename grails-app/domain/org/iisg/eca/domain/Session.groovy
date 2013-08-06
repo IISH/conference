@@ -9,7 +9,8 @@ class Session extends EventDateDomain {
     String abstr
     String comment
     SessionState state
-
+    boolean mailSessionState = true
+    
     static belongsTo = [Network, SessionState]
     static hasMany = [  sessionParticipants: SessionParticipant,
                         papers: Paper,
@@ -21,13 +22,14 @@ class Session extends EventDateDomain {
         version false
         sort code: 'asc'
 
-        id          column: 'session_id'
-        date        column: 'date_id'
-        code        column: 'session_code'
-        name        column: 'session_name'
-        abstr       column: 'session_abstract', type: 'text'
-        comment     column: 'session_comment',  type: 'text'
-        state       column: 'session_state_id'
+        id                  column: 'session_id'
+        date                column: 'date_id'
+        code                column: 'session_code'
+        name                column: 'session_name'
+        abstr               column: 'session_abstract', type: 'text'
+        comment             column: 'session_comment',  type: 'text'
+        state               column: 'session_state_id'
+        mailSessionState    column: 'mail_session_state'
 
         networks                joinTable: 'session_in_network'
         sessionParticipants     cascade: 'all-delete-orphan'
@@ -46,27 +48,23 @@ class Session extends EventDateDomain {
      * Updates the paper state of all papers of this session when the state of this session has been changed
      */
     def beforeUpdate() {
-        if (isDirty('state') && state.correspondingPaperState) { 
-            //long sessionId = this.id
-            //long paperStateId = state.correspondingPaperState.id
-            
-            //Paper.withNewSession { hSession -> 
-                // Find the corresponding paper state of this session state
-               // Session session = Session.findById(sessionId)
-               // PaperState correspondingPaperState = PaperState.findById(paperStateId)
-                PaperState correspondingPaperState = state.correspondingPaperState
-            
-                // Change all paper states of this session
-                Paper.findAllBySession(this).each { paper ->
-                    PaperState paperState = paper.state
+        if (isDirty('state')) { 
+            mailSessionState = true
+            updatePaperStates()
+        }
+    }
+    
+    void updatePaperStates() {
+        if (state.correspondingPaperState) {
+            PaperState correspondingPaperState = state.correspondingPaperState
 
-                    // Only update papers that may be changed
-                    if (paperState.sessionStateTrigger) {
-                        paper.state = correspondingPaperState
-                        paper.save()
-                    }
+            // Change all paper states of this session
+            Paper.findAllBySession(this).each { paper ->
+                // Only update papers that may be changed
+                if (paper.state.sessionStateTrigger) {
+                    paper.state = correspondingPaperState
                 }
-          //  }            
+            }
         }
     }
     
