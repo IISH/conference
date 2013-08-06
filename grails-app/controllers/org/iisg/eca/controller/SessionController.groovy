@@ -186,21 +186,35 @@ class SessionController {
     }
 
     def paperMismatch() {
-        Network network = null
-
-        if (params.network?.isLong()) {
-            network = Network.findById(params.network)
+        if (params.networkId?.isLong()) {
+            String uri = eca.createLink(action: 'paperMismatch', noBase: true, id: params.networkId)
+            params.remove('networkId')  
+            
+            redirect(uri: uri, params: params)
         }
         else {
-            network = Network.find("FROM Network")
+            Network network = null
+            List<Network> networks = Network.executeQuery('''
+                FROM Network
+                ORDER BY showOnline DESC, name ASC
+            ''')
+            
+            if (params.id?.isLong()) {
+                network = Network.findById(params.id)
+            }
+            else {
+                network = networks.get(0)
+                params.id = network.id
+            }
+
+            // Let the participantSessionService come up with all mismatches
+            Map<Session, List<ParticipantSessionInfo>> sessions = participantSessionService.getParticipantsForSessionMismatches(network)
+
+            render(view: "paperMismatch", model: [  network:    network,
+                                                    networks:   networks,
+                                                    networkIds: networks*.id,
+                                                    sessions:   sessions])
         }
-
-        // Let the participantSessionService come up with all mismatches
-        Map<Session, List<ParticipantSessionInfo>> sessions = participantSessionService.getParticipantsForSessionMismatches(network)
-
-        render(view: "paperMismatch", model: [  network:    network,
-                                                networks:   Network.list(),
-                                                sessions:   sessions])
     }
 
     /**

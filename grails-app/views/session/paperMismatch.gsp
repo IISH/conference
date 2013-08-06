@@ -5,6 +5,9 @@
         <meta name="layout" content="main">
     </head>
     <body>
+        <input type="hidden" name="id" value="${params.id}" />
+        <eca:navigation ids="${networkIds}" />
+      
         <ol class="property-list">
           <li>
             <span id="network-label" class="property-label">
@@ -12,7 +15,7 @@
             </span>
             <span class="property-value" arial-labelledby="network-label">
               <form name="network-form" action="#" method="get">
-                <g:select id="network-select" name="network" from="${networks}" value="${network?.id}" optionKey="id" optionValue="name" />
+                <g:select id="network-select" name="networkId" from="${networks}" value="${params.id}" optionKey="id" optionValue="name" />
               </form>
             </span>
           </li>
