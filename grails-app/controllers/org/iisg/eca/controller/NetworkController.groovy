@@ -43,7 +43,7 @@ class NetworkController {
         // We also need a network to be able to show something
         if (!network) {
             flash.error = true
-            flash.message = g.message(code: 'default.not.found.message', args: [g.message(code: 'network.label'), network.id])
+            flash.message = g.message(code: 'default.not.found.message', args: [g.message(code: 'network.label')])
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
         }
@@ -157,7 +157,7 @@ class NetworkController {
 
         redirect(uri: eca.createLink(action: 'list', noBase: true))
     }
-
+    
     /**
      * Returns all unscheduled participants for the current network
      * (AJAX call)

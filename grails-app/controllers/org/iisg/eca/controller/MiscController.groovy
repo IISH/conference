@@ -332,5 +332,29 @@ class MiscController {
                 info:       "Overview of participants with multiple accepted papers."
         ])
     }
+    
+    def chairs() {
+        Sql sql = new Sql(dataSource)
+        List<GroovyRowResult> result = sql.rows("""
+            SELECT users.user_id, networks.name, users.lastname, users.firstname, users.email
+            FROM networks
+            INNER JOIN networks_chairs on networks.network_id=networks_chairs.network_id
+            INNER JOIN users ON networks_chairs.user_id=users.user_id
+            WHERE networks_chairs.enabled=1 
+            AND networks_chairs.deleted=0 
+            AND users.enabled=1 
+            AND users.deleted=0
+            AND networks.date_id = :dateId
+            ORDER BY networks.name, users.lastname, users.firstname
+        """, [dateId: pageInformation.date.id])
+
+        render(view: "list", model: [
+                data:       result,
+                headers:    ["Network", "Last name", "First name", "Email"],
+                controller: "participant",
+                action:     "show",
+                info:       "Overview of all chairs."
+        ])
+    }
 }
 
