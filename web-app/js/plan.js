@@ -144,7 +144,7 @@ $(document).ready(function() {
     sessionInfo = $('#session-info-container');
     roomInfo = $('#room-info-container');
 
-    $(document).keypress(function(e) {
+    $(document).keydown(function(e) {
         if (e.keyCode === 27 && curSessionBlock !== null) {
             unselectSession();
         }
