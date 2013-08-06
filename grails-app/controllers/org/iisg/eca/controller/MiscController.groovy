@@ -309,25 +309,20 @@ class MiscController {
     def multipleAccPapers() {
         Sql sql = new Sql(dataSource)
         List<GroovyRowResult> result = sql.rows("""
-           SELECT users.user_id, lastname, firstname
-           FROM users INNER JOIN participant_date ON users.user_id=participant_date.user_id
-           WHERE users.enabled=1 AND users.deleted=0
-           AND participant_date.enabled=1 and participant_date.deleted=0
-           AND participant_date.participant_state_id IN (0,1,2,999)
-           AND participant_date.date_id = :date_id
-           AND users.user_id IN (
-               SELECT papers.user_id
-               FROM `papers`
-               INNER JOIN session_participant
-               ON papers.user_id = session_participant.user_id
-               AND papers.session_id = session_participant.session_id
-               WHERE papers.enabled=1 AND papers.deleted=0 AND papers.date_id = :date_id
-               AND paper_state_id = 2
-               AND participant_type_id = 3
-               GROUP BY papers.user_id
-               HAVING count(*) > 1
-           ) ORDER BY lastname, firstname
-        """, [date_id: pageInformation.date.id])
+            SELECT users.user_id, lastname, firstname
+            FROM users 
+            INNER JOIN participant_date ON users.user_id=participant_date.user_id
+            WHERE users.enabled=1 AND users.deleted=0
+            AND participant_date.enabled=1 and participant_date.deleted=0
+            AND participant_date.participant_state_id IN (0,1,2,999)
+            AND participant_date.date_id = :dateId
+            AND users.user_id IN (
+                SELECT user_id
+                FROM vw_dbl_acc_papers 
+                WHERE date_id = :dateId
+            ) 
+            ORDER BY lastname, firstname
+        """, [dateId: pageInformation.date.id])
 
         render(view: "list", model: [
                 data:       result,
