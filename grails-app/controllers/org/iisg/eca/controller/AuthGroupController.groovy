@@ -27,7 +27,40 @@ class AuthGroupController {
      * Allows the user to create a new authentication group for the current event date
      */
     def create() {
-        forward(controller: 'dynamicPage', action: 'dynamic', params: params)
+        // Create a new group
+        Group group = new Group();
+        
+        // The 'save' button was clicked, save all data
+        if (request.post) {
+            // Save all group related data
+            bindData(group, params, [include: ["name", "pages", "enabeled"]], "Group")
+            
+            // Add the users to the group
+            int i = 0
+            while (params["User_${i}.id"]?.isLong()) {
+                User user = User.findById(params["User_${i}.id"].toLong())
+
+                // A user should only be added to a group once
+                if (!group.users?.find { it.id == user.id }) {
+                    group.addToUsers(user)
+                }
+
+                i++
+            }
+
+            // Save the group and redirect to the previous page if everything is ok
+            if (group.save(flush: true)) {
+                flash.message = g.message(code: 'default.created.message', args: [g.message(code: 'group.label'), group.toString()])
+                redirect(uri: eca.createLink(previous: true, noBase: true))
+                return
+            }
+        }
+        
+        // Show all group related information
+        render(view: "form", model: [   group:              group,
+                                        pages:              group.allPagesInGroup,
+                                        users:              group.allUsersInGroup,
+                                        pagesNotInGroup:    group.allPagesNotInGroup])
     }
 
     /**
@@ -116,7 +149,7 @@ class AuthGroupController {
         }
 
         // Show all group related information
-        render(view: "edit", model: [   group:              group,
+        render(view: "form", model: [   group:              group,
                                         pages:              group.allPagesInGroup,
                                         users:              group.allUsersInGroup,
                                         pagesNotInGroup:    group.allPagesNotInGroup])

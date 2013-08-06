@@ -21,9 +21,10 @@
         <g:javascript library="jquery" plugin="jquery" />
         <r:layoutResources />
         <g:javascript src="jquery.cookie.js" />
-        <g:javascript src="jquery-ui.js" />
-        <g:layoutHead />
+        <g:javascript src="jquery-ui.js" />        
         <g:javascript src="application.js" />
+        
+        <g:layoutHead />
     </head>
     <body>
         <div id="header" role="banner">
