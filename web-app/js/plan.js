@@ -89,9 +89,23 @@ var unselectSession = function() {
 
     timeSlots.css('background-color', 'transparent');
     timeSlots.removeClass('click-to-plan');
-    $('#sessions-unscheduled').removeClass('click-to-plan');
+    
+    $('#unschedule-session').hide();
     
     disableTableWithLoading(false);
+}
+
+var unscheduleSessionBlock = function() {
+    var sessionCode = curSessionBlock.text().trim();
+    
+    $('#sessions-unscheduled .session-block').each(function(i, block) {
+        block = $(block);
+        
+        if (block.text().trim() > sessionCode) {
+            block.before(curSessionBlock);
+            return false;
+        }
+    });
 }
 
 $(document).ready(function() {
@@ -175,9 +189,16 @@ $(document).ready(function() {
                         (curSessionBlockParent[0] === timeSlot[0]) ? timeSlot.removeClass("click-to-plan") : timeSlot.addClass("click-to-plan");
                     }
                 });
-
+                
+                var unschedule = $('#unschedule-session');
                 var unscheduled = $('#sessions-unscheduled');
-                (curSessionBlockParent[0] === unscheduled[0]) ? unscheduled.removeClass('click-to-plan') : unscheduled.addClass('click-to-plan');
+                                
+                if (curSessionBlockParent[0] === unscheduled[0]) {
+                    unschedule.hide();
+                }
+                else {
+                    unschedule.css('display', 'table').css('height', unscheduled.css('height'));
+                }
                 
                  disableTableWithLoading(false);
             });
@@ -215,14 +236,13 @@ $(document).ready(function() {
         );
     });
 
-    $(document).on("click", '#sessions-unscheduled.click-to-plan', function(e) {
+    $(document).on("click", '#unschedule-session', function(e) {
         disableTableWithLoading(true);
-        var element = $(e.target);
-
+        
         $.getJSON(
             './returnSession', {'session_id': curSessionId}, function(data) {
                 if (data.success) {
-                    element.prepend(curSessionBlock);
+                    unscheduleSessionBlock();
                 }
                 unselectSession();
             }
@@ -241,12 +261,16 @@ $(document).ready(function() {
             var session_id = element.find('input[name=session-id]').val();
             $.getJSON('./sessionInfo', {'session_id': session_id}, function(data) {
                 if (data.success) {
-                    sessionInfo.find('#code-label').next().text(data.code);
-                    sessionInfo.find('#name-label').next().text(data.name);
-                    sessionInfo.find('#state-label').next().text(data.state);
-                    sessionInfo.find('#commnent-label').next().text(data.comment);
-                    sessionInfo.find('#equipment-label').next().html('<li>'+data.equipment.join('</li><li>')+'</li>');
+                    (data.code !== null)            ? sessionInfo.find('#code-label').next().text(data.code)                                            : sessionInfo.find('#code-label').next().text('-');
+                    (data.name !== null)            ? sessionInfo.find('#name-label').next().text(data.name)                                            : sessionInfo.find('#name-label').next().text('-');
+                    (data.state !== null)           ? sessionInfo.find('#state-label').next().text(data.state)                                          : sessionInfo.find('#state-label').next().text('-');
+                    (data.comment !== null)         ? sessionInfo.find('#commnent-label').next().text(data.comment)                                     : sessionInfo.find('#commnent-label').next().text('-');
+                    (data.equipment.length > 0)     ? sessionInfo.find('#equipment-label').next().html('<li>'+data.equipment.join('</li><li>')+'</li>') : sessionInfo.find('#equipment-label').next().text('-');
+                    
                     setParticipantDataForSession(data);
+                    if (data.participants.length === 0) {
+                        sessionInfo.find('#participants-label').next().prepend('<li>-</li>');
+                    }
                 }
                 else {
                     sessionInfo.find('#code-label').next().text(data.message);
@@ -295,10 +319,10 @@ $(document).ready(function() {
             var roomId = element.find('input[name=room-id]').val();
             $.getJSON('./roomInfo', {'room_id': roomId}, function(data) {
                 if (data.success) {
-                    roomInfo.find('#roomnumnber-label').next().text(data.number);
-                    roomInfo.find('#roomname-label').next().text(data.name);
-                    roomInfo.find('#noofseats-label').next().text(data.seats);
-                    roomInfo.find('#roomcomment-label').next().text(data.comment);
+                    (data.number !== null)  ? roomInfo.find('#roomnumnber-label').next().text(data.number)  : roomInfo.find('#roomnumnber-label').next().text('-');
+                    (data.name !== null)    ? roomInfo.find('#roomname-label').next().text(data.name)       : roomInfo.find('#roomname-label').next().text('-');
+                    (data.seats !== null)   ? roomInfo.find('#noofseats-label').next().text(data.seats)     : roomInfo.find('#noofseats-label').next().text('-');
+                    (data.comment !== null) ? roomInfo.find('#roomcomment-label').next().text(data.comment) : roomInfo.find('#roomcomment-label').next().text('-');
                 }
                 else {
                     roomInfo.find('#code-label').next().text(data.message);

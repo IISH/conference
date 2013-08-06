@@ -6,6 +6,10 @@
         <g:javascript src="participants-in-sessions.js" />
     </head>
     <body>
+        <div id="unschedule-session"> 
+            <span><g:message code="session.unschedule.label" /></span>
+        </div>
+        
         <div id="sessions-unscheduled">
             <g:each in="${sessionsUnscheduled}" var="session">
             <div class="session-block">
@@ -14,7 +18,7 @@
             </div>
             </g:each>
         </div>
-
+        
         <table id="legenda-schedule">
             <tr class="equipment">
                 <td style="background-color:#f30;">Not possible</td>

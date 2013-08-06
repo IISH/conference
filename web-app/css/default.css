@@ -808,12 +808,29 @@ ul input.session-name {
 
 /* PLAN SESSIONS */
 
+#unschedule-session { 
+    display: none;  
+    padding: 5px;
+    margin-bottom: 20px;
+    margin-right: 20px;    
+    float: left;
+    border: 1px solid #225496;
+    cursor: pointer;
+}
+
+#unschedule-session span {
+    display: table-cell;
+    vertical-align: middle;
+    font-weight: bold;
+    text-align: center;
+}
+
 #sessions-unscheduled {
     margin-bottom: 20px;
     overflow: auto;
     padding: 5px;
     white-space: nowrap;
-    border: 1px solid #225496;
+    border: 1px solid #225496;    
 }
 
 .session-block {
