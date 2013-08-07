@@ -133,22 +133,6 @@ class LoginController {
 		}
 	}
 
-    /**
-     * The authentication success redirect url.
-     * Sets the language cookie based on the users preferences in the database
-     */
-    def authSuccess() {
-        def lang = User.get(springSecurityService.principal.id).language
-
-        if (lang) {
-            def cookie = new Cookie('lang', lang)
-            cookie.path = '/'
-            response.addCookie(cookie)
-        }
-
-        redirect uri: '/'
-    }
-
 	/**
 	 * The Ajax success redirect url.
 	 */

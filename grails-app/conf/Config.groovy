@@ -143,9 +143,7 @@ grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'org.iisg.eca.
 grails.plugins.springsecurity.authority.className = 'org.iisg.eca.domain.Role'
 grails.plugins.springsecurity.authority.nameField = 'role'
 
-grails.plugins.springsecurity.successHandler.alwaysUseDefault = true
-grails.plugins.springsecurity.successHandler.defaultTargetUrl = '/login/authSuccess'
-
+grails.plugins.springsecurity.useSecurityEventListener = true
 grails.plugins.springsecurity.password.algorithm = 'SHA-512'
 grails.plugins.springsecurity.dao.reflectionSaltSourceProperty = 'salt'
 
