@@ -115,20 +115,20 @@ class SessionPlannerService {
             SELECT r, dt
             FROM Room AS r, SessionDateTime AS dt
             WHERE dt.day IN :days
-            ORDER BY r.roomNumber, dt.indexNumberNumber''', [days: Day.list()])
+            ORDER BY r.roomNumber, dt.indexNumber''', [days: Day.list()])
         
         // ... then retrieve all equipment available in the rooms at specific dates and times
         List<Object[]> equipment = (List<Object[]>) RoomSessionDateTimeEquipment.executeQuery('''
             SELECT rsdte.room.id, rsdte.sessionDateTime.id, rsdte.equipment
             FROM RoomSessionDateTimeEquipment AS rsdte
-            ORDER BY rsdte.room.roomNumber, rsdte.sessionDateTime.indexNumberNumber, rsdte.equipment.code
+            ORDER BY rsdte.room.roomNumber, rsdte.sessionDateTime.indexNumber, rsdte.equipment.code
         ''')
 
         // ... then retrieve all sessions already scheduled in the rooms at specific dates and times
         List<Object[]> sessions = (List<Object[]>) SessionRoomDateTime.executeQuery('''
             SELECT srdt.room.id, srdt.sessionDateTime.id, srdt.session
             FROM SessionRoomDateTime AS srdt
-            ORDER BY srdt.room.roomNumber, srdt.sessionDateTime.indexNumberNumber
+            ORDER BY srdt.room.roomNumber, srdt.sessionDateTime.indexNumber
         ''')
 
         // Now combine them all in one list

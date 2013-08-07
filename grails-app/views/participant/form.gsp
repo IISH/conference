@@ -171,10 +171,10 @@
                     <div class="column">
                         <g:if test="${participant}">
                             <fieldset class="form"> 
-                                <legend><g:message code="participantDate.inventationLetter.label" /></legend>
+                                <legend><g:message code="participantDate.invitationLetter.label" /></legend>
                                 <div class="${hasErrors(bean: participant, field: 'invitationLetter', 'error')}">
                                     <label class="property-label">
-                                        <g:message code="participantDate.invitationLetter.label" />
+                                        <g:message code="participantDate.invitationLetterRequested.label" />
                                     </label>
                                     <span class="property-value">
                                         <g:checkBox name="ParticipantDate.invitationLetter" checked="${participant.invitationLetter}" />
