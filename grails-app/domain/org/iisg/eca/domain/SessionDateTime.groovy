@@ -5,7 +5,7 @@ package org.iisg.eca.domain
  */
 class SessionDateTime extends DefaultDomain {
     Day day
-    int index
+    int indexNumber
     String period
 
     static belongsTo = [Day, User]
@@ -16,12 +16,12 @@ class SessionDateTime extends DefaultDomain {
     static mapping = {
         table 'session_datetime'
         version false
-        sort 'index'
+        sort 'indexNumber'
 
-        id      column: 'session_datetime_id'
-        day     column: 'day_id'
-        index   column: 'index_number'
-        period  column: 'period'
+    id                  column: 'session_datetime_id'
+        day             column: 'day_id'
+        indexNumber     column: 'index_number'
+        period          column: 'period'
 
         usersNotPresent joinTable: [name: 'participant_not_present', key: 'session_datetime_id' ]
         roomSessionDateTimeEquipment    cascade: 'all-delete-orphan'
@@ -29,8 +29,8 @@ class SessionDateTime extends DefaultDomain {
     }
 
     static constraints = {
-        index   min: 0
-        period  blank: false,   maxSize: 30
+        indexNumber     min: 0
+        period          blank: false,   maxSize: 30
     }
 
     /**
@@ -46,7 +46,7 @@ class SessionDateTime extends DefaultDomain {
         if (daysInTenant.size() > 0) {
             SessionDateTime.withCriteria {           
                 'in'('day', daysInTenant)
-                order('index', 'asc')
+                order('indexNumber', 'asc')
             }.each { sessionDateTime ->
                 if ((curDayId != -1) && (sessionDateTime.day.id != curDayId)) {
                     mainList.add(curList)
@@ -64,6 +64,6 @@ class SessionDateTime extends DefaultDomain {
     
     @Override
     String toString() {
-        "${index} (${period})"
+        "${indexNumber} (${period})"
     }
 }

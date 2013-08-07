@@ -56,7 +56,7 @@
             <tr>
                 <td>&nbsp;</td>
                 <g:each in="${dateTimes}" var="dateTime">
-                    <td>${dateTime.index} <br /> ${formatDate(date: dateTime.day.day, format: 'EE')} <br /> ${dateTime.period}</td>
+                    <td>${dateTime.indexNumber} <br /> ${formatDate(date: dateTime.day.day, format: 'EE')} <br /> ${dateTime.period}</td>
                 </g:each>
             </tr>
 
@@ -73,7 +73,7 @@
                     <input type="hidden" name="date-time-id" value="${timeSlot.sessionDateTime.id}" />
                     <input type="hidden" name="room-id" value="${timeSlot.room.id}" />
                     <input type="hidden" name="equipment-combo-code" value="${timeSlot.equipment*.code.join('')}">
-                    <input type="hidden" name="plan-message" value="(${timeSlot.room.roomNumber}: ${timeSlot.room.roomName}) - (${timeSlot.sessionDateTime.index}: ${formatDate(date: timeSlot.sessionDateTime.day.day, format: 'EE')} ${timeSlot.sessionDateTime.period})">
+                    <input type="hidden" name="plan-message" value="(${timeSlot.room.roomNumber}: ${timeSlot.room.roomName}) - (${timeSlot.sessionDateTime.indexNumber}: ${formatDate(date: timeSlot.sessionDateTime.day.day, format: 'EE')} ${timeSlot.sessionDateTime.period})">
 
                     <g:if test="${timeSlot.session}">
                         <div class="session-block">

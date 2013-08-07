@@ -963,9 +963,9 @@ ul input.session-name {
     top: 15px;
 }
 
-/* EMAIL */
+/* EMAIL AND EXPORT */
 
-#email-templates li {
+#email-templates li, #export li {
     margin: 10px 0;
     list-style: decimal inside;
 }
