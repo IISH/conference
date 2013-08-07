@@ -50,9 +50,9 @@ class ParticipantController {
     }
 
     /**
-     * Shows all inventations requests made by participants
+     * Shows all invitations requests made by participants
      */
-    def inventations() {
+    def invitations() {
         forward(controller: 'dynamicPage', action: 'dynamic', params: params)
     }
 
