@@ -356,5 +356,26 @@ class MiscController {
                 info:       "Overview of all chairs."
         ])
     }
+
+    def participantsSameName() {
+        Sql sql = new Sql(dataSource)
+        List<GroovyRowResult> result = sql.rows("""
+            SELECT A.user_id AS A_id, A.lastname AS A_lastname, A.firstname AS A_firstname, B.user_id AS B_id, B.lastname AS B_lastname, B.firstname AS B_firstname
+            FROM vw_accepted_participants A
+            INNER JOIN vw_accepted_participants B ON A.lastname = B.lastname
+            AND A.firstname = B.firstname
+            AND A.user_id < B.user_id
+            WHERE A.date_id = :dateId
+            AND B.date_id = :dateId
+            ORDER BY A.lastname, A.firstname
+        """, [dateId: pageInformation.date.id])
+
+        render(view: "participantsSameName", model: [
+                data:       result,
+                controller: "participant",
+                action:     "show",
+                info:       "Participants with same name."
+        ])
+    }
 }
 
