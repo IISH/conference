@@ -89,6 +89,7 @@ environments {
         grails.logging.jul.usebridge = true
         grails.mail.default.from = "ECA conference application <testeca1@knoex.com>"
         grails.mail.overrideAddress = "Test ECA <testeca1@knoex.com>"
+        grails.mail.disabled = true
     }
     test {
         grails.mail.disabled = true

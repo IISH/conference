@@ -3,7 +3,7 @@ package org.iisg.eca.domain
 import org.apache.commons.lang.builder.EqualsBuilder
 import org.apache.commons.lang.builder.HashCodeBuilder
 
-class SessionRoomDateTime implements Serializable {
+class SessionRoomDateTime extends EventDateDomain implements Serializable {
     Room room
     SessionDateTime sessionDateTime
     Session session
