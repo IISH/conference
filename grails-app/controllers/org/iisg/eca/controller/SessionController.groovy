@@ -274,14 +274,12 @@ class SessionController {
                     // Save the session
                     if (session.save(flush: true)) {                        
                         // Everything is fine
-                        /*Session.withNewSession { hSession ->
+                        Session.withNewSession { hSession ->
                             Session newSession = Session.findById(session.id)
-                            newSession.updatePaperStates()
-                                                        
-                            List<ParticipantSessionInfo> participants = participantSessionService.getParticipantsForSession(newSession)*/
-                            responseMap = [ success:        true/*, 
-                                            participants:   participantSessionService.getParticipantSessionInfoMap(participants)*/]
-                      //  }
+                            List<ParticipantSessionInfo> participants = participantSessionService.getParticipantsForSession(newSession)
+                            responseMap = [ success:        true,
+                                            participants:   participantSessionService.getParticipantSessionInfoMap(participants)]
+                        }
                     }
                     else {
                         responseMap = [success: false, message: session.errors.allErrors.collect { g.message(error: it) }]

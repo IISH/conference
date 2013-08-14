@@ -112,7 +112,7 @@ $(document).ready(function() {
         var element = $(this);
         ajaxCall('../session/changeState', {session_id: element.parents("span").prev().val(), state_id: element.val()}, 
             function(data) {
-                //setParticipantDataForSession(data, element.parents("span.session").next());
+                setParticipantDataForSession(data, element.parents("span.session").next());
             }
         );
     });

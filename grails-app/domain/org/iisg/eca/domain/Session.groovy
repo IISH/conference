@@ -1,9 +1,13 @@
 package org.iisg.eca.domain
 
+import groovy.sql.Sql
+
 /**
  * Domain class of table holding all sessions
  */
 class Session extends EventDateDomain {
+    def dataSource
+
     String code
     String name
     String abstr
@@ -56,13 +60,19 @@ class Session extends EventDateDomain {
     
     void updatePaperStates() {
         if (state.correspondingPaperState) {
+            Sql sql = new Sql(dataSource)
             PaperState correspondingPaperState = state.correspondingPaperState
 
             // Change all paper states of this session
             Paper.findAllBySession(this).each { paper ->
                 // Only update papers that may be changed
                 if (paper.state.sessionStateTrigger) {
-                    paper.state = correspondingPaperState
+                    // Use SQL to prevent Hibernate session exceptions
+                    sql.executeUpdate('''
+                      UPDATE papers
+                      SET paper_state_id = :paperStateId
+                      WHERE paper_id = :paperId
+                    ''', [paperStateId: correspondingPaperState.id, paperId: paper.id])
                 }
             }
         }
