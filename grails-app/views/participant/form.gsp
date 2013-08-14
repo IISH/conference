@@ -498,7 +498,7 @@
                                             <g:if test="${paper.session}"> 
                                                 <g:set var="functionInSession" value="${SessionParticipant.findAllByUserAndSession(user, paper.session)}" />
                                                 <g:if test="${functionInSession.size() > 0}">                                                
-                                                    ${functionInSession.find { it.type.withPaper == true }.type}                                                
+                                                    ${functionInSession*.type.join(', ')}
                                                 </g:if>
                                             </g:if> 
                                             <g:else>-</g:else>
