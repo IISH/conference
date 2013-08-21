@@ -46,7 +46,7 @@ class UtilsTagLibTests {
     /**
      * Tests the link tag
      */
-    void testLinkTag() {
+    /*void testLinkTag() {
         String firstTemplate = '<eca:link controller="${controller}" action="${action}" id="${id}">link</eca:link>'
         String secondTemplate = '<eca:link controller="${controller}" action="${action}" event="${event}" date="${date}">link</eca:link>'
         String thirdTemplate = '<eca:link previous="${previous}">link</eca:link>'
@@ -60,12 +60,12 @@ class UtilsTagLibTests {
                 '<a href="/test/juli-3000/prevCo/prevAc/9?prevController=co&amp;prevAction=ac&amp;prevId=10">link</a>'
         assert applyTemplate(fourthTemplate, [noBase: true, controller: "co2", action: "ac2", id: 11L]) ==
                 '<a href="/./test/juli-3000/co2/ac2/11?prevController=co&amp;prevAction=ac&amp;prevId=10">link</a>'
-    }
+    } */
 
     /**
      * Tests the createLink tag
      */
-    void testCreateLinkTag() {
+    /*void testCreateLinkTag() {
         String firstTemplate = '<eca:createLink controller="${controller}" action="${action}" id="${id}" />'
         String secondTemplate = '<eca:createLink controller="${controller}" action="${action}" event="${event}" date="${date}" />'
         String thirdTemplate = '<eca:createLink previous="${previous}" />'
@@ -79,7 +79,7 @@ class UtilsTagLibTests {
                 '/test/juli-3000/prevCo/prevAc/9?prevController=co&prevAction=ac&prevId=10'
         assert applyTemplate(fourthTemplate, [noBase: true, controller: "co2", action: "ac2", id: 11L]) ==
                 '/./test/juli-3000/co2/ac2/11?prevController=co&prevAction=ac&prevId=10'
-    }
+    }*/
 
     /**
      * Tests the fallbackMessage tag

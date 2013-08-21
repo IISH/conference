@@ -11,6 +11,7 @@ import groovy.xml.MarkupBuilder
 
 import org.codehaus.groovy.grails.web.util.WebUtils
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+import org.apache.commons.lang.RandomStringUtils
 
 /**
  * Utilities tag library
@@ -76,7 +77,7 @@ class UtilsTagLib {
 
             // Build prev link, if it exists
             if (prev) {
-                builder."a"(class: "prev", href: createLinkAllParams(action: params.action, id: prev, params: [index: prevIndex], setPrev: true)) {
+                builder."a"(class: "prev", href: eca.createLinkAllParams(action: params.action, id: prev, params: [index: prevIndex])) {
                     builder.span(class: "ui-icon ui-icon-arrowthick-1-w", "")                    
                     builder.span(g.message(code: "default.paginate.prev"))
                 }
@@ -90,7 +91,7 @@ class UtilsTagLib {
 
             // Build next link, if it exists
             if (next) {
-                builder."a"(class: "next", href: createLinkAllParams(action: params.action, id: next, params: [index: nextIndex], setPrev: true)) {
+                builder."a"(class: "next", href: eca.createLinkAllParams(action: params.action, id: next, params: [index: nextIndex])) {
                     builder.span(g.message(code: "default.paginate.next"))
                     builder.span(class: "ui-icon ui-icon-arrowthick-1-e", "")
                 }
@@ -223,36 +224,6 @@ class UtilsTagLib {
     }
 
     /**
-     * An alternative to the g:link tag for easier use with different events
-     * and for implementation of previous page information
-     */
-    def link = { attrs, body ->
-        out << g.link(linkPrep(attrs, params), body)
-    }
-
-    /**
-     * An alternative to the g:createLink tag for easier use with different events
-     * and for implementation of previous page information
-     */
-    def createLink = { attrs ->
-        out << g.createLink(linkPrep(attrs, params))
-    }
-
-    /**
-     * An alternative to the g:link tag for a link to the same page with all existing parameters + parameters added
-     */
-    def linkAllParams = { attrs, body ->
-        out << g.link(linkAllParamsPrep(attrs, params, request), body)
-    }
-
-    /**
-     * An alternative to the g:link tag for a link to the same page with all existing parameters + parameters added
-     */
-    def createLinkAllParams = { attrs ->
-        out << g.createLink(linkAllParamsPrep(attrs, params, request))
-    }
-
-    /**
      * If the message is not found in the language properties files, try the fall back code and attributes.
      * If the message is still not found, then fall back to the default code
      * @attr code The code to resolve the message for
@@ -331,102 +302,6 @@ class UtilsTagLib {
         if (!page.hasAccess()) {
             out << body()
         }
-    }
-
-    /**
-     * Prepares the link attributes
-     * @param attrs The attributes of the called tag
-     * @param params The request parameters
-     * @return A prepared attrs object
-     */
-    private static Map linkPrep(attrs, params) {
-        if (!attrs.params) {
-            attrs.params = [:]
-        }
-
-        // Add event (date) information
-        if (attrs.event && attrs.date) {
-            attrs.params.put('event', attrs.event)
-            attrs.params.put('date', attrs.date)
-            if (!attrs.mapping) {
-                attrs.mapping = 'eventDate'
-            }
-        }
-        else if (params.event && params.date) {
-            attrs.params.put('event', params.event)
-            attrs.params.put('date', params.date)
-            if (!attrs.mapping) {
-                attrs.mapping = 'eventDate'
-            }
-        }
-        attrs.remove('event')
-        attrs.remove('date')
-
-        // Link back to the previous page
-        if (attrs.previous && params.prevController) {
-            attrs.controller = params.prevController
-            attrs.action = params.prevAction ?: params.action
-            attrs.id = params.prevId ?: params.id
-            attrs.remove('previous')
-        }
-        else if (attrs.previous) {
-            attrs.uri = '/'
-            attrs.remove('previous')
-        }
-
-        // Add parameters for moving back to the current page, unless specifically specified not to do so
-        if (!attrs.noPreviousInfo) {
-            attrs.params.prevController = params.controller
-            attrs.params.prevAction = params.action
-            if (params.id) {
-                attrs.params.prevId = params.id
-            }
-            attrs.remove('noPreviousInfo')
-        }
-
-        // In cases when there are multiple bases added, one is enough...
-        if (attrs.noBase) {
-            attrs.base = '/.'
-            attrs.remove('noBase')
-        }
-
-        attrs
-    }
-
-    /**
-     * Prepares the link attributes, including all parameters
-     * @param attrs The attributes of the called tag
-     * @param params The request parameters
-     * @param request The request object
-     * @return A prepared attrs object
-     */
-    private static Map linkAllParamsPrep(attrs, params, request) {
-        if (!attrs.params) {
-            attrs.params = [:]
-        }
-
-        // Add event (date) information
-        attrs.params.event = params.event
-        attrs.params.date = params.date
-        attrs.mapping = 'eventDate'
-        
-        // Only take parameters from the query string
-        Map filteredParams = WebUtils.fromQueryString(request.queryString)
-        filteredParams.putAll(attrs.params)
-        attrs.params = filteredParams
-        
-        // Set previous info
-        if (attrs.setPrev) {
-            attrs.params.prevController = params.controller
-            attrs.params.prevAction = params.action
-
-            if (params.id) {
-                attrs.params.prevId = params.id
-            }
-        }
-        attrs.remove('setPrev')
-
-        attrs
     }
 
     /**

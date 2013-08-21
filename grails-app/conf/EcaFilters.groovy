@@ -9,6 +9,7 @@ import org.iisg.eca.domain.EventDateDomain
 
 import org.springframework.context.i18n.LocaleContextHolder
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+import org.apache.commons.lang.RandomStringUtils
 
 /**
  * All filters for accessing a page
@@ -31,6 +32,11 @@ class EcaFilters {
                 if (page) {
                     pageInformation.page = page
                 }
+
+                // Also save the parameters of this page in a session
+                String sessionIdentifier = RandomStringUtils.random(8, true, true)
+                session.putValue(sessionIdentifier, params.clone())
+                pageInformation.sessionIdentifier = sessionIdentifier
 
                 return true
             }

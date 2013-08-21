@@ -90,7 +90,7 @@ class PageBuilder {
     private void buildTable(DataContainer element) {
         builder.div(class: "tbl_container") {
             if (element.action) {
-                builder.input(type: "hidden", name: "url", value: "\${eca.createLinkAllParams(controller: params.controller, action: '${element.action}', id: 0, setPrev: true)}")
+                builder.input(type: "hidden", name: "url", value: "\${eca.createLinkAllParams(controller: params.controller, action: '${element.action}', id: 0)}")
             }
 
             builder.div(class: "menu") {
@@ -398,7 +398,7 @@ class PageBuilder {
                     }
                     break
                 case Button.Type.BACK:
-                    builder."eca:link"(controller: "\${params.prevController}", action: "\${params.prevAction}", id: "\${params.prevId}") {
+                    builder."eca:link"(previous: "true") {
                         builder."g:message"(code: "default.button.${button.name}.label")
                     }
                     break

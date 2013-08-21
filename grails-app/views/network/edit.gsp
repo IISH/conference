@@ -255,7 +255,7 @@
           </fieldset>
 
           <fieldset class="buttons">
-            <eca:link controller="${params.prevController}" action="${params.prevAction}" id="${params.prevId}">
+            <eca:link previous="true">
                 <g:message code="default.button.cancel.label" />
             </eca:link>
             <eca:link action="delete" id="${params.id}" class="btn_delete">

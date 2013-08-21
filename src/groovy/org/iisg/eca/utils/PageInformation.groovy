@@ -18,6 +18,11 @@ class PageInformation {
     private ThreadLocal<EventDate> threadLocalDate = new ThreadLocal<EventDate>()
 
     /**
+     * A thread local to the request holding an identifier for requesting this pages parameters from the session
+     */
+    private ThreadLocal<String> threadLocalSessionIdentifier = new ThreadLocal<String>()
+
+    /**
      * Sets the page of the current request
      * @param page The page describing the requested page
      */
@@ -31,6 +36,14 @@ class PageInformation {
      */
     public void setDate(EventDate date) {
         threadLocalDate.set(date)
+    }
+
+    /**
+     * Sets the session identifier of the current request
+     * @param sessionIdentifier Session identifier for the parameters of this page
+     */
+    public void setSessionIdentifier(String sessionIdentifier) {
+        threadLocalSessionIdentifier.set(sessionIdentifier)
     }
 
     /**
@@ -50,6 +63,14 @@ class PageInformation {
     }
 
     /**
+     * Returns the session identifier of the current request
+     * @return <code>String</code> Session identifier for the parameters of this page
+     */
+    public String getSessionIdentifier() {
+        threadLocalSessionIdentifier.get()
+    }
+
+    /**
      * Removes the <code>Page</code> object from the local thread
      */
     public void removePage() {
@@ -61,5 +82,12 @@ class PageInformation {
      */
     public void removeDate() {
         threadLocalDate.remove()
+    }
+
+    /**
+     * Removes the <code>String</code> object from the local thread
+     */
+    public void removeSessionIdentifier() {
+        threadLocalSessionIdentifier.remove()
     }
 }

@@ -28,7 +28,7 @@
             </fieldset>
           
             <fieldset class="buttons">
-                <eca:link controller="${params.prevController}" action="${params.prevAction}" id="${params.prevId}">
+                <eca:link previous="true">
                     <g:message code="default.button.cancel.label" />
                 </eca:link>                
                 <input type="submit" name="btn_save" class="btn_save" value="${message(code: 'default.button.create.label')}" />

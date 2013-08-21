@@ -58,7 +58,7 @@
         </ol>
 
         <div class="buttons">
-            <eca:link controller="${params.prevController}" action="${params.prevAction}" id="${params.prevId}">
+            <eca:link previous="true">
                 <g:message code="default.button.back.label" />
             </eca:link>
             <eca:ifUserHasAccess controller="${params.controller}" action="edit">
