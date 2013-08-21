@@ -190,7 +190,7 @@ class User extends DefaultDomain {
      * Makes sure the email address is always saved in lowercase characters
      */
     private void emailToLowercase() {
-        this.email = this.email.toLowerCase()
+        this.email = this.email.trim().toLowerCase()
     }
 
     @Override
