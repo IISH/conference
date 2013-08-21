@@ -33,7 +33,17 @@
                                     <span id="id-label" class="property-label">#</span>
                                     <span class="property-value" arial-labelledby="id-label">
                                         ${user.id}
+
+                                        <g:set var="link" value="${Setting.getByEvent(Setting.findAllByProperty(Setting.CHANGE_USER)).value}" />
+                                        <g:if test="${link}">
+                                            <span id="change-user">
+                                                <a href="${link.replace('[EMAIL]', user.email)}">
+                                                    <g:message code="participantDate.show.personal.page.message" />
+                                                </a>
+                                            </span>
+                                        </g:if>
                                     </span>
+
                                 </li>
                                 <li>
                                     <span id="date-added-label" class="property-label">

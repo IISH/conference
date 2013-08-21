@@ -748,6 +748,10 @@ span.remove-item {
     border: 1px solid #225496;
 }
 
+#change-user {
+    margin-left: 30px;
+}
+
 /* ROOMS */
 
 #room-equipment .column {
