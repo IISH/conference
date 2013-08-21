@@ -4,6 +4,8 @@
         <meta name="layout" content="main">
     </head>
     <body>
+        <eca:navigation ids="${roomIds}" />
+
         <ol class="property-list">
           <li>
             <span id="id-label" class="property-label">#</span>

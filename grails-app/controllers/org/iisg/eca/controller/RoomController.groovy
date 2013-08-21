@@ -4,11 +4,16 @@ import org.iisg.eca.domain.Room
 import org.iisg.eca.domain.Equipment
 import org.iisg.eca.domain.SessionDateTime
 import org.iisg.eca.domain.RoomSessionDateTimeEquipment
+import org.iisg.eca.domain.DynamicPage
+import org.iisg.eca.domain.Page
+import org.iisg.eca.dynamic.DynamicPageResults
+import org.iisg.eca.dynamic.DataContainer
 
 /**
  * Controller responsible for handling requests on rooms
  */
 class RoomController {
+    def dynamicPageService
 
     /**
      * Index action, redirects to the list action
@@ -39,8 +44,17 @@ class RoomController {
             return
         }
 
+        // If the user came to this page via the dynamic page listing all rooms, ask for the last results
+        // Otherwise just return all listed rooms in its default order
+        DynamicPage dynamicPage = dynamicPageService.getDynamicPage(Page.findByControllerAndAction(params.controller, 'list'))
+        DynamicPageResults results = new DynamicPageResults((DataContainer) dynamicPage.elements.get(0), params)
+
+        // Now we have the results, but we're only interested in the ids
+        // (Actually, just the prev/next ids for the navigation section)
+        List<Long> roomIds = results.get()*.id
+
         // Show all room related information
-        render(view: "show", model: [room: room, equipment: Equipment.list(), timeSlots: SessionDateTime.list()])
+        render(view: "show", model: [room: room, equipment: Equipment.list(), timeSlots: SessionDateTime.list(), roomIds: roomIds])
     }
 
     /**
