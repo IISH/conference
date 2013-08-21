@@ -129,6 +129,7 @@ class ParticipantSessionService {
                 AND t.withPaper = true
                 AND p.state <> st.correspondingPaperState
                 AND p.deleted = false
+                AND s.id = p.session.id
                 ORDER BY u.lastName, u.firstName
             ''', [sessionId: session.id])
         )
