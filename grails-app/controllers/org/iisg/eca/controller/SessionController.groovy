@@ -395,11 +395,16 @@ class SessionController {
                 if (sessionParticipant) {
                     sessionParticipant.delete()
 
+                    // Look up the paper added to this session
+                    Paper paper = Paper.findBySessionAndUser(session, user)
+
+                    // Also look up if the participant is added to the session as a type with a paper
+                    SessionParticipant isAddedWithPaper = SessionParticipant.findAllBySessionAndUser(session, user).find { it.type.withPaper }
+
                     // Make sure to remove the paper from the session as well
-                    if (type.withPaper) {
-                        Paper paper = Paper.findBySessionAndUser(session, user)
-                        paper?.session = null
-                        paper?.save()
+                    if (paper && (type.withPaper || !isAddedWithPaper)) {
+                        paper.session = null
+                        paper.save()
                     }
 
                     // Save the session
