@@ -377,5 +377,33 @@ class MiscController {
                 info:       "Participants with same name."
         ])
     }
+
+    def sessionsNoOrganizer() {
+        Sql sql = new Sql(dataSource)
+        List<GroovyRowResult> result = sql.rows("""
+            SELECT session_id, session_code, session_name
+            FROM `sessions`
+            WHERE enabled=1 AND deleted=0
+            AND date_id=:dateId
+            AND session_state_id=2
+            AND session_id NOT IN (
+                SELECT session_participant.session_id
+                FROM session_participant
+                INNER JOIN vw_accepted_participants ON session_participant.user_id=vw_accepted_participants.user_id
+                WHERE session_participant.enabled=1 AND session_participant.deleted=0
+                AND session_participant.participant_type_id=6
+                GROUP BY session_participant.session_id
+            )
+            ORDER BY session_code ASC, session_name ASC
+        """, [dateId: pageInformation.date.id])
+
+        render(view: "list", model: [
+                data:       result,
+                headers:    ["Code", "Name"],
+                controller: "session",
+                action:     "show",
+                info:       "Sessions without an organizer."
+        ])
+    }
 }
 

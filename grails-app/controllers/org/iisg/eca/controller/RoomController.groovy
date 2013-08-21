@@ -21,7 +21,26 @@ class RoomController {
      * Shows all data on a particular room
      */
     def show() {
-        forward(controller: 'dynamicPage', action: 'dynamic', params: params)
+        // We need an id, check for the id
+        if (!params.id) {
+            flash.error = true
+            flash.message = g.message(code: 'default.no.id.message')
+            redirect(uri: eca.createLink(previous: true, noBase: true))
+            return
+        }
+
+        Room room = Room.findById(params.id)
+
+        // We also need a room to be able to show something
+        if (!room) {
+            flash.error = true
+            flash.message = g.message(code: 'default.not.found.message', args: [g.message(code: 'room.label')])
+            redirect(uri: eca.createLink(previous: true, noBase: true))
+            return
+        }
+
+        // Show all room related information
+        render(view: "show", model: [room: room, equipment: Equipment.list(), timeSlots: SessionDateTime.list()])
     }
 
     /**
