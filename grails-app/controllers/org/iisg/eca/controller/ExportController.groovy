@@ -19,4 +19,10 @@ class ExportController {
         response.setHeader("Content-disposition", "attachment;filename=concordance.xml")
         response.outputStream << bookExportService.concordanceXml
     }
+
+    def sessions() {
+        response.contentType = "application/xml"
+        response.setHeader("Content-disposition", "attachment;filename=sessions.xml")
+        response.outputStream << bookExportService.sessionsXml
+    }
 }

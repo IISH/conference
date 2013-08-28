@@ -215,19 +215,21 @@ class MiscController {
     def multiplePapers() {
         Sql sql = new Sql(dataSource)
         List<GroovyRowResult> result = sql.rows("""
-           SELECT users.user_id, lastname, firstname
-           FROM users INNER JOIN participant_date ON users.user_id=participant_date.user_id
-           WHERE users.enabled=1 AND users.deleted=0
-           AND participant_date.enabled=1 and participant_date.deleted=0
-           AND participant_date.participant_state_id IN (0,1,2,999)
-           AND participant_date.date_id = :date_id
-           AND users.user_id IN (
-               SELECT user_id
-               FROM `papers`
-               WHERE enabled=1 AND deleted=0 AND date_id = :date_id
-               GROUP BY user_id
-               HAVING count(*) > 1
-           ) ORDER BY lastname, firstname
+           SELECT u.user_id, u.lastname, u.firstname
+           FROM users AS u
+           INNER JOIN participant_date pd
+           ON u.user_id = pd.user_id
+           LEFT JOIN papers p
+           ON u.user_id = p.user_id
+           WHERE u.enabled=1 AND u.deleted=0
+           AND pd.enabled=1 and pd.deleted=0
+           AND pd.participant_state_id IN (1,2)
+           AND pd.date_id = :date_id
+           AND p.enabled=1 AND p.deleted=0 AND p.date_id = :date_id
+           GROUP BY p.user_id
+           HAVING count(*) > 1
+
+           ORDER BY u.lastname, u.firstname
         """, [date_id: pageInformation.date.id])
 
         render(view: "list", model: [
@@ -309,19 +311,27 @@ class MiscController {
     def multipleAccPapers() {
         Sql sql = new Sql(dataSource)
         List<GroovyRowResult> result = sql.rows("""
-            SELECT users.user_id, lastname, firstname
-            FROM users 
-            INNER JOIN participant_date ON users.user_id=participant_date.user_id
-            WHERE users.enabled=1 AND users.deleted=0
-            AND participant_date.enabled=1 and participant_date.deleted=0
-            AND participant_date.participant_state_id IN (0,1,2,999)
-            AND participant_date.date_id = :dateId
-            AND users.user_id IN (
-                SELECT user_id
-                FROM vw_dbl_acc_papers 
-                WHERE date_id = :dateId
-            ) 
-            ORDER BY lastname, firstname
+            SELECT u.user_id, u.lastname, u.firstname
+            FROM users AS u
+            INNER JOIN participant_date pd
+            ON u.user_id = pd.user_id
+            LEFT JOIN papers p
+            ON u.user_id = p.user_id
+            INNER JOIN session_participant sp
+            ON p.user_id = sp.user_id
+            AND p.session_id = sp.session_id
+            WHERE u.enabled=1 AND u.deleted=0
+            AND pd.enabled=1 AND pd.deleted=0
+            AND pd.participant_state_id IN (1,2)
+            AND pd.date_id = :dateId
+            AND p.enabled=1
+            AND p.deleted=0
+            AND p.date_id = :dateId
+            AND p.paper_state_id = 2
+            AND participant_type_id = 8
+            GROUP BY p.user_id
+            HAVING count(*) > 1
+            ORDER BY u.lastname, u.firstname
         """, [dateId: pageInformation.date.id])
 
         render(view: "list", model: [

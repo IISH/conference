@@ -211,6 +211,9 @@ var ajaxCall = function(url, params, onSuccess, onFailure) {
         else if ($.isFunction(onSuccess)) {
             onSuccess(data);
         }
+    }).fail(function(jqXHR, textStatus, error) {
+        var err = textStatus + ', ' + error;
+        console.log("Request Failed: " + err);
     });
 }
 

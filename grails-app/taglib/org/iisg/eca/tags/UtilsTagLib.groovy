@@ -258,7 +258,10 @@ class UtilsTagLib {
         
         builder.input(attrs)
     }
-    
+
+    /**
+     * Creates a participant auto complete field
+     */
     def participantAutoComplete = { attrs -> 
         MarkupBuilder builder = new MarkupBuilder(out)
         builder.doubleQuotes = true
