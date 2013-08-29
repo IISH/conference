@@ -94,7 +94,7 @@ class BookExportService {
 
                         String[] times = sdt.period.split('-')
                         builder.starttime(times[0].trim())
-                        builder.starttime(times[1].trim())
+                        builder.endtime(times[1].trim())
                     }
 
                     Session.executeQuery('''
@@ -126,11 +126,13 @@ class BookExportService {
 
                             builder.networks {
                                 Network.executeQuery('''
-                                    FROM Network
-                                    WHERE :sessionId IN sessions
-                                    AND enabled = true
+                                    SELECT n
+                                    FROM Network AS n
+                                    INNER JOIN n.sessions AS s
+                                    WHERE s.id = :sessionId
+                                    AND n.enabled = true
                                     ORDER BY name
-                                ''').each { network ->
+                                ''', [sessionId: session.id]).each { network ->
                                     builder.name(network.name)
                                 }
                             }
