@@ -74,8 +74,8 @@ class EmailService {
             try {
                 // Try to send the email
                 mailService.sendMail {
-                    from "${sentEmail.fromName} <${sentEmail.fromEmail}>"
-                    to "${sentEmail.user.toString()} <${sentEmail.user.email}>"
+                    from "\"${sentEmail.fromName}\" <${sentEmail.fromEmail}>"
+                    to "\"${sentEmail.user.toString()}\" <${sentEmail.user.email}>"
                     subject sentEmail.subject
                     text sentEmail.body
                 }
