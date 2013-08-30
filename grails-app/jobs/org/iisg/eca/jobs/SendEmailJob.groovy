@@ -17,10 +17,7 @@ class SendEmailJob {
      */
     def emailService
 
-    /**
-     * Scheduler helps resetting the trigger, if necessary
-     */
-    def quartzScheduler
+    def grailsApplication
     
     /**
      * Set the triggers for the time between sending emails
@@ -41,9 +38,10 @@ class SendEmailJob {
      */
     def execute(context) {
         Setting emailDisabled = Setting.findByProperty(Setting.DISABLE_EMAIL_SESSIONS)
-        
+        boolean hardDisabled = grailsApplication.config.grails.mail.disabled
+
         // If not disabled, start sending emails
-        if (emailDisabled.value.equals('0')) {
+        if (emailDisabled.value.equals('0') && !hardDisabled) {
             // Find out the maximum number of emails that may be send
             Integer maxMails = new Integer(Setting.findByProperty(Setting.EMAIL_MAX_NUM_EMAILS_PER_SESSION).value)
             // Find out the maximum number of tries
@@ -61,40 +59,39 @@ class SendEmailJob {
                 emailService.sendEmail(email)
             }
         }
-        
+
         // Reschedule the job, in case settings were changed
-        int seconds = getSecondsBetweenSending() 
-        Trigger newTrigger = getTrigger(seconds)
+        int minutes = getMinutesBetweenSending()
+        Trigger newTrigger = getTrigger(minutes)
         reschedule(newTrigger)
     }
     
     /**
-     * Gets the minimum time between sending from the database in minutes and returns it in milliseconds
+     * Gets the minimum time between sending from the database in minutes
      * @return The minimum time between sending in seconds, defaults to 15 minutes
      */
-    int getSecondsBetweenSending() {
+    int getMinutesBetweenSending() {
         Integer interval = new Integer(Setting.findByProperty(Setting.EMAIL_MIN_MINUTES_BETWEEN_SENDING).value)
-        
-        if (interval) {
-            interval * 60
-        }
-        else {
-            900
-        }
+        (interval) ? interval : 15
     }
     
     /**
      * Create a new trigger for the time between sending emails
      */
-    static Trigger getTrigger(int seconds) {
+    static Trigger getTrigger(int minutes) {
+        // Compute the new trigger time
+        Calendar cal = Calendar.getInstance()
+        cal.setTime(new Date())
+        cal.add(Calendar.MINUTE, minutes)
+
+        // Create the new trigger
         newTrigger()
             .withIdentity("SendEmail")
             .withSchedule(
                 simpleSchedule()
-                    .withIntervalInSeconds(seconds)
-                    .repeatForever()
+                    .withRepeatCount(0)
             )
-            .startNow()
+            .startAt(cal.getTime())
             .build()
     }
 }
