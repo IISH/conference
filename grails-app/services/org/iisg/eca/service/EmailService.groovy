@@ -90,6 +90,8 @@ class EmailService {
             catch (MailException me) {
                 // Make sure, the date/time is set to null, cause it failed to send the email
                 sentEmail.dateTimeSent = null
+
+                log.error("Failed to sent mail: $me.message")
             }
             finally {
                 // Some mails shouldn't be saved in the database
