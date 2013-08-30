@@ -6,7 +6,7 @@ $(document).ready(function() {
     $('.loading').click(function(e) {
         var element = $(this);
 
-        $.getJSON('../participantsNotScheduled', {network_id: networkId}, function(data) {
+        ajaxCall('../participantsNotScheduled', {network_id: networkId}, function(data) {
             var participantsContainer = $('#not-in-session');
 
             if (data.participants.length === 0) {
@@ -49,13 +49,8 @@ $(document).ready(function() {
 
         var element = $(this);
 
-        $.getJSON('../addSession', {network_id: networkId, session_id: element.prev().val()}, function(data) {
-            if (data.success) {
-                setParticipantDataForNetwork(data);
-            }
-            else {
-                showErrors(data);
-            }
+        ajaxCall('../addSession', {network_id: networkId, session_id: element.prev().val()}, function(data) {
+            setParticipantDataForNetwork(data);
         });
     });
 
@@ -69,17 +64,12 @@ $(document).ready(function() {
         var code = parentElement.find('.session-code');
         var name = parentElement.find('.session-name');
 
-        $.getJSON('../addSession',
+        ajaxCall('../addSession',
             {   network_id:     networkId,
                 session_code:   code.val(),
                 session_name:   name.val()},
             function(data) {
-                if (data.success) {
-                    setParticipantDataForNetwork(data);
-                }
-                else {
-                    showErrors(data);
-                }
+                setParticipantDataForNetwork(data);
             }
         );
 
@@ -94,16 +84,11 @@ $(document).ready(function() {
         var element = $(e.target);
         var parentElement = element.parent();
 
-        $.getJSON('../removeSession',
+        ajaxCall('../removeSession',
             {   network_id:     networkId,
                 session_id:     parentElement.find('.session-id').val()},
             function(data) {
-                if (data.success) {
-                    setParticipantDataForNetwork(data);
-                }
-                else {
-                    showErrors(data);
-                }
+                setParticipantDataForNetwork(data);
             }
         );
     });

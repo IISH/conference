@@ -16,7 +16,7 @@ class AjaxController {
         // Must be called via AJAX
         if (request.xhr && params.code) {
             // Look up the message and send it back in JSON format
-            Map message = [message: g.message(code: params.code)]
+            Map message = [success: true, message: g.message(code: params.code)]
             render message as JSON
         }
     }

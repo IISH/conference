@@ -131,7 +131,7 @@ class BookExportService {
                                     INNER JOIN n.sessions AS s
                                     WHERE s.id = :sessionId
                                     AND n.enabled = true
-                                    ORDER BY name
+                                    ORDER BY n.name
                                 ''', [sessionId: session.id]).each { network ->
                                     builder.name(network.name)
                                 }

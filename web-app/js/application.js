@@ -219,7 +219,9 @@ var ajaxCall = function(url, params, onSuccess, onFailure) {
         var data = {message: error};
         showErrors(data);
 
-        onFailure(data);
+        if ($.isFunction(onFailure)) {
+            onFailure(data);
+        }
     });
 }
 
@@ -369,7 +371,7 @@ $(document).ready(function() {
         var thisItem = $(e.target);
         var item = thisItem.parents('li');
 
-        $.getJSON(guessMessageUrl(), {code: 'default.button.delete.confirm.message'}, function(data) {
+        ajaxCall(guessMessageUrl(), {code: 'default.button.delete.confirm.message'}, function(data) {
             var deleted = confirm(data.message);
             if (deleted) {
                 if (!thisItem.hasClass('no-del')) {
@@ -384,7 +386,7 @@ $(document).ready(function() {
         var thisItem = $(e.target);
         var item = thisItem.parents('.column');
 
-        $.getJSON(guessMessageUrl(), {code: 'default.button.delete.confirm.message'}, function(data) {
+        ajaxCall(guessMessageUrl(), {code: 'default.button.delete.confirm.message'}, function(data) {
             var deleted = confirm(data.message);
             if (deleted) {
                 if (!thisItem.hasClass('no-del')) {
@@ -399,7 +401,7 @@ $(document).ready(function() {
         e.preventDefault();
         var thisItem = $(this);
 
-        $.getJSON(guessMessageUrl(), {code: 'default.button.delete.confirm.message'}, function(data) {
+        ajaxCall(guessMessageUrl(), {code: 'default.button.delete.confirm.message'}, function(data) {
             var deleted = confirm(data.message);
             if (deleted) {
                 window.location = thisItem.attr('href');
@@ -508,7 +510,7 @@ $(document).ready(function() {
         element.parent().removeClass('error');
         
         if (email !== emailValue) {
-            $.getJSON(guessUniqueEmailUrl(), {email: email}, function(data) {            
+            ajaxCall(guessUniqueEmailUrl(), {email: email}, function(data) {
                 if (!data.success) {
                     element.parent().addClass('error');
                     showErrors(data);
