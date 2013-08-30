@@ -13,7 +13,7 @@ class FeeController {
      * Index action, redirects to the list action
      */
     def index() {
-        redirect(uri: eca.createLink(action: 'list', noBase: true), params: params)
+        redirect(uri: eca.createLink(action: 'list', noBase: true, noPreviousInfo: true, params: params))
     }
 
     /**

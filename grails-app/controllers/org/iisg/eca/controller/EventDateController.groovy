@@ -24,13 +24,13 @@ class EventDateController {
      */
     def index() {
         if (pageInformation.date) {
-            redirect(uri: eca.createLink(action: 'show', noBase: true), params: params)
+            redirect(uri: eca.createLink(action: 'show', noBase: true, noPreviousInfo: true, params: params))
         }
         else if (params.id) {
-            redirect(uri: eca.createLink(action: 'create', noBase: true), params: params)
+            redirect(uri: eca.createLink(action: 'create', noBase: true, noPreviousInfo: true, params: params))
         }
         else {
-            redirect(uri: eca.createLink(controller: 'event', action: 'index', noBase: true), params: params)
+            redirect(uri: eca.createLink(controller: 'event', action: 'index', noBase: true, noPreviousInfo: true, params: params))
         }
     }
 

@@ -43,7 +43,7 @@ class EventController {
             render(view: "index", model: [statistics: statistics])
         }
         else {
-            redirect(uri: eca.createLink(action: 'list', noBase: true), params: params)
+            redirect(uri: eca.createLink(action: 'list', noBase: true, noPreviousInfo: true, params: params))
         }
     }
 
@@ -63,7 +63,7 @@ class EventController {
         }
         params.remove('event_switcher')
 
-        redirect(uri: eca.createLink(controller: controller, action: "index", noBase: true, noPreviousInfo: true))
+        redirect(uri: eca.createLink(controller: controller, action: "index", noBase: true, noPreviousInfo: true, params: params))
     }
 
     /**

@@ -55,10 +55,10 @@ class NetworkChair extends DefaultDomain implements Serializable {
     @Override
     String toString() {
         if (isMainChair) {
-            "${chair} (Main chair)"
+            "$chair: ${chair.email} (Main chair)"
         }
         else {
-            chair
+            "$chair: ${chair.email}"
         }
     }
 }

@@ -22,6 +22,8 @@ class UtilsTagLib {
      */
     def springSecurityService
 
+    def pageInformation
+
     static namespace = "eca"
 
     /**
@@ -190,6 +192,7 @@ class UtilsTagLib {
 
         // Now with all the information available, creeate the select box
         builder.form(method: "get", action: eca.createLink(controller: 'event', action: 'switchEvent')) {
+            builder.input(type: 'hidden', name: 'back', value: pageInformation.sessionIdentifier)
             builder.select(id: "event_switcher", name: "event_switcher") {
                 datesByEvent.keySet().each { event ->
                     builder.optgroup(label: event.toString()) {

@@ -6,6 +6,11 @@ class UrlMappings {
         // Again the default mapping, but now with a name
         name eventDate: "/$event/$date/$controller/$action/$id?" ()
 
+        // If there is no action specified, always go to the action 'index'
+        "/$event/$date/$controller" {
+            action = 'index'
+        }
+
         // Login is separate from an event
         name login: "/login/$action" {
             controller = 'login'
