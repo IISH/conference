@@ -95,7 +95,7 @@ environments {
     }
     production {
         grails.logging.jul.usebridge = false
-        grails.mail.disabled = true // TODO: Temporarily disabled
+        grails.mail.disabled = false
     }
 }
 
