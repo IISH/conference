@@ -12,7 +12,7 @@
         <meta http-equiv="pragma" content="no-cache" />
         
         <title>
-            <g:layoutTitle default="${(curPage) ? message(code: curPage.titleCode, args: [message(code: curPage.titleArg)], default: curPage.titleDefault) : 'ECA'}" />
+            <g:layoutTitle default="${(curPage) ? g.message(code: curPage.titleCode, args: [g.message(code: curPage.titleArg)?.toString()?.toLowerCase()], default: curPage.titleDefault) : 'ECA'}" />
         </title>
         
         <link rel="stylesheet" href="${resource(dir: 'css', file: 'default.css')}" type="text/css">

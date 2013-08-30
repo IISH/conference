@@ -327,10 +327,10 @@ class UtilsTagLib {
                     else if (page.urlQuery) {
                         link += '?' + page.urlQuery
                     }
-                    builder.a(href: link, g.message(code: page.titleCode, args: [g.message(code: page.titleArg)], default: page.titleDefault))
+                    builder.a(href: link, g.message(code: page.titleCode, args: [g.message(code: page.titleArg)?.toString()?.toLowerCase()], default: page.titleDefault))
                 }
                 else if (menuItem.children.size() > 0) {
-                    builder.a(href: "#${page.id}", g.message(code: page.titleCode, args: [g.message(code: page.titleArg)], default: page.titleDefault))
+                    builder.a(href: "#${page.id}", g.message(code: page.titleCode, args: [g.message(code: page.titleArg)?.toString()?.toLowerCase()], default: page.titleDefault))
                 }
             }
             
