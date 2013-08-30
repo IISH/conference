@@ -1,5 +1,4 @@
-import org.codehaus.groovy.grails.commons.GrailsApplication
-import grails.util.GrailsUtil
+import grails.util.Environment
 
 // locations to search for config files that get merged into the main config
 // config files can either be Java properties files or ConfigSlurper scripts
@@ -65,7 +64,7 @@ if (!grails.config.locations || !(grails.config.locations instanceof Collection)
     grails.config.locations = []
 }
 
-if (GrailsUtil.getEnvironment() != GrailsApplication.ENV_TEST) {
+if (Environment.current != Environment.TEST) {
     // Load properties, like passwords, from another location
     if (System.properties.containsKey("conference.properties")) {
        println("Loading properties from " + System.properties["conference.properties"])

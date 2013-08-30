@@ -212,8 +212,14 @@ var ajaxCall = function(url, params, onSuccess, onFailure) {
             onSuccess(data);
         }
     }).fail(function(jqXHR, textStatus, error) {
-        var err = textStatus + ', ' + error;
-        console.log("Request Failed: " + err);
+        if (jqXHR.status === 401) {
+            location.reload();
+        }
+
+        var data = {message: error};
+        showErrors(data);
+
+        onFailure(data);
     });
 }
 

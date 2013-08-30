@@ -487,6 +487,7 @@ class SessionController {
             // Make sure null values are removed
             dateTimeIds.remove(null)
             possibilitiesResponse.put('date-times', dateTimeIds.unique())
+            possibilitiesResponse.put('success',    true)
 
             render possibilitiesResponse as JSON
         }
