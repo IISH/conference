@@ -329,7 +329,7 @@ class MiscController {
             AND p.date_id = :dateId
             AND p.paper_state_id = 2
             AND participant_type_id = 8
-            GROUP BY p.user_id
+            GROUP BY u.user_id, u.lastname, u.firstname
             HAVING count(*) > 1
             ORDER BY u.lastname, u.firstname
         """, [dateId: pageInformation.date.id])
