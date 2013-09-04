@@ -1,5 +1,8 @@
 var content, body, navWidth, contentMargin, emailValue;
 
+var messageUrl = 'ajax/message';
+var uniqueEmailUrl = 'ajax/uniqueEmail';
+
 var decodeUrlParameters = function(urlParameters) {
     var parameters = {};
     var re = /([^&=]+)=([^&]*)/g;
@@ -181,19 +184,14 @@ var removeAnItem = function(toBeRemoved, classToStop) {
 var guessUrl = function(urlToCall) {
     var url = location.href.replace(location.search, '').replace(location.hash, '');
 
+    urlToCall = (urlToCall.indexOf('/') === 0) ? urlToCall.substring(1) : urlToCall;
+    urlToCall = (urlToCall.indexOf('../') === 0) ? urlToCall : '../' + urlToCall;
+
     if ($.isNumeric(url.charAt(url.length-1))) {
         urlToCall = '../' + urlToCall;
     }
 
     return urlToCall;
-}
-
-var guessMessageUrl = function() {
-    return guessUrl('../ajax/message');
-}
-
-var guessUniqueEmailUrl = function() {
-    return guessUrl('../ajax/uniqueEmail');
 }
 
 var ajaxCall = function(url, params, onSuccess, onFailure) {
@@ -371,7 +369,7 @@ $(document).ready(function() {
         var thisItem = $(e.target);
         var item = thisItem.parents('li');
 
-        ajaxCall(guessMessageUrl(), {code: 'default.button.delete.confirm.message'}, function(data) {
+        ajaxCall(messageUrl, {code: 'default.button.delete.confirm.message'}, function(data) {
             var deleted = confirm(data.message);
             if (deleted) {
                 if (!thisItem.hasClass('no-del')) {
@@ -386,7 +384,7 @@ $(document).ready(function() {
         var thisItem = $(e.target);
         var item = thisItem.parents('.column');
 
-        ajaxCall(guessMessageUrl(), {code: 'default.button.delete.confirm.message'}, function(data) {
+        ajaxCall(messageUrl, {code: 'default.button.delete.confirm.message'}, function(data) {
             var deleted = confirm(data.message);
             if (deleted) {
                 if (!thisItem.hasClass('no-del')) {
@@ -401,7 +399,7 @@ $(document).ready(function() {
         e.preventDefault();
         var thisItem = $(this);
 
-        ajaxCall(guessMessageUrl(), {code: 'default.button.delete.confirm.message'}, function(data) {
+        ajaxCall(messageUrl, {code: 'default.button.delete.confirm.message'}, function(data) {
             var deleted = confirm(data.message);
             if (deleted) {
                 window.location = thisItem.attr('href');
@@ -510,7 +508,7 @@ $(document).ready(function() {
         element.parent().removeClass('error');
         
         if (email !== emailValue) {
-            ajaxCall(guessUniqueEmailUrl(), {email: email}, function(data) {
+            ajaxCall(uniqueEmailUrl, {email: email}, function(data) {
                 if (!data.success) {
                     element.parent().addClass('error');
                     showErrors(data);
