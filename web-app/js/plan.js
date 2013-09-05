@@ -169,7 +169,7 @@ $(document).ready(function() {
             curSessionBlockParent = curSessionBlock.parent();
             curSessionId = parseInt(curSessionBlock.find('input').val());
 
-            ajaxCall('./possibilities', {'session_id': curSessionId}, function(data) {
+            $.getJSON('./possibilities', {'session_id': curSessionId}, function(data) {
                 var equipmentCodes = findIndexesThatMatch(data.equipment);
                 timeSlots.each(function() {
                     var timeSlot = $(this);
@@ -212,7 +212,7 @@ $(document).ready(function() {
         var roomId = element.find('input[name=room-id]').val();
         var dateTimeId = element.find('input[name=date-time-id]').val();
 
-        ajaxCall(
+        $.getJSON(
             './planSession',
             {   'session_id':   curSessionId,
                 'room_id':      roomId,
@@ -239,7 +239,7 @@ $(document).ready(function() {
     $(document).on("click", '#unschedule-session', function(e) {
         disableTableWithLoading(true);
         
-        ajaxCall(
+        $.getJSON(
             './returnSession', {'session_id': curSessionId}, function(data) {
                 if (data.success) {
                     unscheduleSessionBlock();
@@ -259,7 +259,7 @@ $(document).ready(function() {
             roomInfo.hide();
 
             var session_id = element.find('input[name=session-id]').val();
-            ajaxCall('./sessionInfo', {'session_id': session_id}, function(data) {
+            $.getJSON('./sessionInfo', {'session_id': session_id}, function(data) {
                 if (data.success) {
                     (data.code !== null)            ? sessionInfo.find('#code-label').next().text(data.code)                                            : sessionInfo.find('#code-label').next().text('-');
                     (data.name !== null)            ? sessionInfo.find('#name-label').next().text(data.name)                                            : sessionInfo.find('#name-label').next().text('-');
@@ -317,7 +317,7 @@ $(document).ready(function() {
             sessionInfo.hide();
 
             var roomId = element.find('input[name=room-id]').val();
-            ajaxCall('./roomInfo', {'room_id': roomId}, function(data) {
+            $.getJSON('./roomInfo', {'room_id': roomId}, function(data) {
                 if (data.success) {
                     (data.number !== null)  ? roomInfo.find('#roomnumnber-label').next().text(data.number)  : roomInfo.find('#roomnumnber-label').next().text('-');
                     (data.name !== null)    ? roomInfo.find('#roomname-label').next().text(data.name)       : roomInfo.find('#roomname-label').next().text('-');

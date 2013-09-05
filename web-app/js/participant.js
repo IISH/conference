@@ -26,7 +26,7 @@ $(document).ready(function() {
     
     $(document).on("removed-item", '.paper.ui-icon-circle-minus', function(e) {
         var paperId = $(e.target).parents('.column').children('input[type=hidden]:first').val();
-        ajaxCall('../removePaper', {'paper-id': paperId});
+        $.getJSON('../removePaper', {'paper-id': paperId});
 
         $(this).parent().text('-');  
     });

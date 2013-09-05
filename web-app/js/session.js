@@ -62,7 +62,7 @@ $(document).ready(function() {
         
         var element = $(this).parents('.ui-tabs-panel');
         
-        ajaxCall(
+        $.getJSON(
             '../addParticipant',
             {   'session_id':       sessionId,
                 'participant_id':   element.find('.participant-id').val(),
@@ -71,11 +71,14 @@ $(document).ready(function() {
             },
             function(data) {
                 disableWithLoading(false);
-                $('#tabs').tabs("option", "active", false);
-                setParticipantDataForSession(data);
-            },
-            function() {
-                disableWithLoading(false);
+                
+                if (data.success) {                    
+                    $('#tabs').tabs("option", "active", false);
+                    setParticipantDataForSession(data);
+                }
+                else {
+                    showErrors(data);
+                }
             }
         );
     });
@@ -87,15 +90,20 @@ $(document).ready(function() {
         var element = $(e.target).parents('.participant-type-value');
         var parentElement = element.parents('li');
 
-        ajaxCall(
+        $.getJSON(
             '../deleteParticipant',
             {   'session_id':   sessionId,
                 'user_id':      parentElement.find('.user-id').val(),
                 'type_id':      element.find('.type-id').val()
             },
             function(data) {
-                $('#tabs').tabs("option", "active", false);
-                setParticipantDataForSession(data);
+                if (data.success) {
+                    $('#tabs').tabs("option", "active", false);
+                    setParticipantDataForSession(data);
+                }
+                else {
+                    showErrors(data);
+                }
             }
         );
     });

@@ -1,8 +1,5 @@
 var content, body, navWidth, contentMargin, emailValue;
 
-var messageUrl = 'ajax/message';
-var uniqueEmailUrl = 'ajax/uniqueEmail';
-
 var decodeUrlParameters = function(urlParameters) {
     var parameters = {};
     var re = /([^&=]+)=([^&]*)/g;
@@ -184,14 +181,19 @@ var removeAnItem = function(toBeRemoved, classToStop) {
 var guessUrl = function(urlToCall) {
     var url = location.href.replace(location.search, '').replace(location.hash, '');
 
-    urlToCall = (urlToCall.indexOf('/') === 0) ? urlToCall.substring(1) : urlToCall;
-    urlToCall = (urlToCall.indexOf('../') === 0) ? urlToCall : '../' + urlToCall;
-
     if ($.isNumeric(url.charAt(url.length-1))) {
         urlToCall = '../' + urlToCall;
     }
 
     return urlToCall;
+}
+
+var guessMessageUrl = function() {
+    return guessUrl('../ajax/message');
+}
+
+var guessUniqueEmailUrl = function() {
+    return guessUrl('../ajax/uniqueEmail');
 }
 
 var ajaxCall = function(url, params, onSuccess, onFailure) {
@@ -210,16 +212,8 @@ var ajaxCall = function(url, params, onSuccess, onFailure) {
             onSuccess(data);
         }
     }).fail(function(jqXHR, textStatus, error) {
-        if (jqXHR.status === 401) {
-            location.reload();
-        }
-
-        var data = {message: error};
-        showErrors(data);
-
-        if ($.isFunction(onFailure)) {
-            onFailure(data);
-        }
+        var err = textStatus + ', ' + error;
+        console.log("Request Failed: " + err);
     });
 }
 
@@ -369,7 +363,7 @@ $(document).ready(function() {
         var thisItem = $(e.target);
         var item = thisItem.parents('li');
 
-        ajaxCall(messageUrl, {code: 'default.button.delete.confirm.message'}, function(data) {
+        $.getJSON(guessMessageUrl(), {code: 'default.button.delete.confirm.message'}, function(data) {
             var deleted = confirm(data.message);
             if (deleted) {
                 if (!thisItem.hasClass('no-del')) {
@@ -384,7 +378,7 @@ $(document).ready(function() {
         var thisItem = $(e.target);
         var item = thisItem.parents('.column');
 
-        ajaxCall(messageUrl, {code: 'default.button.delete.confirm.message'}, function(data) {
+        $.getJSON(guessMessageUrl(), {code: 'default.button.delete.confirm.message'}, function(data) {
             var deleted = confirm(data.message);
             if (deleted) {
                 if (!thisItem.hasClass('no-del')) {
@@ -399,7 +393,7 @@ $(document).ready(function() {
         e.preventDefault();
         var thisItem = $(this);
 
-        ajaxCall(messageUrl, {code: 'default.button.delete.confirm.message'}, function(data) {
+        $.getJSON(guessMessageUrl(), {code: 'default.button.delete.confirm.message'}, function(data) {
             var deleted = confirm(data.message);
             if (deleted) {
                 window.location = thisItem.attr('href');
@@ -508,7 +502,7 @@ $(document).ready(function() {
         element.parent().removeClass('error');
         
         if (email !== emailValue) {
-            ajaxCall(uniqueEmailUrl, {email: email}, function(data) {
+            $.getJSON(guessUniqueEmailUrl(), {email: email}, function(data) {            
                 if (!data.success) {
                     element.parent().addClass('error');
                     showErrors(data);
