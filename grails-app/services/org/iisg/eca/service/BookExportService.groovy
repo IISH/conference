@@ -110,7 +110,7 @@ class BookExportService {
                         AND srdt.deleted = false
                         AND r.enabled = true
                         AND r.deleted = false
-                        ORDER BY r.code
+                        ORDER BY r.roomNumber
                     ''', [sessionDateTimeId: sdt.id]).each { sessionResults ->
                         Session session = sessionResults[0]
                         Room room = sessionResults[1]
