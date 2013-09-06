@@ -7,7 +7,7 @@ $(document).ready(function() {
         
     $('.select-participant').addClass('ui-autocomplete-loading');
     
-    $.getJSON('../participants', function(data) {
+    $.getJSON(guessUrl('session/participants'), function(data) {
         participants = data;
         
         $('.select-participant').each(function(e) {
@@ -62,8 +62,8 @@ $(document).ready(function() {
         
         var element = $(this).parents('.ui-tabs-panel');
         
-        $.getJSON(
-            '../addParticipant',
+        ajaxCall(
+            'session/addParticipant',
             {   'session_id':       sessionId,
                 'participant_id':   element.find('.participant-id').val(),
                 'type_id':          element.find('.type-id').val(),
@@ -71,14 +71,11 @@ $(document).ready(function() {
             },
             function(data) {
                 disableWithLoading(false);
-                
-                if (data.success) {                    
-                    $('#tabs').tabs("option", "active", false);
-                    setParticipantDataForSession(data);
-                }
-                else {
-                    showErrors(data);
-                }
+                $('#tabs').tabs("option", "active", false);
+                setParticipantDataForSession(data);
+            },
+            function() {
+                disableWithLoading(false);
             }
         );
     });
@@ -90,20 +87,15 @@ $(document).ready(function() {
         var element = $(e.target).parents('.participant-type-value');
         var parentElement = element.parents('li');
 
-        $.getJSON(
-            '../deleteParticipant',
+        ajaxCall(
+            'session/deleteParticipant',
             {   'session_id':   sessionId,
                 'user_id':      parentElement.find('.user-id').val(),
                 'type_id':      element.find('.type-id').val()
             },
             function(data) {
-                if (data.success) {
-                    $('#tabs').tabs("option", "active", false);
-                    setParticipantDataForSession(data);
-                }
-                else {
-                    showErrors(data);
-                }
+                $('#tabs').tabs("option", "active", false);
+                setParticipantDataForSession(data);
             }
         );
     });
@@ -123,7 +115,7 @@ var tabActivate = function(event, ui) {
         textBox.val("");
 
         $.getJSON(
-            '../participantsWithType',
+            guessUrl('session/participantsWithType'),
             {   'type_id':      typeId,
                 'session_id':   sessionId},
             function(data) {  

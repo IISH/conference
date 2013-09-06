@@ -9,7 +9,7 @@ var intervalParticipants = setInterval(function() {
     }
 }, 100);
 
-$.getJSON(guessUrl('../user/users'), function(data) {
+$.getJSON(guessUrl('user/users'), function(data) {
     autoCompleteData = {
         source: function(request, response) {
             var matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i");

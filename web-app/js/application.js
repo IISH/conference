@@ -1,5 +1,8 @@
 var content, body, navWidth, contentMargin, emailValue;
 
+var messageUrl = 'ajax/message';
+var uniqueEmailUrl = 'ajax/uniqueEmail';
+
 var decodeUrlParameters = function(urlParameters) {
     var parameters = {};
     var re = /([^&=]+)=([^&]*)/g;
@@ -179,21 +182,16 @@ var removeAnItem = function(toBeRemoved, classToStop) {
 }
 
 var guessUrl = function(urlToCall) {
-    var url = location.href.replace(location.search, '').replace(location.hash, '');
+    var url = location.href.replace(location.search, '').replace(location.hash, '').replace('#', '');
+
+    urlToCall = (urlToCall.indexOf('/') === 0) ? urlToCall.substring(1) : urlToCall;
+    urlToCall = (urlToCall.indexOf('../') === 0) ? urlToCall : '../' + urlToCall;
 
     if ($.isNumeric(url.charAt(url.length-1))) {
         urlToCall = '../' + urlToCall;
     }
 
     return urlToCall;
-}
-
-var guessMessageUrl = function() {
-    return guessUrl('../ajax/message');
-}
-
-var guessUniqueEmailUrl = function() {
-    return guessUrl('../ajax/uniqueEmail');
 }
 
 var ajaxCall = function(url, params, onSuccess, onFailure) {
@@ -212,8 +210,16 @@ var ajaxCall = function(url, params, onSuccess, onFailure) {
             onSuccess(data);
         }
     }).fail(function(jqXHR, textStatus, error) {
-        var err = textStatus + ', ' + error;
-        console.log("Request Failed: " + err);
+        if (jqXHR.status === 401) {
+            location.reload();
+        }
+
+        var data = {message: error};
+        showErrors(data);
+
+        if ($.isFunction(onFailure)) {
+            onFailure(data);
+        }
     });
 }
 
@@ -363,7 +369,7 @@ $(document).ready(function() {
         var thisItem = $(e.target);
         var item = thisItem.parents('li');
 
-        $.getJSON(guessMessageUrl(), {code: 'default.button.delete.confirm.message'}, function(data) {
+        ajaxCall(messageUrl, {code: 'default.button.delete.confirm.message'}, function(data) {
             var deleted = confirm(data.message);
             if (deleted) {
                 if (!thisItem.hasClass('no-del')) {
@@ -378,7 +384,7 @@ $(document).ready(function() {
         var thisItem = $(e.target);
         var item = thisItem.parents('.column');
 
-        $.getJSON(guessMessageUrl(), {code: 'default.button.delete.confirm.message'}, function(data) {
+        ajaxCall(messageUrl, {code: 'default.button.delete.confirm.message'}, function(data) {
             var deleted = confirm(data.message);
             if (deleted) {
                 if (!thisItem.hasClass('no-del')) {
@@ -393,7 +399,7 @@ $(document).ready(function() {
         e.preventDefault();
         var thisItem = $(this);
 
-        $.getJSON(guessMessageUrl(), {code: 'default.button.delete.confirm.message'}, function(data) {
+        ajaxCall(messageUrl, {code: 'default.button.delete.confirm.message'}, function(data) {
             var deleted = confirm(data.message);
             if (deleted) {
                 window.location = thisItem.attr('href');
@@ -502,7 +508,7 @@ $(document).ready(function() {
         element.parent().removeClass('error');
         
         if (email !== emailValue) {
-            $.getJSON(guessUniqueEmailUrl(), {email: email}, function(data) {            
+            ajaxCall(uniqueEmailUrl, {email: email}, function(data) {
                 if (!data.success) {
                     element.parent().addClass('error');
                     showErrors(data);
@@ -517,7 +523,7 @@ $(document).ready(function() {
         var state_id = $(this).val();
         var column = $(this).parents("td");
 
-        ajaxCall('../session/changeState', {session_id: column.prev().text(), state_id: state_id},
+        ajaxCall('session/changeState', {session_id: column.prev().text(), state_id: state_id},
             function() {
                 column.find("span.ui-icon-check").css('visibility', 'visible');
             },
@@ -531,7 +537,7 @@ $(document).ready(function() {
         var state_id = $(this).val();
         var column = $(this).parents("td");
 
-        ajaxCall('../participant/changePaperState', {paper_id: column.prev().text(), state_id: state_id},
+        ajaxCall('participant/changePaperState', {paper_id: column.prev().text(), state_id: state_id},
             function() {
                 column.parent().find("span.ui-icon-check").css('visibility', 'visible');
             },
@@ -553,7 +559,7 @@ $(document).ready(function() {
                 var paperId = dialog.find('input[name=paper-id]').val();
                 var stateId = dialog.find('input[name=paper-state]:checked').val();
                                 
-                ajaxCall('../participant/changePaperState', {paper_id: paperId, state_id: stateId},
+                ajaxCall('participant/changePaperState', {paper_id: paperId, state_id: stateId},
                     function(data) {
                         $('.paper-id[value=' + paperId + ']').parent().find('.paper-text').text(data.paper);                        
                         dialog.dialog("close");
@@ -586,7 +592,7 @@ $(document).ready(function() {
         var gender = $(this).val();
         var column = $(this).parents("td");
 
-        ajaxCall('../participant/changeGender', {user_id: column.prev().text(), gender: gender},
+        ajaxCall('participant/changeGender', {user_id: column.prev().text(), gender: gender},
             function() {
                 column.parent().find("span.ui-icon-check").css('visibility', 'visible');
             },
