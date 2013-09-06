@@ -21,6 +21,7 @@ class Setting extends EventDomain {
     static final String EMAIL_ADDRESS_INFO_ERRORS = 'email_address_info_errors'
     static final String WEB_ADDRESS = 'web_address'
     static final String CHANGE_USER = 'change_user'
+    static final String DONT_SEND_EMAILS_TO = 'dont_send_emails_to'
 
     String property
     String value
@@ -50,6 +51,7 @@ class Setting extends EventDomain {
             case EMAIL_ADDRESS_INFO_ERRORS:
             case WEB_ADDRESS:
             case CHANGE_USER:
+            case DONT_SEND_EMAILS_TO:
                 super.beforeUpdate()
                 break
             default:

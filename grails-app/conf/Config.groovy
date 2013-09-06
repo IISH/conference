@@ -56,8 +56,8 @@ grails.web.disable.multipart=false
 // request parameters to mask when logging exceptions
 grails.exceptionresolver.params.exclude = ['password']
 
-// enable query caching by default
-grails.hibernate.cache.queries = true
+// enable query caching by default, if false, you have to specify 'cache: true' in the query to cache queries
+grails.hibernate.cache.queries = false
 
 // Make sure grails.config.locations is initialized
 if (!grails.config.locations || !(grails.config.locations instanceof Collection)) {
