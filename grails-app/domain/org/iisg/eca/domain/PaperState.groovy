@@ -3,7 +3,13 @@ package org.iisg.eca.domain
 /**
  * Domain class of table holding all possible paper states
  */
-class PaperState extends EventDateDomain {
+class PaperState extends EventDomain {
+    static final long NO_PAPER = 0L
+    static final long NEW_PAPER = 1L
+    static final long PAPER_ACCEPTED = 2L
+    static final long PAPER_NOT_ACCEPTED = 3L
+    static final long PAPER_IN_CONSIDERATION = 4L
+
     String description
     String shortDescription
     boolean sessionStateTrigger = false

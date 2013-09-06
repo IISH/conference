@@ -6,7 +6,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder
 /**
  * Domain class of table holding all roles assigned to a participant
  */
-class UserRole extends EventDateDomain implements Serializable {
+class UserRole extends EventDomain implements Serializable {
     User user
     Role role
 
@@ -20,7 +20,6 @@ class UserRole extends EventDateDomain implements Serializable {
         id      column: 'user_role_id'
         user    column: 'user_id'
         role    column: 'role_id'
-        date    column: 'date_id'
     }
     
     @Override

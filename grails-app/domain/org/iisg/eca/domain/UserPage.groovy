@@ -7,7 +7,7 @@ import org.springframework.context.i18n.LocaleContextHolder
 /**
  * Domain class of table holding all extra rules concerning access to pages
  */
-class UserPage extends EventDateDomain implements Serializable {
+class UserPage extends EventDomain implements Serializable {
     def messageSource
 
     User user
@@ -24,12 +24,7 @@ class UserPage extends EventDateDomain implements Serializable {
 
         user        column: 'user_id'
         page        column: 'page_id'
-        date        column: 'date_id'
         denied      column: 'denied'
-    }
-
-    static constraints = {
-        date    nullable: true
     }
 
     Long getId() {

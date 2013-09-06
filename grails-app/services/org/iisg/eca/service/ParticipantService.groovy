@@ -6,6 +6,7 @@ import org.iisg.eca.domain.ParticipantDate
 import groovy.sql.Sql
 import org.springframework.context.i18n.LocaleContextHolder
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
+import org.iisg.eca.domain.ParticipantState
 
 /**
  * Service responsible for requesting participant data
@@ -22,8 +23,8 @@ class ParticipantService {
     List<User> getAllParticipants() {
         User.withCriteria {
             participantDates {
-                // TODO: Perhaps replace by extra column in database
-                'in'('state.id', [0L,1L,2L,999L])
+                'in'('state.id', [ParticipantState.NEW_PARTICIPANT, ParticipantState.PARTICIPANT_DATA_CHECKED,
+                        ParticipantState.PARTICIPANT, ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
                 
                 // Make sure the data is filtered here
                 eq('date.id', pageInformation.date.id)

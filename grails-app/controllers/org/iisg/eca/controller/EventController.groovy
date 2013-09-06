@@ -4,6 +4,7 @@ import org.iisg.eca.domain.User
 import org.iisg.eca.domain.EventDate
 import org.iisg.eca.domain.StatisticsTemplate
 import org.iisg.eca.domain.Statistic
+import org.iisg.eca.domain.Event
 
 /**
  * Controller for event related actions
@@ -71,22 +72,15 @@ class EventController {
      */
     def list() {
         // Get all event dates the user has access to, and sort the dates
-        Set<EventDate> dates = User.get(springSecurityService.principal.id).dates
-        List<EventDate> datesSorted = new ArrayList<EventDate>()
-        EventDate.sortByEventAndDate.list().each { date ->
-            if (dates.find { it.id == date.id }) {
-                datesSorted.add(date)
-            }
+        List<Event> events = User.get(springSecurityService.principal.id).events
+
+        // Loop over all the events and collect the event dates
+        Map datesByEvent = [:]
+        events.each { event ->
+            datesByEvent.put(event, EventDate.getAllForEvent(event).list())
         }
 
-        // Loop over all the event dates in search for the events they belong to
-        def datesByEvent = [:]  
-        datesSorted.each { date ->
-            def list = datesByEvent.get(date.event, new ArrayList())
-            list.add(date)
-        }
-
-        [events: datesByEvent.keySet(), dates: datesByEvent]
+        [events: events, dates: datesByEvent]
     }
 
     /**

@@ -3,6 +3,10 @@ package org.iisg.eca.controller
 import groovy.sql.Sql
 import groovy.sql.GroovyRowResult
 
+import org.iisg.eca.domain.SessionState
+import org.iisg.eca.domain.ParticipantType
+import org.iisg.eca.domain.ParticipantState
+
 /*
  * Misc queries
  * First returned column is assumed to be the id
@@ -18,7 +22,7 @@ class MiscController {
            FROM users INNER JOIN participant_date ON users.user_id=participant_date.user_id
            WHERE users.enabled=1 AND users.deleted=0
            AND participant_date.enabled=1 and participant_date.deleted=0
-           AND participant_date.participant_state_id IN (0,1,2,999)
+           AND participant_date.participant_state_id IN (:new, :dataChecked, :participant, :notFinished)
            AND participant_date.date_id = :date_id
            AND
            (
@@ -27,7 +31,8 @@ class MiscController {
                AND ( binary lastname = binary upper( lastname ) OR binary lastname = binary lower( lastname ) )
            )
            ORDER BY lastname
-        """, [date_id: pageInformation.date.id])
+        """, [date_id: pageInformation.date.id, new: ParticipantState.NEW_PARTICIPANT, dataChecked: ParticipantState.PARTICIPANT_DATA_CHECKED,
+                participant: ParticipantState.PARTICIPANT, notFinished: ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
 
         render(view: "list", model: [
                 data:       result,
@@ -45,7 +50,7 @@ class MiscController {
            FROM users INNER JOIN participant_date ON users.user_id=participant_date.user_id
            WHERE users.enabled=1 AND users.deleted=0
            AND participant_date.enabled=1 and participant_date.deleted=0
-           AND participant_date.participant_state_id IN (0,1,2,999)
+           AND participant_date.participant_state_id IN (:new, :dataChecked, :participant, :notFinished)
            AND participant_date.date_id = :date_id
            AND
            (
@@ -54,7 +59,8 @@ class MiscController {
            AND ( binary firstname = binary upper( firstname ) OR binary firstname = binary lower( firstname ) )
            )
            ORDER BY firstname
-        """, [date_id: pageInformation.date.id])
+        """, [date_id: pageInformation.date.id, new: ParticipantState.NEW_PARTICIPANT, dataChecked: ParticipantState.PARTICIPANT_DATA_CHECKED,
+                participant: ParticipantState.PARTICIPANT, notFinished: ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
 
         render(view: "list", model: [
                 data:       result,
@@ -72,7 +78,7 @@ class MiscController {
            FROM users INNER JOIN participant_date ON users.user_id=participant_date.user_id
            WHERE users.enabled=1 AND users.deleted=0
            AND participant_date.enabled=1 and participant_date.deleted=0
-           AND participant_date.participant_state_id IN (0,1,2,999)
+           AND participant_date.participant_state_id IN (:new, :dataChecked, :participant, :notFinished)
            AND participant_date.date_id = :date_id
            AND
            (
@@ -81,7 +87,8 @@ class MiscController {
            AND ( binary city = binary upper( city ) OR binary city = binary lower( city ) )
            )
            ORDER BY city
-        """, [date_id: pageInformation.date.id])
+        """, [date_id: pageInformation.date.id, new: ParticipantState.NEW_PARTICIPANT, dataChecked: ParticipantState.PARTICIPANT_DATA_CHECKED,
+                participant: ParticipantState.PARTICIPANT, notFinished: ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
 
         render(view: "list", model: [
                 data:       result,
@@ -99,7 +106,7 @@ class MiscController {
            FROM users INNER JOIN participant_date ON users.user_id=participant_date.user_id
            WHERE users.enabled=1 AND users.deleted=0
            AND participant_date.enabled=1 and participant_date.deleted=0
-           AND participant_date.participant_state_id IN (0,1,2,999)
+           AND participant_date.participant_state_id IN (:new, :dataChecked, :participant, :notFinished)
            AND participant_date.date_id = :date_id
            AND
            (
@@ -109,7 +116,8 @@ class MiscController {
            AND ( binary organisation = binary upper( organisation ) OR binary organisation = binary lower( organisation ) )
            )
            ORDER BY organisation
-        """, [date_id: pageInformation.date.id])
+        """, [date_id: pageInformation.date.id, new: ParticipantState.NEW_PARTICIPANT, dataChecked: ParticipantState.PARTICIPANT_DATA_CHECKED,
+                participant: ParticipantState.PARTICIPANT, notFinished: ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
 
         render(view: "list", model: [
                 data:       result,
@@ -194,14 +202,15 @@ class MiscController {
            FROM users INNER JOIN participant_date ON users.user_id=participant_date.user_id
            WHERE users.enabled=1 AND users.deleted=0
            AND participant_date.enabled=1 and participant_date.deleted=0
-           AND participant_date.participant_state_id IN (0,1,2,999)
+           AND participant_date.participant_state_id IN (:new, :dataChecked, :participant, :notFinished)
            AND participant_date.date_id = :date_id
            AND users.user_id IN (
                SELECT A.user_id FROM papers A, papers B WHERE A.user_id = B.user_id and A.paper_id <> B.paper_id and A.title = B.title and A.paper_id > B.paper_id
                AND A.enabled=1 AND A.deleted=0
                AND B.enabled=1 AND B.deleted=0
            )
-        """, [date_id: pageInformation.date.id])
+        """, [date_id: pageInformation.date.id, new: ParticipantState.NEW_PARTICIPANT, dataChecked: ParticipantState.PARTICIPANT_DATA_CHECKED,
+                participant: ParticipantState.PARTICIPANT, notFinished: ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
 
         render(view: "list", model: [
                 data:       result,
@@ -223,14 +232,14 @@ class MiscController {
            ON u.user_id = p.user_id
            WHERE u.enabled=1 AND u.deleted=0
            AND pd.enabled=1 and pd.deleted=0
-           AND pd.participant_state_id IN (1,2)
+           AND pd.participant_state_id IN (:dataChecked, :participant)
            AND pd.date_id = :date_id
            AND p.enabled=1 AND p.deleted=0 AND p.date_id = :date_id
            GROUP BY p.user_id
            HAVING count(*) > 1
 
            ORDER BY u.lastname, u.firstname
-        """, [date_id: pageInformation.date.id])
+        """, [date_id: pageInformation.date.id, dataChecked: ParticipantState.PARTICIPANT_DATA_CHECKED, participant: ParticipantState.PARTICIPANT])
 
         render(view: "list", model: [
                 data:       result,
@@ -248,11 +257,12 @@ class MiscController {
           FROM users INNER JOIN participant_date ON users.user_id=participant_date.user_id
           WHERE users.enabled=1 AND users.deleted=0
           AND participant_date.enabled=1 and participant_date.deleted=0
-          AND participant_date.participant_state_id IN (0,1,2,999)
+          AND participant_date.participant_state_id IN (:new, :dataChecked, :participant, :notFinished)
           AND participant_date.date_id = :date_id
           AND users.user_id IN (
             SELECT user_id FROM `papers` WHERE session_id IN (SELECT session_id FROM sessions WHERE deleted=1 ) OR session_id NOT IN (SELECT session_id FROM sessions) ) ;
-        """, [date_id: pageInformation.date.id])
+        """, [date_id: pageInformation.date.id, new: ParticipantState.NEW_PARTICIPANT, dataChecked: ParticipantState.PARTICIPANT_DATA_CHECKED,
+                participant: ParticipantState.PARTICIPANT, notFinished: ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
 
         render(view: "list", model: [
                 data:       result,
@@ -270,11 +280,12 @@ class MiscController {
           FROM users INNER JOIN participant_date ON users.user_id=participant_date.user_id
           WHERE users.enabled=1 AND users.deleted=0
           AND participant_date.enabled=1 and participant_date.deleted=0
-          AND participant_date.participant_state_id IN (0,1,2,999)
+          AND participant_date.participant_state_id IN (:new, :dataChecked, :participant, :notFinished)
           AND participant_date.date_id = :date_id
           AND participant_date.award=1
           ORDER BY lastname, firstname
-        """, [date_id: pageInformation.date.id])
+        """, [date_id: pageInformation.date.id, new: ParticipantState.NEW_PARTICIPANT, dataChecked: ParticipantState.PARTICIPANT_DATA_CHECKED,
+                participant: ParticipantState.PARTICIPANT, notFinished: ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
 
         render(view: "list", model: [
                 data:       result,
@@ -332,7 +343,7 @@ class MiscController {
             GROUP BY u.user_id, u.lastname, u.firstname
             HAVING count(*) > 1
             ORDER BY u.lastname, u.firstname
-        """, [dateId: pageInformation.date.id])
+        """, [dateId: pageInformation.date.id, dataChecked: ParticipantState.PARTICIPANT_DATA_CHECKED, participant: ParticipantState.PARTICIPANT])
 
         render(view: "list", model: [
                 data:       result,
@@ -395,17 +406,17 @@ class MiscController {
             FROM `sessions`
             WHERE enabled=1 AND deleted=0
             AND date_id=:dateId
-            AND session_state_id=2
+            AND session_state_id = :accepted
             AND session_id NOT IN (
                 SELECT session_participant.session_id
                 FROM session_participant
                 INNER JOIN vw_accepted_participants ON session_participant.user_id=vw_accepted_participants.user_id
                 WHERE session_participant.enabled=1 AND session_participant.deleted=0
-                AND session_participant.participant_type_id=6
+                AND session_participant.participant_type_id = :organizer
                 GROUP BY session_participant.session_id
             )
             ORDER BY session_code ASC, session_name ASC
-        """, [dateId: pageInformation.date.id])
+        """, [dateId: pageInformation.date.id, accepted: SessionState.SESSION_ACCEPTED, organizer: ParticipantType.ORGANIZER])
 
         render(view: "list", model: [
                 data:       result,

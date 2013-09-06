@@ -99,7 +99,7 @@ class EcaFilters {
                     User user = User.get(springSecurityService.principal.id)
 
                     // First check on a tenant (event date) level
-                    if (pageInformation.date && (UserRole.findAllByUserAndDate(user, pageInformation.date).size() == 0)) {
+                    if (pageInformation.date?.event && (UserRole.findAllByUserAndEvent(user, pageInformation.date.event, [cache: true]).size() == 0)) {
                         // Unfortunately, no access to this event date specified in the database
                         response.sendError(403)
                         return
@@ -111,7 +111,7 @@ class EcaFilters {
                         // So check these specific actions, which need an event id, now
                         List<UserRole> access = UserRole.withCriteria {
                             eq('user.id', user.id)
-                            inList('date.id', Event.get(params.id)?.dates*.id)
+                            eq('event.id', params.id)
                         }
 
                         // If the user has access to one of the event dates of the given event, it is ok

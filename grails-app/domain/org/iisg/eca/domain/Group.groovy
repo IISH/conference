@@ -3,7 +3,7 @@ package org.iisg.eca.domain
 /**
  * Domain class of table holding all existing permission groups
  */
-class Group extends EventDateDomain {
+class Group extends EventDomain {
     String name
 
     static hasMany = [users: User, pages: Page]
@@ -16,7 +16,6 @@ class Group extends EventDateDomain {
 
         id      column: 'group_id'
         name    column: 'name'
-        date    column: 'date_id'
 
         users   joinTable: 'users_groups'
         pages   joinTable: 'groups_pages'
@@ -24,7 +23,6 @@ class Group extends EventDateDomain {
 
     static constraints = {
         name    blank: false,   maxSize: 50
-        date    nullable: true
     }
 
     List<Page> getAllPagesInGroup() {

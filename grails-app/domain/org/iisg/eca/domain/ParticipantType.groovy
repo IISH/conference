@@ -4,6 +4,12 @@ package org.iisg.eca.domain
  * Domain class of table holding all possible participant types
  */
 class ParticipantType extends EventDomain {
+    static final long CHAIR = 6L
+    static final long ORGANIZER = 7L
+    static final long AUTHOR = 8L
+    static final long CO_AUTHOR = 9L
+    static final long DISCUSSANT = 10L
+
     String type
     boolean withPaper = false
     int importance = 0

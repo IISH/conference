@@ -127,7 +127,7 @@ class Page extends DefaultDomain {
     boolean hasAccess() {
         if (SpringSecurityUtils.ifNotGranted('superAdmin') && !(controller == null && action == null)) {
             User user = User.get(springSecurityService.principal.id)
-            UserPage userPage = UserPage.findAllByUser(user).find { (it.page.controller == controller) && (it.page.action == action) }
+            UserPage userPage = UserPage.findAllByUser(user, [cache: true]).find { (it.page.controller == controller) && (it.page.action == action) }
 
             // An individual rule for this page has been configured for this user
             if (userPage) {

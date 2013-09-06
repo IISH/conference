@@ -122,23 +122,29 @@ class User extends DefaultDomain {
     }
 
     /**
-     * Returns all event dates this user can access
-     * @return A set of event dates this user can access
+     * Returns all events this user can access
+     * @return A set of events this user can access
      */
-    Set<EventDate> getDates() {
-        List<EventDate> dates
+    List<Event> getEvents() {
+        List<Event> events
         List<Role> roles = Role.findAllByFullRights(true)
 
-        // If the user is granted access to all events, just return a list of all event dates
-        // Otherwise, only return the event dates he/she is specifically given access to
+        // If the user is granted access to all events, just return a list of all events
+        // Otherwise, only return the events he/she is specifically given access to
         if (SpringSecurityUtils.ifAnyGranted(roles*.role.join(','))) {
-            dates = EventDate.list()
+            events = Event.listOrderByShortName()
         }
         else {
-            dates = UserRole.findAllByUser(this).collect { it.date }
+            events = Event.executeQuery('''
+                SELECT e
+                FROM UserRole AS ur
+                INNER JOIN ur.event AS e
+                WHERE ur.user.id = :userId
+                ORDER BY e.shortName
+            ''', [userId: this.id])
         }
 
-        dates
+        events
     }
 
     def beforeInsert() {

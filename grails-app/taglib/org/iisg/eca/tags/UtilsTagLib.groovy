@@ -173,24 +173,15 @@ class UtilsTagLib {
         builder.doubleQuotes = true
 
         // Get all dates the user has access to
-        Set<EventDate> dates = User.get(springSecurityService.principal.id).dates
-        List<EventDate> datesSorted = new ArrayList()
+        List<Event> events = User.get(springSecurityService.principal.id).events
 
-        // Make sure the dates are properly sorted
-        EventDate.sortByEventAndDate.list().each { date ->
-            if (dates.contains(date)) {
-                datesSorted.add(date)
-            }
+        // Loop over all the events and collect the event dates
+        Map datesByEvent = [:]
+        events.each { event ->
+            datesByEvent.put(event, EventDate.getAllForEvent(event).list())
         }
 
-        // Map the event dates to their specific event
-        Map<Event, List<EventDate>> datesByEvent = [:]
-        datesSorted.each { date ->
-            List<EventDate> list = (List<EventDate>) datesByEvent.get(date.event, new ArrayList<EventDate>())
-            list.add(date)
-        }
-
-        // Now with all the information available, creeate the select box
+        // Now with all the information available, create the select box
         builder.form(method: "get", action: eca.createLink(controller: 'event', action: 'switchEvent')) {
             builder.input(type: 'hidden', name: 'back', value: pageInformation.sessionIdentifier)
             builder.select(id: "event_switcher", name: "event_switcher") {

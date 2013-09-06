@@ -51,6 +51,11 @@ class EventDate extends DefaultDomain {
             }
             order('startDate', 'desc')
         }
+
+        getAllForEvent { event ->
+            eq('event.id', event.id)
+            order('startDate', 'desc')
+        }
     }
 
     String getUrl() {
