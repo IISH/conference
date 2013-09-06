@@ -88,7 +88,7 @@
 
             <div id="content" role="main">
                 <g:if test="${curPage}">
-                    <h1><g:message code="${curPage.titleCode}" args="${[message(code: curPage.titleArg)]}" default="${curPage.titleDefault}" /></h1>
+                    <h1><g:message code="${curPage.titleCode}" args="${[message(code: curPage.titleArg).toString().toLowerCase()]}" default="${curPage.titleDefault}" /></h1>
                 </g:if>
 
                 <g:if test="${flash.message && flash.error && curPage}">
