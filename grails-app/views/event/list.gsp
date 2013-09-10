@@ -18,30 +18,12 @@
                         ${evt.toString()}
                     </h2>
 
-                    <sec:ifAnyGranted roles="admin">
-                        <span class="action">
-                            <eca:link controller="event" action="edit" id="${evt.id}">
-                                <g:message code="default.edit.label" args="[message(code: 'event.label')]" />
-                            </eca:link>
-                        </span>
-                    </sec:ifAnyGranted>
-
                     <ul>
                         <g:each in="${dates.get(evt)}" var="eventDate">
-                            <li>
-                                <eca:link event="${evt.url}" date="${eventDate.url}">${eventDate.yearCode}</eca:link>
-                            </li>
+                        <li>
+                            <eca:link event="${evt.url}" date="${eventDate.url}">${eventDate.yearCode}</eca:link>
+                        </li>
                         </g:each>
-
-                        <sec:ifAnyGranted roles="admin">
-                            <li>
-                                <span class="action">
-                                    <eca:link controller="eventDate" action="create" id="${evt.id}">
-                                        <g:message code="default.add.label" args="[message(code: 'eventDate.label').toLowerCase()]" />
-                                    </eca:link>
-                                </span>
-                            </li>
-                        </sec:ifAnyGranted>
                      </ul>
                 </div>
             </g:each>

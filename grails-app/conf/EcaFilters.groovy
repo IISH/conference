@@ -80,7 +80,8 @@ class EcaFilters {
 
                 // Event actions and user actions may be performed from outside a tenant
                 // Just like creating a new event date
-                return ((params.controller == 'event') || (params.controller == 'user') || ((params.controller == 'eventDate') && (params.action == 'create')))
+                //return ((params.controller == 'event') || (params.controller == 'user') || ((params.controller == 'eventDate') && (params.action == 'create')))
+                return ((params.controller == 'event') && (params.action == 'create' || params.action == 'list' || params.action == 'index'))
             }
             afterView = { Exception e ->
                 pageInformation.removeDate()
@@ -105,8 +106,9 @@ class EcaFilters {
                         return
                     }
                     else if (   !pageInformation.date && params.id &&
-                                (((params.controller == 'event') && ((params.action == 'show') || (params.action == 'edit'))) ||
-                                ((params.controller == 'eventDate') && (params.action == 'create')))) {
+                               // (((params.controller == 'event') && ((params.action == 'show') || (params.action == 'edit'))) ||
+                             //   ((params.controller == 'eventDate') && (params.action == 'create')))) {
+                                ((params.controller == 'event') && (params.action == 'create' || params.action == 'list' || params.action == 'index'))) {
                         // Event and event date are tenants, but accessible from outside a tenant
                         // So check these specific actions, which need an event id, now
                         List<UserRole> access = UserRole.withCriteria {

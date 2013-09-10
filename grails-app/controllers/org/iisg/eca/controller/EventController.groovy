@@ -94,6 +94,9 @@ class EventController {
      * Shows all data on an event
      */
     def show() {
+        // Only the current tenant event
+        params.id = pageInformation.date.event.id
+
         forward(controller: 'dynamicPage', action: 'dynamic', params: params)
     }
 
@@ -101,6 +104,9 @@ class EventController {
      * Allows the user to make changes to an event
      */
     def edit() {
+        // Only the current tenant event
+        params.id = pageInformation.date.event.id
+
         forward(controller: 'dynamicPage', action: 'dynamic', params: params)
     }
 }

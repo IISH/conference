@@ -23,7 +23,12 @@
                 <span class="required-indicator">*</span>
               </label>
               <span class="property-value">
-                 <input id="EventDate.yearCode" maxlength="20" name="EventDate.yearCode" value="${eventDate?.yearCode}" type="text" required="required" />
+                  <g:if test="${params.action == 'create'}">
+                    <input id="EventDate.yearCode" maxlength="20" name="EventDate.yearCode" value="${eventDate?.yearCode}" type="text" required="required" />
+                  </g:if>
+                  <g:else>
+                    ${eventDate?.yearCode}
+                  </g:else>
               </span>
             </div>
             <div class="${hasErrors(bean: eventDate, field: 'startDate', 'error')} ">
@@ -31,7 +36,7 @@
                 <eca:fallbackMessage code="eventDate.startDate.label" fbCode="eventDate.startDate.label" />
               </label>
               <span class="property-value">
-                <input id="EventDate.startDate" placeholder="${g.message(code: 'default.date.form.format').toLowerCase()}" name="EventDate.startDate" value="${g.formatDate(formatName: 'default.date.form.format', date: eventDate?.startDate)}" type="text" />
+                <input id="EventDate.startDate" placeholder="${g.message(code: 'default.date.form.format').toLowerCase()}" name="EventDate.startDate" value="${g.formatDate(formatName: 'default.date.form.format', date: eventDate?.startDate)}" type="text" class="datepicker" />
               </span>
             </div>
             <div class="${hasErrors(bean: eventDate, field: 'endDate', 'error')} ">
@@ -39,7 +44,7 @@
                 <eca:fallbackMessage code="eventDate.endDate.label" fbCode="eventDate.endDate.label" />
               </label>
               <span class="property-value">
-                <input id="EventDate.endDate" placeholder="${g.message(code: 'default.date.form.format').toLowerCase()}" name="EventDate.endDate" value="${g.formatDate(formatName: 'default.date.form.format', date: eventDate?.endDate)}" type="text" />
+                <input id="EventDate.endDate" placeholder="${g.message(code: 'default.date.form.format').toLowerCase()}" name="EventDate.endDate" value="${g.formatDate(formatName: 'default.date.form.format', date: eventDate?.endDate)}" type="text" class="datepicker" />
               </span>
             </div>
             <div class="${hasErrors(bean: eventDate, field: 'days', 'error')} ">

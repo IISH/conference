@@ -6,6 +6,7 @@ import org.iisg.eca.domain.Day
 import org.iisg.eca.domain.Room
 import org.iisg.eca.domain.Session
 import org.iisg.eca.domain.Equipment
+import org.iisg.eca.domain.SessionState
 import org.iisg.eca.domain.SessionDateTime
 import org.iisg.eca.domain.SessionParticipant
 import org.iisg.eca.domain.SessionRoomDateTime
@@ -35,9 +36,9 @@ class SessionPlannerService {
                 FROM SessionRoomDateTime AS srdt
                 WHERE srdt.session.id = s.id
             )
-            AND state.id = 2
+            AND state.id = :stateId
             ORDER BY s.code
-        ''')
+        ''', [stateId: SessionState.SESSION_ACCEPTED])
     }
 
     /**

@@ -26,7 +26,7 @@ class UrlMappings {
             controller = 'user'
         }
         
-        // Event is a controller for ALL events, so it is separate from AN event
+        /*// Event is a controller for ALL events, so it is separate from AN event
         name event: "/event/$action/$id?" {
             controller = 'event'
         }
@@ -35,7 +35,7 @@ class UrlMappings {
         name createEventDate: "/eventDate/create/$id?" {
             controller = 'eventDate'
             action = 'create'
-        }
+        }   */
 
         // The index page of an event
         name eventIdx: "/$event/$date" {

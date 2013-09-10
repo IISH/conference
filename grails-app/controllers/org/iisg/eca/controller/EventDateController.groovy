@@ -39,19 +39,11 @@ class EventDateController {
      */
     def create() {
         // We need an id of the event to add it to, check for the id
-        if (!params.id) {
-            flash.error = true
-            flash.message = g.message(code: 'default.no.id.message')
-            redirect(uri: eca.createLink(previous: true, noBase: true))
-            return
-        }
-
-        Event event = Event.get(params.id)
         User user = User.get(springSecurityService.principal.id)
 
-        // Make sure we have an event and user, and the user is allowed access to that event
-        if (event && user && user.dates.find { it.event.id == event.id }) {
-            EventDate eventDate = new EventDate(event: event)
+        // Make sure we have an user
+        if (pageInformation.date.event && user) {
+            EventDate eventDate = new EventDate(event: pageInformation.date.event)
 
             // The 'save' button was clicked, save all data
             if (request.post) {
@@ -104,7 +96,7 @@ class EventDateController {
         // The 'save' button was clicked, save all data
         if (request.post) {
             // Save all event date related data
-            bindData(date, params, [include: ['yearCode', 'startDate', 'endDate',
+            bindData(date, params, [include: ['startDate', 'endDate',
                     'dateAsText', 'description', 'longDescription', 'createStatistics']], 'EventDate')
 
             // Get a list of all days for this event date
