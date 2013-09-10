@@ -80,8 +80,7 @@ class EcaFilters {
 
                 // Event actions and user actions may be performed from outside a tenant
                 // Just like creating a new event date
-                //return ((params.controller == 'event') || (params.controller == 'user') || ((params.controller == 'eventDate') && (params.action == 'create')))
-                return ((params.controller == 'event') && (params.action == 'create' || params.action == 'list' || params.action == 'index'))
+                return ((params.controller == 'event') || (params.controller = 'css') || (params.controller == 'user') || ((params.controller == 'eventDate') && (params.action == 'create')))
             }
             afterView = { Exception e ->
                 pageInformation.removeDate()
@@ -91,7 +90,7 @@ class EcaFilters {
         /**
          * The authorization filter
          */
-        authFilter(controller: '*', action: '*', controllerExclude: 'login|logout') {
+        authFilter(controller: '*', action: '*', controllerExclude: 'login|logout|css') {
             before = {
                 List<Role> roles = Role.findAllByFullRights(true)
 

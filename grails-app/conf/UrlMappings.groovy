@@ -21,6 +21,11 @@ class UrlMappings {
             controller = 'logout'
         }
 
+        // CSS is separate from an event
+        name css: "/css/$action" {
+            controller = 'css'
+        }
+
         // User is separate from an event
         name user: "/user/$action" {
             controller = 'user'

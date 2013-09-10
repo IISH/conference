@@ -22,6 +22,14 @@ class Setting extends EventDomain {
     static final String WEB_ADDRESS = 'web_address'
     static final String CHANGE_USER = 'change_user'
     static final String DONT_SEND_EMAILS_TO = 'dont_send_emails_to'
+    static final String APPLICATION_TITLE = 'application_title'
+
+    static final String BANNER_IMG = 'banner_img'
+    static final String BANNER_BG_IMG = 'banner_bg_img'
+    static final String LABEL_COLOR = 'label_color'
+    static final String MAIN_COLOR_LIGHT = 'main_color_light'
+    static final String MAIN_COLOR_DARK = 'main_color_dark'
+    static final String MAIN_COLOR_BG = 'main_color_bg'
 
     String property
     String value
@@ -52,6 +60,13 @@ class Setting extends EventDomain {
             case WEB_ADDRESS:
             case CHANGE_USER:
             case DONT_SEND_EMAILS_TO:
+            case APPLICATION_TITLE:
+            case BANNER_IMG:
+            case BANNER_BG_IMG:
+            case LABEL_COLOR:
+            case MAIN_COLOR_LIGHT:
+            case MAIN_COLOR_DARK:
+            case MAIN_COLOR_BG:
                 super.beforeUpdate()
                 break
             default:

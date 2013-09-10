@@ -34,14 +34,14 @@ td {
 }
 
 label {
-    color: #666666;  
+    color: [label_color];
 }
 
 input, textarea, select {
     font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
     font-size: 9pt;
     background: #FFFFFF;
-    border: 1px solid #7F9DB9; 
+    border: 1px solid [main_color_light];
     line-height: 1;    
 }
 
@@ -83,8 +83,8 @@ input[type=checkbox], input[type=radio] {
 }
 
 h1 {   
-    border-bottom: 1px solid #225496;
-    color: #225496;
+    border-bottom: 1px solid [main_color_dark];
+    color: [main_color_dark];
     font-weight: normal;
     font-size: 16pt; 
     margin: 0 0 30px;    
@@ -92,7 +92,7 @@ h1 {
 
 h2, h3, legend {
     display: inline-block;
-    color: #225496;
+    color: [main_color_dark];
     font-weight: normal;
 }
 
@@ -127,10 +127,10 @@ a:hover {
 .message {
     margin: 30px 30px 20px;  
     background: url("../images/skin/information.png") no-repeat scroll 7px 50% transparent; 
-    color: #225496;
-       -moz-box-shadow: 0 0 3px 1px #225496;
-    -webkit-box-shadow: 0 0 3px 1px #225496;
-            box-shadow: 0 0 3px 1px #225496;
+    color: [main_color_dark];
+       -moz-box-shadow: 0 0 3px 1px [main_color_dark];
+    -webkit-box-shadow: 0 0 3px 1px [main_color_dark];
+            box-shadow: 0 0 3px 1px [main_color_dark];
 }
 
 .errors {
@@ -156,7 +156,7 @@ a:hover {
 .toggle-session-participants {
     cursor: pointer;
     position: absolute;
-    color: #225496;
+    color: [main_color_dark];
     font-weight: bold; 
     text-align: center;
     top: 5px;
@@ -173,7 +173,7 @@ a:hover {
 
 .navigation {
     position: absolute;
-    color: #225496;
+    color: [main_color_dark];
     font-weight: bold; 
     text-align: center;
     top: 5px;
@@ -213,14 +213,14 @@ a:hover {
 .buttons input, .buttons a {
     display: inline-block;
     min-width: 50px;
-    color: #225496;
+    color: [main_color_dark];
     font-weight: bold;
     cursor: pointer;
     margin: 0 5px;
     padding: 3px 10px;
     text-decoration: none;
     overflow: visible;
-    border: 1px solid #225496;
+    border: 1px solid [main_color_dark];
     outline: none;
     background-color: #FFFFFF;
     text-align: center;
@@ -260,7 +260,7 @@ a:hover {
 .form > div > .property-label, .property-list li > .property-label, .label {
     width: 25%;
     float: left;  
-    color: #666666;
+    color: [label_color];
     text-align: right;
 }
 
@@ -331,9 +331,9 @@ span.remove-item {
 /* TABLES */
 
 .tbl_toolbar {
-    background-color: #D8E2EB;
-    border-top: 1px solid #7F9DB9;
-    color: #225496;
+    background-color: [main_color_bg];
+    border-top: 1px solid [main_color_light];
+    color: [main_color_dark];
     font-weight: bold;
     padding: 5px 10px;
     float: right;
@@ -344,8 +344,8 @@ span.remove-item {
 }
 
 .tbl_totals {
-    border-top: 1px solid #7F9DB9;
-    color: #225496;
+    border-top: 1px solid [main_color_light];
+    color: [main_color_dark];
     font-weight: bold;
 }
 
@@ -356,9 +356,9 @@ span.remove-item {
 }
 
 .tbl_container thead {
-    border-top: 1px solid #7F9DB9;
-    border-bottom: 1px solid #7F9DB9;
-    background-color: #D8E2EB;
+    border-top: 1px solid [main_color_light];
+    border-bottom: 1px solid [main_color_light];
+    background-color: [main_color_bg];
 }
 
 .tbl_container thead.no-filters {
@@ -366,12 +366,12 @@ span.remove-item {
 }
 
 .tbl_container tbody tr:hover {
-    background-color: #D8E2EB;
+    background-color: [main_color_bg];
     cursor: pointer;
 }
 
 .tbl_container th {
-    color: #225496;
+    color: [main_color_dark];
     font-size: 14px;
     padding: 3px;
 }
@@ -392,8 +392,8 @@ span.remove-item {
 
 .tbl_container td.counter {
     width: 25px;
-    border-right: 1px solid #7F9DB9;
-    color: #225496;
+    border-right: 1px solid [main_color_light];
+    color: [main_color_dark];
     font-weight: bold;
     text-align: right;
 }
@@ -428,30 +428,35 @@ span.remove-item {
 }
 
 #event-logo {	
-    background: url("../images/header-esshc.gif") no-repeat;
+    /*background: url("../images/header-esshc.gif") no-repeat;*/
     display: inline-block;    
-    width: 495px;
-    height: 36px;
-    text-indent: -9999px;
+    /*width: 495px;
+    height: 36px;   */
+    color: [main_color_dark];
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18pt;
+    padding: 5px;
+    /*text-indent: -9999px; */
 }
 
 #event-header .hosted {
     position: absolute;	
     right: 0;
-    color: #225496;
+    color: [main_color_dark];
     font-size: 95%;
     font-weight: bold;
     margin-right: 30px;
-    margin-top: 10px;
+    margin-top: 12px;
 }
 
 #banner-container {
-    background: url("../images/bannerbg-esshc.jpg") repeat-x;
+    background: url([banner_bg_img]) repeat-x;
     width: 100%;
 }
 
 #banner {
-    background: url("../images/banner-esshc.jpg") no-repeat;
+    background: url([banner_img]) no-repeat;
     width: 755px;
     height: 50px;
 }
@@ -481,7 +486,7 @@ span.remove-item {
 }
 
 #locales img.selected {
-    border-bottom-color: #7F9DB9;
+    border-bottom-color: [main_color_light];
 }
 
 #event-switcher select {
@@ -489,7 +494,7 @@ span.remove-item {
 }
 
 #loggedin {
-    color: #225496;
+    color: [main_color_dark];
     font-weight: bold;
     margin-right: 20px;
 }
@@ -522,7 +527,7 @@ span.remove-item {
     max-width: 150px;
     padding: 0 8px;
     padding-bottom: 20px;
-    border-right: 1px solid #225496;
+    border-right: 1px solid [main_color_dark];
     overflow: hidden;
 }
 
@@ -530,7 +535,7 @@ span.remove-item {
     padding-bottom: 5px;
     font-size: 11pt;
     font-weight: bold;
-    color: #225496;
+    color: [main_color_dark];
 }
 
 #nav dd {	
@@ -571,7 +576,7 @@ span.remove-item {
     text-align: right;
     font-size: 8pt;
     color: #FFFFFF;
-    background-color: #225496;
+    background-color: [main_color_dark];
     clear: both;
 }
 
@@ -580,7 +585,7 @@ span.remove-item {
 .menu {
     display: none;
     background-color: #FFFFFF;
-    box-shadow: 0 0 3px 1px #225496;
+    box-shadow: 0 0 3px 1px [main_color_dark];
     position: absolute;
 }
 
@@ -619,13 +624,13 @@ span.remove-item {
     font-style: italic;
     margin-left: 10px;
     font-size: 8pt;
-    color: #225496;
+    color: [main_color_dark];
 }
 
 /* PARTICIPANTS PAGE */
 
 #filter-participant {
-    border-bottom: 1px solid #225496;
+    border-bottom: 1px solid [main_color_dark];
     margin-bottom: 20px;
 }
 
@@ -728,7 +733,7 @@ span.remove-item {
 }
 
 #papers-tab .column, #sessions-tab .column {
-    border-bottom: 1px solid #225496;
+    border-bottom: 1px solid [main_color_dark];
     margin-bottom: 20px;
 }
 
@@ -745,7 +750,7 @@ span.remove-item {
 }
 
 #participant-present td {
-    border: 1px solid #225496;
+    border: 1px solid [main_color_dark];
 }
 
 #change-user {
@@ -775,13 +780,13 @@ span.remove-item {
 /* SESSIONS INFORMATION */
 
 .participant-type-value {
-    color: #225496;
+    color: [main_color_dark];
     font-style: italic;
 }
 
 .participant-paper-value {
     display: block;
-    color: #225496;
+    color: [main_color_dark];
     font-style: italic;
 }
 
@@ -818,7 +823,7 @@ ul input.session-name {
     margin-bottom: 20px;
     margin-right: 20px;    
     float: left;
-    border: 1px solid #225496;
+    border: 1px solid [main_color_dark];
     cursor: pointer;
 }
 
@@ -834,11 +839,11 @@ ul input.session-name {
     overflow: auto;
     padding: 5px;
     white-space: nowrap;
-    border: 1px solid #225496;    
+    border: 1px solid [main_color_dark];    
 }
 
 .session-block {
-    border: 1px solid #225496;
+    border: 1px solid [main_color_dark];
     display: inline-block;
     font-weight: bold;
     padding: 3px;
@@ -862,11 +867,11 @@ ul input.session-name {
 #legenda-schedule {
     margin-bottom: 20px;
     text-align: center;
-    border: 1px solid #225496;
+    border: 1px solid [main_color_dark];
 }
 
 #legenda-schedule td {
-    border-left: 1px solid #225496;
+    border-left: 1px solid [main_color_dark];
     padding: 0;
     vertical-align: text-top;
 }
@@ -881,7 +886,7 @@ ul input.session-name {
 }
 
 #schedule td {
-    border: 1px solid #225496;
+    border: 1px solid [main_color_dark];
     padding: 0 0 5px;
     font-weight: bold;
 }
@@ -928,12 +933,12 @@ ul input.session-name {
 
 #session-info, #room-info {
     background-color: white;
-    border: 3px solid #225496;
+    border: 3px solid [main_color_dark];
     padding: 0 10px;
 }
 
 #session-info-click {
-    border: 1px solid #225496;
+    border: 1px solid [main_color_dark];
     margin-bottom: 20px;
 }
 
@@ -957,11 +962,11 @@ ul input.session-name {
 
 #session-info-container .pointer {
     margin-left: 15px;
-    border-bottom-color: #225496;
+    border-bottom-color: [main_color_dark];
 }
 
 #room-info-container .pointer {
-    border-right-color: #225496;
+    border-right-color: [main_color_dark];
     position: absolute;
     left: -10px;
     top: 15px;
@@ -981,7 +986,7 @@ ul input.session-name {
 }
 
 #status-info {
-    border: 1px solid #225496;
+    border: 1px solid [main_color_dark];
     margin: 10px;
     padding: 10px;
 }

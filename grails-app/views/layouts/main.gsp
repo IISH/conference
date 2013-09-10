@@ -15,7 +15,7 @@
             <g:layoutTitle default="${(curPage) ? g.message(code: curPage.titleCode, args: [g.message(code: curPage.titleArg)?.toString()?.toLowerCase()], default: curPage.titleDefault) : 'ECA'}" />
         </title>
         
-        <link rel="stylesheet" href="${resource(dir: 'css', file: 'default.css')}" type="text/css">
+        <link rel="stylesheet" href="${eca.createLink(controller: 'css', action: 'css', noPreviousInfo: true)}" type="text/css">
         <link rel="stylesheet" href="${resource(dir: 'css', file: 'jquery-ui.css')}" type="text/css">
         
         <g:javascript library="jquery" plugin="jquery" />
@@ -30,9 +30,8 @@
         <div id="header" role="banner">
             <div id="event-header">
                 <a id="event-logo" href="${grailsApplication.config.grails.serverURL}" name="top">
-                    ${grailsApplication.config.grails.serverURL}
+                    ${Setting.getByEvent(Setting.findAllByProperty(Setting.APPLICATION_TITLE, [cache: true])).value}
                 </a>
-                
                 <a href="http://socialhistory.org/" target="_blank" class="hosted">Hosted by IISH</a>
             </div>
           
