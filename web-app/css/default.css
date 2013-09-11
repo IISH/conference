@@ -126,7 +126,7 @@ a:hover {
 
 .message {
     margin: 30px 30px 20px;  
-    background: url("../images/skin/information.png") no-repeat scroll 7px 50% transparent; 
+    background: url("[resource_dir]/skin/information.png") no-repeat scroll 7px 50% transparent;
     color: [main_color_dark];
        -moz-box-shadow: 0 0 3px 1px [main_color_dark];
     -webkit-box-shadow: 0 0 3px 1px [main_color_dark];
@@ -142,7 +142,7 @@ a:hover {
 }
 
 .errors li {
-    background: url(../images/skin/exclamation.png) no-repeat scroll 7px 50% transparent; 
+    background: url([resource_dir]/skin/exclamation.png) no-repeat scroll 7px 50% transparent;
 }
 
 .error input, .error select, .error textarea {
@@ -406,19 +406,19 @@ span.remove-item {
 }
 
 .asc_unselected {
-    background: url("../images/skin/sorted_asc.png") no-repeat;
+    background: url("[resource_dir]/skin/sorted_asc.png") no-repeat;
 }
 
 .asc_selected {
-    background: url("../images/skin/sorted_asc_selected.png") no-repeat;
+    background: url("[resource_dir]/skin/sorted_asc_selected.png") no-repeat;
 }
 
 .desc_unselected {
-    background: url("../images/skin/sorted_desc.png") no-repeat;
+    background: url("[resource_dir]/skin/sorted_desc.png") no-repeat;
 }
 
 .desc_selected {
-    background: url("../images/skin/sorted_desc_selected.png") no-repeat;
+    background: url("[resource_dir]/skin/sorted_desc_selected.png") no-repeat;
 }
 
 /* HEADER */
@@ -853,7 +853,7 @@ ul input.session-name {
 }
 
 .session-block.selected {
-    background: url("../images/striped-bg.png") repeat transparent; 
+    background: url("[resource_dir]/striped-bg.png") repeat transparent;
     border-width: 3px;
     color: #FFFFFF;
     text-decoration: underline;
@@ -1014,7 +1014,7 @@ ul input.session-name {
 }
 
 .ui-autocomplete-loading { 
-    background: url('../images/spinner.gif') no-repeat right center;
+    background: url('[resource_dir]/spinner.gif') no-repeat right center;
 }
 
 /* HELPERS */

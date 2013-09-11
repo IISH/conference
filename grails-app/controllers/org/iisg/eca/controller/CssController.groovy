@@ -15,9 +15,15 @@ class CssController {
         String css = cssFile.text
 
         String bannerImg = Setting.getByEvent(Setting.findAllByProperty(Setting.BANNER_IMG, [cache: true])).value
+        if (!bannerImg.startsWith("http")) {
+            bannerImg = g.resource(dir: 'images', file: bannerImg)
+        }
         css = css.replace("[${Setting.BANNER_IMG}]", bannerImg)
 
         String bannerBgImg = Setting.getByEvent(Setting.findAllByProperty(Setting.BANNER_BG_IMG, [cache: true])).value
+        if (!bannerImg.startsWith("http")) {
+            bannerBgImg = g.resource(dir: 'images', file: bannerBgImg)
+        }
         css = css.replace("[${Setting.BANNER_BG_IMG}]", bannerBgImg)
 
         String labelColor = Setting.getByEvent(Setting.findAllByProperty(Setting.LABEL_COLOR, [cache: true])).value
@@ -31,6 +37,8 @@ class CssController {
 
         String mainColorBg = Setting.getByEvent(Setting.findAllByProperty(Setting.MAIN_COLOR_BG, [cache: true])).value
         css = css.replace("[${Setting.MAIN_COLOR_BG}]", mainColorBg)
+
+        css = css.replace("[resource_dir]", g.resource(dir: 'images'))
 
         render(text: css, contentType: "text/css")
     }
