@@ -3,7 +3,7 @@ package org.iisg.eca.domain
 import groovy.sql.Sql
 
 class EmailCode extends EventDomain {
-    def dataSource
+    def dataSource_readOnly
     def pageInformation
 
     String code
@@ -27,7 +27,7 @@ class EmailCode extends EventDomain {
     }
 
     String translateForUser(User user, EventDate date = pageInformation.date) {
-        Binding binding = new Binding([sql: new Sql(dataSource), params: [userId: user?.id, dateId: date?.id]])
+        Binding binding = new Binding([sql: new Sql(dataSource_readOnly), params: [userId: user?.id, dateId: date?.id]])
         GroovyShell shell = new GroovyShell(binding)
         Object ret = shell.evaluate(groovyScript)
         ret.toString()
