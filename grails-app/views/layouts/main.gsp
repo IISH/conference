@@ -117,6 +117,7 @@
         <div class="menu" id="usermenu">
             <ul>
                 <li><eca:link controller="user" action="show"><g:message code="menu.personalpage" /></eca:link></li>
+                <li><eca:link controller="user" action="changePassword"><g:message code="user.changePassword.label" /></eca:link></li>
                 <li><eca:link controller="logout"><g:message code="menu.logout" /></eca:link></li>
             </ul>
         </div>

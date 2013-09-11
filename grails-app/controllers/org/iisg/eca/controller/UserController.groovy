@@ -36,27 +36,6 @@ class UserController {
             [user: user]
         }
         else if (request.post) {
-            // For a password update, the new password has to be typed twice and has to match
-            if (!params['User.newPassword'].equals(params['User.newPasswordAgain'])) {
-                user.errors.rejectValue 'password', g.message(code: 'user.password.nomatch')
-                render(view: "edit", model: [user: user])
-                return
-            }
-
-            // If it is indeed a password update, make sure the old password is correct
-            // and the new password is not empty
-            if (!params['User.newPassword'].isEmpty()) {
-                if (user.isPasswordCorrect(params['User.password'])) {
-                    user.password = params['User.newPassword']
-                }
-                else {
-                    // Incorrect password given
-                    user.errors.rejectValue 'password', g.message(code: 'user.password.incorrect')
-                    render(view: "edit", model: [user: user])
-                    return
-                }
-            }
-
             bindData(user, params, [include: ['title', 'firstName', 'lastName', 'gender', 'organisation', 'department',
                     'email', 'address', 'city', 'country', 'phone', 'mobile', 'extraInfo']], "User")
 
@@ -76,6 +55,36 @@ class UserController {
                 render(view: "edit", model: [user: user])
             }
         }
+    }
+
+    /**
+     * Allows the user to change his/her password
+     */
+    def changePassword() {
+        User user = User.get(springSecurityService.principal.id)
+
+        if (request.post) {
+            // For a password update, the new password has to be typed twice and has to match
+            if (!params['User.newPassword'].equals(params['User.newPasswordAgain'])) {
+                user.errors.rejectValue 'password', g.message(code: 'user.password.nomatch')
+            }
+            // If it is indeed a password update, make sure the old password is correct
+            // and the new password is not empty
+            else if (!params['User.newPassword'].isEmpty()) {
+                if (user.isPasswordCorrect(params['User.password'])) {
+                    user.password = params['User.newPassword']
+                    if (user.save(flush: true)) {
+                        flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'user.newPassword.label'), user.toString()])
+                    }
+                }
+                else {
+                    // Incorrect password given
+                    user.errors.rejectValue 'password', g.message(code: 'user.password.incorrect')
+                }
+            }
+        }
+
+        render(view: "changePassword", model: [user: user])
     }
 
     /**

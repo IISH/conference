@@ -22,7 +22,6 @@
 
         <form action="#" method="post" autocomplete="off">
             <fieldset class="form">
-                <legend><g:message code="user.personalInfo.label" /></legend>
                 <div class="${hasErrors(bean: user, field: 'title', 'error')} required">
                     <label class="property-label">
                         <g:message code="title.label" />
@@ -128,32 +127,6 @@
                     </label>
                     <span class="property-value">
                         <textarea name="User.extraInfo" cols="40" rows="5">${fieldValue(bean: user, field: 'extraInfo')}</textarea>
-                    </span>
-                </div>
-
-                <legend><g:message code="user.changePassword.label" /></legend>
-                <div class="${hasErrors(bean: user, field: 'password', 'error')}">
-                    <label class="property-label">
-                        <g:message code="user.password.label" />
-                    </label>
-                    <span class="property-value">
-                        <input type="password" name="User.password" />
-                    </span>
-                </div>
-                <div class="${hasErrors(bean: user, field: 'password', 'error')}">
-                    <label class="property-label">
-                        <g:message code="user.newPassword.label" />
-                    </label>
-                    <span class="property-value">
-                        <input type="password" name="User.newPassword" />
-                    </span>
-                </div>
-                <div class="${hasErrors(bean: user, field: 'password', 'error')}">
-                    <label class="property-label">
-                        <g:message code="user.newPasswordAgain.label" />
-                    </label>
-                    <span class="property-value">
-                        <input type="password" name="User.newPasswordAgain" />
                     </span>
                 </div>
             </fieldset>
