@@ -188,6 +188,9 @@ $(document).ready(function() {
             $('#conflicts-searching').hide();
             $('#conflicts').show();
         }
+    }, 
+    function() {
+        $('#conflicts-searching').hide();
     });
 
     $(document).keydown(function(e) {

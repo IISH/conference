@@ -75,7 +75,11 @@ class SessionPlannerService {
      */
     boolean hasEquipmentConflicts(Session session) {
         SessionRoomDateTime plannedSession = session.sessionRoomDateTime.first()
-        return !getEquipment(plannedSession).containsAll(getEquipment(session))
+        
+        List<Long> timeSlotEquipmentIds = getEquipment(plannedSession)*.id
+        List<Long> sessionEquipmentIds = getEquipment(session)*.id
+        
+        return !timeSlotEquipmentIds.containsAll(sessionEquipmentIds)
     }
 
     /**

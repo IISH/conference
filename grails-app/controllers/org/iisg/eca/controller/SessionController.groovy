@@ -495,16 +495,18 @@ class SessionController {
     def conflicts() {
         // If this is an AJAX call, continue
         if (request.xhr) {
-            List<Map> noShow = []
-            List<Map> alreadyPlanned = []
-            List<Map> equipmentProblems = []
+            List<Map> noShow = new ArrayList<Map>()
+            List<Map> alreadyPlanned = new ArrayList<Map>()
+            List<Map> equipmentProblems = new ArrayList<Map>()
 
             // Check all planned sessions
             Session.executeQuery('''
                 SELECT s
                 FROM SessionRoomDateTime AS srdt
                 INNER JOIN srdt.session AS s
-                ORDER BY s.code
+                INNER JOIN srdt.room AS r
+                INNER JOIN srdt.sessionDateTime AS sdt 
+                ORDER BY r.roomNumber, sdt.indexNumber
             ''').each { session ->
                 SessionRoomDateTime plannedSession = session.sessionRoomDateTime.first()
 
