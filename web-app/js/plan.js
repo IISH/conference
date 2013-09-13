@@ -144,6 +144,52 @@ $(document).ready(function() {
     sessionInfo = $('#session-info-container');
     roomInfo = $('#room-info-container');
 
+    ajaxCall('session/conflicts', {}, function(data) {
+        if ((data.noShow.length === 0) && (data.alreadyPlanned.length === 0) && (data.equipmentProblems.length === 0)) {
+            $('#conflicts-searching').hide();
+            $('#no-conflicts').show();
+        }
+        else {
+            var conflictsBox = $('#conflicts ul');
+
+            for (var i=0; i<data.noShow.length; i++) {
+                conflictsBox.prepend('<li>- ' +
+                    '<a href="' + data.noShow[i].sessionUrl + '">' +
+                    data.noShow[i].plannedSession +
+                    '</a> ' +
+                    data.noShow[i].text +
+                    '</li>');
+            }
+
+            for (var i=0; i<data.alreadyPlanned.length; i++) {
+                conflictsBox.prepend('<li>- ' +
+                    '<a href="' + data.alreadyPlanned[i].sessionUrl + '">' +
+                    data.alreadyPlanned[i].plannedSession +
+                    '</a> ' +
+                    data.alreadyPlanned[i].text +
+                    ' <a href="' + data.alreadyPlanned[i].conflictSessionUrl + '">' +
+                    data.alreadyPlanned[i].conflictSession +
+                    '</a>' +
+                    '</li>');
+            }
+
+            for (var i=0; i<data.equipmentProblems.length; i++) {
+                conflictsBox.prepend('<li>- ' +
+                    '<a href="' + data.equipmentProblems[i].sessionUrl + '">' +
+                    data.equipmentProblems[i].plannedSession +
+                    '</a> ' +
+                    data.equipmentProblems[i].text +
+                    ' <a href="' + data.equipmentProblems[i].roomUrl + '">' +
+                    data.equipmentProblems[i].plannedRoom +
+                    '</a>' +
+                    '</li>');
+            }
+
+            $('#conflicts-searching').hide();
+            $('#conflicts').show();
+        }
+    });
+
     $(document).keydown(function(e) {
         if (e.keyCode === 27 && curSessionBlock !== null) {
             unselectSession();

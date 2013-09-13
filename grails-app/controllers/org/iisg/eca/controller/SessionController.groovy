@@ -480,16 +480,65 @@ class SessionController {
             possibilitiesResponse.put('equipment', equipment.collect { it.id })
 
             // Collect all date/times of sessions with the same participants
-            List<Session> sessions = sessionPlannerService.getSessionsWithSameParticipants(session)
-            List<Long> dateTimeIds = sessions.collect { SessionRoomDateTime.findBySession(it)?.sessionDateTime?.id }
-            dateTimeIds.addAll(sessionPlannerService.getTimesParticipantsNotPresent(session)*.id)
-
-            // Make sure null values are removed
-            dateTimeIds.remove(null)
-            possibilitiesResponse.put('date-times', dateTimeIds.unique())
+            List<SessionDateTime> dateTimes = sessionPlannerService.getTimesToBeBlocked(session)
+            possibilitiesResponse.put('date-times', dateTimes.collect { it.id })
             possibilitiesResponse.put('success',    true)
 
             render possibilitiesResponse as JSON
+        }
+    }
+
+    /**
+     * Returns all conflicts of planned sessions
+     * (AJAX call)
+     */
+    def conflicts() {
+        // If this is an AJAX call, continue
+        if (request.xhr) {
+            List<Map> noShow = []
+            List<Map> alreadyPlanned = []
+            List<Map> equipmentProblems = []
+
+            // Check all planned sessions
+            Session.executeQuery('''
+                SELECT s
+                FROM SessionRoomDateTime AS srdt
+                INNER JOIN srdt.session AS s
+                ORDER BY s.code
+            ''').each { session ->
+                SessionRoomDateTime plannedSession = session.sessionRoomDateTime.first()
+
+                if (sessionPlannerService.isParticipantNotPresent(session)) {
+                    noShow.add([
+                            plannedSession: plannedSession.toString(),
+                            sessionUrl:     eca.createLink(controller: 'session', action: 'show', id: session.id),
+                            text:           g.message(code: 'session.noShow.label')
+                    ])
+                }
+
+                sessionPlannerService.getSessionConflicts(session).each { sessionConflict ->
+                    alreadyPlanned.add([
+                            plannedSession:     plannedSession..toString(),
+                            sessionUrl:         eca.createLink(controller: 'session', action: 'show', id: session.id),
+                            conflictSession:    sessionConflict.sessionRoomDateTime.first().toString(),
+                            conflictSessionUrl: eca.createLink(controller: 'session', action: 'show', id: sessionConflict.id),
+                            text:               g.message(code: 'session.sessionConflict.label')
+                    ])
+                }
+
+                if (sessionPlannerService.hasEquipmentConflicts(session)) {
+                    equipmentProblems.add([
+                            plannedSession: plannedSession.toString(),
+                            sessionUrl:     eca.createLink(controller: 'session', action: 'show', id: session.id),
+                            plannedRoom:    plannedSession.room.toString(),
+                            roomUrl:        eca.createLink(controller: 'room', action: 'show', id: plannedSession.room.id),
+                            text:           g.message(code: 'session.equipmentProblem.label')
+                    ])
+                }
+            }
+
+            Map responseMap = [success: true, noShow: noShow, alreadyPlanned: alreadyPlanned, equipmentProblems: equipmentProblems]
+            render responseMap as JSON
         }
     }
 

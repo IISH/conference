@@ -45,4 +45,9 @@ class SessionRoomDateTime extends EventDateDomain implements Serializable {
         builder.append session, other.session
         builder.isEquals()
     }
+
+    @Override
+    String toString() {
+        "${session.code}, ${room.roomNumber}-${sessionDateTime.indexNumber}"
+    }
 }

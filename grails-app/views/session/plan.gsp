@@ -13,6 +13,7 @@
         <div id="sessions-unscheduled">
             <g:each in="${sessionsUnscheduled}" var="session">
             <div class="session-block">
+                <a name="${session.code}"></a>
                 <input type="hidden" name="session-id" value="${session.id}" />
                 ${session.code}
             </div>
@@ -52,6 +53,21 @@
             </tr>
         </table>
 
+        <div id="conflicts-searching">
+            <g:message code="session.conflicts.searching.label" />
+        </div>
+
+        <div id="no-conflicts">
+            <g:message code="session.no.conflicts.label" />
+        </div>
+
+        <div id="conflicts">
+            <span>
+                <g:message code="session.conflics.found.label" />
+            </span>
+            <ul> </ul>
+        </div>
+
         <table id="schedule">
             <tr>
                 <td>&nbsp;</td>
@@ -77,6 +93,7 @@
 
                     <g:if test="${timeSlot.session}">
                         <div class="session-block">
+                            <a name="${timeSlot.session.code}"></a>
                             <input type="hidden" name="session-id" value="${timeSlot.session.id}" />
                             ${timeSlot.session.code}
                         </div>

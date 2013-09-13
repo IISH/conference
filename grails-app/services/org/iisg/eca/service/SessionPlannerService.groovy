@@ -58,6 +58,27 @@ class SessionPlannerService {
     }
 
     /**
+     * Returns all equipment at the given time slot and room
+     * @param timeSlot The time slot in question
+     * @return A list of equipment available at the time slot and room
+     */
+    List<Equipment> getEquipment(SessionRoomDateTime timeSlotRoom) {
+        List<RoomSessionDateTimeEquipment> allEquipment = RoomSessionDateTimeEquipment.findAllBySessionDateTimeAndRoom(timeSlotRoom.sessionDateTime, timeSlotRoom.room)
+        allEquipment*.equipment
+    }
+
+    /**
+     * Returns <code>true</code> if at least one of the equipment requirements from the given session
+     * is not present at the scheduled time and room
+     * @param session The session of which the equipment requirements should be checked
+     * @return Whether at least one equipment necessary is not present at the scheduled time and room
+     */
+    boolean hasEquipmentConflicts(Session session) {
+        SessionRoomDateTime plannedSession = session.sessionRoomDateTime.first()
+        return !getEquipment(plannedSession).containsAll(getEquipment(session))
+    }
+
+    /**
      * Returns a list of sessions that have the same participants scheduled as the given session
      * @param session The session of which the participants should be checked
      * @return A list of sessions that have the same participants scheduled as the given one
@@ -74,11 +95,35 @@ class SessionPlannerService {
                 AND sp.session.id <> sp2.session.id
                 AND sp2.session.id = :sessionId
             )
+            AND sp.session.id <> :sessionId
             GROUP BY sp.session
         ''', [sessionId: session.id])
 
         SessionParticipant.enableHibernateFilter('hideDeleted')
         result
+    }
+
+    /**
+     * Returns a list of sessions that have the same participants scheduled as the given session at the same time
+     * @param session The session of which the participants should be checked
+     * @return A list of sessions that have the same participants scheduled as the given one at the same time
+     */
+    List<Session> getSessionConflicts(Session session) {
+        List<Session> conflicts = new ArrayList<Session>()
+
+        SessionRoomDateTime plannedSession = session.sessionRoomDateTime.first()
+        SessionDateTime plannedDateTime = plannedSession.sessionDateTime
+
+        getSessionsWithSameParticipants(session).each { sessionSameParticipants ->
+            if (sessionSameParticipants.sessionRoomDateTime?.size() > 0) {
+                SessionRoomDateTime plannedSecondSession = sessionSameParticipants.sessionRoomDateTime.first()
+                if (plannedSecondSession.sessionDateTime.id == plannedDateTime.id) {
+                    conflicts.add(sessionSameParticipants)
+                }
+            }
+        }
+
+        conflicts
     }
 
     /**
@@ -103,6 +148,37 @@ class SessionPlannerService {
             AND u.deleted = false
             GROUP BY dt
         ''', [userIds: userIds])
+    }
+
+    /**
+     * Returns <code>true</code> if at least one of the participants from the given session
+     * is not present at the scheduled time
+     * @param session The session of which the participants should be checked
+     * @return Whether at least one participant is not present at the scheduled time
+     */
+    boolean isParticipantNotPresent(Session session) {
+        SessionRoomDateTime plannedSession = session.sessionRoomDateTime.first()
+        SessionDateTime plannedDateTime = plannedSession.sessionDateTime
+
+        List<SessionDateTime> notPresent = getTimesParticipantsNotPresent(session)
+        return notPresent.contains(plannedDateTime)
+    }
+
+    /**
+     * Returns a list of time slots that have to be blocked, as it is not possible to plan sessions at that time
+     * @param session The session to be checked
+     * @return A list of time slots
+     */
+    List<SessionDateTime> getTimesToBeBlocked(Session session) {
+        List<SessionDateTime> times
+
+        List<Session> sessions = getSessionsWithSameParticipants(session)
+        times = sessions.collect { SessionRoomDateTime.findBySession(it)?.sessionDateTime }
+
+        times.addAll(getTimesParticipantsNotPresent(session))
+
+        times.remove(null)
+        times.unique()
     }
 
     /**
