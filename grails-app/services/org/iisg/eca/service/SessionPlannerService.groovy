@@ -4,6 +4,7 @@ import org.iisg.eca.utils.TimeSlot
 
 import org.iisg.eca.domain.Day
 import org.iisg.eca.domain.Room
+import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Session
 import org.iisg.eca.domain.Equipment
 import org.iisg.eca.domain.SessionState
@@ -16,7 +17,8 @@ import org.iisg.eca.domain.RoomSessionDateTimeEquipment
  * Service responsible for session planning activities
  */
 class SessionPlannerService {
-
+    def pageInformation
+    
     /**
      * Finds out all possible combinations of equipment for the current event date
      * @return A set which contains a list of all possible equipment combinations
@@ -48,38 +50,42 @@ class SessionPlannerService {
      */
     List<Equipment> getEquipment(Session session) {
         (List<Equipment>) Session.executeQuery('''
-            SELECT e
+            SELECT DISTINCT e
             FROM Session AS s
             JOIN s.papers AS p
             JOIN p.equipment AS e
             WHERE s.id = :sessionId
-            GROUP BY e
         ''', [sessionId: session.id])
     }
-
+    
     /**
-     * Returns all equipment at the given time slot and room
-     * @param timeSlot The time slot in question
-     * @return A list of equipment available at the time slot and room
-     */
-    List<Equipment> getEquipment(SessionRoomDateTime timeSlotRoom) {
-        List<RoomSessionDateTimeEquipment> allEquipment = RoomSessionDateTimeEquipment.findAllBySessionDateTimeAndRoom(timeSlotRoom.sessionDateTime, timeSlotRoom.room)
-        allEquipment*.equipment
-    }
-
-    /**
-     * Returns <code>true</code> if at least one of the equipment requirements from the given session
+     * Returns all sessions where at least one of the equipment requirements 
      * is not present at the scheduled time and room
-     * @param session The session of which the equipment requirements should be checked
-     * @return Whether at least one equipment necessary is not present at the scheduled time and room
+     * @return Sessions ordered by the room code and then by date/time they are planned in
      */
-    boolean hasEquipmentConflicts(Session session) {
-        SessionRoomDateTime plannedSession = session.sessionRoomDateTime.first()
-        
-        List<Long> timeSlotEquipmentIds = getEquipment(plannedSession)*.id
-        List<Long> sessionEquipmentIds = getEquipment(session)*.id
-        
-        return !timeSlotEquipmentIds.containsAll(sessionEquipmentIds)
+    List<Session> getSessionsWithEquipmentConflicts() {
+        Session.executeQuery('''
+            SELECT DISTINCT s
+            FROM Session AS s
+            INNER JOIN s.papers AS p
+            INNER JOIN p.equipment AS e
+            INNER JOIN s.sessionRoomDateTime AS srdt
+            INNER JOIN srdt.room AS r
+            INNER JOIN srdt.sessionDateTime AS sdt 
+            WHERE NOT EXISTS (
+                FROM Session AS s2
+                INNER JOIN s2.sessionRoomDateTime AS srdt2
+                INNER JOIN srdt2.sessionDateTime AS sdt
+                INNER JOIN sdt.roomSessionDateTimeEquipment AS rsdte
+                INNER JOIN rsdte.equipment AS e2
+                WHERE srdt2.room.id = rsdte.room.id
+                AND s2.date.id = :dateId
+                AND s2.deleted = false
+                AND s.id = s2.id
+                AND e.id = e2.id
+            )
+            ORDER BY r.roomNumber DESC, sdt.indexNumber DESC
+        ''', [dateId: pageInformation.date.id])
     }
 
     /**
@@ -91,7 +97,7 @@ class SessionPlannerService {
         SessionParticipant.disableHibernateFilter('hideDeleted')
 
         List<Session> result = (List<Session>) SessionParticipant.executeQuery('''
-            SELECT sp.session
+            SELECT DISTINCT sp.session
             FROM SessionParticipant AS sp
             WHERE EXISTS (
                 FROM SessionParticipant AS sp2
@@ -100,7 +106,6 @@ class SessionPlannerService {
                 AND sp2.session.id = :sessionId
             )
             AND sp.session.id <> :sessionId
-            GROUP BY sp.session
         ''', [sessionId: session.id])
 
         SessionParticipant.enableHibernateFilter('hideDeleted')
@@ -108,26 +113,52 @@ class SessionPlannerService {
     }
 
     /**
-     * Returns a list of sessions that have the same participants scheduled as the given session at the same time
-     * @param session The session of which the participants should be checked
-     * @return A list of sessions that have the same participants scheduled as the given one at the same time
+     * Returns a map with all the sessions and a list of sessions that have the same participant(s) scheduled at the same time
+     * @return A map of sessions
      */
-    List<Session> getSessionConflicts(Session session) {
-        List<Session> conflicts = new ArrayList<Session>()
-
-        SessionRoomDateTime plannedSession = session.sessionRoomDateTime.first()
-        SessionDateTime plannedDateTime = plannedSession.sessionDateTime
-
-        getSessionsWithSameParticipants(session).each { sessionSameParticipants ->
-            if (sessionSameParticipants.sessionRoomDateTime?.size() > 0) {
-                SessionRoomDateTime plannedSecondSession = sessionSameParticipants.sessionRoomDateTime.first()
-                if (plannedSecondSession.sessionDateTime.id == plannedDateTime.id) {
-                    conflicts.add(sessionSameParticipants)
+    LinkedHashMap<Session, List<Session>> getSessionConflicts() {
+        LinkedHashMap<Session, List<Session>> sessionMap = new LinkedHashMap<Session, List<Session>>()
+        Map<Long, Session> userSessionMap = new HashMap<Long, Session>()        
+        
+        Session.executeQuery('''
+            SELECT s, u
+            FROM Session AS s
+            INNER JOIN s.sessionRoomDateTime AS srdt
+            INNER JOIN s.sessionParticipants AS sp
+            INNER JOIN sp.user AS u 
+            INNER JOIN srdt.room AS r
+            INNER JOIN srdt.sessionDateTime AS sdt 
+            WHERE EXISTS (
+                FROM Session AS s2
+                INNER JOIN s2.sessionRoomDateTime AS srdt2
+                INNER JOIN s2.sessionParticipants AS sp2
+                WHERE s2.date.id = :dateId
+                AND s2.deleted = false
+                AND s.id <> s2.id	
+                AND srdt.sessionDateTime.id = srdt2.sessionDateTime.id
+                AND sp.user.id = sp2.user.id
+            )
+            ORDER BY r.roomNumber DESC, sdt.indexNumber DESC
+        ''', [dateId: pageInformation.date.id]).each { sessionAndUser -> 
+            Session session = sessionAndUser[0]
+            User user = sessionAndUser[1]
+            
+            if (userSessionMap.containsKey(user.id)) {
+                Session otherSession = userSessionMap.get(user.id)
+                List<Session> sessions = sessionMap.get(otherSession)
+                if (!sessions.contains(session)) {
+                    sessions.add(session)
+                }
+            }
+            else {
+                userSessionMap.put(user.id, session)
+                if (!sessionMap.containsKey(session)) {
+                    sessionMap.put(session, new ArrayList<Session>())
                 }
             }
         }
-
-        conflicts
+        
+        sessionMap
     }
 
     /**
@@ -144,28 +175,39 @@ class SessionPlannerService {
         }
 
         (List<SessionDateTime>) SessionParticipant.executeQuery('''
-            SELECT dt
+            SELECT DISTINCT dt
             FROM ParticipantDate AS p
             INNER JOIN p.user AS u
             INNER JOIN u.dateTimesNotPresent AS dt
             WHERE u.id IN :userIds
             AND u.deleted = false
-            GROUP BY dt
         ''', [userIds: userIds])
     }
 
     /**
-     * Returns <code>true</code> if at least one of the participants from the given session
+     * Returns all the sessions where at least one of the participants 
      * is not present at the scheduled time
-     * @param session The session of which the participants should be checked
-     * @return Whether at least one participant is not present at the scheduled time
+     * @return Sessions ordered by the room code and then by date/time they are planned in
      */
-    boolean isParticipantNotPresent(Session session) {
-        SessionRoomDateTime plannedSession = session.sessionRoomDateTime.first()
-        SessionDateTime plannedDateTime = plannedSession.sessionDateTime
-
-        List<SessionDateTime> notPresent = getTimesParticipantsNotPresent(session)
-        return notPresent.contains(plannedDateTime)
+    List<Session> getSessionsWithNotPresentParticipants() {
+        Session.executeQuery(''' 
+            SELECT DISTINCT s
+            FROM Session AS s
+            INNER JOIN s.sessionRoomDateTime AS srdt
+            INNER JOIN s.sessionParticipants AS sp
+            INNER JOIN srdt.room AS r
+            INNER JOIN srdt.sessionDateTime AS sdt 
+            WHERE EXISTS (
+                FROM ParticipantDate AS p
+                INNER JOIN p.user AS u
+                INNER JOIN u.dateTimesNotPresent AS dt
+                WHERE p.date.id = :dateId
+                AND p.deleted = false
+                AND dt.id = srdt.sessionDateTime.id
+                AND sp.user.id = u.id
+            )
+            ORDER BY r.roomNumber DESC, sdt.indexNumber DESC
+        ''', [dateId: pageInformation.date.id])
     }
 
     /**

@@ -160,17 +160,26 @@ $(document).ready(function() {
                     data.noShow[i].text +
                     '</li>');
             }
-
+            
             for (var i=0; i<data.alreadyPlanned.length; i++) {
-                conflictsBox.prepend('<li>- ' +
+                var alreadyPlannedText =
+                    '<li>- ' +
                     '<a href="' + data.alreadyPlanned[i].sessionUrl + '">' +
                     data.alreadyPlanned[i].plannedSession +
                     '</a> ' +
-                    data.alreadyPlanned[i].text +
-                    ' <a href="' + data.alreadyPlanned[i].conflictSessionUrl + '">' +
-                    data.alreadyPlanned[i].conflictSession +
-                    '</a>' +
-                    '</li>');
+                    data.alreadyPlanned[i].text;
+                    
+                for (var j=0; j<data.alreadyPlanned[i].conflictingSessions.length; j++) {
+                   alreadyPlannedText += 
+                        ' <a href="' + data.alreadyPlanned[i].conflictingSessionsUrls[j] + '">' +
+                        data.alreadyPlanned[i].conflictingSessions[j] +
+                        '</a>,';
+                }
+                
+                alreadyPlannedText = alreadyPlannedText.substring(0, alreadyPlannedText.length-1);
+                alreadyPlannedText += '</li>';         
+                
+                conflictsBox.prepend(alreadyPlannedText);
             }
 
             for (var i=0; i<data.equipmentProblems.length; i++) {

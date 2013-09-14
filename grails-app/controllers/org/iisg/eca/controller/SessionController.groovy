@@ -499,46 +499,34 @@ class SessionController {
             List<Map> alreadyPlanned = new ArrayList<Map>()
             List<Map> equipmentProblems = new ArrayList<Map>()
 
-            // Check all planned sessions
-            Session.executeQuery('''
-                SELECT s
-                FROM SessionRoomDateTime AS srdt
-                INNER JOIN srdt.session AS s
-                INNER JOIN srdt.room AS r
-                INNER JOIN srdt.sessionDateTime AS sdt 
-                ORDER BY r.roomNumber, sdt.indexNumber
-            ''').each { session ->
-                SessionRoomDateTime plannedSession = session.sessionRoomDateTime.first()
-
-                if (sessionPlannerService.isParticipantNotPresent(session)) {
-                    noShow.add([
-                            plannedSession: plannedSession.toString(),
-                            sessionUrl:     eca.createLink(controller: 'session', action: 'show', id: session.id),
-                            text:           g.message(code: 'session.noShow.label')
-                    ])
-                }
-
-                sessionPlannerService.getSessionConflicts(session).each { sessionConflict ->
-                    alreadyPlanned.add([
-                            plannedSession:     plannedSession..toString(),
-                            sessionUrl:         eca.createLink(controller: 'session', action: 'show', id: session.id),
-                            conflictSession:    sessionConflict.sessionRoomDateTime.first().toString(),
-                            conflictSessionUrl: eca.createLink(controller: 'session', action: 'show', id: sessionConflict.id),
-                            text:               g.message(code: 'session.sessionConflict.label')
-                    ])
-                }
-
-                if (sessionPlannerService.hasEquipmentConflicts(session)) {
-                    equipmentProblems.add([
-                            plannedSession: plannedSession.toString(),
-                            sessionUrl:     eca.createLink(controller: 'session', action: 'show', id: session.id),
-                            plannedRoom:    plannedSession.room.toString(),
-                            roomUrl:        eca.createLink(controller: 'room', action: 'show', id: plannedSession.room.id),
-                            text:           g.message(code: 'session.equipmentProblem.label')
-                    ])
-                }
+            sessionPlannerService.getSessionsWithNotPresentParticipants().each { session -> 
+                 noShow.add([
+                         plannedSession: session.sessionRoomDateTime.first().toString(),
+                         sessionUrl:     eca.createLink(controller: 'session', action: 'show', id: session.id),
+                         text:           g.message(code: 'session.noShow.label')
+                 ])
             }
 
+            sessionPlannerService.getSessionConflicts().each { session, conflictingSessions ->
+                 alreadyPlanned.add([
+                         plannedSession:            session.sessionRoomDateTime.first().toString(),
+                         sessionUrl:                eca.createLink(controller: 'session', action: 'show', id: session.id),
+                         conflictingSessions:       conflictingSessions.collect { it.sessionRoomDateTime.first().toString() },
+                         conflictingSessionsUrls:   conflictingSessions.collect { eca.createLink(controller: 'session', action: 'show', id: it.id) },
+                         text:                      g.message(code: 'session.sessionConflict.label')
+                 ])
+            }
+
+            sessionPlannerService.getSessionsWithEquipmentConflicts().each { session -> 
+                 equipmentProblems.add([
+                         plannedSession: session.sessionRoomDateTime.first().toString(),
+                         sessionUrl:     eca.createLink(controller: 'session', action: 'show', id: session.id),
+                         plannedRoom:    session.sessionRoomDateTime.first().room.toString(),
+                         roomUrl:        eca.createLink(controller: 'room', action: 'show', id: session.sessionRoomDateTime.first().room.id),
+                         text:           g.message(code: 'session.equipmentProblem.label')
+                 ])
+            }
+             
             Map responseMap = [success: true, noShow: noShow, alreadyPlanned: alreadyPlanned, equipmentProblems: equipmentProblems]
             render responseMap as JSON
         }
