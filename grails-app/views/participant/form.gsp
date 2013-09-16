@@ -167,6 +167,14 @@
                                     <input type="text" name="User.mobile" maxlength="50" value="${fieldValue(bean: user, field: 'mobile')}" />
                                 </span>
                             </div>
+                            <div class="${hasErrors(bean: user, field: 'cv', 'error')}">
+                                <label class="property-label">
+                                    <g:message code="user.cv.label" />
+                                </label>
+                                <span class="property-value">
+                                    <textarea name="User.cv" cols="40" rows="5">${fieldValue(bean: user, field: 'cv')}</textarea>
+                                </span>
+                            </div>
                             <div class="${hasErrors(bean: user, field: 'extraInfo', 'error')}">
                                 <label class="property-label">
                                     <g:message code="user.extraInfo.label" />

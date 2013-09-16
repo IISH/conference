@@ -39,6 +39,7 @@ class User extends DefaultDomain {
     String mobile
     String organisation
     String department
+    String cv
     String extraInfo
     Date dateAdded = new Date()
 
@@ -76,6 +77,7 @@ class User extends DefaultDomain {
         mobile          column: 'mobile'
         organisation    column: 'organisation'
         department      column: 'department'
+        cv              column: 'cv',           type: 'text'
         extraInfo       column: 'extra_info',   type: 'text'
         dateAdded       column: 'date_added'
 
@@ -104,6 +106,7 @@ class User extends DefaultDomain {
         mobile          maxSize: 50,    nullable: true
         organisation    maxSize: 255,   nullable: true
         department      maxSize: 255,   nullable: true
+        cv                              nullable: true
         extraInfo                       nullable: true
         papers          validator: { val, obj ->
                             /*Integer maxPapers = Setting.getByEvent(Setting.findAllByProperty(Setting.MAX_PAPERS_PER_PERSON_PER_SESSION))?.value?.toInteger()

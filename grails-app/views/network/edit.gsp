@@ -39,7 +39,7 @@
                 <input id="Network.name" maxlength="100" name="Network.name" value="${network.name}" type="text" required="required" />
               </span>
             </div>
-            <div class="${hasErrors(bean: network, field: 'comment', 'error')} ">
+            <div class="${hasErrors(bean: network, field: 'comment', 'error')}">
               <label class="property-label" for="Network.comment">
                 <g:message code="network.comment.label" />
               </label>
@@ -47,13 +47,12 @@
                 <textarea id="Network.comment" cols="40" name="Network.comment" rows="5">${network.comment}</textarea>
               </span>
             </div>
-            <div class="${hasErrors(bean: network, field: 'url', 'error')} required">
+            <div class="${hasErrors(bean: network, field: 'url', 'error')}">
               <label class="property-label" for="Network.url">
                 <g:message code="network.url.label" />
-                <span class="required-indicator">*</span>
               </label>
               <span class="property-value">
-                <input id="Network.url" maxlength="255" name="Network.url" value="${network.url}" type="text" required="required" />
+                <input id="Network.url" maxlength="255" name="Network.url" value="${network.url}" type="text" />
               </span>
             </div>
             <div class="${hasErrors(bean: network, field: 'email', 'error')} required">

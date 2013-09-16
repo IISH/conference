@@ -109,6 +109,14 @@
                 </span>
             </li>
             <li>
+                <span id="cv-label" class="property-label">
+                    <g:message code="user.cv.label" />
+                </span>
+                <span class="property-value" aria-labelledby="cv-label">
+                    <eca:formatText text="${user.cv}" />
+                </span>
+            </li>
+            <li>
                 <span id="extra-info-label" class="property-label">
                     <g:message code="user.extraInfo.label" />
                 </span>
