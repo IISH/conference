@@ -106,6 +106,8 @@ var unscheduleSessionBlock = function() {
             return false;
         }
     });
+
+    $('#sessions-unscheduled').append(curSessionBlock);
 }
 
 $(document).ready(function() {
