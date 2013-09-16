@@ -46,7 +46,7 @@ class BookExportService {
                         builder.day(dayFormatter.format(d.day))
                         builder.month(monthFormatter.format(d.day))
 
-                        String times = sdt.period.split('-')
+                        String[] times = sdt.period.split('-')
                         builder.starttime(times[0].trim())
                         builder.endtime(times[1].trim())
                     }
@@ -122,13 +122,12 @@ class BookExportService {
                         WHERE srdt.sessionDateTime.id = :sessionDateTimeId
                         AND srdt.deleted = false
                         AND r.deleted = false
-                        AND n.deleted = false
                         ORDER BY r.roomNumber
                     ''', [sessionDateTimeId: sdt.id]).each { sessionResults ->
                         Session session = (Session) sessionResults[0]
                         Room room = (Room) sessionResults[1]
 
-                        forEachSession(session, room, builder)
+                        forEachSession(session, room, sdt, builder)
                     }
                 }
             }
@@ -170,10 +169,11 @@ class BookExportService {
     /**
      * Creates the XML content for each session
      * @param session The session to create the xml for
-     * @param room The room of the session
+     * @param room The room of the planned session
+     * @param sdt The date/time of the planned session
      * @param builder The builder for creating the XML
      */
-    private void forEachSession(Session session, Room room, MarkupBuilder builder) {
+    private void forEachSession(Session session, Room room, SessionDateTime sdt, MarkupBuilder builder) {
         builder.session {
             builder.sessionname(session.name)
 
@@ -213,9 +213,9 @@ class BookExportService {
             }
 
             sessionParticipants.each { type, users ->
-                builder."${type.type}s" {
+                builder."${type.type.toLowerCase()}s" {
                     users.each { user ->
-                        builder."${type.type}name"("$user.firstName $user.lastName")
+                        builder."${type.type.toLowerCase()}name"("$user.firstName $user.lastName")
                     }
                 }
             }
