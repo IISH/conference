@@ -12,6 +12,7 @@ import org.iisg.eca.domain.Session
 import org.iisg.eca.domain.Room
 import org.iisg.eca.domain.Network
 import org.iisg.eca.domain.Paper
+import org.iisg.eca.domain.ParticipantState
 
 /**
  * Service creating the XML for the program book
@@ -39,7 +40,10 @@ class BookExportService {
                         builder.weekday(weekDayFormatter.format(d.day))
                         builder.day(dayFormatter.format(d.day))
                         builder.month(monthFormatter.format(d.day))
-                        builder.time(sdt.period.split('-')[0].trim())
+
+                        String times = sdt.period.split('-')
+                        builder.starttime(times[0].trim())
+                        builder.endtime(times[1].trim())
                     }
                 }
             }
@@ -53,12 +57,12 @@ class BookExportService {
                     SELECT u
                     FROM ParticipantDate AS pd
                     INNER JOIN pd.user AS u
-                    WHERE pd.state.id = 2
+                    WHERE pd.state.id = :stateId
                     AND u.enabled = true
                     AND u.deleted = false
                     AND pd.enabled = true
                     ORDER BY u.lastName, u.firstName
-                ''').each { user ->
+                ''', [stateId: ParticipantState.PARTICIPANT]).each { user ->
                     builder.name {
                         builder.lastname(user.lastName)
                         builder.firstname(user.firstName)
@@ -116,12 +120,12 @@ class BookExportService {
                         Room room = sessionResults[1]
 
                         builder.session {
-                            builder.code(session.code)
-                            builder.name(session.name)
+                            //builder.code(session.code)
+                            builder.sessionname(session.name)
 
                             builder.location {
                                 builder.code("${room.roomNumber}-${sdt.indexNumber}")
-                                builder.name(room.roomName)
+                                builder.locationname(room.roomName)
                             }
 
                             builder.networks {
@@ -133,7 +137,7 @@ class BookExportService {
                                     AND n.enabled = true
                                     ORDER BY n.name
                                 ''', [sessionId: session.id]).each { network ->
-                                    builder.name(network.name)
+                                    builder.networkname(network.name)
                                 }
                             }
 
@@ -147,7 +151,7 @@ class BookExportService {
                                     AND u.enabled = true
                                     ORDER BY u.lastName, u.firstName
                                 ''', [sessionId: session.id]).each { participant ->
-                                    builder.name("$participant.firstName $participant.lastName")
+                                    builder.chairname("$participant.firstName $participant.lastName")
                                 }
                             }
 
@@ -161,7 +165,7 @@ class BookExportService {
                                     AND u.enabled = true
                                     ORDER BY u.lastName, u.firstName
                                 ''', [sessionId: session.id]).each { participant ->
-                                    builder.name("$participant.firstName $participant.lastName")
+                                    builder.organizername("$participant.firstName $participant.lastName")
                                 }
                             }
 
@@ -175,7 +179,7 @@ class BookExportService {
                                     AND u.enabled = true
                                     ORDER BY u.lastName, u.firstName
                                 ''', [sessionId: session.id]).each { participant ->
-                                    builder.name("$participant.firstName $participant.lastName")
+                                    builder.discussantname("$participant.firstName $participant.lastName")
                                 }
                             }
 
@@ -195,9 +199,11 @@ class BookExportService {
                                     Paper paper = paperInfo[0]
                                     User user = paperInfo[1]
 
-                                    builder.presenter("$user.firstName $user.lastName")
-                                    builder.copresenters(paper.coAuthors)
-                                    builder.subject(paper.title)
+                                    builder.paper {
+                                        builder.presenter("$user.firstName $user.lastName")
+                                        builder.copresenters(paper.coAuthors)
+                                        builder.subject(paper.title)
+                                    }
                                 }
                             }
                         }
