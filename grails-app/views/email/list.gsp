@@ -9,7 +9,7 @@
         <g:each in="${templates}" var="emailTemplate">
             <li>
                 <eca:ifUserHasAccess controller="email" action="send">
-                    <eca:link action="send" id="${emailTemplate.id}" params="${[type: emailTemplate.action]}">
+                    <eca:link action="send" id="${emailTemplate.id}">
                         ${emailTemplate.description}
                     </eca:link>
                 </eca:ifUserHasAccess>

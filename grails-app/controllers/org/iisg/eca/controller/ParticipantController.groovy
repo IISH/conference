@@ -17,6 +17,7 @@ import grails.converters.JSON
 import grails.validation.ValidationException
 
 import org.springframework.web.multipart.commons.CommonsMultipartFile
+import org.grails.datastore.gorm.query.NamedCriteriaProxy
 
 /**
  * Controller responsible for handling requests on participants
@@ -393,6 +394,37 @@ class ParticipantController {
             List<User> participants = participantService.allParticipants
 
             // Return all participants and their paper, which are still not added to a session
+            render participants.collect { user ->
+                [label: "${user.lastName}, ${user.firstName}", value: user.id]
+            } as JSON
+        }
+    }
+
+    /**
+     * Returns a list will all participants that have signed up for the current event date
+     * (AJAX call)
+     */
+    def participantsAjax() {
+        // If this is an AJAX call, continue
+        if (request.xhr) {
+            def criteria = User.allParticipants(pageInformation.date)
+
+            if (params.query) {
+                criteria = User."$params.query"(pageInformation.date)
+            }
+
+            String[] searchTerms = params.terms.toString().split()
+            List<User> participants = (List<User>) criteria {
+                or {
+                    for (String searchTerm : searchTerms) {
+                        if (!searchTerm.isEmpty()) {
+                            like('lastName', "%${searchTerm}%")
+                            like('firstName', "%${searchTerm}%")
+                        }
+                    }
+                }
+            }
+
             render participants.collect { user ->
                 [label: "${user.lastName}, ${user.firstName}", value: user.id]
             } as JSON

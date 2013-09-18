@@ -25,17 +25,17 @@ class ParticipantService {
             participantDates {
                 'in'('state.id', [ParticipantState.NEW_PARTICIPANT, ParticipantState.PARTICIPANT_DATA_CHECKED,
                         ParticipantState.PARTICIPANT, ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
-                
+
                 // Make sure the data is filtered here
                 eq('date.id', pageInformation.date.id)
                 eq('deleted', false)
             }
-            
+
             order('lastName', 'asc')
             order('firstName', 'asc')
         }
     }
-    
+
     /**
      * Returns all participants of the current event date with filters set by the user
      * @param params The parameters of the current request containing the filters set by the user

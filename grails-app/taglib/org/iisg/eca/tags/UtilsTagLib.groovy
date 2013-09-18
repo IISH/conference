@@ -275,6 +275,28 @@ class UtilsTagLib {
         builder.input(attrs)        
     }
 
+    def participantAutoCompleteAjax = { attrs ->
+        MarkupBuilder builder = new MarkupBuilder(out)
+        builder.doubleQuotes = true
+
+        String name = attrs['name']
+        String value = attrs['idValue']
+        String queryName = attrs['queryName']
+
+        attrs['value'] = attrs['labelValue']
+        attrs['type'] = "text"
+        attrs['class'] = "${attrs['class']} participant-autocomplete-ajax"
+
+        attrs.remove('name')
+        attrs.remove('idValue')
+        attrs.remove('labelValue')
+        attrs.remove('queryName')
+
+        builder.input(type: "hidden", class: 'ac-query', value: queryName)
+        builder.input(type: "hidden", class: 'ac-value', name: name, value: value)
+        builder.input(attrs)
+    }
+
     /**
      * The body is only executed if the user has access to the page the attributes point to
      * @attr controller REQUIRED The controller of the page

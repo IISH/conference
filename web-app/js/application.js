@@ -612,4 +612,16 @@ $(document).ready(function() {
 
         selectBox.find('option:selected').remove().appendTo(otherSelectBox);
     });
+
+    $('#preview-options .refresh').click(function(e) {
+        var preview = $('#email-preview');
+        var templateId = parseInt($('input[name=id]').val());
+
+        ajaxCall('email/refreshPreview', {id: templateId}, function(data) {
+            preview.find('#from-label').next().html(data.from);
+            preview.find('#to-label').next().html(data.to);
+            preview.find('#subject-label').next().html(data.subject);
+            preview.find('#body-label').next().html(data.body);
+        });
+    });
 });

@@ -21,6 +21,7 @@
         <g:javascript library="jquery" plugin="jquery" />
         <r:layoutResources />
         <g:javascript src="jquery.cookie.js" />
+        <g:javascript src="jquery.placeholder.js" />
         <g:javascript src="jquery-ui.js" />        
         <g:javascript src="application.js" />
         

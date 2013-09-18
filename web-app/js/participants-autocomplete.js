@@ -37,6 +37,31 @@ $(document).ready(function() {
     $('.participant-autocomplete').each(function(e) {
         addAutoComplete(this);
     });
+
+    $('.participant-autocomplete-ajax').each(function(e) {
+        $(this).autocomplete({
+            minLength: 3,
+            source: function(request, response) {
+                var queryName = $(this).prevAll(".ac-query").val();
+
+                $.getJSON(guessUrl('participant/participantsAjax'), {query: queryName, terms: request.term}, function(data) {
+                    response(data);
+                });
+            },
+            search: function(event, ui) {
+                $(event.target).prevAll(".ac-value").val("");
+            },
+            focus: function(event, ui) {
+                $(event.target).val(ui.item.label);
+                return false;
+            },
+            select: function(event, ui) {
+                $(event.target).val(ui.item.label);
+                $(event.target).prevAll(".ac-value").val(ui.item.value);
+                return false;
+            }
+        });
+    });
 });
 
 var addAutoComplete = function(source) {

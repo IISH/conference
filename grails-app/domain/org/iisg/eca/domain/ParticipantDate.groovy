@@ -53,48 +53,53 @@ class ParticipantDate extends EventDateDomain {
     }
 
     static namedQueries = {
-        allParticipants { 
+        allParticipants { date ->
+            'in'('state.id', [ParticipantState.PARTICIPANT_DATA_CHECKED, ParticipantState.PARTICIPANT])
+
             user {
-                order("lastName", "asc")
-                order("firstName", "asc")
+                eq('deleted', false)
+                eq('date.id', date.id)
+
+                order('lastName', "asc")
+                order('firstName', "asc")
             }
         }
         
         paperAccepted { date ->
-            allParticipants()
+            allParticipants(date)
             
             user {
                 papers {
-                    eq('state.id', 2L)
+                    eq('state.id', PaperState.PAPER_ACCEPTED)
                     eq('date.id', date.id)
                 }
             }
         }
 
         paperInConsideration { date ->
-            allParticipants()
+            allParticipants(date)
             
             user {
                 papers {
-                    eq('state.id', 4L)
+                    eq('state.id', PaperState.PAPER_IN_CONSIDERATION)
                     eq('date.id', date.id)
                 }
             }
         }
 
         paperNotAccepted { date ->
-            allParticipants()
+            allParticipants(date)
             
             user {
                 papers {
-                    eq('state.id', 3L)
+                    eq('state.id', PaperState.PAPER_NOT_ACCEPTED)
                     eq('date.id', date.id)
                 }
             }
         }
         
         lowerFeeNotAnswered { date -> 
-            allParticipants()
+            allParticipants(date)
             
             eq('lowerFeeRequested', true)
             eq('lowerFeeAnswered', false)
@@ -102,7 +107,7 @@ class ParticipantDate extends EventDateDomain {
     }
     
     void updateByQueryType(String queryType) {
-        // Workaround for Hibernate excpetion "two open sessions" when using Quartz
+        // Workaround for Hibernate exception "two open sessions" when using Quartz
         Sql sql = new Sql(dataSource)
         
         switch (queryType) {

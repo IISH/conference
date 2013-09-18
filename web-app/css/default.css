@@ -108,12 +108,13 @@ h3, legend {
 
 /* LINKS */
 
-a, a:link, a:visited , a:active {
+a, a:link, a:visited , a:active, .link {
     color: #A26E33;
     text-decoration: none;
+    cursor: pointer;
 }
 
-a:hover {
+a:hover, .link:hover {
     text-decoration: underline;
 }
 
@@ -342,6 +343,15 @@ span.remove-item {
 
 .tbl_toolbar span {
     margin: 0 15px;
+    vertical-align: middle;
+}
+
+.tbl_toolbar div {
+    display: inline-block;
+}
+
+.tbl_toolbar .ui-icon {
+    margin: 0;
 }
 
 .tbl_totals {
@@ -1026,6 +1036,18 @@ ul input.session-name {
 
 #status-info h3 {
     display: block;
+}
+
+#email-preview-container {
+    margin-top: 5px;
+}
+
+#email-preview {
+    border-top: 1px solid [main_color_light];
+    border-bottom: 1px solid [main_color_light];
+    color: [main_color_dark];
+    padding: 5px;
+    clear: both;
 }
 
 /* LOGIN */

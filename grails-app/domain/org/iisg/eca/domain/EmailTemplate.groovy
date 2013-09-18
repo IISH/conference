@@ -1,6 +1,51 @@
 package org.iisg.eca.domain
 
+/**
+ * An email template
+ */
 class EmailTemplate extends EventDomain {
+
+    /**
+     * What to filter on for each action when sending mails?
+     */
+    private static final Map<String, Boolean> ACTION_NULL = [
+            participant: false,
+            participantState: false,
+            paperState: false,
+            eventDates: false
+    ] as HashMap<String, Boolean>
+
+    private static final Map<String, Boolean> ACTION_PARTICIPANT = [
+            participant: true,
+            participantState: false,
+            paperState: false,
+            eventDates: false
+    ] as HashMap<String, Boolean>
+
+    private static final Map<String, Boolean> ACTION_PARTICIPANT_PAPERSTATE = [
+            participant: true,
+            participantState: true,
+            paperState: true,
+            eventDates: false
+    ] as HashMap<String, Boolean>
+
+    private static final Map<String, Boolean> ACTION_PARTICIPANT_STATE = [
+            participant: true,
+            participantState: true,
+            paperState: false,
+            eventDates: false
+    ] as HashMap<String, Boolean>
+
+    private static final Map<String, Boolean> ACTION_EVENTDATES = [
+            participant: false,
+            participantState: false,
+            paperState: false,
+            eventDates: true
+    ] as HashMap<String, Boolean>
+
+    /**
+     * Email service for sending test emails
+     */
     def emailService
 
     String description
@@ -56,6 +101,21 @@ class EmailTemplate extends EventDomain {
     def afterUpdate() {
         if (testAfterSave) {
             testTemplate()
+        }
+    }
+
+    Map<String, Boolean> getFilterMap() {
+        switch (action) {
+            case 'participant':
+                return ACTION_PARTICIPANT
+            case 'participantPaperState':
+                return ACTION_PARTICIPANT_PAPERSTATE
+            case 'participantState':
+                return ACTION_PARTICIPANT_STATE
+            case 'eventDates':
+                return ACTION_EVENTDATES
+            default:
+               return ACTION_NULL
         }
     }
 

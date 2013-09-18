@@ -117,6 +117,65 @@ class User extends DefaultDomain {
     }
 
     /**
+     * Same queries as in the <code>ParticipantDate</code> domain class, but now returns a list of User objects
+     */
+    static namedQueries = {
+        allParticipantUsers {
+            participantDates {
+                eq('deleted', false)
+            }
+
+            order('lastName', "asc")
+            order('firstName', "asc")
+        }
+
+        allParticipants { date ->
+            allParticipantUsers()
+
+            participantDates {
+                'in'('state.id', [ParticipantState.PARTICIPANT_DATA_CHECKED, ParticipantState.PARTICIPANT])
+                eq('date.id', date.id)
+            }
+        }
+
+        paperAccepted { date ->
+            allParticipants(date)
+
+            papers {
+                eq('state.id', PaperState.PAPER_ACCEPTED)
+                eq('date.id', date.id)
+            }
+        }
+
+        paperInConsideration { date ->
+            allParticipants(date)
+
+            papers {
+                eq('state.id', PaperState.PAPER_IN_CONSIDERATION)
+                eq('date.id', date.id)
+            }
+        }
+
+        paperNotAccepted { date ->
+            allParticipants(date)
+
+            papers {
+                eq('state.id', PaperState.PAPER_NOT_ACCEPTED)
+                eq('date.id', date.id)
+            }
+        }
+
+        lowerFeeNotAnswered { date ->
+            allParticipants(date)
+
+            participantDates {
+                eq('lowerFeeRequested', true)
+                eq('lowerFeeAnswered', false)
+            }
+        }
+    }
+
+    /**
      * Returns all roles assigned to this user
      * @return A set of roles assigned to this user
      */

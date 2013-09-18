@@ -5,6 +5,10 @@ import org.iisg.eca.jobs.CreateEmailJob
 import org.iisg.eca.domain.Setting
 import org.iisg.eca.domain.EmailTemplate
 import org.iisg.eca.domain.ParticipantDate
+import org.apache.tools.ant.taskdefs.SendEmail
+import org.iisg.eca.domain.User
+import org.iisg.eca.domain.SentEmail
+import grails.converters.JSON
 
 /**
  * Controller responsible for handling requests on sending emails
@@ -19,6 +23,11 @@ class EmailController {
      * Service responsible for sending the emails
      */
     def emailService
+
+    /**
+     * To create a preview email with the currently logged in user
+     */
+    def springSecurityService
 
     /**
      * Index action, redirects to the list action
@@ -48,6 +57,7 @@ class EmailController {
         }
 
         EmailTemplate emailTemplate = EmailTemplate.findById(params.id)
+        Map<String, Boolean> filterMap = emailTemplate.getFilterMap()
 
         // We also need a email template to be able to send emails
         if (!emailTemplate) {
@@ -59,51 +69,58 @@ class EmailController {
 
         // The 'send' button was clicked, create and send the emails
         if (request.post) {
-            List<ParticipantDate> participants
-            def criteria
+            List<User> users
+            def criteria = User.allParticipants(pageInformation.date)
 
             // The email template chosen could contain a query type (a named query to call)
-            // Otherwise create a new empty criteria object
-            // Note: If a participant is chosen, the named query is not called
-            if (params.participant?.isLong() || !emailTemplate.queryType) {
-                criteria = ParticipantDate.allParticipants(pageInformation.date)
-            }
-            else {
-                criteria = ParticipantDate."${emailTemplate.queryType}"(pageInformation.date)
+            if (emailTemplate.queryType) {
+                criteria = User."${emailTemplate.queryType}"(pageInformation.date)
             }
 
             // Now extend the criteria with the filters set by the user
-            participants = criteria {
-                if (params.state?.isLong()) {
-                    eq('state.id', params.long('state'))
-                }
-                if (params.participant?.isLong()) {
-                    eq('id', params.long('participant'))
-                }
-                if (params.paper?.isLong()) {
-                    user {
-                        papers {
-                            eq('state.id', params.long('paper'))
-                        }
+            users = (List<User>) criteria {
+                participantDates {
+                    if (filterMap.participant && params.participant?.isLong()) {
+                        eq('id', params.long('participant'))
+                    }
+
+                    if (filterMap.participantState && params.participantState?.isLong()) {
+                        eq('state.id', params.long('participantState'))
+                    }
+
+                    if (filterMap.paperState && params.paperState?.isLong()) {
+                        eq('state.id', params.long('paperState'))
+                    }
+
+                    if (filterMap.eventDate) {
+                        'in'('date.id', params.eventDate)
                     }
                 }
             }
 
-            // We have found all the participants/recipients, so we can create all the individual emails
+            // We have found all the recipients, so we can create all the individual emails
             // But in the background, as it could take a while
-            CreateEmailJob.triggerNow([participants: participants, template: emailTemplate, date: pageInformation.date])
+            CreateEmailJob.triggerNow([users: users, template: emailTemplate, date: pageInformation.date])
 
-            flash.message = g.message(code: 'email.background.message', args: [participants.size()])
+            flash.message = g.message(code: 'email.background.message', args: [users.size()])
         }
 
-        // What type of view to load?
-        if (!params.type) {
-            params.type = "default"
-        }
+        // Create a preview email with the currently logged in user
+        User previewUser = User.get(springSecurityService.principal.id)
+        SentEmail previewEmail = emailService.createEmail(previewUser, emailTemplate)
+
+        // The labels to and from cause problems because of the characters '<' and '>', so define them here
+        String from = "${previewEmail.fromName} <${previewEmail.fromEmail}>".encodeAsHTML()
+        String to = "${previewEmail.user.toString()} <${previewEmail.user.email}>".encodeAsHTML()
 
         // Show the page to select the participant recipients
-        // Note: for some reason, ParticipantDate.list() does not work and throws an ArrayIndexOutOfBoundsException
-        render view: "filter_${params.type}", model: [emailTemplate: emailTemplate, participants: ParticipantDate.allParticipants(pageInformation.date).list()]
+        render view: "create", model: [
+                emailTemplate:  emailTemplate,
+                filterMap:      filterMap,
+                preview:        previewEmail,
+                from:           from,
+                to:             to
+        ]
     }
     
     /**
@@ -119,5 +136,26 @@ class EmailController {
         }
         
         render view: "test", model: [statusInfo: statusInfo]
+    }
+
+    /**
+     * Creates a new email preview for the currently logged in user
+     * (AJAX call)
+     */
+    def refreshPreview() {
+        // Is this really an AJAX call?
+        if (request.xhr) {
+            User previewUser = User.get(springSecurityService.principal.id)
+            EmailTemplate emailTemplate = EmailTemplate.findById(params.id)
+
+            SentEmail previewEmail = emailService.createEmail(previewUser, emailTemplate)
+            Map responseMap = [ success:    true,
+                                from:       "${previewEmail.fromName} <${previewEmail.fromEmail}>".encodeAsHTML(),
+                                to:         "${previewEmail.user.toString()} <${previewEmail.user.email}>".encodeAsHTML(),
+                                subject:    previewEmail.subject.encodeAsHTML(),
+                                body:       eca.formatText(text: previewEmail.body)]
+
+            render responseMap as JSON
+        }
     }
 }
