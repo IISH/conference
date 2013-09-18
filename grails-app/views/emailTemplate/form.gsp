@@ -61,7 +61,7 @@
                 <span class="required-indicator">*</span>
               </label>
               <span class="property-value">
-                <input id="emailTemplate.sender" maxlength="30" name="emailTemplate.sender" value="${template?.sender}" type="text" required="required" />
+                <input id="emailTemplate.sender" maxlength="100" name="emailTemplate.sender" value="${template?.sender}" type="text" required="required" />
               </span>
             </div>
             <div class="${hasErrors(bean: template, field: 'comment', 'error')} ">

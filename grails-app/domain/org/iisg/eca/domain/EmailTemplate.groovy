@@ -22,7 +22,7 @@ class EmailTemplate extends EventDomain {
         description blank: false,   maxSize: 255
         subject     blank: false,   maxSize: 78
         body        blank: false
-        sender      blank: false,   maxSize: 30
+        sender      blank: false,   maxSize: 100
         action      nullable: true, maxSize: 30
         queryType   nullable: true, maxSize: 30
         comment     nullable: true
