@@ -42,7 +42,7 @@ $(document).ready(function() {
         $(this).autocomplete({
             minLength: 3,
             source: function(request, response) {
-                var queryName = $(this).prevAll(".ac-query").val();
+                var queryName = $(this.element).prevAll(".ac-query").val();
 
                 $.getJSON(guessUrl('participant/participantsAjax'), {query: queryName, terms: request.term}, function(data) {
                     response(data);

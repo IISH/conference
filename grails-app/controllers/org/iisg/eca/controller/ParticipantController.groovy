@@ -414,7 +414,11 @@ class ParticipantController {
             }
 
             String[] searchTerms = params.terms.toString().split()
-            List<User> participants = (List<User>) criteria {
+            def participants = criteria {
+                projections {
+                    distinct(['id', 'lastName', 'firstName'])
+                }
+
                 or {
                     for (String searchTerm : searchTerms) {
                         if (!searchTerm.isEmpty()) {
@@ -426,7 +430,7 @@ class ParticipantController {
             }
 
             render participants.collect { user ->
-                [label: "${user.lastName}, ${user.firstName}", value: user.id]
+                [label: "${user[1]}, ${user[2]}", value: user[0]]
             } as JSON
         }
     }

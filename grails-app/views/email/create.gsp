@@ -19,7 +19,7 @@
                             <g:message code="participantDate.label" />
                         </label>
                         <span class="property-value">
-                            <eca:participantAutoCompleteAjax name="participant" queryName="allParticipants" placeholder="${g.message(code: 'email.all.participants.label')}" />
+                            <eca:participantAutoCompleteAjax name="participant" queryName="${queryName}" placeholder="${placeholder}" />
                         </span>
                     </div>
                 </g:if>

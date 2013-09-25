@@ -116,17 +116,29 @@ class User extends DefaultDomain {
                         }
     }
 
-    /**
-     * Same queries as in the <code>ParticipantDate</code> domain class, but now returns a list of User objects
-     */
     static namedQueries = {
+        allUsers {
+            order('lastName', "asc")
+            order('firstName', "asc")
+        }
+
+        networkChairs { date ->
+            allUsers()
+
+            networks {
+                network {
+                    eq('date.id', date.id)
+                    eq('deleted', false)
+                }
+            }
+        }
+
         allParticipantUsers {
+            allUsers()
+
             participantDates {
                 eq('deleted', false)
             }
-
-            order('lastName', "asc")
-            order('firstName', "asc")
         }
 
         allParticipants { date ->

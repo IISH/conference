@@ -79,11 +79,11 @@ class EmailController {
 
             // Now extend the criteria with the filters set by the user
             users = (List<User>) criteria {
-                participantDates {
-                    if (filterMap.participant && params.participant?.isLong()) {
-                        eq('id', params.long('participant'))
-                    }
+                if (filterMap.participant && params.participant?.isLong()) {
+                    eq('id', params.long('participant'))
+                }
 
+                participantDates {
                     if (filterMap.participantState && params.participantState?.isLong()) {
                         eq('state.id', params.long('participantState'))
                     }
@@ -105,6 +105,15 @@ class EmailController {
             flash.message = g.message(code: 'email.background.message', args: [users.size()])
         }
 
+        // Find out what auto-complete function to use
+        String queryName = 'allParticipants'
+        String placeholder = g.message(code: 'email.all.participants.label')
+
+        if (emailTemplate.queryType == 'networkChairs') {
+            queryName = emailTemplate.queryType
+            placeholder = g.message(code: 'email.all.network.chairs.label')
+        }
+
         // Create a preview email with the currently logged in user
         User previewUser = User.get(springSecurityService.principal.id)
         SentEmail previewEmail = emailService.createEmail(previewUser, emailTemplate)
@@ -117,6 +126,8 @@ class EmailController {
         render view: "create", model: [
                 emailTemplate:  emailTemplate,
                 filterMap:      filterMap,
+                queryName:      queryName,
+                placeholder:    placeholder,
                 preview:        previewEmail,
                 from:           from,
                 to:             to

@@ -7,7 +7,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder
  * Domain class of table holding all chairs of a network
  */
 class NetworkChair extends DefaultDomain implements Serializable {
-    Long id
+    //Long id
     Network network
     User chair
     boolean isMainChair = false
@@ -16,9 +16,10 @@ class NetworkChair extends DefaultDomain implements Serializable {
 
     static mapping = {
         table 'networks_chairs'
-        id composite: ['network', 'chair']
+      //  id composite: ['network', 'chair']
         version false
 
+        id          column: 'network_chair_id_temp'
         network     column: 'network_id'
         chair       column: 'user_id'
         isMainChair column: 'is_main_chair'
@@ -27,10 +28,10 @@ class NetworkChair extends DefaultDomain implements Serializable {
     static constraints = {
         network     unique: 'chair'
     }
-
+     /*
     Long getId() {
         "${network.id}${chair.id}".toLong()
-    }
+    }   */
 
     @Override
     int hashCode() {
