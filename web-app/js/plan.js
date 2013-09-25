@@ -155,19 +155,31 @@ $(document).ready(function() {
             var conflictsBox = $('#conflicts ul');
 
             for (var i=0; i<data.noShow.length; i++) {
-                conflictsBox.prepend('<li>- ' +
-                    '<a href="' + data.noShow[i].sessionUrl + '">' +
-                    data.noShow[i].plannedSession +
+                var noShowText =
+                    '<li>- ' +
+                    '<a href="' + data.noShow[i].userUrl + '">' +
+                    data.noShow[i].plannedUser +
                     '</a> ' +
-                    data.noShow[i].text +
-                    '</li>');
+                    data.noShow[i].text;
+                    
+                for (var j=0; j<data.noShow[i].conflictingSessions.length; j++) {
+                   noShowText += 
+                        ' <a href="' + data.noShow[i].conflictingSessionsUrls[j] + '">' +
+                        data.noShow[i].conflictingSessions[j] +
+                        '</a>,';
+                }
+                
+                noShowText = noShowText.substring(0, noShowText.length-1);
+                noShowText += '</li>';         
+                
+                conflictsBox.prepend(noShowText);
             }
             
             for (var i=0; i<data.alreadyPlanned.length; i++) {
                 var alreadyPlannedText =
                     '<li>- ' +
-                    '<a href="' + data.alreadyPlanned[i].sessionUrl + '">' +
-                    data.alreadyPlanned[i].plannedSession +
+                    '<a href="' + data.alreadyPlanned[i].userUrl + '">' +
+                    data.alreadyPlanned[i].plannedUser +
                     '</a> ' +
                     data.alreadyPlanned[i].text;
                     

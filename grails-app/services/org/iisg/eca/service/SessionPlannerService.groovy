@@ -12,6 +12,7 @@ import org.iisg.eca.domain.SessionDateTime
 import org.iisg.eca.domain.SessionParticipant
 import org.iisg.eca.domain.SessionRoomDateTime
 import org.iisg.eca.domain.RoomSessionDateTimeEquipment
+import org.iisg.eca.utils.UserDateTime
 
 /**
  * Service responsible for session planning activities
@@ -113,20 +114,18 @@ class SessionPlannerService {
     }
 
     /**
-     * Returns a map with all the sessions and a list of sessions that have the same participant(s) scheduled at the same time
-     * @return A map of sessions
+     * Returns a map with all the users and a list of sessions that have that same user scheduled at the same time
+     * @return A map of user and the date time of the conflict pointing to a list of sessions that are problematic
      */
-    LinkedHashMap<Session, List<Session>> getSessionConflicts() {
-        LinkedHashMap<Session, List<Session>> sessionMap = new LinkedHashMap<Session, List<Session>>()
-        Map<Long, Session> userSessionMap = new HashMap<Long, Session>()        
+    LinkedHashMap<UserDateTime, List<Session>> getSessionConflicts() {
+        LinkedHashMap<UserDateTime, List<Session>> sessionMap = new LinkedHashMap<UserDateTime, List<Session>>()
         
         Session.executeQuery('''
-            SELECT s, u
+            SELECT s, u, sdt
             FROM Session AS s
             INNER JOIN s.sessionRoomDateTime AS srdt
             INNER JOIN s.sessionParticipants AS sp
-            INNER JOIN sp.user AS u 
-            INNER JOIN srdt.room AS r
+            INNER JOIN sp.user AS u
             INNER JOIN srdt.sessionDateTime AS sdt 
             WHERE EXISTS (
                 FROM Session AS s2
@@ -138,24 +137,15 @@ class SessionPlannerService {
                 AND srdt.sessionDateTime.id = srdt2.sessionDateTime.id
                 AND sp.user.id = sp2.user.id
             )
-            ORDER BY r.roomNumber DESC, sdt.indexNumber DESC
-        ''', [dateId: pageInformation.date.id]).each { sessionAndUser -> 
-            Session session = sessionAndUser[0]
-            User user = sessionAndUser[1]
+            ORDER BY sdt.indexNumber DESC
+        ''', [dateId: pageInformation.date.id]).each { conflict -> 
+            Session session = conflict[0]
+            User user = conflict[1]
+            SessionDateTime dateTime = conflict[2]
             
-            if (userSessionMap.containsKey(user.id)) {
-                Session otherSession = userSessionMap.get(user.id)
-                List<Session> sessions = sessionMap.get(otherSession)
-                if (!sessions.contains(session)) {
-                    sessions.add(session)
-                }
-            }
-            else {
-                userSessionMap.put(user.id, session)
-                if (!sessionMap.containsKey(session)) {
-                    sessionMap.put(session, new ArrayList<Session>())
-                }
-            }
+            UserDateTime userDateTime = new UserDateTime(user, dateTime)
+            List<Session> sessions = sessionMap.get(userDateTime, new ArrayList<Session>())
+            sessions.add(session)          
         }
         
         sessionMap
@@ -187,15 +177,17 @@ class SessionPlannerService {
     /**
      * Returns all the sessions where at least one of the participants 
      * is not present at the scheduled time
-     * @return Sessions ordered by the room code and then by date/time they are planned in
+     * @return A map of the user with a conflict pointing to a list of sessions that are problematic
      */
-    List<Session> getSessionsWithNotPresentParticipants() {
+    LinkedHashMap<User, List<Session>> getSessionsWithNotPresentParticipants() {
+        LinkedHashMap<User, List<Session>> sessionMap = new LinkedHashMap<User, List<Session>>()
+        
         Session.executeQuery(''' 
-            SELECT DISTINCT s
+            SELECT DISTINCT s, u
             FROM Session AS s
             INNER JOIN s.sessionRoomDateTime AS srdt
             INNER JOIN s.sessionParticipants AS sp
-            INNER JOIN srdt.room AS r
+            INNER JOIN sp.user AS u
             INNER JOIN srdt.sessionDateTime AS sdt 
             WHERE EXISTS (
                 FROM ParticipantDate AS p
@@ -206,8 +198,16 @@ class SessionPlannerService {
                 AND dt.id = srdt.sessionDateTime.id
                 AND sp.user.id = u.id
             )
-            ORDER BY r.roomNumber DESC, sdt.indexNumber DESC
-        ''', [dateId: pageInformation.date.id])
+            ORDER BY sdt.indexNumber DESC
+        ''', [dateId: pageInformation.date.id]).each { conflict -> 
+            Session session = conflict[0]
+            User user = conflict[1]
+            
+            List<Session> sessions = sessionMap.get(user, new ArrayList<Session>())
+            sessions.add(session)    
+        }
+        
+        sessionMap
     }
 
     /**

@@ -499,31 +499,33 @@ class SessionController {
             List<Map> alreadyPlanned = new ArrayList<Map>()
             List<Map> equipmentProblems = new ArrayList<Map>()
 
-            sessionPlannerService.getSessionsWithNotPresentParticipants().each { session -> 
+            sessionPlannerService.getSessionsWithNotPresentParticipants().each { user, conflictingSessions ->
                  noShow.add([
-                         plannedSession: session.sessionRoomDateTime.first().toString(),
-                         sessionUrl:     eca.createLink(controller: 'session', action: 'show', id: session.id),
-                         text:           g.message(code: 'session.noShow.label')
+                        plannedUser:               user.toString(),
+                        userUrl:                   eca.createLink(controller: 'participant', action: 'show', id: user.id),                         
+                        conflictingSessions:       conflictingSessions.collect { it.sessionRoomDateTime.first().toString() },
+                        conflictingSessionsUrls:   conflictingSessions.collect { eca.createLink(controller: 'session', action: 'show', id: it.id) },
+                        text:                      g.message(code: 'session.noShow.label')
                  ])
             }
 
-            sessionPlannerService.getSessionConflicts().each { session, conflictingSessions ->
+            sessionPlannerService.getSessionConflicts().each { userDateTime, conflictingSessions ->
                  alreadyPlanned.add([
-                         plannedSession:            session.sessionRoomDateTime.first().toString(),
-                         sessionUrl:                eca.createLink(controller: 'session', action: 'show', id: session.id),
-                         conflictingSessions:       conflictingSessions.collect { it.sessionRoomDateTime.first().toString() },
-                         conflictingSessionsUrls:   conflictingSessions.collect { eca.createLink(controller: 'session', action: 'show', id: it.id) },
-                         text:                      g.message(code: 'session.sessionConflict.label')
+                        plannedUser:               userDateTime.getUser().toString(),
+                        userUrl:                   eca.createLink(controller: 'participant', action: 'show', id: userDateTime.getUser().id),
+                        conflictingSessions:       conflictingSessions.collect { it.sessionRoomDateTime.first().toString() },
+                        conflictingSessionsUrls:   conflictingSessions.collect { eca.createLink(controller: 'session', action: 'show', id: it.id) },
+                        text:                      g.message(code: 'session.sessionConflict.label')
                  ])
             }
 
             sessionPlannerService.getSessionsWithEquipmentConflicts().each { session -> 
                  equipmentProblems.add([
-                         plannedSession: session.sessionRoomDateTime.first().toString(),
-                         sessionUrl:     eca.createLink(controller: 'session', action: 'show', id: session.id),
-                         plannedRoom:    session.sessionRoomDateTime.first().room.toString(),
-                         roomUrl:        eca.createLink(controller: 'room', action: 'show', id: session.sessionRoomDateTime.first().room.id),
-                         text:           g.message(code: 'session.equipmentProblem.label')
+                        plannedSession: session.sessionRoomDateTime.first().toString(),
+                        sessionUrl:     eca.createLink(controller: 'session', action: 'show', id: session.id),
+                        plannedRoom:    session.sessionRoomDateTime.first().room.toString(),
+                        roomUrl:        eca.createLink(controller: 'room', action: 'show', id: session.sessionRoomDateTime.first().room.id),
+                        text:           g.message(code: 'session.equipmentProblem.label')
                  ])
             }
              
