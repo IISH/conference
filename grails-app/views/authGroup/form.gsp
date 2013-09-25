@@ -2,7 +2,6 @@
 <html>
     <head>
         <meta name="layout" content="main">
-        <g:javascript src="users-autocomplete.js" />
     </head>
     <body>
         <form method="post" action="#">
@@ -41,7 +40,7 @@
                     <ul class="property-value">
                         <g:each in="${users}" var="user" status="i">
                             <li>
-                                <eca:participantAutoComplete name="User_${i}.id" labelValue="${user.lastName + ', ' + user.firstName}" idValue="${user.id}" required="required" />
+                                <eca:usersAutoComplete name="User_${i}.id" labelValue="${user.lastName + ', ' + user.firstName}" idValue="${user.id}" queryName="allUsers" required="required" />
                                 <span class="ui-icon ui-icon-circle-minus"></span>
                             </li>
                         </g:each>
@@ -53,7 +52,7 @@
                         </li>
 
                         <li class="hidden">
-                            <eca:participantAutoComplete name="User_null.id" labelValue="" idValue="" required="required" />
+                            <eca:usersAutoComplete name="User_null.id" labelValue="" idValue="" queryName="allUsers" required="required" />
                             <span class="ui-icon ui-icon-circle-minus"></span>
                         </li>
                     </ul>

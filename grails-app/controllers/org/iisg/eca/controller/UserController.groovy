@@ -13,6 +13,11 @@ class UserController {
     def springSecurityService
 
     /**
+     * Information about the current page
+     */
+    def pageInformation
+
+    /**
      * Default action: Redirects to 'show' method, which will display information of the logged in user
      */
     def index() {
@@ -88,19 +93,38 @@ class UserController {
     }
 
     /**
-     * Returns a list will all users
+     * Returns a list will all users for auto complete boxes
      * (AJAX call)
      */
-    def users() {
-        // If this is an AJAX call, continue
-        if (request.xhr) {
-            // Return all users
-            render User.withCriteria {
-                order('lastName', 'asc')
-                order('firstName', 'asc')
-            }.collect { user ->
-                [label: "${user.lastName}, ${user.firstName}", value: user.id]
-            } as JSON
-        }
+    def usersAutoComplete() {
+       // If this is an AJAX call, continue
+       if (request.xhr) {
+           // By default, only return users that are a participant in the current event date
+           def criteria = User.allParticipants(pageInformation.date)
+
+           if (params.query) {
+               criteria = User."$params.query"(pageInformation.date)
+           }
+
+           String[] searchTerms = params.terms.toString().split()
+           def users = criteria {
+               projections {
+                   distinct(['id', 'lastName', 'firstName'])
+               }
+
+               or {
+                   for (String searchTerm : searchTerms) {
+                       if (!searchTerm.isEmpty()) {
+                           like('lastName', "%${searchTerm}%")
+                           like('firstName', "%${searchTerm}%")
+                       }
+                   }
+               }
+           }
+
+           render users.collect { user ->
+               [label: "${user[1]}, ${user[2]}", value: user[0]]
+           } as JSON
+       }
     }
 }

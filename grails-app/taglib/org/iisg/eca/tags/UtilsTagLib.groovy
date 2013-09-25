@@ -253,29 +253,7 @@ class UtilsTagLib {
         builder.input(attrs)
     }
 
-    /**
-     * Creates a participant auto complete field
-     */
-    def participantAutoComplete = { attrs -> 
-        MarkupBuilder builder = new MarkupBuilder(out)
-        builder.doubleQuotes = true
-        
-        String name = attrs['name']
-        String value = attrs['idValue']
-        
-        attrs['value'] = attrs['labelValue']
-        attrs['type'] = "text"
-        attrs['class'] = "${attrs['class']} participant-autocomplete ui-autocomplete-loading"
-        
-        attrs.remove('name')
-        attrs.remove('idValue')
-        attrs.remove('labelValue')
-        
-        builder.input(type: "hidden", name: name, value: value)
-        builder.input(attrs)        
-    }
-
-    def participantAutoCompleteAjax = { attrs ->
+    def usersAutoComplete = { attrs ->
         MarkupBuilder builder = new MarkupBuilder(out)
         builder.doubleQuotes = true
 
@@ -285,7 +263,7 @@ class UtilsTagLib {
 
         attrs['value'] = attrs['labelValue']
         attrs['type'] = "text"
-        attrs['class'] = "${attrs['class']} participant-autocomplete-ajax"
+        attrs['class'] = "${attrs['class']} users-autocomplete"
 
         attrs.remove('name')
         attrs.remove('idValue')

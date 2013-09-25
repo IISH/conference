@@ -17,7 +17,7 @@
         <form method="post" action="#">
             <fieldset class="form">
                 <div class="required">
-                    <label class="property-label" for="roomName">
+                    <label class="property-label">
                         <g:message code="user.email.label" />
                         <span class="required-indicator">*</span>
                     </label>

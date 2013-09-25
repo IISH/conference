@@ -108,12 +108,6 @@ class User extends DefaultDomain {
         department      maxSize: 255,   nullable: true
         cv                              nullable: true
         extraInfo                       nullable: true
-        papers          validator: { val, obj ->
-                            /*Integer maxPapers = Setting.getByEvent(Setting.findAllByProperty(Setting.MAX_PAPERS_PER_PERSON_PER_SESSION))?.value?.toInteger()
-                            if (maxPapers && (obj?.papers?.findAll { !it.deleted && (it.date.id == pageInformation.date.id) }?.size() > maxPapers)) {
-                                "paper.validation.max.message"
-                            } */
-                        }
     }
 
     static namedQueries = {
@@ -146,6 +140,16 @@ class User extends DefaultDomain {
 
             participantDates {
                 'in'('state.id', [ParticipantState.PARTICIPANT_DATA_CHECKED, ParticipantState.PARTICIPANT])
+                eq('date.id', date.id)
+            }
+        }
+
+        allParticipantsSoftState { date ->
+            allParticipantUsers()
+
+            participantDates {
+                'in'('state.id', [  ParticipantState.NEW_PARTICIPANT, ParticipantState.PARTICIPANT_DATA_CHECKED,
+                                    ParticipantState.PARTICIPANT, ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
                 eq('date.id', date.id)
             }
         }

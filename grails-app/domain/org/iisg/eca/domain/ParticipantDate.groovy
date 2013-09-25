@@ -52,60 +52,6 @@ class ParticipantDate extends EventDateDomain {
         lowerFeeText    nullable: true, maxSize: 255
     }
 
-    static namedQueries = {
-        allParticipants { date ->
-            'in'('state.id', [ParticipantState.PARTICIPANT_DATA_CHECKED, ParticipantState.PARTICIPANT])
-
-            user {
-                eq('deleted', false)
-                eq('date.id', date.id)
-
-                order('lastName', "asc")
-                order('firstName', "asc")
-            }
-        }
-        
-        paperAccepted { date ->
-            allParticipants(date)
-            
-            user {
-                papers {
-                    eq('state.id', PaperState.PAPER_ACCEPTED)
-                    eq('date.id', date.id)
-                }
-            }
-        }
-
-        paperInConsideration { date ->
-            allParticipants(date)
-            
-            user {
-                papers {
-                    eq('state.id', PaperState.PAPER_IN_CONSIDERATION)
-                    eq('date.id', date.id)
-                }
-            }
-        }
-
-        paperNotAccepted { date ->
-            allParticipants(date)
-            
-            user {
-                papers {
-                    eq('state.id', PaperState.PAPER_NOT_ACCEPTED)
-                    eq('date.id', date.id)
-                }
-            }
-        }
-        
-        lowerFeeNotAnswered { date -> 
-            allParticipants(date)
-            
-            eq('lowerFeeRequested', true)
-            eq('lowerFeeAnswered', false)
-        }
-    }
-    
     void updateByQueryType(String queryType) {
         // Workaround for Hibernate exception "two open sessions" when using Quartz
         Sql sql = new Sql(dataSource)

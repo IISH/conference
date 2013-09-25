@@ -5,7 +5,6 @@
         <meta name="layout" content="main">
         <g:javascript src="network.js" />
         <g:javascript src="participants-in-sessions.js" />
-        <g:javascript src="participants-autocomplete.js" />
     </head>
     <body>
         <input type="hidden" name="id" value="${params.id}" />
@@ -89,8 +88,7 @@
                     <input type="hidden" name="NetworkChair_${i}.id" value="${instance.chair.id}" />
                     <label class="property-label">
                       <g:message code="user.multiple.label" />
-                      <eca:participantAutoComplete name="NetworkChair_${i}.chair.id" labelValue="${instance.chair.lastName + ', ' + instance.chair.firstName}" idValue="${instance.chair.id}" required="required" />
-                      <!--<g:select id="chair" name="NetworkChair_${i}.chair.id" value="${instance.chair.id}" optionKey="id" class="property-value" from="${users}" required="required" />-->
+                      <eca:usersAutoComplete name="NetworkChair_${i}.chair.id" labelValue="${instance.chair.lastName + ', ' + instance.chair.firstName}" idValue="${instance.chair.id}" queryName="allUsers" required="required" />
                     </label>
                     <label class="property-label">
                       <g:message code="networkChair.isMainChair.label" />
@@ -108,8 +106,7 @@
                   <input type="hidden" name="NetworkChair_null.id" />
                   <label class="property-label">
                     <g:message code="user.multiple.label" />
-                    <eca:participantAutoComplete name="NetworkChair_null.chair.id" labelValue="" idValue="" required="required" />
-                    <!--<g:select id="chair" name="NetworkChair_${i}.chair.id" optionKey="id" class="property-value" from="${users}" required="required" />-->
+                    <eca:usersAutoComplete name="NetworkChair_null.chair.id" labelValue="" idValue="" queryName="allUsers" required="required" />
                   </label>
                   <label class="property-label">
                     <g:message code="networkChair.isMainChair.label" />

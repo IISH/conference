@@ -440,7 +440,7 @@ class SessionController {
         // If this is an AJAX call, continue
         if (request.xhr) {
             // Let the participantService come up with all the participants for the current event date
-            List<User> participants = participantService.allParticipants
+            List<User> participants = User.allParticipantsSoftState(pageInformation.date).list()
 
             // Return all participants and their paper, which are still not added to a session
             render participants.collect { user ->

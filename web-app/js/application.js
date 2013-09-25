@@ -63,6 +63,34 @@ var setDatePicker = function(element, increaseDay) {
     }
 }
 
+var addAutoComplete = function(element) {
+    // Have to use listener for auto complete added to dynamically added input boxes
+    $(element).on('focus', function() {
+        $(this).autocomplete({
+            minLength: 3,
+            source: function(request, response) {
+                var queryName = $(this.element).prevAll(".ac-query").val();
+
+                $.getJSON(guessUrl('user/usersAutoComplete'), {query: queryName, terms: request.term}, function(data) {
+                    response(data);
+                });
+            },
+            search: function(event, ui) {
+                $(event.target).prevAll(".ac-value").val("");
+            },
+            focus: function(event, ui) {
+                $(event.target).val(ui.item.label);
+                return false;
+            },
+            select: function(event, ui) {
+                $(event.target).val(ui.item.label);
+                $(event.target).prevAll(".ac-value").val(ui.item.value);
+                return false;
+            }
+        });
+    });
+}
+
 var makeResizable = function(element) {
     element = $(element);
     var maxSize = parseInt(element.css('max-width').replace('px', '')) + 8;
@@ -79,7 +107,7 @@ var makeResizable = function(element) {
 var createNewItem = function(item, lastItem) {
     var i = -1;
     if ((lastItem.length !== 0) && (lastItem.hasClass('column') || lastItem.is('li'))) {
-        var nameSplit = lastItem.find('input, select, textarea').attr("name").split('.');
+        var nameSplit = lastItem.find('input[name], select[name], textarea[name]').attr("name").split('.');
         var number = nameSplit[0].split('_')[1];
         if ($.isNumeric(number)) {
             i = number;
@@ -89,36 +117,34 @@ var createNewItem = function(item, lastItem) {
 
     var clone = item.clone(true);
 
-    clone.find('input, select, textarea').each(function() {
+    clone.find('input[name], select[name], textarea[name]').each(function() {
         var name = $(this).attr("name");
-        
-        if (name !== undefined) {
-            if (name.indexOf("null") === -1) {
-                var nameSplit = name.split("_");
-                $(this).attr("name", nameSplit[0] + "_" + i + nameSplit[1]);
-                $(this).attr("id", nameSplit[0] + "_" + i + nameSplit[1]);
+
+        if (name.indexOf("null") === -1) {
+            var nameSplit = name.split("_");
+            $(this).attr("name", nameSplit[0] + "_" + i + nameSplit[1]);
+            $(this).attr("id", nameSplit[0] + "_" + i + nameSplit[1]);
+        }
+        else {
+            $(this).attr("name", name.replace("null", i));
+            $(this).attr("id", name.replace("null", i));
+        }
+
+        if (name.match(/day$/)) {
+            $(this).val(lastItem.find('.datepicker').val());
+            if ($(this).val().trim() === "") {
+                var startDate = item.parents('.form').find('input[name$=startDate]');
+                $(this).val(startDate.val() + "sd");
+            }
+        }
+        if (name.match(/dayNumber$/)) {
+            var number = eval(lastItem.find('input[type=number]').val());
+            if (number) {
+                $(this).val(number+1);
             }
             else {
-                $(this).attr("name", name.replace("null", i));
-                $(this).attr("id", name.replace("null", i));
+                $(this).val(1);
             }
-        
-            if (name.match(/day$/)) {
-                $(this).val(lastItem.find('.datepicker').val());
-                if ($(this).val().trim() === "") {
-                    var startDate = item.parents('.form').find('input[name$=startDate]');
-                    $(this).val(startDate.val() + "sd");
-                }
-            }
-            if (name.match(/dayNumber$/)) {
-                var number = eval(lastItem.find('input[type=number]').val());
-                if (number) {
-                    $(this).val(number+1);
-                }
-                else {
-                    $(this).val(1);
-                }
-            }       
         }
     });
 
@@ -127,10 +153,8 @@ var createNewItem = function(item, lastItem) {
         setDatePicker(this, hasDate);
     });
     
-     clone.find('.participant-autocomplete').each(function() {      
-        if ($.isFunction(addAutoComplete)) {
-            addAutoComplete(this);
-        }
+    clone.find('.users-autocomplete').each(function() {
+        addAutoComplete(this);
     });
     
     clone.removeClass("hidden");  
@@ -146,7 +170,7 @@ var removeAnItem = function(toBeRemoved, classToStop) {
 
     var next = toBeRemoved.next();
     while (!next.hasClass(classToStop)) {
-        var elements = next.find('input, select')
+        var elements = next.find('input[name], select[name]')
         var nameSplit = elements.attr("name").split('.');
         var number = nameSplit[0].split('_')[1];
         if ($.isNumeric(number)) {
@@ -622,6 +646,12 @@ $(document).ready(function() {
             preview.find('#to-label').next().html(data.to);
             preview.find('#subject-label').next().html(data.subject);
             preview.find('#body-label').next().html(data.body);
+        });
+    });
+
+    $(document).ready(function() {
+        $('.users-autocomplete').each(function() {
+            addAutoComplete(this);
         });
     });
 });

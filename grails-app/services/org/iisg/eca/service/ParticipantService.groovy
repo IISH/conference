@@ -17,26 +17,6 @@ class ParticipantService {
     def pageInformation
 
     /**
-     * Returns a list of all participants for the current event date
-     * @return A list of users who are participants in the current event date
-     */
-    List<User> getAllParticipants() {
-        User.withCriteria {
-            participantDates {
-                'in'('state.id', [ParticipantState.NEW_PARTICIPANT, ParticipantState.PARTICIPANT_DATA_CHECKED,
-                        ParticipantState.PARTICIPANT, ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
-
-                // Make sure the data is filtered here
-                eq('date.id', pageInformation.date.id)
-                eq('deleted', false)
-            }
-
-            order('lastName', 'asc')
-            order('firstName', 'asc')
-        }
-    }
-
-    /**
      * Returns all participants of the current event date with filters set by the user
      * @param params The parameters of the current request containing the filters set by the user
      * @return A map with characters A-Z as key, which lists all participants which last names start with the keys character

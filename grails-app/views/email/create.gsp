@@ -3,7 +3,6 @@
 <html>
     <head>
         <meta name="layout" content="main">
-        <g:javascript src="participants-autocomplete.js" />
     </head>
     <body>
         <input type="hidden" name="id" value="${params.id}" />
@@ -19,7 +18,7 @@
                             <g:message code="participantDate.label" />
                         </label>
                         <span class="property-value">
-                            <eca:participantAutoCompleteAjax name="participant" queryName="${queryName}" placeholder="${placeholder}" />
+                            <eca:usersAutoComplete name="participant" queryName="${queryName}" placeholder="${placeholder}" />
                         </span>
                     </div>
                 </g:if>
