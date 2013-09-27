@@ -74,6 +74,38 @@ class ParticipantSessionService {
     }
 
     /**
+     * Based on the rules as set for the current event, create a blacklist of users
+     * for the specified type in the specified session
+     * @param session The session to create a blacklist for
+     * @param type The participant type to create a blacklist for
+     * @return A set of all participants that cannot be added to the specified session with the specified type
+     */
+    Set<User> getBlacklistForTypeInSession(Session session, ParticipantType type) {
+        Set<User> participants = new HashSet<User>()
+
+        // Check for every individual rule, which participants with what type should be added to the blacklist
+        ParticipantTypeRule.getRulesForParticipantType(type).each { rule ->
+            if (rule.firstType.id == type.id) {
+                participants.addAll(getParticipantsOfType(rule.secondType, session))
+            }
+            else if (rule.secondType.id == type.id) {
+                participants.addAll(getParticipantsOfType(rule.firstType, session))
+            }
+        }
+
+        // And of course, participants who are already in the specified session
+        // with the specified type cannot be added twice
+        participants.addAll(getParticipantsOfType(type, session))
+
+        // In case the participant should be added with an paper, blacklist those without (open) papers
+        if (type.withPaper) {
+            participants.addAll(getParticipantsWithoutOpenPapers())
+        }
+
+        participants
+    }
+
+    /**
      * Returns a list with information about every participant added to the given session
      * @param session The session in question
      * @return A list of <code>ParticipantSessionInfo</code> objects
@@ -280,37 +312,5 @@ class ParticipantSessionService {
             WHERE p.session.id = :sessionId
             GROUP BY e
         ''', [sessionId: session.id])
-    }
-
-    /**
-     * Based on the rules as set for the current event, create a blacklist of users
-     * for the specified type in the specified session
-     * @param session The session to create a blacklist for
-     * @param type The participant type to create a blacklist for
-     * @return A list of all participants that cannot be added to the specified session with the specified type
-     */
-    List<User> getBlacklistForTypeInSession(Session session, ParticipantType type) {
-        List<User> participants = new ArrayList<User>()
-
-        // Check for every individual rule, which participants with what type should be added to the blacklist
-        ParticipantTypeRule.getRulesForParticipantType(type).each { rule ->
-            if (rule.firstType.id == type.id) {
-                participants.addAll(getParticipantsOfType(rule.secondType, session))
-            }
-            else if (rule.secondType.id == type.id) {
-                participants.addAll(getParticipantsOfType(rule.firstType, session))
-            }
-        }
-
-        // And of course, participants who are already in the specified session
-        // with the specified type cannot be added twice
-        participants.addAll(getParticipantsOfType(type, session))
-
-        // In case the participant should be added with an paper, blacklist those without (open) papers
-        if (type.withPaper) {
-            participants.addAll(getParticipantsWithoutOpenPapers())
-        }
-
-        participants.unique()
     }
 }

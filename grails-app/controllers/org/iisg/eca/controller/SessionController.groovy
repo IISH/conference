@@ -436,32 +436,38 @@ class SessionController {
      * Returns a list will all participants that have signed up for the current event date
      * (AJAX call)
      */
-    def participants() {
+    def sessionParticipantsAutoComplete() {
         // If this is an AJAX call, continue
-        if (request.xhr) {
-            // Let the participantService come up with all the participants for the current event date
-            List<User> participants = User.allParticipantsSoftState(pageInformation.date).list()
-
-            // Return all participants and their paper, which are still not added to a session
-            render participants.collect { user ->
-                def papers = Paper.findAllByUserAndSessionIsNull(user)
-                [label: "${user.firstName} ${user.lastName}", value: user.id, papers: papers.collect { [label: it.title, value: it.id] }]
-            } as JSON
-        }
-    }
-    
-    /**
-     * Returns a blacklist for participants with a specific type in a specific session
-     * (AJAX call)
-     */
-    def participantsWithType() {
-        // If this is an AJAX call with a type id and session id, continue
         if (request.xhr && params.type_id?.isLong() && params.session_id?.isLong()) {
             ParticipantType selectedType = ParticipantType.findById(params.long('type_id'))
             Session session = Session.findById(params.long('session_id'))
+            def criteria = User.allParticipantsSoftState(pageInformation.date)
 
-            // Return the ids of all blacklisted participants for this type in this session
-            render participantSessionService.getBlacklistForTypeInSession(session, selectedType).collect { it.id } as JSON
+            String[] searchTerms = params.terms.toString().split()
+            List<User> users = (List<User>) criteria {
+                or {
+                    for (String searchTerm : searchTerms) {
+                        if (!searchTerm.isEmpty()) {
+                            like('lastName', "%${searchTerm}%")
+                            like('firstName', "%${searchTerm}%")
+                        }
+                    }
+                }
+            }
+
+            Set<User> blacklist = participantSessionService.getBlacklistForTypeInSession(session, selectedType)
+            users.removeAll(blacklist)
+
+            // Return all participants and their paper, which are still not added to a session
+            render users.collect { user ->
+                if (selectedType.withPaper) {
+                    List<Paper> papers = Paper.findAllByUserAndSessionIsNull(user)
+                    [label: "${user.firstName} ${user.lastName}", value: user.id, papers: papers.collect { [label: it.title, value: it.id] }]
+                }
+                else {
+                    [label: "${user.firstName} ${user.lastName}", value: user.id, papers: []]
+                }
+            } as JSON
         }
     }
 

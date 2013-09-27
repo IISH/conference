@@ -210,12 +210,12 @@
                                     </span>
                                 </div>
                             </g:if>
-                            <div>
+                            <div class="buttons">
                                 <input type="button" name="add-participant" class="property-value" value="${g.message(code: "default.add.label", args: [type])}" />
                             </div>
                         </div>
                     </g:each>
-              </div>
+                  </div>
                   <div id="loading">
                       <div class="loading-helper">
                           <span class="loading-text"><g:message code="default.please.wait" /></span>
