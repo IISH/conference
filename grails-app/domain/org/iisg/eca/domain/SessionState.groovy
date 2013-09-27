@@ -19,6 +19,7 @@ class SessionState extends EventDomain {
     static mapping = {
         table 'session_states'
         version false
+        cache true
 
         id                      column: 'session_state_id'
         description             column: 'description'

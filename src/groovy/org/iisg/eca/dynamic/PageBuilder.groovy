@@ -274,7 +274,7 @@ class PageBuilder {
                         }
                         else if (c.interactive && (c.property.manyToOne || c.property.oneToOne)) {
                             builder.td {
-                                builder."eca:radioSelect"(name: c.interactive + "\${i+1}", class: c.interactive, labelName: "shortDescription", "value": "\${row.${c.columnPath.join('.')}.id}", values: "\${${c.property.type.name}.list()}")
+                                builder."eca:radioSelect"(name: c.interactive + "\${i+1}", class: c.interactive, labelName: "shortDescription", "value": "\${row.${c.columnPath.join('.')}.id}", values: "\${${c.name}ListCache}")
 
                                 builder."span"(class: "ui-icon ui-icon-check invisible", "")
                                 builder."span"(class: "ui-icon ui-icon-alert invisible", "")
@@ -476,12 +476,14 @@ class PageBuilder {
                         else if (c.property.type == String)  {
                             builder.input(type: "text", name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", placeholder: "\${g.message(code: 'default.filter.on')} \${eca.fallbackMessage(code: '${getCode(c.property)}', fbCode: '${getFbCode(c.property)}').toLowerCase()}")
                         }
-                        else if (c.property.manyToOne || c.property.oneToOne) {
+                        else if (c.property.manyToOne || c.property.oneToOne) {                            
+                            builder."g:set"(var: "${c.name}ListCache", value: "\${${c.property.type.name}.list()}")
+                            
                             if (c.filter) {
-                                renderEditor.render(c, [name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", noSelection: "\${[null: '']}"])
+                                renderEditor.render(c, [name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", noSelection: "\${[null: '']}", from: "\${${c.name}ListCache}"])
                             }
                             else {
-                                renderEditor.render(c, [name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", noSelection: "\${[null: 'No filter selected']}"])
+                                renderEditor.render(c, [name: "filter_${element.eid}_${c.name}", value: "\${params.filter_${element.eid}_${c.name}}", noSelection: "\${[null: 'No filter selected']}", from: "\${${c.name}ListCache}"])
                             }
                         }
                     }

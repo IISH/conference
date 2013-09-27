@@ -19,7 +19,8 @@ class PaperState extends EventDomain {
     static mapping = {
         table 'paper_states'
         version false
-
+        cache true
+        
         id                  column: 'paper_state_id'
         description         column: 'description'
         shortDescription    column: 'short_description'
