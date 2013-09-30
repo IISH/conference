@@ -17,13 +17,26 @@
         
         <form method="post" action="#">
           <fieldset class="form">
+            <div>
+              <label class="property-label">
+                  #
+              </label>
+              <span class="property-value">
+                  ${template.id}
+              </span>
+            </div>
             <div class="${hasErrors(bean: template, field: 'usedBy', 'error')} required">
               <label class="property-label" for="emailTemplate.description">
                 <g:message code="emailTemplate.description.label" />
                 <span class="required-indicator">*</span>
               </label>
               <span class="property-value">
-                <input id="emailTemplate.description" maxlength="255" name="emailTemplate.description" value="${template?.description}" type="text" required="required" />
+                <sec:ifAnyGranted roles="superAdmin">
+                  <input id="emailTemplate.description" maxlength="255" name="emailTemplate.description" value="${template?.description}" type="text" required="required" />
+                </sec:ifAnyGranted>
+                <sec:ifNotGranted roles="superAdmin">
+                  ${template?.description}
+                </sec:ifNotGranted>
               </span>
             </div>
             <div class="${hasErrors(bean: template, field: 'subject', 'error')} required">
@@ -80,6 +93,14 @@
                 <input type="number" id="emailTemplate.sortOrder" name="emailTemplate.sortOrder" value="${template?.sortOrder}" />
               </span>
             </div>
+            <div class="${hasErrors(bean: template, field: 'showInBackend', 'error')} ">
+              <label class="property-label" for="emailTemplate.showInBackend">
+                <g:message code="emailTemplate.showInBackend.label" />
+              </label>
+              <span class="property-value">
+                <g:checkBox name="emailTemplate.showInBackend" value="${template?.showInBackend}" />
+              </span>
+            </div>
             <div class="${hasErrors(bean: template, field: 'testAfterSave', 'error')} ">
               <label class="property-label" for="emailTemplate.testAfterSave">
                 <g:message code="emailTemplate.testAfterSave.label" />
@@ -103,9 +124,7 @@
               <g:message code="default.button.cancel.label" />
             </eca:link>
             <input type="submit" name="btn_save" class="btn_save" value="${message(code: 'default.button.save.label')}" />
-            <g:if test="${params.action != 'create'}">
-              <input type="submit" name="btn_save_close" class="btn_save_close" value="${message(code: 'default.button.save.close.label')}" />
-            </g:if>
+            <input type="submit" name="btn_save_close" class="btn_save_close" value="${message(code: 'default.button.save.close.label')}" />
           </fieldset>
         </form>
     </body>

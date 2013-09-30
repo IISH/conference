@@ -71,7 +71,7 @@ class EmailController {
         if (request.post) {
             List<User> users
             def criteria = User.allParticipants(pageInformation.date)
-
+            
             // The email template chosen could contain a query type (a named query to call)
             if (emailTemplate.queryType) {
                 criteria = User."${emailTemplate.queryType}"(pageInformation.date)
@@ -92,8 +92,15 @@ class EmailController {
                         eq('state.id', params.long('paperState'))
                     }
 
-                    if (filterMap.eventDate) {
-                        'in'('date.id', params.eventDate)
+                    if (filterMap.eventDates && (params.eventDates instanceof String) && params.eventDates?.isLong()) {
+                        eq('date.id', params.eventDates.toLong())
+                    }
+                    else if (filterMap.eventDates && params.eventDates) {
+                        'in'('date.id', params.eventDates*.toLong())
+                    }
+                    // If nothing is selected, then nothing is done...
+                    else if (filterMap.eventDates && !params.eventDates) {
+                        eq('date.id', -100L)
                     }
                 }
             }

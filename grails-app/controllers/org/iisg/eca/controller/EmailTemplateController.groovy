@@ -1,6 +1,7 @@
 package org.iisg.eca.controller
 
 import org.iisg.eca.domain.EmailTemplate
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
 /**
  * Controller responsible for handling requests on email templates
@@ -37,8 +38,8 @@ class EmailTemplateController {
         // The 'save' button was clicked, save all data
         if (request.post) {
             // Save all email template related data
-            bindData(template, params, [include: ['description', 'subject', 'body', 'sender', 'comment', 'sortOrder',
-                    'testEmail', 'testAfterSave']], "emailTemplate")
+            bindData(template, params, [include: ['description', 'subject', 'body', 'sender', 'comment', 
+                    'sortOrder', 'showInBackend', 'testEmail', 'testAfterSave']], "emailTemplate")
 
             // Save the email template and redirect to the previous page if everything is ok
             if (template.save(flush: true)) {
@@ -49,7 +50,7 @@ class EmailTemplateController {
         }
 
         // Show all email template related information
-        render(view: "form", model: [template: template])
+        render(view: "create", model: [template: template])
     }
 
     /**
@@ -77,21 +78,26 @@ class EmailTemplateController {
         // The 'save' button was clicked, save all data
         if (request.post) {
             // Save all email template related data
-            bindData(template, params, [include: ['description', 'subject', 'body', 'sender', 'comment', 'sortOrder',
-                    'testEmail', 'testAfterSave']], "emailTemplate")
+            bindData(template, params, [include: ['subject', 'body', 'sender', 'comment', 'sortOrder', 
+                    'showInBackend', 'testEmail', 'testAfterSave']], "emailTemplate")
 
+            // If the user is a superadmin, he may update the description
+            if (SpringSecurityUtils.ifAnyGranted('superAdmin')) {
+                template.description = params["emailTemplate.description"]
+            }
+            
             // Save the email template and redirect to the previous page if everything is ok
             if (template.save(flush: true)) {
                 flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'emailTemplate.label'), template.toString()])
                 if (params['btn_save_close']) {
-                    redirect(uri: eca.createLink(action: "show", id: template.id, noBase: true))
+                    redirect(uri: eca.createLink(previous: true, noBase: true))
                     return
                 }
             }
         }
 
         // Show all email template related information
-        render(view: "form", model: [template: template])
+        render(view: "edit", model: [template: template])
     }
 
     /**

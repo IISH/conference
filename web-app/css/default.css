@@ -37,6 +37,11 @@ label {
     color: [label_color];
 }
 
+.property-value label {
+    color: black;
+    margin-right: 5px;
+}
+
 input, textarea, select {
     font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
     font-size: 9pt;

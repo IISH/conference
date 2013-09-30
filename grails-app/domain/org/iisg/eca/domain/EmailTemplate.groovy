@@ -52,7 +52,7 @@ class EmailTemplate extends EventDomain {
     String subject
     String body
     String sender
-    String action
+    String action = "participant"
     String queryType
     int sortOrder = 0
     boolean showInBackend = true

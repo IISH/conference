@@ -180,7 +180,8 @@ class ParticipantController {
             try {
                 // Save all user information
                 bindData(user, params, [include: ['title', 'firstName', 'lastName', 'gender', 'organisation',
-                        'department', 'email', 'address', 'city', 'country', 'phone', 'mobile', 'cv', 'extraInfo']], "User")
+                        'department', 'email', 'address', 'city', 'country', 'phone', 'mobile', 'cv', 
+                        'extraInfo', 'emailDiscontinued']], "User")
                 user.save(failOnError: true)
                 
                 if (!participant && params['add-to-date']?.equals('add')) {

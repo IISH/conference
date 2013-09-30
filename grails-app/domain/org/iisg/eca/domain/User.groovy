@@ -42,6 +42,7 @@ class User extends DefaultDomain {
     String cv
     String extraInfo
     Date dateAdded = new Date()
+    boolean emailDiscontinued = false
 
     static belongsTo = [Country, Group]
     static hasMany = [  groups:                 Group,
@@ -59,27 +60,28 @@ class User extends DefaultDomain {
         version false
         sort "lastName"
 
-        id              column: 'user_id'
-        email           column: 'email'
-        lastName        column: 'lastname'
-        firstName       column: 'firstname'
-        gender          column: 'gender',       sqlType: 'enum'
-        title           column: 'title'
-        address         column: 'address',      type: 'text'
-        city            column: 'city'
-        country         column: 'country_id'
-        language        column: 'language'
-        password        column: 'password'
-        salt            column: 'salt'
-        requestCode     column: 'request_code'
-        phone           column: 'phone'
-        fax             column: 'fax'
-        mobile          column: 'mobile'
-        organisation    column: 'organisation'
-        department      column: 'department'
-        cv              column: 'cv',           type: 'text'
-        extraInfo       column: 'extra_info',   type: 'text'
-        dateAdded       column: 'date_added'
+        id                  column: 'user_id'
+        email               column: 'email'
+        lastName            column: 'lastname'
+        firstName           column: 'firstname'
+        gender              column: 'gender',       sqlType: 'enum'
+        title               column: 'title'
+        address             column: 'address',      type: 'text'
+        city                column: 'city'
+        country             column: 'country_id'
+        language            column: 'language'
+        password            column: 'password'
+        salt                column: 'salt'
+        requestCode         column: 'request_code'
+        phone               column: 'phone'
+        fax                 column: 'fax'
+        mobile              column: 'mobile'
+        organisation        column: 'organisation'
+        department          column: 'department'
+        cv                  column: 'cv',           type: 'text'
+        extraInfo           column: 'extra_info',   type: 'text'
+        dateAdded           column: 'date_added'
+        emailDiscontinued   column: 'email_discontinued'
 
         groups              joinTable: 'users_groups'
         dateTimesNotPresent joinTable: 'participant_not_present'

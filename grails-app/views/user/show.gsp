@@ -69,6 +69,14 @@
                 </span>
             </li>
             <li>
+                <span id="emailDiscontinued-label" class="property-label">
+                    <g:message code="user.emailDiscontinued.label" />
+                </span>
+                <span class="property-value" arial-labelledby="emailDiscontinued-label">
+                    <g:checkBox name="emailDiscontinued" value="${user.emailDiscontinued}" disabled="true" />
+                </span>
+            </li>
+            <li>
                 <span id="address-label" class="property-label">
                     <g:message code="user.address.label" />
                 </span>

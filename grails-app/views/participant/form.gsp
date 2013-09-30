@@ -127,6 +127,14 @@
                                     <input type="email" name="User.email" required="required" maxlength="100" value="${fieldValue(bean: user, field: 'email')}" />
                                 </span>
                             </div>
+                            <div class="${hasErrors(bean: user, field: 'emailDiscontinued', 'error')}">
+                                <label class="property-label">
+                                    <g:message code="user.emailDiscontinued.label" />
+                                </label>
+                                <span class="property-value">
+                                    <g:checkBox name="User.emailDiscontinued" value="${user.emailDiscontinued}" />
+                                </span>
+                            </div>
                             <div class="${hasErrors(bean: user, field: 'address', 'error')} required">
                                 <label class="property-label">
                                     <g:message code="user.address.label" />

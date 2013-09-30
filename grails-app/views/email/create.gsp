@@ -51,7 +51,12 @@
                             <g:message code="eventDate.multiple.label" />
                         </label>
                         <span class="property-value">
-                            <g:select multiple="true" name="eventDates" from="${EventDate.findAllByEvent(curDate.event)}" optionKey="id" optionValue="yearCode" />
+                            <g:each in="${EventDate.findAllByEvent(curDate.event)}" var="eventDate">
+                                <label>
+                                    <g:checkBox name="eventDates" value="${eventDate.id}" checked="${false}" />
+                                    ${eventDate.yearCode}
+                                </label>
+                            </g:each>
                         </span>
                     </div>
                 </g:if>

@@ -71,7 +71,7 @@ class EmailService {
 
             try {
                 // Try to send the email if we have to
-                if (sendEmailTo(sentEmail.user.email, sentEmail.date?.event)) {
+                if (sendEmailTo(sentEmail.user, sentEmail.date?.event)) {
                     mailService.sendMail {
                         from "\"${sentEmail.fromName}\" <${sentEmail.fromEmail}>"
                         to "\"${sentEmail.user.toString()}\" <${sentEmail.user.email}>"
@@ -223,25 +223,24 @@ class EmailService {
     }
 
     /**
-     * Find out whether we have to send the emails really to this email address
-     * @param emailAddress The address to match
+     * Find out whether we have to send the emails really to this user
+     * @param user The user to check
      * @param event The event for which the email is
      * @return Whether we have to send mails to this address
      */
-    private boolean sendEmailTo(String emailAddress, Event event) {
+    private boolean sendEmailTo(User user, Event event) {
         List<Setting> allRegexSettings = Setting.findAllByProperty(Setting.DONT_SEND_EMAILS_TO, [cache: true])
         Setting regexSettingsForEvent = (Setting) Setting.getByEvent(allRegexSettings, event)
         String[] regexs = regexSettingsForEvent.value?.split()
 
         if (regexs && regexs.length > 0) {
             for (String regex : regexs) {
-                if (emailAddress.matches(regex)) {
+                if (user.email.matches(regex)) {
                     return false
                 }
             }
         }
 
-        return true
+        return !user.emailDiscontinued
     }
 }
-
