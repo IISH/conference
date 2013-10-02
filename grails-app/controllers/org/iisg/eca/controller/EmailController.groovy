@@ -77,30 +77,31 @@ class EmailController {
                 criteria = User."${emailTemplate.queryType}"(pageInformation.date)
             }
 
-            // Now extend the criteria with the filters set by the user
-            users = (List<User>) criteria {
-                if (filterMap.participant && params.participant?.isLong()) {
-                    eq('id', params.long('participant'))
-                }
-
-                participantDates {
-                    if (filterMap.participantState && params.participantState?.isLong()) {
-                        eq('state.id', params.long('participantState'))
+            if (filterMap.participant && params.participant?.isLong() && (emailTemplate.queryType != 'networkChairs')) {
+                users = User.findAllById(params.long('participant'))
+            }
+            else {
+                // Now extend the criteria with the filters set by the user
+                users = (List<User>) criteria {
+                    if ((emailTemplate.queryType == 'networkChairs') && filterMap.participant && params.participant?.isLong()) {
+                        eq('id', params.long('participant'))
                     }
 
-                    if (filterMap.paperState && params.paperState?.isLong()) {
-                        eq('state.id', params.long('paperState'))
-                    }
+                    participantDates {
+                        if (filterMap.participantState && params.participantState?.isLong()) {
+                            eq('state.id', params.long('participantState'))
+                        }
 
-                    if (filterMap.eventDates && (params.eventDates instanceof String) && params.eventDates?.isLong()) {
-                        eq('date.id', params.eventDates.toLong())
-                    }
-                    else if (filterMap.eventDates && params.eventDates) {
-                        'in'('date.id', params.eventDates*.toLong())
-                    }
-                    // If nothing is selected, then nothing is done...
-                    else if (filterMap.eventDates && !params.eventDates) {
-                        eq('date.id', -100L)
+                        if (filterMap.eventDates && (params.eventDates instanceof String) && params.eventDates?.isLong()) {
+                            eq('date.id', params.eventDates.toLong())
+                        }
+                        else if (filterMap.eventDates && params.eventDates) {
+                            'in'('date.id', params.eventDates*.toLong())
+                        }
+                        // If nothing is selected, then nothing is done...
+                        else if (filterMap.eventDates && !params.eventDates) {
+                            eq('date.id', -100L)
+                        }
                     }
                 }
             }
