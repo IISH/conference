@@ -233,12 +233,18 @@ class SessionPlannerService {
      * for a specific room, date and time of the current event date
      */
     List<TimeSlot> getSchedule() {
+        // Schedule is only possible with dates, check if dates are configured
+        List<Day> days = Day.list()
+        if (!days) {
+            return null
+        }
+
         // First collect all the necessary information, retrieve all rooms, dates and times...
         List<Object[]> roomDateTimes = (List<Object[]>) Room.executeQuery('''
             SELECT r, dt
             FROM Room AS r, SessionDateTime AS dt
             WHERE dt.day IN :days
-            ORDER BY r.roomNumber, dt.indexNumber''', [days: Day.list()])
+            ORDER BY r.roomNumber, dt.indexNumber''', [days: days])
         
         // ... then retrieve all equipment available in the rooms at specific dates and times
         List<Object[]> equipment = (List<Object[]>) RoomSessionDateTimeEquipment.executeQuery('''

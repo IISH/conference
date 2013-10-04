@@ -132,7 +132,7 @@ class ParticipantController {
             
             // This user is not a participant yet, but the user indicated he/she wants to make him/her one
             if (!participant) {                
-                participant = new ParticipantDate(user: user, state: ParticipantState.get(0), feeState: FeeState.get(0))
+                participant = new ParticipantDate(user: user, state: ParticipantState.get(ParticipantState.NEW_PARTICIPANT), feeState: FeeState.get(FeeState.NO_FEE_SELECTED))
             }
             
             if (user.save(flush: true) && participant.save(flush: true)) {

@@ -1,14 +1,13 @@
 package org.iisg.eca.controller
 
-import org.iisg.eca.jobs.CreateEmailJob
-
-import org.iisg.eca.domain.Setting
-import org.iisg.eca.domain.EmailTemplate
-import org.iisg.eca.domain.ParticipantDate
-import org.apache.tools.ant.taskdefs.SendEmail
-import org.iisg.eca.domain.User
-import org.iisg.eca.domain.SentEmail
 import grails.converters.JSON
+
+import org.iisg.eca.domain.User
+import org.iisg.eca.domain.Setting
+import org.iisg.eca.domain.SentEmail
+import org.iisg.eca.domain.EmailTemplate
+
+import org.iisg.eca.jobs.CreateEmailJob
 
 /**
  * Controller responsible for handling requests on sending emails
@@ -77,16 +76,13 @@ class EmailController {
                 criteria = User."${emailTemplate.queryType}"(pageInformation.date)
             }
 
-            if (filterMap.participant && params.participant?.isLong() && (emailTemplate.queryType != 'networkChairs')) {
+            // If one specific participant/user is selected, then don't use the other filters
+            if (filterMap.participant && params.participant?.isLong()) {
                 users = User.findAllById(params.long('participant'))
             }
             else {
                 // Now extend the criteria with the filters set by the user
                 users = (List<User>) criteria {
-                    if ((emailTemplate.queryType == 'networkChairs') && filterMap.participant && params.participant?.isLong()) {
-                        eq('id', params.long('participant'))
-                    }
-
                     participantDates {
                         if (filterMap.participantState && params.participantState?.isLong()) {
                             eq('state.id', params.long('participantState'))
@@ -103,6 +99,12 @@ class EmailController {
                             eq('date.id', -100L)
                         }
                     }
+
+                    papers {
+                        if (filterMap.paperState && params.paperState?.isLong()) {
+                            eq('state.id', params.long('paperState'))
+                        }
+                    }
                 }
             }
 
@@ -117,6 +119,7 @@ class EmailController {
         String queryName = 'allParticipants'
         String placeholder = g.message(code: 'email.all.participants.label')
 
+        // TODO: Figure out another way to define these actions; should students be defined here as well?
         if (emailTemplate.queryType == 'networkChairs') {
             queryName = emailTemplate.queryType
             placeholder = g.message(code: 'email.all.network.chairs.label')

@@ -4,7 +4,6 @@ package org.iisg.eca.domain
  * Domain class of table holding all possible session states
  */
 class SessionState extends EventDomain {
-    static final long NO_SESSION = 0L
     static final long NEW_SESSION = 1L
     static final long SESSION_ACCEPTED = 2L
     static final long SESSION_NOT_ACCEPTED = 3L

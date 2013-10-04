@@ -44,7 +44,7 @@ class CreateEmailJob {
                 emailService.sendInfoMail("Succesfully created the emails for ${users.size()} participants", """\
                     Succesfully created the emails for ${users.size()} participants.
                     The emails will be emailed soon.
-                """.stripIndent(), date?.event)
+                """.stripIndent().toString(), date?.event)
             }
             catch (Exception e) {
                 StringWriter sw = new StringWriter()
@@ -55,7 +55,7 @@ class CreateEmailJob {
                     Failed to create the emails for ${users.size()} participants.
                     Template used: ${template.description}
                     Exception: ${sw.toString()}
-                """.stripIndent(), date?.event)
+                """.stripIndent().toString(), date?.event)
             }
         }
     }

@@ -7,7 +7,8 @@ import groovy.sql.Sql
 class ParticipantDate extends EventDateDomain {
     def dataSource
     
-    private static final String QUERY_LOWER_FEE_NOT_ANSWERED = "lowerFeeNotAnswered";
+    private static final String QUERY_STUDENT_LOWER_FEE_NOT_ANSWERED = "studentLowerFeeNotAnswered"
+    private static final String QUERY_NO_STUDENT_LOWER_FEE_NOT_ANSWERED = "noStudentLowerFeeNotAnswered"
     
     User user
     ParticipantState state
@@ -57,7 +58,8 @@ class ParticipantDate extends EventDateDomain {
         Sql sql = new Sql(dataSource)
         
         switch (queryType) {
-            case QUERY_LOWER_FEE_NOT_ANSWERED:
+            case QUERY_STUDENT_LOWER_FEE_NOT_ANSWERED:
+            case QUERY_NO_STUDENT_LOWER_FEE_NOT_ANSWERED:
                 sql.executeUpdate("""
                     UPDATE  participant_date
                     SET     lower_fee_requested = 1,

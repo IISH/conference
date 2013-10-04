@@ -23,6 +23,8 @@ class Setting extends EventDomain {
     static final String CHANGE_USER = 'change_user'
     static final String DONT_SEND_EMAILS_TO = 'dont_send_emails_to'
     static final String APPLICATION_TITLE = 'application_title'
+    static final String IP_AUTHENTICATION = 'ip_authentication'
+    static final String CHECK_ACCEPTED_IP = 'check_accepted_ip'
 
     static final String BANNER_IMG = 'banner_img'
     static final String BANNER_BG_IMG = 'banner_bg_img'

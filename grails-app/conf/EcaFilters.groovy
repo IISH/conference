@@ -6,10 +6,11 @@ import org.iisg.eca.domain.UserRole
 import org.iisg.eca.domain.EventDate
 import org.iisg.eca.domain.EventDomain
 import org.iisg.eca.domain.EventDateDomain
+import org.iisg.eca.domain.IPAuthentication
 
+import org.apache.commons.lang.RandomStringUtils
 import org.springframework.context.i18n.LocaleContextHolder
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
-import org.apache.commons.lang.RandomStringUtils
 
 /**
  * All filters for accessing a page
@@ -20,6 +21,25 @@ class EcaFilters {
     def springSecurityService
     
     def filters = {
+
+        /**
+         * Perform IP authentication, is user allowed to access the application?
+         */
+        ipFilter(controller: '*', action: '*', controllerExclude: 'css') {
+            before = {
+                String clientIP = request.getHeader("X-Forwarded-For")?.trim()
+                if (!clientIP || clientIP.isEmpty()) {
+                    clientIP = request.getRemoteAddr()?.trim()
+                }
+
+                if (clientIP && IPAuthentication.isIPAllowed(clientIP)) {
+                    return
+                }
+
+                response.sendError(403)
+                return
+            }
+        }
 
         /**
          *  Every page (except login/logout/xhr) should be in the database, so lookup the page information from the database

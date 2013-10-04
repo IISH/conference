@@ -156,6 +156,18 @@ class User extends DefaultDomain {
             }
         }
 
+        allParticipantsNotDeleted { date ->
+            allParticipantUsers()
+
+            participantDates {
+                not {
+                    'in'('state.id', [  ParticipantState.REMOVED_CANCELLED, ParticipantState.REMOVED_DOUBLE_ENTRY,
+                                        ParticipantState.WILL_BE_REMOVED])
+                }
+                eq('date.id', date.id)
+            }
+        }
+
         paperAccepted { date ->
             allParticipants(date)
 
@@ -183,10 +195,21 @@ class User extends DefaultDomain {
             }
         }
 
-        lowerFeeNotAnswered { date ->
-            allParticipants(date)
+        studentLowerFeeNotAnswered { date ->
+            allParticipantsNotDeleted(date)
 
             participantDates {
+                eq('student', true)
+                eq('lowerFeeRequested', true)
+                eq('lowerFeeAnswered', false)
+            }
+        }
+
+        noStudentLowerFeeNotAnswered { date ->
+            allParticipantsNotDeleted(date)
+
+            participantDates {
+                eq('student', false)
                 eq('lowerFeeRequested', true)
                 eq('lowerFeeAnswered', false)
             }
