@@ -52,10 +52,10 @@ class CreateEmailJob {
 
                 // Failed to create the emails, send a notification email with the exception thrown
                 emailService.sendInfoMail("Failed to create the emails for ${users.size()} participants", """\
-                    Failed to create the emails for ${users.size()} participants.
-                    Template used: ${template.description}
-                    Exception: ${sw.toString()}
-                """.stripIndent().toString(), date?.event)
+                    |Failed to create the emails for ${users.size()} participants.
+                    |Template used: ${template.description}
+                    |Exception: ${sw.toString()}
+                """.stripMargin().toString(), date?.event)
             }
         }
     }

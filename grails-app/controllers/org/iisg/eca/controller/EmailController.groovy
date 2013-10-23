@@ -83,26 +83,30 @@ class EmailController {
             else {
                 // Now extend the criteria with the filters set by the user
                 users = (List<User>) criteria {
-                    participantDates {
-                        if (filterMap.participantState && params.participantState?.isLong()) {
-                            eq('state.id', params.long('participantState'))
-                        }
+                    if (filterMap.participantState || filterMap.eventDates) {
+                        participantDates {
+                            if (filterMap.participantState && params.participantState?.isLong()) {
+                                eq('state.id', params.long('participantState'))
+                            }
 
-                        if (filterMap.eventDates && (params.eventDates instanceof String) && params.eventDates?.isLong()) {
-                            eq('date.id', params.eventDates.toLong())
-                        }
-                        else if (filterMap.eventDates && params.eventDates) {
-                            'in'('date.id', params.eventDates*.toLong())
-                        }
-                        // If nothing is selected, then nothing is done...
-                        else if (filterMap.eventDates && !params.eventDates) {
-                            eq('date.id', -100L)
+                            if (filterMap.eventDates && (params.eventDates instanceof String) && params.eventDates?.isLong()) {
+                                eq('date.id', params.eventDates.toLong())
+                            }
+                            else if (filterMap.eventDates && params.eventDates) {
+                                'in'('date.id', params.eventDates*.toLong())
+                            }
+                            // If nothing is selected, then nothing is done...
+                            else if (filterMap.eventDates && !params.eventDates) {
+                                eq('date.id', -100L)
+                            }
                         }
                     }
 
-                    papers {
-                        if (filterMap.paperState && params.paperState?.isLong()) {
-                            eq('state.id', params.long('paperState'))
+                    if (filterMap.paperState) {
+                        papers {
+                            if (filterMap.paperState && params.paperState?.isLong()) {
+                                eq('state.id', params.long('paperState'))
+                            }
                         }
                     }
                 }
