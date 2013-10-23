@@ -214,6 +214,14 @@ class User extends DefaultDomain {
                 eq('lowerFeeAnswered', false)
             }
         }
+
+        noPaymentInfo { date ->
+            allParticipants(date)
+
+            participantDates {
+                eq('emailPaymentInfo', false)
+            }
+        }
     }
 
     /**

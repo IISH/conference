@@ -238,7 +238,7 @@ class UtilsTagLib {
     
     /**
      * Creates a date field with the given attributes
-     * @attr date REQUIRED The date to be parsed
+     * @attr date The date to be parsed
      */
     def dateField = { attrs -> 
         MarkupBuilder builder = new MarkupBuilder(out)

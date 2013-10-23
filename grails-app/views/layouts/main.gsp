@@ -112,8 +112,7 @@
         <div id="footer" role="contentinfo">
             ${grailsApplication.config.grails.serverURL} -
             <g:message code="default.last.updated" />:
-            <g:formatDate date="${new SimpleDateFormat("yy-MM-dd").parse(Setting.findByProperty(Setting.LAST_UPDATED).value)}" format="MMMMM yyyy" /> -
-            IP address forwarded: ${request.getHeader('X-Forwarded-For')} - IP address remote: ${request.remoteAddr}
+            <g:formatDate date="${new SimpleDateFormat("yy-MM-dd").parse(Setting.findByProperty(Setting.LAST_UPDATED).value)}" format="MMMMM yyyy" />
         </div>
 
         <div class="menu" id="usermenu">

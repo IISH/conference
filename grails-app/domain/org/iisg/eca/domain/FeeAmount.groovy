@@ -8,7 +8,7 @@ class FeeAmount extends EventDateDomain {
     Date endDate
     int numDaysStart
     int numDaysEnd
-    BigDecimal feeAmount
+    BigDecimal feeAmount = new BigDecimal(9999.99)
 
     static belongsTo = FeeState
 

@@ -115,7 +115,7 @@
                                 <span class="required-indicator">*</span>
                             </label>
                             <span class="property-value">
-                                <g:field type="number" name="feeAmount_null.feeAmount" min="0" required="required" />
+                                <g:field type="number" name="feeAmount_null.feeAmount" min="0" required="required" value="9999.99" />
                             </span>
                         </div>
 
@@ -154,7 +154,7 @@
                                 <g:message code="default.enabled.label" />
                             </label>
                             <span class="property-value">
-                                <g:checkBox name="feeAmount_null.enabled" />
+                                <g:checkBox name="feeAmount_null.enabled" checked="true" />
                             </span>
                         </div>
                     </fieldset>
