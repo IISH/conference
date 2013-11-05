@@ -44,13 +44,13 @@ class Setting extends EventDomain {
 
         id              column: 'setting_id'
         property        column: 'property'
-        value           column: 'value'
+        value           column: 'value',            type: 'text'
         showInBackend   column: 'show_in_backend'
     }
 
     static constraints = {
         property        blank: false,   maxSize: 50
-        value           blank: false,   maxSize: 255
+        value           blank: false
     }
     
     def beforeUpdate() {
