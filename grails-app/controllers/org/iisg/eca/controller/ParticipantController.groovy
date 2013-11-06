@@ -72,6 +72,13 @@ class ParticipantController {
     }
 
     /**
+     * Shows all participants with no discontinued email
+     */
+    def listAll() {
+        forward(controller: 'dynamicPage', action: 'dynamic', params: params)
+    }
+
+    /**
      * Shows a list of all participants who signed up for the current event date
      * and offers users to filter the results
      */
