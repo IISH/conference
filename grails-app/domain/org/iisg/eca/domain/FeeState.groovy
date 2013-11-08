@@ -7,7 +7,7 @@ class FeeState extends EventDomain {
     static final long NO_FEE_SELECTED = 0L
 
     String name
-    boolean isDefaultFee
+    boolean isDefaultFee = false
     
     static hasMany = [participantDates: ParticipantDate, feeAmounts: FeeAmount]
 
@@ -19,7 +19,7 @@ class FeeState extends EventDomain {
     static mapping = {
         table 'fee_states'
         version false
-        sort 'isDefaultFee': 'desc'
+        sort 'name': 'asc'
 
         id              column: 'fee_state_id'
         event           column: 'event_id'

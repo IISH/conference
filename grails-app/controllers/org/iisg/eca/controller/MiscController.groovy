@@ -357,21 +357,26 @@ class MiscController {
     def chairs() {
         Sql sql = new Sql(dataSource)
         List<GroovyRowResult> result = sql.rows("""
-            SELECT users.user_id, networks.name, users.lastname, users.firstname, users.email
+            SELECT users.user_id, networks.name as network_name, users.lastname, users.firstname, users.email, fee_states.name as fee_state_name
             FROM networks
             INNER JOIN networks_chairs on networks.network_id=networks_chairs.network_id
             INNER JOIN users ON networks_chairs.user_id=users.user_id
-            WHERE networks_chairs.enabled=1 
-            AND networks_chairs.deleted=0 
-            AND users.enabled=1 
+            LEFT JOIN participant_date ON participant_date.user_id=users.user_id
+            LEFT JOIN fee_states ON fee_states.fee_state_id=participant_date.fee_state_id
+            WHERE networks_chairs.enabled=1
+            AND networks_chairs.deleted=0
+            AND users.enabled=1
             AND users.deleted=0
+            AND participant_date.enabled=1
+            AND participant_date.deleted=0
             AND networks.date_id = :dateId
+            AND participant_date.date_id = :dateId
             ORDER BY networks.name, users.lastname, users.firstname
         """, [dateId: pageInformation.date.id])
 
         render(view: "list", model: [
                 data:       result,
-                headers:    ["Network", "Last name", "First name", "Email"],
+                headers:    ["Network", "Last name", "First name", "Email", "Fee state"],
                 controller: "participant",
                 action:     "show",
                 info:       "Overview of all chairs."

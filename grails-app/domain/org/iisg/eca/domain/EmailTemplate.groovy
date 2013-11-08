@@ -122,7 +122,7 @@ class EmailTemplate extends EventDomain {
     /**
      * Tests the template with the testEmail specified
      */
-    private void testTemplate() {
+    public void testTemplate() {
         User user = User.findByEmail(testEmail)
 
         if (user) {
@@ -135,6 +135,8 @@ class EmailTemplate extends EventDomain {
 
             emailService.sendInfoMail(subject, message, testEmail)
         }
+
+        this.testAfterSave = false
     }
 
     @Override

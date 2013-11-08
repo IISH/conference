@@ -106,7 +106,7 @@
                 <g:message code="emailTemplate.testAfterSave.label" />
               </label>
               <span class="property-value">
-                <input type="checkbox" id="emailTemplate.testAfterSave" name="emailTemplate.testAfterSave" value="${template?.testAfterSave}" />
+                <g:checkBox name="emailTemplate.testAfterSave" />
               </span>
             </div>
             <div class="${hasErrors(bean: template, field: 'testEmail', 'error')} ">
