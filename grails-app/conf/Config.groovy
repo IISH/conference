@@ -108,7 +108,6 @@ println("log directory: " + logFile.absolutePath)
 
 String loglevel = System.properties.getProperty('loglevel', 'warn')
 log4j = {
-
     appenders {
         console name: 'StackTrace'
         rollingFile name: 'stacktrace', maxFileSize: 1024,
@@ -118,6 +117,7 @@ log4j = {
     root {
         "$loglevel"()
     }
+
     "$loglevel" 'org.codehaus.groovy.grails.web.servlet',  //  controllers
                'org.codehaus.groovy.grails.web.pages', //  GSP
                'org.codehaus.groovy.grails.web.sitemesh', //  layouts

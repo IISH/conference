@@ -137,7 +137,7 @@ class FeeController {
             if (feeState.save(flush: true)) {
                 flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'feeState.label'), feeState.toString()])
                 if (params['btn_save_close']) {
-                    redirect(uri: eca.createLink(previous: true, noBase: true))
+                    redirect(uri: eca.createLink(previous: true, noBase: true, forceOnePageBack: true))
                     return
                 }
             }

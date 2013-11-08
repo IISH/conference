@@ -115,7 +115,7 @@ class LinksTagLib {
                 backParams = session.getValue(params.back)?.clone()
 
                 // If this is an 'edit' page, go back two pages
-                if ((params.action == 'edit') && backParams?.back) {
+                if (!attrs.forceOnePageBack && (params.action == 'edit') && backParams?.back) {
                     backParams = session.getValue(backParams.back)?.clone()
                 }
 
