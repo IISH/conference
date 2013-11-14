@@ -773,6 +773,21 @@ span.remove-item {
     margin-left: 30px;
 }
 
+#selected-days {
+    text-align: center;
+}
+
+#selected-days span.header {
+    display: inline-block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+#selected-days span.not-found {
+    display: block;
+    font-style: italic;
+}
+
 /* ROOMS */
 
 #room-equipment .column {

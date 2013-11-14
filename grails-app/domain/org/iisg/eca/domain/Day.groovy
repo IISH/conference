@@ -12,7 +12,7 @@ class Day extends EventDateDomain {
     Date day
     int dayNumber
     
-    static hasMany = [sessionDateTimes: SessionDateTime]
+    static hasMany = [sessionDateTimes: SessionDateTime, participantPresent: ParticipantDay]
     
     static constraints = {
         dayNumber   min: 0, validator: { val, obj ->

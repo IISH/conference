@@ -77,6 +77,14 @@ class Session extends EventDateDomain {
             }
         }
     }
+
+    /**
+     * Find out the date/time this session is planned
+     * @return The date/time the session is planned, if it is planned, otherwise <code>null</code> is returned.
+     */
+    SessionDateTime getPlannedDateTime() {
+        SessionRoomDateTime.findBySession(this)?.sessionDateTime
+    }
     
     @Override
     String toString() {

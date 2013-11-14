@@ -8,6 +8,7 @@ import org.iisg.eca.domain.FeeState
 import org.iisg.eca.domain.Equipment
 import org.iisg.eca.domain.PaperState
 import org.iisg.eca.domain.Volunteering
+import org.iisg.eca.domain.ParticipantDay
 import org.iisg.eca.domain.SessionDateTime
 import org.iisg.eca.domain.ParticipantDate
 import org.iisg.eca.domain.ParticipantState
@@ -16,8 +17,8 @@ import org.iisg.eca.domain.ParticipantVolunteering
 import grails.converters.JSON
 import grails.validation.ValidationException
 
-import org.springframework.web.multipart.commons.CommonsMultipartFile
 import org.grails.datastore.gorm.query.NamedCriteriaProxy
+import org.springframework.web.multipart.commons.CommonsMultipartFile
 
 /**
  * Controller responsible for handling requests on participants
@@ -181,6 +182,7 @@ class ParticipantController {
         // Already collect participant ids in the case of an error
         List participantIds = participantService.getParticipantsWithFilters(params).collect { it[0] }
         List sessions = participantSessionService.getSessionsForParticipant(participant)
+        List daysPresent = ParticipantDay.findAllDaysOfUser(user)
 
         // The 'save' button was clicked, save all data
         if (request.post) {
@@ -331,7 +333,8 @@ class ParticipantController {
                                                 paperStates: PaperState.list(),
                                                 equipmentList: Equipment.list(),
                                                 participantIds: participantIds,
-                                                sessions: sessions
+                                                sessions: sessions,
+                                                daysPresent: daysPresent
                 ])
             }
         }
@@ -345,7 +348,8 @@ class ParticipantController {
                                         paperStates: PaperState.list(),
                                         equipmentList: Equipment.list(),
                                         participantIds: participantIds,
-                                        sessions: sessions
+                                        sessions: sessions,
+                                        daysPresent: daysPresent
         ])
     }
     

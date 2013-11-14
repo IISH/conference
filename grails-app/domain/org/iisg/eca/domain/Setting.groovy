@@ -25,6 +25,7 @@ class Setting extends EventDomain {
     static final String APPLICATION_TITLE = 'application_title'
     static final String IP_AUTHENTICATION = 'ip_authentication'
     static final String CHECK_ACCEPTED_IP = 'check_accepted_ip'
+    static final String PAYWAY_PROJECT_ID = 'payway_project_id';
 
     static final String BANNER_IMG = 'banner_img'
     static final String BANNER_BG_IMG = 'banner_bg_img'
@@ -63,6 +64,7 @@ class Setting extends EventDomain {
             case CHANGE_USER:
             case DONT_SEND_EMAILS_TO:
             case APPLICATION_TITLE:
+            case PAYWAY_PROJECT_ID:
             case BANNER_IMG:
             case BANNER_BG_IMG:
             case LABEL_COLOR:
