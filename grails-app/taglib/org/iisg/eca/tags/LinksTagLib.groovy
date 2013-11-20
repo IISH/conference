@@ -94,7 +94,10 @@ class LinksTagLib {
         attrs.mapping = 'eventDate'
 
         // Only take parameters from the query string
-        Map filteredParams = WebUtils.fromQueryString(request.queryString)
+        Map filteredParams = [:]
+        if (request.queryString) {
+            filteredParams = WebUtils.fromQueryString(request.queryString)
+        }
         filteredParams.putAll(attrs.params)
         attrs.params = filteredParams
 

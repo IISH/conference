@@ -1,6 +1,7 @@
 package org.iisg.eca.domain
 
 import groovy.sql.Sql
+import org.iisg.eca.domain.payway.Order
 
 /**
  * Domain class of table holding all participants (users) who signed up for an event date
@@ -15,6 +16,7 @@ class ParticipantDate extends EventDateDomain {
     User user
     ParticipantState state
     FeeState feeState
+    Long paymentId
     Date dateAdded = new Date()
     boolean invitationLetter = false
     boolean invitationLetterSent = false
@@ -38,6 +40,7 @@ class ParticipantDate extends EventDateDomain {
         user                    column: 'user_id'
         state                   column: 'participant_state_id'
         feeState                column: 'fee_state_id'
+        paymentId               column: 'payment_id'
         dateAdded               column: 'date_added'
         invitationLetter        column: 'invitation_letter'
         invitationLetterSent    column: 'invitation_letter_sent'
@@ -54,7 +57,13 @@ class ParticipantDate extends EventDateDomain {
     }
 
     static constraints = {
+        paymentId       nullable: true
         lowerFeeText    nullable: true, maxSize: 255
+    }
+
+    Order findOrder() {
+        Order order = Order.get(paymentId)
+        order
     }
 
     void updateByQueryType(String queryType) {

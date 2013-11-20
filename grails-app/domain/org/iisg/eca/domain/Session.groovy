@@ -85,6 +85,19 @@ class Session extends EventDateDomain {
     SessionDateTime getPlannedDateTime() {
         SessionRoomDateTime.findBySession(this)?.sessionDateTime
     }
+
+    /**
+     * Returns all participant types that are scheduled in this session
+     * @return All participant types that are scheduled in this session
+     */
+    List<ParticipantType> getAllParticipantTypes() {
+        ParticipantType.executeQuery('''
+            SELECT DISTINCT t
+            FROM ParticipantType AS t
+            INNER JOIN t.sessionParticipants AS sp
+            WHERE sp.session.id = :sessionId
+        ''', [sessionId: this.id])
+    }
     
     @Override
     String toString() {

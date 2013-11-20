@@ -1,4 +1,4 @@
-<%@ page import="org.iisg.eca.domain.SessionDateTime; org.iisg.eca.domain.Setting; org.iisg.eca.domain.Title; org.iisg.eca.domain.FeeState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Extra; org.iisg.eca.domain.Country; org.iisg.eca.domain.SessionParticipant" %>
+<%@ page import="org.iisg.eca.domain.SessionDateTime; org.iisg.eca.domain.Setting; org.iisg.eca.domain.Title; org.iisg.eca.domain.FeeState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Extra; org.iisg.eca.domain.Country; org.iisg.eca.domain.SessionParticipant; org.iisg.eca.domain.payway.Order" %>
 <!doctype html>
 <html>
     <head>
@@ -6,6 +6,8 @@
         <g:javascript src="participant.js" />
     </head>
     <body>
+        <input type="hidden" name="id" value="${params.id}" />
+
         <eca:navigation ids="${participantIds}" index="${params.index}" />
 
         <g:hasErrors model="[participant: participant, user: user]">
@@ -22,6 +24,7 @@
                     <li><a href="#personal-tab"><g:message code="participantDate.personal.info.label" /></a></li>
                     <li><a href="#papers-tab"><g:message code="paper.multiple.label" /></a></li>
                     <li><a href="#sessions-tab"><g:message code="session.multiple.label" /></a></li>
+                    <li><a href="#payments-tab"><g:message code="payment.multiple.label" /></a></li>
                 </ul>
                 
                 <div id="personal-tab" class="columns">
@@ -34,7 +37,7 @@
                                     <span class="property-value" arial-labelledby="id-label">
                                         ${user.id}
 
-                                        <g:set var="link" value="${Setting.getByEvent(Setting.findAllByProperty(Setting.CHANGE_USER)).value}" />
+                                        <g:set var="link" value="${Setting.getSetting(Setting.CHANGE_USER).value}" />
                                         <g:if test="${link}">
                                             <span id="change-user">
                                                 <a href="${link.replace('[EMAIL]', user.email)}">
@@ -379,7 +382,7 @@
                 </div>
 
                 <div id="papers-tab" class="columns copy">
-                    <input type="hidden" name="max-papers" value="${Setting.getByEvent(Setting.findAllByProperty(Setting.MAX_PAPERS_PER_PERSON_PER_SESSION)).value}" />
+                    <input type="hidden" name="max-papers" value="${Setting.getSetting(Setting.MAX_PAPERS_PER_PERSON_PER_SESSION).value}" />
                     <input type="hidden" name="to-be-deleted" class="to-be-deleted" />
 
                     <g:if test="${participant}">
@@ -689,6 +692,24 @@
                 </div>
               
                 <div id="sessions-tab" class="columns">
+                    <div id="selected-days">
+                        <span class="header">
+                            <g:message code="participantDay.is.present.label" />
+                        </span>
+
+                        <g:if test="${daysPresent.size() == 0}">
+                            <span class="not-found">
+                                <g:message code="participantDay.not.found.label" />
+                            </span>
+                        </g:if>
+
+                        <ol>
+                            <g:each in="${daysPresent}" var="day">
+                                <li><eca:formatText text="${day.toString()}" /></li>
+                            </g:each>
+                        </ol>
+                    </div>
+
                     <g:each in="${sessions}" var="participantSessionInfo">
                         <div class="participant-session column">
                             <div>
@@ -734,6 +755,104 @@
                                           </g:each>
                                         </ol>
                                       </span>
+                                    </li>
+                                    <li>
+                                        <span id="planned-date-label" class="property-label">
+                                            <g:message code="session.planned.label" />
+                                        </span>
+                                        <span class="property-value" arial-labelledby="planned-date-label">
+                                            <g:set var="sessionDateTime" value="${participantSessionInfo.session.getPlannedDateTime()}" />
+                                            <g:if test="${sessionDateTime}">
+                                                <eca:formatText text="${sessionDateTime.day.toString()}" />
+                                                (<eca:formatText text="${sessionDateTime.period.toString()}" />)
+                                            </g:if>
+                                            <g:else>
+                                                <g:message code="session.not.planned.label" />
+                                            </g:else>
+                                        </span>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+                    </g:each>
+                </div>
+
+                <div id="payments-tab" class="columns">
+                    <g:each in="${orders}" var="order">
+                        <div class="participant-order column">
+                            <div>
+                                <ol class="property-list">
+                                    <li>
+                                        <span id="order-id-label" class="property-label">#</span>
+                                        <span class="property-value" arial-labelledby="order-id-label">${order.id}</span>
+                                    </li>
+                                    <li>
+                                        <span id="order-code-label" class="property-label">
+                                            <g:message code="order.code.label" />
+                                        </span>
+                                        <span class="property-value" arial-labelledby="order-code-label">
+                                            <eca:formatText text="${order.orderCode}" />
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span id="amount-label" class="property-label">
+                                            <g:message code="order.amount.label" />
+                                        </span>
+                                        <span class="property-value" arial-labelledby="amount-label">
+                                            <eca:formatText text="${order.getAmountAsBigDecimal()}" />
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span id="status-label" class="property-label">
+                                            <g:message code="order.status.label" />
+                                        </span>
+                                        <span class="property-value" arial-labelledby="status-label">
+                                            ${order.getStatusText()}
+
+                                            <g:if test="${order.willPayByBank && (order.payed == Order.ORDER_NOT_PAYED)}">
+                                                <span class="order-set-payed clickable">
+                                                    <span class="ui-icon ui-icon-carat-1-e"></span>
+                                                    <g:message code="order.set.payed.label" />
+                                                </span>
+                                            </g:if>
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span id="method-label" class="property-label">
+                                            <g:message code="order.method.label" />
+                                        </span>
+                                        <span class="property-value" arial-labelledby="method-label">
+                                            <g:if test="${order.willPayByBank}">
+                                                <g:message code="order.method.bank.label" />
+                                            </g:if>
+                                            <g:else>
+                                                <g:message code="order.method.ogone.label" />
+                                            </g:else>
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span id="created-label" class="property-label">
+                                            <g:message code="order.created.at.label" />
+                                        </span>
+                                        <span class="property-value" arial-labelledby="created-label">
+                                            <g:formatDate date="${order.createdAt}" formatName="default.date.time.format" />
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span id="updated-label" class="property-label">
+                                            <g:message code="order.updated.at.label" />
+                                        </span>
+                                        <span class="property-value" arial-labelledby="updated-label">
+                                            <g:formatDate date="${order.updatedAt}" formatName="default.date.time.format" />
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span id="description-label" class="property-label">
+                                            <g:message code="order.description.label" />
+                                        </span>
+                                        <span class="property-value" arial-labelledby="description-label">
+                                            <eca:formatText text="${order.description}" />
+                                        </span>
                                     </li>
                                 </ol>
                             </div>

@@ -154,7 +154,7 @@ class EmailController {
      */
     def test() {
         String statusInfo = null
-        params.from = (params.from) ? params.from : Setting.getByEvent(Setting.findAllByProperty(Setting.DEFAULT_ORGANISATION_EMAIL)).value
+        params.from = (params.from) ? params.from : Setting.getSetting(Setting.DEFAULT_ORGANISATION_EMAIL).value
         
         // The 'send' button was clicked, create and send the emails
         if (request.post) {

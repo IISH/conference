@@ -1,5 +1,6 @@
 package org.iisg.eca.controller
 
+import org.iisg.eca.domain.ParticipantType
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Paper
 import org.iisg.eca.domain.Extra
@@ -18,6 +19,7 @@ import grails.converters.JSON
 import grails.validation.ValidationException
 
 import org.grails.datastore.gorm.query.NamedCriteriaProxy
+import org.iisg.eca.domain.payway.Order
 import org.springframework.web.multipart.commons.CommonsMultipartFile
 
 /**
@@ -183,6 +185,7 @@ class ParticipantController {
         List participantIds = participantService.getParticipantsWithFilters(params).collect { it[0] }
         List sessions = participantSessionService.getSessionsForParticipant(participant)
         List daysPresent = ParticipantDay.findAllDaysOfUser(user)
+        List orders = Order.findAllOrdersOfUserLastYear(user)
 
         // The 'save' button was clicked, save all data
         if (request.post) {
@@ -334,7 +337,8 @@ class ParticipantController {
                                                 equipmentList: Equipment.list(),
                                                 participantIds: participantIds,
                                                 sessions: sessions,
-                                                daysPresent: daysPresent
+                                                daysPresent: daysPresent,
+                                                orders: orders
                 ])
             }
         }
@@ -349,7 +353,8 @@ class ParticipantController {
                                         equipmentList: Equipment.list(),
                                         participantIds: participantIds,
                                         sessions: sessions,
-                                        daysPresent: daysPresent
+                                        daysPresent: daysPresent,
+                                        orders: orders
         ])
     }
     
@@ -462,6 +467,48 @@ class ParticipantController {
             // If there is no responseMap defined yet, it can only mean the paper or state could not be found
             if (!responseMap) {
                 responseMap = [success: false, message: g.message(code: 'default.not.found.message', args: ["${g.message(code: 'paper.label')}, ${g.message(code: 'paper.state.label')}"])]
+            }
+
+            render responseMap as JSON
+        }
+    }
+
+    /**
+     * Change the paper state of the given paper
+     * (AJAX call)
+     */
+    def setPayed() {
+        // If this is an AJAX call, continue
+        if (request.xhr) {
+            Map responseMap = null
+
+            // If we have a paper id and state id, try to find the records for these ids
+            if (params.user_id?.isLong() && params.order_id?.isLong()) {
+                User user = User.get(params.user_id.toLong())
+                Order order = Order.findById(params.order_id.toLong())
+                ParticipantDate participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
+
+                // Change the paper state if they both exist
+                if (user && order && participant) {
+                    if (order.setPayedAndActive(participant)) {
+                        // Save the paper
+                        if (order.save(flush: true) && participant.save(flush: true)) {
+                            // Everything is fine
+                            responseMap = [success: true, state: order.getStatusText()]
+                        }
+                        else {
+                            responseMap = [success: false, message: order.errors.allErrors.collect { g.message(error: it) }]
+                        }
+                    }
+                    else {
+                        responseMap = [success: false, message: g.message(code: 'default.not.allowed.message')]
+                    }
+                }
+            }
+
+            // If there is no responseMap defined yet, it can only mean the paper or state could not be found
+            if (!responseMap) {
+                responseMap = [success: false, message: g.message(code: 'default.not.found.message', args: ["${g.message(code: 'order.label')}"])]
             }
 
             render responseMap as JSON

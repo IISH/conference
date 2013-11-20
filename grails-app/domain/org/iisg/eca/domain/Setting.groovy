@@ -85,6 +85,17 @@ class Setting extends EventDomain {
     def afterUpdate() {
         setSetting()
     }
+
+    static Setting getSetting(String property, Event event = null) {
+        List<Setting> settings = Setting.findAllByProperty(property, [cache: true])
+
+        if (event) {
+            (Setting) getByEvent(settings, event)
+        }
+        else {
+            (Setting) getByEvent(settings)
+        }
+    }
     
     private void setSetting() {
         switch (property) {

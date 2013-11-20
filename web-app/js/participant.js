@@ -1,4 +1,5 @@
 var tabsHeight = 0;
+var userId;
 
 var moveTabs = function() {
     var size = 0;
@@ -19,6 +20,8 @@ $(document).ready(function() {
     var tabs = $('#participant-form #tabs > ul:first-child');
     tabsHeight = parseInt(tabs.css('top').replace('px', ''));
     moveTabs();
+
+    userId = parseInt($('input[name=id]').val());
     
     $(document).on("error", function(e) {
         moveTabs();
@@ -50,5 +53,20 @@ $(document).ready(function() {
         if ((maxPapers !== null) && (noPapers >= maxPapers)) {
             e.stopImmediatePropagation();
         }
+    });
+
+    $('.order-set-payed').click(function(e) {
+        $('.errors').hide();
+        $('.message').hide();
+
+        var element = $(e.target).parents('.participant-order');
+
+        ajaxCall(
+            'participant/setPayed',
+            {   'user_id':  userId,
+                'order_id': element.find('#order-id-label').next().text()
+        }, function(data) {
+            $(e.target).parent().text(data.state);
+        });
     });
 });

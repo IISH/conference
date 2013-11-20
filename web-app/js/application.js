@@ -626,7 +626,7 @@ $(document).ready(function() {
         );
     });
 
-    $("#network-select").change(function(e) {
+    $("#network-select, #session-select").change(function(e) {
         $(this).parents('form').submit();
     });
 
@@ -647,6 +647,13 @@ $(document).ready(function() {
             preview.find('#subject-label').next().html(data.subject);
             preview.find('#body-label').next().html(data.body);
         });
+    });
+
+    $('#btn_session').click(function(e) {
+        var id = $(this).prev().find(':selected').val();
+        if ($.isNumeric(id)) {
+            window.open('../../session/show/' + id);
+        }
     });
 
     $(document).ready(function() {

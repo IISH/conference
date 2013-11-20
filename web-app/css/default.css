@@ -717,7 +717,7 @@ span.remove-item {
 #participant-form #tabs > ul:first-child { 
     position: absolute;     
     top: -63px;
-    left: 40%;
+    left: 35%;
 }
 
 @media screen and (-webkit-min-device-pixel-ratio:0) {
@@ -748,7 +748,7 @@ span.remove-item {
     max-width: 250px;
 }
 
-#papers-tab .column, #sessions-tab .column {
+#papers-tab .column, #sessions-tab .column, #payments-tab .column {
     border-bottom: 1px solid [main_color_dark];
     margin-bottom: 20px;
 }
@@ -761,16 +761,16 @@ span.remove-item {
     height: 250px;
 }
 
+#payments-tab .column {
+    height: 250px;
+}
+
 #participant-present {
     margin-top: 20px;
 }
 
 #participant-present td {
     border: 1px solid [main_color_dark];
-}
-
-#change-user {
-    margin-left: 30px;
 }
 
 #selected-days {
@@ -813,6 +813,15 @@ span.remove-item {
 .participant-type-value {
     color: [main_color_dark];
     font-style: italic;
+}
+
+.session-participants > .participant-warning {
+    margin-top: 20px;
+}
+
+.participant-warning {
+    color: red;
+    font-weight: bold;
 }
 
 .participant-paper-value {
@@ -1129,4 +1138,8 @@ ul input.session-name {
 
 .bold {
     font-weight: bold;
+}
+
+.clickable {
+    cursor: pointer;
 }

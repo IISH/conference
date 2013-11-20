@@ -217,6 +217,41 @@ class SessionController {
         }
     }
 
+    def warnings() {
+        if (params.sessionId?.isLong()) {
+            String uri = eca.createLink(action: 'warnings', noBase: true, id: params.sessionId)
+            params.remove('sessionId')
+
+            redirect(uri: uri, params: params)
+        }
+        else {
+            Session session = null
+            List<Session> sessions = Session.executeQuery('''
+                FROM Session
+                WHERE state.id = :stateId
+                ORDER BY code, name
+            ''', [stateId: SessionState.SESSION_ACCEPTED])
+
+            if (params.id?.isLong()) {
+                session = Session.findById(params.id.toLong())
+            }
+            else {
+                session = sessions.get(0)
+                params.id = session.id
+            }
+
+            // Let the participantSessionService come up with all participants
+            List<ParticipantSessionInfo> participants = participantSessionService.getParticipantsForSession(session)
+
+            render(view: "warnings", model: [
+                    session:        session,
+                    sessions:       sessions,
+                    sessionIds:     sessions*.id,
+                    participants:   participants
+            ])
+        }
+    }
+
     /**
      * Removes the session from the current event date
      */
@@ -318,7 +353,7 @@ class SessionController {
                     // Find out if the participant also needs to add a paper to the session
                     if (type.withPaper) {
                         // If only one paper is allowed, get that one
-                        Integer maxPapers = Setting.getByEvent(Setting.findAllByProperty(Setting.MAX_PAPERS_PER_PERSON_PER_SESSION)).value?.toInteger()
+                        Integer maxPapers = Setting.getSetting(Setting.MAX_PAPERS_PER_PERSON_PER_SESSION).value?.toInteger()
                         if ((maxPapers == null || maxPapers > 1) && params.paper_id) {
                             paper = Paper.findById(params.paper_id)
                         }

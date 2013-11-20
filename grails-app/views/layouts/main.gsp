@@ -31,7 +31,7 @@
         <div id="header" role="banner">
             <div id="event-header">
                 <a id="event-logo" href="${grailsApplication.config.grails.serverURL}" name="top">
-                    ${Setting.getByEvent(Setting.findAllByProperty(Setting.APPLICATION_TITLE, [cache: true])).value}
+                    ${Setting.getSetting(Setting.APPLICATION_TITLE).value}
                 </a>
                 <a href="http://socialhistory.org/" target="_blank" class="hosted">Hosted by IISH</a>
             </div>
@@ -76,7 +76,7 @@
                 <dl id="menu">
                     <g:if test="${params.event && params.date}">
                         <dt>Web</dt>
-                        <dd><a target="_blank" href="${Setting.getByEvent(Setting.findAllByProperty(Setting.WEB_ADDRESS)).value}">${curDate.event.shortName}</a></dd>
+                        <dd><a target="_blank" href="${Setting.getSetting(Setting.WEB_ADDRESS).value}">${curDate.event.shortName}</a></dd>
 
                         <dd>&nbsp;</dd>
 

@@ -8,7 +8,7 @@
     </head>
     <body>
         <input type="hidden" name="id" value="${params.id}" />
-        <g:set var="maxPapers" value="${Setting.getByEvent(Setting.findAllByProperty(Setting.MAX_PAPERS_PER_PERSON_PER_SESSION)).value?.toInteger()}" />
+        <g:set var="maxPapers" value="${Setting.getSetting(Setting.MAX_PAPERS_PER_PERSON_PER_SESSION).value?.toInteger()}" />
         
         <g:hasErrors bean="${eventSession}">
             <ul class="errors" role="alert">
