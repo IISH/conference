@@ -158,9 +158,9 @@ a:hover, .link:hover {
     color: #cc0000;
 }
 
-/* TOGGLE */
+/* TITLE MENU */
 
-.toggle-session-participants {
+.title-menu-link {
     cursor: pointer;
     position: absolute;
     color: [main_color_dark];
@@ -392,6 +392,10 @@ span.remove-item {
     padding: 3px;
 }
 
+.tbl_container .subheader th {
+    font-size: 12px;
+}
+
 .tbl_container th input, .tbl_container th select {
     width: 80%;
     margin-bottom: 2px;
@@ -404,6 +408,14 @@ span.remove-item {
 
 .tbl_container td select {
     height: 20px;
+}
+
+.tbl_container td.left {
+    background-color: [main_color_bg];
+    color: [main_color_dark];
+    text-align: right;
+    width: 90%;
+    border-right: 1px solid [main_color_light];
 }
 
 .tbl_container td.counter {
@@ -819,6 +831,10 @@ span.remove-item {
     margin-top: 20px;
 }
 
+.warning {
+    color: red;
+}
+
 .participant-warning {
     color: red;
     font-weight: bold;
@@ -1077,6 +1093,30 @@ ul input.session-name {
     color: [main_color_dark];
     padding: 5px;
     clear: both;
+}
+
+/* PAYMENTS */
+
+.payment-statistics td {
+    width: 12%;
+    text-align: center;
+}
+
+.payment-statistics td.line {
+    border-right: 1px solid [main_color_light];
+}
+
+.payment-statistics tbody.line {
+    border-top: 1px solid [main_color_light];
+    border-bottom: 1px solid [main_color_light];
+}
+
+.payment-statistics .tbl_totals {
+    border-bottom: 1px solid [main_color_light];
+}
+
+table.payment-statistics tbody tr:hover {
+    cursor: default;
 }
 
 /* LOGIN */

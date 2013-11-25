@@ -518,11 +518,11 @@ class SessionController {
 
             // Collect all the equipment for this session
             List<Equipment> equipment = sessionPlannerService.getEquipment(session)
-            possibilitiesResponse.put('equipment', equipment.collect { it.id })
+            possibilitiesResponse.put('equipment', equipment*.id)
 
             // Collect all date/times of sessions with the same participants
             List<SessionDateTime> dateTimes = sessionPlannerService.getTimesToBeBlocked(session)
-            possibilitiesResponse.put('date-times', dateTimes.collect { it.id })
+            possibilitiesResponse.put('date-times', dateTimes*.id)
             possibilitiesResponse.put('success',    true)
 
             render possibilitiesResponse as JSON

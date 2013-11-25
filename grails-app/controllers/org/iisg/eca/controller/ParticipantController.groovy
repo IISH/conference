@@ -1,6 +1,5 @@
 package org.iisg.eca.controller
 
-import org.iisg.eca.domain.ParticipantType
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Paper
 import org.iisg.eca.domain.Extra
@@ -15,11 +14,14 @@ import org.iisg.eca.domain.ParticipantDate
 import org.iisg.eca.domain.ParticipantState
 import org.iisg.eca.domain.ParticipantVolunteering
 
+import org.iisg.eca.domain.payway.Order
+import org.iisg.eca.utils.PaymentQueries
+
+import groovy.sql.Sql
+
 import grails.converters.JSON
 import grails.validation.ValidationException
-
-import org.grails.datastore.gorm.query.NamedCriteriaProxy
-import org.iisg.eca.domain.payway.Order
+import org.iisg.eca.utils.PaymentStatistic
 import org.springframework.web.multipart.commons.CommonsMultipartFile
 
 /**
@@ -45,6 +47,11 @@ class ParticipantController {
      * Service taking care of exporting the participants paper
      */
     def exportService
+
+    /**
+     * Data source of the PayWay and conference databases
+     */
+    def dataSource_payWay
 
     /**
      * Index action, redirects to the list action
@@ -357,7 +364,38 @@ class ParticipantController {
                                         orders: orders
         ])
     }
-    
+
+    /**
+     * Shows the payment status for all participants
+     */
+    def payments() {
+        Sql sql = new Sql(dataSource_payWay)
+
+        render(view: "payments", model: [
+                paymentsList:                   sql.rows(PaymentQueries.PAYMENT_LIST, [dateId: pageInformation.date.id]),
+
+                paymentMethod:                  PaymentStatistic.createMap(
+                                                    sql.rows(PaymentQueries.PAYMENT_METHOD_UNCONFIRMED, [dateId: pageInformation.date.id]),
+                                                    sql.rows(PaymentQueries.PAYMENT_METHOD_CONFIRMED, [dateId: pageInformation.date.id])
+                                                ),
+                paymentAmount:                  PaymentStatistic.createMap(
+                                                    sql.rows(PaymentQueries.PAYMENT_AMOUNT_UNCONFIRMED, [dateId: pageInformation.date.id]),
+                                                    sql.rows(PaymentQueries.PAYMENT_AMOUNT_CONFIRMED, [dateId: pageInformation.date.id])
+                                                ),
+                participantState:               PaymentStatistic.createMap(
+                                                    sql.rows(PaymentQueries.PARTICIPANT_STATE_UNCONFIRMED, [dateId: pageInformation.date.id]),
+                                                    sql.rows(PaymentQueries.PARTICIPANT_STATE_CONFIRMED, [dateId: pageInformation.date.id])
+                                                ),
+
+                paymentAmountsList:             sql.rows(PaymentQueries.PAYMENT_AMOUNT_LIST, [dateId: pageInformation.date.id]),
+
+                participantsTotalPayed:         sql.rows(PaymentQueries.PARTICIPANTS_TOTAL_PAYED, [dateId: pageInformation.date.id]).first(),
+                participantsTotalNotCompleted:  sql.rows(PaymentQueries.PARTICIPANTS_TOTAL_PAYMENT_NOT_COMPLETE, [dateId: pageInformation.date.id]).first(),
+                participantsTotalNoAttempt:     sql.rows(PaymentQueries.PARTICIPANTS_TOTAL_NO_ATTEMPT, [dateId: pageInformation.date.id]).first(),
+                participantsTotal:              sql.rows(PaymentQueries.PARTICIPANTS_TOTAL, [dateId: pageInformation.date.id]).first()
+        ])
+    }
+
     /**
      * Shows all participants and allows to change their paper state
      */

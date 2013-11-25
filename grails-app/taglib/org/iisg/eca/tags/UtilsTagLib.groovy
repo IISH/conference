@@ -302,6 +302,17 @@ class UtilsTagLib {
     }
 
     /**
+     * Returns an amount in a string format
+     * @attr amount REQUIRED The amount
+     * @attr cents Whether the amount is given in cents or not
+     */
+    def getAmount = { attrs ->
+        BigDecimal amount = new BigDecimal(attrs.amount)
+        amount = (attrs.cents) ? amount.movePointLeft(2) : amount
+        out << amount.toString().encodeAsHTML()
+    }
+
+    /**
      * Prints the menu and its sub menus
      * @param builder The markup builder for the HTML output
      * @param menu The menu items to print

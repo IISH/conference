@@ -223,7 +223,7 @@ class SessionPlannerService {
 
         times.addAll(getTimesParticipantsNotPresent(session))
 
-        times.remove(null)
+        times.removeAll(Collections.singleton(null))
         times.unique()
     }
 
