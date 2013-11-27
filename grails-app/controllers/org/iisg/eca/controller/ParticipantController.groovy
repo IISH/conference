@@ -1,5 +1,6 @@
 package org.iisg.eca.controller
 
+import org.iisg.eca.domain.Day
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Paper
 import org.iisg.eca.domain.Extra
@@ -15,6 +16,7 @@ import org.iisg.eca.domain.ParticipantState
 import org.iisg.eca.domain.ParticipantVolunteering
 
 import org.iisg.eca.domain.payway.Order
+import org.iisg.eca.service.ParticipantService
 import org.iisg.eca.utils.PaymentQueries
 
 import groovy.sql.Sql
@@ -393,6 +395,19 @@ class ParticipantController {
                 participantsTotalNotCompleted:  sql.rows(PaymentQueries.PARTICIPANTS_TOTAL_PAYMENT_NOT_COMPLETE, [dateId: pageInformation.date.id]).first(),
                 participantsTotalNoAttempt:     sql.rows(PaymentQueries.PARTICIPANTS_TOTAL_NO_ATTEMPT, [dateId: pageInformation.date.id]).first(),
                 participantsTotal:              sql.rows(PaymentQueries.PARTICIPANTS_TOTAL, [dateId: pageInformation.date.id]).first()
+        ])
+    }
+
+    /**
+     * Shows which participants are present on what days and what extras
+     */
+    def presence() {
+        render(view: 'presence', model: [
+                days:           Day.list(),
+                extras:         Extra.list(),
+                overview:       participantService.getParticipantPresentOverview(),
+                daysCount:      participantService.getDaysCount(),
+                extrasCount:    participantService.getExtrasCount()
         ])
     }
 

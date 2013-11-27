@@ -479,7 +479,7 @@ $(document).ready(function() {
         window.location.search = "?" + $.param(urlParameters);
     });
 
-    $('.tbl_container tbody tr').mousedown(function(e) {
+    $('.tbl_container tbody tr:not(.tbl_totals)').mousedown(function(e) {
         var element = $(this);
         var target = $(e.target);
         

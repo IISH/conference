@@ -386,6 +386,10 @@ span.remove-item {
     cursor: pointer;
 }
 
+.tbl_container tbody tr.tbl_totals:hover {
+    cursor: default;
+}
+
 .tbl_container th {
     color: [main_color_dark];
     font-size: 14px;

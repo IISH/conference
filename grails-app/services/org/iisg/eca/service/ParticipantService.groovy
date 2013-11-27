@@ -1,12 +1,15 @@
 package org.iisg.eca.service
 
-import org.iisg.eca.domain.User
+import org.iisg.eca.domain.Day
+import org.iisg.eca.domain.Extra
 import org.iisg.eca.domain.ParticipantDate
+import org.iisg.eca.domain.ParticipantState
 
 import groovy.sql.Sql
+import groovy.sql.GroovyRowResult
+
 import org.springframework.context.i18n.LocaleContextHolder
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
-import org.iisg.eca.domain.ParticipantState
 
 /**
  * Service responsible for requesting participant data
@@ -132,6 +135,75 @@ class ParticipantService {
         states.each { count = count + it[2] }
         states.add(0, [new Integer(-1), messageSource.getMessage('default.all.label', null, LocaleContextHolder.locale), count])
         states
+    }
+
+    /**
+     * Returns an overview of all days and extras the accepted participants signed up for
+     * @return An overview for all accepted participants
+     */
+    List<GroovyRowResult> getParticipantPresentOverview() {
+        Sql sql = new Sql(dataSource)
+
+        // Due to group_concat function, not possible with HQL
+        sql.rows('''
+            SELECT u.user_id, u.lastname, u.firstname, GROUP_CONCAT(DISTINCT d.day_id ORDER BY d.day_number) AS days, GROUP_CONCAT(DISTINCT e.extra_id ORDER BY e.extra) AS extras
+            FROM users AS u
+            INNER JOIN participant_date AS pd
+            ON u.user_id = pd.user_id
+            LEFT JOIN participant_day AS pday
+            ON u.user_id = pday.user_id
+            LEFT JOIN days AS d
+            ON pday.day_id = d.day_id
+            LEFT JOIN participant_date_extra AS pde
+            ON pd.participant_date_id = pde.participant_date_id
+            LEFT JOIN extras AS e
+            ON pde.extra_id = e.extra_id
+            WHERE u.deleted = 0
+            AND pd.date_id = :dateId
+            AND pd.deleted = 0
+            AND pd.participant_state_id IN (:participantDataChecked, :participant)
+            GROUP BY u.user_id
+            ORDER BY u.lastname, u.firstname
+        ''', [dateId: pageInformation.date.id, participantDataChecked: ParticipantState.PARTICIPANT_DATA_CHECKED, participant: ParticipantState.PARTICIPANT])
+    }
+
+    /**
+     * Returns the number of participants that signed up for each conference day
+     * @return A map with the day id as the key and the number of participants for that day
+     */
+    Map<Long, Long> getDaysCount() {
+        Day.executeQuery('''
+            SELECT d.id, COUNT(d.id) AS total
+            FROM Day AS d
+            INNER JOIN d.participantPresent AS pday
+            INNER JOIN pday.user AS u
+            INNER JOIN u.participantDates AS pd
+            WHERE u.deleted = false
+            AND pd.date.id = :dateId
+            AND pd.deleted = false
+            GROUP BY d.id
+            ORDER BY d.dayNumber
+        ''', [dateId: pageInformation.date.id]).collectEntries {
+            [(it[0]) : (it[1])]
+        }
+    }
+
+    /**
+     * Returns the number of participants that signed up for each extra
+     * @return A map with the extra id as the key and the number of participants for that extra
+     */
+    Map<Long, Long> getExtrasCount() {
+        Extra.executeQuery('''
+            SELECT e.id, COUNT(e.id) AS total
+            FROM Extra AS e
+            INNER JOIN e.participantDates AS pd
+            WHERE pd.date.id = :dateId
+            AND pd.deleted = false
+            GROUP BY e.id
+            ORDER BY e.extra
+        ''', [dateId: pageInformation.date.id]).collectEntries {
+            [(it[0]) : (it[1])]
+        }
     }
 }
 
