@@ -6,12 +6,12 @@ package org.iisg.eca.utils
 public interface PaymentQueries {
     public static final String PAYMENT_LIST = """
         SELECT u.user_id, u.lastname, u.firstname, o.payed, o.willpaybybank, o.amount, pd.participant_state_id, ps.participant_state
-        FROM `esshc_socialhistory_org_conference`.users AS u
-        INNER JOIN `esshc_socialhistory_org_conference`.participant_date AS pd
+        FROM `db-name`.users AS u
+        INNER JOIN `db-name`.participant_date AS pd
         ON u.user_id = pd.user_id
-        INNER JOIN `esshc_socialhistory_org_conference`.participant_states AS ps
+        INNER JOIN `db-name`.participant_states AS ps
         ON pd.participant_state_id = ps.participant_state_id
-        LEFT JOIN `payway`.orders AS o
+        LEFT JOIN `db-name-payway`.orders AS o
         ON pd.payment_id = o.ID
         WHERE u.deleted = false
         AND pd.date_id = :dateId
@@ -22,10 +22,10 @@ public interface PaymentQueries {
     // MAIN PARTS OF THE QUERIES
 
     public static final String MAIN_BODY = """
-        FROM `esshc_socialhistory_org_conference`.users AS u
-        INNER JOIN `esshc_socialhistory_org_conference`.participant_date AS pd
+        FROM `db-name`.users AS u
+        INNER JOIN `db-name`.participant_date AS pd
         ON u.user_id = pd.user_id
-        LEFT JOIN `payway`.orders AS o
+        LEFT JOIN `db-name-payway`.orders AS o
         ON pd.payment_id = o.ID
         WHERE u.deleted = false
         AND pd.date_id = :dateId

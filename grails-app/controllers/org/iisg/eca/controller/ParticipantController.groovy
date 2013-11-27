@@ -1,5 +1,6 @@
 package org.iisg.eca.controller
 
+import org.hibernate.impl.SessionImpl
 import org.iisg.eca.domain.Day
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Paper
@@ -16,14 +17,14 @@ import org.iisg.eca.domain.ParticipantState
 import org.iisg.eca.domain.ParticipantVolunteering
 
 import org.iisg.eca.domain.payway.Order
-import org.iisg.eca.service.ParticipantService
-import org.iisg.eca.utils.PaymentQueries
 
-import groovy.sql.Sql
+import org.iisg.eca.utils.PaymentQueries
+import org.iisg.eca.utils.PaymentStatistic
 
 import grails.converters.JSON
 import grails.validation.ValidationException
-import org.iisg.eca.utils.PaymentStatistic
+
+import groovy.sql.Sql
 import org.springframework.web.multipart.commons.CommonsMultipartFile
 
 /**
@@ -54,6 +55,10 @@ class ParticipantController {
      * Data source of the PayWay and conference databases
      */
     def dataSource_payWay
+
+    def sessionFactory
+
+    def sessionFactory_payWay
 
     /**
      * Index action, redirects to the list action
@@ -373,28 +378,71 @@ class ParticipantController {
     def payments() {
         Sql sql = new Sql(dataSource_payWay)
 
+        String dbName = ((SessionImpl) sessionFactory.currentSession).connection().catalog
+        String dbNamePayWay = ((SessionImpl) sessionFactory_payWay.currentSession).connection().catalog
+
         render(view: "payments", model: [
-                paymentsList:                   sql.rows(PaymentQueries.PAYMENT_LIST, [dateId: pageInformation.date.id]),
+                paymentsList:                   sql.rows(PaymentQueries.PAYMENT_LIST
+                                                        .replace('db-name-payway', dbNamePayWay)
+                                                        .replace('db-name', dbName),
+                                                        [dateId: pageInformation.date.id]),
 
                 paymentMethod:                  PaymentStatistic.createMap(
-                                                    sql.rows(PaymentQueries.PAYMENT_METHOD_UNCONFIRMED, [dateId: pageInformation.date.id]),
-                                                    sql.rows(PaymentQueries.PAYMENT_METHOD_CONFIRMED, [dateId: pageInformation.date.id])
+                                                    sql.rows(PaymentQueries.PAYMENT_METHOD_UNCONFIRMED
+                                                            .replace('db-name-payway', dbNamePayWay)
+                                                            .replace('db-name', dbName),
+                                                            [dateId: pageInformation.date.id]),
+                                                    sql.rows(PaymentQueries.PAYMENT_METHOD_CONFIRMED
+                                                            .replace('db-name-payway', dbNamePayWay)
+                                                            .replace('db-name', dbName),
+                                                            [dateId: pageInformation.date.id])
                                                 ),
                 paymentAmount:                  PaymentStatistic.createMap(
-                                                    sql.rows(PaymentQueries.PAYMENT_AMOUNT_UNCONFIRMED, [dateId: pageInformation.date.id]),
-                                                    sql.rows(PaymentQueries.PAYMENT_AMOUNT_CONFIRMED, [dateId: pageInformation.date.id])
+                                                    sql.rows(PaymentQueries.PAYMENT_AMOUNT_UNCONFIRMED
+                                                            .replace('db-name-payway', dbNamePayWay)
+                                                            .replace('db-name', dbName),
+                                                            [dateId: pageInformation.date.id]),
+                                                    sql.rows(PaymentQueries.PAYMENT_AMOUNT_CONFIRMED
+                                                            .replace('db-name-payway', dbNamePayWay)
+                                                            .replace('db-name', dbName),
+                                                            [dateId: pageInformation.date.id])
                                                 ),
                 participantState:               PaymentStatistic.createMap(
-                                                    sql.rows(PaymentQueries.PARTICIPANT_STATE_UNCONFIRMED, [dateId: pageInformation.date.id]),
-                                                    sql.rows(PaymentQueries.PARTICIPANT_STATE_CONFIRMED, [dateId: pageInformation.date.id])
+                                                    sql.rows(PaymentQueries.PARTICIPANT_STATE_UNCONFIRMED
+                                                            .replace('db-name-payway', dbNamePayWay)
+                                                            .replace('db-name', dbName),
+                                                            [dateId: pageInformation.date.id]),
+                                                    sql.rows(PaymentQueries.PARTICIPANT_STATE_CONFIRMED
+                                                            .replace('db-name-payway', dbNamePayWay)
+                                                            .replace('db-name', dbName),
+                                                            [dateId: pageInformation.date.id])
                                                 ),
 
-                paymentAmountsList:             sql.rows(PaymentQueries.PAYMENT_AMOUNT_LIST, [dateId: pageInformation.date.id]),
+                paymentAmountsList:             sql.rows(PaymentQueries.PAYMENT_AMOUNT_LIST
+                                                        .replace('db-name-payway', dbNamePayWay)
+                                                        .replace('db-name', dbName),
+                                                        [dateId: pageInformation.date.id]),
 
-                participantsTotalPayed:         sql.rows(PaymentQueries.PARTICIPANTS_TOTAL_PAYED, [dateId: pageInformation.date.id]).first(),
-                participantsTotalNotCompleted:  sql.rows(PaymentQueries.PARTICIPANTS_TOTAL_PAYMENT_NOT_COMPLETE, [dateId: pageInformation.date.id]).first(),
-                participantsTotalNoAttempt:     sql.rows(PaymentQueries.PARTICIPANTS_TOTAL_NO_ATTEMPT, [dateId: pageInformation.date.id]).first(),
-                participantsTotal:              sql.rows(PaymentQueries.PARTICIPANTS_TOTAL, [dateId: pageInformation.date.id]).first()
+                participantsTotalPayed:         sql.rows(PaymentQueries.PARTICIPANTS_TOTAL_PAYED
+                                                        .replace('db-name-payway', dbNamePayWay)
+                                                        .replace('db-name', dbName),
+                                                        [dateId: pageInformation.date.id])
+                                                        .first(),
+                participantsTotalNotCompleted:  sql.rows(PaymentQueries.PARTICIPANTS_TOTAL_PAYMENT_NOT_COMPLETE
+                                                        .replace('db-name-payway', dbNamePayWay)
+                                                        .replace('db-name', dbName),
+                                                        [dateId: pageInformation.date.id])
+                                                        .first(),
+                participantsTotalNoAttempt:     sql.rows(PaymentQueries.PARTICIPANTS_TOTAL_NO_ATTEMPT
+                                                        .replace('db-name-payway', dbNamePayWay)
+                                                        .replace('db-name', dbName),
+                                                        [dateId: pageInformation.date.id])
+                                                        .first(),
+                participantsTotal:              sql.rows(PaymentQueries.PARTICIPANTS_TOTAL
+                                                        .replace('db-name-payway', dbNamePayWay)
+                                                        .replace('db-name', dbName),
+                                                        [dateId: pageInformation.date.id])
+                                                        .first()
         ])
     }
 
