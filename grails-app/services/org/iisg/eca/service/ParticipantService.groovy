@@ -146,7 +146,9 @@ class ParticipantService {
 
         // Due to group_concat function, not possible with HQL
         sql.rows('''
-            SELECT u.user_id, u.lastname, u.firstname, GROUP_CONCAT(DISTINCT d.day_id ORDER BY d.day_number) AS days, GROUP_CONCAT(DISTINCT e.extra_id ORDER BY e.extra) AS extras
+            SELECT u.user_id, u.lastname, u.firstname,
+                CAST(GROUP_CONCAT(DISTINCT d.day_id ORDER BY d.day_number) AS CHAR) AS days,
+                CAST(GROUP_CONCAT(DISTINCT e.extra_id ORDER BY e.extra) AS CHAR) AS extras
             FROM users AS u
             INNER JOIN participant_date AS pd
             ON u.user_id = pd.user_id

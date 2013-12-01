@@ -15,14 +15,14 @@ beans = {
     }
 
     authenticationSuccessHandler(SecurityEventListener) {
-            def conf = SpringSecurityUtils.securityConfig
-            requestCache = ref('requestCache')
-            defaultTargetUrl = conf.successHandler.defaultTargetUrl
-            alwaysUseDefaultTargetUrl = conf.successHandler.alwaysUseDefault
-            targetUrlParameter = conf.successHandler.targetUrlParameter
-            useReferer = conf.successHandler.useReferer
-            redirectStrategy = ref('redirectStrategy')
-        }
+        def conf = SpringSecurityUtils.securityConfig
+        requestCache = ref('requestCache')
+        defaultTargetUrl = conf.successHandler.defaultTargetUrl
+        alwaysUseDefaultTargetUrl = conf.successHandler.alwaysUseDefault
+        targetUrlParameter = conf.successHandler.targetUrlParameter
+        useReferer = conf.successHandler.useReferer
+        redirectStrategy = ref('redirectStrategy')
+    }
 
     saltSource(UserSaltSource) {
         userPropertyToUse = application.config.grails.plugins.springsecurity.dao.reflectionSaltSourceProperty
