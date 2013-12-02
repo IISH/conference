@@ -13,21 +13,24 @@ import grails.util.Environment
 // }
 
 grails.project.groupId = org.iisg.eca // change this to alter the default package name and Maven publishing destination
-grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
-grails.mime.use.accept.header = false
-grails.mime.types = [ html: ['text/html','application/xhtml+xml'],
-                      xml: ['text/xml', 'application/xml'],
-                      text: 'text/plain',
-                      js: 'text/javascript',
-                      rss: 'application/rss+xml',
-                      atom: 'application/atom+xml',
-                      css: 'text/css',
-                      csv: 'text/csv',
-                      all: '*/*',
-                      json: ['application/json','text/json'],
-                      form: 'application/x-www-form-urlencoded',
-                      multipartForm: 'multipart/form-data'
-                    ]
+
+// The ACCEPT header will not be used for content negotiation for user agents containing the following strings (defaults to the 4 major rendering engines)
+grails.mime.disable.accept.header.userAgents = ['Gecko', 'WebKit', 'Presto', 'Trident']
+grails.mime.types = [
+        all:           '*/*',
+        atom:          'application/atom+xml',
+        css:           'text/css',
+        csv:           'text/csv',
+        form:          'application/x-www-form-urlencoded',
+        html:          ['text/html','application/xhtml+xml'],
+        js:            'text/javascript',
+        json:          ['application/json', 'text/json'],
+        multipartForm: 'multipart/form-data',
+        rss:           'application/rss+xml',
+        text:          'text/plain',
+        hal:           ['application/hal+json','application/hal+xml'],
+        xml:           ['text/xml', 'application/xml']
+]
 
 // URL Mapping Cache Max Size, defaults to 5000
 //grails.urlmapping.cache.maxsize = 1000
@@ -35,12 +38,34 @@ grails.mime.types = [ html: ['text/html','application/xhtml+xml'],
 // What URL patterns should be processed by the resources plugin
 grails.resources.adhoc.patterns = ['/images/*', '/css/*', '/js/*', '/plugins/*']
 
-// The default codec used to encode data with ${}
-grails.views.default.codec = "none" // none, html, base64
-grails.views.gsp.encoding = "UTF-8"
+// Legacy setting for codec used to encode data with ${}
+grails.views.default.codec = "html"
+
+// The default scope for controllers. May be prototype, session or singleton.
+// If unspecified, controllers are prototype scoped.
+grails.controllers.defaultScope = 'singleton'
+
+// GSP settings
+grails {
+    views {
+        gsp {
+            encoding = 'UTF-8'
+            htmlcodec = 'xml' // use xml escaping instead of HTML4 escaping
+            codecs {
+                expression = 'html' // escapes values inside ${}
+                scriptlet = 'html' // escapes output from scriptlets in GSPs
+                taglib = 'none' // escapes output from taglibs
+                staticparts = 'none' // escapes output from static template parts
+            }
+        }
+        // escapes all not-encoded output at final stage of outputting
+        filteringCodecForContentType {
+            //'text/html' = 'html'
+        }
+    }
+}
+
 grails.converters.encoding = "UTF-8"
-// enable Sitemesh preprocessing of GSP pages
-grails.views.gsp.sitemesh.preprocess = true
 // scaffolding templates configuration
 grails.scaffolding.templates.domainSuffix = 'Instance'
 
@@ -58,6 +83,9 @@ grails.exceptionresolver.params.exclude = ['password']
 
 // enable query caching by default, if false, you have to specify 'cache: true' in the query to cache queries
 grails.hibernate.cache.queries = false
+
+// Set to true to fallback to the Spring binder instead
+grails.databinding.useSpringBinder = true
 
 // Make sure grails.config.locations is initialized
 if (!grails.config.locations || !(grails.config.locations instanceof Collection)) {
@@ -89,6 +117,7 @@ environments {
         grails.mail.default.from = "ECA conference application <testeca1@knoex.com>"
         grails.mail.overrideAddress = "Test ECA <testeca1@knoex.com>"
         grails.mail.disabled = true
+        grails.plugin.springsecurity.debug.useFilter = true
     }
     test {
         grails.mail.disabled = true
@@ -100,63 +129,94 @@ environments {
 }
 
 // log4j configuration
-// We assume the production environment is running in an tomcat container. If not we use the application path's target folder.
-final String catalinaBase = System.properties.getProperty('catalina.base', './target') + "/logs"
-File logFile = new File(catalinaBase)
-logFile.mkdirs()
-println("log directory: " + logFile.absolutePath)
+if (Environment.current == Environment.PRODUCTION) {
+    // We assume the production environment is running in an tomcat container. If not we use the application path's target folder.
+    final String catalinaBase = System.properties.getProperty('catalina.base', './target') + "/logs"
+    File logFile = new File(catalinaBase)
+    logFile.mkdirs()
+    println("log directory: " + logFile.absolutePath)
 
-String loglevel = System.properties.getProperty('loglevel', 'warn')
-log4j = {
-    appenders {
-        console name: 'StackTrace'
-        rollingFile name: 'stacktrace', maxFileSize: 1024,
-                file: logFile.absolutePath + '/stacktrace.log'
+    String loglevel = System.properties.getProperty('loglevel', 'warn')
+    log4j = {
+        appenders {
+            console name: 'StackTrace'
+            rollingFile name: 'stacktrace', maxFileSize: 1024,
+                    file: logFile.absolutePath + '/stacktrace.log'
+        }
+
+        root {
+            "$loglevel"()
+        }
+
+        "$loglevel" 'org.codehaus.groovy.grails.web.servlet',  //  controllers
+                    'org.codehaus.groovy.grails.web.pages', //  GSP
+                    'org.codehaus.groovy.grails.web.sitemesh', //  layouts
+                    'org.codehaus.groovy.grails.web.mapping.filter', // URL mapping
+                    'org.codehaus.groovy.grails.web.mapping', // URL mapping
+                    'org.codehaus.groovy.grails.commons', // core / classloading
+                    'org.codehaus.groovy.grails.plugins', // plugins
+                    'org.codehaus.groovy.grails.orm.hibernate', // hibernate integration
+                    'org.springframework',
+                    'org.hibernate',
+                    'net.sf.ehcache.hibernate'
     }
-
-    root {
-        "$loglevel"()
+}
+else {
+    log4j = {
+        root {
+            warn()
+        }
     }
-
-    "$loglevel" 'org.codehaus.groovy.grails.web.servlet',  //  controllers
-               'org.codehaus.groovy.grails.web.pages', //  GSP
-               'org.codehaus.groovy.grails.web.sitemesh', //  layouts
-               'org.codehaus.groovy.grails.web.mapping.filter', // URL mapping
-               'org.codehaus.groovy.grails.web.mapping', // URL mapping
-               'org.codehaus.groovy.grails.commons', // core / classloading
-               'org.codehaus.groovy.grails.plugins', // plugins
-               'org.codehaus.groovy.grails.orm.hibernate', // hibernate integration
-               'org.springframework',
-               'org.hibernate',
-               'net.sf.ehcache.hibernate'
 }
 
 // Spring Security Core config
-grails.plugins.springsecurity.userLookup.userDomainClassName = 'org.iisg.eca.domain.User'
-grails.plugins.springsecurity.userLookup.usernamePropertyName = 'email'
-grails.plugins.springsecurity.userLookup.passwordPropertyName = 'password'
-grails.plugins.springsecurity.userLookup.authoritiesPropertyName = 'roles'
-grails.plugins.springsecurity.userLookup.enabledPropertyName = 'enabled'
-grails.plugins.springsecurity.userLookup.accountLockedPropertyName = 'deleted'
-grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'org.iisg.eca.domain.UserRole'
+grails {
+    plugin {
+        springsecurity {
+            userLookup {
+                userDomainClassName = 'org.iisg.eca.domain.User'
+                usernamePropertyName = 'email'
+                passwordPropertyName = 'password'
+                authoritiesPropertyName = 'roles'
+                enabledPropertyName = 'enabled'
+                accountLockedPropertyName = 'deleted'
+                authorityJoinClassName = 'org.iisg.eca.domain.UserRole'
+            }
 
-grails.plugins.springsecurity.authority.className = 'org.iisg.eca.domain.Role'
-grails.plugins.springsecurity.authority.nameField = 'role'
+            authority {
+                className = 'org.iisg.eca.domain.Role'
+                nameField = 'role'
+            }
 
-grails.plugins.springsecurity.useSecurityEventListener = true
-grails.plugins.springsecurity.password.algorithm = 'SHA-512'
-grails.plugins.springsecurity.dao.reflectionSaltSourceProperty = 'salt'
+            requestMap {
+                className = 'org.iisg.eca.domain.RequestMap'
+                urlField = 'url'
+                configAttributeField = 'configAttribute'
+                httpMethodField = 'httpMethod'
+            }
 
-grails.plugins.springsecurity.securityConfigType = grails.plugins.springsecurity.SecurityConfigType.Requestmap
+            password {
+                algorithm = 'SHA-512'
+                hash.iterations = 1
+            }
 
-grails.plugins.springsecurity.requestMap.className = 'org.iisg.eca.domain.RequestMap'
-grails.plugins.springsecurity.requestMap.urlField = 'url'
-grails.plugins.springsecurity.requestMap.configAttributeField = 'configAttribute'
-
-grails.plugins.springsecurity.roleHierarchy = '''
-        superAdmin > admin
-        admin > user
-'''
+            logout.postOnly = false
+            useSecurityEventListener = true
+            dao.reflectionSaltSourceProperty = 'salt'
+            securityConfigType = grails.plugin.springsecurity.SecurityConfigType.Requestmap
+            roleHierarchy = 'superAdmin > admin admin > user'
+            controllerAnnotations.staticRules = [
+                    '/':                              ['permitAll'],
+                    '/index':                         ['permitAll'],
+                    '/index.gsp':                     ['permitAll'],
+                    '/**/js/**':                      ['permitAll'],
+                    '/**/css/**':                     ['permitAll'],
+                    '/**/images/**':                  ['permitAll'],
+                    '/**/favicon.ico':                ['permitAll']
+            ]
+        }
+    }
+}
 
 // Quartz plugin config
 grails.plugin.quartz2.autoStartup = true 

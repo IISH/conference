@@ -1,6 +1,6 @@
 package org.iisg.eca.domain
 
-import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+import grails.plugin.springsecurity.SpringSecurityUtils
 
 /**
  * Domain class of table holding all available user roles

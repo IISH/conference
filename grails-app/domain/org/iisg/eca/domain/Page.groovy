@@ -2,7 +2,7 @@ package org.iisg.eca.domain
 
 import org.iisg.eca.utils.MenuItem
 import org.springframework.context.i18n.LocaleContextHolder
-import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+import grails.plugin.springsecurity.SpringSecurityUtils
 
 /**
  * Domain class of table holding all pages of this application

@@ -1,7 +1,7 @@
 package org.iisg.eca.domain
 
 import java.security.SecureRandom
-import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+import grails.plugin.springsecurity.SpringSecurityUtils
 
 /**
  * Domain class of table holding all registered users

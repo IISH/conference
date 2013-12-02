@@ -789,6 +789,10 @@ span.remove-item {
     border: 1px solid [main_color_dark];
 }
 
+#change-user {
+    margin-left: 30px;
+}
+
 #selected-days {
     text-align: center;
 }

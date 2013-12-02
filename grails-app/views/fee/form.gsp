@@ -58,7 +58,7 @@
                                     <span class="required-indicator">*</span>
                                 </label>
                                 <span class="property-value">
-                                    <g:field type="number" name="feeAmount_${i}.feeAmount" min="0" required="required" value="${fieldValue(bean: amount, field: 'feeAmount')}" />
+                                    <g:field type="text" name="feeAmount_${i}.feeAmount" required="required" value="${amount.feeAmount}" />
                                 </span>
                             </div>
 
@@ -115,7 +115,7 @@
                                 <span class="required-indicator">*</span>
                             </label>
                             <span class="property-value">
-                                <g:field type="number" name="feeAmount_null.feeAmount" min="0" required="required" value="9999.99" />
+                                <g:field type="text" name="feeAmount_null.feeAmount" required="required" value="9999.99" />
                             </span>
                         </div>
 

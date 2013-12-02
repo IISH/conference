@@ -8,7 +8,7 @@ import org.iisg.eca.domain.Group
 import org.iisg.eca.domain.UserRole
 import org.iisg.eca.domain.UserPage
 
-import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+import grails.plugin.springsecurity.SpringSecurityUtils
 
 /**
  * Controller responsible for handling requests on user authentication

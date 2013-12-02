@@ -29,21 +29,23 @@ class MaintenanceJob {
      * Collect the maintenance queries from the database and run them in order
      */
     def execute() {
-        Sql sql = new Sql(dataSource)
+        MaintenanceQuery.withNewSession { session ->
+            Sql sql = new Sql(dataSource)
 
-         // Get all maintenance queries
-        List<MaintenanceQuery> queries = MaintenanceQuery.listOrderByOrder()
+            // Get all maintenance queries
+            List<MaintenanceQuery> queries = MaintenanceQuery.listOrderByOrder()
 
-        // Run each query
-        for (MaintenanceQuery query : queries) {
-            String[] calls = query.query.split(';')*.trim()
+            // Run each query
+            for (MaintenanceQuery query : queries) {
+                String[] calls = query.query.split(';')*.trim()
 
-            for (int i=0; i<calls.length; i++) {
-                if (calls[i].toLowerCase().startsWith("call")) {
-                    try {
-                        sql.execute(calls[i])
+                for (int i=0; i<calls.length; i++) {
+                    if (calls[i].toLowerCase().startsWith("call")) {
+                        try {
+                            sql.execute(calls[i])
+                        }
+                        catch (Exception e) { }
                     }
-                    catch (Exception e) { }
                 }
             }
         }

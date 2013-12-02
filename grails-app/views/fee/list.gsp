@@ -34,7 +34,7 @@
                             <td class="id hidden">${feeAmount.id}</td>
                             <td><g:fieldValue bean="${feeAmount}" field="numDays" /></td>
                             <td><g:fieldValue bean="${feeAmount}" field="endDate" /></td>
-                            <td><g:fieldValue bean="${feeAmount}" field="feeAmount" /></td>
+                            <td><eca:getAmount amount="${feeAmount.feeAmount}" /></td>
                         </tr>
                     </g:each>
                 </tbody>

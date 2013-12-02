@@ -1,7 +1,7 @@
 package org.iisg.eca.security
 
 import org.springframework.security.core.GrantedAuthority
-import org.codehaus.groovy.grails.plugins.springsecurity.GrailsUser
+import grails.plugin.springsecurity.userdetails.GrailsUser
 
 /**
  * Extension of the <code>GrailsUser</code> class to include extra user information necessary
@@ -13,9 +13,12 @@ class MyUserDetails extends GrailsUser {
     // Necessary for comparing hashed passwords during authentication
     final String salt
 
-    MyUserDetails(String username, String password, boolean enabled, boolean accountNonLocked,
-            Collection<GrantedAuthority> authorities, long id, String fullName, String salt) {
+    MyUserDetails(String username, String password, boolean enabled,
+                    boolean accountNonLocked,
+                    Collection<GrantedAuthority> authorities,
+                    long id, String fullName, String salt) {
         super(username, password, enabled, true, true, accountNonLocked, authorities, id)
+
         this.fullName = fullName
         this.salt = salt
     }

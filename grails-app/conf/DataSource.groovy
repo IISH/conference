@@ -21,7 +21,10 @@ dataSource_payWay {
 hibernate {
     cache.use_second_level_cache = true
     cache.use_query_cache = true
-    cache.region.factory_class = 'net.sf.ehcache.hibernate.EhCacheRegionFactory'
+    //cache.region.factory_class = 'net.sf.ehcache.hibernate.EhCacheRegionFactory' // Hibernate 3
+    cache.region.factory_class = 'net.sf.ehcache.hibernate.SingletonEhCacheRegionFactory' // Hibernate 3 singleton
+    //cache.region.factory_class = 'org.hibernate.cache.ehcache.EhCacheRegionFactory' // Hibernate 4
+    //cache.region.factory_class = 'org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory' // Hibernate 4 singleton
 }
 // environment specific settings
 environments {
@@ -32,7 +35,7 @@ environments {
             username = "sa"
             password = ""
             dbCreate = "update"
-            url = "jdbc:h2:mem:testDb;MVCC=TRUE"
+            url = "jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000"
         }
         dataSource_readOnly {
             driverClassName = "org.h2.Driver"
@@ -40,7 +43,7 @@ environments {
             username = "sa"
             password = ""
             dbCreate = "update"
-            url = "jdbc:h2:mem:testDb;MVCC=TRUE"
+            url = "jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000"
         }
         dataSource_payWay {
             driverClassName = "org.h2.Driver"
@@ -48,7 +51,7 @@ environments {
             username = "sa"
             password = ""
             dbCreate = "update"
-            url = "jdbc:h2:mem:testDb;MVCC=TRUE"
+            url = "jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000"
         }
     }
     production {
@@ -66,6 +69,7 @@ environments {
                 testWhileIdle = true
                 testOnReturn = true
                 validationQuery = "SELECT 1"
+                jdbcInterceptors = "ConnectionState"
             }
         }
         dataSource_readOnly {
@@ -78,6 +82,7 @@ environments {
                 testWhileIdle = true
                 testOnReturn = true
                 validationQuery = "SELECT 1"
+                jdbcInterceptors = "ConnectionState"
             }
         }
         dataSource_payWay {
@@ -90,6 +95,7 @@ environments {
                 testWhileIdle = true
                 testOnReturn = true
                 validationQuery = "SELECT 1"
+                jdbcInterceptors = "ConnectionState"
             }
         }
     }

@@ -1,5 +1,8 @@
 package org.iisg.eca.tags
 
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+
 import org.iisg.eca.domain.Page
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Event
@@ -8,10 +11,7 @@ import org.iisg.eca.domain.EventDate
 import org.iisg.eca.utils.MenuItem
 
 import groovy.xml.MarkupBuilder
-
-import org.codehaus.groovy.grails.web.util.WebUtils
-import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
-import org.apache.commons.lang.RandomStringUtils
+import org.springframework.context.i18n.LocaleContextHolder
 
 /**
  * Utilities tag library
@@ -22,6 +22,9 @@ class UtilsTagLib {
      */
     def springSecurityService
 
+    /**
+     * Holds the current event date and page of the current request
+     */
     def pageInformation
 
     static namespace = "eca"
@@ -156,7 +159,7 @@ class UtilsTagLib {
      */
     def roles = {
         // Get all the roles of the currently logged in user
-        String userRoles = SpringSecurityUtils.getPrincipalAuthorities().collect { it.authority }.join(', ')
+        String userRoles = User.get(springSecurityService.principal.id).roles.join(', ')
 
         // If he has any roles, return them
         if (!userRoles.isEmpty()) {
@@ -309,7 +312,14 @@ class UtilsTagLib {
     def getAmount = { attrs ->
         BigDecimal amount = new BigDecimal(attrs.amount)
         amount = (attrs.cents) ? amount.movePointLeft(2) : amount
-        out << amount.toString().encodeAsHTML()
+
+        DecimalFormat formatter = new DecimalFormat()
+        formatter.setDecimalSeparatorAlwaysShown(true)
+        formatter.setMinimumFractionDigits(2)
+        formatter.setMaximumFractionDigits(2)
+        formatter.setDecimalFormatSymbols(new DecimalFormatSymbols(LocaleContextHolder.locale))
+
+        out << formatter.format(amount).encodeAsHTML()
     }
 
     /**

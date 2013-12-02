@@ -9,7 +9,7 @@
     <body>
         <input type="hidden" name="id" value="${params.id}" />
         
-        <div class="title-menu-link">
+        <div class="title-menu-link toggle-session-participants">
             <span class="ui-icon ui-icon-person"></span>
             <a><g:message code="default.toggle.label" args="${[g.message(code: 'session.sessionParticipants.label').toLowerCase()]}" /></a>
         </div>

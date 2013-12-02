@@ -140,8 +140,10 @@ class ParticipantSessionService {
                 INNER JOIN sp.type AS t
                 INNER JOIN sp.session AS s
                 WHERE sp.user.id = :userId
+                AND s.date.id = :dateId
+                AND s.deleted = false
                 ORDER BY s.code, s.name, t.importance DESC
-            ''', [userId: participant?.user?.id])
+            ''', [userId: participant?.user?.id, dateId: pageInformation.date.id])
         )
     }
 

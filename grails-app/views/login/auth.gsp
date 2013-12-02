@@ -39,7 +39,7 @@
                 
                 <fieldset class="buttons">
                     <span class="value">
-                        <input type='submit' id="login" value='${message(code: "springSecurity.login.button")}'/>
+                        <input type='submit' id="submit" value='${message(code: "springSecurity.login.button")}'/>
                     </span>
                 </fieldset>
                 
@@ -49,5 +49,13 @@
                 </fieldset>
             </form>
         </div>
+
+        <script type='text/javascript' language="javascript">
+            <!--
+            (function() {
+                document.forms['loginForm'].elements['j_username'].focus();
+            })();
+            // -->
+        </script>
     </body>
 </html>

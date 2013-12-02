@@ -10,7 +10,8 @@ import org.iisg.eca.domain.IPAuthentication
 
 import org.apache.commons.lang.RandomStringUtils
 import org.springframework.context.i18n.LocaleContextHolder
-import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+
+import grails.plugin.springsecurity.SpringSecurityUtils
 
 /**
  * All filters for accessing a page
@@ -45,18 +46,20 @@ class EcaFilters {
          *  Every page (except login/logout/xhr) should be in the database, so lookup the page information from the database
          *  If it is there, cache the page information for this request
          */
-        page(controller: '*', action: '*') {
+        page(controller: '*', action: '*', controllerExclude: 'css') {
             before = {
-                Page page = Page.findByControllerAndAction(params.controller, params.action)
+                if (!params.xhr) {
+                    Page page = Page.findByControllerAndAction(params.controller, params.action)
 
-                if (page) {
-                    pageInformation.page = page
+                    if (page) {
+                        pageInformation.page = page
+                    }
+
+                    // Also save the parameters of this page in a session
+                    String sessionIdentifier = RandomStringUtils.random(8, true, true)
+                    session.putValue(sessionIdentifier, params.clone())
+                    pageInformation.sessionIdentifier = sessionIdentifier
                 }
-
-                // Also save the parameters of this page in a session
-                String sessionIdentifier = RandomStringUtils.random(8, true, true)
-                session.putValue(sessionIdentifier, params.clone())
-                pageInformation.sessionIdentifier = sessionIdentifier
 
                 return true
             }
@@ -125,9 +128,8 @@ class EcaFilters {
                         return
                     }
                     else if (   !pageInformation.date && params.id &&
-                               // (((params.controller == 'event') && ((params.action == 'show') || (params.action == 'edit'))) ||
-                             //   ((params.controller == 'eventDate') && (params.action == 'create')))) {
-                                ((params.controller == 'event') && (params.action == 'create' || params.action == 'list' || params.action == 'index'))) {
+                                ((params.controller == 'event') &&
+                                (params.action == 'create' || params.action == 'list' || params.action == 'index'))) {
                         // Event and event date are tenants, but accessible from outside a tenant
                         // So check these specific actions, which need an event id, now
                         List<UserRole> access = UserRole.withCriteria {
@@ -176,16 +178,14 @@ class EcaFilters {
                 return true
             }
             after = { Map model ->
-                if (!model) {
-                    model = [:]
-                }
-                
-                // Add the pageInformation bean information to all models by default
-                model.put('curPage', pageInformation.page)
-                model.put('curDate', pageInformation.date)
+                if (model != null) {
+                    // Add the pageInformation bean information to all models by default
+                    model.put('curPage', pageInformation.page)
+                    model.put('curDate', pageInformation.date)
 
-                // Also add current language information to the model
-                model.put('curLang', LocaleContextHolder.locale.language)
+                    // Also add current language information to the model
+                    model.put('curLang', LocaleContextHolder.locale.language)
+                }
             }
         }
     }

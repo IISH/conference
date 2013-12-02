@@ -1,30 +1,32 @@
 package org.iisg.eca.controller
 
-import javax.servlet.http.Cookie
-import javax.servlet.http.HttpServletResponse
-
-import grails.converters.JSON
-
-import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
-
 import org.springframework.security.authentication.LockedException
 import org.springframework.security.authentication.DisabledException
 import org.springframework.security.authentication.AccountExpiredException
 import org.springframework.security.authentication.CredentialsExpiredException
 
 import org.springframework.security.web.WebAttributes
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-
+import org.springframework.security.access.annotation.Secured
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.SentEmail
 import org.iisg.eca.domain.EmailTemplate
 
+import grails.converters.JSON
+import grails.plugin.springsecurity.SpringSecurityUtils
+
+import javax.servlet.http.HttpServletResponse
+import java.security.MessageDigest;
+import org.springframework.security.crypto.codec.Base64;
+import org.springframework.security.crypto.codec.Hex;
+import org.springframework.security.crypto.codec.Utf8;
+
 /**
  * Controller for login related actions
  */
 class LoginController {
+
 	/**
 	 * Dependency injection for the authenticationTrustResolver.
 	 */
@@ -39,6 +41,9 @@ class LoginController {
      *  EmailService for mailing the new password when requested
      */
     def emailService
+
+    def passwordEncoder
+    def saltSource
 
 	/**
 	 * Default action; redirects to 'defaultTargetUrl' if logged in, /login/auth otherwise.
@@ -102,7 +107,6 @@ class LoginController {
 	 * Callback after a failed login. Redirects to the auth page with a warning message.
 	 */
 	def authfail() {
-	    def username = session[UsernamePasswordAuthenticationFilter.SPRING_SECURITY_LAST_USERNAME_KEY]
 		String msg = ''
 		def exception = session[WebAttributes.AUTHENTICATION_EXCEPTION]
 		if (exception) {

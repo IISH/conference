@@ -26,36 +26,38 @@ class CreateEmailJob {
      * @param context The context containing a map with all users and the template needed
      */
     def execute(context) {
-        // Load the users to send to, template to use and the event date
-        List<User> users = context.mergedJobDataMap.get('users')
-        EmailTemplate template = context.mergedJobDataMap.get('template')
-        EventDate date = context.mergedJobDataMap.get('date')
-        
-        // If they are correctly send, we can start creating the emails
-        if (users && template && date) {
-            try {
-                for (User user : users) {
-                    // Let the emailService create all the emails
-                    SentEmail email = emailService.createEmail(user, template, date)
-                    email.save()
-                }
+        SentEmail.withNewSession { session ->
+            // Load the users to send to, template to use and the event date
+            List<User> users = context.mergedJobDataMap.get('users')
+            EmailTemplate template = context.mergedJobDataMap.get('template')
+            EventDate date = context.mergedJobDataMap.get('date')
 
-                // Successfully created the emails, send a notification email
-                emailService.sendInfoMail("Succesfully created the emails for ${users.size()} participants", """\
+            // If they are correctly send, we can start creating the emails
+            if (users && template && date) {
+                try {
+                    for (User user : users) {
+                        // Let the emailService create all the emails
+                        SentEmail email = emailService.createEmail(user, template, date)
+                        email.save()
+                    }
+
+                    // Successfully created the emails, send a notification email
+                    emailService.sendInfoMail("Succesfully created the emails for ${users.size()} participants", """\
                     Succesfully created the emails for ${users.size()} participants.
                     The emails will be emailed soon.
                 """.stripIndent().toString(), date?.event)
-            }
-            catch (Exception e) {
-                StringWriter sw = new StringWriter()
-                e.printStackTrace(new PrintWriter(sw))
+                }
+                catch (Exception e) {
+                    StringWriter sw = new StringWriter()
+                    e.printStackTrace(new PrintWriter(sw))
 
-                // Failed to create the emails, send a notification email with the exception thrown
-                emailService.sendInfoMail("Failed to create the emails for ${users.size()} participants", """\
+                    // Failed to create the emails, send a notification email with the exception thrown
+                    emailService.sendInfoMail("Failed to create the emails for ${users.size()} participants", """\
                     |Failed to create the emails for ${users.size()} participants.
                     |Template used: ${template.description}
                     |Exception: ${sw.toString()}
                 """.stripMargin().toString(), date?.event)
+                }
             }
         }
     }

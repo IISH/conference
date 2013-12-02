@@ -43,6 +43,19 @@ class UserRole extends EventDomain implements Serializable {
     }
 
     /**
+     * Get the UserRole based on the ids of the user and the role
+     * @param userId The id of the user in question
+     * @param roleId The id of the role in question
+     * @return The UserRole
+     */
+    static UserRole get(long userId, long roleId) {
+        UserRole.where {
+            user == User.load(userId) &&
+            role == Role.load(roleId)
+        }.get()
+    }
+
+    /**
      * Grants a specific user a new role and/or grants a specific user access to a specific event date
      * @param user The user in question
      * @param role The new role to be assigned to the user
@@ -61,24 +74,22 @@ class UserRole extends EventDomain implements Serializable {
      * @return Whether the role and its event dates were removed for this specific user
      */
     static boolean remove(User user, Role role, boolean flush = false) {
-        List<UserRole> instances = UserRole.findAllByUserAndRole(user, role)
-        if (!instances) {
-            return false
-        }
+        int rowCount = UserRole.where {
+            user == User.load(user.id) &&
+            role == Role.load(role.id)
+        }.deleteAll()
 
-        instances.each {
-            it.delete(flush: flush)
-        }
-        
-        return true
+        rowCount > 0
     }
 
     /**
-     * Takes away all roles of the given user
-     * @param user The user in question
-     */
+    * Takes away all roles of the given user
+    * @param user The user in question
+    */
     static void removeAll(User user) {
-        executeUpdate 'DELETE FROM UserRole WHERE user=:user', [user: user]
+        UserRole.where {
+            user == User.load(user.id)
+        }.deleteAll()
     }
 
     /**
@@ -86,6 +97,8 @@ class UserRole extends EventDomain implements Serializable {
      * @param role The role in question
      */
     static void removeAll(Role role) {
-        executeUpdate 'DELETE FROM UserRole WHERE role=:role', [role: role]
+        UserRole.where {
+            role == Role.load(role.id)
+        }.deleteAll()
     }
 }

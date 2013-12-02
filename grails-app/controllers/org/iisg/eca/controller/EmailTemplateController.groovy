@@ -1,7 +1,7 @@
 package org.iisg.eca.controller
 
 import org.iisg.eca.domain.EmailTemplate
-import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+import grails.plugin.springsecurity.SpringSecurityUtils
 
 /**
  * Controller responsible for handling requests on email templates

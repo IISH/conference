@@ -4,6 +4,6 @@
         <meta name="layout" content="main">
     </head>
     <body>
-        ${content}
+        ${raw(content)}
     </body>
 </html>
