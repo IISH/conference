@@ -110,6 +110,11 @@ if (Environment.current != Environment.TEST) {
     }
 }
 
+quartz {
+    autoStartup = true
+    jdbcStore = false
+}
+
 // set per-environment serverURL stem for creating absolute links
 environments {
     development {
@@ -121,6 +126,9 @@ environments {
     }
     test {
         grails.mail.disabled = true
+        quartz {
+            autoStartup = false
+        }
     }
     production {
         grails.logging.jul.usebridge = false
@@ -215,18 +223,5 @@ grails {
                     '/**/favicon.ico':                ['permitAll']
             ]
         }
-    }
-}
-
-// Quartz plugin config
-grails.plugin.quartz2.autoStartup = true 
-
-org {
-    quartz {
-        scheduler.instanceName = 'MyAppScheduler'
-        threadPool.class = 'org.quartz.simpl.SimpleThreadPool'
-        threadPool.threadCount = 5
-        threadPool.threadsInheritContextClassLoaderOfInitializingThread = true
-        jobStore.class = 'org.quartz.simpl.RAMJobStore'
     }
 }
