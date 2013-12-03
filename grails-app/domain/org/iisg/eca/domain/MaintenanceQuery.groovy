@@ -17,7 +17,7 @@ class MaintenanceQuery extends DefaultDomain {
         id          column: 'maintenance_query_id'
         query       column: 'query'
         description column: 'description'
-        order       column: 'order'
+        order       column: 'sort_order'
 
         sort        'order'
     }

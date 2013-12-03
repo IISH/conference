@@ -65,7 +65,7 @@ class User extends DefaultDomain {
         email               column: 'email'
         lastName            column: 'lastname'
         firstName           column: 'firstname'
-        gender              column: 'gender',       sqlType: 'enum'
+        gender              column: 'gender'
         title               column: 'title'
         address             column: 'address',      type: 'text'
         city                column: 'city'
