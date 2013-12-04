@@ -16,6 +16,10 @@ public interface PaymentQueries {
         WHERE u.deleted = false
         AND pd.date_id = :dateId
         AND pd.deleted = false
+        AND (
+            pd.participant_state_id IN (1,2)
+            OR pd.payment_id IS NOT NULL
+        )
         ORDER BY u.lastname ASC, u.firstname ASC
     """
 
@@ -131,6 +135,7 @@ public interface PaymentQueries {
     public static final String PARTICIPANTS_TOTAL = """
         SELECT count(*) AS no_participants
         ${MAIN_BODY}
+        AND pd.participant_state_id IN (1,2)
     """
 
     public static final String PARTICIPANTS_TOTAL_PAYED =
