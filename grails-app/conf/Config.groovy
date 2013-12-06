@@ -110,6 +110,7 @@ if (Environment.current != Environment.TEST) {
     }
 }
 
+// Quartz configuration
 quartz {
     autoStartup = true
     jdbcStore = false
@@ -144,7 +145,7 @@ if (Environment.current == Environment.PRODUCTION) {
     logFile.mkdirs()
     println("log directory: " + logFile.absolutePath)
 
-    String loglevel = System.properties.getProperty('loglevel', 'warn')
+    String loglevel = 'info' //System.properties.getProperty('loglevel', 'warn')
     log4j = {
         appenders {
             console name: 'StackTrace'
@@ -172,7 +173,7 @@ if (Environment.current == Environment.PRODUCTION) {
 else {
     log4j = {
         root {
-            warn()
+            info()
         }
     }
 }

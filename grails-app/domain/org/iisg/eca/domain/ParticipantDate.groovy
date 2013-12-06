@@ -8,7 +8,10 @@ import org.iisg.eca.domain.payway.Order
  */
 class ParticipantDate extends EventDateDomain {
     def dataSource
-    
+
+    private static final String QUERY_PAPER_ACCEPTED = "paperAccepted"
+    private static final String QUERY_PAPER_IN_CONSIDERATION = "paperInConsideration"
+    private static final String QUERY_PAPER_NOT_ACCEPTED = "paperNotAccepted"
     private static final String QUERY_STUDENT_LOWER_FEE_NOT_ANSWERED = "studentLowerFeeNotAnswered"
     private static final String QUERY_NO_STUDENT_LOWER_FEE_NOT_ANSWERED = "noStudentLowerFeeNotAnswered"
     private static final String QUERY_NO_PAYMENT_INFO = "noPaymentInfo"
@@ -71,6 +74,15 @@ class ParticipantDate extends EventDateDomain {
         Sql sql = new Sql(dataSource)
         
         switch (queryType) {
+            /*case QUERY_PAPER_ACCEPTED:
+            case QUERY_PAPER_IN_CONSIDERATION:
+            case QUERY_PAPER_NOT_ACCEPTED:
+                sql.executeUpdate("""
+                    UPDATE  papers
+                    SET     mail_paper_state = 1
+                    WHERE   user_id = ?
+                """, [user.id])
+                break*/
             case QUERY_STUDENT_LOWER_FEE_NOT_ANSWERED:
             case QUERY_NO_STUDENT_LOWER_FEE_NOT_ANSWERED:
                 sql.executeUpdate("""

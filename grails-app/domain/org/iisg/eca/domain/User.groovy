@@ -175,6 +175,7 @@ class User extends DefaultDomain {
             papers {
                 eq('state.id', PaperState.PAPER_ACCEPTED)
                 eq('date.id', date.id)
+                eq('mailPaperState', false)
             }
         }
 
@@ -184,6 +185,7 @@ class User extends DefaultDomain {
             papers {
                 eq('state.id', PaperState.PAPER_IN_CONSIDERATION)
                 eq('date.id', date.id)
+                eq('mailPaperState', false)
             }
         }
 
@@ -193,6 +195,7 @@ class User extends DefaultDomain {
             papers {
                 eq('state.id', PaperState.PAPER_NOT_ACCEPTED)
                 eq('date.id', date.id)
+                eq('mailPaperState', false)
             }
         }
 
@@ -221,6 +224,14 @@ class User extends DefaultDomain {
 
             participantDates {
                 eq('emailPaymentInfo', false)
+            }
+        }
+
+        noPaymentAttempt { date ->
+            allParticipants(date)
+
+            participantDates {
+                isNull('paymentId')
             }
         }
     }

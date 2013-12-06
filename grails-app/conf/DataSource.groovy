@@ -57,13 +57,9 @@ environments {
     production {
         dataSource {
             properties {
-                maxActive = 50
-                maxIdle = 25
-                minIdle = 5
-                initialSize = 5
-                minEvictableIdleTimeMillis = 60000
-                timeBetweenEvictionRunsMillis = 60000
-                maxWait = 10000
+                maxActive = -1
+                minEvictableIdleTimeMillis = 1800000
+                timeBetweenEvictionRunsMillis = 1800000
                 numTestsPerEvictionRun = 3
                 testOnBorrow = true
                 testWhileIdle = true
