@@ -83,8 +83,6 @@ class EmailService {
                 // Successfully send, so set the date and time of sending
                 sentEmail.dateTimeSent = new Date()
 
-                log.warn("Email send to \"${sentEmail.fromName}\" <${sentEmail.fromEmail}>: \n${sentEmail.body}")
-
                 // Update the participant
                 ParticipantDate participant = ParticipantDate.findByUserAndDate(sentEmail.user, sentEmail.date)
                 participant?.updateByQueryType(sentEmail.queryType)

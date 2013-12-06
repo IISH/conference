@@ -1,12 +1,7 @@
 package org.iisg.eca.jobs
 
-import org.quartz.Trigger
-import static org.quartz.TriggerBuilder.*
-import static org.quartz.SimpleScheduleBuilder.*
-
 import org.iisg.eca.domain.Setting
 import org.iisg.eca.domain.SentEmail
-import org.iisg.eca.domain.ParticipantDate
 
 /**
  * SendEmailJob runs in the background, checking the database for emails waiting to be send and tries to send them
@@ -17,6 +12,9 @@ class SendEmailJob {
      */
     def emailService
 
+    /**
+     * To check hard coded configuration settings
+     */
     def grailsApplication
     
     /**
@@ -24,7 +22,7 @@ class SendEmailJob {
      * Defaults to a minimum of 15 minutes between sending
      */
     static triggers = {
-        simple name: "SendEmail", repeatInterval: 900000, repeatCount: 0
+        simple name: "SendEmail", repeatCount: 0
     }
     
     // No concurrent jobs, wait until the previous one is finished
@@ -67,44 +65,26 @@ class SendEmailJob {
                 }
             }
 
-            // Reschedule the job, in case settings were changed
-            int minutes = getMinutesBetweenSending()
-            Trigger newTrigger = getTrigger(minutes)
-            reschedule(newTrigger)
+            // Schedule the next email session, in case settings were changed
+            Date nextTrigger = getNextTriggerTime()
+            schedule(nextTrigger)
 
-            Calendar cal = Calendar.getInstance()
-            cal.setTime(new Date())
-            cal.add(Calendar.MINUTE, minutes)
-            log.warn("End of current email session: time=${new Date()} minutesBetweenSending=${minutes} newSessionStarts=${cal.getTime()}")
+            log.warn("End of current email session: time=${new Date()} newSessionStarts=${nextTrigger}")
         }
     }
     
     /**
-     * Gets the minimum time between sending from the database in minutes
-     * @return The minimum time between sending in seconds, defaults to 15 minutes
+     * Gets the specific timestamp when the next email session should be triggered, defaults to 15 minutes
+     * @return The date/time of the next trigger
      */
-    int getMinutesBetweenSending() {
-        Integer interval = new Integer(Setting.findByProperty(Setting.EMAIL_MIN_MINUTES_BETWEEN_SENDING).value)
-        (interval) ? interval : 15
-    }
-    
-    /**
-     * Create a new trigger for the time between sending emails
-     */
-    static Trigger getTrigger(int minutes) {
-        // Compute the new trigger time
+    Date getNextTriggerTime() {
+        Integer minutes = new Integer(Setting.findByProperty(Setting.EMAIL_MIN_MINUTES_BETWEEN_SENDING).value)
+        (minutes) ? minutes : 15
+
         Calendar cal = Calendar.getInstance()
         cal.setTime(new Date())
         cal.add(Calendar.MINUTE, minutes)
 
-        // Create the new trigger
-        newTrigger()
-            .withIdentity("SendEmail")
-            .withSchedule(
-                simpleSchedule()
-                    .withRepeatCount(0)
-            )
-            .startAt(cal.getTime())
-            .build()
+        cal.getTime()
     }
 }
