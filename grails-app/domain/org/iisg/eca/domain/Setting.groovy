@@ -20,6 +20,7 @@ class Setting extends EventDomain {
     static final String DISABLE_EMAIL_SESSIONS = 'disable_email_sessions'
     static final String DEFAULT_ORGANISATION_EMAIL = 'default_organisation_email'
     static final String EMAIL_ADDRESS_INFO_ERRORS = 'email_address_info_errors'
+    static final String MAIL_INVITATION_LETTERS_TO = 'mail_invitation_letters_to'
     static final String WEB_ADDRESS = 'web_address'
     static final String CHANGE_USER = 'change_user'
     static final String DONT_SEND_EMAILS_TO = 'dont_send_emails_to'

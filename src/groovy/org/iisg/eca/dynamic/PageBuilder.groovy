@@ -71,7 +71,7 @@ class PageBuilder {
         }
         
         // Now build the actual form...
-        builder.form(method: "post", action: "#") {
+        builder.form(method: "post", action: "#", class: element.classNames) {
             builder.input(type: "hidden", name: "id", value: "\${${RESULTS}.get(${element.eid}).get('${element.domainClass.name}').id}")
             builder.input(type: "hidden", name: "eid", value: element.eid)
             builder.fieldset(class: "form") {
@@ -88,7 +88,7 @@ class PageBuilder {
      * @param element The container element which represents a table
      */
     private void buildTable(DataContainer element) {
-        builder.div(class: "tbl_container") {
+        builder.div(class: "tbl_container ${element.classNames}") {
             if (element.action) {
                 builder.input(type: "hidden", name: "url", value: "\${eca.createLinkAllParams(controller: params.controller, action: '${element.action}', id: 0)}")
             }
@@ -146,7 +146,7 @@ class PageBuilder {
      * @element The container element which represents a overview
      */
     private void buildOverview(DataContainer element) {
-        builder.ol(class: "property-list") {
+        builder.ol(class: "property-list ${element.classNames}") {
             buildOverviewColumns(element.columns)
         }
     }

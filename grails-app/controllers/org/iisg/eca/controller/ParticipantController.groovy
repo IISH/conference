@@ -2,6 +2,9 @@ package org.iisg.eca.controller
 
 import org.hibernate.impl.SessionImpl
 import org.iisg.eca.domain.Day
+import org.iisg.eca.domain.EmailTemplate
+import org.iisg.eca.domain.SentEmail
+import org.iisg.eca.domain.Setting
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Paper
 import org.iisg.eca.domain.Extra
@@ -50,6 +53,8 @@ class ParticipantController {
      * Service taking care of exporting the participants paper
      */
     def exportService
+
+    def emailService
 
     /**
      * Data source of the PayWay and conference databases
@@ -649,12 +654,48 @@ class ParticipantController {
                 }
             }
 
-            // If there is no responseMap defined yet, it can only mean the paper or state could not be found
+            // If there is no responseMap defined yet, it can only mean the user could not be found
             if (!responseMap) {
                 responseMap = [success: false, message: g.message(code: 'default.not.found.message', args: ["${g.message(code: 'user.label')}"])]
             }
 
             render responseMap as JSON
         }
+    }
+
+    def sendInvitationLetter() {
+        Map responseMap = null
+
+        // If we have a user, find the user
+        if (params.user_id?.isLong()) {
+            User user = User.findById(params.user_id)
+            ParticipantDate participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
+
+            EmailTemplate template = EmailTemplate.findByDescriptionAndEvent('Invitation letter', pageInformation.date.event)
+            User recipient = User.get(Setting.getSetting(Setting.MAIL_INVITATION_LETTERS_TO).value)
+
+            // Send invitation letter
+            if (user && participant) {
+                SentEmail email = emailService.createEmail(user, template)
+                email.user = recipient
+                participant.invitationLetterSent = true
+
+                // Save the participant
+                if (email.save(flush: true) && participant.save(flush: true)) {
+                    // Everything is fine
+                    responseMap = [success: true, sent: g.message(code: 'default.boolean.true')]
+                }
+                else {
+                    responseMap = [success: false, message: user.errors.allErrors.collect { g.message(error: it) }]
+                }
+            }
+        }
+
+        // If there is no responseMap defined yet, it can only mean the user could not be found
+        if (!responseMap) {
+            responseMap = [success: false, message: g.message(code: 'default.not.found.message', args: ["${g.message(code: 'user.label')}"])]
+        }
+
+        render responseMap as JSON
     }
 }

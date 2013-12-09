@@ -135,6 +135,7 @@ class DynamicPageService {
                         dataContainer.index = xmlElement.@index.text().equalsIgnoreCase("true")
                         dataContainer.totals = xmlElement.@totals.text().equalsIgnoreCase("true")
                         dataContainer.action = xmlElement.@action.text()
+                        dataContainer.classNames = xmlElement.@classNames.text()
 
                         pageElements.add(dataContainer)
                     }

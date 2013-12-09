@@ -13,6 +13,7 @@ class DataContainer extends ContainerElement {
     private boolean index
     private boolean totals
     private String action
+    private String classNames
     
     /**
      * The possible data element types
@@ -187,6 +188,24 @@ class DataContainer extends ContainerElement {
         }
         else {
             this.action = action
+        }
+    }
+
+    /**
+     * Returns the class names to give this container
+     * @return The class names to give this container
+     */
+    String getClassNames() {
+        classNames
+    }
+
+    /**
+     * Sets the class names to give this container
+     * @param classNames Classes to give this container
+     */
+    void setClassNames(String classNames) {
+        if (classNames && !classNames.isEmpty()) {
+            this.classNames = classNames
         }
     }
 }

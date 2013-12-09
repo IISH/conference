@@ -661,4 +661,25 @@ $(document).ready(function() {
             addAutoComplete(this);
         });
     });
+
+    $('div.tbl_container.invitation-letters thead tr').append('<td>&nbsp;</td>');
+    $('div.tbl_container.invitation-letters tbody tr').append(
+        '<td><input type="button" class="send-invitation-letter" value="Send" />' +
+        '<span class="ui-icon ui-icon-check invisible"></span>' +
+        '<span class="ui-icon ui-icon-alert invisible"></span></td>');
+
+    $(document).on('click', '.send-invitation-letter', function(e) {
+        var id = $(e.target).parents("tr").find('td.id').text();
+        var column = $(e.target).parents("td");
+
+        ajaxCall('participant/sendInvitationLetter', {user_id: id},
+            function(data) {
+                column.find("span.ui-icon-check").css('visibility', 'visible');
+                column.prev().text(data.sent);
+            },
+            function() {
+                column.find("span.ui-icon-alert").css('visibility', 'visible');
+            }
+        );
+    });
 });
