@@ -85,14 +85,20 @@ class Order {
     static List<Order> findAllOrdersOfUser(User user, Date minimumDate) {
         Setting projectId = Setting.getSetting(Setting.PAYWAY_PROJECT_ID)
 
-        Order.withCriteria {
-            eq('projectId', projectId.value.toLong())
-            eq('userId', user.id.toString())
+        if (projectId?.value) {
+            Order.withCriteria {
+                eq('projectId', projectId.value.toLong())
+                eq('userId', user.id.toString())
 
-            ge('createdAt', minimumDate)
+                ge('createdAt', minimumDate)
 
-            order('id', 'desc')
+                order('id', 'desc')
+            }
         }
+        else {
+            return []
+        }
+
     }
 
     /**
