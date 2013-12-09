@@ -6,7 +6,6 @@ import org.springframework.security.authentication.AccountExpiredException
 import org.springframework.security.authentication.CredentialsExpiredException
 
 import org.springframework.security.web.WebAttributes
-import org.springframework.security.access.annotation.Secured
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 
 import org.iisg.eca.domain.User
@@ -17,10 +16,6 @@ import grails.converters.JSON
 import grails.plugin.springsecurity.SpringSecurityUtils
 
 import javax.servlet.http.HttpServletResponse
-import java.security.MessageDigest;
-import org.springframework.security.crypto.codec.Base64;
-import org.springframework.security.crypto.codec.Hex;
-import org.springframework.security.crypto.codec.Utf8;
 
 /**
  * Controller for login related actions
@@ -194,7 +189,7 @@ class LoginController {
 
         // So far so good, send an email to the user with the link to request a new password:
         String link = "${grailsApplication.config.grails.serverURL}/${params.controller}/checkRequestCode?email=${user.email}&code=${requestCode}"
-        SentEmail email = emailService.createEmail(user, EmailTemplate.findByDescription("Request code"), null, ['Link': link])
+        SentEmail email = emailService.createEmail(user, EmailTemplate.findByDescription("Request code"), false, null, ['Link': link])
         emailService.sendEmail(email, false)
 
         // Redirect to the login page with a success message
@@ -234,7 +229,7 @@ class LoginController {
             }
 
             // So far so good, send an email to the user with his/her new password
-            SentEmail email = emailService.createEmail(user, EmailTemplate.findByDescription("New password"), null, ['NewPassword': newPassword])
+            SentEmail email = emailService.createEmail(user, EmailTemplate.findByDescription("New password"), false, null, ['NewPassword': newPassword])
             emailService.sendEmail(email, false)
 
             // Redirect to the login page with a success message
