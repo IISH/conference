@@ -37,7 +37,7 @@ class CreateEmailJob {
                 try {
                     for (User user : users) {
                         // Let the emailService create all the emails
-                        SentEmail email = emailService.createEmail(user, template, date)
+                        SentEmail email = emailService.createEmail(user, template, false, date)
                         email.save()
                     }
 

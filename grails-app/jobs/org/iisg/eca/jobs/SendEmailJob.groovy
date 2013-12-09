@@ -52,10 +52,14 @@ class SendEmailJob {
 
                 // Get all emails that are waiting to be send
                 List<SentEmail> emailsWaiting = SentEmail.executeQuery("""
-                FROM SentEmail AS se
-                WHERE se.dateTimeSent IS NULL
-                AND se.numTries < :maxNumTries
-            """, [maxNumTries: maxNumTries], [max: maxMails])
+                    FROM SentEmail AS se
+                    WHERE se.dateTimeSent IS NULL
+                    AND se.numTries < :maxNumTries
+                    AND (
+                        se.dateTimeCreated <= :dateTime
+                        OR se.sendAsap = true
+                    )
+                """, [maxNumTries: maxNumTries, dateTime: getMaxCreatedTime()], [max: maxMails])
 
                 log.info("Found ${emailsWaiting.size()} mails to be send!")
 
@@ -79,12 +83,27 @@ class SendEmailJob {
      */
     Date getNextTriggerTime() {
         Integer minutes = new Integer(Setting.findByProperty(Setting.EMAIL_MIN_MINUTES_BETWEEN_SENDING).value)
-        (minutes) ? minutes : 15
+        minutes = (minutes) ? minutes : 15
 
         Calendar cal = Calendar.getInstance()
         cal.setTime(new Date())
         cal.add(Calendar.MINUTE, minutes)
 
         cal.getTime()
+    }
+
+    /**
+     * Obtain the maximum created time for emails to be send, defaults to one hour
+     * @return The maximum date/time
+     */
+    Date getMaxCreatedTime() {
+        Integer minutes = new Integer(Setting.findByProperty(Setting.EMAIL_WAITING_TIME).value)
+        minutes = (minutes) ? minutes : 60
+        minutes = -minutes
+
+        Calendar calendar = Calendar.getInstance()
+        calendar.add(Calendar.MINUTE, minutes)
+
+        calendar.getTime()
     }
 }

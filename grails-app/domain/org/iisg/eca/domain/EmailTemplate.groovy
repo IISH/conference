@@ -126,7 +126,7 @@ class EmailTemplate extends EventDomain {
         User user = User.findByEmail(testEmail)
 
         if (user) {
-            SentEmail email = emailService.createEmail(user, this, pageInformation.date)
+            SentEmail email = emailService.createEmail(user, this, false, pageInformation.date)
             emailService.sendEmail(email, false)
         }
         else {

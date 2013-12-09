@@ -37,11 +37,12 @@ class EmailService {
      * Creates an email based on the template and the information about the user
      * @param user The user to which the email has to be send and information has to be embedded in the body text
      * @param emailTemplate The template used for the email content
+     * @param sendAsap Whether the email should be send as soon as possible
      * @param date The event date of which to extract participant information from
      * @param additionalValues A map of additional values to add to the email
      * @return The email ready to be send
      */
-    SentEmail createEmail(User user, EmailTemplate emailTemplate, EventDate date=pageInformation.date, Map<String, String> additionalValues=[:]) {
+    SentEmail createEmail(User user, EmailTemplate emailTemplate, boolean sendAsap=false, EventDate date=pageInformation.date, Map<String, String> additionalValues=[:]) {
         SentEmail email = new SentEmail()
 
         // Set all the email properties
@@ -52,6 +53,7 @@ class EmailService {
         email.date = date
         email.body = createEmailBody(user, emailTemplate, date, additionalValues)
         email.queryType = emailTemplate.queryType
+        email.sendAsap = sendAsap
 
         email
     }

@@ -16,6 +16,7 @@ class Setting extends EventDomain {
     static final String EMAIL_MAX_NUM_TRIES = 'email_max_num_tries'
     static final String EMAIL_MIN_MINUTES_BETWEEN_SENDING = 'email_min_minutes_between_sending'
     static final String EMAIL_MAX_NUM_EMAILS_PER_SESSION = 'email_max_num_emails_per_session'
+    static final String EMAIL_WAITING_TIME = 'email_waiting_time'
     static final String DISABLE_EMAIL_SESSIONS = 'disable_email_sessions'
     static final String DEFAULT_ORGANISATION_EMAIL = 'default_organisation_email'
     static final String EMAIL_ADDRESS_INFO_ERRORS = 'email_address_info_errors'

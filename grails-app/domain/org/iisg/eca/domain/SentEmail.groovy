@@ -1,5 +1,8 @@
 package org.iisg.eca.domain
 
+/**
+ * Domain class of table holding all (to be) sent emails
+ */
 class SentEmail extends EventDateDomain {
     User user
     String fromName
@@ -7,7 +10,9 @@ class SentEmail extends EventDateDomain {
     String subject
     String body
     String queryType
+    Date dateTimeCreated = new Date()
     Date dateTimeSent
+    boolean sendAsap = false
     int numTries = 0
 
     static belongsTo = User
@@ -18,6 +23,7 @@ class SentEmail extends EventDateDomain {
         subject         blank: false
         body            blank: false
         queryType       nullable: true
+        dateTimeCreated nullable: true
         dateTimeSent    nullable: true
         numTries        min: 0
     }
@@ -33,7 +39,9 @@ class SentEmail extends EventDateDomain {
         subject         column: 'subject'
         body            column: 'body',             type: 'text'
         queryType       column: 'query_type'
+        dateTimeCreated column: 'date_time_created'
         dateTimeSent    column: 'date_time_sent'
+        sendAsap        column: 'send_asap'
         numTries        column: 'num_tries'
     }
 
