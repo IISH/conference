@@ -663,39 +663,46 @@ class ParticipantController {
         }
     }
 
+    /**
+     * Sends an invitation letter concerning the given user
+     * (AJAX call)
+     */
     def sendInvitationLetter() {
-        Map responseMap = null
+        // If this is an AJAX call, continue
+        if (request.xhr) {
+            Map responseMap = null
 
-        // If we have a user, find the user
-        if (params.user_id?.isLong()) {
-            User user = User.findById(params.user_id)
-            ParticipantDate participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
+            // If we have a user, find the user
+            if (params.user_id?.isLong()) {
+                User user = User.findById(params.user_id)
+                ParticipantDate participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
 
-            EmailTemplate template = EmailTemplate.findByDescriptionAndEvent('Invitation letter', pageInformation.date.event)
-            User recipient = User.get(Setting.getSetting(Setting.MAIL_INVITATION_LETTERS_TO).value)
+                EmailTemplate template = EmailTemplate.findByDescriptionAndEvent('Invitation letter', pageInformation.date.event)
+                User recipient = User.get(Setting.getSetting(Setting.MAIL_INVITATION_LETTERS_TO).value)
 
-            // Send invitation letter
-            if (user && participant) {
-                SentEmail email = emailService.createEmail(user, template)
-                email.user = recipient
-                participant.invitationLetterSent = true
+                // Send invitation letter
+                if (user && participant) {
+                    SentEmail email = emailService.createEmail(user, template)
+                    email.user = recipient
+                    participant.invitationLetterSent = true
 
-                // Save the participant
-                if (email.save(flush: true) && participant.save(flush: true)) {
-                    // Everything is fine
-                    responseMap = [success: true, sent: g.message(code: 'default.boolean.true')]
-                }
-                else {
-                    responseMap = [success: false, message: user.errors.allErrors.collect { g.message(error: it) }]
+                    // Save the participant
+                    if (email.save(flush: true) && participant.save(flush: true)) {
+                        // Everything is fine
+                        responseMap = [success: true, sent: g.message(code: 'default.boolean.true')]
+                    }
+                    else {
+                        responseMap = [success: false, message: user.errors.allErrors.collect { g.message(error: it) }]
+                    }
                 }
             }
-        }
 
-        // If there is no responseMap defined yet, it can only mean the user could not be found
-        if (!responseMap) {
-            responseMap = [success: false, message: g.message(code: 'default.not.found.message', args: ["${g.message(code: 'user.label')}"])]
-        }
+            // If there is no responseMap defined yet, it can only mean the user could not be found
+            if (!responseMap) {
+                responseMap = [success: false, message: g.message(code: 'default.not.found.message', args: ["${g.message(code: 'user.label')}"])]
+            }
 
-        render responseMap as JSON
+            render responseMap as JSON
+        }
     }
 }
