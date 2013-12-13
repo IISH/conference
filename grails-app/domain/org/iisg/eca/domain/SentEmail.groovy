@@ -9,7 +9,6 @@ class SentEmail extends EventDateDomain {
     String fromEmail
     String subject
     String body
-    String queryType
     Date dateTimeCreated = new Date()
     Date dateTimeSent
     boolean sendAsap = false
@@ -22,7 +21,6 @@ class SentEmail extends EventDateDomain {
         fromEmail       blank: false
         subject         blank: false
         body            blank: false
-        queryType       nullable: true
         dateTimeCreated nullable: true
         dateTimeSent    nullable: true
         numTries        min: 0
@@ -38,7 +36,6 @@ class SentEmail extends EventDateDomain {
         fromEmail       column: 'from_email'
         subject         column: 'subject'
         body            column: 'body',             type: 'text'
-        queryType       column: 'query_type'
         dateTimeCreated column: 'date_time_created'
         dateTimeSent    column: 'date_time_sent'
         sendAsap        column: 'send_asap'

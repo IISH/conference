@@ -7,7 +7,6 @@ import org.iisg.eca.domain.SentEmail
 import org.iisg.eca.domain.EventDate
 import org.iisg.eca.domain.EmailCode
 import org.iisg.eca.domain.EmailTemplate
-import org.iisg.eca.domain.ParticipantDate
 
 import javax.mail.internet.MimeMessage
 
@@ -37,25 +36,61 @@ class EmailService {
      * Creates an email based on the template and the information about the user
      * @param user The user to which the email has to be send and information has to be embedded in the body text
      * @param emailTemplate The template used for the email content
-     * @param sendAsap Whether the email should be send as soon as possible
+     * @param updateRecords Indicates whether related records of the recipient should be updated
+     * @param identifiers A map with ids that should identify the type of information the body should contain
      * @param date The event date of which to extract participant information from
+     * @param sendAsap Whether the email should be send as soon as possible
      * @param additionalValues A map of additional values to add to the email
      * @return The email ready to be send
      */
-    SentEmail createEmail(User user, EmailTemplate emailTemplate, boolean sendAsap=false, EventDate date=pageInformation.date, Map<String, String> additionalValues=[:]) {
-        SentEmail email = new SentEmail()
+    SentEmail createEmail(User user, EmailTemplate emailTemplate, boolean updateRecords=true,
+                          Map<String, Long> identifiers=[:], EventDate date=pageInformation.date,
+                          boolean sendAsap=false, Map<String, String> additionalValues=[:]) {
+        // First make sure the identifiers are correctly set
+        if (!identifiers) {
+            identifiers = [:]
+        }
+        if (!identifiers.containsKey(EmailTemplate.USER_ID)) {
+            identifiers[EmailTemplate.USER_ID] = user.id
+        }
+        if (!identifiers.containsKey(EmailTemplate.DATE_ID)) {
+            identifiers[EmailTemplate.DATE_ID] = date.id
+        }
 
         // Set all the email properties
+        SentEmail email = new SentEmail()
+
         email.user = user
         email.fromName = emailTemplate.sender
         email.fromEmail = Setting.getSetting(Setting.DEFAULT_ORGANISATION_EMAIL, date?.event).value
         email.subject = emailTemplate.subject
         email.date = date
-        email.body = createEmailBody(user, emailTemplate, date, additionalValues)
-        email.queryType = emailTemplate.queryType
+        email.body = createEmailBody(emailTemplate, identifiers, additionalValues)
         email.sendAsap = sendAsap
 
+        // Update the recipients records, as his email is created and ready to be send
+        if (updateRecords) {
+            emailTemplate.updateRecipient(identifiers)
+        }
+
         email
+    }
+
+    /**
+     * Creates an email based on the template and the information about the user
+     * @param emailTemplate The template used for the email content     *
+     * @param identifiers A map with ids that should identify the type of information the body should contain
+     * @param updateRecords Indicates whether related records of the recipient should be updated
+     * @param date The event date of which to extract participant information from
+     * @param sendAsap Whether the email should be send as soon as possible
+     * @param additionalValues A map of additional values to add to the email
+     * @return The email ready to be send
+     */
+    SentEmail createEmail(EmailTemplate emailTemplate, Map<String, Long> identifiers, boolean updateRecords=true,
+                          EventDate date=pageInformation.date, boolean sendAsap=false,
+                          Map<String, String> additionalValues=[:]) {
+        User user = User.get(identifiers.get(EmailTemplate.USER_ID))
+        createEmail(user, emailTemplate, updateRecords, identifiers, date, sendAsap, additionalValues)
     }
 
     /**
@@ -65,7 +100,7 @@ class EmailService {
      */
     synchronized void sendEmail(SentEmail sentEmail, boolean saveToDb=true) {
         // How often may we try before giving up?
-        Integer maxNumTries = new Integer(Setting.findByProperty(Setting.EMAIL_MAX_NUM_TRIES, [cache: true]).value)
+        Integer maxNumTries = new Integer(Setting.getSetting(Setting.EMAIL_MAX_NUM_TRIES).value)
 
         // Only send the email if the maximum number of tries is not reached
         if (sentEmail.numTries < maxNumTries) {
@@ -84,10 +119,6 @@ class EmailService {
 
                 // Successfully send, so set the date and time of sending
                 sentEmail.dateTimeSent = new Date()
-
-                // Update the participant
-                ParticipantDate participant = ParticipantDate.findByUserAndDate(sentEmail.user, sentEmail.date)
-                participant?.updateByQueryType(sentEmail.queryType)
             }
             catch (MailException me) {
                 // Make sure, the date/time is set to null, cause it failed to send the email
@@ -114,7 +145,8 @@ class EmailService {
      * @param event From which event is the email originating
      * @param emailAddress Specify from which email address the email originated
      */
-    synchronized void sendInfoMail(String emailSubject, String message, Event event = pageInformation.date?.event, String emailAddress = null) {
+    synchronized void sendInfoMail(String emailSubject, String message,
+                                   Event event=pageInformation.date?.event, String emailAddress=null) {
         String[] recipients = Setting.getSetting(Setting.EMAIL_ADDRESS_INFO_ERRORS, event).value.split(';')
 
         // If no email address is set, use the default info email address from the settings
@@ -190,20 +222,20 @@ class EmailService {
     /**
      * Creates the body for an email message by replacing
      * the codes in the email template with information from the user
-     * @param user The user of whom the information has to be included in the email body
      * @param emailTemplate The template to use for the body of an email message
-     * @param date The event date of which to extract participant information from
+     * @param identifiers The ids of records to extract participant information from
      * @param additionalValues A map of additional values to add to the email
      * @return The body text from the template combined with information from the user
      */
-    String createEmailBody(User user, EmailTemplate emailTemplate, EventDate date=pageInformation.date, Map<String, String> additionalValues=[:]) {
+    String createEmailBody(EmailTemplate emailTemplate, Map<String, Long> identifiers,
+                           Map<String, String> additionalValues=[:]) {
         String emailBody = emailTemplate.body.toString()
         
         // Collect all available codes and check for each one whether the email uses the code
         EmailCode.list().each { code ->
             if (emailBody.contains("[${code.code}]")) {
                 // If the email contains the code, replace all occurrences with user specific information
-                emailBody = emailBody.replaceAll("\\[${code.code}\\]", code.translateForUser(user, date))
+                emailBody = emailBody.replace("[$code.code]", code.translate(identifiers))
             }
         }
         
@@ -211,14 +243,14 @@ class EmailService {
         additionalValues.each { additionalValue ->
             if (emailBody.contains("[${additionalValue.key}]")) {
                 // If the email contains the code, replace all occurrences with the value
-                emailBody = emailBody.replaceAll("\\[${additionalValue.key}\\]", additionalValue.value)
+                emailBody = emailBody.replace("[$additionalValue.key]", additionalValue.value)
             }
         }
         
         // Also update the special code SenderName
         if (emailBody.contains("[SenderName]")) {
             // If the email contains the code, replace all occurrences with the value
-            emailBody = emailBody.replaceAll("\\[SenderName\\]", emailTemplate.sender?.trim())
+            emailBody = emailBody.replace("[SenderName]", emailTemplate.sender?.trim())
         }
         
         emailBody
@@ -231,7 +263,7 @@ class EmailService {
      * @return Whether we have to send mails to this address
      */
     private boolean sendEmailTo(User user, Event event) {
-        Setting regexSettingsForEvent = Setting.getSetting(Setting.DONT_SEND_EMAILS_TO)
+        Setting regexSettingsForEvent = Setting.getSetting(Setting.DONT_SEND_EMAILS_TO, event)
         String[] regexs = regexSettingsForEvent.value?.split()
 
         if (regexs && regexs.length > 0) {

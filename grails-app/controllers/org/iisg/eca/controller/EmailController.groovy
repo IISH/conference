@@ -17,7 +17,12 @@ class EmailController {
      * Holds all page information, like the current event date
      */
     def pageInformation
-    
+
+    /**
+     * Service responsible for obtaining the email recipients
+     */
+    def emailRecipientsService
+
     /**
      * Service responsible for sending the emails
      */
@@ -68,70 +73,25 @@ class EmailController {
 
         // The 'send' button was clicked, create and send the emails
         if (request.post) {
-            List<User> users
-            def criteria = User.allParticipants(pageInformation.date)
-            
-            // The email template chosen could contain a query type (a named query to call)
-            if (emailTemplate.queryType) {
-                criteria = User."${emailTemplate.queryType}"(pageInformation.date)
-            }
+            // Find all the recipients, so we can create all the individual emails
+            List<Long[]> recipients = emailRecipientsService.getRecipientsFor(emailTemplate, params)
 
-            // If one specific participant/user is selected, then don't use the other filters
-            if (filterMap.participant && params.participant?.isLong()) {
-                users = User.findAllById(params.long('participant'))
-            }
-            else {
-                // Now extend the criteria with the filters set by the user
-                users = (List<User>) criteria {
-                    if (filterMap.participantState || filterMap.eventDates) {
-                        participantDates {
-                            if (filterMap.participantState && params.participantState?.isLong()) {
-                                eq('state.id', params.long('participantState'))
-                            }
+            // But place the actual creation in the background, as it could take a while
+            CreateEmailJob.triggerNow([recipients: recipients, template: emailTemplate, date: pageInformation.date])
 
-                            if (filterMap.eventDates && (params.eventDates instanceof String) && params.eventDates?.isLong()) {
-                                eq('date.id', params.eventDates.toLong())
-                            }
-                            else if (filterMap.eventDates && params.eventDates) {
-                                'in'('date.id', params.eventDates*.toLong())
-                            }
-                            // If nothing is selected, then nothing is done...
-                            else if (filterMap.eventDates && !params.eventDates) {
-                                eq('date.id', -100L)
-                            }
-                        }
-                    }
-
-                    if (filterMap.paperState) {
-                        papers {
-                            if (filterMap.paperState && params.paperState?.isLong()) {
-                                eq('state.id', params.long('paperState'))
-                            }
-                        }
-                    }
-                }
-            }
-
-            // We have found all the recipients, so we can create all the individual emails
-            // But in the background, as it could take a while
-            CreateEmailJob.triggerNow([users: users, template: emailTemplate, date: pageInformation.date])
-
-            flash.message = g.message(code: 'email.background.message', args: [users.size()])
+            flash.message = g.message(code: 'email.background.message', args: [recipients.size()])
         }
 
         // Find out what auto-complete function to use
         String queryName = 'allParticipants'
         String placeholder = g.message(code: 'email.all.participants.label')
-
-        // TODO: Figure out another way to define these actions; should students be defined here as well?
-        if (emailTemplate.queryType == 'networkChairs') {
-            queryName = emailTemplate.queryType
-            placeholder = g.message(code: 'email.all.network.chairs.label')
+        if (emailTemplate.queryTypeOne) {
+            queryName = emailTemplate.queryTypeOne
         }
 
         // Create a preview email with the currently logged in user
         User previewUser = User.get(springSecurityService.principal.id)
-        SentEmail previewEmail = emailService.createEmail(previewUser, emailTemplate)
+        SentEmail previewEmail = emailService.createEmail(previewUser, emailTemplate, false)
 
         // The labels to and from cause problems because of the characters '<' and '>', so define them here
         String from = "${previewEmail.fromName} <${previewEmail.fromEmail}>".encodeAsHTML()
@@ -174,7 +134,7 @@ class EmailController {
             User previewUser = User.get(springSecurityService.principal.id)
             EmailTemplate emailTemplate = EmailTemplate.findById(params.id)
 
-            SentEmail previewEmail = emailService.createEmail(previewUser, emailTemplate)
+            SentEmail previewEmail = emailService.createEmail(previewUser, emailTemplate, false)
             Map responseMap = [ success:    true,
                                 from:       "${previewEmail.fromName} <${previewEmail.fromEmail}>".encodeAsHTML(),
                                 to:         "${previewEmail.user.toString()} <${previewEmail.user.email}>".encodeAsHTML(),

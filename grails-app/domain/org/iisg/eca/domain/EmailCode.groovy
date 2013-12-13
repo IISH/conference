@@ -3,8 +3,8 @@ package org.iisg.eca.domain
 import groovy.sql.Sql
 
 class EmailCode extends EventDomain {
-    def dataSource_readOnly
     def pageInformation
+    def dataSource_readOnly
 
     String code
     String description
@@ -26,8 +26,13 @@ class EmailCode extends EventDomain {
         groovyScript    column: 'groovy_script',    type: 'text'
     }
 
-    String translateForUser(User user, EventDate date = pageInformation.date) {
-        Binding binding = new Binding([sql: new Sql(dataSource_readOnly), params: [userId: user?.id, dateId: date?.id]])
+    /**
+     * Translates this code with data from the database using the specified identifiers
+     * @param identifiers A map which contains all ids to filter data upon
+     * @return The translated text to be placed in the email
+     */
+    String translate(Map<String, Long> identifiers) {
+        Binding binding = new Binding([sql: new Sql(dataSource_readOnly), params: identifiers])
         GroovyShell shell = new GroovyShell(binding)
         Object ret = shell.evaluate(groovyScript)
         ret.toString()

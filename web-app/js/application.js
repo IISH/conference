@@ -257,7 +257,9 @@ $(document).ready(function() {
     setContentWidth();
     
     $('#loading').hide();
-    
+
+    $.Placeholder.init();
+
     var cookieValue = $.cookie("submenus");
     var openSubMenus = (cookieValue) ? cookieValue.split(';') : [];
     $('#menu dl.sub-menu').each(function() {
@@ -356,6 +358,7 @@ $(document).ready(function() {
         var selectBox = form.find('.moveSelectBox.primary');
         selectBox.find('option').prop('selected', true);
 
+        $.Placeholder.cleanBeforeSubmit();
         this.click();
     });
 

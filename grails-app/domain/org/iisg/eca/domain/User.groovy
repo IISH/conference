@@ -175,7 +175,15 @@ class User extends DefaultDomain {
             papers {
                 eq('state.id', PaperState.PAPER_ACCEPTED)
                 eq('date.id', date.id)
-                eq('mailPaperState', false)
+                eq('deleted', false)
+            }
+        }
+
+        paperAcceptedNotAnswered { date ->
+            paperAccepted(date)
+
+            papers {
+                eq('mailPaperState', true)
             }
         }
 
@@ -185,7 +193,15 @@ class User extends DefaultDomain {
             papers {
                 eq('state.id', PaperState.PAPER_IN_CONSIDERATION)
                 eq('date.id', date.id)
-                eq('mailPaperState', false)
+                eq('deleted', false)
+            }
+        }
+
+        paperInConsiderationNotAnswered { date ->
+            paperInConsideration(date)
+
+            papers {
+                eq('mailPaperState', true)
             }
         }
 
@@ -195,26 +211,48 @@ class User extends DefaultDomain {
             papers {
                 eq('state.id', PaperState.PAPER_NOT_ACCEPTED)
                 eq('date.id', date.id)
-                eq('mailPaperState', false)
+                eq('deleted', false)
             }
         }
 
-        studentLowerFeeNotAnswered { date ->
+        paperNotAcceptedNotAnswered { date ->
+            paperNotAccepted(date)
+
+            papers {
+                eq('mailPaperState', true)
+            }
+        }
+
+        studentLowerFee { date ->
             allParticipantsNotDeleted(date)
 
             participantDates {
                 eq('student', true)
                 eq('lowerFeeRequested', true)
+            }
+        }
+
+        studentLowerFeeNotAnswered { date ->
+            studentLowerFee(date)
+
+            participantDates {
                 eq('lowerFeeAnswered', false)
             }
         }
 
-        noStudentLowerFeeNotAnswered { date ->
+        noStudentLowerFee { date ->
             allParticipantsNotDeleted(date)
 
             participantDates {
                 eq('student', false)
                 eq('lowerFeeRequested', true)
+            }
+        }
+
+        noStudentLowerFeeNotAnswered { date ->
+            noStudentLowerFee(date)
+
+            participantDates {
                 eq('lowerFeeAnswered', false)
             }
         }
@@ -231,7 +269,10 @@ class User extends DefaultDomain {
             allParticipants(date)
 
             participantDates {
-                isNull('paymentId')
+                or {
+                    isNull('paymentId')
+                    eq('paymentId', 0L)
+                }
             }
         }
     }

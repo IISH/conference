@@ -1,21 +1,11 @@
 package org.iisg.eca.domain
 
-import groovy.sql.Sql
 import org.iisg.eca.domain.payway.Order
 
 /**
  * Domain class of table holding all participants (users) who signed up for an event date
  */
 class ParticipantDate extends EventDateDomain {
-    def dataSource
-
-    private static final String QUERY_PAPER_ACCEPTED = "paperAccepted"
-    private static final String QUERY_PAPER_IN_CONSIDERATION = "paperInConsideration"
-    private static final String QUERY_PAPER_NOT_ACCEPTED = "paperNotAccepted"
-    private static final String QUERY_STUDENT_LOWER_FEE_NOT_ANSWERED = "studentLowerFeeNotAnswered"
-    private static final String QUERY_NO_STUDENT_LOWER_FEE_NOT_ANSWERED = "noStudentLowerFeeNotAnswered"
-    private static final String QUERY_NO_PAYMENT_INFO = "noPaymentInfo"
-    
     User user
     ParticipantState state
     FeeState feeState
@@ -67,39 +57,6 @@ class ParticipantDate extends EventDateDomain {
     Order findOrder() {
         Order order = Order.get(paymentId)
         order
-    }
-
-    void updateByQueryType(String queryType) {
-        // Workaround for Hibernate exception "two open sessions" when using Quartz
-        Sql sql = new Sql(dataSource)
-        
-        switch (queryType) {
-            /*case QUERY_PAPER_ACCEPTED:
-            case QUERY_PAPER_IN_CONSIDERATION:
-            case QUERY_PAPER_NOT_ACCEPTED:
-                sql.executeUpdate("""
-                    UPDATE  papers
-                    SET     mail_paper_state = 1
-                    WHERE   user_id = ?
-                """, [user.id])
-                break*/
-            case QUERY_STUDENT_LOWER_FEE_NOT_ANSWERED:
-            case QUERY_NO_STUDENT_LOWER_FEE_NOT_ANSWERED:
-                sql.executeUpdate("""
-                    UPDATE  participant_date
-                    SET     lower_fee_requested = 1,
-                            lower_fee_answered = 1
-                    WHERE   participant_date_id = ?
-                """, [id])
-                break
-            case QUERY_NO_PAYMENT_INFO:
-                sql.executeUpdate("""
-                    UPDATE  participant_date
-                    SET     email_payment_info = 1
-                    WHERE   participant_date_id = ?
-                """, [id])
-                break
-        }
     }
 
     @Override

@@ -189,7 +189,8 @@ class LoginController {
 
         // So far so good, send an email to the user with the link to request a new password:
         String link = "${grailsApplication.config.grails.serverURL}/${params.controller}/checkRequestCode?email=${user.email}&code=${requestCode}"
-        SentEmail email = emailService.createEmail(user, EmailTemplate.findByDescription("Request code"), false, null, ['Link': link])
+        SentEmail email = emailService.createEmail(user, EmailTemplate.findByDescription("Request code"),
+                true, null, null, true, ['Link': link])
         emailService.sendEmail(email, false)
 
         // Redirect to the login page with a success message
@@ -229,7 +230,8 @@ class LoginController {
             }
 
             // So far so good, send an email to the user with his/her new password
-            SentEmail email = emailService.createEmail(user, EmailTemplate.findByDescription("New password"), false, null, ['NewPassword': newPassword])
+            SentEmail email = emailService.createEmail(user, EmailTemplate.findByDescription("New password"), true,
+                    null, null, true, ['NewPassword': newPassword])
             emailService.sendEmail(email, false)
 
             // Redirect to the login page with a success message
