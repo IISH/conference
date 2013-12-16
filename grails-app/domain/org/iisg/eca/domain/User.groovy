@@ -266,7 +266,7 @@ class User extends DefaultDomain {
         }
 
         noPaymentAttempt { date ->
-            allParticipants(date)
+            allParticipantsSoftState(date)
 
             participantDates {
                 or {
