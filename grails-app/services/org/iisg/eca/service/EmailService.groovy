@@ -53,7 +53,7 @@ class EmailService {
         if (!identifiers.containsKey(EmailTemplate.USER_ID)) {
             identifiers[EmailTemplate.USER_ID] = user.id
         }
-        if (!identifiers.containsKey(EmailTemplate.DATE_ID)) {
+        if (!identifiers.containsKey(EmailTemplate.DATE_ID) && date) {
             identifiers[EmailTemplate.DATE_ID] = date.id
         }
 

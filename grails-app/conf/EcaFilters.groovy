@@ -157,12 +157,12 @@ class EcaFilters {
         }
         
          /**
-         * Default filter for all requests
-         */
+          * Default filter for all requests
+          */
         defaultFilter(controller: '*', action: '*') {
             before = {
                 // Update locale of currently logged in user if it has changed
-                if (params.lang && !(springSecurityService.principal instanceof String)) {
+                if (params.lang && !(springSecurityService.principal instanceof String) && springSecurityService.principal?.class?.hasProperty('id')) {
                     User user = User.get(springSecurityService.principal.id)
                     if (user) {
                         user.language = params.lang

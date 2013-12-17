@@ -127,9 +127,7 @@ environments {
     }
     test {
         grails.mail.disabled = true
-        quartz {
-            autoStartup = false
-        }
+        quartz.autoStartup = false
     }
     production {
         grails.logging.jul.usebridge = false
