@@ -14,6 +14,9 @@
             <li>
                 <eca:link action="sessions">Create XML Export of Sessions for program book</eca:link>
             </li>
+            <li>
+                <eca:link action="badges">Create Excel Export of participants for badges</eca:link>
+            </li>
         </ol>
     </body>
 </html>

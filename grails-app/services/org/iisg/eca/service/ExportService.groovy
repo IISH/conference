@@ -3,9 +3,9 @@ package org.iisg.eca.service
 import org.iisg.eca.domain.Paper
 
 import org.iisg.eca.export.Export
-import org.iisg.eca.export.XmlExport
-import org.iisg.eca.export.XlsExport
-import org.iisg.eca.export.CsvExport
+import org.iisg.eca.export.XmlDynamicPageExport
+import org.iisg.eca.export.XlsDynamicPageExport
+import org.iisg.eca.export.CsvDynamicPageExport
 
 import javax.servlet.http.HttpServletResponse
 
@@ -37,14 +37,14 @@ class ExportService {
         // To which format should we export the data?
         switch (format.toLowerCase()) {
             case XML:
-                export = new XmlExport(columns, results, fileName)
+                export = new XmlDynamicPageExport(columns, results, fileName)
                 break
             case XLS:
-                export = new XlsExport(columns, results, fileName)
+                export = new XlsDynamicPageExport(columns, results, fileName)
                 break
             case CSV:
             default:
-                export = new CsvExport(columns, results, fileName)
+                export = new CsvDynamicPageExport(columns, results, fileName)
                 export.separator = separator
         }
 

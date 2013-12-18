@@ -1,12 +1,10 @@
 package org.iisg.eca.export
-
-import org.iisg.eca.dynamic.Column
-
 /**
  * Export csv files
  */
-class CsvExport extends AbstractExport {
+class CsvMapExport extends MapExport {
     private static final String CONTENT_TYPE = 'text/csv'
+    private static final String EXTENSION = 'csv'
 
     private String separator = ','
 
@@ -15,9 +13,10 @@ class CsvExport extends AbstractExport {
      * @param columns An array of columns to export
      * @param results The results, a list with arrays of domain classes, to export
      * @param title The title of the resulting file
+     * @param columnNames The names of the columns
      */
-    CsvExport(List columns, List results, String title) {
-        super(columns, results, title)
+    CsvMapExport(List<String> columns, List<Map> results, String title, List<String> columnNames) {
+        super(columns, results, title, columnNames)
     }
 
     /**
@@ -43,6 +42,15 @@ class CsvExport extends AbstractExport {
     }
 
     /**
+     * Returns the extension of csv files
+     * @return The extension
+     */
+    @Override
+    String getExtension() {
+        EXTENSION
+    }
+
+    /**
      * Parses the results to a csv file
      */
     @Override
@@ -51,10 +59,13 @@ class CsvExport extends AbstractExport {
         writer.write("${columnNames.join(separator)}\r\n")
 
         results.each { result ->
-            List<String> r = columns.grep { it.canBeShown() }.collect { c ->
-                def value = result
-                c.columnPath.each { value = value[it.toString()] }
-                value
+            List<String> r = columns.collect { c ->
+                if (result[c] != null) {
+                    result[c].toString()
+                }
+                else {
+                    ''
+                }
             }
 
             writer.write("${r.join(separator)}\r\n")

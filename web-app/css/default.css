@@ -789,8 +789,19 @@ span.remove-item {
     border: 1px solid [main_color_dark];
 }
 
-#change-user {
+.inline-link {
     margin-left: 30px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.inline-button {
+    margin-left: 30px;
+    cursor: pointer;
+    color: [main_color_dark];
+    font-weight: bold;
+    border: 1px solid [main_color_dark];
+    padding: 2px;
 }
 
 #selected-days {
@@ -1186,8 +1197,4 @@ table.payment-statistics tbody tr:hover {
 
 .bold {
     font-weight: bold;
-}
-
-.clickable {
-    cursor: pointer;
 }

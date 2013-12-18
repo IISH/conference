@@ -438,6 +438,9 @@ $(document).ready(function() {
         if (e.which == 13) {
             var urlParameters = decodeUrlParameters(window.location.search.substring(1));
             $('.filter input, .filter select').each(function() {
+                if ($(this).val() === $(this).attr('placeholder')) {
+                    $(this).val('');
+                }
                 urlParameters[$(this).attr("name")] = $(this).val();
             });
             window.location.search = "?" + $.param(urlParameters);
@@ -447,6 +450,9 @@ $(document).ready(function() {
     $('.filter select').change(function(e) {
         var urlParameters = decodeUrlParameters(window.location.search.substring(1));
         $('.filter input, .filter select').each(function() {
+            if ($(this).val() === $(this).attr('placeholder')) {
+                $(this).val('');
+            }
             urlParameters[$(this).attr("name")] = $(this).val();
         });
         window.location.search = "?" + $.param(urlParameters);

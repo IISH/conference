@@ -1,5 +1,6 @@
 package org.iisg.eca.export
 
+import jxl.CellView
 import jxl.Workbook
 import jxl.WorkbookSettings
 
@@ -8,24 +9,23 @@ import jxl.write.WritableFont
 import jxl.write.WritableSheet
 import jxl.write.WritableWorkbook
 import jxl.write.WritableCellFormat
-import jxl.format.Orientation
-import jxl.CellView
-import jxl.Cell
 
 /**
  * Export xls (Excel) files
  */
-class XlsExport extends AbstractExport {
+class XlsMapExport extends MapExport {
     private static final String CONTENT_TYPE = 'application/ms-excel'
+    private static final String EXTENSION = 'xls'
 
     /**
      * Creates a new xls export for the specified element
      * @param columns An array of columns to export
      * @param results The results, a list with arrays of domain classes, to export
      * @param title The title of the resulting file
+     * @param columnNames The names of the columns
      */
-    XlsExport(List columns, List results, String title) {
-        super(columns, results, title)
+    XlsMapExport(List<String> columns, List<Map> results, String title, List<String> columnNames) {
+        super(columns, results, title, columnNames)
     }
 
     /**
@@ -38,37 +38,48 @@ class XlsExport extends AbstractExport {
     }
 
     /**
+     * Returns the extension of csv files
+     * @return The extension
+     */
+    @Override
+    String getExtension() {
+        EXTENSION
+    }
+
+    /**
      * Export the results to an xls file
      */
     @Override
     parse() {
-        File file = File.createTempFile('excel', '.xls')
+        File file = File.createTempFile('excel', '.' + EXTENSION)
         file.deleteOnExit()
 
         WritableWorkbook workbook = Workbook.createWorkbook(file, new WorkbookSettings())
 
-        WritableFont font = new WritableFont(WritableFont.ARIAL, 12)
-        WritableFont fontBold = new WritableFont(WritableFont.ARIAL, 12, WritableFont.BOLD)
+        WritableFont font = new WritableFont(WritableFont.TAHOMA, 12)
+        WritableFont fontBold = new WritableFont(WritableFont.TAHOMA, 12, WritableFont.BOLD)
 
         WritableCellFormat format = new WritableCellFormat(font)
         WritableCellFormat formatBold = new WritableCellFormat(fontBold)
 
         WritableSheet sheet = workbook.createSheet(title, 0)
 
-        columnNames.eachWithIndex { column, j ->
-            sheet.addCell(new Label(j, 0, columnNames[j].toString(), formatBold))
+        columnNames.eachWithIndex { name, j ->
+            sheet.addCell(new Label(j, 0, name.toString(), formatBold))
         }
 
         results.eachWithIndex { result, i ->
-            columns.grep { it.canBeShown() }.eachWithIndex { c, j ->
-                def value = result
-                c.columnPath.each { value = value[it.toString()] }
-                sheet.addCell(new Label(j, i+1, value.toString(), format))
+            columns.eachWithIndex { c, j ->
+                if (result[c] != null) {
+                    sheet.addCell(new Label(j, i+1, result[c].toString(), format))
+                }
             }
         }
 
         for (int i=0; i<columns.size(); i++) {
-            sheet.getColumnView(i).autosize = true
+            CellView cell = sheet.getColumnView(i)
+            cell.autosize = true
+            sheet.setColumnView(i, cell)
         }
 
         workbook.write()

@@ -1,6 +1,7 @@
 package org.iisg.eca.domain.payway
 
 import org.iisg.eca.domain.ParticipantDate
+import org.iisg.eca.domain.ParticipantState
 import org.iisg.eca.domain.Setting
 import org.iisg.eca.domain.User
 import org.springframework.context.i18n.LocaleContextHolder
@@ -129,7 +130,11 @@ class Order {
                 (this.payed == ORDER_NOT_PAYED) &&
                 this.willPayByBank) {
             this.payed = ORDER_PAYED
+
             participant.paymentId = this.id
+            if (participant.state.id == ParticipantState.REMOVED_CANCELLED) {
+                participant.state = ParticipantState.get(ParticipantState.PARTICIPANT_DATA_CHECKED)
+            }
 
             return true
         }

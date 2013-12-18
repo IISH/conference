@@ -39,7 +39,7 @@
 
                                         <g:set var="link" value="${Setting.getSetting(Setting.CHANGE_USER).value}" />
                                         <g:if test="${link}">
-                                            <span id="change-user">
+                                            <span class="inline-link">
                                                 <a href="${link.replace('[EMAIL]', user.email)}">
                                                     <g:message code="participantDate.show.personal.page.message" />
                                                 </a>
@@ -307,7 +307,7 @@
                                         <g:message code="participantDate.feeState.label" />
                                     </label>
                                     <span class="property-value">
-                                        <g:select name="ParticipantDate.feeState.id" from="${FeeState.list()}" optionKey="id" optionValue="name" value="${participant.feeState.id}" />
+                                        <g:select name="ParticipantDate.feeState.id" from="${FeeState.sortedFeeStates.list()}" optionKey="id" optionValue="name" value="${participant.feeState.id}" />
                                     </span>                                
                                 </div>
                                 <div class="${hasErrors(bean: user, field: 'dateTimesNotPresent', 'error')}">
@@ -810,8 +810,7 @@
                                             ${order.getStatusText()}
 
                                             <g:if test="${order.willPayByBank && (order.payed == Order.ORDER_NOT_PAYED)}">
-                                                <span class="order-set-payed clickable">
-                                                    <span class="ui-icon ui-icon-carat-1-e"></span>
+                                                <span class="inline-button order-set-payed">
                                                     <g:message code="order.set.payed.label" />
                                                 </span>
                                             </g:if>

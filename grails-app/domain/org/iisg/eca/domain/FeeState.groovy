@@ -29,6 +29,13 @@ class FeeState extends EventDomain {
         feeAmounts      sort: 'endDate', cascade: 'all-delete-orphan'
     }
 
+    static namedQueries = {
+        sortedFeeStates {
+            order('isDefaultFee', 'desc')
+            order('name', 'asc')
+        }
+    }
+
     @Override
     String toString() {
         name

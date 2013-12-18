@@ -11,6 +11,18 @@ interface Export {
     public String getContentType()
 
     /**
+     * Returns the extension of the resulting file
+     * @return The extension
+     */
+    public String getExtension()
+
+    /**
+     * Returns the title of the resulting file
+     * @return The title
+     */
+    public String getTitle()
+
+    /**
      * Parses the element
      */
     public parse()
