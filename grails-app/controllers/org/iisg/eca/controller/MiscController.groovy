@@ -274,26 +274,7 @@ class MiscController {
     }
 
     def award() {
-        Sql sql = new Sql(dataSource)
-        List<GroovyRowResult> result = sql.rows("""
-          SELECT users.user_id, lastname, firstname, email
-          FROM users INNER JOIN participant_date ON users.user_id=participant_date.user_id
-          WHERE users.enabled=1 AND users.deleted=0
-          AND participant_date.enabled=1 and participant_date.deleted=0
-          AND participant_date.participant_state_id IN (:new, :dataChecked, :participant, :notFinished)
-          AND participant_date.date_id = :date_id
-          AND participant_date.award=1
-          ORDER BY lastname, firstname
-        """, [date_id: pageInformation.date.id, new: ParticipantState.NEW_PARTICIPANT, dataChecked: ParticipantState.PARTICIPANT_DATA_CHECKED,
-                participant: ParticipantState.PARTICIPANT, notFinished: ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
-
-        render(view: "list", model: [
-                data:       result,
-                headers:    ["Last name", "First name", "E-mail"],
-                controller: "participant",
-                action:     "show",
-                info:       "Overview of students participating in the 'Award'."
-        ])
+        forward(controller: 'dynamicPage', action: 'dynamic', params: params)
     }
 
     def notRegisteredChairs() {
