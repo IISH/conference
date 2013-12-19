@@ -17,6 +17,8 @@ class ParticipantDate extends EventDateDomain {
     boolean lowerFeeAnswered = false
     String lowerFeeText
     boolean emailPaymentInfo = false
+    boolean emailSessionInfo = false
+    boolean emailSessionChairInfo = false
     boolean student = false
     boolean studentConfirmed = false
     boolean award = false
@@ -41,6 +43,8 @@ class ParticipantDate extends EventDateDomain {
         lowerFeeAnswered        column: 'lower_fee_answered'
         lowerFeeText            column: 'lower_fee_text'
         emailPaymentInfo        column: 'email_payment_info'
+        emailSessionInfo        column: 'email_session_info'
+        emailSessionChairInfo   column: 'email_session_chair_info'
         student                 column: 'student'
         studentConfirmed        column: 'student_confirmed'
         award                   column: 'award'

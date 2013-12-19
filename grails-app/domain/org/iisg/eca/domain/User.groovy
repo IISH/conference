@@ -257,6 +257,38 @@ class User extends DefaultDomain {
             }
         }
 
+        allSessionParticipants { date ->
+            allParticipants(date)
+
+            sessionParticipants {
+                eq('deleted', false)
+            }
+        }
+
+        allSessionParticipantsNotAnswered { date ->
+            allSessionParticipants(date)
+
+            participantDates {
+                eq('emailSessionInfo', false)
+            }
+        }
+
+        allSessionChairs { date ->
+            allSessionParticipants(date)
+
+            sessionParticipants {
+                eq('type.id', ParticipantType.CHAIR)
+            }
+        }
+
+        allSessionChairsNotAnswered { date ->
+            allSessionChairs(date)
+
+            participantDates {
+                eq('emailSessionChairInfo', false)
+            }
+        }
+
         noPaymentInfo { date ->
             allParticipants(date)
 

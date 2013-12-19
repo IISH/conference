@@ -16,6 +16,8 @@ class EmailTemplate extends EventDomain {
     public static final String QUERY_PAPER_NOT_ACCEPTED_NOT_ANSWERED = "paperNotAcceptedNotAnswered"
     public static final String QUERY_STUDENT_LOWER_FEE_NOT_ANSWERED = "studentLowerFeeNotAnswered"
     public static final String QUERY_NO_STUDENT_LOWER_FEE_NOT_ANSWERED = "noStudentLowerFeeNotAnswered"
+    public static final String QUERY_ALL_SESSION_PARTICIPANTS_NOT_ANSWERED = "allSessionParticipantsNotAnswered"
+    public static final String QUERY_ALL_SESSION_CHAIRS_NOT_ANSWERED = "allSessionChairsNotAnswered"
     public static final String QUERY_NO_PAYMENT_INFO = "noPaymentInfo"
 
     /**
@@ -224,6 +226,22 @@ class EmailTemplate extends EventDomain {
                     UPDATE  participant_date
                     SET     lower_fee_requested = 1,
                             lower_fee_answered = 1
+                    WHERE   user_id = :userId
+                    AND     date_id = :dateId
+                ''', identifiers)
+                break
+            case QUERY_ALL_SESSION_CHAIRS_NOT_ANSWERED:
+                sql.executeUpdate('''
+                    UPDATE  participant_date
+                    SET     email_session_chair_info = 1
+                    WHERE   user_id = :userId
+                    AND     date_id = :dateId
+                ''', identifiers)
+                break
+            case QUERY_ALL_SESSION_PARTICIPANTS_NOT_ANSWERED:
+                sql.executeUpdate('''
+                    UPDATE  participant_date
+                    SET     email_session_info = 1
                     WHERE   user_id = :userId
                     AND     date_id = :dateId
                 ''', identifiers)

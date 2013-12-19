@@ -143,7 +143,12 @@ class EmailRecipientsService {
      */
     private void projectionsForCriteria(NamedCriteriaProxy criteria, EmailTemplate template) {
         criteria.projections {
-            criteria.property('id')
+            if (template.getAssociationsNames().size() == 0) {
+                criteria.distinct('id')
+            }
+            else {
+                criteria.property('id')
+            }
 
             for (String association : template.getAssociationsNames()) {
                 "$association" {
