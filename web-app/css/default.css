@@ -1198,3 +1198,15 @@ table.payment-statistics tbody tr:hover {
 .bold {
     font-weight: bold;
 }
+
+.red {
+    color: red;
+}
+
+.orange {
+    color: orange;
+}
+
+.green {
+    color: green;
+}

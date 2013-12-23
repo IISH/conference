@@ -778,6 +778,7 @@
                 </div>
 
                 <div id="payments-tab" class="columns">
+                    <g:set var="hidePayedButton" value="${false}" />
                     <g:each in="${orders}" var="order">
                         <div class="participant-order column">
                             <div>
@@ -806,13 +807,27 @@
                                         <span id="status-label" class="property-label">
                                             <g:message code="order.status.label" />
                                         </span>
-                                        <span class="property-value" arial-labelledby="status-label">
+
+                                        <g:set var="classStatus" value="red" />
+                                        <g:if test="${order.payed}">
+                                            <g:set var="classStatus" value="green" />
+                                        </g:if>
+                                        <g:elseif test="${order.willPayByBank}">
+                                            <g:set var="classStatus" value="orange" />
+                                        </g:elseif>
+
+                                        <span class="property-value bold ${classStatus}" arial-labelledby="status-label">
                                             ${order.getStatusText()}
 
-                                            <g:if test="${order.willPayByBank && (order.payed == Order.ORDER_NOT_PAYED)}">
+                                            <g:if test="${order.willPayByBank && (order.payed == Order.ORDER_NOT_PAYED) && !hidePayedButton}">
                                                 <span class="inline-button order-set-payed">
                                                     <g:message code="order.set.payed.label" />
                                                 </span>
+                                                <g:set var="hidePayedButton" value="${true}" />
+                                            </g:if>
+
+                                            <g:if test="${order.payed == Order.ORDER_PAYED}">
+                                                <g:set var="hidePayedButton" value="${true}" />
                                             </g:if>
                                         </span>
                                     </li>

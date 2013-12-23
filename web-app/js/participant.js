@@ -56,17 +56,23 @@ $(document).ready(function() {
     });
 
     $('.order-set-payed').click(function(e) {
-        $('.errors').hide();
-        $('.message').hide();
+        ajaxCall(messageUrl, {code: 'default.button.delete.confirm.message'}, function(data) {
+            var setPayed = confirm(data.message);
+            if (setPayed) {
+                $('.errors').hide();
+                $('.message').hide();
 
-        var element = $(e.target).parents('.participant-order');
+                var element = $(e.target).parents('.participant-order');
 
-        ajaxCall(
-            'participant/setPayed',
-            {   'user_id':  userId,
-                'order_id': element.find('#order-id-label').next().text()
-        }, function(data) {
-            $(e.target).parent().text(data.state);
+                ajaxCall('participant/setPayed',
+                    {   'user_id':  userId,
+                        'order_id': element.find('#order-id-label').next().text()
+                    },
+                    function(data) {
+                        $(e.target).parent().text(data.state).removeClass('orange').addClass('green');
+                    }
+                );
+            }
         });
     });
 });
