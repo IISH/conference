@@ -81,8 +81,8 @@ class EcaFilters {
                 dateCode = dateCode ?: ""
 
                 // Lookup the requested event and event date in the database
-                Event event = Event.findByCode(eventCode)
-                EventDate date = EventDate.findByEventAndYearCode(event, dateCode)
+                Event event = Event.findByCode(eventCode, [cache: true])
+                EventDate date = EventDate.findByEventAndYearCode(event, dateCode, [cache: true])
 
                 if (date) {
                     pageInformation.date = date

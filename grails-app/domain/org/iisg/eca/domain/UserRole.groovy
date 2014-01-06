@@ -14,7 +14,6 @@ class UserRole extends EventDomain implements Serializable {
 
     static mapping = {
         table 'users_roles'
-        cache true
         version false
 
         id      column: 'user_role_id'

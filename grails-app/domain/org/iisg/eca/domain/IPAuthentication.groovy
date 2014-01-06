@@ -13,7 +13,6 @@ class IPAuthentication {
 
     static mapping = {
         table 'ip_authentication'
-        cache true
         version false
 
         id          column: 'ip_authentication_id'

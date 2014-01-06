@@ -10,7 +10,6 @@ class Group extends EventDomain {
 
     static mapping = {
         table 'groups'
-        cache true
         version false
         sort name: 'asc'
 

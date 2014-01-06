@@ -32,7 +32,6 @@ class Page extends DefaultDomain {
 
     static mapping = {
         table 'pages'
-        cache true
         version false
         sort controller: 'asc'
 

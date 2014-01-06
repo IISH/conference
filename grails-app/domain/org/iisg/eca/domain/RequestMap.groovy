@@ -9,7 +9,6 @@ class RequestMap {
 
     static mapping = {
         table 'request_map'
-        cache true
         version false
 
         id              column: 'request_map_id'

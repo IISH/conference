@@ -42,7 +42,6 @@ class Setting extends EventDomain {
 
     static mapping = {
         table 'settings'
-        cache true
         version false
 
         id              column: 'setting_id'
