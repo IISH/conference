@@ -11,6 +11,7 @@ import org.iisg.eca.domain.Room
 import org.iisg.eca.domain.Paper
 import org.iisg.eca.domain.Network
 import org.iisg.eca.domain.Session
+import org.iisg.eca.domain.SessionState
 import org.iisg.eca.domain.ParticipantType
 import org.iisg.eca.domain.SessionDateTime
 import org.iisg.eca.domain.ParticipantState
@@ -66,12 +67,19 @@ class BookExportService {
                     SELECT u
                     FROM ParticipantDate AS pd
                     INNER JOIN pd.user AS u
+                    INNER JOIN u.sessionParticipants AS sp
+                    INNER JOIN sp.session AS s
                     WHERE pd.state.id = :stateId
+                    AND s.state.id = :sessionStateId
                     AND u.enabled = true
                     AND u.deleted = false
                     AND pd.enabled = true
+                    AND sp.enabled = true
+                    AND sp.deleted = false
+                    AND s.enabled = true
+                    AND s.deleted = false
                     ORDER BY u.lastName, u.firstName
-                ''', [stateId: ParticipantState.PARTICIPANT]).each { user ->
+                ''', [stateId: ParticipantState.PARTICIPANT, sessionStateId: SessionState.SESSION_ACCEPTED]).each { user ->
                     builder.name {
                         builder.lastname(user.lastName)
                         builder.firstname(user.firstName)

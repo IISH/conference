@@ -49,7 +49,7 @@ class EcaFilters {
         page(controller: '*', action: '*', controllerExclude: 'css') {
             before = {
                 if (!params.xhr) {
-                    Page page = Page.findByControllerAndAction(params.controller, params.action)
+                    Page page = Page.findByControllerAndAction(params.controller.toString(), params.action.toString(), [cache: true])
 
                     if (page) {
                         pageInformation.page = page
@@ -115,7 +115,7 @@ class EcaFilters {
          */
         authFilter(controller: '*', action: '*', controllerExclude: 'login|logout|css') {
             before = {
-                List<Role> roles = Role.findAllByFullRights(true)
+                List<Role> roles = Role.findAllByFullRights(true, [cache: true])
 
                 // No full rights? Then find out if the user has access
                 if (!SpringSecurityUtils.ifAnyGranted(roles*.role.join(','))) {
@@ -135,6 +135,7 @@ class EcaFilters {
                         List<UserRole> access = UserRole.withCriteria {
                             eq('user.id', user.id)
                             eq('event.id', params.id)
+                            cache(true)
                         }
 
                         // If the user has access to one of the event dates of the given event, it is ok

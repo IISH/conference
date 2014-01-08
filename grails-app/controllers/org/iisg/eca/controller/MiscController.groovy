@@ -412,5 +412,59 @@ class MiscController {
                 info:       "Sessions without an organizer."
         ])
     }
+
+    def sessionsNoChair() {
+        Sql sql = new Sql(dataSource)
+        List<GroovyRowResult> result = sql.rows("""
+            SELECT session_id, session_code, session_name, description
+            FROM `sessions` s
+            INNER JOIN session_states ss ON s.session_state_id = ss.session_state_id
+            WHERE s.enabled=1 AND s.deleted=0
+            AND date_id=:dateId
+            AND s.session_state_id IN (:accepted, :consideration)
+            AND session_id NOT IN (
+                SELECT session_participant.session_id
+                FROM session_participant
+                INNER JOIN vw_accepted_participants ON session_participant.user_id=vw_accepted_participants.user_id
+                WHERE session_participant.enabled=1 AND session_participant.deleted=0
+                AND session_participant.participant_type_id = :chair
+                GROUP BY session_participant.session_id
+            )
+            ORDER BY s.session_state_id ASC, session_code ASC, session_name ASC
+        """, [  dateId: pageInformation.date.id,
+                accepted: SessionState.SESSION_ACCEPTED,
+                consideration: SessionState.SESSION_IN_CONSIDERATION,
+                chair: ParticipantType.CHAIR])
+
+        render(view: "list", model: [
+                data:       result,
+                headers:    ["Code", "Name", "Session state"],
+                controller: "session",
+                action:     "show",
+                info:       "Sessions without a chair."
+        ])
+    }
+
+    def participantNoCountry() {
+        Sql sql = new Sql(dataSource)
+        List<GroovyRowResult> result = sql.rows("""
+            SELECT u.user_id, u.lastname, u.firstname
+            FROM users AS u
+            INNER JOIN participant_date AS pd
+            ON u.user_id = pd.user_id
+            WHERE pd.date_id = :dateId
+            AND pd.deleted = 0
+            AND u.deleted = 0
+            AND (u.country_id IS NULL OR u.country_id = 0)
+        """, [dateId: pageInformation.date.id])
+
+        render(view: "list", model: [
+                data:       result,
+                headers:    ["Last name", "First name"],
+                controller: "participant",
+                action:     "show",
+                info:       "Participants without a country."
+        ])
+    }
 }
 
