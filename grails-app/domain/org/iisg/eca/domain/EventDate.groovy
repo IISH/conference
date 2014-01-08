@@ -49,11 +49,13 @@ class EventDate extends DefaultDomain {
                 order('shortName', 'asc')
             }
             order('startDate', 'desc')
+            cache(true)
         }
 
         getAllForEvent { event ->
             eq('event.id', event.id)
             order('startDate', 'desc')
+            cache(true)
         }
     }
 

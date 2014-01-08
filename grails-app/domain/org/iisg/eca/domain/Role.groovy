@@ -30,7 +30,7 @@ class Role {
     
     static Set<Role> getPossibleRoles() {
         Set<Role> roles = []
-        Role.list().each { 
+        list(cache: true).each {
             if (SpringSecurityUtils.ifAnyGranted(it.role)) {
                 roles.add(it) 
             }
