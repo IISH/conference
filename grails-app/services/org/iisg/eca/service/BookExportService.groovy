@@ -64,7 +64,7 @@ class BookExportService {
         getXml("Export of Concordance for ${getEventCode()} Programbook") { builder ->
             builder.names {
                 User.executeQuery('''
-                    SELECT u
+                    SELECT DISTINCT u
                     FROM ParticipantDate AS pd
                     INNER JOIN pd.user AS u
                     INNER JOIN u.sessionParticipants AS sp

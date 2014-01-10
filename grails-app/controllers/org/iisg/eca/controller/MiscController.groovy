@@ -456,6 +456,7 @@ class MiscController {
             AND pd.deleted = 0
             AND u.deleted = 0
             AND (u.country_id IS NULL OR u.country_id = 0)
+            ORDER BY u.lastname, u.firstname
         """, [dateId: pageInformation.date.id])
 
         render(view: "list", model: [
