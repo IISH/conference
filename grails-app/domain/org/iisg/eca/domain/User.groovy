@@ -326,7 +326,7 @@ class User extends DefaultDomain {
      */
     List<Event> getEvents() {
         List<Event> events
-        List<Role> roles = Role.findAllByFullRights(true)
+        List<Role> roles = Role.findAllByFullRights(true, [cache: true])
 
         // If the user is granted access to all events, just return a list of all events
         // Otherwise, only return the events he/she is specifically given access to
@@ -340,7 +340,7 @@ class User extends DefaultDomain {
                 INNER JOIN ur.event AS e
                 WHERE ur.user.id = :userId
                 ORDER BY e.shortName
-            ''', [userId: this.id])
+            ''', [userId: this.id], [cache: true])
         }
 
         events
