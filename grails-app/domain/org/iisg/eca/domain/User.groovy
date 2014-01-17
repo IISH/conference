@@ -263,6 +263,8 @@ class User extends DefaultDomain {
             sessionParticipants {
                 session {
                     eq('state.id', SessionState.SESSION_ACCEPTED)
+                    eq('date.id', date.id)
+                    eq('deleted', false)
                 }
                 eq('deleted', false)
             }
