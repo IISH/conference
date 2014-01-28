@@ -280,32 +280,32 @@ $(document).ready(function() {
     $(document).on("click", '.time-slot.click-to-plan', function(e) {
         disableTableWithLoading(true);
 
-        var element = $(e.target);
+        var element = $(this);
         var roomId = element.find('input[name=room-id]').val();
         var dateTimeId = element.find('input[name=date-time-id]').val();
 
-        ajaxCall(
-            'session/planSession',
-            {   'session_id':   curSessionId,
-                'room_id':      roomId,
-                'date_time_id': dateTimeId},
-            function(data) {
-                if (data.success) {
-                    var contPlan = true;
-                    var plannedSession = element.find('.session-block');
+        var contPlan = true;
+        var plannedSession = element.find('.session-block');
 
-                    if (plannedSession.length === 1) {
-                        contPlan = confirm("A session is already planned on this time slot! \r\nDo you want to continue?");
-                    }
+        if (plannedSession.length === 1) {
+            contPlan = confirm("A session is already planned on this time slot! \r\nDo you want to continue?");
+        }
 
-                    if (contPlan) {
-                        $('#sessions-unscheduled').prepend(plannedSession);                        
-                        element.prepend(curSessionBlock);                        
+        if (contPlan) {
+            ajaxCall(
+                'session/planSession',
+                {   'session_id':   curSessionId,
+                    'room_id':      roomId,
+                    'date_time_id': dateTimeId},
+                function(data) {
+                    if (data.success) {
+                        $('#sessions-unscheduled').prepend(plannedSession);
+                        element.prepend(curSessionBlock);
                     }
-                }                
-                unselectSession();
-            }
-        );
+                    unselectSession();
+                }
+            );
+        }
     });
 
     $(document).on("click", '#unschedule-session', function(e) {
