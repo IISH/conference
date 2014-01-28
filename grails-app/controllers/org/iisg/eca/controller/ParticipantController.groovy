@@ -54,6 +54,9 @@ class ParticipantController {
      */
     def exportService
 
+    /**
+     * Service that takes care of sending emails
+     */
     def emailService
 
     /**
@@ -206,6 +209,21 @@ class ParticipantController {
         List daysPresent = ParticipantDay.findAllDaysOfUser(user)
         List orders = Order.findAllOrdersOfUserLastYear(user)
 
+        // Obtain the emails
+        Calendar cal = Calendar.getInstance()
+        cal.add(Calendar.MONTH, -18)
+
+        List emailsNotSent = SentEmail.withCriteria {
+            eq('user.id', user.id)
+            isNull('dateTimeSent')
+            order('dateTimeCreated', 'desc')
+        }
+        List emailsSent = SentEmail.withCriteria {
+            eq('user.id', user.id)
+            ge('dateTimeSent', cal.getTime())
+            order('dateTimeSent', 'desc')
+        }
+
         // The 'save' button was clicked, save all data
         if (request.post) {
             try {
@@ -357,7 +375,9 @@ class ParticipantController {
                                                 participantIds: participantIds,
                                                 sessions: sessions,
                                                 daysPresent: daysPresent,
-                                                orders: orders
+                                                orders: orders,
+                                                emailsSent: emailsSent,
+                                                emailsNotSent: emailsNotSent
                 ])
             }
         }
@@ -373,7 +393,9 @@ class ParticipantController {
                                         participantIds: participantIds,
                                         sessions: sessions,
                                         daysPresent: daysPresent,
-                                        orders: orders
+                                        orders: orders,
+                                        emailsSent: emailsSent,
+                                        emailsNotSent: emailsNotSent
         ])
     }
 
@@ -700,6 +722,65 @@ class ParticipantController {
             // If there is no responseMap defined yet, it can only mean the user could not be found
             if (!responseMap) {
                 responseMap = [success: false, message: g.message(code: 'default.not.found.message', args: ["${g.message(code: 'user.label')}"])]
+            }
+
+            render responseMap as JSON
+        }
+    }
+
+    /**
+     * Returns the email details
+     * (AJAX call)
+     */
+    def emailDetails() {
+        // If this is an AJAX call, continue
+        if (request.xhr) {
+            Map responseMap = null
+
+            if (params['email-id']?.isLong()) {
+                SentEmail email = SentEmail.findById(params.long('email-id'))
+                if (email) {
+                    responseMap = [
+                            success: true,
+                            orginalSent: g.formatDate(date: email.dateTimeSent, formatName: 'default.date.time.format'),
+                            copiesSent: email.allDateTimeCopies.collect { g.formatDate(date: it, formatName: 'default.date.time.format') }.join('<br />'),
+                            from: "${email.fromName} ( ${email.fromEmail} )",
+                            subject: email.subject,
+                            body: eca.formatText(text: email.body)
+                    ]
+                }
+            }
+
+            // If there is no responseMap defined yet, it can only mean the email could not be found
+            if (!responseMap) {
+                responseMap = [success: false, message: g.message(code: 'default.not.found.message', args: ["${g.message(code: 'email.label')}"])]
+            }
+
+            render responseMap as JSON
+        }
+    }
+
+    /**
+     * Resend the given email
+     * (AJAX call)
+     */
+    def resendEmail() {
+        // If this is an AJAX call, continue
+        if (request.xhr) {
+            Map responseMap = null
+
+            if (params['email-id']?.isLong()) {
+                SentEmail email = SentEmail.findById(params.long('email-id'))
+                if (email) {
+                    emailService.sendEmail(email, true, true)
+                    Map response = ['success': true, message: 'Email has been succesfully resend!']
+                    render response as JSON
+                }
+            }
+
+            // If there is no responseMap defined yet, it can only mean the email could not be found
+            if (!responseMap) {
+                responseMap = [success: false, message: g.message(code: 'default.not.found.message', args: ["${g.message(code: 'email.label')}"])]
             }
 
             render responseMap as JSON

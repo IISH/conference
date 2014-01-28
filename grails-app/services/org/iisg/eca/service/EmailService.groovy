@@ -97,13 +97,14 @@ class EmailService {
      * Tries to send the email, if succeeded the send date will be set in the database
      * @param sentEmail The email to be send
      * @param saveToDb Whether the email should be saved in the database
+     * @param forceSend Whether the email is forced to (re)send     *
      */
-    synchronized void sendEmail(SentEmail sentEmail, boolean saveToDb=true) {
+    synchronized void sendEmail(SentEmail sentEmail, boolean saveToDb=true, boolean forceSend=false) {
         // How often may we try before giving up?
         Integer maxNumTries = new Integer(Setting.getSetting(Setting.EMAIL_MAX_NUM_TRIES).value)
 
         // Only send the email if the maximum number of tries is not reached
-        if (sentEmail.numTries < maxNumTries) {
+        if (forceSend || (sentEmail.numTries < maxNumTries)) {
             sentEmail.numTries++
 
             try {
@@ -118,7 +119,7 @@ class EmailService {
                 }
 
                 // Successfully send, so set the date and time of sending
-                sentEmail.dateTimeSent = new Date()
+                sentEmail.updateDateTimeSent()
             }
             catch (MailException me) {
                 // Make sure, the date/time is set to null, cause it failed to send the email

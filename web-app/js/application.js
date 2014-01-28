@@ -45,6 +45,20 @@ var showErrors = function(data) {
     errorsBox.trigger('error');
 }
 
+var showMessage = function(data) {
+    var messageBox = $('.message');
+    messageBox.hide();
+
+    if (messageBox.length === 0) {
+        messageBox = $('h1').after('<div class="message" role="status"></div>').next();
+    }
+    messageBox.html("");
+
+    messageBox.text(data.message);
+    messageBox.show();
+    messageBox.trigger('message');
+}
+
 var setDatePicker = function(element, increaseDay) {
     element = $(element);
 

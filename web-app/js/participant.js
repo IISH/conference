@@ -26,6 +26,10 @@ $(document).ready(function() {
     $(document).on("error", function(e) {
         moveTabs();
     });
+
+    $(document).on("message", function(e) {
+        moveTabs();
+    });
     
     $(document).on("removed-item", '.paper.ui-icon-circle-minus', function(e) {
         var paperId = $(e.target).parents('.column').children('input[type=hidden]:first').val();
@@ -73,6 +77,34 @@ $(document).ready(function() {
                     }
                 );
             }
+        });
+    });
+
+    $('#emails-not-sent, #emails-sent').accordion({
+        header: '.emailHeader',
+        heightStyle: 'content',
+        collapsible: true,
+        active: false,
+        beforeActivate: function(event, ui) {
+            if (!$.isEmptyObject(ui.newPanel) && (ui.newPanel.children().eq(1).val() == 0)) {
+                var emailId = ui.newPanel.children(":first").val();
+                ajaxCall('participant/emailDetails', {'email-id': emailId}, function(data) {
+                    ui.newPanel.find('#original-sent-label').next().prepend(data.orginalSent);
+                    ui.newPanel.find('#copies-sent-label').next().html(data.copiesSent);
+                    ui.newPanel.find('#from-label').next().text(data.from);
+                    ui.newPanel.find('#subject-label').next().text(data.subject);
+                    ui.newPanel.find('#body-label').next().html(data.body);
+
+                    ui.newPanel.children().eq(1).val(1);
+                });
+            }
+        }
+    });
+
+    $('.resend-email').click(function(e) {
+        var emailId = $(this).parents('.email-content').children(":first").val();
+        ajaxCall('participant/resendEmail', {'email-id': emailId}, function(data) {
+            showMessage(data);
         });
     });
 });

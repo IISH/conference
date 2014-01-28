@@ -748,7 +748,7 @@ span.remove-item {
     padding: 0;
 }
 
-#participant-form .column > fieldset, #participant-form .column > div {
+#participant-form .column > fieldset, #participant-form .column > div, #emails-not-sent {
     margin-bottom: 20px;
 }
 
