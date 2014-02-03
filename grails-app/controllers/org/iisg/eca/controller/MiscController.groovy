@@ -13,6 +13,7 @@ import org.iisg.eca.domain.ParticipantState
  */
 class MiscController {
     def dataSource
+	def exportService
     def pageInformation
 
     def lastNameUpperCase() {
@@ -334,7 +335,7 @@ class MiscController {
                 info:       "Overview of participants with multiple accepted papers."
         ])
     }
-    
+
     def chairs() {
         Sql sql = new Sql(dataSource)
         List<GroovyRowResult> result = sql.rows("""
@@ -436,12 +437,23 @@ class MiscController {
                 consideration: SessionState.SESSION_IN_CONSIDERATION,
                 chair: ParticipantType.CHAIR])
 
+	    List<String> columns = ['session_code', 'session_name', 'description'] as List<String>
+	    List<String> headers = ["Code", "Name", "Session state"] as List<String>
+	    String info = "Sessions without a chair"
+
+	    // If an export of the results is requested, try to delegate the request to the export service
+	    if (params.format) {
+		    exportService.getSQLExport(params.format, response, columns, result, info, headers, params.sep)
+		    return
+	    }
+
         render(view: "list", model: [
                 data:       result,
-                headers:    ["Code", "Name", "Session state"],
+                headers:    headers,
                 controller: "session",
                 action:     "show",
-                info:       "Sessions without a chair."
+                info:       info,
+		        export:     true
         ])
     }
 

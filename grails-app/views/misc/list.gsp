@@ -10,14 +10,30 @@
             <g:if test="${controller && action}">
                 <input type="hidden" name="url" value="${eca.createLink(controller: controller, action: action, id: 0)}" />
             </g:if>
-            
+
             <div class="menu">
                 <ul>
                     <li><a href="">Open link</a></li>
                     <li><a href="" target="_blank">Open link in new tab</a></li>
                 </ul>
             </div>
-            
+
+            <g:if test="${export}">
+                <div class="tbl_toolbar right">
+                    <span>
+                        <g:message code="default.export.data" />
+                    </span>
+                    <select class="export-data">
+                        <option value="-1"> </option>
+                        <option value="export=0&amp;format=csv&amp;sep=,">CSV (,)</option>
+                        <option value="export=0&amp;format=csv&amp;sep=;">CSV (;)</option>
+                        <option value="export=0&amp;format=csv&amp;sep=tab">CSV (tab)</option>
+                        <option value="export=0&amp;format=xls">XLS</option>
+                        <option value="export=0&amp;format=xml">XML</option>
+                    </select>
+                </div>
+            </g:if>
+
             <table class="clear">
                 <thead class="no-filters">
                     <tr>
