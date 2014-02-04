@@ -5,13 +5,6 @@ dataSource {
     dbCreate = "validate"
     configClass = org.grails.plugin.hibernate.filter.HibernateFilterDomainConfiguration.class
 }
-dataSource_readOnly {
-    pooled = true
-    driverClassName = "com.mysql.jdbc.Driver"
-    dialect = org.hibernate.dialect.MySQL5InnoDBDialect
-    dbCreate = "validate"
-    configClass = org.grails.plugin.hibernate.filter.HibernateFilterDomainConfiguration.class
-}
 dataSource_payWay {
     pooled = true
     driverClassName = "com.mysql.jdbc.Driver"
@@ -37,14 +30,6 @@ environments {
             dbCreate = "update"
             url = "jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000"
         }
-        dataSource_readOnly {
-            driverClassName = "org.h2.Driver"
-            dialect = org.hibernate.dialect.H2Dialect
-            username = "sa"
-            password = ""
-            dbCreate = "update"
-            url = "jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000"
-        }
         dataSource_payWay {
             driverClassName = "org.h2.Driver"
             dialect = org.hibernate.dialect.H2Dialect
@@ -57,20 +42,9 @@ environments {
     production {
         dataSource {
             properties {
-                maxActive = -1
-                minEvictableIdleTimeMillis = 1800000
-                timeBetweenEvictionRunsMillis = 1800000
-                numTestsPerEvictionRun = 3
-                testOnBorrow = true
-                testWhileIdle = true
-                testOnReturn = true
-                validationQuery = "SELECT 1"
-                jdbcInterceptors = "ConnectionState"
-            }
-        }
-        dataSource_readOnly {
-            properties {
-                maxActive = -1
+	            maxActive = 50
+	            maxIdle = 25
+	            minIdle = 5
                 minEvictableIdleTimeMillis = 1800000
                 timeBetweenEvictionRunsMillis = 1800000
                 numTestsPerEvictionRun = 3
@@ -83,7 +57,9 @@ environments {
         }
         dataSource_payWay {
             properties {
-                maxActive = -1
+	            maxActive = 50
+	            maxIdle = 25
+	            minIdle = 5
                 minEvictableIdleTimeMillis = 1800000
                 timeBetweenEvictionRunsMillis = 1800000
                 numTestsPerEvictionRun = 3

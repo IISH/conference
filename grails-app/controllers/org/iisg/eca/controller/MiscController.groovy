@@ -479,5 +479,40 @@ class MiscController {
                 info:       "Participants without a country."
         ])
     }
+
+	def noPaymentAttempt() {
+		Sql sql = new Sql(dataSource)
+		List<GroovyRowResult> result = sql.rows("""
+            SELECT users.user_id, users.lastname, users.firstname, users.email
+			FROM users
+			INNER JOIN participant_date
+			ON users.user_id = participant_date.user_id
+			WHERE users.enabled=1 AND users.deleted=0
+			AND participant_date.enabled=1 AND participant_date.deleted=0
+			AND participant_date.participant_state_id IN (1,2)
+			AND participant_date.date_id = :dateId
+			AND ( participant_date.payment_id IS NULL OR participant_date.payment_id = 0 )
+			ORDER BY lastname, firstname, email
+        """, [dateId: pageInformation.date.id])
+
+		List<String> columns = ['lastname', 'firstname', 'email'] as List<String>
+		List<String> headers = ["Last name", "First name", "E-mail"] as List<String>
+		String info = "Participants without any made payment attempt"
+
+		// If an export of the results is requested, try to delegate the request to the export service
+		if (params.format) {
+			exportService.getSQLExport(params.format, response, columns, result, info, headers, params.sep)
+			return
+		}
+
+		render(view: "list", model: [
+				data:       result,
+				headers:    headers,
+				controller: "participant",
+				action:     "show",
+				info:       info,
+				export:     true
+		])
+	}
 }
 

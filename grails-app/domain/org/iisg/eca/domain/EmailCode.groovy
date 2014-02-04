@@ -4,7 +4,7 @@ import groovy.sql.Sql
 
 class EmailCode extends EventDomain {
     def pageInformation
-    def dataSource_readOnly
+    def dataSource
 
     String code
     String description
@@ -32,7 +32,7 @@ class EmailCode extends EventDomain {
      * @return The translated text to be placed in the email
      */
     String translate(Map<String, Long> identifiers) {
-        Binding binding = new Binding([sql: new Sql(dataSource_readOnly), params: identifiers])
+        Binding binding = new Binding([sql: new Sql(dataSource), params: identifiers])
         GroovyShell shell = new GroovyShell(binding)
         Object ret = shell.evaluate(groovyScript)
         ret.toString()
