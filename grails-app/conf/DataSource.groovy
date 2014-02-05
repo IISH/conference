@@ -42,9 +42,9 @@ environments {
     production {
         dataSource {
             properties {
-	            maxActive = 50
-	            maxIdle = 25
-	            minIdle = 5
+	            maxActive = 8
+	            maxIdle = 8
+	            minIdle = 0
                 minEvictableIdleTimeMillis = 1800000
                 timeBetweenEvictionRunsMillis = 1800000
                 numTestsPerEvictionRun = 3
@@ -57,9 +57,9 @@ environments {
         }
         dataSource_payWay {
             properties {
-	            maxActive = 50
-	            maxIdle = 25
-	            minIdle = 5
+	            maxActive = 8
+	            maxIdle = 8
+	            minIdle = 0
                 minEvictableIdleTimeMillis = 1800000
                 timeBetweenEvictionRunsMillis = 1800000
                 numTestsPerEvictionRun = 3
