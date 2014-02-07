@@ -151,8 +151,6 @@ $(document).ready(function() {
                         alert(data.message);
                     }
                 );
-
-                var a = 123;
             },
             Cancel: function() {
                 $(this).dialog("close");
