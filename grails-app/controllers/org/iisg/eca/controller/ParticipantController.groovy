@@ -43,12 +43,12 @@ class ParticipantController {
      * Service taking care of participant information
      */
     def participantService
-    
+
     /**
      * Service taking care of participant in session related information
      */
     def participantSessionService
-    
+
     /**
      * Service taking care of exporting the participants paper
      */
@@ -122,7 +122,7 @@ class ParticipantController {
                                         alphabet:       participants.keySet(),
                                         states:         participantService.getParticipantCounts()])
     }
-    
+
     /**
      * Add a new participant to the current event date
      */
@@ -131,22 +131,22 @@ class ParticipantController {
             // We need an email address, check for the email
             if (!params.email) {
                 flash.error = true
-                flash.message = g.message(code: 'default.no.email.message')                
+                flash.message = g.message(code: 'default.no.email.message')
                 return
             }
-            
+
             ParticipantDate participant = null
             User user = User.findByEmail(params.email)
-            
+
             if (!user) {
-                user = new User(lastName: "n/a", firstName: "n/a", email: params.email)                
+                user = new User(lastName: "n/a", firstName: "n/a", email: params.email)
             }
-            else {            
+            else {
                 // Does the participant exist in the database already
                 participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
 
                 if (participant) {
-                    flash.message = g.message(code: 'default.exists.message', args: [user.toString(), g.message(code: 'participantDate.label')]) 
+                    flash.message = g.message(code: 'default.exists.message', args: [user.toString(), g.message(code: 'participantDate.label')])
                     redirect(uri: eca.createLink(action: 'show', id: user.id, noBase: true))
                     return
                 }
@@ -160,13 +160,13 @@ class ParticipantController {
                 if (participant) {
                     participant.deleted = false
                 }
-            } 
-            
+            }
+
             // This user is not a participant yet, but the user indicated he/she wants to make him/her one
-            if (!participant) {                
+            if (!participant) {
                 participant = new ParticipantDate(user: user, state: ParticipantState.get(ParticipantState.NEW_PARTICIPANT), feeState: FeeState.get(FeeState.NO_FEE_SELECTED))
             }
-            
+
             if (user.save(flush: true) && participant.save(flush: true)) {
                 flash.message = g.message(code: 'default.created.message', args: [g.message(code: 'participantDate.label'), participant.toString()])
                 redirect(uri: eca.createLink(action: 'show', id: user.id, noBase: true))
@@ -175,9 +175,9 @@ class ParticipantController {
             else {
                 return [participant: participant]
             }
-        }    
+        }
     }
-    
+
     /**
      * Shows all participant information and allows for editing
      */
@@ -199,7 +199,7 @@ class ParticipantController {
             redirect(uri: eca.createLink(previous: true, noBase: true))
             return
         }
-        
+
         // Try to look up this user as a participant for the current event date
         ParticipantDate participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
 
@@ -229,10 +229,10 @@ class ParticipantController {
             try {
                 // Save all user information
                 bindData(user, params, [include: ['title', 'firstName', 'lastName', 'gender', 'organisation',
-                        'department', 'email', 'address', 'city', 'country', 'phone', 'mobile', 'cv', 
+                        'department', 'email', 'address', 'city', 'country', 'phone', 'mobile', 'cv',
                         'extraInfo', 'emailDiscontinued']], "User")
                 user.save(failOnError: true)
-                
+
                 if (!participant && params['add-to-date']?.equals('add')) {
                     // Try to find out if this participant has been deleted before or is filtered for some other reason
                     ParticipantDate.withoutHibernateFilters {
@@ -256,14 +256,14 @@ class ParticipantController {
                             'lowerFeeAnswered', 'lowerFeeText', 'student', 'studentConfirmed', 'award',
                             'state', 'feeState']], "ParticipantDate")
                     participant.save(failOnError: true)
-                    
+
                     // Remove all extras the participant is interested in and save all new information
                     participant.extras.clear()
                     params."ParticipantDate.extras".each { extraId ->
                         participant.addToExtras(Extra.get(extraId))
                     }
-                    participant.save(failOnError: true)    
-                    
+                    participant.save(failOnError: true)
+
                     // Remove all date/times the user is not present and save all new information
                     // However, we are only interested in the dates/times the participant is NOT present
                     user.dateTimesNotPresent.clear()
@@ -274,7 +274,7 @@ class ParticipantController {
                     }
                     user.dateTimesNotPresent.addAll(sessionDateTimes)
                     user.save(failOnError: true)
-                    
+
                     // Remove all volunteering offers from the participant and save all new information
                     int i = 0
                     participant.participantVolunteering.clear()
@@ -283,7 +283,7 @@ class ParticipantController {
                         ParticipantVolunteering pv = new ParticipantVolunteering()
                         bindData(pv, params, [include: ['volunteering', 'network']], "ParticipantVolunteering_${i}")
                         i++
-                        
+
                         if (!participant.participantVolunteering.find { it.equalsWithoutParticipant(pv) }) {
                             participant.addToParticipantVolunteering(pv)
                         }
@@ -316,17 +316,17 @@ class ParticipantController {
                             user.addToPapers(paper)
                             paper.setDate(pageInformation.date)
                         }
-                        
+
                         // Make sure that the paper can be saved first
                         bindData(paper, params, [include: ['title', 'abstr']], "Paper_${i}")
                         paper.save(failOnError: true, flush: true)
-                        
+
                         // Also save all other paper information
                         bindData(paper, params, [include: ['coAuthors', 'state', 'comment',
                                 'sessionProposal', 'proposalDescription', 'networkProposal',
                                 'equipmentComment']], "Paper_${i}")
                         paper.save(failOnError: true)
-                        
+
                         // If a paper file is uploaded, save all file information
                         CommonsMultipartFile file = (CommonsMultipartFile) params["Paper_${i}.file"]
                         if (file?.size > 0) {
@@ -499,7 +499,7 @@ class ParticipantController {
     def gender() {
         forward(controller: 'dynamicPage', action: 'dynamic', params: params)
     }
-    
+
     /**
      * Removes the user as a participant from the current event date
      */
@@ -562,7 +562,7 @@ class ParticipantController {
             render returnMap as JSON
         }
     }
-    
+
     /**
      * Change the paper state of the given paper
      * (AJAX call)
@@ -571,19 +571,19 @@ class ParticipantController {
         // If this is an AJAX call, continue
         if (request.xhr) {
             Map responseMap = null
-            
+
             // If we have a paper id and state id, try to find the records for these ids
             if (params.paper_id?.isLong() && params.state_id?.isLong()) {
                 Paper paper = Paper.findById(params.paper_id)
                 PaperState state = PaperState.findById(params.state_id)
-                
+
                 // Change the paper state if they both exist
                 if (paper && state) {
                     paper.state = state
-                    
+
                     // Save the paper
                     if (paper.save(flush: true)) {
-                        // Everything is fine                        
+                        // Everything is fine
                         responseMap = [success: true, paper: "${g.message(code: 'paper.label')}: ${paper.toString()} (${state.toString()})"]
                     }
                     else {
@@ -591,7 +591,7 @@ class ParticipantController {
                     }
                 }
             }
-            
+
             // If there is no responseMap defined yet, it can only mean the paper or state could not be found
             if (!responseMap) {
                 responseMap = [success: false, message: g.message(code: 'default.not.found.message', args: ["${g.message(code: 'paper.label')}, ${g.message(code: 'paper.state.label')}"])]
@@ -602,7 +602,7 @@ class ParticipantController {
     }
 
     /**
-     * Change the paper state of the given paper
+     * Change the status of a bank transfer to 'payed'
      * (AJAX call)
      */
     def setPayed() {
@@ -610,14 +610,14 @@ class ParticipantController {
         if (request.xhr) {
             Map responseMap = null
 
-            // If we have a paper id and state id, try to find the records for these ids
+            // If we have a user id and order id, try to find the record for the order id
             if (params.user_id?.isLong() && params.order_id?.isLong()) {
                 User user = User.get(params.user_id.toLong())
-                Order order = Order.findById(params.order_id.toLong())
+                //Order order = Order.findById(params.order_id.toLong())
                 ParticipantDate participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
 
-                // Change the paper state if they both exist
-                if (user && order && participant) {
+                // Change the payment status if it exist
+                if (user && participant) {
                     if (order.setPayedAndActive(participant)) {
                         // Save the paper
                         if (order.save(flush: true) && participant.save(flush: true)) {
@@ -786,4 +786,46 @@ class ParticipantController {
             render responseMap as JSON
         }
     }
+
+	/**
+	 * Changes the present days of a participant
+	 * (AJAX call)
+	 */
+	def changeDays() {
+		// If this is an AJAX call, continue
+		if (request.xhr) {
+			Map responseMap = null
+
+			if (params['user-id']?.toString()?.isLong()) {
+				User user = User.get(params.long('user-id'))
+				if (user) {
+					user.daysPresent.clear()
+					user.save(flush: true)
+
+					params.days.split(';').each { dayId ->
+						if (dayId.toString().isLong()) {
+							Day day = Day.findById(dayId.toString().toLong())
+							if (day) {
+								user.addToDaysPresent(new ParticipantDay(day: day))
+							}
+						}
+					}
+
+					if (user.save(flush: true)) {
+						def daysPresent = ParticipantDay.findAllDaysOfUser(user).collect { it.toString() }
+						daysPresent = (daysPresent.size() > 0) ? daysPresent : g.message(code: 'participantDay.not.found.label')
+
+						responseMap = ['success': true, daysPresent: daysPresent]
+					}
+				}
+			}
+
+			// If there is no responseMap defined yet, it can only mean the email could not be found
+			if (!responseMap) {
+				responseMap = [success: false, message: g.message(code: 'default.not.found.message', args: ["${g.message(code: 'day.label')}"])]
+			}
+
+			render responseMap as JSON
+		}
+	}
 }

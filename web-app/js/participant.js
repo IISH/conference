@@ -5,14 +5,14 @@ var moveTabs = function() {
     var size = 0;
     var errors = $('ul.errors');
     var message = $('div.message');
-    
+
     if ((errors.size() > 0) && !errors.is(':hidden')) {
         size += errors.outerHeight(true) - parseInt(errors.css('margin-top').replace('px', ''));
     }
     if ((message.size() > 0) && !message.is(':hidden')) {
         size += message.outerHeight(true) - parseInt(message.css('margin-top').replace('px', ''));
     }
-    
+
     $('#participant-form #tabs > ul:first-child').css('top', tabsHeight-size + 'px');
 }
 
@@ -22,7 +22,7 @@ $(document).ready(function() {
     moveTabs();
 
     userId = parseInt($('input[name=id]').val());
-    
+
     $(document).on("error", function(e) {
         moveTabs();
     });
@@ -30,12 +30,12 @@ $(document).ready(function() {
     $(document).on("message", function(e) {
         moveTabs();
     });
-    
+
     $(document).on("removed-item", '.paper.ui-icon-circle-minus', function(e) {
         var paperId = $(e.target).parents('.column').children('input[type=hidden]:first').val();
         ajaxCall('participant/removePaper', {'paper-id': paperId});
 
-        $(this).parent().text('-');  
+        $(this).parent().text('-');
     });
 
     $('#btn_network').click(function(e) {
@@ -106,5 +106,57 @@ $(document).ready(function() {
         ajaxCall('participant/resendEmail', {'email-id': emailId}, function(data) {
             showMessage(data);
         });
+    });
+
+    $('.change-present-days').click(function() {
+        $('#edit-days').dialog('open');
+    });
+
+    $('#edit-days').dialog({
+        autoOpen: false,
+        modal: true,
+        minWidth: 250,
+        minHeight: 200,
+        title: "Change days",
+        buttons: {
+            "Save" : function() {
+                var dialog = $(this);
+                var days = [];
+
+                var userId = dialog.find('input[name=user-id]').val();
+                dialog.find('input[name=day]:checked').each(function() {
+                    days.push($(this).val());
+                });
+
+                ajaxCall('participant/changeDays', {'user-id': userId, 'days': days.join(';')},
+                    function(data) {
+                        $('#selected-days .not-found').remove();
+                        $('#selected-days ol.list-days-present').remove();
+
+                        if ($.isArray(data.daysPresent)) {
+                            var htmlDaysPresent = '';
+                            for (var i=0; i<data.daysPresent.length; i++) {
+                                htmlDaysPresent += '<li>' + data.daysPresent[i] + '</li>';
+                            }
+
+                            $('#selected-days .header').after('<ol class="list-days-present">' + htmlDaysPresent + '</ol>');
+                        }
+                        else {
+                            $('#selected-days .header').after('<span class="not-found">' + data.daysPresent + '</span>');
+                        }
+
+                        dialog.dialog("close");
+                    },
+                    function(data) {
+                        alert(data.message);
+                    }
+                );
+
+                var a = 123;
+            },
+            Cancel: function() {
+                $(this).dialog("close");
+            }
+        }
     });
 });

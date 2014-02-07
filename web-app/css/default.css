@@ -7,9 +7,9 @@ body {
     margin: 0;
 }
 
-a, img, fieldset, div, span, form, fieldset, input, textarea, select, 
+a, img, fieldset, div, span, form, fieldset, input, textarea, select,
 ol, ul, li, dl, dt, dd {
-    border: none; 
+    border: none;
     outline: none;
     margin: 0;
     padding: 0;
@@ -47,7 +47,7 @@ input, textarea, select {
     font-size: 9pt;
     background: #FFFFFF;
     border: 1px solid [main_color_light];
-    line-height: 1;    
+    line-height: 1;
 }
 
 input[type=text], input[type=password], input[type=number], input[type=email], input[type=url] {
@@ -63,7 +63,7 @@ textarea {
 
 select {
     height: 22px;
-    min-width: 150px;    
+    min-width: 150px;
     vertical-align: middle;
 }
 
@@ -87,12 +87,12 @@ input[type=checkbox], input[type=radio] {
     vertical-align: middle;
 }
 
-h1 {   
+h1 {
     border-bottom: 1px solid [main_color_dark];
     color: [main_color_dark];
     font-weight: normal;
-    font-size: 16pt; 
-    margin: 0 0 30px;    
+    font-size: 16pt;
+    margin: 0 0 30px;
 }
 
 h2, h3, legend {
@@ -132,7 +132,7 @@ a:hover, .link:hover {
 }
 
 .message {
-    margin: 30px 30px 20px;  
+    margin: 30px 30px 20px;
     background: url("[resource_dir]/skin/information.png") no-repeat scroll 7px 50% transparent;
     color: [main_color_dark];
        -moz-box-shadow: 0 0 3px 1px [main_color_dark];
@@ -141,7 +141,7 @@ a:hover, .link:hover {
 }
 
 .errors {
-    margin: 30px 30px 20px;  
+    margin: 30px 30px 20px;
     color: #cc0000;
        -moz-box-shadow: 0 0 3px 1px #ff8888;
     -webkit-box-shadow: 0 0 3px 1px #ff8888;
@@ -164,16 +164,16 @@ a:hover, .link:hover {
     cursor: pointer;
     position: absolute;
     color: [main_color_dark];
-    font-weight: bold; 
+    font-weight: bold;
     text-align: center;
     top: 5px;
-    right: 0;    
+    right: 0;
 }
 
 /* DIALOGS */
 
 .edit-paper-icon {
-    cursor: pointer;    
+    cursor: pointer;
 }
 
 /* NAVIGATION */
@@ -181,10 +181,10 @@ a:hover, .link:hover {
 .navigation {
     position: absolute;
     color: [main_color_dark];
-    font-weight: bold; 
+    font-weight: bold;
     text-align: center;
     top: 5px;
-    right: 0;    
+    right: 0;
 }
 
 .navigation .prev, .navigation .next {
@@ -248,7 +248,7 @@ a:hover, .link:hover {
 }
 
 .buttons .btn_delete {
-    float: right;    
+    float: right;
 }
 
 /* LISTS AND FORMS */
@@ -266,7 +266,7 @@ a:hover, .link:hover {
 
 .form > div > .property-label, .property-list li > .property-label, .label {
     width: 25%;
-    float: left;  
+    float: left;
     color: [label_color];
     text-align: right;
 }
@@ -274,7 +274,7 @@ a:hover, .link:hover {
 .form > div > .property-value, .property-list li > .property-value, .value {
     display: block;
     text-align: left;
-    margin: 0 0 0 26%;    
+    margin: 0 0 0 26%;
     white-space: normal;
     word-wrap: break-word;
 }
@@ -295,7 +295,7 @@ ul input[type=email], ul input[type=url] {
 .columns > .column {
     float: left;
     width: 350px;
-    margin: 20px 5px;    
+    margin: 20px 5px;
     overflow: auto;
 }
 
@@ -459,9 +459,9 @@ span.remove-item {
     margin-bottom: 20px;
 }
 
-#event-logo {	
+#event-logo {
     /*background: url("../images/header-esshc.gif") no-repeat;*/
-    display: inline-block;    
+    display: inline-block;
     /*width: 495px;
     height: 36px;   */
     color: [main_color_dark];
@@ -473,7 +473,7 @@ span.remove-item {
 }
 
 #event-header .hosted {
-    position: absolute;	
+    position: absolute;
     right: 0;
     color: [main_color_dark];
     font-size: 95%;
@@ -553,7 +553,7 @@ span.remove-item {
 
 /* NAVIGATION */
 
-#nav {	
+#nav {
     display: inline-block;
     width: 150px;
     max-width: 150px;
@@ -570,11 +570,11 @@ span.remove-item {
     color: [main_color_dark];
 }
 
-#nav dd {	
+#nav dd {
     margin: -4px 0;
     padding: 5px 0;
     list-style-position: outside;
-    font-size: 8pt;	
+    font-size: 8pt;
 }
 
 #nav > dl dl.sub-menu {
@@ -585,7 +585,7 @@ span.remove-item {
 /* MAIN CONTENT */
 
 #container {
-    white-space: nowrap;    
+    white-space: nowrap;
 }
 
 #content {
@@ -622,10 +622,10 @@ span.remove-item {
 }
 
 .menu li {
-    padding: 5px;    
+    padding: 5px;
 }
 
-#usermenu {    
+#usermenu {
     right: 175px;
     top: 125px;
 }
@@ -730,14 +730,14 @@ span.remove-item {
     position: relative;
 }
 
-#participant-form #tabs > ul:first-child { 
-    position: absolute;     
+#participant-form #tabs > ul:first-child {
+    position: absolute;
     top: -63px;
     left: 35%;
 }
 
 @media screen and (-webkit-min-device-pixel-ratio:0) {
-    #participant-form #tabs > ul:first-child {   
+    #participant-form #tabs > ul:first-child {
         top: -62px;
     }
 }
@@ -789,6 +789,11 @@ span.remove-item {
     border: 1px solid [main_color_dark];
 }
 
+.link {
+    cursor: pointer;
+    font-weight: bold;
+}
+
 .inline-link {
     margin-left: 30px;
     cursor: pointer;
@@ -811,12 +816,16 @@ span.remove-item {
 #selected-days span.header {
     display: inline-block;
     font-weight: bold;
-    margin-bottom: 5px;
+}
+
+#selected-days ol.list-days-present {
+    margin: 5px 0;
 }
 
 #selected-days span.not-found {
     display: block;
     font-style: italic;
+    margin: 5px 0;
 }
 
 /* ROOMS */
@@ -892,11 +901,11 @@ ul input.session-name {
 
 /* PLAN SESSIONS */
 
-#unschedule-session { 
-    display: none;  
+#unschedule-session {
+    display: none;
     padding: 5px;
     margin-bottom: 20px;
-    margin-right: 20px;    
+    margin-right: 20px;
     float: left;
     border: 1px solid [main_color_dark];
     cursor: pointer;
@@ -914,7 +923,7 @@ ul input.session-name {
     overflow: auto;
     padding: 5px;
     white-space: nowrap;
-    border: 1px solid [main_color_dark];    
+    border: 1px solid [main_color_dark];
 }
 
 .session-block {
@@ -924,7 +933,7 @@ ul input.session-name {
     padding: 3px;
     margin: 3px;
     cursor: pointer;
-    background-color: rgba(255, 255, 255, 0.4);    
+    background-color: rgba(255, 255, 255, 0.4);
 }
 
 .session-block.selected {
@@ -981,9 +990,9 @@ ul input.session-name {
     background-color: rgba(255, 255, 255, 0.7);
     display: table;
     margin: 0;
-    padding: 0;    
+    padding: 0;
     position: absolute;
-    overflow: hidden;   
+    overflow: hidden;
 }
 
 .loading-helper {
@@ -995,13 +1004,13 @@ ul input.session-name {
     display: block;
     font-size: 14pt;
     font-weight: bold;
-    text-align: center;     
+    text-align: center;
 }
 
 #session-info-container, #room-info-container {
     display: none;
     position: absolute;
-    background-color: transparent;    
+    background-color: transparent;
     max-width: 700px;
     max-height: 500px;
 }
@@ -1141,7 +1150,7 @@ table.payment-statistics tbody tr:hover {
 /* LOGIN */
 
 #login {
-    margin: 0;    
+    margin: 0;
 }
 
 /* AUTOCOMPLETE */
@@ -1156,7 +1165,7 @@ table.payment-statistics tbody tr:hover {
     height: 100px;
 }
 
-.ui-autocomplete-loading { 
+.ui-autocomplete-loading {
     background: url('[resource_dir]/spinner.gif') no-repeat right center;
 }
 

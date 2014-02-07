@@ -89,6 +89,7 @@ class User extends DefaultDomain {
         userPages           cascade: 'all-delete-orphan'
         papers              cascade: 'all-delete-orphan'
         sessionParticipants cascade: 'all-delete-orphan'
+        daysPresent         cascade: 'all-delete-orphan'
     }
 
     static constraints = {

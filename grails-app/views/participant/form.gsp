@@ -1,4 +1,4 @@
-<%@ page import="org.iisg.eca.domain.SessionDateTime; org.iisg.eca.domain.Setting; org.iisg.eca.domain.Title; org.iisg.eca.domain.FeeState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Extra; org.iisg.eca.domain.Country; org.iisg.eca.domain.SessionParticipant; org.iisg.eca.domain.payway.Order" %>
+<%@ page import="org.iisg.eca.domain.Day; org.iisg.eca.domain.SessionDateTime; org.iisg.eca.domain.Setting; org.iisg.eca.domain.Title; org.iisg.eca.domain.FeeState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Extra; org.iisg.eca.domain.Country; org.iisg.eca.domain.SessionParticipant; org.iisg.eca.domain.payway.Order" %>
 <!doctype html>
 <html>
     <head>
@@ -27,7 +27,7 @@
                     <li><a href="#payments-tab"><g:message code="payment.multiple.label" /></a></li>
                     <li><a href="#emails-tab"><g:message code="email.multiple.label" /></a></li>
                 </ul>
-                
+
                 <div id="personal-tab" class="columns">
                     <div class="column">
                         <div>
@@ -70,7 +70,7 @@
                             </ol>
                         </div>
 
-                        <fieldset class="form"> 
+                        <fieldset class="form">
                             <legend><g:message code="participantDate.personal.info.label" /></legend>
                             <div class="${hasErrors(bean: user, field: 'title', 'error')} required">
                                 <label class="property-label">
@@ -200,7 +200,7 @@
 
                     <div class="column">
                         <g:if test="${participant}">
-                            <fieldset class="form"> 
+                            <fieldset class="form">
                                 <legend><g:message code="participantDate.invitationLetter.label" /></legend>
                                 <div class="${hasErrors(bean: participant, field: 'invitationLetter', 'error')}">
                                     <label class="property-label">
@@ -235,9 +235,9 @@
                                         </span>
                                     </div>
                                 </g:each>
-                            </fieldset> 
+                            </fieldset>
 
-                            <fieldset class="form"> 
+                            <fieldset class="form">
                                 <legend><g:message code="participantDate.lowerFee.label" /></legend>
                                 <div class="${hasErrors(bean: participant, field: 'lowerFeeRequested', 'error')}">
                                     <label class="property-label">
@@ -293,7 +293,7 @@
                                 </div>
                             </fieldset>
 
-                            <fieldset class="form"> 
+                            <fieldset class="form">
                                 <legend><g:message code="participantDate.attendance.label" /></legend>
                                 <div class="${hasErrors(bean: participant, field: 'state', 'error')} required">
                                     <label class="property-label">
@@ -309,7 +309,7 @@
                                     </label>
                                     <span class="property-value">
                                         <g:select name="ParticipantDate.feeState.id" from="${FeeState.sortedFeeStates.list()}" optionKey="id" optionValue="name" value="${participant.feeState.id}" />
-                                    </span>                                
+                                    </span>
                                 </div>
                                 <div class="${hasErrors(bean: user, field: 'dateTimesNotPresent', 'error')}">
                                     <table id="participant-present">
@@ -333,7 +333,7 @@
                                 </div>
                             </fieldset>
 
-                            <fieldset class="form"> 
+                            <fieldset class="form">
                                 <legend><g:message code="participantDate.volunteering.label" /></legend>
                                 <div class="${hasErrors(bean: participant, field: 'participantVolunteering', 'error')} ">
                                     <ul>
@@ -378,7 +378,7 @@
                             </div>
                         </g:else>
                     </div>
-                  
+
                     <div class="clear empty"></div>
                 </div>
 
@@ -512,31 +512,31 @@
                                     </label>
                                     <span class="property-value">
                                         <span>
-                                            <g:if test="${paper.session}">                                                
-                                                ${fieldValue(bean: paper.session, field: 'state')}                                                
+                                            <g:if test="${paper.session}">
+                                                ${fieldValue(bean: paper.session, field: 'state')}
                                             </g:if>
                                             <g:else>-</g:else>
                                         </span>
                                     </span>
-                                </div> 
+                                </div>
                                 <div>
                                     <label class="property-label">
                                         <g:message code="participantType.function.label" />
                                     </label>
                                     <span class="property-value">
                                         <span>
-                                            <g:if test="${paper.session}"> 
+                                            <g:if test="${paper.session}">
                                                 <g:set var="functionInSession" value="${SessionParticipant.findAllByUserAndSession(user, paper.session)}" />
-                                                <g:if test="${functionInSession.size() > 0}">                                                
+                                                <g:if test="${functionInSession.size() > 0}">
                                                     ${functionInSession*.type.join(', ')}
                                                 </g:if>
-                                            </g:if> 
+                                            </g:if>
                                             <g:else>-</g:else>
                                         </span>
                                     </span>
                                 </div>
                             </fieldset>
-                            
+
                             <fieldset class="form">
                                 <legend><g:message code="equipment.label" /></legend>
                                 <g:each in="${equipmentList}" var="equipment">
@@ -687,11 +687,11 @@
                             </div>
                         </fieldset>
                     </div>
-                    
+
                     <div class="clear empty"></div>
                 </g:if>
                 </div>
-              
+
                 <div id="sessions-tab" class="columns">
                     <div id="selected-days">
                         <span class="header">
@@ -704,11 +704,15 @@
                             </span>
                         </g:if>
 
-                        <ol>
+                        <ol class="list-days-present">
                             <g:each in="${daysPresent}" var="day">
                                 <li><eca:formatText text="${day.toString()}" /></li>
                             </g:each>
                         </ol>
+
+                        <span class="link change-present-days">
+                            <a><g:message code="default.change.label" args="${[g.message(code: 'participantDay.multiple.label')]}" /></a>
+                        </span>
                     </div>
 
                     <g:each in="${sessions}" var="participantSessionInfo">
@@ -728,7 +732,7 @@
                                       </span>
                                     </li>
                                     <li>
-                                      <span id="name-label" class="property-label">                                        
+                                      <span id="name-label" class="property-label">
                                         <g:message code="session.name.label" />
                                       </span>
                                       <span class="property-value" arial-labelledby="name-label">
@@ -736,7 +740,7 @@
                                           <eca:formatText text="${participantSessionInfo.session.name}" />
                                         </eca:link>
                                       </span>
-                                    </li> 
+                                    </li>
                                     <li>
                                       <span id="state-label" class="property-label">
                                         <g:message code="session.state.label" />
@@ -977,7 +981,7 @@
                     </div>
                 </div>
             </div>
-          
+
             <fieldset class="buttons">
                 <eca:link previous="true">
                     <g:message code="default.button.cancel.label" />
@@ -990,5 +994,23 @@
                 <input type="button" name="btn_add" class="btn_add" value="${message(code: 'default.add.label', args: [message(code: 'paper.label').toLowerCase()])}" />
             </fieldset>
         </form>
+
+        <div id="edit-days" class="info">
+            <input type="hidden" name="user-id" value="${user.id}" />
+            <form method="post" action="#">
+                <fieldset class="form">
+                    <g:each in="${Day.list()}" var="day">
+                        <div>
+                            <span class="property-label">
+                                <g:checkBox name="day" value="${day.id}" id="edit-day-${day.id}" checked="${user.daysPresent.find { it.day.id == day.id }}" />
+                            </span>
+                            <label class="property-value" for="edit-day-${day.id}">
+                                ${day.toString()}
+                            </label>
+                        </div>
+                    </g:each>
+                </fieldset>
+            </form>
+        </div>
     </body>
 </html>
