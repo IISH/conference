@@ -613,7 +613,7 @@ class ParticipantController {
             // If we have a user id and order id, try to find the record for the order id
             if (params.user_id?.isLong() && params.order_id?.isLong()) {
                 User user = User.get(params.user_id.toLong())
-                //Order order = Order.findById(params.order_id.toLong())
+                Order order = Order.findById(params.order_id.toLong())
                 ParticipantDate participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
 
                 // Change the payment status if it exist
