@@ -80,6 +80,10 @@ class SentEmail extends EventDateDomain {
         if (body.contains("[${property}]")) {
             body = body.replace("[$property]", value)
         }
+
+	    if (subject.contains("[${property}]")) {
+		    subject = subject.replace("[$property]", value)
+	    }
     }
 
     @Override

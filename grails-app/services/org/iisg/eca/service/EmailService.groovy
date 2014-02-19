@@ -21,7 +21,7 @@ class EmailService {
      * Grails application service to access configuration values
      */
     def grailsApplication
-    
+
     /**
      * The standard mail service
      */
@@ -64,9 +64,12 @@ class EmailService {
         email.fromName = emailTemplate.sender
         email.fromEmail = Setting.getSetting(Setting.DEFAULT_ORGANISATION_EMAIL, date?.event).value
         email.subject = emailTemplate.subject
+	    email.body = emailTemplate.body
         email.date = date
-        email.body = createEmailBody(emailTemplate, identifiers, additionalValues)
         email.sendAsap = sendAsap
+
+	    // Translate the codes in the email
+	    translateCodes(email, identifiers, additionalValues)
 
         // Update the recipients records, as his email is created and ready to be send
         if (updateRecords) {
@@ -163,7 +166,7 @@ class EmailService {
             text message
         }
     }
-    
+
     /**
      * Send a test email and return relevant information about the email
      * @param f From email address
@@ -173,8 +176,8 @@ class EmailService {
      * @return Relevant information about the email
      */
     synchronized String testEmailService(String f, String t, String s, String body) {
-        String info = "";       
-        
+        String info = "";
+
         try {
             // Make sure that the mail service is enabled.
             if (grailsApplication.config.grails.mail.disabled) {
@@ -182,14 +185,14 @@ class EmailService {
                     "Please change the value of 'grails.mail.disabled' " +
                     "in Config.groovy.");
             }
-            
+
             // Make sure that the mail service is also enabled in the database.
             if (Setting.getSetting(Setting.DISABLE_EMAIL_SESSIONS).value.equals('1')) {
                 throw new Exception("The mail service is disabled. " +
                     "Please change the value of '${Setting.DISABLE_EMAIL_SESSIONS}' " +
                     "in the Settings table of the database.");
             }
-            
+
             // Send the email
             MimeMailMessage mailMessage = mailService.sendMail {
                 from f
@@ -197,18 +200,18 @@ class EmailService {
                 subject s
                 text body
             }
-            
+
             // Get the info from the email message
             MimeMessage message = mailMessage.getMimeMessage()
-            
+
             // Get header information
             for (String header : message.getAllHeaderLines()) {
                 info += "${header} \n"
             }
             info += "\n"
-            
+
             // Get content information
-            info += "Content: \n${message.getContent()} \n\n"            
+            info += "Content: \n${message.getContent()} \n\n"
         }
         catch (Exception e) {
             StringWriter sw = new StringWriter()
@@ -221,40 +224,45 @@ class EmailService {
     }
 
     /**
-     * Creates the body for an email message by replacing
-     * the codes in the email template with information from the user
-     * @param emailTemplate The template to use for the body of an email message
+     * Translates the codes in the body/subject for an email message by replacing
+     * the codes in the email with information from the user
+     * @param email The email message
      * @param identifiers The ids of records to extract participant information from
      * @param additionalValues A map of additional values to add to the email
      * @return The body text from the template combined with information from the user
      */
-    String createEmailBody(EmailTemplate emailTemplate, Map<String, Long> identifiers,
-                           Map<String, String> additionalValues=[:]) {
-        String emailBody = emailTemplate.body.toString()
-        
+    void translateCodes(SentEmail email, Map<String, Long> identifiers, Map<String, String> additionalValues=[:]) {
         // Collect all available codes and check for each one whether the email uses the code
         EmailCode.list().each { code ->
-            if (emailBody.contains("[${code.code}]")) {
-                // If the email contains the code, replace all occurrences with user specific information
-                emailBody = emailBody.replace("[$code.code]", code.translate(identifiers))
+	        // If the email contains the code, replace all occurrences with user specific information
+            if (email.body.contains("[${code.code}]")) {
+	            email.body = email.body.replace("[$code.code]", code.translate(identifiers))
             }
+
+	        if (email.subject.contains("[${code.code}]")) {
+		        email.subject = email.subject.replace("[$code.code]", code.translate(identifiers))
+	        }
         }
-        
+
         // Do the same for additional values
         additionalValues.each { additionalValue ->
-            if (emailBody.contains("[${additionalValue.key}]")) {
-                // If the email contains the code, replace all occurrences with the value
-                emailBody = emailBody.replace("[$additionalValue.key]", additionalValue.value)
+            if (email.body.contains("[${additionalValue.key}]")) {
+	            email.body = email.body.replace("[$additionalValue.key]", additionalValue.value)
             }
+
+	        if (email.subject.contains("[${additionalValue.key}]")) {
+		        email.subject = email.subject.replace("[$additionalValue.key]", additionalValue.value)
+	        }
         }
-        
+
         // Also update the special code SenderName
-        if (emailBody.contains("[SenderName]")) {
-            // If the email contains the code, replace all occurrences with the value
-            emailBody = emailBody.replace("[SenderName]", emailTemplate.sender?.trim())
+        if (email.body.contains("[SenderName]")) {
+	        email.body = email.body.replace("[SenderName]", emailTemplate.sender?.trim())
         }
-        
-        emailBody
+
+	    if (email.subject.contains("[SenderName]")) {
+		    email.subject = email.subject.replace("[SenderName]", emailTemplate.sender?.trim())
+	    }
     }
 
     /**
