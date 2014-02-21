@@ -69,7 +69,7 @@ class EmailService {
         email.sendAsap = sendAsap
 
 	    // Translate the codes in the email
-	    translateCodes(email, identifiers, additionalValues)
+	    translateCodes(emailTemplate, email, identifiers, additionalValues)
 
         // Update the recipients records, as his email is created and ready to be send
         if (updateRecords) {
@@ -223,15 +223,15 @@ class EmailService {
         }
     }
 
-    /**
-     * Translates the codes in the body/subject for an email message by replacing
-     * the codes in the email with information from the user
-     * @param email The email message
-     * @param identifiers The ids of records to extract participant information from
-     * @param additionalValues A map of additional values to add to the email
-     * @return The body text from the template combined with information from the user
-     */
-    void translateCodes(SentEmail email, Map<String, Long> identifiers, Map<String, String> additionalValues=[:]) {
+	/**
+	 * Translates the codes in the body/subject for an email message by replacing
+	 * the codes in the email with information from the user
+	 * @param template The email template used
+	 * @param email The email message
+	 * @param identifiers The ids of records to extract participant information from
+	 * @param additionalValues A map of additional values to add to the email
+	 */
+    void translateCodes(EmailTemplate template, SentEmail email, Map<String, Long> identifiers, Map<String, String> additionalValues=[:]) {
         // Collect all available codes and check for each one whether the email uses the code
         EmailCode.list().each { code ->
 	        // If the email contains the code, replace all occurrences with user specific information
@@ -257,11 +257,11 @@ class EmailService {
 
         // Also update the special code SenderName
         if (email.body.contains("[SenderName]")) {
-	        email.body = email.body.replace("[SenderName]", emailTemplate.sender?.trim())
+	        email.body = email.body.replace("[SenderName]", template.sender?.trim())
         }
 
 	    if (email.subject.contains("[SenderName]")) {
-		    email.subject = email.subject.replace("[SenderName]", emailTemplate.sender?.trim())
+		    email.subject = email.subject.replace("[SenderName]", template.sender?.trim())
 	    }
     }
 
