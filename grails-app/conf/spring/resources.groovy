@@ -12,7 +12,7 @@ import org.springframework.web.servlet.i18n.CookieLocaleResolver
 import grails.plugin.springsecurity.SpringSecurityUtils
 
 // Place your Spring DSL code here
-beans = {
+beans = {     
     userDetailsService(UserDetailsService) {
         grailsApplication = ref('grailsApplication')
     }
