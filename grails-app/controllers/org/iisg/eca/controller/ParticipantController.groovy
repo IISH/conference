@@ -1,18 +1,17 @@
 package org.iisg.eca.controller
 
-import org.hibernate.impl.SessionImpl
 import org.iisg.eca.domain.Day
-import org.iisg.eca.domain.EmailTemplate
-import org.iisg.eca.domain.SentEmail
-import org.iisg.eca.domain.Setting
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Paper
 import org.iisg.eca.domain.Extra
+import org.iisg.eca.domain.Setting
 import org.iisg.eca.domain.Network
 import org.iisg.eca.domain.FeeState
+import org.iisg.eca.domain.SentEmail
 import org.iisg.eca.domain.Equipment
 import org.iisg.eca.domain.PaperState
 import org.iisg.eca.domain.Volunteering
+import org.iisg.eca.domain.EmailTemplate
 import org.iisg.eca.domain.ParticipantDay
 import org.iisg.eca.domain.SessionDateTime
 import org.iisg.eca.domain.ParticipantDate
@@ -28,6 +27,7 @@ import grails.converters.JSON
 import grails.validation.ValidationException
 
 import groovy.sql.Sql
+import org.hibernate.impl.SessionImpl
 import org.springframework.web.multipart.commons.CommonsMultipartFile
 
 /**
@@ -606,42 +606,74 @@ class ParticipantController {
      * (AJAX call)
      */
     def setPayed() {
-        // If this is an AJAX call, continue
-        if (request.xhr) {
-            Map responseMap = null
+	    // If this is an AJAX call, continue
+	    if (request.xhr) {
+		    Map responseMap = null
 
-            // If we have a user id and order id, try to find the record for the order id
-            if (params.user_id?.isLong() && params.order_id?.isLong()) {
-                User user = User.get(params.user_id.toLong())
-                Order order = Order.findById(params.order_id.toLong())
-                ParticipantDate participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
+		    // If we have a user id and order id, try to find the record for the order id
+		    if (params.user_id?.isLong() && params.order_id?.isLong()) {
+			    User user = User.get(params.user_id.toLong())
+			    Order order = Order.findById(params.order_id.toLong())
+			    ParticipantDate participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
 
-                // Change the payment status if it exist
-                if (user && participant) {
-                    if (order.setPayedAndActive(participant)) {
-                        // Save the paper
-                        if (order.save(flush: true) && participant.save(flush: true)) {
-                            // Everything is fine
-                            responseMap = [success: true, state: order.getStatusText()]
-                        }
-                        else {
-                            responseMap = [success: false, message: order.errors.allErrors.collect { g.message(error: it) }]
-                        }
-                    }
-                    else {
-                        responseMap = [success: false, message: g.message(code: 'default.not.allowed.message')]
-                    }
-                }
-            }
+			    // Change the payment status if it exists
+			    if (user && participant) {
+				    if (order.setPayedAndActive(participant)) {
+					    // Save the participant
+					    if (participant.save(flush: true)) {
+						    // Everything is fine
+						    order = order.refresh()
+						    responseMap = [success: true, state: order.getStatusText()]
+					    }
+					    else {
+						    responseMap = [success: false, message: order.errors.allErrors.collect { g.message(error: it) }]
+					    }
+				    }
+				    else {
+					    responseMap = [success: false, message: g.message(code: 'default.not.allowed.message')]
+				    }
+			    }
+		    }
 
-            // If there is no responseMap defined yet, it can only mean the paper or state could not be found
-            if (!responseMap) {
-                responseMap = [success: false, message: g.message(code: 'default.not.found.message', args: ["${g.message(code: 'order.label')}"])]
-            }
+		    // If there is no responseMap defined yet, it can only mean the paper or state could not be found
+		    if (!responseMap) {
+			    responseMap = [success: false, message: g.message(code: 'default.not.found.message', args: ["${g.message(code: 'order.label')}"])]
+		    }
 
-            render responseMap as JSON
-        }
+		    render responseMap as JSON
+	    }
     }
+
+	/**
+	 * Refund the payment of the given order
+	 * (AJAX call)
+	 */
+	def refundPayment() {
+		// If this is an AJAX call, continue
+		if (request.xhr) {
+			Map responseMap = null
+
+			// If we have a user id and order id, try to find the record for the order id
+			if (params.order_id?.isLong()) {
+				Order order = Order.findById(params.order_id.toLong())
+				if (order && order.fullRefund()) {
+					// Everything is fine
+					order = order.refresh()
+					responseMap = [success: true, state: order.getStatusText()]
+				}
+				else {
+					responseMap = [success: false, message: g.message(code: 'default.not.allowed.message')]
+				}
+			}
+
+			// If there is no responseMap defined yet, it can only mean the paper or state could not be found
+			if (!responseMap) {
+				responseMap = [success: false, message: g.message(code: 'default.not.found.message', args: ["${g.message(code: 'order.label')}"])]
+			}
+
+			render responseMap as JSON
+		}
+	}
 
     /**
      * Change the gender of the given user

@@ -8,6 +8,7 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl
 class Setting extends EventDomain {
     def roleHierarchy
 
+	// Default settings
     static final String LAST_UPDATED = 'last_updated'
     static final String MAX_PAPERS_PER_PERSON_PER_SESSION = 'max_papers_per_person_per_session'
     static final String SALT = 'salt'
@@ -27,14 +28,22 @@ class Setting extends EventDomain {
     static final String APPLICATION_TITLE = 'application_title'
     static final String IP_AUTHENTICATION = 'ip_authentication'
     static final String CHECK_ACCEPTED_IP = 'check_accepted_ip'
-    static final String PAYWAY_PROJECT_ID = 'payway_project_id';
+	static final String REFUND_ADMINISTRATION_COSTS = 'refund_administration_costs'
 
+	// Layout settings
     static final String BANNER_IMG = 'banner_img'
     static final String BANNER_BG_IMG = 'banner_bg_img'
     static final String LABEL_COLOR = 'label_color'
     static final String MAIN_COLOR_LIGHT = 'main_color_light'
     static final String MAIN_COLOR_DARK = 'main_color_dark'
     static final String MAIN_COLOR_BG = 'main_color_bg'
+
+	// PayWay settings
+	static final String PAYWAY_ADDRESS = 'payway_address'
+	static final String PAYWAY_PROJECT_ID = 'payway_project_id'
+	static final String PAYWAY_PROJECT = 'payway_project'
+	static final String PAYWAY_PASSPHRASE_IN = 'payway_passphrase_in'
+	static final String PAYWAY_PASSPHRASE_OUT = 'payway_passphrase_out'
 
     String property
     String value
@@ -54,7 +63,7 @@ class Setting extends EventDomain {
         property        blank: false,   maxSize: 50
         value           blank: false
     }
-    
+
     def beforeUpdate() {
         switch (property) {
             case MAX_PAPERS_PER_PERSON_PER_SESSION:
@@ -65,20 +74,25 @@ class Setting extends EventDomain {
             case CHANGE_USER:
             case DONT_SEND_EMAILS_TO:
             case APPLICATION_TITLE:
-            case PAYWAY_PROJECT_ID:
+            case REFUND_ADMINISTRATION_COSTS:
             case BANNER_IMG:
             case BANNER_BG_IMG:
             case LABEL_COLOR:
             case MAIN_COLOR_LIGHT:
             case MAIN_COLOR_DARK:
             case MAIN_COLOR_BG:
+            case PAYWAY_ADDRESS:
+            case PAYWAY_PROJECT_ID:
+            case PAYWAY_PROJECT:
+            case PAYWAY_PASSPHRASE_IN:
+            case PAYWAY_PASSPHRASE_OUT:
                 super.beforeUpdate()
                 break
             default:
                 return true
         }
     }
-    
+
     def afterInsert() {
         setSetting()
     }
@@ -97,7 +111,7 @@ class Setting extends EventDomain {
             (Setting) getByEvent(settings)
         }
     }
-    
+
     private void setSetting() {
         switch (property) {
             case ROLE_HIERARCHY:
@@ -105,30 +119,30 @@ class Setting extends EventDomain {
                 break
         }
     }
-    
+
     private void setHierarchy() {
         if (property == ROLE_HIERARCHY) {
             RoleHierarchyImpl roleHierarchy = (RoleHierarchyImpl) roleHierarchy
             roleHierarchy.setHierarchy(value)
         }
     }
-    
+
     @Override
     protected EventDomain getTenantRecord(Event event) {
         EventDomain[] domains = executeQuery(
-                    """ FROM Setting 
+                    """ FROM Setting
                         WHERE property = :property
-                        AND event.id = :eventID""", 
+                        AND event.id = :eventID""",
                         [property: property, eventID: event.id, max: 1])
-                    
+
         if (domains.length == 0) {
             return null
         }
         else {
             return domains[0]
         }
-    } 
-    
+    }
+
     @Override
     String toString() {
         "${property}: ${value}"

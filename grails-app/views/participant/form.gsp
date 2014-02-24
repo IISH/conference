@@ -808,6 +808,27 @@
                                             <eca:formatText text="${order.getAmountAsBigDecimal()}" />
                                         </span>
                                     </li>
+
+                                    <g:if test="${order.payed == Order.ORDER_REFUND_OGONE || order.payed == Order.ORDER_REFUND_BANK}">
+                                        <li>
+                                            <span id="refunded=amount-label" class="property-label">
+                                                <g:message code="order.refunded.amount.label" />
+                                            </span>
+                                            <span class="property-value" arial-labelledby="amount-label">
+                                                <eca:formatText text="${order.getRefundedAmountAsBigDecimal()}" />
+                                            </span>
+                                        </li>
+
+                                        <li>
+                                            <span id="refunded-label" class="property-label">
+                                                <g:message code="order.refunded.at.label" />
+                                            </span>
+                                            <span class="property-value" arial-labelledby="refunded-label">
+                                                <g:formatDate date="${order.refundedAt}" formatName="default.date.time.format" />
+                                            </span>
+                                        </li>
+                                    </g:if>
+
                                     <li>
                                         <span id="status-label" class="property-label">
                                             <g:message code="order.status.label" />
@@ -833,6 +854,10 @@
 
                                             <g:if test="${order.payed == Order.ORDER_PAYED}">
                                                 <g:set var="hidePayedButton" value="${true}" />
+
+                                                <span class="inline-button order-refund-payment">
+                                                    <g:message code="order.refund.payment.label" />
+                                                </span>
                                             </g:if>
                                         </span>
                                     </li>

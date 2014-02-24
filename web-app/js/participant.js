@@ -80,6 +80,25 @@ $(document).ready(function() {
         });
     });
 
+    $('.order-refund-payment').click(function(e) {
+        ajaxCall(messageUrl, {code: 'default.button.delete.confirm.message'}, function(data) {
+            var refundPayment = confirm(data.message);
+            if (refundPayment) {
+                $('.errors').hide();
+                $('.message').hide();
+
+                var element = $(e.target).parents('.participant-order');
+
+                ajaxCall('participant/refundPayment', {
+                        'order_id': element.find('#order-id-label').next().text()
+                    }, function(data) {
+                        $(e.target).parent().text(data.state);
+                    }
+                );
+            }
+        });
+    });
+
     $('#emails-not-sent, #emails-sent').accordion({
         header: '.emailHeader',
         heightStyle: 'content',
