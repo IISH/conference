@@ -108,7 +108,9 @@ class EmailService {
 
         // Only send the email if the maximum number of tries is not reached
         if (forceSend || (sentEmail.numTries < maxNumTries)) {
-            sentEmail.numTries++
+            if (!sentEmail.dateTimeSent) {
+	            sentEmail.numTries++
+            }
 
             try {
                 // Try to send the email if we have to

@@ -855,9 +855,11 @@
                                             <g:if test="${order.payed == Order.ORDER_PAYED}">
                                                 <g:set var="hidePayedButton" value="${true}" />
 
-                                                <span class="inline-button order-refund-payment">
-                                                    <g:message code="order.refund.payment.label" />
-                                                </span>
+                                                <sec:ifAnyGranted roles="admin,superAdmin">
+                                                    <span class="inline-button order-refund-payment">
+                                                        <g:message code="order.refund.payment.label" />
+                                                    </span>
+                                                </sec:ifAnyGranted>
                                             </g:if>
                                         </span>
                                     </li>
