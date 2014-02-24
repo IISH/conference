@@ -170,6 +170,15 @@ class User extends DefaultDomain {
             }
         }
 
+	    allParticipantsToBeRemoved { date ->
+		    allParticipantUsers()
+
+		    participantDates {
+			    eq('state.id', ParticipantState.WILL_BE_REMOVED)
+			    eq('date.id', date.id)
+		    }
+	    }
+
         paperAccepted { date ->
             allParticipants(date)
 
