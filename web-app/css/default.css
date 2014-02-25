@@ -335,6 +335,13 @@ span.remove-item {
     font-weight: bold;
 }
 
+span.help-text {
+    margin-left: 5px;
+    font-style: italic;
+    font-size: 8pt;
+    color: grey;    
+}
+
 /* TABLES */
 
 .tbl_toolbar {
@@ -460,16 +467,12 @@ span.remove-item {
 }
 
 #event-logo {
-    /*background: url("../images/header-esshc.gif") no-repeat;*/
     display: inline-block;
-    /*width: 495px;
-    height: 36px;   */
     color: [main_color_dark];
     text-decoration: none;
     font-weight: bold;
     font-size: 18pt;
     padding: 5px;
-    /*text-indent: -9999px; */
 }
 
 #event-header .hosted {

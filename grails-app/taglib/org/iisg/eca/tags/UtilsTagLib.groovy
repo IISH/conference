@@ -41,21 +41,21 @@ class UtilsTagLib {
             out << "-"
         }
     }
-    
+
     /**
      * Tag creating navigation buttons
      * @attr prev The url to go to when the user wants to go to the previous page
      * @attr next The url to go to when the user wants to go to the next page
      * @attr ids An array of id's to use for navigation
      */
-    def navigation = { attrs -> 
+    def navigation = { attrs ->
         MarkupBuilder builder = new MarkupBuilder(out)
         builder.doubleQuotes = true
-        
+
         builder.div(class: "navigation") {
             def prev = attrs.prev
             def next = attrs.next
-            
+
             Integer prevIndex = null
             Integer nextIndex = null
 
@@ -68,22 +68,22 @@ class UtilsTagLib {
                         nextIndex = i+1
                     }
                 }
-                
+
                 // Id is not in the list anymore, so update the index
                 if (!prevIndex && !nextIndex && attrs.index?.isInteger()) {
                     prevIndex = attrs.index.toInteger() - 1
                     nextIndex = attrs.index.toInteger()
                 }
-                
+
                 // Explicitly check if the index is not null, the index is allowed to be 0
-                prev = ((prevIndex != null) && (prevIndex >= 0)) ? attrs.ids.get(prevIndex) : null   
+                prev = ((prevIndex != null) && (prevIndex >= 0)) ? attrs.ids.get(prevIndex) : null
                 next = ((nextIndex != null) && (nextIndex < attrs.ids.size())) ? attrs.ids.get(nextIndex) : null
             }
 
             // Build prev link, if it exists
             if (prev) {
                 builder."a"(class: "prev", href: eca.createLinkAllParams(action: params.action, id: prev, params: [index: prevIndex])) {
-                    builder.span(class: "ui-icon ui-icon-arrowthick-1-w", "")                    
+                    builder.span(class: "ui-icon ui-icon-arrowthick-1-w", "")
                     builder.span(g.message(code: "default.paginate.prev"))
                 }
             }
@@ -91,7 +91,7 @@ class UtilsTagLib {
                 builder.span(class: "ui-icon ui-icon-arrowthick-1-w", "")
                 builder.span(g.message(code: "default.paginate.prev"))
             }
-            
+
             builder.span(class: "ui-icon ui-icon-bullet", "")
 
             // Build next link, if it exists
@@ -238,21 +238,21 @@ class UtilsTagLib {
 
         out << msg
     }
-    
+
     /**
      * Creates a date field with the given attributes
      * @attr date The date to be parsed
      */
-    def dateField = { attrs -> 
+    def dateField = { attrs ->
         MarkupBuilder builder = new MarkupBuilder(out)
         builder.doubleQuotes = true
-        
+
         attrs['type'] = "text"
         attrs['class'] = "${attrs['class']} datepicker"
         attrs['placeholder'] = g.message(code: 'default.date.form.format').toLowerCase()
         attrs['value'] = g.formatDate(formatName: 'default.date.form.format', date: attrs.date)
         attrs.remove('date')
-        
+
         builder.input(attrs)
     }
 
@@ -276,6 +276,7 @@ class UtilsTagLib {
         builder.input(type: "hidden", class: 'ac-query', value: queryName)
         builder.input(type: "hidden", class: 'ac-value', name: name, value: value)
         builder.input(attrs)
+	    builder.span(class: 'help-text', g.message(code: 'default.help.autocomplete.text'))
     }
 
     /**
@@ -328,7 +329,7 @@ class UtilsTagLib {
      * @param menu The menu items to print
      */
     private void printSubMenu(MarkupBuilder builder, List<MenuItem> menu) {
-         menu.each { menuItem -> 
+         menu.each { menuItem ->
             builder.dd {
                 Page page = menuItem.page
                 if (page.controller && page.action) {
@@ -345,7 +346,7 @@ class UtilsTagLib {
                     builder.a(href: "#${page.id}", g.message(code: page.titleCode, args: [g.message(code: page.titleArg)?.toString()?.toLowerCase()], default: page.titleDefault))
                 }
             }
-            
+
             // If there is a sub menu, print it as well
             if (menuItem.children.size() > 0) {
                 builder.dl(class: "sub-menu") {
