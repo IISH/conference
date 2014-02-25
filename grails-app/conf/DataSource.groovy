@@ -42,44 +42,32 @@ environments {
     production {
         dataSource {
             properties {
-	            jmxEnabled = true
-	            initialSize = 0
 	            maxActive = 8
-	            minIdle = 0
 	            maxIdle = 8
-	            maxWait = 10000
-	            maxAge = 10 * 60000
-	            timeBetweenEvictionRunsMillis = 5000
-	            minEvictableIdleTimeMillis = 60000
-	            validationQuery = "SELECT 1"
-	            validationQueryTimeout = 3
-	            validationInterval = 15000
+	            minIdle = 0
+	            minEvictableIdleTimeMillis = 1800000
+	            timeBetweenEvictionRunsMillis = 1800000
+	            numTestsPerEvictionRun = 3
 	            testOnBorrow = true
 	            testWhileIdle = true
 	            testOnReturn = true
-	            jdbcInterceptors = "ConnectionState;StatementCache(max=200)"
-	            defaultTransactionIsolation = Connection.TRANSACTION_READ_COMMITTED
+	            validationQuery = "SELECT 1"
+	            jdbcInterceptors = "ConnectionState"
             }
         }
         dataSource_payWay {
             properties {
-	            jmxEnabled = true
-	            initialSize = 0
 	            maxActive = 8
-	            minIdle = 0
 	            maxIdle = 8
-	            maxWait = 10000
-	            maxAge = 10 * 60000
-	            timeBetweenEvictionRunsMillis = 5000
-	            minEvictableIdleTimeMillis = 60000
-	            validationQuery = "SELECT 1"
-	            validationQueryTimeout = 3
-	            validationInterval = 15000
+	            minIdle = 0
+	            minEvictableIdleTimeMillis = 1800000
+	            timeBetweenEvictionRunsMillis = 1800000
+	            numTestsPerEvictionRun = 3
 	            testOnBorrow = true
 	            testWhileIdle = true
 	            testOnReturn = true
-	            jdbcInterceptors = "ConnectionState;StatementCache(max=200)"
-	            defaultTransactionIsolation = Connection.TRANSACTION_READ_COMMITTED
+	            validationQuery = "SELECT 1"
+	            jdbcInterceptors = "ConnectionState"
             }
         }
     }
