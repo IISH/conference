@@ -66,13 +66,13 @@ var setDatePicker = function(element, increaseDay) {
     element.datepicker({
         dateFormat: element.attr('placeholder').replace('yyyy', 'yy')
     });
-    
+
     if (element.val().match(/sd$/)) {
         element.val(element.val().replace('sd', ''));
     }
     else if (increaseDay && (element.val().length > 0)) {
-        var date = element.datepicker('getDate'); 
-        date.setDate(date.getDate()+1); 
+        var date = element.datepicker('getDate');
+        date.setDate(date.getDate()+1);
         element.datepicker('setDate', date);
     }
 }
@@ -108,7 +108,7 @@ var addAutoComplete = function(element) {
 var makeResizable = function(element) {
     element = $(element);
     var maxSize = parseInt(element.css('max-width').replace('px', '')) + 8;
-        
+
     if (!element.is(':hidden')) {
         element.resizable({
             handles: "se",
@@ -163,16 +163,16 @@ var createNewItem = function(item, lastItem) {
     });
 
     clone.find('.datepicker').each(function() {
-        hasDate = ($(this).val().length > 0);        
+        hasDate = ($(this).val().length > 0);
         setDatePicker(this, hasDate);
     });
-    
+
     clone.find('.users-autocomplete').each(function() {
         addAutoComplete(this);
     });
-    
-    clone.removeClass("hidden");  
-    
+
+    clone.removeClass("hidden");
+
     return clone;
 }
 
@@ -235,11 +235,11 @@ var guessUrl = function(urlToCall) {
 var ajaxCall = function(url, params, onSuccess, onFailure) {
     $('.errors').hide();
     $('.message').hide();
-    
+
     $.getJSON(guessUrl(url), params, function(data) {
         if (!data.success) {
             showErrors(data);
-            
+
             if ($.isFunction(onFailure)) {
                 onFailure(data);
             }
@@ -266,10 +266,10 @@ $(document).ready(function() {
     body = $('body');
     navWidth = $('#nav').outerWidth(true);
     contentMargin = parseInt(content.css('margin-left').replace('px', '')) * 2;
-    
+
     $(window).resize(setContentWidth);
     setContentWidth();
-    
+
     $('#loading').hide();
 
     $.Placeholder.init();
@@ -278,29 +278,29 @@ $(document).ready(function() {
     var openSubMenus = (cookieValue) ? cookieValue.split(';') : [];
     $('#menu dl.sub-menu').each(function() {
         var id = $(this).prev().find('a').attr('href').substring(1);
-        
+
         if ($.isNumeric(id) && ($.inArray(id, openSubMenus) !== -1)) {
             $(this).show();
         }
     });
-    
+
     $('textarea').each(function() {
         makeResizable(this);
     });
-    
+
     $('#tabs').tabs({
         active: $.cookie("tab"),
         activate: function(e, ui) {
             $.cookie("tab", ui.newTab.index());
         }
     });
-    
+
     var urlParameters = decodeUrlParameters(window.location.search.substring(1));
     $('.sort_asc, .sort_desc').each(function() {
         var element = $(this);
         var values = element.attr("name").split('|');
-        
-        var order = element.hasClass("sort_asc") ? "asc" : "desc";         
+
+        var order = element.hasClass("sort_asc") ? "asc" : "desc";
         var paramName = "sort_" + values[0];
         if (urlParameters[paramName]) {
             var sortedFields = urlParameters[paramName].split(';');
@@ -310,13 +310,13 @@ $(document).ready(function() {
             }
         }
     });
-    
+
     $('#event_switcher').change(function(e) {
         $(this).parents('form').submit();
     });
 
     $('html').click(function(e) {
-        $(".menu").hide();         
+        $(".menu").hide();
         document.oncontextmenu = null;
      });
 
@@ -324,11 +324,11 @@ $(document).ready(function() {
         $("#usermenu").toggle();
         e.stopPropagation();
     });
-    
+
     $("select[multiple] option").mousedown(function() {
         if ($(this).attr("selected")) {
             $(this).attr("selected", "");
-        }               
+        }
         else {
             $(this).attr("selected", "selected");
         }
@@ -336,16 +336,16 @@ $(document).ready(function() {
 
     $('#menu dl.sub-menu').prev().click(function(e) {
         var subMenu = $(this).next();
-        var id = $(this).find('a').attr('href').substring(1);           
+        var id = $(this).find('a').attr('href').substring(1);
         var cookieValue = $.cookie("submenus");
         var openSubMenus = (cookieValue) ? cookieValue.split(';') : [];
 
-        var index = $.inArray(id, openSubMenus);  
-        if (subMenu.is(':hidden') && (index === -1)) {                 
+        var index = $.inArray(id, openSubMenus);
+        if (subMenu.is(':hidden') && (index === -1)) {
             openSubMenus.push(id);
         }
         else if (index !== -1) {
-            openSubMenus.splice(index, 1); 
+            openSubMenus.splice(index, 1);
         }
 
         $.cookie("submenus", openSubMenus.join(';'), {path: '/'});
@@ -384,10 +384,10 @@ $(document).ready(function() {
         var parent = $(this).parent();
         var lastItem = parent.prev();
         var item = parent.next();
-        
+
         var newItem = createNewItem(item, lastItem);
         newItem.insertBefore(parent);
-        
+
         newItem.find('textarea').each(function() {
             makeResizable(this);
         });
@@ -400,7 +400,7 @@ $(document).ready(function() {
 
         var newItem = createNewItem(item, lastItem);
         newItem.insertBefore(item);
-        
+
         newItem.find('textarea').each(function() {
             makeResizable(this);
         });
@@ -471,19 +471,19 @@ $(document).ready(function() {
         });
         window.location.search = "?" + $.param(urlParameters);
     });
-    
-    $('.sort_asc, .sort_desc').click(function(e) {  
+
+    $('.sort_asc, .sort_desc').click(function(e) {
         var element = $(this);
-        var values = element.attr("name").split('|');        
+        var values = element.attr("name").split('|');
         var urlParameters = decodeUrlParameters(window.location.search.substring(1));
-        
-        var order = element.hasClass("sort_asc") ? "asc" : "desc";         
+
+        var order = element.hasClass("sort_asc") ? "asc" : "desc";
         var paramName = "sort_" + values[0];
         var sortedFields = [];
         if (urlParameters[paramName]) {
             sortedFields = urlParameters[paramName].split(';');
         }
-        
+
         var i = $.inArray(values[1]+":"+order, sortedFields);
         if (i >= 0) {
             sortedFields.splice(i, 1);
@@ -491,13 +491,13 @@ $(document).ready(function() {
         else {
             sortedFields.push(values[1] + ":" + order);
         }
-        
+
         var oppositeOrder = (order === "desc") ? "asc" : "desc";
         var j = $.inArray(values[1]+":"+oppositeOrder, sortedFields);
         if (j >= 0) {
             sortedFields.splice(j, 1);
         }
-                
+
         urlParameters[paramName] = sortedFields.join(';');
         window.location.search = "?" + $.param(urlParameters);
     });
@@ -505,7 +505,7 @@ $(document).ready(function() {
     $('.tbl_container tbody tr:not(.tbl_totals)').mousedown(function(e) {
         var element = $(this);
         var target = $(e.target);
-        
+
         if (target[0] === element[0] || target.parent()[0] === element[0]) {
             var container = element.parents('.tbl_container');
             var linkElement = container.find('input[name=url]')
@@ -543,17 +543,17 @@ $(document).ready(function() {
         var checked = $(this).is(':checked');
         $(this).parents('.column').find('input[type=checkbox]').attr('checked', checked);
     });
-    
+
     var email = $('input[type=email]');
     emailValue = (email.length > 0) ? email.val().toLowerCase().trim() : "";
-    
-    $('input[type=email]').blur(function(e) {
+
+    $('input[type=email]:not(.no-email-validation)').blur(function(e) {
         var element = $(this);
         var email = element.val().toLowerCase().trim();
-        
+
         $('.errors').hide();
         element.parent().removeClass('error');
-        
+
         if (email !== emailValue) {
             ajaxCall(uniqueEmailUrl, {email: email}, function(data) {
                 if (!data.success) {
@@ -562,10 +562,10 @@ $(document).ready(function() {
                 }
             });
         }
-        
+
         element.trigger('error');
     });
-    
+
     $('.tbl_container .session-state-select-tbl').change(function(e) {
         var state_id = $(this).val();
         var column = $(this).parents("td");
@@ -579,7 +579,7 @@ $(document).ready(function() {
             }
         );
     });
-    
+
     $('.tbl_container .paper-state-select').change(function(e) {
         var state_id = $(this).val();
         var column = $(this).parents("td");
@@ -591,12 +591,12 @@ $(document).ready(function() {
             function() {
                 column.parent().find("span.ui-icon-alert").css('visibility', 'visible');
             }
-        ); 
+        );
     });
-    
+
     $('#edit-paper').dialog({
         autoOpen: false,
-        modal: true,   
+        modal: true,
         minWidth: 520,
         minHeight: 220,
         title: "Change paper state",
@@ -605,33 +605,33 @@ $(document).ready(function() {
                 var dialog = $(this);
                 var paperId = dialog.find('input[name=paper-id]').val();
                 var stateId = dialog.find('input[name=paper-state]:checked').val();
-                                
+
                 ajaxCall('participant/changePaperState', {paper_id: paperId, state_id: stateId},
                     function(data) {
-                        $('.paper-id[value=' + paperId + ']').parent().find('.paper-text').text(data.paper);                        
+                        $('.paper-id[value=' + paperId + ']').parent().find('.paper-text').text(data.paper);
                         dialog.dialog("close");
                     },
                     function(data) {
                         alert(data.message);
                     }
-                ); 
+                );
             },
             Cancel: function() {
                 $(this).dialog("close");
             }
         }
     });
-    
+
     $(document).on('click', '.edit-paper-icon', function(e) {
         var dialog = $('#edit-paper');
         var paper = $(this).prev().prev().prev().text();
         var paperId = $(this).prev().prev().val();
-        var paperStateId = $(this).prev().val();        
-        
+        var paperStateId = $(this).prev().val();
+
         dialog.find("input[name=paper-id]").val(paperId);
         dialog.find(':radio[value='+ paperStateId +']').attr('checked', true);
         dialog.find(".participant-paper-value").text(paper);
-        
+
         dialog.dialog('open');
     });
 

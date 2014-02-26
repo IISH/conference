@@ -22,15 +22,15 @@
                         <span class="required-indicator">*</span>
                     </label>
                     <span class="property-value">
-                        <input type="email" name="email" required="required" value="${params.email}" />
+                        <input type="email" name="email" class="no-email-validation" required="required" value="${params.email}" />
                     </span>
                 </div>
             </fieldset>
-          
+
             <fieldset class="buttons">
                 <eca:link previous="true">
                     <g:message code="default.button.cancel.label" />
-                </eca:link>                
+                </eca:link>
                 <input type="submit" name="btn_save" class="btn_save" value="${message(code: 'default.button.create.label')}" />
             </fieldset>
         </form>
