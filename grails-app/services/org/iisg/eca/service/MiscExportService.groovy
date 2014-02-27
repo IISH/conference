@@ -12,11 +12,12 @@ import org.hibernate.impl.SessionImpl
 import org.springframework.context.i18n.LocaleContextHolder
 
 /**
- * Service that takes care of creating the XLS export for badges
+ * Service that takes care of creating the export for various cases
  */
-class BadgeExportService {
+class MiscExportService {
     def sessionFactory
     def sessionFactory_payWay
+	def dataSource
     def dataSource_payWay
     def messageSource
     def pageInformation
@@ -63,7 +64,8 @@ class BadgeExportService {
         String dbName = ((SessionImpl) sessionFactory.currentSession).connection().catalog
         String dbNamePayWay = ((SessionImpl) sessionFactory_payWay.currentSession).connection().catalog
 
-        List<Map> results = sql.rows(getParticipantsSQL(dbName, dbNamePayWay), [dateId: pageInformation.date.id])
+	    String sqlQuery = PARTICIPANTS_SQL.replace('db-name-payway', dbNamePayWay).replace('db-name', dbName)
+        List<Map> results = sql.rows(sqlQuery, [dateId: pageInformation.date.id])
         results.each { Map row ->
             if (row.payed == null) {
                 row.put('payed', falseText)
@@ -102,14 +104,31 @@ class BadgeExportService {
         return new XlsMapExport(columns, results, title, columnNames)
     }
 
-    /**
-     * The SQL to obtain all participant information for the badges
-     * @param dbName The database name of conference
-     * @param dbNamePayWay The database name of payway
-     * @return The SQL, ready to be send to the database
-     */
-    private String getParticipantsSQL(String dbName, String dbNamePayWay) {
-        ''' SELECT u.user_id, u.title, u.lastname, u.firstname, u.organisation, u.department, c.name_english,
+	/**
+	 * Create a specific export for the programme at a glance
+	 * @return An export which can be used to create the XLS file
+	 */
+	Export getProgramAtAGlanceExport() {
+		List<String> columns = ['day', 'index_number', 'period', 'room_name', 'room_number', 'session_name']
+		List<String> columnNames = [
+				messageSource.getMessage('day.label', null, LocaleContextHolder.locale),
+				messageSource.getMessage('sessionDateTime.indexNumber.label', null, LocaleContextHolder.locale),
+				messageSource.getMessage('sessionDateTime.period.label', null, LocaleContextHolder.locale),
+				messageSource.getMessage('room.roomName.label', null, LocaleContextHolder.locale),
+				messageSource.getMessage('room.roomNumber.label', null, LocaleContextHolder.locale),
+				messageSource.getMessage('session.label', null, LocaleContextHolder.locale)
+		]
+
+		Sql sql = new Sql(dataSource)
+		List<Map> results = sql.rows(PROGRAM_SQL, [dateId: pageInformation.date.id])
+
+		// Create XLS export
+		String title = messageSource.getMessage('default.program.label', null, LocaleContextHolder.locale)
+		return new XlsMapExport(columns, results, title, columnNames)
+	}
+
+	private static final String PARTICIPANTS_SQL = '''
+			SELECT u.user_id, u.title, u.lastname, u.firstname, u.organisation, u.department, c.name_english,
             o.payed, o.willpaybybank, o.amount, fs.name,
             CAST(GROUP_CONCAT(DISTINCT d.day_id ORDER BY d.day_number) AS CHAR) AS days,
             CAST(GROUP_CONCAT(DISTINCT e.extra_id ORDER BY e.extra) AS CHAR) AS extras
@@ -143,6 +162,30 @@ class BadgeExportService {
                     OR (pd.payment_id IS NOT NULL AND payment_id > 0))
             GROUP BY u.user_id
             ORDER BY u.lastname ASC, u.firstname ASC'''
-                .replace('db-name-payway', dbNamePayWay).replace('db-name', dbName)
-    }
+
+	private static final String PROGRAM_SQL = '''
+			SELECT DATE_FORMAT(d.day, '%W %e %M') AS day, sdt.index_number, sdt.period, r.room_name, r.room_number,
+			s.session_name
+			FROM session_datetime AS sdt
+			INNER JOIN days AS d
+			ON sdt.day_id = d.day_id
+			LEFT JOIN rooms AS r
+			ON 1=1
+			LEFT JOIN session_room_datetime AS srdt
+			ON sdt.session_datetime_id = srdt.session_datetime_id
+			AND r.room_id = srdt.room_id
+			LEFT JOIN sessions AS s
+			ON srdt.session_id = s.session_id
+			WHERE sdt.date_id = :dateId
+			AND sdt.deleted = false
+			AND d.date_id = :dateId
+			AND d.deleted = false
+			AND r.date_id = :dateId
+			AND r.deleted = false
+			AND (srdt.date_id = :dateId OR srdt.date_id IS NULL)
+			AND (srdt.deleted = false OR srdt.deleted IS NULL)
+			AND (s.date_id = :dateId OR s.date_id IS NULL)
+			AND (s.deleted = false OR s.deleted IS NULL)
+			ORDER BY sdt.index_number, r.room_number
+		'''
 }

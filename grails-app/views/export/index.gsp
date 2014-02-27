@@ -17,6 +17,9 @@
             <li>
                 <eca:link action="badges">Create Excel Export of participants for badges</eca:link>
             </li>
+            <li>
+                <eca:link action="programAtAGlance">Create Excel Export of Program at a glance</eca:link>
+            </li>
         </ol>
     </body>
 </html>
