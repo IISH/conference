@@ -254,7 +254,7 @@ class ParticipantController {
                     // He/she is a participant, save all of that information as well
                     bindData(participant, params, [include: ['invitationLetter', 'invitationLetterSent', 'lowerFeeRequested',
                             'lowerFeeAnswered', 'lowerFeeText', 'student', 'studentConfirmed', 'award',
-                            'state', 'feeState']], "ParticipantDate")
+                            'state', 'feeState', 'extraInfo']], "ParticipantDate")
                     participant.save(failOnError: true)
 
                     // Remove all extras the participant is interested in and save all new information

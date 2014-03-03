@@ -311,6 +311,14 @@
                                         <g:select name="ParticipantDate.feeState.id" from="${FeeState.sortedFeeStates.list()}" optionKey="id" optionValue="name" value="${participant.feeState.id}" />
                                     </span>
                                 </div>
+                                <div class="${hasErrors(bean: participant, field: 'extraInfo', 'error')}">
+                                    <label class="property-label">
+                                        <g:message code="participantDate.extraInfo.label" />
+                                    </label>
+                                    <span class="property-value">
+                                        <textarea name="ParticipantDate.extraInfo" cols="40" rows="5">${fieldValue(bean: participant, field: 'extraInfo')}</textarea>
+                                    </span>
+                                </div>
                                 <div class="${hasErrors(bean: user, field: 'dateTimesNotPresent', 'error')}">
                                     <table id="participant-present">
                                         <g:each in="${SessionDateTime.getTableList(curDate)}" var="dateTimeRow">
@@ -855,11 +863,13 @@
                                             <g:if test="${order.payed == Order.ORDER_PAYED}">
                                                 <g:set var="hidePayedButton" value="${true}" />
 
-                                                <sec:ifAnyGranted roles="admin,superAdmin">
-                                                    <span class="inline-button order-refund-payment">
-                                                        <g:message code="order.refund.payment.label" />
-                                                    </span>
-                                                </sec:ifAnyGranted>
+                                                <g:if test="${order.amount > 0}">
+                                                    <sec:ifAnyGranted roles="admin,superAdmin">
+                                                        <span class="inline-button order-refund-payment">
+                                                            <g:message code="order.refund.payment.label" />
+                                                        </span>
+                                                    </sec:ifAnyGranted>
+                                                </g:if>
                                             </g:if>
                                         </span>
                                     </li>

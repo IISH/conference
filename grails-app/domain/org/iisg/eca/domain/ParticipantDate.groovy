@@ -22,6 +22,7 @@ class ParticipantDate extends EventDateDomain {
     boolean student = false
     boolean studentConfirmed = false
     boolean award = false
+    String extraInfo
 
     static belongsTo = [User, ParticipantState, FeeState]
     static hasMany = [extras: Extra, participantVolunteering: ParticipantVolunteering]
@@ -48,6 +49,7 @@ class ParticipantDate extends EventDateDomain {
         student                 column: 'student'
         studentConfirmed        column: 'student_confirmed'
         award                   column: 'award'
+        extraInfo               column: 'extra_info',   type: 'text'
 
         extras                  joinTable: 'participant_date_extra'
         participantVolunteering cascade: 'all-delete-orphan'
@@ -56,6 +58,7 @@ class ParticipantDate extends EventDateDomain {
     static constraints = {
         paymentId       nullable: true
         lowerFeeText    nullable: true, maxSize: 255
+        extraInfo       nullable: true
     }
 
     Order findOrder() {

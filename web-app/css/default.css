@@ -269,6 +269,7 @@ a:hover, .link:hover {
     float: left;
     color: [label_color];
     text-align: right;
+    white-space: normal;
 }
 
 .form > div > .property-value, .property-list li > .property-value, .value {
