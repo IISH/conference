@@ -51,7 +51,7 @@ grails.project.dependency.resolution = {
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
         compile 'net.sourceforge.jexcelapi:jxl:2.6.12'
-        runtime 'mysql:mysql-connector-java:5.1.26'
+        runtime 'mysql:mysql-connector-java:5.1.29'
 	    runtime('org.codehaus.groovy.modules.http-builder:http-builder:0.7') {
 		    excludes 'xalan'
 		    excludes 'xml-apis'
@@ -61,7 +61,7 @@ grails.project.dependency.resolution = {
 
     plugins {
         // plugins for the build system only
-        build ":tomcat:7.0.42"
+	    build ':tomcat:7.0.50.1'
 
         // plugins for the compile step
         compile ":hibernate-filter:0.3.2"
@@ -70,7 +70,7 @@ grails.project.dependency.resolution = {
         compile ":spring-security-core:2.0-RC2"
 
         // plugins needed at runtime but not for compilation
-        runtime ":hibernate:3.6.10.2" // Hibernate 4 instead: ":hibernate4:4.1.11.2"
+	    runtime ':hibernate:3.6.10.8' // Hibernate 4 instead: ":hibernate4:4.3.1.2"
         runtime ":jquery:1.10.2"
         runtime ":resources:1.2.1"
 
