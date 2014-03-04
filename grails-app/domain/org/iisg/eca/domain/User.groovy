@@ -1,16 +1,32 @@
 package org.iisg.eca.domain
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.oauth2.common.OAuth2AccessToken
+import org.springframework.security.oauth2.provider.ClientDetails
+import org.springframework.security.oauth2.provider.DefaultAuthorizationRequest
+import org.springframework.security.oauth2.provider.OAuth2Authentication
+
+import java.util.regex.Pattern
 import java.security.SecureRandom
+import org.apache.commons.lang.RandomStringUtils
 import grails.plugin.springsecurity.SpringSecurityUtils
 
 /**
  * Domain class of table holding all registered users
  */
 class User extends DefaultDomain {
+    static final int USER_STATUS_NOT_FOUND = 0;
+    static final int USER_STATUS_FOUND = 1;
+    static final int USER_STATUS_DISABLED = 2;
+    static final int USER_STATUS_DELETED = 3;
+    static final Pattern PASSWORD_PATTERN = Pattern.compile('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$')
+
     /**
      * Information about the current page
      */
     def static pageInformation
+    def clientDetailsService
+    def tokenServices
 
     /**
      * The saltSource is responsible for the creation of salts
@@ -34,6 +50,8 @@ class User extends DefaultDomain {
     String password
     String salt
     String requestCode
+    Date requestCodeValidUntil
+    Date newPasswordEmailed
     String phone
     String fax
     String mobile
@@ -61,58 +79,102 @@ class User extends DefaultDomain {
         version false
         sort "lastName"
 
-        id                  column: 'user_id'
-        email               column: 'email'
-        lastName            column: 'lastname'
-        firstName           column: 'firstname'
-        gender              column: 'gender'
-        title               column: 'title'
-        address             column: 'address',      type: 'text'
-        city                column: 'city'
-        country             column: 'country_id'
-        language            column: 'language'
-        password            column: 'password'
-        salt                column: 'salt'
-        requestCode         column: 'request_code'
-        phone               column: 'phone'
-        fax                 column: 'fax'
-        mobile              column: 'mobile'
-        organisation        column: 'organisation'
-        department          column: 'department'
-        cv                  column: 'cv',           type: 'text'
-        extraInfo           column: 'extra_info',   type: 'text'
-        dateAdded           column: 'date_added'
-        emailDiscontinued   column: 'email_discontinued'
+        id                      column: 'user_id'
+        email                   column: 'email'
+        lastName                column: 'lastname'
+        firstName               column: 'firstname'
+        gender                  column: 'gender'
+        title                   column: 'title'
+        address                 column: 'address',      type: 'text'
+        city                    column: 'city'
+        country                 column: 'country_id'
+        language                column: 'language'
+        password                column: 'password'
+        salt                    column: 'salt'
+        requestCode             column: 'request_code'
+        requestCodeValidUntil   column: 'request_code_valid_until'
+        newPasswordEmailed      column: 'new_password_emailed'
+        phone                   column: 'phone'
+        fax                     column: 'fax'
+        mobile                  column: 'mobile'
+        organisation            column: 'organisation'
+        department              column: 'department'
+        cv                      column: 'cv',           type: 'text'
+        extraInfo               column: 'extra_info',   type: 'text'
+        dateAdded               column: 'date_added'
+        emailDiscontinued       column: 'email_discontinued'
 
-        groups              joinTable: 'users_groups'
-        dateTimesNotPresent joinTable: 'participant_not_present'
-        userPages           cascade: 'all-delete-orphan'
-        papers              cascade: 'all-delete-orphan'
-        sessionParticipants cascade: 'all-delete-orphan'
-        daysPresent         cascade: 'all-delete-orphan'
+        groups                  joinTable: 'users_groups'
+        dateTimesNotPresent     joinTable: 'participant_not_present'
+        userPages               cascade: 'all-delete-orphan'
+        papers                  cascade: 'all-delete-orphan'
+        sessionParticipants     cascade: 'all-delete-orphan'
+        daysPresent             cascade: 'all-delete-orphan'
     }
 
     static constraints = {
-        email           maxSize: 100,   blank: false,   unique: true,   email: true
-        lastName        maxSize: 100,   blank: false
-        firstName       maxSize: 100,   blank: false
-        gender                          nullable: true, inList: ['M', 'F']
-        title           maxSize: 20,    nullable: true
-        address                         nullable: true
-        city            maxSize: 100,   nullable: true
-        country                         nullable: true
-        language        maxSize: 10,    blank: false
-        password        maxSize: 128,   nullable: true, display: false, password: true
-        salt            maxSize: 26,    nullable: true, display: false
-        requestCode     maxSize: 26,    nullable: true, display: false
-        phone           maxSize: 50,    nullable: true
-        fax             maxSize: 50,    nullable: true
-        mobile          maxSize: 50,    nullable: true
-        organisation    maxSize: 255,   nullable: true
-        department      maxSize: 255,   nullable: true
-        cv                              nullable: true
-        extraInfo                       nullable: true
+        email                   maxSize: 100,   blank: false,   unique: true,   email: true
+        lastName                maxSize: 100,   blank: false
+        firstName               maxSize: 100,   blank: false
+        gender                                  nullable: true, inList: ['M', 'F']
+        title                   maxSize: 20,    nullable: true
+        address                                 nullable: true
+        city                    maxSize: 100,   nullable: true
+        country                                 nullable: true
+        language                maxSize: 10,    blank: false
+        password                maxSize: 128,   nullable: true, display: false, password: true
+        salt                    maxSize: 26,    nullable: true, display: false
+        requestCode             maxSize: 26,    nullable: true, display: false
+        requestCodeValidUntil                   nullable: true, display: false
+        newPasswordEmailed                      nullable: true, display: false
+        phone                   maxSize: 50,    nullable: true
+        fax                     maxSize: 50,    nullable: true
+        mobile                  maxSize: 50,    nullable: true
+        organisation            maxSize: 255,   nullable: true
+        department              maxSize: 255,   nullable: true
+        cv                                      nullable: true
+        extraInfo                               nullable: true
     }
+
+    static apiActions = ['GET', 'POST', 'PUT']
+
+    static apiAllowed = [
+            'id',
+            'email',
+            'lastName',
+            'firstName',
+            'gender',
+            'title',
+            'address',
+            'city',
+            'country.id',
+            'phone',
+            'fax',
+            'mobile',
+            'organisation',
+            'department',
+            'cv',
+            'extraInfo',
+            'papers.id',
+            'daysPresent.day.id'
+    ]
+
+    static apiPostPut = [
+		    'email',
+		    'lastName',
+		    'firstName',
+		    'gender',
+		    'city',
+		    'address',
+		    'phone',
+		    'fax',
+		    'mobile',
+		    'organisation',
+		    'department',
+		    'cv',
+		    'country.id',
+            'daysPresent.day.id',
+    ]
 
     static namedQueries = {
         allUsers {
@@ -358,6 +420,89 @@ class User extends DefaultDomain {
         events
     }
 
+    /**
+     * Find out if user is granted full rights
+     * @return Whether this user has full rights
+     */
+    boolean hasFullRights() {
+        Role fullRights = getRoles().find { it.fullRights }
+        return (fullRights != null)
+    }
+
+    /**
+     * Find out if user is part of the crew and can access the CMS
+     * @return Whether this user is part of the crew
+     */
+    boolean isCrew() {
+        return (getRoles().size() > 0)
+    }
+
+    /**
+     * Find out if user is a network chair
+     * @return Whether this user is a network chair
+     */
+    boolean isNetworkChair() {
+        NetworkChair chair = NetworkChair.findByChair(this)
+        return (chair != null)
+    }
+
+    /**
+     * Find out if user has this role in one or more sessions
+     * @param type The participant type in question
+     * @return Whether this user has this role in one or more sessions
+     */
+    boolean hasRoleInASession(ParticipantType type) {
+        SessionParticipant sessionParticipant = SessionParticipant.findByUserAndType(this, type)
+        return (sessionParticipant != null)
+    }
+
+    /**
+     * Returns an access token for the user or will create a new one if the access token is not found or expired
+     * @return An OAuth2 access token
+     */
+    OAuth2AccessToken getAccessToken() {
+        Collection<OAuth2AccessToken> tokens = tokenServices.findTokensByUserName(this.email)
+        OAuth2AccessToken token = (tokens?.size() > 0) ? tokens.first() : null
+
+	    // If the token expires within an hour, then request a new one already
+	    Calendar calendar = Calendar.getInstance()
+	    calendar.add(Calendar.HOUR, 1)
+
+        if (!token || token.expired || calendar.time.after(token.expiration)) {
+            ClientDetails client = clientDetailsService.loadClientByClientId('userClient')
+            DefaultAuthorizationRequest ar = new DefaultAuthorizationRequest(client.clientId, client.scope)
+            ar.setApproved(true)
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(this.email, this.password, client.authorities)
+            OAuth2Authentication oauth2Auth = new OAuth2Authentication(ar, authToken)
+            token = tokenServices.createAccessToken(oauth2Auth)
+        }
+
+        return token
+    }
+
+    void updateForApi(String property, String value) {
+        switch (property) {
+            case 'daysPresent.day.id':
+                this.daysPresent.clear()
+                this.save(flush: true)
+                value.split(';').each { dayId ->
+                    if (dayId.toString().isLong()) {
+                        Day day = Day.findById(dayId.toString().toLong())
+                        if (day) {
+                            this.addToDaysPresent(new ParticipantDay(day: day))
+                        }
+                    }
+                }
+                break
+	        case 'country.id':
+		        Country country = Country.get(value.toLong())
+		        if (country) {
+			        this.country = country
+		        }
+		        break
+        }
+    }
+
     def beforeInsert() {
         // Before insertion of a user, hash the password
         encodePassword()
@@ -387,20 +532,46 @@ class User extends DefaultDomain {
     }
 
     /**
-     * Creates a 26 characters long String using a secure random generator
-     * @return A new secure random String
+     * Returns the status of the user
+     * @return The status
      */
-    static String createSecureRandomString() {
-        Random r = new SecureRandom()
-        new BigInteger(130, r).toString(32)
+    int getStatus() {
+        // The user is at least found
+        int status = User.USER_STATUS_FOUND
+
+        if (this.deleted) {
+            status = User.USER_STATUS_DELETED
+        }
+        else if (!this.enabled) {
+            status = User.USER_STATUS_DISABLED
+        }
+
+        return status;
+    }
+
+    /**
+     * Creates a 26 characters long salt using a secure random generator
+     * @return A new secure random salt
+     */
+    static String createSalt() {
+        createPassword(26)
+    }
+
+    /**
+     * Creates a new password of the given length
+     * @return A new password
+     */
+    static String createPassword(int length=8) {
+        RandomStringUtils.random(length, 0, 0, true, true, null, new SecureRandom())
     }
 
     /**
      * Every time a new password is saved (and has to be hashed), also create a new user salt
      */
     protected void encodePassword() {
-        salt = createSecureRandomString()
+        salt = createSalt()
         password = springSecurityService.encodePassword(password, saltSource.getSalt(this))
+        newPasswordEmailed = new Date()
     }
 
     /**
@@ -408,6 +579,14 @@ class User extends DefaultDomain {
      */
     private void emailToLowercase() {
         this.email = this.email.trim().toLowerCase()
+    }
+
+    /**
+     * Returns the full name, firstname + lastname
+     * @return The full name
+     */
+    String getFullName() {
+        return "${firstName} ${lastName}"
     }
 
     @Override

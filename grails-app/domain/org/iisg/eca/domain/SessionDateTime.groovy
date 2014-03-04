@@ -33,6 +33,15 @@ class SessionDateTime extends EventDateDomain {
         period          blank: false,   maxSize: 30
     }
 
+    static apiActions = ['GET']
+
+    static apiAllowed = [
+            'id',
+            'day.id',
+            'indexNumber',
+            'period'
+    ]
+
     /**
      * Searches for all date times and tries to order them in a table layout
      * @return A list with SessionDateTime rows

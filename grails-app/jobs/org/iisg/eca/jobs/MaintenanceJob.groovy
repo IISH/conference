@@ -8,6 +8,7 @@ import org.iisg.eca.domain.MaintenanceQuery
  */
 class MaintenanceJob {
     def dataSource
+    def sessionPlannerService
 
     /**
      * Set the triggers for maintenance to run
@@ -49,5 +50,8 @@ class MaintenanceJob {
                 }
             }
         }
+
+        // Also flush the program cache
+        sessionPlannerService.removeProgramFromCache()
     }
 }

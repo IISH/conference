@@ -34,6 +34,14 @@ class Day extends EventDateDomain {
         
         sessionDateTimes cascade: 'all-delete-orphan'
     }
+
+    static apiActions = ['GET']
+
+    static apiAllowed = [
+            'id',
+            'day',
+            'dayNumber'
+    ]
     
     SimpleDateFormat getFormat() {
         String dateFormat = messageSource.getMessage('default.date.format', null, LocaleContextHolder.locale)

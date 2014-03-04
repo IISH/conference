@@ -221,6 +221,24 @@ grails {
                     '/**/images/**':                  ['permitAll'],
                     '/**/favicon.ico':                ['permitAll']
             ]
+            providerNames = [
+                    'daoAuthenticationProvider',
+                    'clientCredentialsAuthenticationProvider'
+            ]
+
+            oauthProvider {
+                grantTypes {
+                    authorizationCode = false
+                    implicit = false
+                    refreshToken = false
+                    clientCredentials = true
+                    password = false
+                }
+
+                tokenServices {
+                    accessTokenValiditySeconds = 60 * 60 * 12 // default 12 hours
+                }
+            }
         }
     }
 }
