@@ -6,6 +6,7 @@ import org.springframework.security.oauth2.provider.BaseClientDetails
 import org.springframework.security.oauth2.provider.NoSuchClientException
 
 import grails.converters.JSON
+import grails.util.Environment
 import java.text.SimpleDateFormat
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 
@@ -33,16 +34,18 @@ class BootStrap {
         }
 
 	    // Make sure we always have a user OAuth 2 client
-	    try {
-		    clientDetailsService.loadClientByClientId('userClient')
-	    }
-	    catch (NoSuchClientException nsce) {
-		    ClientDetails userClient = new BaseClientDetails()
-		    userClient.clientId = 'userClient'
-		    userClient.authorizedGrantTypes = ["client_credentials"]
-		    userClient.setAuthorities([new SimpleGrantedAuthority('ROLE_USER_API')])
+		if (Environment.current != Environment.TEST) {
+		    try {
+			    clientDetailsService.loadClientByClientId('userClient')
+		    }
+		    catch (NoSuchClientException nsce) {
+			    ClientDetails userClient = new BaseClientDetails()
+			    userClient.clientId = 'userClient'
+			    userClient.authorizedGrantTypes = ["client_credentials"]
+			    userClient.setAuthorities([new SimpleGrantedAuthority('ROLE_USER_API')])
 
-		    clientDetailsService.addClientDetails(userClient)
+			    clientDetailsService.addClientDetails(userClient)
+		    }
 	    }
 
         // Make sure domain classes are correctly rendered as JSON
