@@ -370,6 +370,10 @@ class ApiController {
 		render results as JSON
 	}
 
+	def eventDateInfo() {
+		render pageInformation.date as JSON
+	}
+
 	private void returnUserInfo(Map response, User user) {
 		response.put('status', user.getStatus())
 		response.put('hasFullRights', user.hasFullRights())

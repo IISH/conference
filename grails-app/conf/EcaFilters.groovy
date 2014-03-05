@@ -174,12 +174,12 @@ class EcaFilters {
                 }
 
                 ClientDetails client = clientDetailsService.loadClientByClientId(clientId)
-                if (client && (client instanceof EventDateClientDetails)) {
-                    EventDateClientDetails clientDetails = (EventDateClientDetails) client
+                if (client) {
+                    EventDateClientDetails clientDetails = new EventDateClientDetails(client)
                     String[] eventCodes = clientDetails.getEvents()
 
                     // Find out if the client is allowed to request data from the requested event
-                    if (eventCodes.contains(pageInformation.date.event.code)) {
+                    if (eventCodes?.contains(pageInformation.date.event.code)) {
                         // Everything is ok, allow access
                         return true
                     }

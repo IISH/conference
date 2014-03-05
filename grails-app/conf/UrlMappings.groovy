@@ -117,6 +117,10 @@ class UrlMappings {
             action = 'removePaper'
         }
 
+	    name eventDateInfo: "/$event/$date/api/eventDateInfo" (controller: "api", parseRequest: true) {
+		    action = 'eventDateInfo'
+	    }
+
         /*
          * END API CALLS
          */

@@ -32,6 +32,15 @@ class Event extends DefaultDomain {
         type        maxSize: 20,    nullable: true
     }
 
+	static apiActions = ['GET']
+
+	static apiAllowed = [
+			'id',
+			'code',
+			'shortName',
+			'longName'
+	]
+
     String getUrl() {
         code.replaceAll('\\s', '-')
     }
