@@ -43,6 +43,19 @@ class EventDate extends DefaultDomain {
         sort                startDate: 'desc'
     }
 
+	static apiActions = ['GET']
+
+	static apiAllowed = [
+			'id',
+			'yearCode',
+			'startDate',
+			'endDate',
+			'dateAsText',
+			'description',
+			'longDescription',
+			'event'
+	]
+
     static namedQueries = {
         sortByEventAndDate {
             event {

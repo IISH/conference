@@ -30,6 +30,13 @@ class ParticipantState extends EventDomain {
         state   column: 'participant_state'
     }
 
+    static apiActions = ['GET']
+
+    static apiAllowed = [
+            'id',
+            'state'
+    ]
+
     @Override
     String toString() {
         state

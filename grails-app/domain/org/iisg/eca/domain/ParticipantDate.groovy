@@ -61,6 +61,70 @@ class ParticipantDate extends EventDateDomain {
         extraInfo       nullable: true
     }
 
+    static apiActions = ['GET', 'POST', 'PUT']
+
+    static apiAllowed = [
+            'id',
+            'user.id',
+            'state.id',
+            'feeState.id',
+            'paymentId',
+            'invitationLetter',
+            'lowerFeeRequested',
+            'lowerFeeText',
+            'student',
+            'award',
+            'extras.id',
+            'participantVolunteering.id'
+    ]
+
+    static apiPostPut = [
+		    'paymentId',
+		    'invitationLetter',
+		    'lowerFeeRequested',
+		    'student',
+		    'award',
+            'extras.id',
+		    'state.id',
+		    'feeState.id',
+		    'user.id',
+    ]
+
+    void updateForApi(String property, String value) {
+        switch (property) {
+            case 'extras.id':
+                this.extras.clear()
+                this.save(flush: true)
+                value.split(';').each { extraId ->
+                    if (extraId.toString().isLong()) {
+                        Extra extra = Extra.findById(extraId.toString().toLong())
+                        if (extra) {
+                            this.addToExtras(extra)
+                        }
+                    }
+                }
+                break
+	        case 'state.id':
+		        ParticipantState state = ParticipantState.findById(value.toLong())
+		        if (state) {
+			        this.state = state
+		        }
+				break
+	        case 'feeState.id':
+		        FeeState state = FeeState.findById(value.toLong())
+		        if (state) {
+			        this.feeState = state
+		        }
+		        break
+	        case 'user.id':
+		        User user = User.findById(value.toLong())
+		        if (user) {
+			        this.user = user
+		        }
+		        break
+        }
+    }
+
     Order findOrder() {
         Order order = Order.get(paymentId)
         order

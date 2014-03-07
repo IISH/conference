@@ -9,9 +9,11 @@ import org.iisg.eca.domain.EventDateDomain
 import org.iisg.eca.domain.IPAuthentication
 
 import org.apache.commons.lang.RandomStringUtils
+import org.iisg.eca.security.EventDateClientDetails
 import org.springframework.context.i18n.LocaleContextHolder
 
 import grails.plugin.springsecurity.SpringSecurityUtils
+import org.springframework.security.oauth2.provider.ClientDetails
 
 /**
  * All filters for accessing a page
@@ -19,8 +21,9 @@ import grails.plugin.springsecurity.SpringSecurityUtils
 class EcaFilters {
     def pageInformation
     def grailsApplication
+    def clientDetailsService
     def springSecurityService
-    
+
     def filters = {
 
         /**
@@ -46,7 +49,7 @@ class EcaFilters {
          *  Every page (except login/logout/xhr) should be in the database, so lookup the page information from the database
          *  If it is there, cache the page information for this request
          */
-        page(controller: '*', action: '*', controllerExclude: 'css') {
+        page(controller: '*', action: '*', controllerExclude: 'ajax|api|css|login|logout') {
             before = {
                 if (!params.xhr) {
                     Page page = Page.findByControllerAndAction(params.controller.toString(), params.action.toString(), [cache: true])
@@ -113,7 +116,7 @@ class EcaFilters {
         /**
          * The authorization filter
          */
-        authFilter(controller: '*', action: '*', controllerExclude: 'login|logout|css') {
+        authFilter(controller: '*', action: '*', controllerExclude: 'login|logout|css|api|userApi') {
             before = {
                 List<Role> roles = Role.findAllByFullRights(true, [cache: true])
 
@@ -156,7 +159,37 @@ class EcaFilters {
                 return true
             }
         }
-        
+
+        /**
+         * The authorization filter for the API
+         */
+        authFilterApi(controller: 'api', action: '*') {
+            before = {
+                String clientId
+                if (springSecurityService.principal instanceof String) {
+                    clientId = springSecurityService.principal
+                }
+                else {
+                    clientId = springSecurityService.principal?.username
+                }
+
+                ClientDetails client = clientDetailsService.loadClientByClientId(clientId)
+                if (client) {
+                    EventDateClientDetails clientDetails = new EventDateClientDetails(client)
+                    String[] eventCodes = clientDetails.getEvents()
+
+                    // Find out if the client is allowed to request data from the requested event
+                    if (eventCodes?.contains(pageInformation.date.event.code)) {
+                        // Everything is ok, allow access
+                        return true
+                    }
+                }
+
+                response.sendError(403)
+                return
+            }
+        }
+
          /**
           * Default filter for all requests
           */

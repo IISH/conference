@@ -71,6 +71,80 @@ class Paper extends EventDateDomain {
         equipmentComment    nullable: true
     }
 
+    static apiActions = ['GET', 'POST', 'PUT']
+
+    static apiAllowed = [
+            'id',
+            'user.id',
+            'state.id',
+            'session.id',
+            'title',
+            'coAuthors',
+            'abstr',
+            'networkProposal.id',
+            'sessionProposal',
+            'proposalDescription',
+            'fileName',
+            'contentType',
+            'fileSize',
+            'equipmentComment',
+            'equipment.id',
+    ]
+
+	static apiPostPut = [
+			'title',
+			'coAuthors',
+			'abstr',
+			'sessionProposal',
+			'equipmentComment',
+			'user.id',
+			'state.id',
+			'session.id',
+			'networkProposal.id',
+			'equipment.id',
+	]
+
+	void updateForApi(String property, String value) {
+		switch (property) {
+			case 'user.id':
+				User user = User.get(value.toLong())
+				if (user) {
+					this.user = user
+				}
+				break
+			case 'state.id':
+				PaperState state = PaperState.findById(value.toLong())
+				if (state) {
+					this.state = state
+				}
+				break
+			case 'session.id':
+				Session session = Session.findById(value.toLong())
+				if (session) {
+					this.session = session
+				}
+				break
+			case 'networkProposal.id':
+				Network networkProposal = Network.findById(value.toLong())
+				if (networkProposal) {
+					this.networkProposal = networkProposal
+				}
+				break
+			case 'equipment.id':
+				this.equipment.clear()
+				this.save(flush: true)
+				value.split(';').each { equipmentId ->
+					if (equipmentId.toString().isLong()) {
+						Equipment equipment = Equipment.findById(equipmentId.toString().toLong())
+						if (equipment) {
+							this.addToEquipment(equipment)
+						}
+					}
+				}
+				break
+		}
+	}
+
     /**
      * Returns the file size in a human friendly readable way
      * @return The file size

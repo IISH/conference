@@ -9,6 +9,7 @@ class FeeAmount extends EventDateDomain {
     int numDaysStart
     int numDaysEnd
     BigDecimal feeAmount = new BigDecimal(9999.99)
+    String substituteName
 
     static belongsTo = FeeState
 
@@ -21,6 +22,7 @@ class FeeAmount extends EventDateDomain {
                             }
                         }
         feeAmount       min: BigDecimal.ZERO
+        substituteName  nullable: true,         maxSize: 50
     }
 
     static mapping = {
@@ -34,7 +36,20 @@ class FeeAmount extends EventDateDomain {
         numDaysStart    column: 'nr_of_days_start'
         numDaysEnd      column: 'nr_of_days_end'
         feeAmount       column: 'fee_amount'
+        substituteName  column: 'substitute_name'
     }
+
+    static apiActions = ['GET']
+
+    static apiAllowed = [
+            'id',
+            'feeState.id',
+            'endDate',
+            'numDaysStart',
+            'numDaysEnd',
+            'feeAmount',
+            'substituteName'
+    ]
 
     String getNumDays() {
         (numDaysStart == numDaysEnd) ? numDaysStart : "${numDaysStart} - ${numDaysEnd}"

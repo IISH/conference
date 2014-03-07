@@ -29,6 +29,9 @@ class Setting extends EventDomain {
     static final String IP_AUTHENTICATION = 'ip_authentication'
     static final String CHECK_ACCEPTED_IP = 'check_accepted_ip'
 	static final String REFUND_ADMINISTRATION_COSTS = 'refund_administration_costs'
+    static final String MAX_UPLOAD_SIZE_PAPER = 'max_upload_size_paper'
+    static final String ALLOWED_PAPER_EXTENSIONS = 'allowed_paper_extensions'
+    static final String BANK_TRANSFER_INFO = 'bank_transfer_info'
 
 	// Layout settings
     static final String BANNER_IMG = 'banner_img'
@@ -37,6 +40,13 @@ class Setting extends EventDomain {
     static final String MAIN_COLOR_LIGHT = 'main_color_light'
     static final String MAIN_COLOR_DARK = 'main_color_dark'
     static final String MAIN_COLOR_BG = 'main_color_bg'
+
+    // Email templates
+    static final String CHANGE_PASSWORD_EMAIL_TEMPLATE_ID = 'change_password_email_template_id'
+    static final String LOST_PASSWORD_EMAIL_TEMPLATE_ID = 'lost_password_email_template_id'
+    static final String CONFIRM_LOST_PASSWORD_EMAIL_TEMPLATE_ID = 'confirm_lost_password_email_template_id'
+    static final String BANK_TRANSFER_EMAIL_TEMPLATE_ID = 'bank_transfer_email_template_id'
+    static final String PAYMENT_ACCEPTED_EMAIL_TEMPLATE_ID = 'payment_accepted_email_template_id'
 
 	// PayWay settings
 	static final String PAYWAY_ADDRESS = 'payway_address'
@@ -48,15 +58,18 @@ class Setting extends EventDomain {
     String property
     String value
     boolean showInBackend = false
+    boolean apiAllowedSetting = false
 
     static mapping = {
         table 'settings'
+        cache true
         version false
 
-        id              column: 'setting_id'
-        property        column: 'property'
-        value           column: 'value',            type: 'text'
-        showInBackend   column: 'show_in_backend'
+        id                  column: 'setting_id'
+        property            column: 'property'
+        value               column: 'value',            type: 'text'
+        showInBackend       column: 'show_in_backend'
+        apiAllowedSetting   column: 'api_allowed'
     }
 
     static constraints = {
@@ -86,6 +99,11 @@ class Setting extends EventDomain {
             case PAYWAY_PROJECT:
             case PAYWAY_PASSPHRASE_IN:
             case PAYWAY_PASSPHRASE_OUT:
+            case CHANGE_PASSWORD_EMAIL_TEMPLATE_ID:
+            case LOST_PASSWORD_EMAIL_TEMPLATE_ID:
+            case CONFIRM_LOST_PASSWORD_EMAIL_TEMPLATE_ID:
+            case MAX_UPLOAD_SIZE_PAPER:
+            case ALLOWED_PAPER_EXTENSIONS:
                 super.beforeUpdate()
                 break
             default:
@@ -111,6 +129,20 @@ class Setting extends EventDomain {
             (Setting) getByEvent(settings)
         }
     }
+
+	static Map<String, String> getSettingsMapForApi() {
+		Map<String, String> settings = new TreeMap<String, String>()
+
+		Setting.withCriteria {
+			eq('apiAllowedSetting', true)
+			order('property', 'asc')
+			order('event', 'asc')
+		}.each {
+			settings.put(it.property, it.value)
+		}
+
+		return settings
+	}
 
     private void setSetting() {
         switch (property) {
