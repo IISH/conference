@@ -85,7 +85,9 @@ grails.exceptionresolver.params.exclude = ['password']
 grails.hibernate.cache.queries = false
 
 // Set to true to fallback to the Spring binder instead
-grails.databinding.useSpringBinder = true
+grails.databinding.useSpringBinder = false
+grails.databinding.trimStrings = true
+grails.databinding.convertEmptyStringsToNull = true
 
 // Make sure grails.config.locations is initialized
 if (!grails.config.locations || !(grails.config.locations instanceof Collection)) {

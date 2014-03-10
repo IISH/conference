@@ -51,7 +51,7 @@ class DomainClassInfo {
             case 'long':
                 return value?.isLong() ? value.toLong() : null
             case 'boolean':
-                return (value.equals('1') || value.equals('0')) ? value.equals('1') : null
+                return value?.equals('1') || value?.equalsIgnoreCase('true')
             case 'date':
                 return value?.isLong() ? new Date(value.toLong() * 1000) : null
             default:

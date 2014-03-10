@@ -1,6 +1,6 @@
 import org.iisg.eca.domain.Setting
 import org.iisg.eca.domain.DynamicPage
-
+import org.iisg.eca.security.EventDateClientDetails
 import org.springframework.security.oauth2.provider.ClientDetails
 import org.springframework.security.oauth2.provider.BaseClientDetails
 import org.springframework.security.oauth2.provider.NoSuchClientException
@@ -36,15 +36,15 @@ class BootStrap {
 	    // Make sure we always have a user OAuth 2 client
 		if (Environment.current != Environment.TEST) {
 		    try {
-			    clientDetailsService.loadClientByClientId('userClient')
+                clientDetailsService.loadClientByClientId('userClient')
 		    }
 		    catch (NoSuchClientException nsce) {
-			    ClientDetails userClient = new BaseClientDetails()
+                BaseClientDetails userClient = new BaseClientDetails()
 			    userClient.clientId = 'userClient'
 			    userClient.authorizedGrantTypes = ["client_credentials"]
 			    userClient.setAuthorities([new SimpleGrantedAuthority('ROLE_USER_API')])
 
-			    clientDetailsService.addClientDetails(userClient)
+                clientDetailsService.addClientDetails(userClient)
 		    }
 	    }
 
