@@ -31,14 +31,6 @@ class SessionState extends EventDomain {
         correspondingPaperState nullable: true
     }
 
-    static apiActions = ['GET']
-
-    static apiAllowed = [
-            'id',
-            'description',
-            'shortDescription'
-    ]
-
     @Override
     String toString() {
         description

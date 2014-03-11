@@ -100,7 +100,7 @@ class EmailService {
      * Tries to send the email, if succeeded the send date will be set in the database
      * @param sentEmail The email to be send
      * @param saveToDb Whether the email should be saved in the database
-     * @param forceSend Whether the email is forced to (re)send
+     * @param forceSend Whether the email is forced to (re)send     *
      */
     synchronized void sendEmail(SentEmail sentEmail, boolean saveToDb=true, boolean forceSend=false) {
         // How often may we try before giving up?

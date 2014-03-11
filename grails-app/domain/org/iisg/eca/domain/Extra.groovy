@@ -35,17 +35,6 @@ class Extra extends EventDateDomain {
         amount              min: BigDecimal.ZERO
     }
 
-    static apiActions = ['GET']
-
-    static apiAllowed = [
-            'id',
-            'title',
-            'extra',
-            'description',
-            'secondDescription',
-            'amount'
-    ]
-
     @Override
     String toString() {
         extra

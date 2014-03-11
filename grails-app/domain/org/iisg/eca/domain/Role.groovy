@@ -9,6 +9,7 @@ class Role {
     String role
     String description
     boolean fullRights = false
+	boolean onlyLastDate = false
 
     static hasMany = [userRoles: UserRole]
 
@@ -17,10 +18,11 @@ class Role {
         cache true
         version false
 
-        id          column: 'role_id'
-        role        column: 'role'
-        description column: 'description',  type: 'text'
-        fullRights  column: 'full_rights'
+        id              column: 'role_id'
+        role            column: 'role'
+        description     column: 'description',  type: 'text'
+        fullRights      column: 'full_rights'
+	    onlyLastDate    column: 'only_last_date'
     }
 
     static constraints = {

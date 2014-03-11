@@ -14,8 +14,7 @@ class Session extends EventDateDomain {
     String comment
     SessionState state
     boolean mailSessionState = true
-    User addedBy
-
+    
     static belongsTo = [Network, SessionState]
     static hasMany = [  sessionParticipants: SessionParticipant,
                         papers: Paper,
@@ -35,7 +34,6 @@ class Session extends EventDateDomain {
         comment             column: 'session_comment',  type: 'text'
         state               column: 'session_state_id'
         mailSessionState    column: 'mail_session_state'
-        addedBy             column: 'added_by'
 
         networks                joinTable: 'session_in_network'
         sessionParticipants     cascade: 'all-delete-orphan'
@@ -48,41 +46,7 @@ class Session extends EventDateDomain {
         name        blank: false,   maxSize: 255
         abstr       nullable: true
         comment     nullable: true
-        addedBy     nullable: true
     }
-
-    static apiActions = ['GET', 'POST', 'PUT']
-
-    static apiAllowed = [
-            'id',
-            'name',
-            'abstr',
-            'state.id',
-            'sessionRoomDateTime.id',
-            'sessionParticipants.id',
-            'sessionParticipants.user.id',
-            'sessionParticipants.type.id',
-            'papers.id',
-            'networks.id',
-            'addedBy.id'
-    ]
-
-	static apiPostPut = [
-			'name',
-			'abstr',
-			'addedBy.id'
-	]
-
-	void updateForApi(String property, String value) {
-		switch (property) {
-			case 'addedBy.id':
-				User addedBy = User.get(value.toLong())
-				if (addedBy) {
-					this.addedBy = addedBy
-				}
-				break
-		}
-	}
 
     /**
      * Updates the paper state of all papers of this session when the state of this session has been changed
@@ -137,7 +101,7 @@ class Session extends EventDateDomain {
     
     @Override
     String toString() {
-        String readCode = (code) ? code : "-";
+        String readCode = (code) ? code : "-";        
         "${readCode}: ${name}"
     }
 }

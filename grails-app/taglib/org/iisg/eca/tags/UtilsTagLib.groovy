@@ -175,20 +175,16 @@ class UtilsTagLib {
         MarkupBuilder builder = new MarkupBuilder(out)
         builder.doubleQuotes = true
 
-        // Get all dates the user has access to
-        List<Event> events = User.get(springSecurityService.principal.id).events
-
-        // Loop over all the events and collect the event dates
-        Map datesByEvent = [:]
-        events.each { event ->
-            datesByEvent.put(event, EventDate.getAllForEvent(event).list())
-        }
+        // Get all events and dates the user has access to
+	    User user = User.get(springSecurityService.principal.id)
+        List<Event> events = user.events
+	    Map<Event, List<EventDate>> datesByEvent = Event.getEventsAndDatesWithAccess(user)
 
         // Now with all the information available, create the select box
         builder.form(method: "get", action: eca.createLink(controller: 'event', action: 'switchEvent')) {
             builder.input(type: 'hidden', name: 'back', value: pageInformation.sessionIdentifier)
             builder.select(id: "event_switcher", name: "event_switcher") {
-                datesByEvent.keySet().each { event ->
+                events.each { event ->
                     builder.optgroup(label: event.toString()) {
                         datesByEvent.get(event).each { date ->
                             String htmlReadyDate = "${date.description} &nbsp;&nbsp; ${date.dateAsText}"

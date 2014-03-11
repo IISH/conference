@@ -59,9 +59,32 @@ class EventDate extends DefaultDomain {
         }
     }
 
+	/**
+	 * Returns the last event date of the given event
+	 * @param event The event in question
+	 * @return The last event date of the given event
+	 */
+	static EventDate getLastDate(Event event) {
+		return executeQuery('''
+			SELECT d
+			FROM Event AS e
+			INNER JOIN e.dates AS d
+			WHERE e.id = :eventId
+			ORDER BY d.startDate DESC
+		''', ['eventId': event.id], [cache: true]).first()
+	}
+
     String getUrl() {
         yearCode.replaceAll('\\s', '-')
     }
+
+	/**
+	 * Whether of all dates belonging to the event this is also the last date
+	 * @return Whether this is or is not currently the last date of the event
+	 */
+	boolean isLastDate() {
+		return getLastDate(this.event).equals(this)
+	}
 
     @Override
     String toString() {

@@ -14,20 +14,13 @@ class Volunteering extends EventDomain {
 
         id          column: 'volunteering_id'
         description column: 'description'
-
+        
         participantVolunteering cascade: 'all-delete-orphan'
     }
 
     static constraints = {
         description blank: false,   maxSize: 30
     }
-
-	static apiActions = ['GET']
-
-	static apiAllowed = [
-			'id',
-			'description'
-	]
 
     @Override
     String toString() {

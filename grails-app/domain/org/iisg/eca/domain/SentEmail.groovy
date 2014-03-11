@@ -45,21 +45,6 @@ class SentEmail extends EventDateDomain {
         numTries            column: 'num_tries'
     }
 
-    static apiActions = ['GET']
-    static apiAllowed = [
-            'id',
-            'user.id',
-            'fromName',
-            'fromEmail',
-            'subject',
-            'body',
-            'dateTimeCreated',
-            'dateTimeSent',
-            'dateTimesSentCopy',
-            'sendAsap',
-            'numTries',
-    ]
-
     /**
      * Returns all date time copies as a list with Date objects
      * @return A list with all the date/times a copy of this email was sent

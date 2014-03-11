@@ -29,15 +29,6 @@ class FeeState extends EventDomain {
         feeAmounts      sort: 'endDate', cascade: 'all-delete-orphan'
     }
 
-    static apiActions = ['GET']
-
-    static apiAllowed = [
-            'id',
-            'name',
-            'isDefaultFee',
-            'feeAmounts.id'
-    ]
-
     static namedQueries = {
         sortedFeeStates {
             order('isDefaultFee', 'desc')

@@ -1,20 +1,18 @@
-import org.iisg.eca.security.UserSaltSource
-import org.iisg.eca.security.UserDetailsService
-import org.iisg.eca.security.SecurityEventListener
-
 import org.iisg.eca.utils.PageInformation
 import org.iisg.eca.utils.CustomPropertyEditorRegistrar
 
 import org.iisg.eca.converter.DateConverter
 
-import org.springframework.security.oauth2.provider.token.JdbcTokenStore
-import org.springframework.security.oauth2.provider.JdbcClientDetailsService
+import org.iisg.eca.security.UserSaltSource
+import org.iisg.eca.security.UserDetailsService
+import org.iisg.eca.security.SecurityEventListener
 
-import grails.plugin.springsecurity.SpringSecurityUtils
 import org.springframework.web.servlet.i18n.CookieLocaleResolver
 
+import grails.plugin.springsecurity.SpringSecurityUtils
+
 // Place your Spring DSL code here
-beans = {
+beans = {     
     userDetailsService(UserDetailsService) {
         grailsApplication = ref('grailsApplication')
     }
@@ -28,10 +26,6 @@ beans = {
         useReferer = conf.successHandler.useReferer
         redirectStrategy = ref('redirectStrategy')
     }
-
-    tokenStore(JdbcTokenStore, ref('dataSource'))
-
-	clientDetailsService(JdbcClientDetailsService, ref('dataSource'))
 
     saltSource(UserSaltSource) {
         userPropertyToUse = application.config.grails.plugin.springsecurity.dao.reflectionSaltSourceProperty

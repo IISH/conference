@@ -28,16 +28,6 @@ class NetworkChair extends DefaultDomain implements Serializable {
     static constraints = {
         network     unique: 'chair'
     }
-
-    static apiActions = ['GET']
-
-    static apiAllowed = [
-            'id',
-            'network.id',
-            'chair',
-            'isMainChair'
-    ]
-
      /*
     Long getId() {
         "${network.id}${chair.id}".toLong()
