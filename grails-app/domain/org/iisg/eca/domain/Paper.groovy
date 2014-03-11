@@ -22,6 +22,7 @@ class Paper extends EventDateDomain {
     byte[] file
     String equipmentComment
     boolean mailPaperState = true
+	User addedBy
 
     static belongsTo = [User, PaperState, Session, Network]
     static hasMany = [equipment: Equipment]
@@ -46,6 +47,7 @@ class Paper extends EventDateDomain {
         file                column: 'file',                 sqlType: 'mediumblob'
         equipmentComment    column: 'equipment_comment',    type: 'text'
         mailPaperState      column: 'mail_paper_state'
+	    addedBy             column: 'added_by'
 
         equipment           joinTable: 'paper_equipment'
     }
@@ -69,6 +71,7 @@ class Paper extends EventDateDomain {
         fileSize            nullable: true
         file                nullable: true
         equipmentComment    nullable: true
+	    addedBy             nullable: true
     }
 
     static apiActions = ['GET', 'POST', 'PUT']
@@ -89,6 +92,7 @@ class Paper extends EventDateDomain {
             'fileSize',
             'equipmentComment',
             'equipment.id',
+		    'addedBy.id'
     ]
 
 	static apiPostPut = [
@@ -102,6 +106,7 @@ class Paper extends EventDateDomain {
 			'session.id',
 			'networkProposal.id',
 			'equipment.id',
+			'addedBy.id'
 	]
 
 	void updateForApi(String property, String value) {
@@ -131,7 +136,7 @@ class Paper extends EventDateDomain {
 				}
 				break
 			case 'equipment.id':
-				this.equipment.clear()
+				this.equipment?.clear()
 				this.save(flush: true)
 				value.split(';').each { equipmentId ->
 					if (equipmentId.toString().isLong()) {
@@ -140,6 +145,12 @@ class Paper extends EventDateDomain {
 							this.addToEquipment(equipment)
 						}
 					}
+				}
+				break
+			case 'addedBy.id':
+				User addedBy = User.findById(value.toLong())
+				if (addedBy) {
+					this.addedBy = addedBy
 				}
 				break
 		}

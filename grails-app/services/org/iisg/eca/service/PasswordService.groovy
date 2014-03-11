@@ -23,6 +23,16 @@ class PasswordService {
     def messageSource
 
 	/**
+	 * Allows for changing the password
+	 * @param user The user who's password has to be updated
+	 * @param newPassword The new password of the user
+	 * @return <code>true</code> in case the change was successful and the email was sent
+	 */
+	boolean changePassword(User user, String newPassword) {
+		return changePassword(user, newPassword, newPassword)
+	}
+
+	/**
 	 * Allows users to change their password
 	 * @param user The user who's password has to be updated
 	 * @param newPassword The new password of the user

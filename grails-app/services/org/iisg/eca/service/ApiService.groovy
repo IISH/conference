@@ -110,10 +110,10 @@ class ApiService {
 		Map validProperties = params.subMap(params.keySet().intersect(allowed)).findAll { it.value instanceof String }
 
 		Class domainClass = domainClassInfo.getDomainClass()
-		Object instance = id ? domainClass.findById(params.id) : domainClass.class.newInstance()
+		Object instance = id ? domainClass.findById(params.id) : domainClass.newInstance()
 
 		validProperties.each { property, value ->
-			if (property.toString().contains('.') && domainClassInfo.hasProperty('updateForApi')) {
+			if (property.toString().contains('.')) {
 				instance.updateForApi(property, value)
 			}
 			else {

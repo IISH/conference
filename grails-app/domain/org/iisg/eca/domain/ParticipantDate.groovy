@@ -23,6 +23,7 @@ class ParticipantDate extends EventDateDomain {
     boolean studentConfirmed = false
     boolean award = false
     String extraInfo
+	User addedBy
 
     static belongsTo = [User, ParticipantState, FeeState]
     static hasMany = [extras: Extra, participantVolunteering: ParticipantVolunteering]
@@ -30,7 +31,7 @@ class ParticipantDate extends EventDateDomain {
     static mapping = {
         table 'participant_date'
         version false
-        sort participantVolunteering: 'volunteering'
+        // TODO: Causes ArrayIndexOutOfBoundsException: sort participantVolunteering: 'volunteering'
 
         id                      column: 'participant_date_id'
         user                    column: 'user_id'
@@ -50,6 +51,7 @@ class ParticipantDate extends EventDateDomain {
         studentConfirmed        column: 'student_confirmed'
         award                   column: 'award'
         extraInfo               column: 'extra_info',   type: 'text'
+	    addedBy                 column: 'added_by'
 
         extras                  joinTable: 'participant_date_extra'
         participantVolunteering cascade: 'all-delete-orphan'
@@ -59,6 +61,7 @@ class ParticipantDate extends EventDateDomain {
         paymentId       nullable: true
         lowerFeeText    nullable: true, maxSize: 255
         extraInfo       nullable: true
+	    addedBy         nullable: true
     }
 
     static apiActions = ['GET', 'POST', 'PUT']
@@ -75,7 +78,8 @@ class ParticipantDate extends EventDateDomain {
             'student',
             'award',
             'extras.id',
-            'participantVolunteering.id'
+            'participantVolunteering.id',
+		    'addedBy.id'
     ]
 
     static apiPostPut = [
@@ -88,6 +92,7 @@ class ParticipantDate extends EventDateDomain {
 		    'state.id',
 		    'feeState.id',
 		    'user.id',
+		    'addedBy.id'
     ]
 
     void updateForApi(String property, String value) {
@@ -120,6 +125,12 @@ class ParticipantDate extends EventDateDomain {
 		        User user = User.findById(value.toLong())
 		        if (user) {
 			        this.user = user
+		        }
+		        break
+	        case 'addedBy.id':
+		        User addedBy = User.findById(value.toLong())
+		        if (addedBy) {
+			        this.addedBy = addedBy
 		        }
 		        break
         }
