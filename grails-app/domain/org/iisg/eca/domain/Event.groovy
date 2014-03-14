@@ -32,16 +32,6 @@ class Event extends DefaultDomain {
         type        maxSize: 20,    nullable: true
     }
 
-<<<<<<< HEAD
-	static apiActions = ['GET']
-
-	static apiAllowed = [
-			'id',
-			'code',
-			'shortName',
-			'longName'
-	]
-=======
 	/**
 	 *  Returns a map with all the events and its event dates the given user has access to
 	 * @param user The user in question
@@ -65,7 +55,6 @@ class Event extends DefaultDomain {
 
 		return datesByEvent
 	}
->>>>>>> 802dfd05ae0ec9d22ca1f222bacfde7af07a5044
 
     String getUrl() {
         code.replaceAll('\\s', '-')

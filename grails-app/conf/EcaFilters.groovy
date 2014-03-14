@@ -162,41 +162,7 @@ class EcaFilters {
                 return true
             }
         }
-<<<<<<< HEAD
-
-        /**
-         * The authorization filter for the API
-         */
-        authFilterApi(controller: 'api', action: '*') {
-            before = {
-                String clientId
-                if (springSecurityService.principal instanceof String) {
-                    clientId = springSecurityService.principal
-                }
-                else {
-                    clientId = springSecurityService.principal?.username
-                }
-
-                ClientDetails client = clientDetailsService.loadClientByClientId(clientId)
-                if (client) {
-                    EventDateClientDetails clientDetails = new EventDateClientDetails(client)
-                    String[] eventCodes = clientDetails.getEvents()
-
-                    // Find out if the client is allowed to request data from the requested event
-                    if (eventCodes?.contains(pageInformation.date.event.code)) {
-                        // Everything is ok, allow access
-                        return true
-                    }
-                }
-
-                response.sendError(403)
-                return
-            }
-        }
-
-=======
         
->>>>>>> 802dfd05ae0ec9d22ca1f222bacfde7af07a5044
          /**
           * Default filter for all requests
           */
