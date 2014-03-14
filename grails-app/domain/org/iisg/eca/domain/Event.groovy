@@ -41,6 +41,14 @@ class Event extends DefaultDomain {
 			'longName'
 	]
 
+	/**
+	 *  Returns a map with all the events and its event dates the given user has access to
+	 * @param user The user in question
+	 * @return A map with all the events and its event dates the given user has access to
+	 */
+	static Map<Event, List<EventDate>> getEventsAndDatesWithAccess(User user) {
+		List<Event> events = user.events
+		
 		// Loop over all the events and collect the event dates
 		Map<Event, List<EventDate>> datesByEvent = [:]
 		events.each { event ->
