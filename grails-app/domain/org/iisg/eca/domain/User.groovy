@@ -61,6 +61,7 @@ class User extends DefaultDomain {
     String extraInfo
     Date dateAdded = new Date()
     boolean emailDiscontinued = false
+	User addedBy
 
     static belongsTo = [Country, Group]
     static hasMany = [  groups:                 Group,
@@ -103,6 +104,7 @@ class User extends DefaultDomain {
         extraInfo               column: 'extra_info',   type: 'text'
         dateAdded               column: 'date_added'
         emailDiscontinued       column: 'email_discontinued'
+		addedBy                 column: 'added_by'
 
         groups                  joinTable: 'users_groups'
         dateTimesNotPresent     joinTable: 'participant_not_present'
@@ -134,6 +136,7 @@ class User extends DefaultDomain {
         department              maxSize: 255,   nullable: true
         cv                                      nullable: true
         extraInfo                               nullable: true
+	    addedBy                                 nullable: true
     }
 
     static apiActions = ['GET', 'POST', 'PUT']
@@ -156,7 +159,8 @@ class User extends DefaultDomain {
             'cv',
             'extraInfo',
             'papers.id',
-            'daysPresent.day.id'
+            'daysPresent.day.id',
+		    'addedBy.id'
     ]
 
     static apiPostPut = [
@@ -174,6 +178,7 @@ class User extends DefaultDomain {
 		    'cv',
 		    'country.id',
             'daysPresent.day.id',
+		    'addedBy.id'
     ]
 
     static namedQueries = {
@@ -498,6 +503,12 @@ class User extends DefaultDomain {
 		        Country country = Country.get(value.toLong())
 		        if (country) {
 			        this.country = country
+		        }
+		        break
+	        case 'addedBy.id':
+		        User addedBy = User.findById(value.toLong())
+		        if (addedBy) {
+			        this.addedBy = addedBy
 		        }
 		        break
         }

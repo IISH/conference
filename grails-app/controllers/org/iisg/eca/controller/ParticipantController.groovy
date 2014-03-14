@@ -59,6 +59,11 @@ class ParticipantController {
      */
     def emailService
 
+	/**
+	 * Service that takes care of passwords
+	 */
+	def passwordService
+
     /**
      * Data source of the PayWay and conference databases
      */
@@ -168,6 +173,9 @@ class ParticipantController {
             }
 
             if (user.save(flush: true) && participant.save(flush: true)) {
+	            // Also create a new password that will be emailed to the participant
+	            passwordService.changePassword(user, User.createPassword())
+
                 flash.message = g.message(code: 'default.created.message', args: [g.message(code: 'participantDate.label'), participant.toString()])
                 redirect(uri: eca.createLink(action: 'show', id: user.id, noBase: true))
                 return
