@@ -396,7 +396,7 @@ class User extends DefaultDomain {
      * @return A set of roles assigned to this user
      */
     Set<Role> getRoles() {
-        UserRole.findAllByUser(this).collect { it.role } as Set
+        UserRole.findAllByUser(this, [cache: true]).collect { it.role } as Set
     }
 
     /**

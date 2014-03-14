@@ -204,7 +204,7 @@ grails {
             useSecurityEventListener = true
             dao.reflectionSaltSourceProperty = 'salt'
             securityConfigType = grails.plugin.springsecurity.SecurityConfigType.Requestmap
-            roleHierarchy = 'superAdmin > admin admin > user'
+            roleHierarchy = 'superAdmin > admin admin > user user > userLastDate'
             controllerAnnotations.staticRules = [
                     '/':                              ['permitAll'],
                     '/index':                         ['permitAll'],

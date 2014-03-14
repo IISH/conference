@@ -118,10 +118,11 @@ class EcaFilters {
          */
         authFilter(controller: '*', action: '*', controllerExclude: 'login|logout|css|api|userApi') {
             before = {
-                List<Role> roles = Role.findAllByFullRights(true, [cache: true])
+                List<Role> rolesFullRights = Role.findAllByFullRights(true, [cache: true])
+				List<Role> rolesOnlyLastDate = Role.findAllByOnlyLastDate(true, [cache: true])
 
                 // No full rights? Then find out if the user has access
-                if (!SpringSecurityUtils.ifAnyGranted(roles*.role.join(','))) {
+                if (!SpringSecurityUtils.ifAnyGranted(rolesFullRights*.role.join(','))) {
                     User user = User.get(springSecurityService.principal.id)
 
                     // First check on a tenant (event date) level
@@ -130,6 +131,11 @@ class EcaFilters {
                         response.sendError(403)
                         return
                     }
+                    // In case of a user with the role 'userLastDate', he/she only has access to the last date
+	                else if (pageInformation.date && user.getRoles().find { rolesOnlyLastDate.contains(it) } && !pageInformation.date.isLastDate()) {
+		                response.sendError(403)
+		                return
+	                }
                     else if (   !pageInformation.date && params.id &&
                                 ((params.controller == 'event') &&
                                 (params.action == 'create' || params.action == 'list' || params.action == 'index'))) {

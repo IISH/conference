@@ -41,6 +41,22 @@ class Event extends DefaultDomain {
 			'longName'
 	]
 
+		// Loop over all the events and collect the event dates
+		Map<Event, List<EventDate>> datesByEvent = [:]
+		events.each { event ->
+			// Perhaps the user only has access to the last even date?
+			List<Role> roles = Role.findAllByOnlyLastDate(true, [cache: true])
+			if (user.getRoles().find { roles.contains(it) }) {
+				datesByEvent.put(event, [EventDate.getLastDate(event)])
+			}
+			else {
+				datesByEvent.put(event, EventDate.getAllForEvent(event).list())
+			}
+		}
+
+		return datesByEvent
+	}
+
     String getUrl() {
         code.replaceAll('\\s', '-')
     }

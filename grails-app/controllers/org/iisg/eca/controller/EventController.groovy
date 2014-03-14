@@ -1,10 +1,10 @@
 package org.iisg.eca.controller
 
 import org.iisg.eca.domain.User
-import org.iisg.eca.domain.EventDate
-import org.iisg.eca.domain.StatisticsTemplate
-import org.iisg.eca.domain.Statistic
 import org.iisg.eca.domain.Event
+import org.iisg.eca.domain.EventDate
+import org.iisg.eca.domain.Statistic
+import org.iisg.eca.domain.StatisticsTemplate
 
 /**
  * Controller for event related actions
@@ -71,16 +71,8 @@ class EventController {
      * Display all events the user has access to
      */
     def list() {
-        // Get all event dates the user has access to, and sort the dates
-        List<Event> events = User.get(springSecurityService.principal.id).events
-
-        // Loop over all the events and collect the event dates
-        Map datesByEvent = [:]
-        events.each { event ->
-            datesByEvent.put(event, EventDate.getAllForEvent(event).list())
-        }
-
-        [events: events, dates: datesByEvent]
+	    User user = User.get(springSecurityService.principal.id)
+        return [events: user.events, dates: Event.getEventsAndDatesWithAccess(user)]
     }
 
     /**
