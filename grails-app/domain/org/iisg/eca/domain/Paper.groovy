@@ -112,27 +112,33 @@ class Paper extends EventDateDomain {
 	void updateForApi(String property, String value) {
 		switch (property) {
 			case 'user.id':
-				User user = User.get(value.toLong())
+				User user = (value.isLong()) ? User.get(value.toLong()) : null
 				if (user) {
 					this.user = user
 				}
 				break
 			case 'state.id':
-				PaperState state = PaperState.findById(value.toLong())
+				PaperState state = (value.isLong()) ? PaperState.findById(value.toLong()) : null
 				if (state) {
 					this.state = state
 				}
 				break
 			case 'session.id':
-				Session session = Session.findById(value.toLong())
+				Session session = (value.isLong()) ? Session.findById(value.toLong()) : null
 				if (session) {
 					this.session = session
 				}
 				break
 			case 'networkProposal.id':
-				Network networkProposal = Network.findById(value.toLong())
+				Network networkProposal = (value.isLong()) ? Network.findById(value.toLong()) : null
 				if (networkProposal) {
 					this.networkProposal = networkProposal
+				}
+				break
+			case 'addedBy.id':
+				User addedBy = (value.isLong()) ? User.findById(value.toLong()) : null
+				if (addedBy) {
+					this.addedBy = addedBy
 				}
 				break
 			case 'equipment.id':
@@ -145,12 +151,6 @@ class Paper extends EventDateDomain {
 							this.addToEquipment(equipment)
 						}
 					}
-				}
-				break
-			case 'addedBy.id':
-				User addedBy = User.findById(value.toLong())
-				if (addedBy) {
-					this.addedBy = addedBy
 				}
 				break
 		}

@@ -110,25 +110,25 @@ class ParticipantDate extends EventDateDomain {
                 }
                 break
 	        case 'state.id':
-		        ParticipantState state = ParticipantState.findById(value.toLong())
+		        ParticipantState state = (value.isLong()) ? ParticipantState.findById(value.toLong()) : null
 		        if (state) {
 			        this.state = state
 		        }
 				break
 	        case 'feeState.id':
-		        FeeState state = FeeState.findById(value.toLong())
+		        FeeState state = (value.isLong()) ? FeeState.findById(value.toLong()) : null
 		        if (state) {
 			        this.feeState = state
 		        }
 		        break
 	        case 'user.id':
-		        User user = User.findById(value.toLong())
+		        User user = (value.isLong()) ? User.findById(value.toLong()) : null
 		        if (user) {
 			        this.user = user
 		        }
 		        break
 	        case 'addedBy.id':
-		        User addedBy = User.findById(value.toLong())
+		        User addedBy = (value.isLong()) ? User.findById(value.toLong()) : null
 		        if (addedBy) {
 			        this.addedBy = addedBy
 		        }

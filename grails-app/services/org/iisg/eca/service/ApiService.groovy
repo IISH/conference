@@ -136,9 +136,9 @@ class ApiService {
 		DomainClassInfo domainClassInfo = new DomainClassInfo(grailsApplication, domain)
 		if (apiActionIsAllowed(domainClassInfo, 'DELETE') && (id != null)) {
 			def instance = domainClassInfo.getDomainClass().findById(id)
-			return instance.delete()
+			instance.delete()
+			return true
 		}
-
 		return false
 	}
 

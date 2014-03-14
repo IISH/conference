@@ -26,9 +26,10 @@ class ParticipantVolunteering implements Serializable {
         sort    volunteering: 'description'
     }
 
-    static apiActions = ['GET', 'POST', 'PUT']
+    static apiActions = ['GET', 'POST', 'PUT', 'DELETE']
 
     static apiAllowed = [
+		    'id',
             'participantDate.id',
             'volunteering.id',
             'network.id',

@@ -488,7 +488,7 @@ class User extends DefaultDomain {
     void updateForApi(String property, String value) {
         switch (property) {
             case 'daysPresent.day.id':
-                this.daysPresent.clear()
+                this.daysPresent?.clear()
                 this.save(flush: true)
                 value.split(';').each { dayId ->
                     if (dayId.toString().isLong()) {
@@ -500,13 +500,13 @@ class User extends DefaultDomain {
                 }
                 break
 	        case 'country.id':
-		        Country country = Country.get(value.toLong())
+		        Country country = (value.isLong()) ? Country.get(value.toLong()) : null
 		        if (country) {
 			        this.country = country
 		        }
 		        break
 	        case 'addedBy.id':
-		        User addedBy = User.findById(value.toLong())
+		        User addedBy = (value.isLong()) ? User.findById(value.toLong()) : null
 		        if (addedBy) {
 			        this.addedBy = addedBy
 		        }

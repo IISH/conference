@@ -58,10 +58,6 @@ class Session extends EventDateDomain {
             'name',
             'abstr',
             'state.id',
-            'sessionRoomDateTime.id',
-            'sessionParticipants.id',
-            'sessionParticipants.user.id',
-            'sessionParticipants.type.id',
             'papers.id',
             'networks.id',
             'addedBy.id'
@@ -70,15 +66,37 @@ class Session extends EventDateDomain {
 	static apiPostPut = [
 			'name',
 			'abstr',
+			'state.id',
+			'networks.id',
 			'addedBy.id'
 	]
 
 	void updateForApi(String property, String value) {
 		switch (property) {
 			case 'addedBy.id':
-				User addedBy = User.get(value.toLong())
+				User addedBy = (value.isLong()) ? User.get(value.toLong()) : null
 				if (addedBy) {
 					this.addedBy = addedBy
+				}
+				break
+			case 'state.id':
+				SessionState state = (value.isLong()) ? SessionState.get(value.toLong()) : null
+				if (state) {
+					this.state = state
+				}
+				break
+			case 'networks.id':
+				List<Network> networks = []
+				networks += this.networks
+				networks.each { it?.removeFromSessions(this) }
+				this.save(flush: true)
+				value.split(';').each { networkId ->
+					if (networkId.toString().isLong()) {
+						Network network = Network.findById(networkId.toString().toLong())
+						if (network) {
+							this.addToNetworks(network)
+						}
+					}
 				}
 				break
 		}

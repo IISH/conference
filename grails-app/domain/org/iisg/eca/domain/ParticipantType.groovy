@@ -43,8 +43,16 @@ class ParticipantType extends EventDomain {
     static apiAllowed = [
             'id',
             'type',
-            'withPaper'
+            'withPaper',
+		    'notInCombinationWith.id'
     ]
+
+	Set<ParticipantType> getNotInCombinationWith() {
+		Set<ParticipantType> types = new HashSet<ParticipantType>()
+		types.addAll(this.rulesFirst*.secondType)
+		types.addAll(this.rulesSecond*.firstType)
+		return types
+	}
 
     @Override
     String toString() {
