@@ -31,14 +31,6 @@ class PaperState extends EventDomain {
         shortDescription    blank: false,   maxSize: 10
     }
 
-    static apiActions = ['GET']
-
-    static apiAllowed = [
-            'id',
-            'description',
-            'shortDescription'
-    ]
-
     @Override
     String toString() {
         description

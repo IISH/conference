@@ -38,14 +38,6 @@ class ParticipantType extends EventDomain {
         type        blank: false,   maxSize: 30
     }
 
-    static apiActions = ['GET']
-
-    static apiAllowed = [
-            'id',
-            'type',
-            'withPaper'
-    ]
-
     @Override
     String toString() {
         type

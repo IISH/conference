@@ -48,6 +48,7 @@ class UrlMappings {
             controller = 'event'
             action = 'list'
         }
+<<<<<<< HEAD
 
         /*
          * API CALLS
@@ -125,6 +126,9 @@ class UrlMappings {
          * END API CALLS
          */
 
+=======
+        
+>>>>>>> 802dfd05ae0ec9d22ca1f222bacfde7af07a5044
         // Errors:
         "403" (view: '/login/denied')
         "404" (view: '/404')

@@ -17,11 +17,6 @@ class UserController {
      */
     def pageInformation
 
-	/**
-	 * PasswordService for password related actions
-	 */
-	def passwordService
-
     /**
      * Default action: Redirects to 'show' method, which will display information of the logged in user
      */
@@ -83,10 +78,8 @@ class UserController {
             else if (!params['User.newPassword'].isEmpty()) {
                 if (user.isPasswordCorrect(params['User.password'])) {
                     user.password = params['User.newPassword']
-                    if (passwordService.changePassword(user, params['User.newPassword'].toString(),
-		                    params['User.newPasswordAgain'].toString(), params['User.newPassword'].toString())) {
-                        flash.message = g.message(code: 'default.updated.message', args:
-		                        [g.message(code: 'user.newPassword.label'), user.toString()])
+                    if (user.save(flush: true)) {
+                        flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'user.newPassword.label'), user.toString()])
                     }
                 }
                 else {

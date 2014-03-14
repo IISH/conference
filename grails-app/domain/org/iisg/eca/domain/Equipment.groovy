@@ -34,16 +34,6 @@ class Equipment extends EventDateDomain {
         
         roomSessionDateTimeEquipment cascade: 'all-delete-orphan'
     }
-
-    static apiActions = ['GET']
-
-    static apiAllowed = [
-            'id',
-            'code',
-            'equipment',
-            'description',
-            'imageUrl'
-    ]
     
     @Override
     String toString() {

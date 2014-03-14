@@ -61,7 +61,7 @@ class UserAuthController {
      * Allows the user to create a new user
      */
     def create() {
-        User user = new User(password: User.createSalt())
+        User user = new User(password: User.createSecureRandomString())
         
         // A user can only be assigned a role which is equal or lower in the hierarchy
         // And pages which the current user can access already

@@ -1,15 +1,22 @@
 package org.iisg.eca.controller
-import grails.converters.JSON
-import grails.plugin.springsecurity.SpringSecurityUtils
-import org.iisg.eca.domain.User
+
+import org.springframework.security.authentication.LockedException
+import org.springframework.security.authentication.DisabledException
 import org.springframework.security.authentication.AccountExpiredException
 import org.springframework.security.authentication.CredentialsExpiredException
-import org.springframework.security.authentication.DisabledException
-import org.springframework.security.authentication.LockedException
-import org.springframework.security.core.context.SecurityContextHolder as SCH
+
 import org.springframework.security.web.WebAttributes
+import org.springframework.security.core.context.SecurityContextHolder as SCH
+
+import org.iisg.eca.domain.User
+import org.iisg.eca.domain.SentEmail
+import org.iisg.eca.domain.EmailTemplate
+
+import grails.converters.JSON
+import grails.plugin.springsecurity.SpringSecurityUtils
 
 import javax.servlet.http.HttpServletResponse
+
 /**
  * Controller for login related actions
  */
@@ -26,14 +33,12 @@ class LoginController {
 	def springSecurityService
 
     /**
-     * EmailService for mailing the new password when requested
+     *  EmailService for mailing the new password when requested
      */
     def emailService
 
-	/**
-	 * PasswordService for password related actions
-	 */
-	def passwordService
+    def passwordEncoder
+    def saltSource
 
 	/**
 	 * Default action; redirects to 'defaultTargetUrl' if logged in, /login/auth otherwise.
@@ -161,6 +166,7 @@ class LoginController {
     def newPassword() {
         // Find the user and create a new request code
         User user = User.findByEmail(params.j_username)
+        String requestCode = User.createSecureRandomString()
 
         // We need a user to give him/her a new request code
         if (!user) {
@@ -170,13 +176,22 @@ class LoginController {
             return
         }
 
-        // Try to request a new request code for the user
-        if (!passwordService.lostPassword(user)) {
+        // Assign the created request code to the user
+        user.requestCode = requestCode
+
+        // Try to persist the request code to the database
+        if (!user.save(flush: true)) {
             flash.error = true
             flash.message = g.message(code: 'springSecurity.forgot.error')
             render view: 'forgot'
             return
         }
+
+        // So far so good, send an email to the user with the link to request a new password:
+        String link = "${grailsApplication.config.grails.serverURL}/${params.controller}/checkRequestCode?email=${user.email}&code=${requestCode}"
+        SentEmail email = emailService.createEmail(user, EmailTemplate.findByDescription("Request code"),
+                true, null, null, true, ['Link': link])
+        emailService.sendEmail(email, false)
 
         // Redirect to the login page with a success message
         flash.message = g.message(code: 'springSecurity.forgot.code.request')
@@ -197,19 +212,37 @@ class LoginController {
             return
         }
 
-	    // Try to confirm the given request code by the user in order to send him/her a new password
-	    switch (passwordService.confirmLostPassword(user, params.code.toString())) {
-		    case passwordService.CONFIRM_LOST_PASSWORD_ACCEPT:
-			    flash.message = g.message(code: 'springSecurity.forgot.success')
-			    break
-		    case passwordService.CONFIRM_LOST_PASSWORD_NOT_FOUND:
-		    case passwordService.CONFIRM_LOST_PASSWORD_CODE_EXPIRED:
-		    case passwordService.CONFIRM_LOST_PASSWORD_PASSWORD_ALREADY_SENT:
-		    default:
-			    flash.error = true
-			    flash.message = g.message(code: 'springSecurity.forgot.code.incorrect')
-	    }
+        // Check the code with the code saved in the database
+        if (user.requestCode.equals(params.code)) {
+            // Create a new password
+            String newPassword = User.createSecureRandomString()
 
-	    redirect action: 'auth'
+            // Assign the newly created password to the user and reset the request code in the database
+            user.password = newPassword
+            user.requestCode = null
+
+            // Try to persist the changes to the database
+            if (!user.save(flush: true)) {
+                flash.error = true
+                flash.message = g.message(code: 'springSecurity.forgot.error')
+                render view: 'auth'
+                return
+            }
+
+            // So far so good, send an email to the user with his/her new password
+            SentEmail email = emailService.createEmail(user, EmailTemplate.findByDescription("New password"), true,
+                    null, null, true, ['NewPassword': newPassword])
+            emailService.sendEmail(email, false)
+
+            // Redirect to the login page with a success message
+            flash.message = g.message(code: 'springSecurity.forgot.success')
+            redirect action: 'auth'
+        }
+        else {
+            // Redirect to the login page with a failure message, the codes are not equal
+            flash.error = true
+            flash.message = g.message(code: 'springSecurity.forgot.code.incorrect')
+            redirect action: 'auth'
+        }
     }
 }

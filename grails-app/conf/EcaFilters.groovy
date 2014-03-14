@@ -9,11 +9,9 @@ import org.iisg.eca.domain.EventDateDomain
 import org.iisg.eca.domain.IPAuthentication
 
 import org.apache.commons.lang.RandomStringUtils
-import org.iisg.eca.security.EventDateClientDetails
 import org.springframework.context.i18n.LocaleContextHolder
 
 import grails.plugin.springsecurity.SpringSecurityUtils
-import org.springframework.security.oauth2.provider.ClientDetails
 
 /**
  * All filters for accessing a page
@@ -21,9 +19,8 @@ import org.springframework.security.oauth2.provider.ClientDetails
 class EcaFilters {
     def pageInformation
     def grailsApplication
-    def clientDetailsService
     def springSecurityService
-
+    
     def filters = {
 
         /**
@@ -49,7 +46,7 @@ class EcaFilters {
          *  Every page (except login/logout/xhr) should be in the database, so lookup the page information from the database
          *  If it is there, cache the page information for this request
          */
-        page(controller: '*', action: '*', controllerExclude: 'ajax|api|css|login|logout') {
+        page(controller: '*', action: '*', controllerExclude: 'css') {
             before = {
                 if (!params.xhr) {
                     Page page = Page.findByControllerAndAction(params.controller.toString(), params.action.toString(), [cache: true])
@@ -116,12 +113,13 @@ class EcaFilters {
         /**
          * The authorization filter
          */
-        authFilter(controller: '*', action: '*', controllerExclude: 'login|logout|css|api|userApi') {
+        authFilter(controller: '*', action: '*', controllerExclude: 'login|logout|css') {
             before = {
-                List<Role> roles = Role.findAllByFullRights(true, [cache: true])
+                List<Role> rolesFullRights = Role.findAllByFullRights(true, [cache: true])
+				List<Role> rolesOnlyLastDate = Role.findAllByOnlyLastDate(true, [cache: true])
 
                 // No full rights? Then find out if the user has access
-                if (!SpringSecurityUtils.ifAnyGranted(roles*.role.join(','))) {
+                if (!SpringSecurityUtils.ifAnyGranted(rolesFullRights*.role.join(','))) {
                     User user = User.get(springSecurityService.principal.id)
 
                     // First check on a tenant (event date) level
@@ -130,6 +128,11 @@ class EcaFilters {
                         response.sendError(403)
                         return
                     }
+                    // In case of a user with the role 'userLastDate', he/she only has access to the last date
+	                else if (pageInformation.date && user.getRoles().find { rolesOnlyLastDate.contains(it) } && !pageInformation.date.isLastDate()) {
+		                response.sendError(403)
+		                return
+	                }
                     else if (   !pageInformation.date && params.id &&
                                 ((params.controller == 'event') &&
                                 (params.action == 'create' || params.action == 'list' || params.action == 'index'))) {
@@ -159,6 +162,7 @@ class EcaFilters {
                 return true
             }
         }
+<<<<<<< HEAD
 
         /**
          * The authorization filter for the API
@@ -190,6 +194,9 @@ class EcaFilters {
             }
         }
 
+=======
+        
+>>>>>>> 802dfd05ae0ec9d22ca1f222bacfde7af07a5044
          /**
           * Default filter for all requests
           */

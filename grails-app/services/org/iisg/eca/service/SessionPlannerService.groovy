@@ -3,10 +3,8 @@ package org.iisg.eca.service
 import org.iisg.eca.utils.TimeSlot
 
 import org.iisg.eca.domain.Day
-import org.iisg.eca.domain.ParticipantType
 import org.iisg.eca.domain.Room
 import org.iisg.eca.domain.User
-import org.iisg.eca.domain.Paper
 import org.iisg.eca.domain.Session
 import org.iisg.eca.domain.Equipment
 import org.iisg.eca.domain.SessionState
@@ -14,13 +12,7 @@ import org.iisg.eca.domain.SessionDateTime
 import org.iisg.eca.domain.SessionParticipant
 import org.iisg.eca.domain.SessionRoomDateTime
 import org.iisg.eca.domain.RoomSessionDateTimeEquipment
-
-import org.iisg.eca.utils.TimeSlot
 import org.iisg.eca.utils.UserDateTime
-import org.iisg.eca.utils.PlannedSession
-
-import org.springframework.cache.annotation.Cacheable
-import org.springframework.cache.annotation.CacheEvict
 
 /**
  * Service responsible for session planning activities
@@ -153,7 +145,7 @@ class SessionPlannerService {
             
             UserDateTime userDateTime = new UserDateTime(user, dateTime)
             List<Session> sessions = sessionMap.get(userDateTime, new ArrayList<Session>())
-            sessions.add(session)
+            sessions.add(session)          
         }
         
         sessionMap
@@ -301,161 +293,4 @@ class SessionPlannerService {
 
         schedule
     }
-
-    /**
-     * Create the current planned schedule for API purposes
-     * @param dayId The day to filter on
-     * @param timeId The time to filter on
-     * @param networkId The network to filter on
-     * @param roomId The room to filter on
-     * @param terms The search terms to filter on
-     * @return The currently planned schedule
-     */
-    @Cacheable("program")
-    List<PlannedSession> getProgram(Long dayId, Long timeId, Long networkId, Long roomId, String terms) {
-        // Start by querying
-        def results = SessionRoomDateTime.createCriteria().listDistinct {
-            // Create aliases first for joins
-            createAlias('room', 'r')
-            createAlias('sessionDateTime', 'sdt')
-            if (networkId || (terms?.trim()?.size() > 0)) {
-                createAlias('session', 's')
-                createAlias('s.networks', 'n')
-                if (terms?.trim()?.size() > 1) {
-                    createAlias('s.sessionParticipants', 'sp')
-                    createAlias('sp.user', 'u')
-                    createAlias('s.papers', 'p')
-                }
-            }
-
-            // Default filtering on joined domain classes
-            eq('r.deleted', false)
-            eq('r.date.id', pageInformation.date.id)
-            eq('sdt.deleted', false)
-            eq('sdt.date.id', pageInformation.date.id)
-            if (networkId || (terms?.trim()?.size() > 0)) {
-                eq('s.deleted', false)
-                eq('s.date.id', pageInformation.date.id)
-                eq('n.deleted', false)
-                eq('n.date.id', pageInformation.date.id)
-                if (terms?.trim()?.size() > 0) {
-                    eq('sp.deleted', false)
-                    ne('sp.type.id', ParticipantType.CO_AUTHOR) // Co-authors are for internal use only
-                    eq('u.deleted', false)
-                    eq('p.deleted', false)
-                    eq('p.date.id', pageInformation.date.id)
-                }
-            }
-
-            // Set ids, if provided with ids
-            if (roomId) {
-                eq('r.id', roomId)
-            }
-            if (dayId) {
-                eq('sdt.day.id', dayId)
-            }
-            if (timeId) {
-                eq('sdt.id', timeId)
-            }
-            if (networkId) {
-                eq('n.id', networkId)
-            }
-
-            // Filter using the terms
-            if (terms?.trim()?.size() > 0) {
-                String[] listOfTerms = terms.split()
-                and {
-                    listOfTerms.each { t ->
-                        if (t.trim().size() > 0) {
-                            or {
-                                like('u.firstName', "%${t.trim()}%")
-                                like('u.lastName', "%${t.trim()}%")
-                                like('p.title', "%${t.trim()}%")
-	                            like('p.coAuthors', "%${t.trim()}%")
-                                like('s.name', "%${t.trim()}%")
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Now make sure the ordering is correct
-            order('sdt.indexNumber', 'asc')
-            order('r.roomNumber', 'asc')
-        }
-
-        // Now create PlannedSession classes out of the results
-        List<PlannedSession> planning = new ArrayList<PlannedSession>()
-        results.each { result ->
-            PlannedSession plannedSession = new PlannedSession()
-
-            plannedSession.roomId = result.room.id
-            plannedSession.roomName = result.room.roomName
-            plannedSession.roomNumber = result.room.roomNumber
-
-            plannedSession.dayId = result.sessionDateTime.day.id
-            plannedSession.day = result.sessionDateTime.day.day
-
-            plannedSession.timeId = result.sessionDateTime.id
-            plannedSession.indexNumber = result.sessionDateTime.indexNumber
-            plannedSession.period = result.sessionDateTime.period
-
-            plannedSession.sessionId = result.session.id
-            plannedSession.sessionCode = result.session.code
-            plannedSession.sessionName = result.session.name
-
-            plannedSession.networks = result.session.networks.collect {
-                if (it.showOnline && !it.deleted) {
-                    PlannedSession.Network network = new PlannedSession.Network()
-                    network.networkId = it.id
-                    network.networkName = it.name
-                    return network
-                }
-            }
-
-            def sessionParticipants = result.session.sessionParticipants.sort { a, b ->
-                if (b.type.importance != a.type.importance) {
-                    b.type.importance <=> a.type.importance
-                }
-                else if (b.user.lastName != a.user.lastName) {
-                    a.user.lastName <=> b.user.lastName
-                }
-                else {
-                    a.user.firstName <=> b.user.firstName
-                }
-            }
-            plannedSession.participants = sessionParticipants.collect { sp ->
-                if (!sp.deleted) {
-                    if (sp.type.withPaper) {
-                        PlannedSession.ParticipantWithPaper participant = new PlannedSession.ParticipantWithPaper()
-                        participant.typeId = sp.type.id
-                        participant.type = sp.type.toString()
-                        participant.participantName = sp.user.getFullName()
-
-                        Paper paper = result.session.papers.find { (it.user.id == sp.user.id) && !it.deleted }
-                        participant.paperId = paper.id
-                        participant.paperName = paper.title
-                        participant.coAuthors = paper.coAuthors
-
-                        return participant
-                    }
-                    else {
-                        PlannedSession.Participant participant = new PlannedSession.Participant()
-                        participant.typeId = sp.type.id
-                        participant.type = sp.type.toString()
-                        participant.participantName = sp.user.getFullName()
-                        return participant
-                    }
-                }
-            } as ArrayList<PlannedSession.Participant>
-            plannedSession.participants.removeAll(Collections.singleton(null))
-
-            planning.add(plannedSession)
-        }
-
-        return planning
-    }
-
-    @CacheEvict("program")
-    void removeProgramFromCache() { }
 }

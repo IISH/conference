@@ -34,16 +34,6 @@ class Room extends EventDateDomain {
         sessionRoomDateTime             cascade: 'all-delete-orphan'
     }
 
-    static apiActions = ['GET']
-
-    static apiAllowed = [
-            'id',
-            'roomName',
-            'roomNumber',
-            'noOfSeats',
-            'comment'
-    ]
-
     @Override
     String toString() {
         "${roomName}, ${roomNumber}"
