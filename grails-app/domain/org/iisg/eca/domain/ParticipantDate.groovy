@@ -64,7 +64,7 @@ class ParticipantDate extends EventDateDomain {
 	    addedBy         nullable: true
     }
 
-    static apiActions = ['GET', 'POST', 'PUT']
+    static apiActions = ['GET', 'POST', 'PUT', 'DELETE']
 
     static apiAllowed = [
             'id',

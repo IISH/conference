@@ -171,7 +171,7 @@ class EcaFilters {
          */
         authFilterApi(controller: 'api', action: '*') {
             before = {
-	            String clientId
+                String clientId
                 if (springSecurityService.principal instanceof String) {
                     clientId = springSecurityService.principal
                 }

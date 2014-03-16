@@ -20,6 +20,7 @@ class Country {
         table 'countries'
         cache true
         version false
+        sort nameEnglish: 'asc'
 
         id                  column: 'country_id'
         tld                 column: 'tld'
