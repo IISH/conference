@@ -215,12 +215,6 @@ grails {
                     '/**/favicon.ico':                ['permitAll']
             ]
 
-            // For the warning 'context.HttpSessionSecurityContextRepository - Failed to create a session,
-            // as response has been committed. Unable to store SecurityContext.'
-            onInteractiveAuthenticationSuccessEvent = { e, appCtx ->
-                RequestContextHolder.currentRequestAttributes().getSession().getId()
-            }
-
             providerNames = ['daoAuthenticationProvider']
 			if (Environment.current != Environment.TEST) {
 		        providerNames << 'clientCredentialsAuthenticationProvider'
