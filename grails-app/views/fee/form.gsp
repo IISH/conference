@@ -33,15 +33,6 @@
                     </span>
                 </div>
 
-                <div class="${hasErrors(bean: feeState, field: 'enabled', 'error')} ">
-                    <label class="property-label">
-                        <g:message code="default.enabled.label" />
-                    </label>
-                    <span class="property-value">
-                        <g:checkBox name="feeState.enabled" value="${feeState?.enabled}" />
-                    </span>
-                </div>
-
                 <div class="columns copy">
                     <g:each in="${feeAmounts}" var="amount" status="i">
                         <fieldset class="form column">
@@ -91,15 +82,6 @@
                                     <g:select from="${1..days}" name="feeAmount_${i}.numDaysEnd" required="required" value="${fieldValue(bean: amount, field: 'numDaysEnd')}" />
                                 </span>
                             </div>
-
-                            <div class="${hasErrors(bean: amount, field: 'enabled', 'error')} ">
-                                <label class="property-label">
-                                    <g:message code="default.enabled.label" />
-                                </label>
-                                <span class="property-value">
-                                    <g:checkBox name="feeAmount_${i}.enabled" value="${amount?.enabled}" />
-                                </span>
-                            </div>
                         </fieldset>
                     </g:each>
                     
@@ -146,15 +128,6 @@
                             </label>
                             <span class="property-value">
                                 <g:select from="${1..days}" name="feeAmount_null.numDaysEnd" required="required" />
-                            </span>
-                        </div>
-
-                        <div>
-                            <label class="property-label">
-                                <g:message code="default.enabled.label" />
-                            </label>
-                            <span class="property-value">
-                                <g:checkBox name="feeAmount_null.enabled" checked="true" />
                             </span>
                         </div>
                     </fieldset>

@@ -79,7 +79,7 @@ class UserAuthController {
             // Save all user related data
             bindData(user, params, [include: ['title', 'firstName', 'lastName', 'gender', 'organisation',
                         'department', 'email', 'address', 'city', 'country', 'phone', 'mobile', 'cv', 
-                        'extraInfo', 'emailDiscontinued', 'enabled']], "User")
+                        'extraInfo', 'emailDiscontinued']], "User")
             user.save()
             
             // Check for all the possible roles, whether they have to be added to the user
@@ -173,7 +173,7 @@ class UserAuthController {
             // Save all user related data
             bindData(user, params, [include: ['title', 'firstName', 'lastName', 'gender', 'organisation',
                         'department', 'email', 'address', 'city', 'country', 'phone', 'mobile', 'cv', 
-                        'extraInfo', 'emailDiscontinued', 'enabled']], "User")
+                        'extraInfo', 'emailDiscontinued']], "User")
                         
             if (mayAuthorizeUser) {
                 // Check for all the possible roles, whether they have to be removed or added to the user

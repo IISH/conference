@@ -1,6 +1,6 @@
 package org.iisg.eca.domain
 
-class MaintenanceQuery extends DefaultDomain {
+class MaintenanceQuery extends SoftDeleteDomain {
     String query
     String description
     int order

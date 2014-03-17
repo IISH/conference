@@ -136,7 +136,14 @@ class ApiService {
 		DomainClassInfo domainClassInfo = new DomainClassInfo(grailsApplication, domain)
 		if (apiActionIsAllowed(domainClassInfo, 'DELETE') && (id != null)) {
 			def instance = domainClassInfo.getDomainClass().findById(id)
-			instance.delete()
+
+			if (instance.metaClass.respondsTo(instance, 'softDelete')) {
+				instance.softDelete()
+			}
+			else {
+				instance.delete()
+			}
+
 			return true
 		}
 		return false

@@ -57,14 +57,6 @@
                         </li>
                     </ul>
                 </div>
-                <div class="${hasErrors(bean: group, field: 'enabled', 'error')} ">
-                    <label class="property-label" for="Group.enabled">
-                        <g:message code="default.enabled.label" />
-                    </label>
-                    <span class="property-value">
-                        <g:checkBox id="Group.enabled" name="Group.enabled" value="${group?.enabled}" />
-                    </span>
-                </div>
             </fieldset>
 
             <fieldset class="buttons">

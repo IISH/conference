@@ -58,14 +58,6 @@
             <span class="property-value" arial-labelledby="showOnline-label">
               <g:checkBox name="showOnline" value="${network.showOnline}" disabled="true" />
             </span>
-          </li>          
-          <li>
-           <span id="enabled-label" class="property-label">
-             <g:message code="default.enabled.label" />
-           </span>
-           <span class="property-value" arial-labelledby="enabled-label">
-             <g:checkBox name="enabled" value="${network.enabled}" disabled="true" />
-           </span>
           </li>
           <li>
             <span id="chairs-label" class="property-label">

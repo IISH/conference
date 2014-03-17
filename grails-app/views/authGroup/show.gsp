@@ -47,14 +47,6 @@
                     </g:else>
                 </ul>
             </li>
-            <li>
-                <span id="enabled-label" class="property-label">
-                    <eca:fallbackMessage code="default.enabled.label" fbCode="group.enabled.label" />
-                </span>
-                <span class="property-value" arial-labelledby="enabled-label">
-                    <g:checkBox name="enabled" value="${group.enabled}" disabled="true" />
-                </span>
-            </li>
         </ol>
 
         <div class="buttons">

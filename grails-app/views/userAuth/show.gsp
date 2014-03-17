@@ -126,14 +126,6 @@
                 </span>
             </li>
             <li>
-                <span id="enabled-label" class="property-label">
-                    <g:message code="default.enabled.label" />
-                </span>
-                <span class="property-value" aria-labelledby="enabled-label">
-                    <g:checkBox name="deleted" value="${user.enabled}" disabled="true" />
-                </span>
-            </li>
-            <li>
                 <span id="roles-label" class="property-label">
                     <g:message code="role.multiple.label" />
                 </span>

@@ -69,14 +69,6 @@
               <span class="property-value">
                 <g:checkBox id="Network.showOnline" name="Network.showOnline" value="${network.showOnline}" />
               </span>
-            </div>            
-            <div class="${hasErrors(bean: network, field: 'enabled', 'error')} ">
-              <label class="property-label" for="Network.enabled">
-                <g:message code="default.enabled.label" />
-              </label>
-              <span class="property-value">
-                <g:checkBox id="Network.enabled" name="Network.enabled" value="${network.enabled}" />
-              </span>
             </div>
             <div class="${hasErrors(bean: network, field: 'chairs', 'error')} ">
               <label class="property-label" for="Network.chairs">

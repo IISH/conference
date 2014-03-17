@@ -7,7 +7,7 @@ import grails.plugin.springsecurity.SpringSecurityUtils
 /**
  * Domain class of table holding all pages of this application
  */
-class Page extends DefaultDomain {
+class Page extends SoftDeleteDomain {
     def springSecurityService
     def messageSource
 

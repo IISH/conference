@@ -497,7 +497,7 @@ class PageBuilder {
      * @param property The propery of a column which needs an i18n label
      */
     static getCode(GrailsDomainClassProperty property) {
-        if (property.name.equalsIgnoreCase("enabled") || property.name.equalsIgnoreCase("deleted")) {
+        if (property.name.equalsIgnoreCase("deleted")) {
             return "default.${property.name}.label"
         }
         else if (property.manyToOne || property.oneToOne || property.oneToMany || property.manyToMany) {

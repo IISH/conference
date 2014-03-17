@@ -3,7 +3,7 @@ package org.iisg.eca.domain
 /**
  * Domain class of table holding all events
  */
-class Event extends DefaultDomain {
+class Event extends SoftDeleteDomain {
     String code
     String shortName
     String longName

@@ -121,14 +121,6 @@
                   <g:checkBox id="EventDate.createStatistics" name="EventDate.createStatistics" value="${eventDate?.createStatistics}" />
                 </span>
             </div>
-            <div class="${hasErrors(bean: eventDate, field: 'enabled', 'error')} ">
-              <label class="property-label" for="EventDate.enabled">
-                <eca:fallbackMessage code="default.enabled.label" fbCode="eventDate.enabled.label" />
-              </label>
-              <span class="property-value">
-                <g:checkBox id="EventDate.enabled" name="EventDate.enabled" value="${eventDate?.enabled}" />
-              </span>
-            </div>
           </fieldset>
           
           <fieldset class="buttons">

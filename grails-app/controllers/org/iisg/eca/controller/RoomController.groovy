@@ -76,7 +76,7 @@ class RoomController {
         }
         else if (request.post) {
             // Save all room related data
-            bindData(room, params, [include: ['roomName', 'roomNumber', 'noOfSeats', 'comment', 'enabled']])
+            bindData(room, params, [include: ['roomName', 'roomNumber', 'noOfSeats', 'comment']])
 
             // Loop over all equipment and time slots to find out if we have
             // to add that type of equipment to this room on the given time slot
@@ -125,7 +125,7 @@ class RoomController {
         // The 'save' button was clicked, save all data
         if (request.post) {
             // Save all room related data
-            bindData(room, params, [include: ['roomName', 'roomNumber', 'noOfSeats', 'comment', 'enabled']])
+            bindData(room, params, [include: ['roomName', 'roomNumber', 'noOfSeats', 'comment']])
 
             // Remove all equipment availability from the room and save all new information
             room.roomSessionDateTimeEquipment.clear()

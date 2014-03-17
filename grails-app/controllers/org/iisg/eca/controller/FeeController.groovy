@@ -49,13 +49,13 @@ class FeeController {
         // The 'save' button was clicked, save all data
         if (request.post) {
             // Save all fee state related data
-            bindData(feeState, params, [include: ['name', 'isDefaultFee', 'enabled']], 'feeState')
+            bindData(feeState, params, [include: ['name', 'isDefaultFee']], 'feeState')
 
             // Save all possible fee amounts
             int i = 0
             while (params."feeAmount_${i}") {
                 FeeAmount feeAmount = new FeeAmount()
-                bindData(feeAmount, params, [include: ['endDate', 'numDaysStart', 'numDaysEnd', 'feeAmount', 'enabled']], "feeAmount_${i}")
+                bindData(feeAmount, params, [include: ['endDate', 'numDaysStart', 'numDaysEnd', 'feeAmount']], "feeAmount_${i}")
                 feeState.addToFeeAmounts(feeAmount)
                 i++
             }
@@ -98,7 +98,7 @@ class FeeController {
         // The 'save' button was clicked, save all data
         if (request.post) {
             // Save all fee state related data
-            bindData(feeState, params, [include: ['name', 'isDefaultFee', 'enabled']], 'feeState')
+            bindData(feeState, params, [include: ['name', 'isDefaultFee']], 'feeState')
 
             // Get a list of all fee amounts for this fee state
             // If they do not come up, they have to be deleted
@@ -121,7 +121,7 @@ class FeeController {
                 }
 
                 // Save the fee amount, add it to the fee state and remove it from the deletion list
-                bindData(feeAmount, params, [include: ['endDate', 'numDaysStart', 'numDaysEnd', 'feeAmount', 'enabled']], "feeAmount_${i}")
+                bindData(feeAmount, params, [include: ['endDate', 'numDaysStart', 'numDaysEnd', 'feeAmount']], "feeAmount_${i}")
                 feeState.addToFeeAmounts(feeAmount)
                 toBeDeleted.remove(feeAmount)
                 i++

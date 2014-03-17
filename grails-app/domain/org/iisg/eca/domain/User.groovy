@@ -14,7 +14,7 @@ import grails.plugin.springsecurity.SpringSecurityUtils
 /**
  * Domain class of table holding all registered users
  */
-class User extends DefaultDomain {
+class User extends SoftDeleteDomain {
     static final int USER_STATUS_NOT_FOUND = 0;
     static final int USER_STATUS_FOUND = 1;
     static final int USER_STATUS_DISABLED = 2;
@@ -61,6 +61,7 @@ class User extends DefaultDomain {
     String extraInfo
     Date dateAdded = new Date()
     boolean emailDiscontinued = false
+	boolean enabled = true
 	User addedBy
 
     static belongsTo = [Country, Group]
@@ -104,6 +105,7 @@ class User extends DefaultDomain {
         extraInfo               column: 'extra_info',   type: 'text'
         dateAdded               column: 'date_added'
         emailDiscontinued       column: 'email_discontinued'
+	    enabled                 column: 'enabled'
 		addedBy                 column: 'added_by'
 
         groups                  joinTable: 'users_groups'
