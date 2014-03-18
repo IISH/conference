@@ -203,8 +203,10 @@ class ApiController {
 			User user = User.findById(id)
 
 			if (user) {
-				SentEmail email = emailCreationService.createEmail(settingPropertyName, user, params)
-				emailService.sendEmail(email)
+				Set<SentEmail> emails = emailCreationService.createEmail(settingPropertyName, user, params)
+				emails.each { email ->
+					emailService.sendEmail(email)
+				}
 				response.put('success', true)
 			}
 		}

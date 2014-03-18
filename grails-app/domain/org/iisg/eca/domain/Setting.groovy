@@ -47,6 +47,8 @@ class Setting extends EventDomain {
     static final String CONFIRM_LOST_PASSWORD_EMAIL_TEMPLATE_ID = 'confirm_lost_password_email_template_id'
     static final String BANK_TRANSFER_EMAIL_TEMPLATE_ID = 'bank_transfer_email_template_id'
     static final String PAYMENT_ACCEPTED_EMAIL_TEMPLATE_ID = 'payment_accepted_email_template_id'
+	static final String PRE_REGISTRATION_EMAIL_TEMPLATE_ID = 'pre_registration_email_template_id'
+	static final String SESSION_REGISTRATION_EMAIL_TEMPLATE_ID = 'session_registration_email_template_id'
 
 	// PayWay settings
 	static final String PAYWAY_ADDRESS = 'payway_address'
