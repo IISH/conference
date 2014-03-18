@@ -14,7 +14,7 @@ import jxl.write.WritableCellFormat
  * Export xls (Excel) files
  */
 class XlsDynamicPageExport extends DynamicPageExport {
-    private static final String CONTENT_TYPE = 'application/ms-excel'
+    private static final String CONTENT_TYPE = 'application/vnd.ms-excel'
     private static final String EXTENSION = 'xls'
 
     /**
