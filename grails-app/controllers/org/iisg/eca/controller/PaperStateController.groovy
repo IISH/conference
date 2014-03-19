@@ -6,6 +6,7 @@ import org.iisg.eca.domain.PaperState
  * Controller responsible for handling requests on paper states
  */
 class PaperStateController {
+	def pageInformation
 
     /**
      * Index action, redirects to the list action
@@ -48,11 +49,10 @@ class PaperStateController {
     def delete() {
         // Of course we need an id of the paper state
         if (params.id) {
-            PaperState paperState = PaperState.findById(params.id)
-            paperState?.softDelete()
+            PaperState paperState = PaperState.findByIdAndEvent(params.id, pageInformation.date.event)
 
             // Try to remove the paper state, send back a success or failure message
-            if (paperState?.save(flush: true)) {
+            if (paperState?.delete(flush: true)) {
                 flash.message = g.message(code: 'default.deleted.message', args: [g.message(code: 'paperState.label'), paperState.toString()])
             }
             else {

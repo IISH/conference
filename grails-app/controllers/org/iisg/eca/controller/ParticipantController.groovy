@@ -213,9 +213,9 @@ class ParticipantController {
 
         // Already collect participant ids in the case of an error
         List participantIds = participantService.getParticipantsWithFilters(params).collect { it[0] }
-        List sessions = participantSessionService.getSessionsForParticipant(participant)
-        List daysPresent = ParticipantDay.findAllDaysOfUser(user)
-        List orders = Order.findAllOrdersOfUserLastYear(user)
+        List sessions = participant ? participantSessionService.getSessionsForParticipant(participant) : []
+        List daysPresent = user ? ParticipantDay.findAllDaysOfUser(user) : []
+        List orders = user ? Order.findAllOrdersOfUserLastYear(user) : []
 
         // Obtain the emails
         Calendar cal = Calendar.getInstance()

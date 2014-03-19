@@ -3,7 +3,7 @@ package org.iisg.eca.domain
 /**
  * Domain class of table holding all event dates
  */
-class EventDate extends SoftDeleteDomain {
+class EventDate  {
     String yearCode
     Date startDate
     Date endDate

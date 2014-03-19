@@ -14,7 +14,6 @@ import grails.plugin.springsecurity.SpringSecurityUtils
  * Controller responsible for handling requests on user authentication
  */
 class UserAuthController {
-    def sessionFactory
     def pageInformation
     
     /**

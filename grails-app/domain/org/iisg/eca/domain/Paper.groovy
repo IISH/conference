@@ -23,8 +23,9 @@ class Paper extends EventDateDomain {
     String equipmentComment
     boolean mailPaperState = true
 	User addedBy
+	boolean deleted = false
 
-    static belongsTo = [User, PaperState, Session, Network]
+	static belongsTo = [User, PaperState, Session, Network]
     static hasMany = [equipment: Equipment]
 
     static mapping = {
@@ -48,6 +49,7 @@ class Paper extends EventDateDomain {
         equipmentComment    column: 'equipment_comment',    type: 'text'
         mailPaperState      column: 'mail_paper_state'
 	    addedBy             column: 'added_by'
+	    deleted             column: 'deleted'
 
         equipment           joinTable: 'paper_equipment'
     }
@@ -73,6 +75,11 @@ class Paper extends EventDateDomain {
         equipmentComment    nullable: true
 	    addedBy             nullable: true
     }
+
+	static hibernateFilters = {
+		dateFilter(condition: '(date_id = :dateId OR date_id IS NULL)', types: 'long')
+		hideDeleted(condition: 'deleted = 0', default: true)
+	}
 
     static apiActions = ['GET', 'POST', 'PUT', 'DELETE']
 
@@ -108,6 +115,10 @@ class Paper extends EventDateDomain {
 			'equipment.id',
 			'addedBy.id'
 	]
+
+	void softDelete() {
+		deleted = true
+	}
 
 	void updateForApi(String property, String value) {
 		switch (property) {

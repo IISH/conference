@@ -295,7 +295,6 @@ class ApiController {
 				INNER JOIN sp.type AS t
 				LEFT JOIN u.papers AS p
 				WHERE u.deleted = false
-				AND sp.deleted = false
 				AND (p.deleted = false OR p IS NULL)
 				AND (p.date.id = :dateId OR p IS NULL)
 				AND sp.session.id = :sessionId

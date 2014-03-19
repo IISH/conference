@@ -258,6 +258,12 @@ class SessionPlannerService {
         List<Object[]> equipment = (List<Object[]>) RoomSessionDateTimeEquipment.executeQuery('''
             SELECT rsdte.room.id, rsdte.sessionDateTime.id, rsdte.equipment
             FROM RoomSessionDateTimeEquipment AS rsdte
+            INNER JOIN rsdte.room AS r
+            INNER JOIN rsdte.sessionDateTime AS sdt
+            INNER JOIN rsdte.equipment AS e
+            WHERE r.deleted = false
+            AND sdt.deleted = false
+            AND e.deleted = false
             ORDER BY rsdte.room.roomNumber, rsdte.sessionDateTime.indexNumber, rsdte.equipment.code
         ''')
 
@@ -265,6 +271,12 @@ class SessionPlannerService {
         List<Object[]> sessions = (List<Object[]>) SessionRoomDateTime.executeQuery('''
             SELECT srdt.room.id, srdt.sessionDateTime.id, srdt.session
             FROM SessionRoomDateTime AS srdt
+            INNER JOIN srdt.room AS r
+            INNER JOIN srdt.sessionDateTime AS sdt
+            INNER JOIN srdt.session AS s
+            WHERE r.deleted = false
+            AND sdt.deleted = false
+            AND s.deleted = false
             ORDER BY srdt.room.roomNumber, srdt.sessionDateTime.indexNumber
         ''')
 

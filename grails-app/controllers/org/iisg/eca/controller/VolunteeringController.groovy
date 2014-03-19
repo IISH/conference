@@ -6,6 +6,7 @@ import org.iisg.eca.domain.Volunteering
  * Controller responsible for handling requests on volunteering offers
  */
 class VolunteeringController {
+	def pageInformation
 
     /**
      * Index action, redirects to the list action
@@ -48,11 +49,10 @@ class VolunteeringController {
     def delete() {
         // Of course we need an id of the volunteering offer
         if (params.id) {
-            Volunteering volunteering = Volunteering.findById(params.id)
-            volunteering?.softDelete()
+            Volunteering volunteering = Volunteering.findByIdAndEvent(params.id, pageInformation.date.event)
 
             // Try to remove the volunteering offer, send back a success or failure message
-            if (volunteering?.save(flush: true)) {
+            if (volunteering?.delete(flush: true)) {
                 flash.message = g.message(code: 'default.deleted.message', args: [g.message(code: 'volunteering.label'), volunteering.toString()])
             }
             else {

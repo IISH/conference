@@ -3,7 +3,7 @@ package org.iisg.eca.domain
 /**
  * Domain class of table holding all participants of a session
  */
-class SessionParticipant extends SoftDeleteDomain {
+class SessionParticipant {
     User user
     Session session
     ParticipantType type

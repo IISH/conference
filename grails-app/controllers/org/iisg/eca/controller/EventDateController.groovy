@@ -112,7 +112,6 @@ class EventDateController {
                 Long id = params.long("Day_${i}.id")
                 if (id) {
                     day = Day.findById(id)
-                    day.deleted = false
                 }
 
                 // Otherwise create a new one
@@ -129,8 +128,7 @@ class EventDateController {
 
             // Everything left in the deletion list must be deleted
             toBeDeleted.each { day ->
-                day.softDelete()
-                day.save()
+                day.delete()
             }
 
             // Save the event date and redirect to the previous page if everything is ok

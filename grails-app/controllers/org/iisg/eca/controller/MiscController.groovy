@@ -48,16 +48,16 @@ class MiscController {
         Sql sql = new Sql(dataSource)
         List<GroovyRowResult> result = sql.rows("""
            SELECT users.user_id, lastname, firstname
-           FROM users INNER JOIN participant_date ON users.user_id=participant_date.user_id
-           WHERE users.enabled=1 AND users.deleted=0
-           ANDparticipant_date.deleted=0
+           FROM users
+           INNER JOIN participant_date ON users.user_id=participant_date.user_id
+           WHERE users.deleted=0
+           AND participant_date.deleted=0
            AND participant_date.participant_state_id IN (:new, :dataChecked, :participant, :notFinished)
            AND participant_date.date_id = :date_id
-           AND
-           (
-           firstname <> ""
-           AND firstname <> "n/a"
-           AND ( binary firstname = binary upper( firstname ) OR binary firstname = binary lower( firstname ) )
+           AND (
+	           firstname <> ""
+	           AND firstname <> "n/a"
+	           AND ( binary firstname = binary upper( firstname ) OR binary firstname = binary lower( firstname ) )
            )
            ORDER BY firstname
         """, [date_id: pageInformation.date.id, new: ParticipantState.NEW_PARTICIPANT, dataChecked: ParticipantState.PARTICIPANT_DATA_CHECKED,
@@ -344,10 +344,8 @@ class MiscController {
             INNER JOIN users ON networks_chairs.user_id=users.user_id
             LEFT JOIN participant_date ON participant_date.user_id=users.user_id
             LEFT JOIN fee_states ON fee_states.fee_state_id=participant_date.fee_state_id
-            WHERE networks_chairs.deleted=0
-            AND users.enabled=1
-            AND users.deleted=0
-            AND participant_date.deleted=0
+            WHERE users.deleted = 0
+            AND participant_date.deleted = 0
             AND networks.date_id = :dateId
             AND participant_date.date_id = :dateId
             ORDER BY networks.name, users.lastname, users.firstname
@@ -424,8 +422,7 @@ class MiscController {
                 SELECT session_participant.session_id
                 FROM session_participant
                 INNER JOIN vw_accepted_participants ON session_participant.user_id=vw_accepted_participants.user_id
-                WHERE session_participant.deleted=0
-                AND session_participant.participant_type_id = :chair
+                WHERE session_participant.participant_type_id = :chair
                 GROUP BY session_participant.session_id
             )
             ORDER BY s.session_state_id ASC, session_code ASC, session_name ASC

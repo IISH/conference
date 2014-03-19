@@ -14,7 +14,7 @@ import grails.plugin.springsecurity.SpringSecurityUtils
 /**
  * Domain class of table holding all registered users
  */
-class User extends SoftDeleteDomain {
+class User {
     static final int USER_STATUS_NOT_FOUND = 0;
     static final int USER_STATUS_FOUND = 1;
     static final int USER_STATUS_DISABLED = 2;
@@ -62,6 +62,7 @@ class User extends SoftDeleteDomain {
     Date dateAdded = new Date()
     boolean emailDiscontinued = false
 	boolean enabled = true
+	boolean deleted = false
 	User addedBy
 
     static belongsTo = [Country, Group]
@@ -106,6 +107,7 @@ class User extends SoftDeleteDomain {
         dateAdded               column: 'date_added'
         emailDiscontinued       column: 'email_discontinued'
 	    enabled                 column: 'enabled'
+	    deleted                 column: 'deleted'
 		addedBy                 column: 'added_by'
 
         groups                  joinTable: 'users_groups'
@@ -140,6 +142,10 @@ class User extends SoftDeleteDomain {
         extraInfo                               nullable: true
 	    addedBy                                 nullable: true
     }
+
+	static hibernateFilters = {
+		hideDeleted(condition: 'deleted = 0', default: true)
+	}
 
     static apiActions = ['GET', 'POST', 'PUT']
 
@@ -345,7 +351,6 @@ class User extends SoftDeleteDomain {
                     eq('date.id', date.id)
                     eq('deleted', false)
                 }
-                eq('deleted', false)
             }
         }
 
@@ -392,6 +397,10 @@ class User extends SoftDeleteDomain {
             }
         }
     }
+
+	void softDelete() {
+		deleted = true
+	}
 
     /**
      * Returns all roles assigned to this user

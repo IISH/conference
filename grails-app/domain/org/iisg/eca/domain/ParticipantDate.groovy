@@ -24,6 +24,7 @@ class ParticipantDate extends EventDateDomain {
     boolean award = false
     String extraInfo
 	User addedBy
+	boolean deleted = false
 
     static belongsTo = [User, ParticipantState, FeeState]
     static hasMany = [extras: Extra, participantVolunteering: ParticipantVolunteering]
@@ -52,6 +53,7 @@ class ParticipantDate extends EventDateDomain {
         award                   column: 'award'
         extraInfo               column: 'extra_info',   type: 'text'
 	    addedBy                 column: 'added_by'
+	    deleted                 column: 'deleted'
 
         extras                  joinTable: 'participant_date_extra'
         participantVolunteering cascade: 'all-delete-orphan'
@@ -63,6 +65,11 @@ class ParticipantDate extends EventDateDomain {
         extraInfo       nullable: true
 	    addedBy         nullable: true
     }
+
+	static hibernateFilters = {
+		dateFilter(condition: '(date_id = :dateId OR date_id IS NULL)', types: 'long')
+		hideDeleted(condition: 'deleted = 0', default: true)
+	}
 
     static apiActions = ['GET', 'POST', 'PUT', 'DELETE']
 
@@ -94,6 +101,10 @@ class ParticipantDate extends EventDateDomain {
 		    'user.id',
 		    'addedBy.id'
     ]
+
+	void softDelete() {
+		deleted = true
+	}
 
     void updateForApi(String property, String value) {
         switch (property) {

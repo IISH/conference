@@ -44,9 +44,6 @@ class ParticipantSessionService {
             sessionParticipants {
                 eq('session.id', session.id)
                 eq('type.id', type.id)
-
-                // Currently hard deleted, but just in case
-                eq('deleted', false)
             }
         }
     }

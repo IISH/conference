@@ -4,7 +4,7 @@ package org.iisg.eca.domain
  * The abstract domain class for all domain classes
  * which contain data to be filtered per event tenant
  */
-abstract class EventDomain extends SoftDeleteDomain {
+abstract class EventDomain {
     /**
      * Contains the tenant to filter on
      */
@@ -30,7 +30,6 @@ abstract class EventDomain extends SoftDeleteDomain {
     }
     
     static hibernateFilters = {
-        hideDeleted(condition: 'deleted = 0', default: true)
         eventFilter(condition: '(event_id = :eventId OR event_id IS NULL)', types: 'long')
     }
 

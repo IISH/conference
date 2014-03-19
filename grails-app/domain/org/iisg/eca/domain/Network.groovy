@@ -12,6 +12,7 @@ class Network extends EventDateDomain {
     String url
     String email
     boolean showOnline = true
+	boolean deleted = false
     
     static hasMany = [  chairs: NetworkChair,
                         participantVolunteering: ParticipantVolunteering,
@@ -38,11 +39,18 @@ class Network extends EventDateDomain {
         url             column: 'url'
         email           column: 'email'
         showOnline      column: 'show_online'
+	    deleted         column: 'deleted'
 
-        chairs                      sort: 'isMainChair', order: 'desc', cascade: 'all-delete-orphan'
+
+	    chairs                      sort: 'isMainChair', order: 'desc', cascade: 'all-delete-orphan'
         sessions                    joinTable: 'session_in_network'
         participantVolunteering     cascade: 'all-delete-orphan'
     }
+
+	static hibernateFilters = {
+		dateFilter(condition: '(date_id = :dateId OR date_id IS NULL)', types: 'long')
+		hideDeleted(condition: 'deleted = 0', default: true)
+	}
 
     static apiActions = ['GET']
 
@@ -56,6 +64,10 @@ class Network extends EventDateDomain {
             'showOnline',
             'chairs.chair.id',
     ]
+
+	void softDelete() {
+		deleted = true
+	}
 
     /**
      * Returns all the users that have been accepted as participants in accepted sessions that fall in this network
@@ -73,7 +85,6 @@ class Network extends EventDateDomain {
             AND s.date.id = :dateId
             AND n.date.id = :dateId
             AND pd.deleted = false
-            AND sp.deleted = false
             AND s.deleted = false
             AND n.deleted = false
             AND n.id = :networkId

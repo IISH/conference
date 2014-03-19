@@ -15,6 +15,7 @@ class Session extends EventDateDomain {
     SessionState state
     boolean mailSessionState = true
     User addedBy
+	boolean deleted = false
 
     static belongsTo = [Network, SessionState]
     static hasMany = [  sessionParticipants: SessionParticipant,
@@ -36,6 +37,7 @@ class Session extends EventDateDomain {
         state               column: 'session_state_id'
         mailSessionState    column: 'mail_session_state'
         addedBy             column: 'added_by'
+	    deleted             column: 'deleted'
 
         networks                joinTable: 'session_in_network'
         sessionParticipants     cascade: 'all-delete-orphan'
@@ -50,6 +52,11 @@ class Session extends EventDateDomain {
         comment     nullable: true
         addedBy     nullable: true
     }
+
+	static hibernateFilters = {
+		dateFilter(condition: '(date_id = :dateId OR date_id IS NULL)', types: 'long')
+		hideDeleted(condition: 'deleted = 0', default: true)
+	}
 
     static apiActions = ['GET', 'POST', 'PUT']
 
@@ -70,6 +77,10 @@ class Session extends EventDateDomain {
 			'networks.id',
 			'addedBy.id'
 	]
+
+	void softDelete() {
+		deleted = true
+	}
 
 	void updateForApi(String property, String value) {
 		switch (property) {

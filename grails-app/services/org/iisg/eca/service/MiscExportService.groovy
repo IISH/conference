@@ -153,9 +153,7 @@ class MiscExportService {
             AND pd.date_id = :dateId
             AND pd.deleted = false
             AND pday.date_id = :dateId
-            AND pday.deleted = false
             AND d.date_id = :dateId
-            AND d.deleted = false
             AND e.date_id = :dateId
             AND e.deleted = false
             AND (   pd.participant_state_id IN (1,2)
@@ -177,13 +175,10 @@ class MiscExportService {
 			LEFT JOIN sessions AS s
 			ON srdt.session_id = s.session_id
 			WHERE sdt.date_id = :dateId
-			AND sdt.deleted = false
 			AND d.date_id = :dateId
-			AND d.deleted = false
 			AND r.date_id = :dateId
 			AND r.deleted = false
 			AND (srdt.date_id = :dateId OR srdt.date_id IS NULL)
-			AND (srdt.deleted = false OR srdt.deleted IS NULL)
 			AND (s.date_id = :dateId OR s.date_id IS NULL)
 			AND (s.deleted = false OR s.deleted IS NULL)
 			ORDER BY sdt.index_number, r.room_number

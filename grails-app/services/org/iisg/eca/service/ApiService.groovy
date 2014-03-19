@@ -137,7 +137,7 @@ class ApiService {
 		if (apiActionIsAllowed(domainClassInfo, 'DELETE') && (id != null)) {
 			def instance = domainClassInfo.getDomainClass().findById(id)
 
-			if (instance.metaClass.respondsTo(instance, 'softDelete')) {
+			if (domainClassInfo.hasProperty('deleted')) {
 				instance.softDelete()
 			}
 			else {

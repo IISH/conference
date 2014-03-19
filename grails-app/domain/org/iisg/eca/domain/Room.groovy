@@ -8,6 +8,7 @@ class Room extends EventDateDomain {
     String roomNumber
     Integer noOfSeats
     String comment
+	boolean deleted = false
     
     static hasMany = [roomSessionDateTimeEquipment: RoomSessionDateTimeEquipment, sessionRoomDateTime: SessionRoomDateTime]
     
@@ -29,10 +30,16 @@ class Room extends EventDateDomain {
         roomNumber  column: 'room_number'
         noOfSeats   column: 'number_of_seats'
         comment     column: 'comment',          type: 'text'
+	    deleted     column: 'deleted'
         
         roomSessionDateTimeEquipment    cascade: 'all-delete-orphan'
         sessionRoomDateTime             cascade: 'all-delete-orphan'
     }
+
+	static hibernateFilters = {
+		dateFilter(condition: '(date_id = :dateId OR date_id IS NULL)', types: 'long')
+		hideDeleted(condition: 'deleted = 0', default: true)
+	}
 
     static apiActions = ['GET']
 
@@ -43,6 +50,10 @@ class Room extends EventDateDomain {
             'noOfSeats',
             'comment'
     ]
+
+	void softDelete() {
+		deleted = true
+	}
 
     @Override
     String toString() {

@@ -428,7 +428,7 @@ class SessionController {
 
                 // If found, delete it
                 if (sessionParticipant) {
-                    sessionParticipant.delete()
+                    sessionParticipant.delete(flush: true)
 
                     // Look up the paper added to this session
                     Paper paper = Paper.findBySessionAndUser(session, user)

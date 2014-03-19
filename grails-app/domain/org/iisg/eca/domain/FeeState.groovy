@@ -8,6 +8,7 @@ class FeeState extends EventDomain {
 
     String name
     boolean isDefaultFee = false
+	boolean deleted = false
     
     static hasMany = [participantDates: ParticipantDate, feeAmounts: FeeAmount]
 
@@ -25,9 +26,15 @@ class FeeState extends EventDomain {
         event           column: 'event_id'
         name            column: 'name'
         isDefaultFee    column: 'is_default_fee'
+	    deleted         column: 'deleted'
 
         feeAmounts      sort: 'endDate', cascade: 'all-delete-orphan'
     }
+
+	static hibernateFilters = {
+		eventFilter(condition: '(event_id = :eventId OR event_id IS NULL)', types: 'long')
+		hideDeleted(condition: 'deleted = 0', default: true)
+	}
 
     static apiActions = ['GET']
 
@@ -45,7 +52,11 @@ class FeeState extends EventDomain {
         }
     }
 
-    @Override
+	void softDelete() {
+		deleted = true
+	}
+
+	@Override
     String toString() {
         name
     }

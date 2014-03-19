@@ -75,7 +75,7 @@
                 <g:message code="network.chairs.label" />
               </label>
               <ul class="property-value">
-                <g:each in="${network.chairs.findAll { !it.deleted }}" var="instance" status="i">
+                <g:each in="${network.chairs}" var="instance" status="i">
                   <li>
                     <input type="hidden" name="NetworkChair_${i}.id" value="${instance.chair.id}" />
                     <label class="property-label">
