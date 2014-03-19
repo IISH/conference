@@ -55,10 +55,16 @@ class ApiService {
 					createAlias(alias, alias)
 					infoForProperty = domainClassInfo.getDomainClassInfoForProperty(alias)
 					if (infoForProperty.hasProperty('event')) {
-						eq(alias + '.event.id', pageInformation.date.event.id)
+						or {
+							eq(alias + '.event.id', pageInformation.date.event.id)
+							isNull(alias + '.event.id')
+						}
 					}
 					if (infoForProperty.hasProperty('date')) {
-						eq(alias + '.date.id', pageInformation.date.id)
+						or {
+							eq(alias + '.date.id', pageInformation.date.id)
+							isNull(alias + '.date.id')
+						}
 					}
 					if (infoForProperty.hasProperty('deleted')) {
 						eq(alias + '.deleted', false)
@@ -139,6 +145,7 @@ class ApiService {
 
 			if (domainClassInfo.hasProperty('deleted')) {
 				instance.softDelete()
+				instance.save(flush: true)
 			}
 			else {
 				instance.delete()

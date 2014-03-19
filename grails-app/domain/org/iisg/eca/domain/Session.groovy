@@ -58,7 +58,7 @@ class Session extends EventDateDomain {
 		hideDeleted(condition: 'deleted = 0', default: true)
 	}
 
-    static apiActions = ['GET', 'POST', 'PUT']
+    static apiActions = ['GET', 'POST', 'PUT', 'DELETE']
 
     static apiAllowed = [
             'id',
