@@ -5,13 +5,6 @@ dataSource {
     dbCreate = "validate"
     configClass = org.grails.plugin.hibernate.filter.HibernateFilterDomainConfiguration.class
 }
-dataSource_payWay {
-	pooled = true
-	driverClassName = "com.mysql.jdbc.Driver"
-	dialect = org.hibernate.dialect.MySQL5InnoDBDialect
-	dbCreate = "validate"
-	configClass = org.grails.plugin.hibernate.filter.HibernateFilterDomainConfiguration.class
-}
 hibernate {
     cache.use_second_level_cache = true
     cache.use_query_cache = true
@@ -56,13 +49,13 @@ environments {
 	            jdbcInterceptors = "ConnectionState"
             }
         }
-		/*dataSource_payWay {
+		dataSource_payWay {
 			driverClassName = "org.h2.Driver"
 			dialect = org.hibernate.dialect.H2Dialect
 			username = "sa"
 			password = ""
 			dbCreate = "update"
 			url = "jdbc:h2:mem:payway;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE"
-        }*/
+        }
 	}
 }
