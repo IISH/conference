@@ -23,6 +23,23 @@ class PasswordService {
     def messageSource
 
 	/**
+	 * Allows for sending passwords
+	 * @param user he user who's password has to be emailed
+	 * @param newPassword The new password of the user
+	 * @return <code>true</code> in case the email was sent
+	 */
+	boolean sendPassword(User user, String newPassword) {
+		Long templateId = Setting.getSetting(Setting.NEW_PASSWORD_EMAIL_TEMPLATE_ID).value.toLong()
+		EmailTemplate template = EmailTemplate.get(templateId)
+
+		SentEmail email = emailService.createEmail(user, template, false)
+		email.addAdditionalValue('PasswordParticipant', newPassword.toString())
+		emailService.sendEmail(email, true) // TODO: Allow these emails in the db in the test environment
+
+		return true
+	}
+
+	/**
 	 * Allows for changing the password
 	 * @param user The user who's password has to be updated
 	 * @param newPassword The new password of the user
@@ -47,12 +64,12 @@ class PasswordService {
                 User.PASSWORD_PATTERN.matcher(newPassword).matches()) {
             user.password = newPassword
             if (user.save()) {
-                Long templateId = Setting.getSetting(Setting.CHANGE_PASSWORD_EMAIL_TEMPLATE_ID).value.toLong()
+                Long templateId = Setting.getSetting(Setting.UPDATED_PASSWORD_EMAIL_TEMPLATE_ID).value.toLong()
                 EmailTemplate template = EmailTemplate.get(templateId)
 
                 SentEmail email = emailService.createEmail(user, template, false)
                 email.addAdditionalValue('PasswordParticipant', newPassword.toString())
-                emailService.sendEmail(email, false)
+                emailService.sendEmail(email, true) // TODO: Allow these emails in the db in the test environment
 
                 return true
             }
@@ -93,7 +110,7 @@ class PasswordService {
             email.addAdditionalValue('ID', user.id.toString())
             email.addAdditionalValue('CODE', user.requestCode)
             email.addAdditionalValue('CodeValidUntil', validUntil)
-            emailService.sendEmail(email, false)
+            emailService.sendEmail(email, true) // TODO: Allow these emails in the db in the test environment
 
             return true
         }
@@ -123,12 +140,12 @@ class PasswordService {
             String newPassword = User.createPassword()
             user.password = newPassword
             if (user.save()) {
-                Long templateId = Setting.getSetting(Setting.CONFIRM_LOST_PASSWORD_EMAIL_TEMPLATE_ID).value.toLong()
+                Long templateId = Setting.getSetting(Setting.UPDATED_PASSWORD_EMAIL_TEMPLATE_ID).value.toLong()
                 EmailTemplate template = EmailTemplate.get(templateId)
 
                 SentEmail email = emailService.createEmail(user, template, false)
                 email.addAdditionalValue('PasswordParticipant', newPassword)
-                emailService.sendEmail(email, false)
+                emailService.sendEmail(email, true) // TODO: Allow these emails in the db in the test environment
 
                 return CONFIRM_LOST_PASSWORD_ACCEPT
             }

@@ -27,6 +27,7 @@ class User {
     def static pageInformation
     def clientDetailsService
     def tokenServices
+	def passwordService
 
     /**
      * The saltSource is responsible for the creation of salts
@@ -526,21 +527,23 @@ class User {
     }
 
     def beforeInsert() {
-        // Before insertion of a user, hash the password
-        encodePassword()
-
         // Make sure the email address is in lowercase
-        emailToLowercase()
+	    emailToLowercase()
+
+        // Before insertion of a user, hash and send the password
+	    password = createPassword()
+	    passwordService.sendPassword(this, password)
+        encodePassword()
     }
 
     def beforeUpdate() {
-        // Make sure to hash the password if changed
-        if (isDirty('password')) {
-            encodePassword()
-        }
-
         // Make sure the email address is in lowercase
         emailToLowercase()
+
+	    // Make sure to hash the password if changed
+	    if (isDirty('password')) {
+		    encodePassword()
+	    }
     }
 
     /**
@@ -593,7 +596,6 @@ class User {
     protected void encodePassword() {
         salt = createSalt()
         password = springSecurityService.encodePassword(password, saltSource.getSalt(this))
-        newPasswordEmailed = new Date()
     }
 
     /**

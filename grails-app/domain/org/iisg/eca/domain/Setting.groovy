@@ -42,9 +42,9 @@ class Setting extends EventDomain {
     static final String MAIN_COLOR_BG = 'main_color_bg'
 
     // Email templates
-    static final String CHANGE_PASSWORD_EMAIL_TEMPLATE_ID = 'change_password_email_template_id'
+    static final String NEW_PASSWORD_EMAIL_TEMPLATE_ID = 'new_password_email_template_id'
     static final String LOST_PASSWORD_EMAIL_TEMPLATE_ID = 'lost_password_email_template_id'
-    static final String CONFIRM_LOST_PASSWORD_EMAIL_TEMPLATE_ID = 'confirm_lost_password_email_template_id'
+    static final String UPDATED_PASSWORD_EMAIL_TEMPLATE_ID = 'updated_password_email_template_id'
     static final String BANK_TRANSFER_EMAIL_TEMPLATE_ID = 'bank_transfer_email_template_id'
     static final String PAYMENT_ACCEPTED_EMAIL_TEMPLATE_ID = 'payment_accepted_email_template_id'
 	static final String PRE_REGISTRATION_EMAIL_TEMPLATE_ID = 'pre_registration_email_template_id'
