@@ -351,7 +351,6 @@ class SessionPlannerService {
                 eq('n.deleted', false)
                 eq('n.date.id', pageInformation.date.id)
                 if (terms?.trim()?.size() > 0) {
-                    eq('sp.deleted', false)
                     ne('sp.type.id', ParticipantType.CO_AUTHOR) // Co-authors are for internal use only
                     eq('u.deleted', false)
                     eq('p.deleted', false)
@@ -437,27 +436,25 @@ class SessionPlannerService {
                 }
             }
             plannedSession.participants = sessionParticipants.collect { sp ->
-                if (!sp.deleted) {
-                    if (sp.type.withPaper) {
-                        PlannedSession.ParticipantWithPaper participant = new PlannedSession.ParticipantWithPaper()
-                        participant.typeId = sp.type.id
-                        participant.type = sp.type.toString()
-                        participant.participantName = sp.user.getFullName()
+                if (sp.type.withPaper) {
+                    PlannedSession.ParticipantWithPaper participant = new PlannedSession.ParticipantWithPaper()
+                    participant.typeId = sp.type.id
+                    participant.type = sp.type.toString()
+                    participant.participantName = sp.user.getFullName()
 
-                        Paper paper = result.session.papers.find { (it.user.id == sp.user.id) && !it.deleted }
-                        participant.paperId = paper.id
-                        participant.paperName = paper.title
-                        participant.coAuthors = paper.coAuthors
+                    Paper paper = result.session.papers.find { (it.user.id == sp.user.id) && !it.deleted }
+                    participant.paperId = paper.id
+                    participant.paperName = paper.title
+                    participant.coAuthors = paper.coAuthors
 
-                        return participant
-                    }
-                    else {
-                        PlannedSession.Participant participant = new PlannedSession.Participant()
-                        participant.typeId = sp.type.id
-                        participant.type = sp.type.toString()
-                        participant.participantName = sp.user.getFullName()
-                        return participant
-                    }
+                    return participant
+                }
+                else {
+                    PlannedSession.Participant participant = new PlannedSession.Participant()
+                    participant.typeId = sp.type.id
+                    participant.type = sp.type.toString()
+                    participant.participantName = sp.user.getFullName()
+                    return participant
                 }
             } as ArrayList<PlannedSession.Participant>
             plannedSession.participants.removeAll(Collections.singleton(null))
