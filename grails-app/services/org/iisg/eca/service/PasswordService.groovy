@@ -23,7 +23,7 @@ class PasswordService {
     def messageSource
 
 	/**
-	 * Allows for sending passwords
+	 * Allows for sending a new password to a user
 	 * @param user he user who's password has to be emailed
 	 * @param newPassword The new password of the user
 	 * @return <code>true</code> in case the email was sent
