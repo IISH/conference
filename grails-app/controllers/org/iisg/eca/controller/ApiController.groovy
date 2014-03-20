@@ -375,6 +375,25 @@ class ApiController {
 		render pageInformation.date as JSON
 	}
 
+	def mailNewPassword() {
+		Long id = (params.userId?.toString()?.isLong()) ? params.userId.toString().toLong() : null
+		Map response = ['success': false] as Map<String, Object>
+
+		if (id) {
+			User user = User.findById(id)
+
+			if (user) {
+				user.password = User.createPassword()
+				passwordService.sendPassword(user, user.password)
+				if (user.save()) {
+					response.put('success', true)
+				}
+			}
+		}
+
+		render response as JSON
+	}
+
 	private void returnUserInfo(Map response, User user) {
 		response.put('status', user.getStatus())
 		response.put('hasFullRights', user.hasFullRights())

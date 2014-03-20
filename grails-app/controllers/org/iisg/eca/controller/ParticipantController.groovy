@@ -140,11 +140,14 @@ class ParticipantController {
                 return
             }
 
+	        String password = null
             ParticipantDate participant = null
             User user = User.findByEmail(params.email)
 
-            if (!user) {
+	        if (!user) {
                 user = new User(lastName: "n/a", firstName: "n/a", email: params.email)
+		        password = User.createPassword()
+		        user.password = password
             }
             else {
                 // Does the participant exist in the database already
@@ -174,7 +177,9 @@ class ParticipantController {
 
             if (user.save(flush: true) && participant.save(flush: true)) {
 	            // Also create a new password that will be emailed to the participant
-	            passwordService.changePassword(user, User.createPassword())
+	            if (password) {
+		            passwordService.sendPassword(user, password)
+	            }
 
                 flash.message = g.message(code: 'default.created.message', args: [g.message(code: 'participantDate.label'), participant.toString()])
                 redirect(uri: eca.createLink(action: 'show', id: user.id, noBase: true))

@@ -101,9 +101,9 @@ class Setting extends EventDomain {
             case PAYWAY_PROJECT:
             case PAYWAY_PASSPHRASE_IN:
             case PAYWAY_PASSPHRASE_OUT:
-            case CHANGE_PASSWORD_EMAIL_TEMPLATE_ID:
+            case NEW_PASSWORD_EMAIL_TEMPLATE_ID:
             case LOST_PASSWORD_EMAIL_TEMPLATE_ID:
-            case CONFIRM_LOST_PASSWORD_EMAIL_TEMPLATE_ID:
+            case UPDATED_PASSWORD_EMAIL_TEMPLATE_ID:
             case MAX_UPLOAD_SIZE_PAPER:
             case ALLOWED_PAPER_EXTENSIONS:
                 super.beforeUpdate()

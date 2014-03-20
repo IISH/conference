@@ -136,7 +136,7 @@ class EmailService {
                 // Some mails shouldn't be saved in the database
                 if (saveToDb) {
                     SentEmail.withNewSession { session ->
-                        sentEmail.internalUpdate = true
+	                    sentEmail.internalUpdate = true
                         sentEmail.save()
                     }
                 }

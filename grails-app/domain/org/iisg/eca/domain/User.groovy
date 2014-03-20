@@ -27,7 +27,6 @@ class User {
     def static pageInformation
     def clientDetailsService
     def tokenServices
-	def passwordService
 
     /**
      * The saltSource is responsible for the creation of salts
@@ -530,10 +529,9 @@ class User {
         // Make sure the email address is in lowercase
 	    emailToLowercase()
 
-        // Before insertion of a user, hash and send the password
+        // Before insertion of a user, hash a new password
 	    password = createPassword()
-	    passwordService.sendPassword(this, password)
-        encodePassword()
+	    encodePassword()
     }
 
     def beforeUpdate() {

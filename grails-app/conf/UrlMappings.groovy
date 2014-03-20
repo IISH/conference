@@ -121,6 +121,10 @@ class UrlMappings {
 		    action = 'eventDateInfo'
 	    }
 
+	    name mailNewPassword: "/$event/$date/api/mailNewPassword" (controller: "api", parseRequest: true) {
+		    action = 'mailNewPassword'
+	    }
+
         /*
          * END API CALLS
          */
