@@ -233,8 +233,12 @@ class BookExportService {
                     SELECT p, u
                     FROM Paper AS p
                     INNER JOIN p.user AS u
+                    INNER JOIN u.sessionParticipants AS sp
+	                INNER JOIN sp.type AS t
                     WHERE p.session.id = :sessionId
                     AND u.deleted = false
+                    AND sp.session.id = :sessionId
+					AND t.withPaper = true
                     ORDER BY u.lastName, u.firstName
                 ''', [sessionId: session.id]).each { paperInfo ->
                     Paper paper = (Paper) paperInfo[0]

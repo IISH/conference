@@ -32,7 +32,7 @@ class MiscExportService {
      */
     Export getParticipantsExport(int status) {
         // Preparation
-        SimpleDateFormat formatter = new SimpleDateFormat('EEEEE, d MMMMM', LocaleContextHolder.locale)
+        SimpleDateFormat formatter = new SimpleDateFormat('EEEEE d MMMMM', LocaleContextHolder.locale)
         Map<Long, String> days = Day.list().collectEntries { day ->
             [(day.id) : formatter.format(day.day)]
         }
@@ -116,7 +116,7 @@ class MiscExportService {
 	        String network = row.network_name
 	        row.remove('network_name')
 	        if (network) {
-	            row.put('network', "Chair: $network")
+	            row.put('network', "Chair $network")
 	        }
 	        else {
 		        row.put('network', null)
