@@ -87,7 +87,7 @@ class PasswordService {
 	 */
     boolean lostPassword(User user) {
         if (user) {
-            if (!user.requestCodeValidUntil?.before(new Date()) || (user.requestCode?.size() < 10)) {
+            if (!user.requestCodeValidUntil || user.requestCodeValidUntil.before(new Date()) || (user.requestCode?.size() < 10)) {
                 Calendar calendar = Calendar.getInstance()
                 calendar.add(Calendar.DAY_OF_MONTH, 3)
                 calendar.set(Calendar.HOUR_OF_DAY, 23)
