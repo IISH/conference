@@ -63,6 +63,7 @@ class PasswordService {
                 newPassword.equals(newPasswordRepeat) &&
                 User.PASSWORD_PATTERN.matcher(newPassword).matches()) {
             user.password = newPassword
+            user.newPasswordEmailed = new Date()
             if (user.save()) {
                 Long templateId = Setting.getSetting(Setting.UPDATED_PASSWORD_EMAIL_TEMPLATE_ID).value.toLong()
                 EmailTemplate template = EmailTemplate.get(templateId)
@@ -139,6 +140,7 @@ class PasswordService {
 
             String newPassword = User.createPassword()
             user.password = newPassword
+            user.newPasswordEmailed = new Date()
             if (user.save()) {
                 Long templateId = Setting.getSetting(Setting.UPDATED_PASSWORD_EMAIL_TEMPLATE_ID).value.toLong()
                 EmailTemplate template = EmailTemplate.get(templateId)
