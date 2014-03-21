@@ -104,7 +104,7 @@ class EmailCreationService {
 
 		// Now for each created session also mail the session participants
 		Session.findAllByAddedBy(user).each { session ->
-			SessionParticipant.findAllBySession(session)*.user.each { sessionParticipant ->
+			SessionParticipant.findAllBySession(session)*.user.unique().each { sessionParticipant ->
 				SentEmail sentEmail = findAndCreateEmail(
 						sessionParticipant,
 						Setting.SESSION_REGISTRATION_EMAIL_TEMPLATE_ID,
