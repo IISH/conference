@@ -275,8 +275,18 @@ class ParticipantController {
                     user.dateTimesNotPresent.addAll(sessionDateTimes)
                     user.save(failOnError: true)
 
+	                // Remove all accompanying persons from the participant and save all new information
+	                int i = 0
+	                participant.accompanyingPersons.clear()
+	                participant.save(failOnError: true, flush: true)
+	                while (params["AccompanyingPerson_${i}"]) {
+		                participant.accompanyingPersons << params["AccompanyingPerson_${i}"]
+		                i++
+	                }
+	                participant.save(failOnError: true)
+
                     // Remove all volunteering offers from the participant and save all new information
-                    int i = 0
+                    i = 0
                     participant.participantVolunteering.clear()
                     participant.save(failOnError: true, flush: true)
                     while (params["ParticipantVolunteering_${i}"]) {

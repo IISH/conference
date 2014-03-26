@@ -311,6 +311,27 @@
                                         <g:select name="ParticipantDate.feeState.id" from="${FeeState.sortedFeeStates.list()}" optionKey="id" optionValue="name" value="${participant.feeState.id}" />
                                     </span>
                                 </div>
+                                <div class="${hasErrors(bean: participant, field: 'accompanyingPersons', 'error')} ">
+                                    <label class="property-label">
+                                        <g:message code="participantDate.accompanyingPersons.label" />
+                                    </label>
+                                    <ul class="property-value">
+                                        <g:each in="${participant.accompanyingPersons}" var="instance" status="i">
+                                            <li>
+                                                <input type="text" name="AccompanyingPerson_${i}" id="AccompanyingPerson_${i}" value="${instance}" />
+                                                <span class="ui-icon ui-icon-circle-minus"></span>
+                                            </li>
+                                        </g:each>
+                                        <li class="add">
+                                            <span class="ui-icon ui-icon-circle-plus"></span>
+                                            <g:message code="default.add.label" args="[g.message(code: 'participantDate.accompanyingPersons.person.label')]" />
+                                        </li>
+                                        <li class="hidden">
+                                            <input type="text"  name="AccompanyingPerson_null" id="AccompanyingPerson_null" />
+                                            <span class="ui-icon ui-icon-circle-minus"></span>
+                                        </li>
+                                    </ul>
+                                </div>
                                 <div class="${hasErrors(bean: participant, field: 'extraInfo', 'error')}">
                                     <label class="property-label">
                                         <g:message code="participantDate.extraInfo.label" />

@@ -25,7 +25,7 @@ class ParticipantDate extends EventDateDomain {
     String extraInfo
 
     static belongsTo = [User, ParticipantState, FeeState]
-    static hasMany = [extras: Extra, participantVolunteering: ParticipantVolunteering]
+    static hasMany = [extras: Extra, participantVolunteering: ParticipantVolunteering, accompanyingPersons: String]
 
     static mapping = {
         table 'participant_date'
@@ -53,6 +53,9 @@ class ParticipantDate extends EventDateDomain {
 
         extras                  joinTable: 'participant_date_extra'
         participantVolunteering cascade: 'all-delete-orphan'
+	    accompanyingPersons     joinTable: [name:   'accompanying_persons',
+					                        key:    'participant_date_id',
+					                        column: 'name']
     }
 
     static constraints = {
