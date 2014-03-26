@@ -179,14 +179,16 @@
                                     <input type="text" name="User.mobile" maxlength="50" value="${fieldValue(bean: user, field: 'mobile')}" />
                                 </span>
                             </div>
-                            <div class="${hasErrors(bean: user, field: 'cv', 'error')}">
-                                <label class="property-label">
-                                    <g:message code="user.cv.label" />
-                                </label>
-                                <span class="property-value">
-                                    <textarea name="User.cv" cols="40" rows="5">${fieldValue(bean: user, field: 'cv')}</textarea>
-                                </span>
-                            </div>
+                            <g:if test="${Setting.getSetting(Setting.SHOW_CV, curDate?.event).value == '1'}">
+                                <div class="${hasErrors(bean: user, field: 'cv', 'error')}">
+                                    <label class="property-label">
+                                        <g:message code="user.cv.label" />
+                                    </label>
+                                    <span class="property-value">
+                                        <textarea name="User.cv" cols="40" rows="5">${fieldValue(bean: user, field: 'cv')}</textarea>
+                                    </span>
+                                </div>
+                            </g:if>
                             <div class="${hasErrors(bean: user, field: 'extraInfo', 'error')}">
                                 <label class="property-label">
                                     <g:message code="user.extraInfo.label" />
@@ -200,25 +202,27 @@
 
                     <div class="column">
                         <g:if test="${participant}">
-                            <fieldset class="form">
-                                <legend><g:message code="participantDate.invitationLetter.label" /></legend>
-                                <div class="${hasErrors(bean: participant, field: 'invitationLetter', 'error')}">
-                                    <label class="property-label">
-                                        <g:message code="participantDate.invitationLetterRequested.label" />
-                                    </label>
-                                    <span class="property-value">
-                                        <g:checkBox name="ParticipantDate.invitationLetter" checked="${participant.invitationLetter}" />
-                                    </span>
-                                </div>
-                                <div class="${hasErrors(bean: participant, field: 'invitationLetterSent', 'error')}">
-                                    <label class="property-label">
-                                        <g:message code="participantDate.invitationLetterSent.label" />
-                                    </label>
-                                    <span class="property-value">
-                                        <g:checkBox name="ParticipantDate.invitationLetterSent" checked="${participant.invitationLetterSent}" />
-                                    </span>
-                                </div>
-                            </fieldset>
+                            <g:if test="${Setting.getSetting(Setting.SHOW_INVITATION_LETTER, curDate?.event).value == '1'}">
+                                <fieldset class="form">
+                                    <legend><g:message code="participantDate.invitationLetter.label" /></legend>
+                                    <div class="${hasErrors(bean: participant, field: 'invitationLetter', 'error')}">
+                                        <label class="property-label">
+                                            <g:message code="participantDate.invitationLetterRequested.label" />
+                                        </label>
+                                        <span class="property-value">
+                                            <g:checkBox name="ParticipantDate.invitationLetter" checked="${participant.invitationLetter}" />
+                                        </span>
+                                    </div>
+                                    <div class="${hasErrors(bean: participant, field: 'invitationLetterSent', 'error')}">
+                                        <label class="property-label">
+                                            <g:message code="participantDate.invitationLetterSent.label" />
+                                        </label>
+                                        <span class="property-value">
+                                            <g:checkBox name="ParticipantDate.invitationLetterSent" checked="${participant.invitationLetterSent}" />
+                                        </span>
+                                    </div>
+                                </fieldset>
+                            </g:if>
 
                             <fieldset class="form">
                                 <g:each in="${Extra.list()}" var="extra" status="i">
@@ -237,61 +241,67 @@
                                 </g:each>
                             </fieldset>
 
-                            <fieldset class="form">
-                                <legend><g:message code="participantDate.lowerFee.label" /></legend>
-                                <div class="${hasErrors(bean: participant, field: 'lowerFeeRequested', 'error')}">
-                                    <label class="property-label">
-                                        <g:message code="participantDate.lowerFeeRequested.label" />
-                                    </label>
-                                    <span class="property-value">
-                                        <g:checkBox name="ParticipantDate.lowerFeeRequested" checked="${participant.lowerFeeRequested}" />
-                                    </span>
-                                </div>
-                                <div class="${hasErrors(bean: participant, field: 'lowerFeeAnswered', 'error')}">
-                                    <label class="property-label">
-                                        <g:message code="participantDate.lowerFeeAnswered.label" />
-                                    </label>
-                                    <span class="property-value">
-                                        <g:checkBox name="ParticipantDate.lowerFeeAnswered" checked="${participant.lowerFeeAnswered}" />
-                                    </span>
-                                </div>
-                                <div class="${hasErrors(bean: participant, field: 'lowerFeeText', 'error')}">
-                                    <label class="property-label">
-                                        <g:message code="participantDate.lowerFeeText.label" />
-                                    </label>
-                                    <span class="property-value">
-                                        <textarea name="ParticipantDate.lowerFeeText" cols="40" rows="5">${participant.lowerFeeText}</textarea>
-                                    </span>
-                                </div>
-                            </fieldset>
+                            <g:if test="${(Setting.getSetting(Setting.SHOW_LOWER_FEE, curDate?.event).value == '1') || (Setting.getSetting(Setting.SHOW_STUDENT, curDate?.event).value == '1')}">
+                                <fieldset class="form">
+                                    <legend><g:message code="participantDate.lowerFee.label" /></legend>
+                                    <div class="${hasErrors(bean: participant, field: 'lowerFeeRequested', 'error')}">
+                                        <label class="property-label">
+                                            <g:message code="participantDate.lowerFeeRequested.label" />
+                                        </label>
+                                        <span class="property-value">
+                                            <g:checkBox name="ParticipantDate.lowerFeeRequested" checked="${participant.lowerFeeRequested}" />
+                                        </span>
+                                    </div>
+                                    <div class="${hasErrors(bean: participant, field: 'lowerFeeAnswered', 'error')}">
+                                        <label class="property-label">
+                                            <g:message code="participantDate.lowerFeeAnswered.label" />
+                                        </label>
+                                        <span class="property-value">
+                                            <g:checkBox name="ParticipantDate.lowerFeeAnswered" checked="${participant.lowerFeeAnswered}" />
+                                        </span>
+                                    </div>
+                                    <div class="${hasErrors(bean: participant, field: 'lowerFeeText', 'error')}">
+                                        <label class="property-label">
+                                            <g:message code="participantDate.lowerFeeText.label" />
+                                        </label>
+                                        <span class="property-value">
+                                            <textarea name="ParticipantDate.lowerFeeText" cols="40" rows="5">${participant.lowerFeeText}</textarea>
+                                        </span>
+                                    </div>
+                                </fieldset>
+                            </g:if>
 
-                            <fieldset class="form">
-                                <legend><g:message code="participantDate.student.label" /></legend>
-                                <div class="${hasErrors(bean: participant, field: 'student', 'error')}">
-                                    <label class="property-label">
-                                        <g:message code="participantDate.studentRequested.label" />
-                                    </label>
-                                    <span class="property-value">
-                                        <g:checkBox name="ParticipantDate.student" checked="${participant.student}" />
-                                    </span>
-                                </div>
-                                <div class="${hasErrors(bean: participant, field: 'studentConfirmed', 'error')}">
-                                    <label class="property-label">
-                                        <g:message code="participantDate.studentConfirmed.label" />
-                                    </label>
-                                    <span class="property-value">
-                                        <g:checkBox name="ParticipantDate.studentConfirmed" checked="${participant.studentConfirmed}" />
-                                    </span>
-                                </div>
-                                <div class="${hasErrors(bean: participant, field: 'award', 'error')}">
-                                    <label class="property-label">
-                                        <g:message code="participantDate.award.label" />
-                                    </label>
-                                    <span class="property-value">
-                                        <g:checkBox name="ParticipantDate.award" checked="${participant.award}" />
-                                    </span>
-                                </div>
-                            </fieldset>
+                             <g:if test="${Setting.getSetting(Setting.SHOW_STUDENT, curDate?.event).value == '1'}">
+                                <fieldset class="form">
+                                    <legend><g:message code="participantDate.student.label" /></legend>
+                                    <div class="${hasErrors(bean: participant, field: 'student', 'error')}">
+                                        <label class="property-label">
+                                            <g:message code="participantDate.studentRequested.label" />
+                                        </label>
+                                        <span class="property-value">
+                                            <g:checkBox name="ParticipantDate.student" checked="${participant.student}" />
+                                        </span>
+                                    </div>
+                                    <div class="${hasErrors(bean: participant, field: 'studentConfirmed', 'error')}">
+                                        <label class="property-label">
+                                            <g:message code="participantDate.studentConfirmed.label" />
+                                        </label>
+                                        <span class="property-value">
+                                            <g:checkBox name="ParticipantDate.studentConfirmed" checked="${participant.studentConfirmed}" />
+                                        </span>
+                                    </div>
+                                    <g:if test="${Setting.getSetting(Setting.SHOW_AWARD, curDate?.event).value == '1'}">
+                                        <div class="${hasErrors(bean: participant, field: 'award', 'error')}">
+                                            <label class="property-label">
+                                                <g:message code="participantDate.award.label" />
+                                            </label>
+                                            <span class="property-value">
+                                                <g:checkBox name="ParticipantDate.award" checked="${participant.award}" />
+                                            </span>
+                                        </div>
+                                    </g:if>
+                                </fieldset>
+                            </g:if>
 
                             <fieldset class="form">
                                 <legend><g:message code="participantDate.attendance.label" /></legend>
@@ -311,27 +321,29 @@
                                         <g:select name="ParticipantDate.feeState.id" from="${FeeState.sortedFeeStates.list()}" optionKey="id" optionValue="name" value="${participant.feeState.id}" />
                                     </span>
                                 </div>
-                                <div class="${hasErrors(bean: participant, field: 'accompanyingPersons', 'error')} ">
-                                    <label class="property-label">
-                                        <g:message code="participantDate.accompanyingPersons.label" />
-                                    </label>
-                                    <ul class="property-value">
-                                        <g:each in="${participant.accompanyingPersons}" var="instance" status="i">
-                                            <li>
-                                                <input type="text" name="AccompanyingPerson_${i}" id="AccompanyingPerson_${i}" value="${instance}" />
+                                <g:if test="${Setting.getSetting(Setting.SHOW_ACCOMPANYING_PERSONS, curDate?.event).value == '1'}">
+                                    <div class="${hasErrors(bean: participant, field: 'accompanyingPersons', 'error')} ">
+                                        <label class="property-label">
+                                            <g:message code="participantDate.accompanyingPersons.label" />
+                                        </label>
+                                        <ul class="property-value">
+                                            <g:each in="${participant.accompanyingPersons}" var="instance" status="i">
+                                                <li>
+                                                    <input type="text" name="AccompanyingPerson_${i}" id="AccompanyingPerson_${i}" value="${instance}" />
+                                                    <span class="ui-icon ui-icon-circle-minus"></span>
+                                                </li>
+                                            </g:each>
+                                            <li class="add">
+                                                <span class="ui-icon ui-icon-circle-plus"></span>
+                                                <g:message code="default.add.label" args="[g.message(code: 'participantDate.accompanyingPersons.person.label')]" />
+                                            </li>
+                                            <li class="hidden">
+                                                <input type="text"  name="AccompanyingPerson_null" id="AccompanyingPerson_null" />
                                                 <span class="ui-icon ui-icon-circle-minus"></span>
                                             </li>
-                                        </g:each>
-                                        <li class="add">
-                                            <span class="ui-icon ui-icon-circle-plus"></span>
-                                            <g:message code="default.add.label" args="[g.message(code: 'participantDate.accompanyingPersons.person.label')]" />
-                                        </li>
-                                        <li class="hidden">
-                                            <input type="text"  name="AccompanyingPerson_null" id="AccompanyingPerson_null" />
-                                            <span class="ui-icon ui-icon-circle-minus"></span>
-                                        </li>
-                                    </ul>
-                                </div>
+                                        </ul>
+                                    </div>
+                                </g:if>
                                 <div class="${hasErrors(bean: participant, field: 'extraInfo', 'error')}">
                                     <label class="property-label">
                                         <g:message code="participantDate.extraInfo.label" />
@@ -362,43 +374,45 @@
                                 </div>
                             </fieldset>
 
-                            <fieldset class="form">
-                                <legend><g:message code="participantDate.volunteering.label" /></legend>
-                                <div class="${hasErrors(bean: participant, field: 'participantVolunteering', 'error')} ">
-                                    <ul>
-                                    <g:each in="${participant.participantVolunteering}" var="instance" status="i">
-                                        <li>
-                                            <input type="hidden" name="ParticipantVolunteering_${i}.id" value="${instance.id}" />
-                                            <label>
-                                                <g:message code="participantDate.volunteering.select.label" />
-                                                <g:select from="${volunteering}" name="ParticipantVolunteering_${i}.volunteering.id" optionKey="id" optionValue="description" value="${instance?.volunteering?.id}" noSelection="[null:'']" />
-                                            </label>
-                                            <label>
-                                                <g:message code="network.label" />
-                                                <g:select from="${networks}" name="ParticipantVolunteering_${i}.network.id" optionKey="id" optionValue="name" value="${instance?.network?.id}" noSelection="[null:'']" />
-                                            </label>
-                                            <span class="ui-icon ui-icon-circle-minus"></span>
-                                        </li>
-                                    </g:each>
-                                        <li class="add">
-                                            <span class="ui-icon ui-icon-circle-plus"></span>
-                                            <g:message code="default.add.label" args="[g.message(code: 'participantDate.volunteering.add.label')]" />
-                                        </li>
-                                        <li class="hidden">
-                                            <input type="hidden" name="ParticipantVolunteering_null.id" />
-                                            <label>
-                                                <g:message code="participantDate.volunteering.select.label" />
-                                                <g:select from="${volunteering}" name="ParticipantVolunteering_null.volunteering.id" optionKey="id" optionValue="description" noSelection="[null:'']" />
-                                            </label>
-                                            <label>
-                                                <g:message code="network.label" />
-                                                <g:select from="${networks}" name="ParticipantVolunteering_null.network.id" optionKey="id" optionValue="name" noSelection="[null:'']" />
-                                            </label>
-                                            <span class="ui-icon ui-icon-circle-minus"></span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </fieldset>
+                            <g:if test="${(Setting.getSetting(Setting.SHOW_CHAIR_DISCUSSANT_POOL, curDate?.event).value == '1') || (Setting.getSetting(Setting.SHOW_LANGUAGE_COACH_PUPIL, curDate?.event).value == '1')}">
+                                <fieldset class="form">
+                                    <legend><g:message code="participantDate.volunteering.label" /></legend>
+                                    <div class="${hasErrors(bean: participant, field: 'participantVolunteering', 'error')} ">
+                                        <ul>
+                                        <g:each in="${participant.participantVolunteering}" var="instance" status="i">
+                                            <li>
+                                                <input type="hidden" name="ParticipantVolunteering_${i}.id" value="${instance.id}" />
+                                                <label>
+                                                    <g:message code="participantDate.volunteering.select.label" />
+                                                    <g:select from="${volunteering}" name="ParticipantVolunteering_${i}.volunteering.id" optionKey="id" optionValue="description" value="${instance?.volunteering?.id}" noSelection="[null:'']" />
+                                                </label>
+                                                <label>
+                                                    <g:message code="network.label" />
+                                                    <g:select from="${networks}" name="ParticipantVolunteering_${i}.network.id" optionKey="id" optionValue="name" value="${instance?.network?.id}" noSelection="[null:'']" />
+                                                </label>
+                                                <span class="ui-icon ui-icon-circle-minus"></span>
+                                            </li>
+                                        </g:each>
+                                            <li class="add">
+                                                <span class="ui-icon ui-icon-circle-plus"></span>
+                                                <g:message code="default.add.label" args="[g.message(code: 'participantDate.volunteering.add.label')]" />
+                                            </li>
+                                            <li class="hidden">
+                                                <input type="hidden" name="ParticipantVolunteering_null.id" />
+                                                <label>
+                                                    <g:message code="participantDate.volunteering.select.label" />
+                                                    <g:select from="${volunteering}" name="ParticipantVolunteering_null.volunteering.id" optionKey="id" optionValue="description" noSelection="[null:'']" />
+                                                </label>
+                                                <label>
+                                                    <g:message code="network.label" />
+                                                    <g:select from="${networks}" name="ParticipantVolunteering_null.network.id" optionKey="id" optionValue="name" noSelection="[null:'']" />
+                                                </label>
+                                                <span class="ui-icon ui-icon-circle-minus"></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </fieldset>
+                            </g:if>
                         </g:if>
                         <g:else>
                             <div>

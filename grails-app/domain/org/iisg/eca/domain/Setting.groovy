@@ -13,7 +13,6 @@ class Setting extends EventDomain {
     static final String MAX_PAPERS_PER_PERSON_PER_SESSION = 'max_papers_per_person_per_session'
     static final String SALT = 'salt'
     static final String ROLE_HIERARCHY = 'role_hierarchy'
-    static final String SHOW_PROGRAMME_ONLINE = 'show_programme_online'
     static final String EMAIL_MAX_NUM_TRIES = 'email_max_num_tries'
     static final String EMAIL_MIN_MINUTES_BETWEEN_SENDING = 'email_min_minutes_between_sending'
     static final String EMAIL_MAX_NUM_EMAILS_PER_SESSION = 'email_max_num_emails_per_session'
@@ -29,6 +28,17 @@ class Setting extends EventDomain {
     static final String IP_AUTHENTICATION = 'ip_authentication'
     static final String CHECK_ACCEPTED_IP = 'check_accepted_ip'
 	static final String REFUND_ADMINISTRATION_COSTS = 'refund_administration_costs'
+
+	// Show/hide settings
+	static final String SHOW_PROGRAMME_ONLINE = 'show_programme_online'
+	static final String SHOW_AWARD = 'show_award'
+	static final String SHOW_STUDENT = 'show_student'
+	static final String SHOW_CV	= 'show_cv'
+	static final String SHOW_ACCOMPANYING_PERSONS = 'show_accompanying_persons'
+	static final String SHOW_INVITATION_LETTER = 'show_invitation_letter'
+	static final String SHOW_LOWER_FEE = 'show_lower_fee'
+	static final String SHOW_CHAIR_DISCUSSANT_POOL = 'show_chair_discussant_pool'
+	static final String SHOW_LANGUAGE_COACH_PUPIL = 'show_language_coach_pupil'
 
 	// Layout settings
     static final String BANNER_IMG = 'banner_img'
@@ -67,7 +77,6 @@ class Setting extends EventDomain {
     def beforeUpdate() {
         switch (property) {
             case MAX_PAPERS_PER_PERSON_PER_SESSION:
-            case SHOW_PROGRAMME_ONLINE:
             case DEFAULT_ORGANISATION_EMAIL:
             case EMAIL_ADDRESS_INFO_ERRORS:
             case WEB_ADDRESS:
@@ -75,6 +84,15 @@ class Setting extends EventDomain {
             case DONT_SEND_EMAILS_TO:
             case APPLICATION_TITLE:
             case REFUND_ADMINISTRATION_COSTS:
+            case SHOW_PROGRAMME_ONLINE:
+            case SHOW_AWARD:
+            case SHOW_STUDENT:
+            case SHOW_CV:
+            case SHOW_ACCOMPANYING_PERSONS:
+            case SHOW_INVITATION_LETTER:
+            case SHOW_LOWER_FEE:
+            case SHOW_CHAIR_DISCUSSANT_POOL:
+            case SHOW_LANGUAGE_COACH_PUPIL:
             case BANNER_IMG:
             case BANNER_BG_IMG:
             case LABEL_COLOR:
