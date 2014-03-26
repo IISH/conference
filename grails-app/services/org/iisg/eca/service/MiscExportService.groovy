@@ -50,8 +50,8 @@ class MiscExportService {
         List<String> columnNames = [
                 'ID',
                 messageSource.getMessage('title.label', null, LocaleContextHolder.locale),
-                messageSource.getMessage('user.firstName.label', null, LocaleContextHolder.locale),
                 messageSource.getMessage('user.lastName.label', null, LocaleContextHolder.locale),
+                messageSource.getMessage('user.firstName.label', null, LocaleContextHolder.locale),
                 messageSource.getMessage('user.organisation.label', null, LocaleContextHolder.locale),
                 messageSource.getMessage('user.department.label', null, LocaleContextHolder.locale),
                 messageSource.getMessage('user.country.label', null, LocaleContextHolder.locale),
@@ -121,6 +121,8 @@ class MiscExportService {
 	        else {
 		        row.put('network', null)
 	        }
+
+	        row.put('amount', (row.get('amount') > 0) ? row.get('amount') / 100 : row.get('amount'))
         }
 
         // Create XLS export
