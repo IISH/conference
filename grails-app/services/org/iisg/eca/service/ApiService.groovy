@@ -119,7 +119,8 @@ class ApiService {
 		Object instance = id ? domainClass.findById(params.id) : domainClass.newInstance()
 
 		validProperties.each { property, value ->
-			if (property.toString().contains('.')) {
+			if (    property.toString().contains('.') ||
+                    domainClassInfo.getTypeNameForProperty(property).equalsIgnoreCase('set')) {
 				instance.updateForApi(property, value)
 			}
 			else {

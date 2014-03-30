@@ -128,7 +128,8 @@ class EventDateController {
 
             // Everything left in the deletion list must be deleted
             toBeDeleted.each { day ->
-                day.delete()
+                day.softDelete()
+                day.save()
             }
 
             // Save the event date and redirect to the previous page if everything is ok

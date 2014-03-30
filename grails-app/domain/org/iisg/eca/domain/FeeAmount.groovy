@@ -14,7 +14,6 @@ class FeeAmount extends EventDateDomain {
     static belongsTo = FeeState
 
     static constraints = {
-        date            nullable: true
         numDaysStart    min: 1
         numDaysEnd      min: 1, validator: { val, obj ->
                             if (obj.numDaysEnd < obj.numDaysStart) {                            
@@ -30,7 +29,6 @@ class FeeAmount extends EventDateDomain {
         version false
 
         id              column: 'fee_amount_id'
-        date            column: 'date_id'
         feeState        column: 'fee_state_id'
         endDate         column: 'end_date'
         numDaysStart    column: 'nr_of_days_start'

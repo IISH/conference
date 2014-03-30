@@ -15,7 +15,6 @@ class ParticipantVolunteering implements Serializable {
 
     static mapping = {
         table 'participant_volunteering'
-        //id composite: ['participantDate', 'volunteering', 'network']
         version false
 
         id              column: 'participant_volunteering_temp_id'
@@ -42,17 +41,20 @@ class ParticipantVolunteering implements Serializable {
 	static apiPostPut = [
 			'participantDate.id',
 			'volunteering.id',
-			'network.id',
+			'network.id'
 	]
 
-    /*Long getId() {
-        if (participantDate?.id && volunteering?.id && network?.id) {
-            "${participantDate.id}${volunteering.id}${network.id}".toLong()
+    static namedQueries = {
+        sortedParticipantVolunteering { participantDateId ->
+            eq('participantDate.id', participantDateId)
+            volunteering {
+                order('description', 'asc')
+            }
+            network {
+                order('name', 'asc')
+            }
         }
-        else {
-            null
-        }
-    }*/
+    }
 
 	void updateForApi(String property, String value) {
 		switch (property) {
@@ -77,7 +79,7 @@ class ParticipantVolunteering implements Serializable {
 		}
 	}
 
-     @Override
+    @Override
     int hashCode() {
         def builder = new HashCodeBuilder()
         builder.append participantDate

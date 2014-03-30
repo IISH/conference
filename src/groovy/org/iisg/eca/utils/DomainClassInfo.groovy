@@ -34,7 +34,7 @@ class DomainClassInfo {
         dcProperty.getTypePropertyName()
     }
 
-    String getTypeForProperty(String property) {
+    Class getTypeForProperty(String property) {
         GrailsDomainClassProperty dcProperty = this.getPropertyByName(property)
         dcProperty.getType()
     }

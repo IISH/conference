@@ -102,7 +102,7 @@ class FeeController {
 
             // Get a list of all fee amounts for this fee state
             // If they do not come up, they have to be deleted
-            Set<FeeAmount> toBeDeleted = new HashSet<FeeAmount>(feeState.feeAmounts)
+            Set<FeeAmount> toBeDeleted = FeeAmount.findAllByFeeState(feeState)
 
             // Save all possible fee amounts
             int i = 0
@@ -129,8 +129,7 @@ class FeeController {
 
             // Everything left in the deletion list must be deleted
             toBeDeleted.each { feeAmount ->
-                feeAmount.softDelete()
-                feeAmount.save()
+                feeState.removeFromFeeAmounts(feeAmount)
             }
 
             // Save the fee state and redirect to the previous page if everything is ok

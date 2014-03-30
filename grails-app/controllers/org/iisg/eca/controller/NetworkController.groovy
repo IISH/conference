@@ -205,7 +205,8 @@ class NetworkController {
                 session = Session.findById(params.long('session_id'))
             }
             else {
-                session = new Session(code: params.session_code, name: params.session_name)
+                session = new Session(code: params.session_code, name: params.session_name, state: SessionState.get(SessionState.NEW_SESSION))
+                session.save()
             }
 
             Network network = Network.findById(params.long('network_id'))

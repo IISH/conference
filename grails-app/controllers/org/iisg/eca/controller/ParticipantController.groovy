@@ -219,6 +219,7 @@ class ParticipantController {
         // Already collect participant ids in the case of an error
         List participantIds = participantService.getParticipantsWithFilters(params).collect { it[0] }
         List sessions = participant ? participantSessionService.getSessionsForParticipant(participant) : []
+        List participantVolunteering = participant ? ParticipantVolunteering.sortedParticipantVolunteering(participant.id).list() : []
         List daysPresent = user ? ParticipantDay.findAllDaysOfUser(user) : []
         List orders = user ? Order.findAllOrdersOfUserLastYear(user) : []
 
@@ -288,20 +289,30 @@ class ParticipantController {
                     user.dateTimesNotPresent.addAll(sessionDateTimes)
                     user.save(failOnError: true)
 
-                    // Remove all volunteering offers from the participant and save all new information
-                    int i = 0
-                    participant.participantVolunteering.clear()
-                    participant.save(failOnError: true, flush: true)
-                    while (params["ParticipantVolunteering_${i}"]) {
-                        ParticipantVolunteering pv = new ParticipantVolunteering()
-                        bindData(pv, params, [include: ['volunteering', 'network']], "ParticipantVolunteering_${i}")
-                        i++
+	                // Remove all accompanying persons from the participant and save all new information
+	                int i = 0
+	                participant.accompanyingPersons.clear()
+	                participant.save(failOnError: true, flush: true)
+	                while (params["AccompanyingPerson_${i}"]) {
+		                participant.accompanyingPersons << params["AccompanyingPerson_${i}"]
+		                i++
+	                }
+	                participant.save(failOnError: true)
 
-                        if (!participant.participantVolunteering.find { it.equalsWithoutParticipant(pv) }) {
-                            participant.addToParticipantVolunteering(pv)
-                        }
-                    }
-                    participant.save(failOnError: true)
+	                // Remove all volunteering offers from the participant and save all new information
+	                i = 0
+	                participant.participantVolunteering.clear()
+	                participant.save(failOnError: true, flush: true)
+	                while (params["ParticipantVolunteering_${i}"]) {
+		                ParticipantVolunteering pv = new ParticipantVolunteering()
+		                bindData(pv, params, [include: ['volunteering', 'network']], "ParticipantVolunteering_${i}")
+		                i++
+
+		                if (!participant.participantVolunteering.find { it.equalsWithoutParticipant(pv) }) {
+			                participant.addToParticipantVolunteering(pv)
+		                }
+	                }
+	                participant.save(failOnError: true)
 
                     // Check which papers have to be deleted, try to soft delete them
                     String[] ids = params["to-be-deleted"].split(';')
@@ -382,6 +393,7 @@ class ParticipantController {
                                                 participant: participant,
                                                 papers: Paper.findAllByUser(user),
                                                 volunteering: Volunteering.list(),
+                                                participantVolunteering: participantVolunteering,
                                                 networks: Network.list(),
                                                 paperStates: PaperState.list(),
                                                 equipmentList: Equipment.list(),
@@ -400,6 +412,7 @@ class ParticipantController {
                                         participant: participant,
                                         papers: Paper.findAllByUser(user),
                                         volunteering: Volunteering.list(),
+                                        participantVolunteering: participantVolunteering,
                                         networks: Network.list(),
                                         paperStates: PaperState.list(),
                                         equipmentList: Equipment.list(),

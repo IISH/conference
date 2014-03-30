@@ -3,7 +3,7 @@ package org.iisg.eca.domain
 /**
  * Domain class of table holding all participants of a session
  */
-class SessionParticipant {
+class SessionParticipant extends EventDateDomain {
     User user
     Session session
     ParticipantType type

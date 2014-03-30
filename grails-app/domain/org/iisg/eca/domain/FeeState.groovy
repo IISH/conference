@@ -8,12 +8,12 @@ class FeeState extends EventDomain {
 
     String name
     boolean isDefaultFee = false
+	boolean isAccompanyingPersonFee = false
 	boolean deleted = false
     
     static hasMany = [participantDates: ParticipantDate, feeAmounts: FeeAmount]
 
     static constraints = {
-        event   nullable: true
         name    blank: false, maxSize: 50
     }
 
@@ -22,13 +22,13 @@ class FeeState extends EventDomain {
         version false
         sort 'name': 'asc'
 
-        id              column: 'fee_state_id'
-        event           column: 'event_id'
-        name            column: 'name'
-        isDefaultFee    column: 'is_default_fee'
-	    deleted         column: 'deleted'
+        id                      column: 'fee_state_id'
+        name                    column: 'name'
+        isDefaultFee            column: 'is_default_fee'
+	    isAccompanyingPersonFee column: 'is_accompanying_person_fee'
+	    deleted                 column: 'deleted'
 
-        feeAmounts      sort: 'endDate', cascade: 'all-delete-orphan'
+		feeAmounts              sort: 'endDate', cascade: 'all-delete-orphan'
     }
 
 	static hibernateFilters = {
@@ -42,6 +42,7 @@ class FeeState extends EventDomain {
             'id',
             'name',
             'isDefaultFee',
+		    'isAccompanyingPersonFee',
             'feeAmounts.id'
     ]
 

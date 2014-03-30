@@ -1,5 +1,6 @@
 package org.iisg.eca.domain
 
+import grails.converters.JSON
 import org.iisg.eca.domain.payway.Order
 
 /**
@@ -27,7 +28,7 @@ class ParticipantDate extends EventDateDomain {
 	boolean deleted = false
 
     static belongsTo = [User, ParticipantState, FeeState]
-    static hasMany = [extras: Extra, participantVolunteering: ParticipantVolunteering]
+	static hasMany = [extras: Extra, participantVolunteering: ParticipantVolunteering, accompanyingPersons: String]
 
     static mapping = {
         table 'participant_date'
@@ -57,6 +58,9 @@ class ParticipantDate extends EventDateDomain {
 
         extras                  joinTable: 'participant_date_extra'
         participantVolunteering cascade: 'all-delete-orphan'
+	    accompanyingPersons     joinTable: [name:   'accompanying_persons',
+	                                        key:    'participant_date_id',
+	                                        column: 'name']
     }
 
     static constraints = {
@@ -84,6 +88,7 @@ class ParticipantDate extends EventDateDomain {
             'lowerFeeText',
             'student',
             'award',
+		    'accompanyingPersons',
             'extras.id',
             'participantVolunteering.id',
 		    'addedBy.id'
@@ -95,6 +100,7 @@ class ParticipantDate extends EventDateDomain {
 		    'lowerFeeRequested',
 		    'student',
 		    'award',
+		    'accompanyingPersons',
             'extras.id',
 		    'state.id',
 		    'feeState.id',
@@ -120,6 +126,11 @@ class ParticipantDate extends EventDateDomain {
                     }
                 }
                 break
+	        case 'accompanyingPersons':
+		        this.accompanyingPersons.clear()
+		        this.save(flush: true)
+		        this.accompanyingPersons = JSON.parse(value)*.trim()
+		        break
 	        case 'state.id':
 		        ParticipantState state = (value.isLong()) ? ParticipantState.findById(value.toLong()) : null
 		        if (state) {
