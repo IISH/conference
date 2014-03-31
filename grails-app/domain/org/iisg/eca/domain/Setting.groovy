@@ -28,6 +28,7 @@ class Setting extends EventDomain {
     static final String IP_AUTHENTICATION = 'ip_authentication'
     static final String CHECK_ACCEPTED_IP = 'check_accepted_ip'
 	static final String REFUND_ADMINISTRATION_COSTS = 'refund_administration_costs'
+	static final String DEFAULT_FROM_EMAIL = 'default_from_email'
 
 	// Show/hide settings
 	static final String SHOW_PROGRAMME_ONLINE = 'show_programme_online'

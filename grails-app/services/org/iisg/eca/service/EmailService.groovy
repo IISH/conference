@@ -105,6 +105,7 @@ class EmailService {
     synchronized void sendEmail(SentEmail sentEmail, boolean saveToDb=true, boolean forceSend=false) {
         // How often may we try before giving up?
         Integer maxNumTries = new Integer(Setting.getSetting(Setting.EMAIL_MAX_NUM_TRIES).value)
+		String fromEmail = Setting.getSetting(Setting.DEFAULT_FROM_EMAIL).value
 
         // Only send the email if the maximum number of tries is not reached
         if (forceSend || (sentEmail.numTries < maxNumTries)) {
@@ -116,8 +117,9 @@ class EmailService {
                 // Try to send the email if we have to
                 if (sendEmailTo(sentEmail.user, sentEmail.date?.event)) {
                     mailService.sendMail {
-                        from "\"${sentEmail.fromName}\" <${sentEmail.fromEmail}>"
-                        to "\"${sentEmail.user.toString()}\" <${sentEmail.user.email}>"
+                        from "\"${sentEmail.fromName}\" <${fromEmail}>"
+	                    replyTo sentEmail.fromEmail
+	                    to "\"${sentEmail.user.toString()}\" <${sentEmail.user.email}>"
                         subject sentEmail.subject
                         text sentEmail.body
                     }
@@ -154,6 +156,7 @@ class EmailService {
     synchronized void sendInfoMail(String emailSubject, String message,
                                    Event event=pageInformation.date?.event, String emailAddress=null) {
         String[] recipients = Setting.getSetting(Setting.EMAIL_ADDRESS_INFO_ERRORS, event).value.split(';')
+	    String fromEmail = Setting.getSetting(Setting.DEFAULT_FROM_EMAIL).value
 
         // If no email address is set, use the default info email address from the settings
         if (!emailAddress) {
@@ -162,7 +165,8 @@ class EmailService {
 
         // Send the email
         mailService.sendMail {
-            from emailAddress
+	        from fromEmail
+            replyTo emailAddress
             to recipients
             subject emailSubject
             text message
@@ -179,6 +183,7 @@ class EmailService {
      */
     synchronized String testEmailService(String f, String t, String s, String body) {
         String info = "";
+	    String fromEmail = Setting.getSetting(Setting.DEFAULT_FROM_EMAIL).value
 
         try {
             // Make sure that the mail service is enabled.
@@ -197,7 +202,8 @@ class EmailService {
 
             // Send the email
             MimeMailMessage mailMessage = mailService.sendMail {
-                from f
+	            from fromEmail
+                replyTo f
                 to t
                 subject s
                 text body
