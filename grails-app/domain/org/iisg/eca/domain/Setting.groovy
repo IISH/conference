@@ -30,8 +30,21 @@ class Setting extends EventDomain {
     static final String CHECK_ACCEPTED_IP = 'check_accepted_ip'
 	static final String REFUND_ADMINISTRATION_COSTS = 'refund_administration_costs'
     static final String MAX_UPLOAD_SIZE_PAPER = 'max_upload_size_paper'
+	static final String DEFAULT_FROM_EMAIL = 'default_from_email'
     static final String ALLOWED_PAPER_EXTENSIONS = 'allowed_paper_extensions'
     static final String BANK_TRANSFER_INFO = 'bank_transfer_info'
+	static final String EMAIL_BCC = 'email_bcc'
+
+	// Show/hide settings
+	static final String SHOW_PROGRAMME_ONLINE = 'show_programme_online'
+	static final String SHOW_AWARD = 'show_award'
+	static final String SHOW_STUDENT = 'show_student'
+	static final String SHOW_CV	= 'show_cv'
+	static final String SHOW_ACCOMPANYING_PERSONS = 'show_accompanying_persons'
+	static final String SHOW_INVITATION_LETTER = 'show_invitation_letter'
+	static final String SHOW_LOWER_FEE = 'show_lower_fee'
+	static final String SHOW_CHAIR_DISCUSSANT_POOL = 'show_chair_discussant_pool'
+	static final String SHOW_LANGUAGE_COACH_PUPIL = 'show_language_coach_pupil'
 
 	// Layout settings
     static final String BANNER_IMG = 'banner_img'
@@ -90,6 +103,15 @@ class Setting extends EventDomain {
             case DONT_SEND_EMAILS_TO:
             case APPLICATION_TITLE:
             case REFUND_ADMINISTRATION_COSTS:
+            case SHOW_PROGRAMME_ONLINE:
+            case SHOW_AWARD:
+            case SHOW_STUDENT:
+            case SHOW_CV:
+            case SHOW_ACCOMPANYING_PERSONS:
+            case SHOW_INVITATION_LETTER:
+            case SHOW_LOWER_FEE:
+            case SHOW_CHAIR_DISCUSSANT_POOL:
+            case SHOW_LANGUAGE_COACH_PUPIL:
             case BANNER_IMG:
             case BANNER_BG_IMG:
             case LABEL_COLOR:
@@ -144,6 +166,10 @@ class Setting extends EventDomain {
 		}
 
 		return settings
+	}
+
+	String[] getMultipleValues() {
+		return (value != null) ? value.split(';') as String[] : [] as String[]
 	}
 
     private void setSetting() {

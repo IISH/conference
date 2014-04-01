@@ -113,11 +113,16 @@ class EmailService {
             }
 
             try {
+	            String fromEmail = Setting.getSetting(Setting.DEFAULT_FROM_EMAIL).value
+	            String[] bccAddresses = Setting.getSetting(Setting.EMAIL_BCC).getMultipleValues()
+
                 // Try to send the email if we have to
                 if (sendEmailTo(sentEmail.user, sentEmail.date?.event)) {
                     mailService.sendMail {
-                        from "\"${sentEmail.fromName}\" <${sentEmail.fromEmail}>"
-                        to "\"${sentEmail.user.toString()}\" <${sentEmail.user.email}>"
+                        from "\"${sentEmail.fromName}\" <${fromEmail}>"
+	                    replyTo sentEmail.fromEmail
+	                    bcc bccAddresses
+	                    to "\"${sentEmail.user.toString()}\" <${sentEmail.user.email}>"
                         subject sentEmail.subject
                         text sentEmail.body
                     }
@@ -136,7 +141,7 @@ class EmailService {
                 // Some mails shouldn't be saved in the database
                 if (saveToDb) {
                     SentEmail.withNewSession { session ->
-	                    sentEmail.internalUpdate = true
+                        sentEmail.internalUpdate = true
                         sentEmail.save()
                     }
                 }
@@ -153,7 +158,8 @@ class EmailService {
      */
     synchronized void sendInfoMail(String emailSubject, String message,
                                    Event event=pageInformation.date?.event, String emailAddress=null) {
-        String[] recipients = Setting.getSetting(Setting.EMAIL_ADDRESS_INFO_ERRORS, event).value.split(';')
+        String[] recipients = Setting.getSetting(Setting.EMAIL_ADDRESS_INFO_ERRORS, event).getMultipleValues()
+	    String fromEmail = Setting.getSetting(Setting.DEFAULT_FROM_EMAIL).value
 
         // If no email address is set, use the default info email address from the settings
         if (!emailAddress) {
@@ -162,7 +168,7 @@ class EmailService {
 
         // Send the email
         mailService.sendMail {
-            from emailAddress
+	        from fromEmail
             to recipients
             subject emailSubject
             text message
@@ -179,6 +185,8 @@ class EmailService {
      */
     synchronized String testEmailService(String f, String t, String s, String body) {
         String info = "";
+	    String fromEmail = Setting.getSetting(Setting.DEFAULT_FROM_EMAIL).value
+	    String[] bccAddresses = Setting.getSetting(Setting.EMAIL_BCC).getMultipleValues()
 
         try {
             // Make sure that the mail service is enabled.
@@ -196,8 +204,10 @@ class EmailService {
             }
 
             // Send the email
-            MimeMailMessage mailMessage = mailService.sendMail {
-                from f
+            MimeMailMessage mailMessage = (MimeMailMessage) mailService.sendMail {
+	            from fromEmail
+                replyTo f
+	            bcc bccAddresses
                 to t
                 subject s
                 text body

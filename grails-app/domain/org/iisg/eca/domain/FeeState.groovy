@@ -9,7 +9,7 @@ class FeeState extends EventDomain {
     String name
     boolean isDefaultFee = false
 	boolean isAccompanyingPersonFee = false
-	boolean deleted = false 
+	boolean deleted = false
     
     static hasMany = [participantDates: ParticipantDate, feeAmounts: FeeAmount]
 
