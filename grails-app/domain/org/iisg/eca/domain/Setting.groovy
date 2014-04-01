@@ -13,7 +13,6 @@ class Setting extends EventDomain {
     static final String MAX_PAPERS_PER_PERSON_PER_SESSION = 'max_papers_per_person_per_session'
     static final String SALT = 'salt'
     static final String ROLE_HIERARCHY = 'role_hierarchy'
-    static final String SHOW_PROGRAMME_ONLINE = 'show_programme_online'
     static final String EMAIL_MAX_NUM_TRIES = 'email_max_num_tries'
     static final String EMAIL_MIN_MINUTES_BETWEEN_SENDING = 'email_min_minutes_between_sending'
     static final String EMAIL_MAX_NUM_EMAILS_PER_SESSION = 'email_max_num_emails_per_session'
@@ -95,7 +94,6 @@ class Setting extends EventDomain {
     def beforeUpdate() {
         switch (property) {
             case MAX_PAPERS_PER_PERSON_PER_SESSION:
-            case SHOW_PROGRAMME_ONLINE:
             case DEFAULT_ORGANISATION_EMAIL:
             case EMAIL_ADDRESS_INFO_ERRORS:
             case WEB_ADDRESS:
