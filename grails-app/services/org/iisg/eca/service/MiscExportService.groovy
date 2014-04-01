@@ -2,7 +2,7 @@ package org.iisg.eca.service
 
 import org.iisg.eca.domain.Day
 import org.iisg.eca.domain.Extra
-
+import org.iisg.eca.domain.User
 import org.iisg.eca.export.Export
 import org.iisg.eca.export.XlsMapExport
 
@@ -10,6 +10,7 @@ import groovy.sql.Sql
 import java.text.SimpleDateFormat
 import org.hibernate.impl.SessionImpl
 import org.springframework.context.i18n.LocaleContextHolder
+import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 
 /**
  * Service that takes care of creating the export for various cases
@@ -150,6 +151,34 @@ class MiscExportService {
 		// Create XLS export
 		String title = messageSource.getMessage('default.program.label', null, LocaleContextHolder.locale)
 		return new XlsMapExport(columns, results, title, columnNames)
+	}
+
+	/**
+	 * Creates an export of (accepted) participants with filters set by the user
+	 * @param params The parameters, filters set by the user
+	 * @return An Excel export of all matching participants
+	 */
+	Export getParticipantsWithFilterExport(GrailsParameterMap params) {
+		List results = User.allParticipants(pageInformation.date) {
+			participantDates {
+				if (params.feeStateId?.isLong()) {
+					eq('feeState.id', params.long('feeStateId'))
+				}
+			}
+		}
+
+		return new XlsMapExport(
+				['id', 'lastName', 'firstName', 'email', 'organisation', 'department', 'country'],
+				results,
+				messageSource.getMessage('participantDate.multiple.label', null, LocaleContextHolder.locale),
+				['#',
+				 messageSource.getMessage('user.lastName.label', null, LocaleContextHolder.locale),
+				 messageSource.getMessage('user.firstName.label', null, LocaleContextHolder.locale),
+				 messageSource.getMessage('user.email.label', null, LocaleContextHolder.locale),
+				 messageSource.getMessage('user.organisation.label', null, LocaleContextHolder.locale),
+				 messageSource.getMessage('user.department.label', null, LocaleContextHolder.locale),
+				 messageSource.getMessage('user.country.label', null, LocaleContextHolder.locale)]
+		)
 	}
 
 	private static final String PARTICIPANTS_SQL = '''
