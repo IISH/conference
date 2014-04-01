@@ -235,9 +235,15 @@ class SessionController {
             if (params.id?.isLong()) {
                 session = Session.findById(params.id.toLong())
             }
-            else {
+            else if (sessions.size() > 0) {
                 session = sessions.get(0)
                 params.id = session.id
+            }
+	        else {
+	            flash.error = true
+	            flash.message = g.message(code: 'default.not.found.message', args: [g.message(code: 'session.multiple.accepted.label')])
+	            redirect(uri: eca.createLink(previous: true, noBase: true))
+	            return
             }
 
             // Let the participantSessionService come up with all participants
