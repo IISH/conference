@@ -47,8 +47,15 @@ class SendEmailJob {
                 Integer maxMails = new Integer(Setting.findByProperty(Setting.EMAIL_MAX_NUM_EMAILS_PER_SESSION).value)
                 // Find out the maximum number of tries
                 Integer maxNumTries = new Integer(Setting.findByProperty(Setting.EMAIL_MAX_NUM_TRIES).value)
+	            // Find out how many mintues we wait for the email to be sent
+	            Integer minutes = new Integer(Setting.findByProperty(Setting.EMAIL_WAITING_TIME).value)
+	            minutes = (minutes) ? minutes : 60
+	            // Find out the minimum date the email has to be created
+	            Date dateTime = geMinimalCreatedTime()
 
-                log.info("Not disabled: querying db with maxMails=${maxMails} and maxNumTries=${maxNumTries}")
+                log.info("Not disabled: querying db with max number of mails = ${maxMails} " +
+		                "and max number of tries = ${maxNumTries} and email delay/waiting time = ${minutes} minutes " +
+		                "which equals to a minimal creation time of = ${dateTime} unless 'sendAsap' = true")
 
                 // Get all emails that are waiting to be send
                 List<SentEmail> emailsWaiting = SentEmail.executeQuery("""
@@ -59,7 +66,7 @@ class SendEmailJob {
                         se.dateTimeCreated <= :dateTime
                         OR se.sendAsap = true
                     )
-                """, [maxNumTries: maxNumTries, dateTime: getMaxCreatedTime()], [max: maxMails])
+                """, [maxNumTries: maxNumTries, dateTime: dateTime], [max: maxMails])
 
                 log.info("Found ${emailsWaiting.size()} mails to be send!")
 
@@ -93,10 +100,10 @@ class SendEmailJob {
     }
 
     /**
-     * Obtain the maximum created time for emails to be send, defaults to one hour
-     * @return The maximum date/time
+     * Obtain the minimal created time for emails to be send, defaults to one hour
+     * @return The minimal date/time
      */
-    Date getMaxCreatedTime() {
+    Date geMinimalCreatedTime() {
         Integer minutes = new Integer(Setting.findByProperty(Setting.EMAIL_WAITING_TIME).value)
         minutes = (minutes) ? minutes : 60
         minutes = -minutes
