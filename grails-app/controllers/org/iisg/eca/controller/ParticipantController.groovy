@@ -417,68 +417,69 @@ class ParticipantController {
 
         String dbName = ((SessionImpl) sessionFactory.currentSession).connection().catalog
         String dbNamePayWay = ((SessionImpl) sessionFactory_payWay.currentSession).connection().catalog
+		Long projectId = Setting.getSetting(Setting.PAYWAY_PROJECT_ID).value?.toLong()
 
         render(view: "payments", model: [
                 paymentsList:                   sql.rows(PaymentQueries.PAYMENT_LIST
                                                         .replace('db-name-payway', dbNamePayWay)
                                                         .replace('db-name', dbName),
-                                                        [dateId: pageInformation.date.id]),
+                                                        [dateId: pageInformation.date.id, projectId: projectId]),
 
                 paymentMethod:                  PaymentStatistic.createMap(
                                                     sql.rows(PaymentQueries.PAYMENT_METHOD_UNCONFIRMED
                                                             .replace('db-name-payway', dbNamePayWay)
                                                             .replace('db-name', dbName),
-                                                            [dateId: pageInformation.date.id]),
+                                                            [dateId: pageInformation.date.id, projectId: projectId]),
                                                     sql.rows(PaymentQueries.PAYMENT_METHOD_CONFIRMED
                                                             .replace('db-name-payway', dbNamePayWay)
                                                             .replace('db-name', dbName),
-                                                            [dateId: pageInformation.date.id])
+                                                            [dateId: pageInformation.date.id, projectId: projectId])
                                                 ),
                 paymentAmount:                  PaymentStatistic.createMap(
                                                     sql.rows(PaymentQueries.PAYMENT_AMOUNT_UNCONFIRMED
                                                             .replace('db-name-payway', dbNamePayWay)
                                                             .replace('db-name', dbName),
-                                                            [dateId: pageInformation.date.id]),
+                                                            [dateId: pageInformation.date.id, projectId: projectId]),
                                                     sql.rows(PaymentQueries.PAYMENT_AMOUNT_CONFIRMED
                                                             .replace('db-name-payway', dbNamePayWay)
                                                             .replace('db-name', dbName),
-                                                            [dateId: pageInformation.date.id])
+                                                            [dateId: pageInformation.date.id, projectId: projectId])
                                                 ),
                 participantState:               PaymentStatistic.createMap(
                                                     sql.rows(PaymentQueries.PARTICIPANT_STATE_UNCONFIRMED
                                                             .replace('db-name-payway', dbNamePayWay)
                                                             .replace('db-name', dbName),
-                                                            [dateId: pageInformation.date.id]),
+                                                            [dateId: pageInformation.date.id, projectId: projectId]),
                                                     sql.rows(PaymentQueries.PARTICIPANT_STATE_CONFIRMED
                                                             .replace('db-name-payway', dbNamePayWay)
                                                             .replace('db-name', dbName),
-                                                            [dateId: pageInformation.date.id])
+                                                            [dateId: pageInformation.date.id, projectId: projectId])
                                                 ),
 
                 paymentAmountsList:             sql.rows(PaymentQueries.PAYMENT_AMOUNT_LIST
                                                         .replace('db-name-payway', dbNamePayWay)
                                                         .replace('db-name', dbName),
-                                                        [dateId: pageInformation.date.id]),
+                                                        [dateId: pageInformation.date.id, projectId: projectId]),
 
                 participantsTotalPayed:         sql.rows(PaymentQueries.PARTICIPANTS_TOTAL_PAYED
                                                         .replace('db-name-payway', dbNamePayWay)
                                                         .replace('db-name', dbName),
-                                                        [dateId: pageInformation.date.id])
+                                                        [dateId: pageInformation.date.id, projectId: projectId])
                                                         .first(),
                 participantsTotalNotCompleted:  sql.rows(PaymentQueries.PARTICIPANTS_TOTAL_PAYMENT_NOT_COMPLETE
                                                         .replace('db-name-payway', dbNamePayWay)
                                                         .replace('db-name', dbName),
-                                                        [dateId: pageInformation.date.id])
+                                                        [dateId: pageInformation.date.id, projectId: projectId])
                                                         .first(),
                 participantsTotalNoAttempt:     sql.rows(PaymentQueries.PARTICIPANTS_TOTAL_NO_ATTEMPT
                                                         .replace('db-name-payway', dbNamePayWay)
                                                         .replace('db-name', dbName),
-                                                        [dateId: pageInformation.date.id])
+                                                        [dateId: pageInformation.date.id, projectId: projectId])
                                                         .first(),
                 participantsTotal:              sql.rows(PaymentQueries.PARTICIPANTS_TOTAL
                                                         .replace('db-name-payway', dbNamePayWay)
                                                         .replace('db-name', dbName),
-                                                        [dateId: pageInformation.date.id])
+                                                        [dateId: pageInformation.date.id, projectId: projectId])
                                                         .first()
         ])
     }
