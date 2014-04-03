@@ -16,7 +16,7 @@ public interface PaymentQueries {
 			LEFT JOIN `db-name-payway`.orders AS o
 			ON pd.user_id = o.user_id
 			WHERE u.deleted = 0
-			AND pd.date_id = 1
+			AND pd.date_id = :dateId
 			AND pd.deleted = 0
 			AND (
 				pd.participant_state_id IN (1,2)
@@ -36,7 +36,7 @@ public interface PaymentQueries {
 			LEFT JOIN `db-name-payway`.orders AS o
 			ON pd.payment_id = o.ID
 			WHERE u.deleted = 0
-			AND pd.date_id = 1
+			AND pd.date_id = :dateId
 			AND pd.deleted = 0
 			AND (
 				pd.participant_state_id IN (1,2)
