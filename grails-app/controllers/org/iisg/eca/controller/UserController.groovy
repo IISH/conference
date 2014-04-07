@@ -1,7 +1,9 @@
 package org.iisg.eca.controller
 
+import org.grails.datastore.gorm.query.NamedCriteriaProxy
 import org.iisg.eca.domain.User
 import grails.converters.JSON
+import org.iisg.eca.utils.QueryTypeCriteriaBuilder
 
 /**
  * Controller for user related actions
@@ -97,34 +99,31 @@ class UserController {
      * (AJAX call)
      */
     def usersAutoComplete() {
-       // If this is an AJAX call, continue
-       if (request.xhr) {
-           // By default, only return users that are a participant in the current event date
-           def criteria = User.allParticipants(pageInformation.date)
+		// If this is an AJAX call, continue
+		if (request.xhr) {
+		    String[] searchTerms = (params.terms) ? params.terms?.split() : []
+		    String queryType = (params.query) ? params.query : 'allParticipants'
 
-           if (params.query) {
-               criteria = User."$params.query"(pageInformation.date)
-           }
+		    QueryTypeCriteriaBuilder queryTypeCriteriaBuilder = new QueryTypeCriteriaBuilder(pageInformation.date, queryType)
+		    queryTypeCriteriaBuilder.setAdditionalCriteria {
+		        projections {
+			        distinct(['id', 'lastName', 'firstName'])
+		        }
 
-           String[] searchTerms = params.terms.toString().split()
-           def users = criteria {
-               projections {
-                   distinct(['id', 'lastName', 'firstName'])
-               }
+		        or {
+			        for (String searchTerm : searchTerms) {
+				        if (!searchTerm.isEmpty()) {
+					        like('lastName', "%${searchTerm}%")
+					        like('firstName', "%${searchTerm}%")
+				        }
+			        }
+		        }
+		    }
 
-               or {
-                   for (String searchTerm : searchTerms) {
-                       if (!searchTerm.isEmpty()) {
-                           like('lastName', "%${searchTerm}%")
-                           like('firstName', "%${searchTerm}%")
-                       }
-                   }
-               }
-           }
-
-           render users.collect { user ->
-               [label: "${user[1]}, ${user[2]}", value: user[0]]
-           } as JSON
-       }
+		    List users = queryTypeCriteriaBuilder.getUniqueResults()
+		    render users.collect { user ->
+		        [label: "${user[1]}, ${user[2]}", value: user[0]]
+		    } as JSON
+		}
     }
 }

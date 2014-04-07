@@ -14,8 +14,9 @@ class Session extends EventDateDomain {
     String comment
     SessionState state
     boolean mailSessionState = true
-    
-    static belongsTo = [Network, SessionState]
+    User addedBy
+
+    static belongsTo = [Network, SessionState, User]
     static hasMany = [  sessionParticipants: SessionParticipant,
                         papers: Paper,
                         sessionRoomDateTime: SessionRoomDateTime,
@@ -34,6 +35,7 @@ class Session extends EventDateDomain {
         comment             column: 'session_comment',  type: 'text'
         state               column: 'session_state_id'
         mailSessionState    column: 'mail_session_state'
+        addedBy             column: 'added_by'
 
         networks                joinTable: 'session_in_network'
         sessionParticipants     cascade: 'all-delete-orphan'
@@ -46,6 +48,7 @@ class Session extends EventDateDomain {
         name        blank: false,   maxSize: 255
         abstr       nullable: true
         comment     nullable: true
+        addedBy     nullable: true
     }
 
     /**

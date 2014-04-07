@@ -19,6 +19,9 @@ class EmailTemplate extends EventDomain {
     public static final String QUERY_ALL_SESSION_PARTICIPANTS_NOT_ANSWERED = "allSessionParticipantsNotAnswered"
     public static final String QUERY_ALL_SESSION_CHAIRS_NOT_ANSWERED = "allSessionChairsNotAnswered"
     public static final String QUERY_NO_PAYMENT_INFO = "noPaymentInfo"
+	public static final String QUERY_SESSION_ACCEPTED_NOT_ANSWERED = "sessionAcceptedNotAnswered"
+	public static final String QUERY_SESSION_IN_CONSIDERATION_NOT_ANSWERED = "sessionInConsiderationNotAnswered"
+	public static final String QUERY_SESSION_NOT_ACCEPTED_NOT_ANSWERED = "sessionNotAcceptedNotAnswered"
 
     /**
      * The identifier names
@@ -26,43 +29,44 @@ class EmailTemplate extends EventDomain {
     public static final String USER_ID = 'userId'
     public static final String DATE_ID = 'dateId'
     public static final String PAPER_ID = 'paperId'
+	public static final String SESSION_ID = 'sessionId'
 
     /**
      * What to filter on for each action when sending mails?
      */
     private static final Map<String, Boolean> ACTION_NULL = [
-            participant: false,
+            participant     : false,
             participantState: false,
-            paperState: false,
-            eventDates: false
+            paperState      : false,
+            eventDates      : false
     ] as HashMap<String, Boolean>
 
     private static final Map<String, Boolean> ACTION_PARTICIPANT = [
-            participant: true,
+            participant     : true,
             participantState: false,
-            paperState: false,
-            eventDates: false
+            paperState      : false,
+            eventDates      : false
     ] as HashMap<String, Boolean>
 
     private static final Map<String, Boolean> ACTION_PARTICIPANT_PAPERSTATE = [
-            participant: true,
+            participant     : true,
             participantState: true,
-            paperState: true,
-            eventDates: false
+            paperState      : true,
+            eventDates      : false
     ] as HashMap<String, Boolean>
 
     private static final Map<String, Boolean> ACTION_PARTICIPANT_STATE = [
-            participant: true,
+            participant     : true,
             participantState: true,
-            paperState: false,
-            eventDates: false
+            paperState      : false,
+            eventDates      : false
     ] as HashMap<String, Boolean>
 
     private static final Map<String, Boolean> ACTION_EVENTDATES = [
-            participant: false,
+            participant     : false,
             participantState: false,
-            paperState: false,
-            eventDates: true
+            paperState      : false,
+            eventDates      : true
     ] as HashMap<String, Boolean>
 
     /**
@@ -96,7 +100,7 @@ class EmailTemplate extends EventDomain {
         queryTypeMultiple   nullable: true, maxSize: 100
         comment             nullable: true
 
-        testEmail   email: true,    maxSize: 255
+        testEmail           email: true,    maxSize: 255
     }
 
     static mapping = {
@@ -145,7 +149,7 @@ class EmailTemplate extends EventDomain {
             case 'eventDates':
                 return ACTION_EVENTDATES
             default:
-               return ACTION_NULL
+                return ACTION_NULL
         }
     }
 
@@ -169,24 +173,32 @@ class EmailTemplate extends EventDomain {
         this.testAfterSave = false
     }
 
-    /**
-     * Finds out the names of the associations to call for ids
+	/**
+     * Finds out the names of the associations to call for ids,
+     * based on the given query type
+     * @attr queryType The specific query type
      * @return An array with the associations if called from a <code>User</code>
      */
-    String[] getAssociationsNames() {
-        switch (queryTypeMultiple) {
-            case QUERY_PAPER_ACCEPTED_NOT_ANSWERED:
-            case QUERY_PAPER_IN_CONSIDERATION_NOT_ANSWERED:
-            case QUERY_PAPER_NOT_ACCEPTED_NOT_ANSWERED:
-                return ['papers']
-                break
-            default:
-                return []
-        }
-    }
+	String[] getAssociationsNames() {
+		switch (this.queryTypeMultiple) {
+			case QUERY_PAPER_ACCEPTED_NOT_ANSWERED:
+			case QUERY_PAPER_IN_CONSIDERATION_NOT_ANSWERED:
+			case QUERY_PAPER_NOT_ACCEPTED_NOT_ANSWERED:
+				return ['papers']
+				break
+			case QUERY_SESSION_ACCEPTED_NOT_ANSWERED:
+			case QUERY_SESSION_IN_CONSIDERATION_NOT_ANSWERED:
+			case QUERY_SESSION_NOT_ACCEPTED_NOT_ANSWERED:
+				return ['sessions']
+				break
+			default:
+				return []
+		}
+	}
 
     /**
-     * Returns a map that identifies the ids
+     * Returns a map that identifies the ids,
+     * based on the first mentioned multiple recipients query type
      * @param identifiers The ids for a single recipient (correct array is expected)
      * @return A map that gives each of the ids a name
      */
@@ -195,15 +207,20 @@ class EmailTemplate extends EventDomain {
             case QUERY_PAPER_ACCEPTED_NOT_ANSWERED:
             case QUERY_PAPER_IN_CONSIDERATION_NOT_ANSWERED:
             case QUERY_PAPER_NOT_ACCEPTED_NOT_ANSWERED:
-                return [(USER_ID) : identifiers[0], (PAPER_ID) : identifiers[1]]
+                return [(USER_ID): identifiers[0], (PAPER_ID): identifiers[1]]
                 break
+	        case QUERY_SESSION_ACCEPTED_NOT_ANSWERED:
+	        case QUERY_SESSION_IN_CONSIDERATION_NOT_ANSWERED:
+	        case QUERY_SESSION_NOT_ACCEPTED_NOT_ANSWERED:
+		        return [(USER_ID): identifiers[0], (SESSION_ID): identifiers[1]]
+		        break
             default:
-                return [(USER_ID) : identifiers[0]]
+                return [(USER_ID): identifiers[0]]
         }
     }
 
     /**
-     * Update the recipients based based on the type of email sent     *
+     * Update the recipients based on the first mentioned multiple recipients query type of email sent
      */
     void updateRecipient(Map<String, Long> identifiers) {
         // Workaround for Hibernate exception "two open sessions" when using Quartz
@@ -220,6 +237,15 @@ class EmailTemplate extends EventDomain {
                     AND     paper_id = :paperId
                 ''', identifiers)
                 break
+	        case QUERY_SESSION_ACCEPTED_NOT_ANSWERED:
+	        case QUERY_SESSION_IN_CONSIDERATION_NOT_ANSWERED:
+	        case QUERY_SESSION_NOT_ACCEPTED_NOT_ANSWERED:
+		        sql.executeUpdate('''
+                    UPDATE  sessions
+                    SET     mail_session_state = 0
+                    WHERE   session_id = :sessionId
+                ''', identifiers)
+		        break
             case QUERY_STUDENT_LOWER_FEE_NOT_ANSWERED:
             case QUERY_NO_STUDENT_LOWER_FEE_NOT_ANSWERED:
                 sql.executeUpdate('''

@@ -7,54 +7,44 @@ import grails.plugin.springsecurity.SpringSecurityUtils
  * Domain class of table holding all registered users
  */
 class User extends DefaultDomain {
-    /**
-     * Information about the current page
-     */
-    def static pageInformation
+	def static pageInformation
+	def saltSource
+	transient springSecurityService
 
-    /**
-     * The saltSource is responsible for the creation of salts
-     */
-    def saltSource
+	String email
+	String lastName
+	String firstName
+	String gender
+	String title
+	String address
+	String city
+	Country country
+	String language = 'en'
+	String password
+	String salt
+	String requestCode
+	String phone
+	String fax
+	String mobile
+	String organisation
+	String department
+	String cv
+	String extraInfo
+	Date dateAdded = new Date()
+	boolean emailDiscontinued = false
 
-    /**
-     * Information about the currently logged in user
-     */
-    transient springSecurityService
-
-    String email
-    String lastName
-    String firstName
-    String gender
-    String title
-    String address
-    String city
-    Country country
-    String language = 'en'
-    String password
-    String salt
-    String requestCode
-    String phone
-    String fax
-    String mobile
-    String organisation
-    String department
-    String cv
-    String extraInfo
-    Date dateAdded = new Date()
-    boolean emailDiscontinued = false
-
-    static belongsTo = [Country, Group]
-    static hasMany = [  groups:                 Group,
-                        networks:               NetworkChair,
-                        participantDates:       ParticipantDate,
-                        userRoles:              UserRole,
-                        papers:                 Paper,
-                        sessionParticipants:    SessionParticipant,
-                        sentEmails:             SentEmail,
-                        dateTimesNotPresent:    SessionDateTime,
-                        userPages:              UserPage,
-                        daysPresent:            ParticipantDay]
+	static belongsTo = [Country, Group]
+	static hasMany = [groups             : Group,
+	                  networks           : NetworkChair,
+	                  participantDates   : ParticipantDate,
+	                  userRoles          : UserRole,
+	                  papers             : Paper,
+	                  sessionParticipants: SessionParticipant,
+	                  sentEmails         : SentEmail,
+	                  dateTimesNotPresent: SessionDateTime,
+	                  userPages          : UserPage,
+	                  daysPresent        : ParticipantDay,
+	                  sessionsAdded      : Session]
 
     static mapping = {
         table 'users'
@@ -114,304 +104,361 @@ class User extends DefaultDomain {
         extraInfo                       nullable: true
     }
 
-    static namedQueries = {
-        allUsers {
-            order('lastName', "asc")
-            order('firstName', "asc")
-        }
+	static namedQueries = {
+		allUsers {
+			order('lastName', "asc")
+			order('firstName', "asc")
+		}
 
-        networkChairs { date ->
-            allUsers()
+		networkChairs { date ->
+			allUsers()
 
-            networks {
-                network {
-                    eq('date.id', date.id)
-                    eq('deleted', false)
-                }
-            }
-        }
+			networks {
+				network {
+					eq('date.id', date.id)
+					eq('deleted', false)
+				}
+			}
+		}
 
-        allParticipantUsers {
-            allUsers()
+		allParticipantUsers {
+			allUsers()
 
-            participantDates {
-                eq('deleted', false)
-            }
-        }
+			participantDates {
+				eq('deleted', false)
+			}
+		}
 
-        allParticipants { date ->
-            allParticipantUsers()
+		allParticipants { date ->
+			allParticipantUsers()
 
-            participantDates {
-                'in'('state.id', [ParticipantState.PARTICIPANT_DATA_CHECKED, ParticipantState.PARTICIPANT])
-                eq('date.id', date.id)
-            }
-        }
+			participantDates {
+				'in'('state.id', [ParticipantState.PARTICIPANT_DATA_CHECKED, ParticipantState.PARTICIPANT])
+				eq('date.id', date.id)
+			}
+		}
 
-        allParticipantsSoftState { date ->
-            allParticipantUsers()
+		allParticipantsSoftState { date ->
+			allParticipantUsers()
 
-            participantDates {
-                'in'('state.id', [  ParticipantState.NEW_PARTICIPANT, ParticipantState.PARTICIPANT_DATA_CHECKED,
-                                    ParticipantState.PARTICIPANT, ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
-                eq('date.id', date.id)
-            }
-        }
+			participantDates {
+				'in'('state.id', [ParticipantState.NEW_PARTICIPANT, ParticipantState.PARTICIPANT_DATA_CHECKED,
+				                  ParticipantState.PARTICIPANT, ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
+				eq('date.id', date.id)
+			}
+		}
 
-        allParticipantsNotDeleted { date ->
-            allParticipantUsers()
+		allParticipantsNotDeleted { date ->
+			allParticipantUsers()
 
-            participantDates {
-                not {
-                    'in'('state.id', [  ParticipantState.REMOVED_CANCELLED, ParticipantState.REMOVED_DOUBLE_ENTRY,
-                                        ParticipantState.WILL_BE_REMOVED])
-                }
-                eq('date.id', date.id)
-            }
-        }
+			participantDates {
+				not {
+					'in'('state.id', [ParticipantState.REMOVED_CANCELLED, ParticipantState.REMOVED_DOUBLE_ENTRY,
+					                  ParticipantState.WILL_BE_REMOVED])
+				}
+				eq('date.id', date.id)
+			}
+		}
 
-	    allParticipantsToBeRemoved { date ->
-		    allParticipantUsers()
+		allParticipantsToBeRemoved { date ->
+			allParticipantUsers()
 
-		    participantDates {
-			    eq('state.id', ParticipantState.WILL_BE_REMOVED)
-			    eq('date.id', date.id)
-		    }
-	    }
+			participantDates {
+				eq('state.id', ParticipantState.WILL_BE_REMOVED)
+				eq('date.id', date.id)
+			}
+		}
 
-        paperAccepted { date ->
-            allParticipants(date)
+		allParticipantPapers { date ->
+			allParticipants(date)
 
-            papers {
-                eq('state.id', PaperState.PAPER_ACCEPTED)
-                eq('date.id', date.id)
-                eq('deleted', false)
-            }
-        }
+			createAlias('papers', 'papers')
+			eq('papers.date.id', date.id)
+			eq('papers.deleted', false)
+		}
 
-        paperAcceptedNotAnswered { date ->
-            paperAccepted(date)
+		paperAccepted { date ->
+			allParticipantPapers(date)
+			eq('papers.state.id', PaperState.PAPER_ACCEPTED)
+		}
 
-            papers {
-                eq('mailPaperState', true)
-            }
-        }
+		paperAcceptedNotAnswered { date ->
+			paperAccepted(date)
+			eq('papers.mailPaperState', true)
+		}
 
-        paperInConsideration { date ->
-            allParticipants(date)
+		paperInConsideration { date ->
+			allParticipantPapers(date)
+			eq('papers.state.id', PaperState.PAPER_IN_CONSIDERATION)
+		}
 
-            papers {
-                eq('state.id', PaperState.PAPER_IN_CONSIDERATION)
-                eq('date.id', date.id)
-                eq('deleted', false)
-            }
-        }
+		paperInConsiderationNotAnswered { date ->
+			paperInConsideration(date)
+			eq('papers.mailPaperState', true)
+		}
 
-        paperInConsiderationNotAnswered { date ->
-            paperInConsideration(date)
+		paperNotAccepted { date ->
+			allParticipantPapers(date)
+			eq('papers.state.id', PaperState.PAPER_NOT_ACCEPTED)
+		}
 
-            papers {
-                eq('mailPaperState', true)
-            }
-        }
+		paperNotAcceptedNotAnswered { date ->
+			paperNotAccepted(date)
+			eq('papers.mailPaperState', true)
+		}
 
-        paperNotAccepted { date ->
-            allParticipants(date)
+		studentLowerFee { date ->
+			allParticipantsNotDeleted(date)
 
-            papers {
-                eq('state.id', PaperState.PAPER_NOT_ACCEPTED)
-                eq('date.id', date.id)
-                eq('deleted', false)
-            }
-        }
+			participantDates {
+				eq('student', true)
+				eq('lowerFeeRequested', true)
+			}
+		}
 
-        paperNotAcceptedNotAnswered { date ->
-            paperNotAccepted(date)
+		studentLowerFeeNotAnswered { date ->
+			studentLowerFee(date)
 
-            papers {
-                eq('mailPaperState', true)
-            }
-        }
+			participantDates {
+				eq('lowerFeeAnswered', false)
+			}
+		}
 
-        studentLowerFee { date ->
-            allParticipantsNotDeleted(date)
+		noStudentLowerFee { date ->
+			allParticipantsNotDeleted(date)
 
-            participantDates {
-                eq('student', true)
-                eq('lowerFeeRequested', true)
-            }
-        }
+			participantDates {
+				eq('student', false)
+				eq('lowerFeeRequested', true)
+			}
+		}
 
-        studentLowerFeeNotAnswered { date ->
-            studentLowerFee(date)
+		noStudentLowerFeeNotAnswered { date ->
+			noStudentLowerFee(date)
 
-            participantDates {
-                eq('lowerFeeAnswered', false)
-            }
-        }
+			participantDates {
+				eq('lowerFeeAnswered', false)
+			}
+		}
 
-        noStudentLowerFee { date ->
-            allParticipantsNotDeleted(date)
+		allSessionParticipants { date ->
+			allParticipants(date)
 
-            participantDates {
-                eq('student', false)
-                eq('lowerFeeRequested', true)
-            }
-        }
+			createAlias('sessionParticipants', 'sp')
+			createAlias('sp.session', 'sessions')
 
-        noStudentLowerFeeNotAnswered { date ->
-            noStudentLowerFee(date)
+			eq('sp.deleted', false)
+			eq('sessions.date.id', date.id)
+			eq('sessions.deleted', false)
+		}
 
-            participantDates {
-                eq('lowerFeeAnswered', false)
-            }
-        }
+		allAcceptedSessionParticipants { date ->
+			allSessionParticipants(date)
+			eq('sessions.state.id', SessionState.SESSION_ACCEPTED)
+		}
 
-        allSessionParticipants { date ->
-            allParticipants(date)
+		allAcceptedSessionParticipantsNotAnswered { date ->
+			allAcceptedSessionParticipants(date)
 
-            sessionParticipants {
-                session {
-                    eq('state.id', SessionState.SESSION_ACCEPTED)
-                    eq('date.id', date.id)
-                    eq('deleted', false)
-                }
-                eq('deleted', false)
-            }
-        }
+			participantDates {
+				eq('emailSessionInfo', false)
+			}
+		}
 
-        allSessionParticipantsNotAnswered { date ->
-            allSessionParticipants(date)
+		allAcceptedSessionChairs { date ->
+			allAcceptedSessionParticipants(date)
+			eq('sp.type.id', ParticipantType.CHAIR)
+		}
 
-            participantDates {
-                eq('emailSessionInfo', false)
-            }
-        }
+		allAcceptedSessionChairsNotAnswered { date ->
+			allAcceptedSessionChairs(date)
 
-        allSessionChairs { date ->
-            allSessionParticipants(date)
+			participantDates {
+				eq('emailSessionChairInfo', false)
+			}
+		}
 
-            sessionParticipants {
-                eq('type.id', ParticipantType.CHAIR)
-            }
-        }
+		allSessionOrganizers { date ->
+			allSessionParticipants(date)
+			eq('sp.type.id', ParticipantType.ORGANIZER)
+		}
 
-        allSessionChairsNotAnswered { date ->
-            allSessionChairs(date)
+		noPaymentInfo { date ->
+			allParticipants(date)
 
-            participantDates {
-                eq('emailSessionChairInfo', false)
-            }
-        }
+			participantDates {
+				eq('emailPaymentInfo', false)
+			}
+		}
 
-        noPaymentInfo { date ->
-            allParticipants(date)
+		noPaymentAttempt { date ->
+			allParticipantsSoftState(date)
 
-            participantDates {
-                eq('emailPaymentInfo', false)
-            }
-        }
+			participantDates {
+				or {
+					isNull('paymentId')
+					eq('paymentId', 0L)
+				}
+			}
+		}
 
-        noPaymentAttempt { date ->
-            allParticipantsSoftState(date)
+		sessionAcceptedOrganizers { date ->
+			allSessionOrganizers(date)
+			eq('sessions.state.id', SessionState.SESSION_ACCEPTED)
+		}
 
-            participantDates {
-                or {
-                    isNull('paymentId')
-                    eq('paymentId', 0L)
-                }
-            }
-        }
-    }
+		sessionAcceptedOrganizersNotAnswered { date ->
+			sessionAcceptedOrganizers(date)
+			eq('sessions.mailSessionState', true)
+		}
 
-    /**
-     * Returns all roles assigned to this user
-     * @return A set of roles assigned to this user
-     */
-    Set<Role> getRoles() {
-        UserRole.findAllByUser(this, [cache: true]).collect { it.role } as Set
-    }
+		sessionInConsiderationOrganizers { date ->
+			allSessionOrganizers(date)
+			eq('sessions.state.id', SessionState.SESSION_IN_CONSIDERATION)
+		}
 
-    /**
-     * Returns all events this user can access
-     * @return A set of events this user can access
-     */
-    List<Event> getEvents() {
-        List<Event> events
-        List<Role> roles = Role.findAllByFullRights(true, [cache: true])
+		sessionInConsiderationOrganizersNotAnswered { date ->
+			sessionInConsiderationOrganizers(date)
+			eq('sessions.mailSessionState', true)
+		}
 
-        // If the user is granted access to all events, just return a list of all events
-        // Otherwise, only return the events he/she is specifically given access to
-        if (SpringSecurityUtils.ifAnyGranted(roles*.role.join(','))) {
-            events = Event.listOrderByShortName()
-        }
-        else {
-            events = Event.executeQuery('''
+		sessionNotAcceptedOrganizers { date ->
+			allSessionOrganizers(date)
+			eq('sessions.state.id', SessionState.SESSION_NOT_ACCEPTED)
+		}
+
+		sessionNotAcceptedOrganizersNotAnswered { date ->
+			sessionNotAcceptedOrganizers(date)
+			eq('sessions.mailSessionState', true)
+		}
+
+		allSessionCreators { date ->
+			allParticipants(date)
+
+			createAlias('sessionsAdded', 'sessions')
+			eq('sessions.date.id', date.id)
+			eq('sessions.deleted', false)
+		}
+
+		sessionAcceptedCreators { date ->
+			allSessionCreators(date)
+			eq('sessions.state.id', SessionState.SESSION_ACCEPTED)
+		}
+
+		sessionAcceptedCreatorsNotAnswered { date ->
+			sessionAcceptedCreators(date)
+			eq('sessions.mailSessionState', true)
+		}
+
+		sessionInConsiderationCreators { date ->
+			allSessionCreators(date)
+			eq('sessions.state.id', SessionState.SESSION_IN_CONSIDERATION)
+		}
+
+		sessionInConsiderationCreatorsNotAnswered { date ->
+			sessionInConsiderationCreators(date)
+			eq('sessions.mailSessionState', true)
+		}
+
+		sessionNotAcceptedCreators { date ->
+			allSessionCreators(date)
+			eq('sessions.state.id', SessionState.SESSION_NOT_ACCEPTED)
+		}
+
+		sessionNotAcceptedCreatorsNotAnswered { date ->
+			sessionNotAcceptedCreators(date)
+			eq('sessions.mailSessionState', true)
+		}
+	}
+
+	/**
+	 * Returns all roles assigned to this user
+	 * @return A set of roles assigned to this user
+	 */
+	Set<Role> getRoles() {
+		UserRole.findAllByUser(this, [cache: true]).collect { it.role } as Set
+	}
+
+	/**
+	 * Returns all events this user can access
+	 * @return A set of events this user can access
+	 */
+	List<Event> getEvents() {
+		List<Event> events
+		List<Role> roles = Role.findAllByFullRights(true, [cache: true])
+
+		// If the user is granted access to all events, just return a list of all events
+		// Otherwise, only return the events he/she is specifically given access to
+		if (SpringSecurityUtils.ifAnyGranted(roles*.role.join(','))) {
+			events = Event.listOrderByShortName()
+		}
+		else {
+			events = Event.executeQuery('''
                 SELECT e
                 FROM UserRole AS ur
                 INNER JOIN ur.event AS e
                 WHERE ur.user.id = :userId
                 ORDER BY e.shortName
             ''', [userId: this.id], [cache: true])
-        }
+		}
 
-        events
-    }
+		events
+	}
 
-    def beforeInsert() {
-        // Before insertion of a user, hash the password
-        encodePassword()
+	def beforeInsert() {
+		// Before insertion of a user, hash the password
+		encodePassword()
 
-        // Make sure the email address is in lowercase
-        emailToLowercase()
-    }
+		// Make sure the email address is in lowercase
+		emailToLowercase()
+	}
 
-    def beforeUpdate() {
-        // Make sure to hash the password if changed
-        if (isDirty('password')) {
-            encodePassword()
-        }
+	def beforeUpdate() {
+		// Make sure to hash the password if changed
+		if (isDirty('password')) {
+			encodePassword()
+		}
 
-        // Make sure the email address is in lowercase
-        emailToLowercase()
-    }
+		// Make sure the email address is in lowercase
+		emailToLowercase()
+	}
 
-    /**
-     * Check to see if the given password equals the hashed password
-     * @param plainPassword The password to hash and compare
-     * @return Is a correct password or not
-     */
-    boolean isPasswordCorrect(String plainPassword) {
-        String hashedPassword = springSecurityService.encodePassword(plainPassword, saltSource.getSalt(this))
-        hashedPassword.equals(password)
-    }
+	/**
+	 * Check to see if the given password equals the hashed password
+	 * @param plainPassword The password to hash and compare
+	 * @return Is a correct password or not
+	 */
+	boolean isPasswordCorrect(String plainPassword) {
+		String hashedPassword = springSecurityService.encodePassword(plainPassword, saltSource.getSalt(this))
+		hashedPassword.equals(password)
+	}
 
-    /**
-     * Creates a 26 characters long String using a secure random generator
-     * @return A new secure random String
-     */
-    static String createSecureRandomString() {
-        Random r = new SecureRandom()
-        new BigInteger(130, r).toString(32)
-    }
+	/**
+	 * Creates a 26 characters long String using a secure random generator
+	 * @return A new secure random String
+	 */
+	static String createSecureRandomString() {
+		Random r = new SecureRandom()
+		new BigInteger(130, r).toString(32)
+	}
 
-    /**
-     * Every time a new password is saved (and has to be hashed), also create a new user salt
-     */
-    protected void encodePassword() {
-        salt = createSecureRandomString()
-        password = springSecurityService.encodePassword(password, saltSource.getSalt(this))
-    }
+	/**
+	 * Every time a new password is saved (and has to be hashed), also create a new user salt
+	 */
+	protected void encodePassword() {
+		salt = createSecureRandomString()
+		password = springSecurityService.encodePassword(password, saltSource.getSalt(this))
+	}
 
-    /**
-     * Makes sure the email address is always saved in lowercase characters
-     */
-    private void emailToLowercase() {
-        this.email = this.email.trim().toLowerCase()
-    }
+	/**
+	 * Makes sure the email address is always saved in lowercase characters
+	 */
+	private void emailToLowercase() {
+		this.email = this.email.trim().toLowerCase()
+	}
 
-    @Override
-    String toString() {
-        "${lastName}, ${firstName}"
-    }
+	@Override
+	String toString() {
+		"${lastName}, ${firstName}"
+	}
 }
