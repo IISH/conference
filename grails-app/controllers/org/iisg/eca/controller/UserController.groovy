@@ -1,8 +1,7 @@
 package org.iisg.eca.controller
 
-import org.grails.datastore.gorm.query.NamedCriteriaProxy
-import org.iisg.eca.domain.User
 import grails.converters.JSON
+import org.iisg.eca.domain.User
 import org.iisg.eca.utils.QueryTypeCriteriaBuilder
 
 /**

@@ -1,7 +1,7 @@
 package org.iisg.eca.service
 
 import org.iisg.eca.domain.EmailTemplate
-
+import org.iisg.eca.domain.EventDate
 import org.iisg.eca.utils.PageInformation
 import org.iisg.eca.utils.QueryTypeCriteriaBuilder
 
@@ -123,15 +123,10 @@ class EmailRecipientsService {
      */
     private static void extendCriteriaForEventDates(NamedCriteriaProxy criteria, GrailsParameterMap filters) {
         criteria.participantDates {
-            if ((filters.eventDates instanceof String) && filters.eventDates?.isLong()) {
-                criteria.eq('date.id', filters.eventDates.toLong())
-            }
-            else if (filters.eventDates) {
-                criteria.'in'('date.id', filters.eventDates*.toLong())
-            }
-            // If nothing is selected, then nothing is done...
-            else if (!filters.eventDates) {
-                criteria.isNull('date.id')
+            if (filters.eventDates?.isLong()) {
+	            EventDate date = EventDate.get(filters.long('eventDates'))
+	            List<EventDate> eventDates = EventDate.getDateAndLaterDates(date).list()
+	            criteria.'in'('date.id', eventDates*.id)
             }
         }
     }

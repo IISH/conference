@@ -48,15 +48,11 @@
                 <g:if test="${filterMap.eventDates}">
                     <div>
                         <label class="property-label">
-                            <g:message code="eventDate.multiple.label" />
+                            <g:message code="eventDate.participants.label" />
                         </label>
                         <span class="property-value">
-                            <g:each in="${EventDate.findAllByEvent(curDate.event)}" var="eventDate">
-                                <label>
-                                    <g:checkBox name="eventDates" value="${eventDate.id}" checked="${false}" />
-                                    ${eventDate.yearCode}
-                                </label>
-                            </g:each>
+                            <g:select name="eventDates" from="${EventDate.findAllByEvent(curDate.event)}"
+                                      optionKey="id" optionValue="${{it.getDateAndLaterText()}}" />
                         </span>
                     </div>
                 </g:if>

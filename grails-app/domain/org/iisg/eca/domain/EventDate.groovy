@@ -1,10 +1,14 @@
 package org.iisg.eca.domain
 
+import org.springframework.context.i18n.LocaleContextHolder
+
 /**
  * Domain class of table holding all event dates
  */
 class EventDate extends DefaultDomain {
-    String yearCode
+	def messageSource
+
+	String yearCode
     Date startDate
     Date endDate
     String dateAsText
@@ -70,6 +74,13 @@ class EventDate extends DefaultDomain {
             order('startDate', 'desc')
             cache(true)
         }
+
+	    getDateAndLaterDates { date ->
+		    eq('event.id', date.event.id)
+		    ge('startDate', date.startDate)
+		    order('startDate', 'desc')
+		    cache(true)
+	    }
     }
 
 	/**
@@ -97,6 +108,19 @@ class EventDate extends DefaultDomain {
 	 */
 	boolean isLastDate() {
 		return getLastDate(this.event).equals(this)
+	}
+
+	/**
+	 * Returns '{yearCode} and later...' unless it is the latest year
+	 * @return '{yearCode} and later...' or '{yearCode}'
+	 */
+	String getDateAndLaterText() {
+		if (this.isLastDate()) {
+			this.yearCode
+		}
+		else {
+			messageSource.getMessage('eventDate.andLater.label', [this.yearCode] as String[], LocaleContextHolder.locale)
+		}
 	}
 
     @Override
