@@ -18,7 +18,7 @@
                             <g:message code="participantDate.label" />
                         </label>
                         <span class="property-value">
-                            <eca:usersAutoComplete name="participant" queryName="${queryNames}" placeholder="${placeholder}" />
+                            <eca:usersAutoComplete name="participant" queryName="${queryName}" placeholder="${placeholder}" />
                         </span>
                     </div>
                 </g:if>

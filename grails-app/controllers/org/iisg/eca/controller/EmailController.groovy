@@ -83,10 +83,10 @@ class EmailController {
         }
 
         // Find out what auto-complete function to use
-        String queryNames = 'allParticipants'
+        String queryName = 'allParticipants'
         String placeholder = g.message(code: 'email.all.participants.label')
         if (emailTemplate.queryTypeOne) {
-            queryNames = emailTemplate.queryTypeOne
+	        queryName = emailTemplate.queryTypeOne
         }
 
         // Create a preview email with the currently logged in user
@@ -101,7 +101,7 @@ class EmailController {
         render view: "create", model: [
                 emailTemplate:  emailTemplate,
                 filterMap:      filterMap,
-                queryNames:     queryNames,
+                queryName:      queryName,
                 placeholder:    placeholder,
                 preview:        previewEmail,
                 from:           from,
