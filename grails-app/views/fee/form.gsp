@@ -33,6 +33,15 @@
                     </span>
                 </div>
 
+                <div class="${hasErrors(bean: feeState, field: 'isAccompanyingPersonFee', 'error')} ">
+                    <label class="property-label">
+                        <g:message code="feeState.isAccompanyingPersonFee.label" />
+                    </label>
+                    <span class="property-value">
+                        <g:checkBox name="feeState.isAccompanyingPersonFee" value="${feeState?.isAccompanyingPersonFee}" />
+                    </span>
+                </div>
+
                 <div class="columns copy">
                     <g:each in="${feeAmounts}" var="amount" status="i">
                         <fieldset class="form column">
@@ -42,6 +51,15 @@
                             </span>
 
                             <input type="hidden" name="feeAmount_${i}.id" value="${amount.id}" />
+
+                            <div class="${hasErrors(bean: amount, field: 'substituteName', 'error')}">
+                                <label class="property-label">
+                                    <g:message code="feeAmount.substituteName.label" />
+                                </label>
+                                <span class="property-value">
+                                    <input type="text" name="feeAmount_${i}.substituteName" maxlength="50" value="${fieldValue(bean: amount, field: 'substituteName')}" />
+                                </span>
+                            </div>
 
                             <div class="${hasErrors(bean: amount, field: 'feeAmount', 'error')} required">
                                 <label class="property-label">
@@ -90,6 +108,15 @@
                             <span class="ui-icon ui-icon-circle-minus"></span>
                             <g:message code="default.delete.label" args="[message(code: 'feeAmount.label').toLowerCase()]" />
                         </span>
+
+                        <div>
+                            <label class="property-label">
+                                <g:message code="feeAmount.substituteName.label" />
+                            </label>
+                            <span class="property-value">
+                                <input type="text" name="feeAmount_null.substituteName" maxlength="50" value="" />
+                            </span>
+                        </div>
 
                         <div class="required">
                             <label class="property-label">

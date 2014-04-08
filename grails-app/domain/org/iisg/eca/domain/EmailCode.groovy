@@ -32,10 +32,16 @@ class EmailCode extends EventDomain {
      * @return The translated text to be placed in the email
      */
     String translate(Map<String, Long> identifiers) {
-        Binding binding = new Binding([sql: new Sql(dataSource), params: identifiers])
+	    EventDate date = EventDate.get(identifiers.dateId.toLong())
+	    Event event = date.event
+
+        Binding binding = new Binding([sql: new Sql(dataSource), params: identifiers, getValueForSetting: { String property ->
+	        Setting.getSetting(property, event)?.value
+        }])
+
         GroovyShell shell = new GroovyShell(binding)
-        Object ret = shell.evaluate(groovyScript)
-        ret.toString()
+	    Object ret = shell.evaluate(groovyScript)
+	    ret.toString()
     }
 
     @Override

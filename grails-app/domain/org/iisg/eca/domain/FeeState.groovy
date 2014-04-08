@@ -3,7 +3,7 @@ package org.iisg.eca.domain
 /**
  * Domain class of table holding all fee states
  */
-class FeeState extends EventDomain {
+class FeeState extends EventDateDomain {
     static final long NO_FEE_SELECTED = 0L
 
     String name
@@ -32,7 +32,7 @@ class FeeState extends EventDomain {
     }
 
 	static hibernateFilters = {
-		eventFilter(condition: '(event_id = :eventId OR event_id IS NULL)', types: 'long')
+		dateFilter(condition: '(date_id = :dateId OR date_id IS NULL)', types: 'long')
 		hideDeleted(condition: 'deleted = 0', default: true)
 	}
 
@@ -49,6 +49,7 @@ class FeeState extends EventDomain {
     static namedQueries = {
         sortedFeeStates {
             order('isDefaultFee', 'desc')
+	        order('isAccompanyingPersonFee', 'desc')
             order('name', 'asc')
         }
     }
