@@ -1,6 +1,7 @@
 package org.iisg.eca.controller
 
 import org.iisg.eca.domain.Day
+import org.iisg.eca.domain.Title
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Paper
 import org.iisg.eca.domain.Extra
@@ -200,14 +201,17 @@ class ParticipantController {
             return
         }
 
+	    // Make sure the title is not deleted
+	    Title.addTitleIfNotExists(user.title)
+
         // Try to look up this user as a participant for the current event date
         ParticipantDate participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
 
         // Already collect participant ids in the case of an error
         List participantIds = participantService.getParticipantsWithFilters(params).collect { it[0] }
-        List sessions = participantSessionService.getSessionsForParticipant(participant)
-        List daysPresent = ParticipantDay.findAllDaysOfUser(user)
-        List orders = Order.findAllOrdersOfUserLastYear(user)
+        List sessions = (participant) ? participantSessionService.getSessionsForParticipant(participant) : []
+        List daysPresent = (user) ? ParticipantDay.findAllDaysOfUser(user) : []
+        List orders = (user) ? Order.findAllOrdersOfUserLastYear(user) : []
 
         // Obtain the emails
         Calendar cal = Calendar.getInstance()

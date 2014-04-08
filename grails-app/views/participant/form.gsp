@@ -429,7 +429,6 @@
                     <input type="hidden" name="max-papers" value="${Setting.getSetting(Setting.MAX_PAPERS_PER_PERSON_PER_SESSION).value}" />
                     <input type="hidden" name="to-be-deleted" class="to-be-deleted" />
 
-                    <g:if test="${participant}">
                     <g:each in="${papers}" var="paper" status="i">
                         <div class="column">
                             <input type="hidden" name="Paper_${i}.id" value="${paper.id}" />
@@ -732,31 +731,32 @@
                     </div>
 
                     <div class="clear empty"></div>
-                </g:if>
                 </div>
 
                 <div id="sessions-tab" class="columns">
-                    <div id="selected-days">
-                        <span class="header">
-                            <g:message code="participantDay.is.present.label" />
-                        </span>
-
-                        <g:if test="${daysPresent.size() == 0}">
-                            <span class="not-found">
-                                <g:message code="participantDay.not.found.label" />
+                    <g:if test="${participant}">
+                        <div id="selected-days">
+                            <span class="header">
+                                <g:message code="participantDay.is.present.label" />
                             </span>
-                        </g:if>
 
-                        <ol class="list-days-present">
-                            <g:each in="${daysPresent}" var="day">
-                                <li><eca:formatText text="${day.toString()}" /></li>
-                            </g:each>
-                        </ol>
+                            <g:if test="${daysPresent.size() == 0}">
+                                <span class="not-found">
+                                    <g:message code="participantDay.not.found.label" />
+                                </span>
+                            </g:if>
 
-                        <span class="link change-present-days">
-                            <a><g:message code="default.change.label" args="${[g.message(code: 'participantDay.multiple.label')]}" /></a>
-                        </span>
-                    </div>
+                            <ol class="list-days-present">
+                                <g:each in="${daysPresent}" var="day">
+                                    <li><eca:formatText text="${day.toString()}" /></li>
+                                </g:each>
+                            </ol>
+
+                            <span class="link change-present-days">
+                                <a><g:message code="default.change.label" args="${[g.message(code: 'participantDay.multiple.label')]}" /></a>
+                            </span>
+                        </div>
+                    </g:if>
 
                     <g:each in="${sessions}" var="participantSessionInfo">
                         <div class="participant-session column">
@@ -827,6 +827,7 @@
 
                 <div id="payments-tab" class="columns">
                     <g:set var="hidePayedButton" value="${false}" />
+
                     <g:each in="${orders}" var="order">
                         <div class="participant-order column">
                             <div>
@@ -1063,7 +1064,9 @@
                 </eca:link>
                 <input type="submit" name="btn_save" class="btn_save" value="${message(code: 'default.button.save.label')}" />
                 <input type="submit" name="btn_save_close" class="btn_save_close" value="${message(code: 'default.button.save.close.label')}" />
-                <input type="button" name="btn_add" class="btn_add" value="${message(code: 'default.add.label', args: [message(code: 'paper.label').toLowerCase()])}" />
+                <g:if test="${participant}">
+                    <input type="button" name="btn_add" class="btn_add" value="${message(code: 'default.add.label', args: [message(code: 'paper.label').toLowerCase()])}" />
+                </g:if>
             </fieldset>
         </form>
 

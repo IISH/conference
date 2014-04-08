@@ -19,6 +19,18 @@ class Title extends EventDomain {
         event   column: 'event_id'
         title   column: 'title'
     }
+
+	/**
+	 * Adds the title to the list of titles if it does not contain the title yet
+	 * @param title The title to check for and add if it is not in the list
+	 */
+	static void addTitleIfNotExists(String title) {
+		List<String> titles = list()*.title
+		if (!titles.contains(title)) {
+			Title missingTitle = new Title(title: title)
+			missingTitle.save(flush: true)
+		}
+	}
     
     @Override
     String toString() {
