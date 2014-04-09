@@ -705,4 +705,15 @@ $(document).ready(function() {
             }
         );
     });
+
+    $('#participants-export-dialog').dialog({
+        autoOpen: false,
+        minWidth: 400,
+        minHeight: 80,
+        title: "Participants export"
+    });
+
+    $('.participants-export-open').click(function(e) {
+        $('#participants-export-dialog').dialog('open');
+    });
 });

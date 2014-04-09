@@ -2,7 +2,7 @@ package org.iisg.eca.service
 
 import org.iisg.eca.domain.Day
 import org.iisg.eca.domain.Extra
-
+import org.iisg.eca.domain.User
 import org.iisg.eca.export.Export
 import org.iisg.eca.export.XlsMapExport
 
@@ -10,11 +10,16 @@ import groovy.sql.Sql
 import java.text.SimpleDateFormat
 import org.hibernate.impl.SessionImpl
 import org.springframework.context.i18n.LocaleContextHolder
+import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 
 /**
  * Service that takes care of creating the export for various cases
  */
 class MiscExportService {
+	public static final int BADGES_PAYED = 0
+	public static final int BADGES_NOT_PAYED = 1
+	public static final int BADGES_UNCONFIRMED_BANK_TRANSFER = 2
+
     def sessionFactory
     def sessionFactory_payWay
 	def dataSource
@@ -26,9 +31,9 @@ class MiscExportService {
      * Create a specific export for the creation of badges
      * @return An export which can be used to create the XLS file
      */
-    Export getParticipantsExport() {
+    Export getParticipantsExport(int status) {
         // Preparation
-        SimpleDateFormat formatter = new SimpleDateFormat('EEEEE, d MMMMM', LocaleContextHolder.locale)
+        SimpleDateFormat formatter = new SimpleDateFormat('EEEEE d MMMMM', LocaleContextHolder.locale)
         Map<Long, String> days = Day.list().collectEntries { day ->
             [(day.id) : formatter.format(day.day)]
         }
@@ -40,22 +45,21 @@ class MiscExportService {
         String falseText = messageSource.getMessage('default.boolean.false', null, LocaleContextHolder.locale)
 
         List<String> columns = ['user_id', 'title', 'lastname', 'firstname', 'organisation', 'department',
-                'name_english', 'payed', 'willpaybybank', 'amount', 'name', 'day']
+                'name_english', 'amount', 'name', 'day', 'network']
         columns += extras.values()
 
         List<String> columnNames = [
                 'ID',
                 messageSource.getMessage('title.label', null, LocaleContextHolder.locale),
-                messageSource.getMessage('user.firstName.label', null, LocaleContextHolder.locale),
                 messageSource.getMessage('user.lastName.label', null, LocaleContextHolder.locale),
+                messageSource.getMessage('user.firstName.label', null, LocaleContextHolder.locale),
                 messageSource.getMessage('user.organisation.label', null, LocaleContextHolder.locale),
                 messageSource.getMessage('user.department.label', null, LocaleContextHolder.locale),
                 messageSource.getMessage('user.country.label', null, LocaleContextHolder.locale),
-                messageSource.getMessage('order.status.payed.label', null, LocaleContextHolder.locale),
-                messageSource.getMessage('order.method.bank.label', null, LocaleContextHolder.locale),
                 messageSource.getMessage('order.amount.label', null, LocaleContextHolder.locale),
                 messageSource.getMessage('feeState.label', null, LocaleContextHolder.locale),
-                messageSource.getMessage('day.label', null, LocaleContextHolder.locale)
+                messageSource.getMessage('day.label', null, LocaleContextHolder.locale),
+		        messageSource.getMessage('network.label', null, LocaleContextHolder.locale)
         ]
         columnNames += extras.values()
 
@@ -64,21 +68,33 @@ class MiscExportService {
         String dbName = ((SessionImpl) sessionFactory.currentSession).connection().catalog
         String dbNamePayWay = ((SessionImpl) sessionFactory_payWay.currentSession).connection().catalog
 
-	    String sqlQuery = PARTICIPANTS_SQL.replace('db-name-payway', dbNamePayWay).replace('db-name', dbName)
+	    String sqlQuery = PARTICIPANTS_SQL
+			    .replace('db-name-payway', dbNamePayWay)
+			    .replace('db-name', dbName)
+
+	    // Make sure we place the right criteria for each export type
+	    String title = messageSource.getMessage('participantDate.badges.label', null, LocaleContextHolder.locale)
+	    switch (status) {
+		    case BADGES_PAYED:
+		        sqlQuery = sqlQuery.replace('extraCriteria', 'AND o.payed = 1')
+			    title = messageSource.getMessage('participantDate.badges.payed.label', null, LocaleContextHolder.locale)
+			    break;
+			case BADGES_NOT_PAYED:
+				sqlQuery = sqlQuery.replace('extraCriteria', 'AND ((o.payed <> 1 AND o.willpaybybank = 0) OR pd.payment_id IS NULL)')
+				title = messageSource.getMessage('participantDate.badges.not.payed.label', null, LocaleContextHolder.locale)
+				break;
+		    case BADGES_UNCONFIRMED_BANK_TRANSFER:
+			    sqlQuery = sqlQuery.replace('extraCriteria', 'AND o.payed <> 1 AND o.willpaybybank = 1')
+			    title = messageSource.getMessage('participantDate.badges.unconfirmed.label', null, LocaleContextHolder.locale)
+			    break;
+		    default:
+			    sqlQuery = sqlQuery.replace('extraCriteria', '')
+	    }
+
+	    // Query the database and create the export
         List<Map> results = sql.rows(sqlQuery, [dateId: pageInformation.date.id])
         results.each { Map row ->
-            if (row.payed == null) {
-                row.put('payed', falseText)
-            }
-            else {
-                row.put('payed', row.payed.toString().equals('1') ? trueText : falseText)
-            }
-
-            if (row.willpaybybank != null) {
-                row.put('willpaybybank', row.willpaybybank.toString().equals('true') ? trueText : falseText)
-            }
-
-            List<Long> dayIds = row.days ? row.days.split(',')*.toLong() : []
+	        List<Long> dayIds = row.days ? row.days.split(',')*.toLong() : []
             row.remove('days')
             if (dayIds.size() == 1) {
                 row.put('day', days.get(dayIds.first()))
@@ -97,10 +113,20 @@ class MiscExportService {
                     row.put(name, falseText)
                 }
             }
+
+	        String network = row.network_name
+	        row.remove('network_name')
+	        if (network) {
+	            row.put('network', "Chair $network")
+	        }
+	        else {
+		        row.put('network', null)
+	        }
+
+	        row.put('amount', (row.get('amount') > 0) ? row.get('amount') / 100 : row.get('amount'))
         }
 
         // Create XLS export
-        String title = messageSource.getMessage('participantDate.badges.label', null, LocaleContextHolder.locale)
         return new XlsMapExport(columns, results, title, columnNames)
     }
 
@@ -127,9 +153,37 @@ class MiscExportService {
 		return new XlsMapExport(columns, results, title, columnNames)
 	}
 
+	/**
+	 * Creates an export of (accepted) participants with filters set by the user
+	 * @param params The parameters, filters set by the user
+	 * @return An Excel export of all matching participants
+	 */
+	Export getParticipantsWithFilterExport(GrailsParameterMap params) {
+		List results = User.allParticipants(pageInformation.date) {
+			participantDates {
+				if (params.feeStateId?.isLong()) {
+					eq('feeState.id', params.long('feeStateId'))
+				}
+			}
+		}
+
+		return new XlsMapExport(
+				['id', 'lastName', 'firstName', 'email', 'organisation', 'department', 'country'],
+				results,
+				messageSource.getMessage('participantDate.multiple.label', null, LocaleContextHolder.locale),
+				['#',
+				 messageSource.getMessage('user.lastName.label', null, LocaleContextHolder.locale),
+				 messageSource.getMessage('user.firstName.label', null, LocaleContextHolder.locale),
+				 messageSource.getMessage('user.email.label', null, LocaleContextHolder.locale),
+				 messageSource.getMessage('user.organisation.label', null, LocaleContextHolder.locale),
+				 messageSource.getMessage('user.department.label', null, LocaleContextHolder.locale),
+				 messageSource.getMessage('user.country.label', null, LocaleContextHolder.locale)]
+		)
+	}
+
 	private static final String PARTICIPANTS_SQL = '''
-			SELECT u.user_id, u.title, u.lastname, u.firstname, u.organisation, u.department, c.name_english,
-            o.payed, o.willpaybybank, o.amount, fs.name,
+			SELECT u.user_id, u.title, u.lastname, u.firstname, u.organisation,
+			u.department, c.name_english, o.amount, fs.name, n.name AS network_name,
             CAST(GROUP_CONCAT(DISTINCT d.day_id ORDER BY d.day_number) AS CHAR) AS days,
             CAST(GROUP_CONCAT(DISTINCT e.extra_id ORDER BY e.extra) AS CHAR) AS extras
             FROM `db-name`.users AS u
@@ -149,15 +203,22 @@ class MiscExportService {
             ON pd.participant_date_id = pde.participant_date_id
             LEFT JOIN `db-name`.extras AS e
             ON pde.extra_id = e.extra_id
-            WHERE u.deleted = false
+            LEFT JOIN `db-name`.networks_chairs AS nc
+            ON u.user_id = nc.user_id
+            LEFT JOIN `db-name`.networks AS n
+            ON nc.network_id = n.network_id
+            WHERE u.deleted = 0
             AND pd.date_id = :dateId
-            AND pd.deleted = false
-            AND pday.date_id = :dateId
-            AND d.date_id = :dateId
-            AND e.date_id = :dateId
-            AND e.deleted = false
+            AND pd.deleted = 0
+            AND (pday.date_id = :dateId OR pday.date_id IS NULL)
+			AND (pday.deleted = 0 OR pday.deleted IS NULL)
+			AND (d.date_id = :dateId OR d.date_id IS NULL)
+			AND (d.deleted = 0 OR d.deleted IS NULL)
+			AND (e.date_id = :dateId OR e.date_id IS NULL)
+			AND (e.deleted = 0 OR e.deleted IS NULL)
             AND (   pd.participant_state_id IN (1,2)
                     OR (pd.payment_id IS NOT NULL AND payment_id > 0))
+            extraCriteria
             GROUP BY u.user_id
             ORDER BY u.lastname ASC, u.firstname ASC'''
 
@@ -175,10 +236,13 @@ class MiscExportService {
 			LEFT JOIN sessions AS s
 			ON srdt.session_id = s.session_id
 			WHERE sdt.date_id = :dateId
+			AND sdt.deleted = 0
 			AND d.date_id = :dateId
+			AND d.deleted = 0
 			AND r.date_id = :dateId
-			AND r.deleted = false
+			AND r.deleted = 0
 			AND (srdt.date_id = :dateId OR srdt.date_id IS NULL)
+			AND (srdt.deleted = false OR srdt.deleted IS NULL)
 			AND (s.date_id = :dateId OR s.date_id IS NULL)
 			AND (s.deleted = false OR s.deleted IS NULL)
 			ORDER BY sdt.index_number, r.room_number

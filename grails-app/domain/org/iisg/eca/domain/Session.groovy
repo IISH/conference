@@ -17,7 +17,7 @@ class Session extends EventDateDomain {
     User addedBy
 	boolean deleted = false
 
-    static belongsTo = [Network, SessionState]
+    static belongsTo = [Network, SessionState, User]
     static hasMany = [  sessionParticipants: SessionParticipant,
                         papers: Paper,
                         sessionRoomDateTime: SessionRoomDateTime,
@@ -166,7 +166,7 @@ class Session extends EventDateDomain {
     
     @Override
     String toString() {
-        String readCode = (code) ? code : "-";
+        String readCode = (code) ? code : "-"
         "${readCode}: ${name}"
     }
 }

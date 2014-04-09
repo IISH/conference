@@ -252,6 +252,13 @@ class UtilsTagLib {
         builder.input(attrs)
     }
 
+    /**
+     * Creates an auto complete field for users
+     * @attr name REQUIRED The name of the field
+     * @attr idValue The default value (user id)
+     * @attr labelValue The default value (user name)
+     * @attr queryName The name of a query type
+     */
     def usersAutoComplete = { attrs ->
         MarkupBuilder builder = new MarkupBuilder(out)
         builder.doubleQuotes = true

@@ -30,8 +30,26 @@ class ExportController {
 		response.outputStream << bookExportService.sessionsXml
 	}
 
-	def badges() {
-		Export badges = miscExportService.getParticipantsExport()
+	def badgesPayed() {
+		Export badges = miscExportService.getParticipantsExport(miscExportService.BADGES_PAYED)
+
+		response.contentType = badges.contentType
+		response.setHeader("Content-disposition",
+				"attachment;filename=${badges.getTitle()}.${badges.getExtension().toLowerCase()}")
+		response.outputStream << badges.parse()
+	}
+
+	def badgesNotPayed() {
+		Export badges = miscExportService.getParticipantsExport(miscExportService.BADGES_NOT_PAYED)
+
+		response.contentType = badges.contentType
+		response.setHeader("Content-disposition",
+				"attachment;filename=${badges.getTitle()}.${badges.getExtension().toLowerCase()}")
+		response.outputStream << badges.parse()
+	}
+
+	def badgesUnconfirmed() {
+		Export badges = miscExportService.getParticipantsExport(miscExportService.BADGES_UNCONFIRMED_BANK_TRANSFER)
 
 		response.contentType = badges.contentType
 		response.setHeader("Content-disposition",
@@ -46,5 +64,14 @@ class ExportController {
 		response.setHeader("Content-disposition",
 				"attachment;filename=${program.getTitle()}.${program.getExtension().toLowerCase()}")
 		response.outputStream << program.parse()
+	}
+
+	def participants() {
+		Export participants = miscExportService.getParticipantsWithFilterExport(params)
+
+		response.contentType = participants.contentType
+		response.setHeader("Content-disposition",
+				"attachment;filename=${participants.getTitle()}.${participants.getExtension().toLowerCase()}")
+		response.outputStream << participants.parse()
 	}
 }

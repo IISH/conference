@@ -24,7 +24,7 @@ class XlsMapExport extends MapExport {
      * @param title The title of the resulting file
      * @param columnNames The names of the columns
      */
-    XlsMapExport(List<String> columns, List<Map> results, String title, List<String> columnNames) {
+    XlsMapExport(List<String> columns, List results, String title, List<String> columnNames) {
         super(columns, results, title, columnNames)
     }
 

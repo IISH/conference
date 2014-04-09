@@ -1,6 +1,7 @@
 package org.iisg.eca.controller
 
 import org.iisg.eca.domain.Day
+import org.iisg.eca.domain.Title
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Paper
 import org.iisg.eca.domain.Extra
@@ -213,15 +214,17 @@ class ParticipantController {
             return
         }
 
+	    // Make sure the title is not deleted
+	    Title.addTitleIfNotExists(user.title)
+
         // Try to look up this user as a participant for the current event date
         ParticipantDate participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
 
         // Already collect participant ids in the case of an error
         List participantIds = participantService.getParticipantsWithFilters(params).collect { it[0] }
-        List sessions = participant ? participantSessionService.getSessionsForParticipant(participant) : []
-        List participantVolunteering = participant ? ParticipantVolunteering.sortedParticipantVolunteering(participant.id).list() : []
-        List daysPresent = user ? ParticipantDay.findAllDaysOfUser(user) : []
-        List orders = user ? Order.findAllOrdersOfUserLastYear(user) : []
+        List sessions = (participant) ? participantSessionService.getSessionsForParticipant(participant) : []
+        List daysPresent = (user) ? ParticipantDay.findAllDaysOfUser(user) : []
+        List orders = (user) ? Order.findAllOrdersOfUserLastYear(user) : []
 
         // Obtain the emails
         Calendar cal = Calendar.getInstance()
@@ -299,20 +302,20 @@ class ParticipantController {
 	                }
 	                participant.save(failOnError: true)
 
-	                // Remove all volunteering offers from the participant and save all new information
-	                i = 0
-	                participant.participantVolunteering.clear()
-	                participant.save(failOnError: true, flush: true)
-	                while (params["ParticipantVolunteering_${i}"]) {
-		                ParticipantVolunteering pv = new ParticipantVolunteering()
-		                bindData(pv, params, [include: ['volunteering', 'network']], "ParticipantVolunteering_${i}")
-		                i++
+                    // Remove all volunteering offers from the participant and save all new information
+                    i = 0
+                    participant.participantVolunteering.clear()
+                    participant.save(failOnError: true, flush: true)
+                    while (params["ParticipantVolunteering_${i}"]) {
+                        ParticipantVolunteering pv = new ParticipantVolunteering()
+                        bindData(pv, params, [include: ['volunteering', 'network']], "ParticipantVolunteering_${i}")
+                        i++
 
-		                if (!participant.participantVolunteering.find { it.equalsWithoutParticipant(pv) }) {
-			                participant.addToParticipantVolunteering(pv)
-		                }
-	                }
-	                participant.save(failOnError: true)
+                        if (!participant.participantVolunteering.find { it.equalsWithoutParticipant(pv) }) {
+                            participant.addToParticipantVolunteering(pv)
+                        }
+                    }
+                    participant.save(failOnError: true)
 
                     // Check which papers have to be deleted, try to soft delete them
                     String[] ids = params["to-be-deleted"].split(';')
@@ -393,7 +396,6 @@ class ParticipantController {
                                                 participant: participant,
                                                 papers: Paper.findAllByUser(user),
                                                 volunteering: Volunteering.list(),
-                                                participantVolunteering: participantVolunteering,
                                                 networks: Network.list(),
                                                 paperStates: PaperState.list(),
                                                 equipmentList: Equipment.list(),
@@ -412,7 +414,6 @@ class ParticipantController {
                                         participant: participant,
                                         papers: Paper.findAllByUser(user),
                                         volunteering: Volunteering.list(),
-                                        participantVolunteering: participantVolunteering,
                                         networks: Network.list(),
                                         paperStates: PaperState.list(),
                                         equipmentList: Equipment.list(),
@@ -433,68 +434,69 @@ class ParticipantController {
 
         String dbName = ((SessionImpl) sessionFactory.currentSession).connection().catalog
         String dbNamePayWay = ((SessionImpl) sessionFactory_payWay.currentSession).connection().catalog
+		Long projectId = Setting.getSetting(Setting.PAYWAY_PROJECT_ID).value?.toLong()
 
         render(view: "payments", model: [
                 paymentsList:                   sql.rows(PaymentQueries.PAYMENT_LIST
                                                         .replace('db-name-payway', dbNamePayWay)
                                                         .replace('db-name', dbName),
-                                                        [dateId: pageInformation.date.id]),
+                                                        [dateId: pageInformation.date.id, projectId: projectId]),
 
                 paymentMethod:                  PaymentStatistic.createMap(
                                                     sql.rows(PaymentQueries.PAYMENT_METHOD_UNCONFIRMED
                                                             .replace('db-name-payway', dbNamePayWay)
                                                             .replace('db-name', dbName),
-                                                            [dateId: pageInformation.date.id]),
+                                                            [dateId: pageInformation.date.id, projectId: projectId]),
                                                     sql.rows(PaymentQueries.PAYMENT_METHOD_CONFIRMED
                                                             .replace('db-name-payway', dbNamePayWay)
                                                             .replace('db-name', dbName),
-                                                            [dateId: pageInformation.date.id])
+                                                            [dateId: pageInformation.date.id, projectId: projectId])
                                                 ),
                 paymentAmount:                  PaymentStatistic.createMap(
                                                     sql.rows(PaymentQueries.PAYMENT_AMOUNT_UNCONFIRMED
                                                             .replace('db-name-payway', dbNamePayWay)
                                                             .replace('db-name', dbName),
-                                                            [dateId: pageInformation.date.id]),
+                                                            [dateId: pageInformation.date.id, projectId: projectId]),
                                                     sql.rows(PaymentQueries.PAYMENT_AMOUNT_CONFIRMED
                                                             .replace('db-name-payway', dbNamePayWay)
                                                             .replace('db-name', dbName),
-                                                            [dateId: pageInformation.date.id])
+                                                            [dateId: pageInformation.date.id, projectId: projectId])
                                                 ),
                 participantState:               PaymentStatistic.createMap(
                                                     sql.rows(PaymentQueries.PARTICIPANT_STATE_UNCONFIRMED
                                                             .replace('db-name-payway', dbNamePayWay)
                                                             .replace('db-name', dbName),
-                                                            [dateId: pageInformation.date.id]),
+                                                            [dateId: pageInformation.date.id, projectId: projectId]),
                                                     sql.rows(PaymentQueries.PARTICIPANT_STATE_CONFIRMED
                                                             .replace('db-name-payway', dbNamePayWay)
                                                             .replace('db-name', dbName),
-                                                            [dateId: pageInformation.date.id])
+                                                            [dateId: pageInformation.date.id, projectId: projectId])
                                                 ),
 
                 paymentAmountsList:             sql.rows(PaymentQueries.PAYMENT_AMOUNT_LIST
                                                         .replace('db-name-payway', dbNamePayWay)
                                                         .replace('db-name', dbName),
-                                                        [dateId: pageInformation.date.id]),
+                                                        [dateId: pageInformation.date.id, projectId: projectId]),
 
                 participantsTotalPayed:         sql.rows(PaymentQueries.PARTICIPANTS_TOTAL_PAYED
                                                         .replace('db-name-payway', dbNamePayWay)
                                                         .replace('db-name', dbName),
-                                                        [dateId: pageInformation.date.id])
+                                                        [dateId: pageInformation.date.id, projectId: projectId])
                                                         .first(),
                 participantsTotalNotCompleted:  sql.rows(PaymentQueries.PARTICIPANTS_TOTAL_PAYMENT_NOT_COMPLETE
                                                         .replace('db-name-payway', dbNamePayWay)
                                                         .replace('db-name', dbName),
-                                                        [dateId: pageInformation.date.id])
+                                                        [dateId: pageInformation.date.id, projectId: projectId])
                                                         .first(),
                 participantsTotalNoAttempt:     sql.rows(PaymentQueries.PARTICIPANTS_TOTAL_NO_ATTEMPT
                                                         .replace('db-name-payway', dbNamePayWay)
                                                         .replace('db-name', dbName),
-                                                        [dateId: pageInformation.date.id])
+                                                        [dateId: pageInformation.date.id, projectId: projectId])
                                                         .first(),
                 participantsTotal:              sql.rows(PaymentQueries.PARTICIPANTS_TOTAL
                                                         .replace('db-name-payway', dbNamePayWay)
                                                         .replace('db-name', dbName),
-                                                        [dateId: pageInformation.date.id])
+                                                        [dateId: pageInformation.date.id, projectId: projectId])
                                                         .first()
         ])
     }

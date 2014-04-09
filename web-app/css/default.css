@@ -1035,11 +1035,11 @@ ul input.session-name {
     cursor: pointer;
 }
 
-#session-info .property-label, #room-info .property-label {
+#session-info .property-label, #room-info .property-label, .dialog > div > .property-label {
     width: 110px;
 }
 
-#session-info .property-value, #room-info .property-value {
+#session-info .property-value, #room-info .property-value, .dialog > div > .property-value {
     margin-left: 120px;
 }
 
@@ -1095,9 +1095,14 @@ ul input.session-name {
 
 /* EMAIL AND EXPORT */
 
-#email-templates li, #export li {
+#email-templates li, #export ol li {
     margin: 10px 0;
     list-style: decimal inside;
+}
+
+#export ol {
+    padding-left: 20px;
+    margin-bottom: 20px;
 }
 
 #email-templates li span {
