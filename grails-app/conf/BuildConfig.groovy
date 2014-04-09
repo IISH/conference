@@ -57,6 +57,8 @@ grails.project.dependency.resolution = {
         compile ":mail:1.0.4"
         compile ":quartz:1.0.1"
         compile ":spring-security-core:2.0-RC2"
+        compile ":spring-security-oauth2-provider:1.0.5.2"
+        compile ":cache:1.1.1"
 
         // plugins needed at runtime but not for compilation
 	    runtime ':hibernate:3.6.10.8' // Hibernate 4 instead: ":hibernate4:4.3.1.2"

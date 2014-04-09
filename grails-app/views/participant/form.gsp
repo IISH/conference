@@ -338,7 +338,7 @@
                                                 <g:message code="default.add.label" args="[g.message(code: 'participantDate.accompanyingPersons.person.label')]" />
                                             </li>
                                             <li class="hidden">
-                                                <input type="text"  name="AccompanyingPerson_null" id="AccompanyingPerson_null" />
+                                                <input type="text" name="AccompanyingPerson_null" id="AccompanyingPerson_null" />
                                                 <span class="ui-icon ui-icon-circle-minus"></span>
                                             </li>
                                         </ul>
@@ -379,7 +379,7 @@
                                     <legend><g:message code="participantDate.volunteering.label" /></legend>
                                     <div class="${hasErrors(bean: participant, field: 'participantVolunteering', 'error')} ">
                                         <ul>
-                                        <g:each in="${participant.participantVolunteering}" var="instance" status="i">
+                                        <g:each in="${participantVolunteering}" var="instance" status="i">
                                             <li>
                                                 <input type="hidden" name="ParticipantVolunteering_${i}.id" value="${instance.id}" />
                                                 <label>

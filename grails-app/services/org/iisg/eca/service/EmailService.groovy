@@ -105,7 +105,6 @@ class EmailService {
     synchronized void sendEmail(SentEmail sentEmail, boolean saveToDb=true, boolean forceSend=false) {
         // How often may we try before giving up?
         Integer maxNumTries = new Integer(Setting.getSetting(Setting.EMAIL_MAX_NUM_TRIES).value)
-		String fromEmail = Setting.getSetting(Setting.DEFAULT_FROM_EMAIL).value
 
         // Only send the email if the maximum number of tries is not reached
         if (forceSend || (sentEmail.numTries < maxNumTries)) {

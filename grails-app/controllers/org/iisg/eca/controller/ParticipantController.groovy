@@ -223,6 +223,7 @@ class ParticipantController {
         // Already collect participant ids in the case of an error
         List participantIds = participantService.getParticipantsWithFilters(params).collect { it[0] }
         List sessions = (participant) ? participantSessionService.getSessionsForParticipant(participant) : []
+	    List participantVolunteering = participant ? ParticipantVolunteering.sortedParticipantVolunteering(participant.id).list() : []
         List daysPresent = (user) ? ParticipantDay.findAllDaysOfUser(user) : []
         List orders = (user) ? Order.findAllOrdersOfUserLastYear(user) : []
 
@@ -396,6 +397,7 @@ class ParticipantController {
                                                 participant: participant,
                                                 papers: Paper.findAllByUser(user),
                                                 volunteering: Volunteering.list(),
+                                                participantVolunteering: participantVolunteering,
                                                 networks: Network.list(),
                                                 paperStates: PaperState.list(),
                                                 equipmentList: Equipment.list(),
@@ -414,6 +416,7 @@ class ParticipantController {
                                         participant: participant,
                                         papers: Paper.findAllByUser(user),
                                         volunteering: Volunteering.list(),
+                                        participantVolunteering: participantVolunteering,
                                         networks: Network.list(),
                                         paperStates: PaperState.list(),
                                         equipmentList: Equipment.list(),
