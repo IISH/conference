@@ -3,6 +3,7 @@ package org.iisg.eca.controller
 import grails.converters.JSON
 import grails.orm.PagedResultList
 
+import org.iisg.eca.domain.Order
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Paper
 import org.iisg.eca.domain.Network
@@ -17,6 +18,7 @@ import org.iisg.eca.export.XlsMapExport
 import org.iisg.eca.utils.PlannedSession
 
 import org.springframework.security.oauth2.common.OAuth2AccessToken
+import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 
 /**
  * The controller for all API related actions
@@ -109,20 +111,15 @@ class ApiController {
 	}
 
 	def changePassword() {
-		Long id = (params.userId?.toString()?.isLong()) ? params.userId.toString().toLong() : null
-		String newPwd = params.newPassword?.toString()
-		String newPwdRepeat = params.newPasswordRepeat?.toString()
-		Map response = ['success': false]
+		actionById(User, 'userId', params, ['success': false]) { User user, Map response ->
+			String newPwd = params.containsKey('newPassword') ? params.newPassword.toString() : null
+			String newPwdRepeat = params.containsKey('newPasswordRepeat') ? params.newPasswordRepeat.toString() : null
 
-		if (id && newPwd && newPwdRepeat) {
-			User user = User.findById(id)
-			if (user) {
+			if (newPwd && newPwdRepeat) {
 				boolean result = passwordService.changePassword(user, newPwd, newPwdRepeat)
 				response.put('success', result)
 			}
 		}
-
-		render response as JSON
 	}
 
 	def lostPassword() {
@@ -166,20 +163,11 @@ class ApiController {
 	}
 
 	def accessToken() {
-		Long id = (params.userId?.toString()?.isLong()) ? params.userId.toString().toLong() : null
-		Map response = ['success': false] as Map<String, Object>
-
-		if (id) {
-			User user = User.findById(id)
-
-			if (user) {
-				OAuth2AccessToken token = user.getAccessToken()
-				response.put('access_token', token.getValue())
-				response.put('success', true)
-			}
+		actionById(User, 'userId', params, ['success': false]) { User user, Map response ->
+			OAuth2AccessToken token = user.getAccessToken()
+			response.put('access_token', token.getValue())
+			response.put('success', true)
 		}
-
-		render response as JSON
 	}
 
 	def program() {
@@ -195,14 +183,9 @@ class ApiController {
 	}
 
 	def sendEmail() {
-		Long id = (params.userId?.toString()?.isLong()) ? params.userId.toString().toLong() : null
-		String settingPropertyName = params.settingPropertyName?.toString()
-		Map response = ['success': false]
-
-		if (id && settingPropertyName) {
-			User user = User.findById(id)
-
-			if (user) {
+		actionById(User, 'userId', params, ['success': false]) { User user, Map response ->
+			String settingPropertyName = params.settingPropertyName?.toString()
+			if (settingPropertyName) {
 				Set<SentEmail> emails = emailCreationService.createEmail(settingPropertyName, user, params)
 				emails.each { email ->
 					emailService.sendEmail(email)
@@ -210,46 +193,19 @@ class ApiController {
 				response.put('success', true)
 			}
 		}
-
-		render response as JSON
 	}
 
 	def resendEmail() {
-		Long id = (params.emailId?.toString()?.isLong()) ? params.emailId.toString().toLong() : null
-		Map response = ['success': false]
-
-		if (id) {
-			SentEmail email = SentEmail.findById(id)
-
-			if (email) {
-				emailService.sendEmail(email, true, true)
-				response.put('success', true)
-			}
+		actionById(SentEmail, 'emailId', params, ['success': false]) { SentEmail email, Map response ->
+			emailService.sendEmail(email, true, true)
+			response.put('success', true)
 		}
-
-		render response as JSON
 	}
 
 	def removePaper() {
-		Long id = (params.paperId?.toString()?.isLong()) ? params.paperId.toString().toLong() : null
-		Map response = [success: false]
-
-		if (id) {
-			Paper paper = Paper.findById(id)
-
-			if (paper) {
-				paper.file = null
-				paper.fileName = null
-				paper.fileSize = null
-				paper.contentType = null
-
-				if (paper.save()) {
-					response.put('success', true)
-				}
-			}
+		actionById(Paper, 'paperId', params, ['success': false]) { Paper paper, Map response ->
+			response.put('success', paper.removePaperFile())
 		}
-
-		render response as JSON
 	}
 
 	def settings() {
@@ -258,27 +214,23 @@ class ApiController {
 	}
 
 	def participantsInNetwork() {
-		Long id = (params.networkId?.toString()?.isLong()) ? params.networkId.toString().toLong() : null
-		Map results = [success: false] as Map<String, Object>
-
-		if (id) {
-			Network network = Network.findById(id)
-			List<Map> users = network?.allUsersInNetwork?.collect {
+		actionById(Network, 'networkId', params, ['success': false]) { Network network, Map response ->
+			List<Map> users = network.allUsersInNetwork.collect {
 				['lastname': it.lastName, 'firstname': it.firstName, 'email': it.email]
 			}
 
-			results.put('success', true)
+			response.put('success', true)
+
 			if (params.excel?.equalsIgnoreCase('true') || params.excel?.equalsIgnoreCase('1')) {
-				XlsMapExport xls = new XlsMapExport(['lastname', 'firstname', 'email'], users,
-						'Sheet 1', [params.lastName, params.firstName, params.email])
-				results.put('xls', xls.parse().encodeBase64().toString())
+				XlsMapExport xls = new XlsMapExport(
+						['lastname', 'firstname', 'email'],  users,
+						'Sheet 1', [params.lastName, params.firstName, params.email] as List<String>)
+				response.put('xls', xls.parse().encodeBase64().toString())
 			}
 			else {
-				results.put('users', users)
+				response.put('users', users)
 			}
 		}
-
-		render results as JSON
 	}
 
 	def participantsInSession() {
@@ -376,19 +328,22 @@ class ApiController {
 	}
 
 	def mailNewPassword() {
-		Long id = (params.userId?.toString()?.isLong()) ? params.userId.toString().toLong() : null
-		Map response = ['success': false] as Map<String, Object>
+		actionById(User, 'userId', params, ['success': false]) { User user, Map response ->
+			user.password = User.createPassword()
+			passwordService.sendPassword(user, user.password)
 
-		if (id) {
-			User user = User.findById(id)
-
-			if (user) {
-				user.password = User.createPassword()
-				passwordService.sendPassword(user, user.password)
-				if (user.save()) {
-					response.put('success', true)
-				}
+			if (user.save()) {
+				response.put('success', true)
 			}
+		}
+	}
+
+	def refreshOrder() {
+		Map response = [success: false]
+		Long id = (params.containsKey('orderId') && params.orderId.isLong()) ? params.long('orderId') : null
+		if (id) {
+			Order order = Order.get(id) ?: new Order(id: id)
+			response.put('success', order.refreshOrder())
 		}
 
 		render response as JSON
@@ -404,5 +359,17 @@ class ApiController {
 
 		response.put('user', user)
 		response.put('participant', ParticipantDate.findByUserAndDate(user, pageInformation.date))
+	}
+
+	private void actionById(Class domainClass, String idName, GrailsParameterMap params, Map defaultResponse, Closure onInstanceFound) {
+		Long id = (params.containsKey(idName) && params[idName].toString().isLong()) ? params.long(idName) : null
+		if (id) {
+			def instance = domainClass.findById(id)
+			if (instance) {
+				onInstanceFound(instance, defaultResponse)
+			}
+		}
+
+		render defaultResponse as JSON
 	}
 }

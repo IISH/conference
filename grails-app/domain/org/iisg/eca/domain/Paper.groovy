@@ -185,6 +185,19 @@ class Paper extends EventDateDomain {
         return "${fileSize} bytes"
     }
 
+	/**
+	 * Removes the paper file by setting all related columns to null
+	 * @return Whether the paper was successfully removed
+	 */
+	boolean removePaperFile() {
+		this.file = null
+		this.fileName = null
+		this.fileSize = null
+		this.contentType = null
+
+		this.save()
+	}
+
     /**
      * Updates the mailPaperState when the state of this paper has been changed
      */

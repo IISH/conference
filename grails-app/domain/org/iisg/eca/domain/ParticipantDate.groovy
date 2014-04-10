@@ -1,7 +1,6 @@
 package org.iisg.eca.domain
 
 import grails.converters.JSON
-import org.iisg.eca.domain.payway.Order
 
 /**
  * Domain class of table holding all participants (users) who signed up for an event date
@@ -28,7 +27,10 @@ class ParticipantDate extends EventDateDomain {
 	boolean deleted = false
 
     static belongsTo = [User, ParticipantState, FeeState]
-	static hasMany = [extras: Extra, participantVolunteering: ParticipantVolunteering, accompanyingPersons: String]
+	static hasMany = [  extras: Extra,
+	                    participantVolunteering: ParticipantVolunteering,
+	                    orders: Order,
+	                    accompanyingPersons: String]
 
     static mapping = {
         table 'participant_date'

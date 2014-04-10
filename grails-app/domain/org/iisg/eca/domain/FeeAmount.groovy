@@ -37,6 +37,24 @@ class FeeAmount extends EventDateDomain {
         substituteName  column: 'substitute_name'
     }
 
+	static namedQueries = {
+		getFeeAmountForNrDays { FeeState state, int nrDays ->
+			eq('numDaysStart', nrDays)
+			eq('numDaysEnd', nrDays)
+			eq('feeState', state)
+		}
+
+		getFeeAmountForDate { FeeState state, Date date ->
+			eq('endDate', date)
+			eq('feeState', state)
+		}
+
+		getFeeAmountForDateAndNrDays { FeeState state, int nrDays, Date date ->
+			getFeeAmountForNrDays(state, nrDays)
+			getFeeAmountForDate(state, date)
+		}
+	}
+
     static apiActions = ['GET']
 
     static apiAllowed = [
@@ -49,7 +67,21 @@ class FeeAmount extends EventDateDomain {
             'substituteName'
     ]
 
+	static getReadableFeeAmount(BigDecimal amount) {
+		return amount.toString() + ' EUR'
+	}
+
     String getNumDays() {
         (numDaysStart == numDaysEnd) ? numDaysStart : "${numDaysStart} - ${numDaysEnd}"
     }
+
+	@Override
+	String toString() {
+		String name = feeState.name
+		if (substituteName?.size() > 0) {
+			name = substituteName
+		}
+
+		return "${name}: ${getReadableFeeAmount(feeAmount)}"
+	}
 }

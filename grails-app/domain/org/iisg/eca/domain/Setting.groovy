@@ -2,6 +2,8 @@ package org.iisg.eca.domain
 
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl
 
+import java.text.SimpleDateFormat
+
 /**
  * Domain class of table holding all settings
  */
@@ -93,7 +95,8 @@ class Setting extends EventDomain {
 	static final String PAYWAY_PASSPHRASE_IN = 'payway_passphrase_in'
 	static final String PAYWAY_PASSPHRASE_OUT = 'payway_passphrase_out'
 	static final String PAYWAY_PROJECT = 'payway_project'
-	static final String PAYWAY_PROJECT_ID = 'payway_project_id'
+
+	private static final SimpleDateFormat SETTINGS_DATE_FORMAT = new SimpleDateFormat('yy-MM-dd')
 
     String property
     String value
@@ -188,6 +191,22 @@ class Setting extends EventDomain {
 	 */
 	String[] getMultipleValues() {
 		return (value != null) ? value.split(';') as String[] : [] as String[]
+	}
+
+	/**
+	 * If the setting holds a boolean value, return the value as a boolean
+	 * @return The boolean value
+	 */
+	boolean getBooleanValue() {
+		return value?.equals('1')
+	}
+
+	/**
+	 * If the setting holds a date value, return the value as a date
+	 * @return The date value
+	 */
+	Date getDateValue() {
+		return value ? SETTINGS_DATE_FORMAT.parse(value) : null
 	}
 
     private void setSetting() {

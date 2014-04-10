@@ -58,6 +58,18 @@ class FeeState extends EventDateDomain {
 		deleted = true
 	}
 
+	static FeeState getDefaultFee() {
+		withCriteria {
+			eq('isDefaultFee', true)
+		}.first()
+	}
+
+	static FeeState getAccompanyingPersonFee() {
+		withCriteria {
+			eq('isAccompanyingPersonFee', true)
+		}.first()
+	}
+
 	@Override
     String toString() {
         name

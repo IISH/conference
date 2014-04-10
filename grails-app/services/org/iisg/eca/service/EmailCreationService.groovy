@@ -4,9 +4,11 @@ import java.text.SimpleDateFormat
 
 import org.iisg.eca.domain.Day
 import org.iisg.eca.domain.User
+import org.iisg.eca.domain.Order
 import org.iisg.eca.domain.Session
 import org.iisg.eca.domain.Setting
 import org.iisg.eca.domain.SentEmail
+import org.iisg.eca.domain.FeeAmount
 import org.iisg.eca.domain.EmailTemplate
 import org.iisg.eca.domain.ParticipantDay
 import org.iisg.eca.domain.SessionParticipant
@@ -29,12 +31,10 @@ class EmailCreationService {
 	Set<SentEmail> createEmail(String settingPropertyName, User user, GrailsParameterMap props = (GrailsParameterMap) [:] as Map) {
 		switch (settingPropertyName) {
 			case Setting.BANK_TRANSFER_EMAIL_TEMPLATE_ID:
-				return [createBankTransferEmail(user, props.paymentNumber.toString(), props.paymentAmount.toString(),
-						props.paymentDescription.toString(), props.date('bankTransferFinalDate', 'yyyy/MM/dd'))] as Set<SentEmail>
+				return [createBankTransferEmail(user, Order.get(props.long('orderId')))] as Set<SentEmail>
 				break
 			case Setting.PAYMENT_ACCEPTED_EMAIL_TEMPLATE_ID:
-				return [createPaymentAcceptedEmail(user, props.paymentNumber.toString(), props.paymentAmount.toString(),
-						props.paymentDescription.toString())] as Set<SentEmail>
+				return [createPaymentAcceptedEmail(user, Order.get(props.long('orderId')))] as Set<SentEmail>
 			case Setting.PRE_REGISTRATION_EMAIL_TEMPLATE_ID:
 				return createPreRegistrationEmail(user)
 			default:
@@ -45,48 +45,54 @@ class EmailCreationService {
 	/**
 	 * Creates an email that tells the user how to make a bank transfer
 	 * @param user The user to whom the email is addressed
-	 * @param paymentNumber The payment number
-	 * @param paymentAmount The amount payed
-	 * @param paymentDescription The payment description
-	 * @param bankTransferFinalDate The final date a bank transfer should have been made
+	 * @param order The order that has been accepted
 	 * @return An email ready to be sent
 	 */
-	SentEmail createBankTransferEmail(User user, String paymentNumber, String paymentAmount,
-			String paymentDescription, Date bankTransferFinalDate) {
+	SentEmail createBankTransferEmail(User user, Order order) {
 		SentEmail email = findAndCreateEmail(user, Setting.BANK_TRANSFER_EMAIL_TEMPLATE_ID)
 
-		Setting bankTransferText = Setting.getSetting(Setting.BANK_TRANSFER_INFO)
-		SimpleDateFormat dateFormat = new SimpleDateFormat('EEEE dd MMMM yyyy')
+		// Make sure the given order belongs to the given user
+		if (order.participantDate.user.id == user.id) {
+			final SimpleDateFormat dateFormat = new SimpleDateFormat('EEEE dd MMMM yyyy', Locale.US)
 
-		email.addAdditionalValue('BankTransferInfo', bankTransferText.value)
-		email.addAdditionalValue('PaymentNumber', paymentNumber)
-		email.addAdditionalValue('PaymentAmount', paymentAmount)
-		email.addAdditionalValue('PaymentDescription', paymentDescription)
-		email.addAdditionalValue('PaymentFinalDate', dateFormat.format(bankTransferFinalDate))
+			Setting bankTransferText = Setting.getSetting(Setting.BANK_TRANSFER_INFO)
+			Setting bankTransferClosesOn = Setting.getSetting(Setting.BANK_TRANSFER_CLOSES_ON)
 
-		return email
+			email.addAdditionalValue('BankTransferInfo', bankTransferText.value)
+			email.addAdditionalValue('PaymentNumber', order.id.toString())
+			email.addAdditionalValue('PaymentAmount', FeeAmount.getReadableFeeAmount(order.amountAsBigDecimal))
+			email.addAdditionalValue('PaymentDescription', order.description)
+			email.addAdditionalValue('PaymentFinalDate', dateFormat.format(bankTransferClosesOn.dateValue))
+
+			return email
+		}
+
+		return null
 	}
 
 	/**
 	 * Creates an email that informs the user his payment has been accepted
 	 * @param user The user to whom the email is addressed
-	 * @param paymentNumber The payment number
-	 * @param paymentAmount The amount payed
-	 * @param paymentDescription The payment description
+	 * @param order The order that has been accepted
 	 * @return An email ready to be sent
 	 */
-	SentEmail createPaymentAcceptedEmail(User user, String paymentNumber, String paymentAmount,
-			String paymentDescription) {
+	SentEmail createPaymentAcceptedEmail(User user, Order order) {
 		SentEmail email = findAndCreateEmail(user, Setting.PAYMENT_ACCEPTED_EMAIL_TEMPLATE_ID)
 
-		List<Day> daysPresent = ParticipantDay.findAllDaysOfUser(user)
+		// Make sure the given order belongs to the given user
+		if (order.participantDate.user.id == user.id) {
+			List<Day> daysPresent = ParticipantDay.findAllDaysOfUser(user)
 
-		email.addAdditionalValue('PaymentNumber', paymentNumber)
-		email.addAdditionalValue('PaymentAmount', paymentAmount)
-		email.addAdditionalValue('PaymentDescription', paymentDescription)
-		email.addAdditionalValue('DaysPresent', daysPresent.join('\n'))
+			email.addAdditionalValue('PaymentNumber', order.id.toString())
+			email.addAdditionalValue('PaymentAmount', FeeAmount.getReadableFeeAmount(order.amountAsBigDecimal))
+			email.addAdditionalValue('PaymentDescription', order.description)
+			email.addAdditionalValue('OrderDescription', order.getExtendedOrderDescription())
+			email.addAdditionalValue('DaysPresent', daysPresent.join('\n'))
 
-		return email
+			return email
+		}
+
+		return null
 	}
 
 	/**

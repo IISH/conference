@@ -2,7 +2,7 @@ dataSource {
     pooled = true
     driverClassName = "com.mysql.jdbc.Driver"
     dialect = org.hibernate.dialect.MySQL5InnoDBDialect
-    dbCreate = "update"
+    dbCreate = "validate"
     configClass = org.grails.plugin.hibernate.filter.HibernateFilterDomainConfiguration.class
 }
 hibernate {
@@ -17,14 +17,6 @@ hibernate {
 environments {
     test {
         dataSource {
-            driverClassName = "org.h2.Driver"
-            dialect = org.hibernate.dialect.H2Dialect
-            username = "sa"
-            password = ""
-            dbCreate = "update"
-            url = "jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000"
-        }
-        dataSource_payWay {
             driverClassName = "org.h2.Driver"
             dialect = org.hibernate.dialect.H2Dialect
             username = "sa"
@@ -48,14 +40,6 @@ environments {
 	            validationQuery = "SELECT 1"
 	            jdbcInterceptors = "ConnectionState"
             }
-        }
-		dataSource_payWay {
-			driverClassName = "org.h2.Driver"
-			dialect = org.hibernate.dialect.H2Dialect
-			username = "sa"
-			password = ""
-			dbCreate = "update"
-			url = "jdbc:h2:mem:payway;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE"
         }
 	}
 }

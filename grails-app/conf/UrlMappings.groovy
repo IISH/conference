@@ -125,6 +125,10 @@ class UrlMappings {
 		    action = 'mailNewPassword'
 	    }
 
+	    name refreshOrder: "/$event/$date/api/refreshOrder" (controller: "api", parseRequest: true) {
+		    action = 'refreshOrder'
+	    }
+
         /*
          * END API CALLS
          */
