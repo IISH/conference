@@ -254,365 +254,456 @@ class User {
 		    }
 	    }
 
-        paperAccepted { date ->
-            allParticipants(date)
+		allParticipantPapers { date ->
+			allParticipants(date)
 
-            papers {
-                eq('state.id', PaperState.PAPER_ACCEPTED)
-                eq('date.id', date.id)
-                eq('deleted', false)
-            }
-        }
+			createAlias('papers', 'papers')
+			eq('papers.date.id', date.id)
+			eq('papers.deleted', false)
+		}
 
-        paperAcceptedNotAnswered { date ->
-            paperAccepted(date)
+		paperAccepted { date ->
+			allParticipantPapers(date)
+			eq('papers.state.id', PaperState.PAPER_ACCEPTED)
+		}
 
-            papers {
-                eq('mailPaperState', true)
-            }
-        }
+		paperAcceptedNotAnswered { date ->
+			paperAccepted(date)
+			eq('papers.mailPaperState', true)
+		}
 
-        paperInConsideration { date ->
-            allParticipants(date)
+		paperInConsideration { date ->
+			allParticipantPapers(date)
+			eq('papers.state.id', PaperState.PAPER_IN_CONSIDERATION)
+		}
 
-            papers {
-                eq('state.id', PaperState.PAPER_IN_CONSIDERATION)
-                eq('date.id', date.id)
-                eq('deleted', false)
-            }
-        }
+		paperInConsiderationNotAnswered { date ->
+			paperInConsideration(date)
+			eq('papers.mailPaperState', true)
+		}
 
-        paperInConsiderationNotAnswered { date ->
-            paperInConsideration(date)
+		paperNotAccepted { date ->
+			allParticipantPapers(date)
+			eq('papers.state.id', PaperState.PAPER_NOT_ACCEPTED)
+		}
 
-            papers {
-                eq('mailPaperState', true)
-            }
-        }
+		paperNotAcceptedNotAnswered { date ->
+			paperNotAccepted(date)
+			eq('papers.mailPaperState', true)
+		}
 
-        paperNotAccepted { date ->
-            allParticipants(date)
+		studentLowerFee { date ->
+			allParticipantsNotDeleted(date)
 
-            papers {
-                eq('state.id', PaperState.PAPER_NOT_ACCEPTED)
-                eq('date.id', date.id)
-                eq('deleted', false)
-            }
-        }
+			participantDates {
+				eq('student', true)
+				eq('lowerFeeRequested', true)
+			}
+		}
 
-        paperNotAcceptedNotAnswered { date ->
-            paperNotAccepted(date)
+		studentLowerFeeNotAnswered { date ->
+			studentLowerFee(date)
 
-            papers {
-                eq('mailPaperState', true)
-            }
-        }
+			participantDates {
+				eq('lowerFeeAnswered', false)
+			}
+		}
 
-        studentLowerFee { date ->
-            allParticipantsNotDeleted(date)
+		noStudentLowerFee { date ->
+			allParticipantsNotDeleted(date)
 
-            participantDates {
-                eq('student', true)
-                eq('lowerFeeRequested', true)
-            }
-        }
+			participantDates {
+				eq('student', false)
+				eq('lowerFeeRequested', true)
+			}
+		}
 
-        studentLowerFeeNotAnswered { date ->
-            studentLowerFee(date)
+		noStudentLowerFeeNotAnswered { date ->
+			noStudentLowerFee(date)
 
-            participantDates {
-                eq('lowerFeeAnswered', false)
-            }
-        }
+			participantDates {
+				eq('lowerFeeAnswered', false)
+			}
+		}
 
-        noStudentLowerFee { date ->
-            allParticipantsNotDeleted(date)
+		allSessionParticipants { date ->
+			allParticipants(date)
 
-            participantDates {
-                eq('student', false)
-                eq('lowerFeeRequested', true)
-            }
-        }
+			createAlias('sessionParticipants', 'sp')
+			createAlias('sp.session', 'sessions')
 
-        noStudentLowerFeeNotAnswered { date ->
-            noStudentLowerFee(date)
+			eq('sp.deleted', false)
+			eq('sessions.date.id', date.id)
+			eq('sessions.deleted', false)
+		}
 
-            participantDates {
-                eq('lowerFeeAnswered', false)
-            }
-        }
+		allAcceptedSessionParticipants { date ->
+			allSessionParticipants(date)
+			eq('sessions.state.id', SessionState.SESSION_ACCEPTED)
+		}
 
-        allSessionParticipants { date ->
-            allParticipants(date)
+		allAcceptedSessionParticipantsNotAnswered { date ->
+			allAcceptedSessionParticipants(date)
 
-            sessionParticipants {
-                session {
-                    eq('state.id', SessionState.SESSION_ACCEPTED)
-                    eq('date.id', date.id)
-                    eq('deleted', false)
-                }
-            }
-        }
+			participantDates {
+				eq('emailSessionInfo', false)
+			}
+		}
 
-        allSessionParticipantsNotAnswered { date ->
-            allSessionParticipants(date)
+		allAcceptedSessionChairs { date ->
+			allAcceptedSessionParticipants(date)
+			eq('sp.type.id', ParticipantType.CHAIR)
+		}
 
-            participantDates {
-                eq('emailSessionInfo', false)
-            }
-        }
+		allAcceptedSessionChairsNotAnswered { date ->
+			allAcceptedSessionChairs(date)
 
-        allSessionChairs { date ->
-            allSessionParticipants(date)
+			participantDates {
+				eq('emailSessionChairInfo', false)
+			}
+		}
 
-            sessionParticipants {
-                eq('type.id', ParticipantType.CHAIR)
-            }
-        }
+		allSessionOrganizers { date ->
+			allSessionParticipants(date)
+			eq('sp.type.id', ParticipantType.ORGANIZER)
+		}
 
-        allSessionChairsNotAnswered { date ->
-            allSessionChairs(date)
+		sessionAcceptedOrganizers { date ->
+			allSessionOrganizers(date)
+			eq('sessions.state.id', SessionState.SESSION_ACCEPTED)
+		}
 
-            participantDates {
-                eq('emailSessionChairInfo', false)
-            }
-        }
+		sessionAcceptedOrganizersNotAnswered { date ->
+			sessionAcceptedOrganizers(date)
+			eq('sessions.mailSessionState', true)
+		}
 
-        noPaymentInfo { date ->
-            allParticipants(date)
+		sessionInConsiderationOrganizers { date ->
+			allSessionOrganizers(date)
+			eq('sessions.state.id', SessionState.SESSION_IN_CONSIDERATION)
+		}
 
-            participantDates {
-                eq('emailPaymentInfo', false)
-            }
-        }
+		sessionInConsiderationOrganizersNotAnswered { date ->
+			sessionInConsiderationOrganizers(date)
+			eq('sessions.mailSessionState', true)
+		}
 
-        noPaymentAttempt { date ->
-            allParticipantsSoftState(date)
+		sessionNotAcceptedOrganizers { date ->
+			allSessionOrganizers(date)
+			eq('sessions.state.id', SessionState.SESSION_NOT_ACCEPTED)
+		}
 
-            participantDates {
-                or {
-                    isNull('paymentId')
-                    eq('paymentId', 0L)
-                }
-            }
-        }
-    }
+		sessionNotAcceptedOrganizersNotAnswered { date ->
+			sessionNotAcceptedOrganizers(date)
+			eq('sessions.mailSessionState', true)
+		}
+
+		allSessionCreators { date ->
+			allParticipants(date)
+
+			createAlias('sessionsAdded', 'sessions')
+			eq('sessions.date.id', date.id)
+			eq('sessions.deleted', false)
+		}
+
+		sessionAcceptedCreators { date ->
+			allSessionCreators(date)
+			eq('sessions.state.id', SessionState.SESSION_ACCEPTED)
+		}
+
+		sessionAcceptedCreatorsNotAnswered { date ->
+			sessionAcceptedCreators(date)
+			eq('sessions.mailSessionState', true)
+		}
+
+		sessionInConsiderationCreators { date ->
+			allSessionCreators(date)
+			eq('sessions.state.id', SessionState.SESSION_IN_CONSIDERATION)
+		}
+
+		sessionInConsiderationCreatorsNotAnswered { date ->
+			sessionInConsiderationCreators(date)
+			eq('sessions.mailSessionState', true)
+		}
+
+		sessionNotAcceptedCreators { date ->
+			allSessionCreators(date)
+			eq('sessions.state.id', SessionState.SESSION_NOT_ACCEPTED)
+		}
+
+		sessionNotAcceptedCreatorsNotAnswered { date ->
+			sessionNotAcceptedCreators(date)
+			eq('sessions.mailSessionState', true)
+		}
+
+		noPaymentInfo { date ->
+			allParticipants(date)
+
+			participantDates {
+				eq('emailPaymentInfo', false)
+			}
+		}
+
+		noPaymentAttempt { date ->
+			allParticipantsSoftState(date)
+
+			participantDates {
+				or {
+					isNull('paymentId')
+					eq('paymentId', 0L)
+				}
+			}
+		}
+
+		confirmedPayments { date ->
+			allParticipantsSoftState(date)
+
+			participantDates {
+				orders {
+					eq('payed', Order.ORDER_PAYED)
+				}
+			}
+		}
+
+		unconfirmedBankTransfers { date ->
+			allParticipantsSoftState(date)
+
+			participantDates {
+				orders {
+					eq('willPayByBank', true)
+					eq('payed', Order.ORDER_NOT_PAYED)
+				}
+			}
+		}
+
+		unconfirmedOnlinePayments { date ->
+			allParticipantsSoftState(date)
+
+			participantDates {
+				orders {
+					eq('willPayByBank', false)
+					eq('payed', Order.ORDER_NOT_PAYED)
+				}
+			}
+		}
+	}
 
 	void softDelete() {
 		deleted = true
 	}
 
-    /**
-     * Returns all roles assigned to this user
-     * @return A set of roles assigned to this user
-     */
-    Set<Role> getRoles() {
-        UserRole.findAllByUser(this, [cache: true]).collect { it.role } as Set
-    }
+	/**
+	 * Returns all roles assigned to this user
+	 * @return A set of roles assigned to this user
+	 */
+	Set<Role> getRoles() {
+		UserRole.findAllByUser(this, [cache: true]).collect { it.role } as Set
+	}
 
-    /**
-     * Returns all events this user can access
-     * @return A set of events this user can access
-     */
-    List<Event> getEvents() {
-        List<Event> events
-        List<Role> roles = Role.findAllByFullRights(true, [cache: true])
+	/**
+	 * Returns all events this user can access
+	 * @return A set of events this user can access
+	 */
+	List<Event> getEvents() {
+		List<Event> events
+		List<Role> roles = Role.findAllByFullRights(true, [cache: true])
 
-        // If the user is granted access to all events, just return a list of all events
-        // Otherwise, only return the events he/she is specifically given access to
-        if (SpringSecurityUtils.ifAnyGranted(roles*.role.join(','))) {
-            events = Event.listOrderByShortName()
-        }
-        else {
-            events = Event.executeQuery('''
+		// If the user is granted access to all events, just return a list of all events
+		// Otherwise, only return the events he/she is specifically given access to
+		if (SpringSecurityUtils.ifAnyGranted(roles*.role.join(','))) {
+			events = Event.listOrderByShortName()
+		}
+		else {
+			events = Event.executeQuery('''
                 SELECT e
                 FROM UserRole AS ur
                 INNER JOIN ur.event AS e
                 WHERE ur.user.id = :userId
                 ORDER BY e.shortName
             ''', [userId: this.id], [cache: true])
-        }
+		}
 
-        events
-    }
+		events
+	}
 
-    /**
-     * Find out if user is granted full rights
-     * @return Whether this user has full rights
-     */
-    boolean hasFullRights() {
-        Role fullRights = getRoles().find { it.fullRights }
-        return (fullRights != null)
-    }
+	/**
+	 * Find out if user is granted full rights
+	 * @return Whether this user has full rights
+	 */
+	boolean hasFullRights() {
+		Role fullRights = getRoles().find { it.fullRights }
+		return (fullRights != null)
+	}
 
-    /**
-     * Find out if user is part of the crew and can access the CMS
-     * @return Whether this user is part of the crew
-     */
-    boolean isCrew() {
-        return (getRoles().size() > 0)
-    }
+	/**
+	 * Find out if user is part of the crew and can access the CMS
+	 * @return Whether this user is part of the crew
+	 */
+	boolean isCrew() {
+		return (getRoles().size() > 0)
+	}
 
-    /**
-     * Find out if user is a network chair
-     * @return Whether this user is a network chair
-     */
-    boolean isNetworkChair() {
-        NetworkChair chair = NetworkChair.findByChair(this)
-        return (chair != null)
-    }
+	/**
+	 * Find out if user is a network chair
+	 * @return Whether this user is a network chair
+	 */
+	boolean isNetworkChair() {
+		NetworkChair chair = NetworkChair.findByChair(this)
+		return (chair != null)
+	}
 
-    /**
-     * Find out if user has this role in one or more sessions
-     * @param type The participant type in question
-     * @return Whether this user has this role in one or more sessions
-     */
-    boolean hasRoleInASession(ParticipantType type) {
-        SessionParticipant sessionParticipant = SessionParticipant.findByUserAndType(this, type)
-        return (sessionParticipant != null)
-    }
+	/**
+	 * Find out if user has this role in one or more sessions
+	 * @param type The participant type in question
+	 * @return Whether this user has this role in one or more sessions
+	 */
+	boolean hasRoleInASession(ParticipantType type) {
+		SessionParticipant sessionParticipant = SessionParticipant.findByUserAndType(this, type)
+		return (sessionParticipant != null)
+	}
 
-    /**
-     * Returns an access token for the user or will create a new one if the access token is not found or expired
-     * @return An OAuth2 access token
-     */
-    OAuth2AccessToken getAccessToken() {
-        Collection<OAuth2AccessToken> tokens = tokenServices.findTokensByUserName(this.email)
-        OAuth2AccessToken token = (tokens?.size() > 0) ? tokens.first() : null
+	/**
+	 * Returns an access token for the user or will create a new one if the access token is not found or expired
+	 * @return An OAuth2 access token
+	 */
+	OAuth2AccessToken getAccessToken() {
+		Collection<OAuth2AccessToken> tokens = tokenServices.findTokensByUserName(this.email)
+		OAuth2AccessToken token = (tokens?.size() > 0) ? tokens.first() : null
 
-	    // If the token expires within an hour, then request a new one already
-	    Calendar calendar = Calendar.getInstance()
-	    calendar.add(Calendar.HOUR, 1)
+		// If the token expires within an hour, then request a new one already
+		Calendar calendar = Calendar.getInstance()
+		calendar.add(Calendar.HOUR, 1)
 
-        if (!token || token.expired || calendar.time.after(token.expiration)) {
-            ClientDetails client = clientDetailsService.loadClientByClientId('userClient')
-            DefaultAuthorizationRequest ar = new DefaultAuthorizationRequest(client.clientId, client.scope)
-            ar.setApproved(true)
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(this.email, this.password, client.authorities)
-            OAuth2Authentication oauth2Auth = new OAuth2Authentication(ar, authToken)
-            token = tokenServices.createAccessToken(oauth2Auth)
-        }
+		if (!token || token.expired || calendar.time.after(token.expiration)) {
+			ClientDetails client = clientDetailsService.loadClientByClientId('userClient')
+			DefaultAuthorizationRequest ar = new DefaultAuthorizationRequest(client.clientId, client.scope)
+			ar.setApproved(true)
+			UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(this.email,
+					this.password, client.authorities)
+			OAuth2Authentication oauth2Auth = new OAuth2Authentication(ar, authToken)
+			token = tokenServices.createAccessToken(oauth2Auth)
+		}
 
-        return token
-    }
+		return token
+	}
 
-    void updateForApi(String property, String value) {
-        switch (property) {
-            case 'daysPresent.day.id':
-                this.daysPresent?.clear()
-                this.save(flush: true)
-                value.split(';').each { dayId ->
-                    if (dayId.toString().isLong()) {
-                        Day day = Day.findById(dayId.toString().toLong())
-                        if (day) {
-                            this.addToDaysPresent(new ParticipantDay(day: day))
-                        }
-                    }
-                }
-                break
-	        case 'country.id':
-		        Country country = (value.isLong()) ? Country.get(value.toLong()) : null
-		        if (country) {
-			        this.country = country
-		        }
-		        break
-	        case 'addedBy.id':
-		        User addedBy = (value.isLong()) ? User.findById(value.toLong()) : null
-		        if (addedBy) {
-			        this.addedBy = addedBy
-		        }
-		        break
-        }
-    }
+	void updateForApi(String property, String value) {
+		switch (property) {
+			case 'daysPresent.day.id':
+				this.daysPresent?.clear()
+				this.save(flush: true)
+				value.split(';').each { dayId ->
+					if (dayId.toString().isLong()) {
+						Day day = Day.findById(dayId.toString().toLong())
+						if (day) {
+							this.addToDaysPresent(new ParticipantDay(day: day))
+						}
+					}
+				}
+				break
+			case 'country.id':
+				Country country = (value.isLong()) ? Country.get(value.toLong()) : null
+				if (country) {
+					this.country = country
+				}
+				break
+			case 'addedBy.id':
+				User addedBy = (value.isLong()) ? User.findById(value.toLong()) : null
+				if (addedBy) {
+					this.addedBy = addedBy
+				}
+				break
+		}
+	}
 
-    def beforeInsert() {
-        // Make sure the email address is in lowercase
-	    emailToLowercase()
+	def beforeInsert() {
+		// Make sure the email address is in lowercase
+		emailToLowercase()
 
-        // Before insertion of a user, hash a new password
-	    password = createPassword()
-	    encodePassword()
-    }
+		// Before insertion of a user, hash a new password
+		password = createPassword()
+		encodePassword()
+	}
 
-    def beforeUpdate() {
-        // Make sure the email address is in lowercase
-        emailToLowercase()
+	def beforeUpdate() {
+		// Make sure the email address is in lowercase
+		emailToLowercase()
 
-	    // Make sure to hash the password if changed
-	    if (isDirty('password')) {
-		    encodePassword()
-	    }
-    }
+		// Make sure to hash the password if changed
+		if (isDirty('password')) {
+			encodePassword()
+		}
+	}
 
-    /**
-     * Check to see if the given password equals the hashed password
-     * @param plainPassword The password to hash and compare
-     * @return Is a correct password or not
-     */
-    boolean isPasswordCorrect(String plainPassword) {
-        String hashedPassword = springSecurityService.encodePassword(plainPassword, saltSource.getSalt(this))
-        hashedPassword.equals(password)
-    }
+	/**
+	 * Check to see if the given password equals the hashed password
+	 * @param plainPassword The password to hash and compare
+	 * @return Is a correct password or not
+	 */
+	boolean isPasswordCorrect(String plainPassword) {
+		String hashedPassword = springSecurityService.encodePassword(plainPassword, saltSource.getSalt(this))
+		hashedPassword.equals(password)
+	}
 
-    /**
-     * Returns the status of the user
-     * @return The status
-     */
-    int getStatus() {
-        // The user is at least found
-        int status = User.USER_STATUS_FOUND
+	/**
+	 * Returns the status of the user
+	 * @return The status
+	 */
+	int getStatus() {
+		// The user is at least found
+		int status = User.USER_STATUS_FOUND
 
-        if (this.deleted) {
-            status = User.USER_STATUS_DELETED
-        }
-        else if (!this.enabled) {
-            status = User.USER_STATUS_DISABLED
-        }
+		if (this.deleted) {
+			status = User.USER_STATUS_DELETED
+		}
+		else if (!this.enabled) {
+			status = User.USER_STATUS_DISABLED
+		}
 
-        return status;
-    }
+		return status;
+	}
 
-    /**
-     * Creates a 26 characters long salt using a secure random generator
-     * @return A new secure random salt
-     */
-    static String createSalt() {
-        createPassword(26)
-    }
+	/**
+	 * Creates a 26 characters long salt using a secure random generator
+	 * @return A new secure random salt
+	 */
+	static String createSalt() {
+		createPassword(26)
+	}
 
-    /**
-     * Creates a new password of the given length
-     * @return A new password
-     */
-    static String createPassword(int length=8) {
-        RandomStringUtils.random(length, 0, 0, true, true, null, new SecureRandom())
-    }
+	/**
+	 * Creates a new password of the given length
+	 * @return A new password
+	 */
+	static String createPassword(int length = 8) {
+		RandomStringUtils.random(length, 0, 0, true, true, null, new SecureRandom())
+	}
 
-    /**
-     * Every time a new password is saved (and has to be hashed), also create a new user salt
-     */
-    protected void encodePassword() {
-        salt = createSalt()
-        password = springSecurityService.encodePassword(password, saltSource.getSalt(this))
-    }
+	/**
+	 * Every time a new password is saved (and has to be hashed), also create a new user salt
+	 */
+	protected void encodePassword() {
+		salt = createSalt()
+		password = springSecurityService.encodePassword(password, saltSource.getSalt(this))
+	}
 
-    /**
-     * Makes sure the email address is always saved in lowercase characters
-     */
-    private void emailToLowercase() {
-        this.email = this.email.trim().toLowerCase()
-    }
+	/**
+	 * Makes sure the email address is always saved in lowercase characters
+	 */
+	private void emailToLowercase() {
+		this.email = this.email.trim().toLowerCase()
+	}
 
-    /**
-     * Returns the full name, firstname + lastname
-     * @return The full name
-     */
-    String getFullName() {
-        return "${firstName} ${lastName}"
-    }
+	/**
+	 * Returns the full name, firstname + lastname
+	 * @return The full name
+	 */
+	String getFullName() {
+		return "${firstName} ${lastName}"
+	}
 
-    @Override
-    String toString() {
-        "${lastName}, ${firstName}"
-    }
+	@Override
+	String toString() {
+		"${lastName}, ${firstName}"
+	}
 }

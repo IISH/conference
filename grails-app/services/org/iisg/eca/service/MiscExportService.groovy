@@ -3,12 +3,12 @@ package org.iisg.eca.service
 import org.iisg.eca.domain.Day
 import org.iisg.eca.domain.Extra
 import org.iisg.eca.domain.User
+
 import org.iisg.eca.export.Export
 import org.iisg.eca.export.XlsMapExport
 
 import groovy.sql.Sql
 import java.text.SimpleDateFormat
-import org.hibernate.impl.SessionImpl
 import org.springframework.context.i18n.LocaleContextHolder
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 
@@ -20,115 +20,107 @@ class MiscExportService {
 	public static final int BADGES_NOT_PAYED = 1
 	public static final int BADGES_UNCONFIRMED_BANK_TRANSFER = 2
 
-    def sessionFactory
-    def sessionFactory_payWay
 	def dataSource
-    def dataSource_payWay
-    def messageSource
-    def pageInformation
+	def messageSource
+	def pageInformation
 
-    /**
-     * Create a specific export for the creation of badges
-     * @return An export which can be used to create the XLS file
-     */
-    Export getParticipantsExport(int status) {
-        // Preparation
-        SimpleDateFormat formatter = new SimpleDateFormat('EEEEE d MMMMM', LocaleContextHolder.locale)
-        Map<Long, String> days = Day.list().collectEntries { day ->
-            [(day.id) : formatter.format(day.day)]
-        }
-        Map<Long, String> extras = Extra.list().collectEntries { extra ->
-            [(extra.id) : extra.title]
-        }
+	/**
+	 * Create a specific export for the creation of badges
+	 * @return An export which can be used to create the XLS file
+	 */
+	Export getParticipantsExport(int status) {
+		// Preparation
+		SimpleDateFormat formatter = new SimpleDateFormat('EEEEE d MMMMM', LocaleContextHolder.locale)
+		Map<Long, String> days = Day.list().collectEntries { day ->
+			[(day.id): formatter.format(day.day)]
+		}
+		Map<Long, String> extras = Extra.list().collectEntries { extra ->
+			[(extra.id): extra.title]
+		}
 
-        String trueText = messageSource.getMessage('default.boolean.true', null, LocaleContextHolder.locale)
-        String falseText = messageSource.getMessage('default.boolean.false', null, LocaleContextHolder.locale)
+		String trueText = messageSource.getMessage('default.boolean.true', null, LocaleContextHolder.locale)
+		String falseText = messageSource.getMessage('default.boolean.false', null, LocaleContextHolder.locale)
 
-        List<String> columns = ['user_id', 'title', 'lastname', 'firstname', 'organisation', 'department',
-                'name_english', 'amount', 'name', 'day', 'network']
-        columns += extras.values()
+		List<String> columns = ['user_id', 'title', 'lastname', 'firstname', 'organisation', 'department',
+		                        'name_english', 'amount', 'name', 'day', 'network']
+		columns += extras.values()
 
-        List<String> columnNames = [
-                'ID',
-                messageSource.getMessage('title.label', null, LocaleContextHolder.locale),
-                messageSource.getMessage('user.lastName.label', null, LocaleContextHolder.locale),
-                messageSource.getMessage('user.firstName.label', null, LocaleContextHolder.locale),
-                messageSource.getMessage('user.organisation.label', null, LocaleContextHolder.locale),
-                messageSource.getMessage('user.department.label', null, LocaleContextHolder.locale),
-                messageSource.getMessage('user.country.label', null, LocaleContextHolder.locale),
-                messageSource.getMessage('order.amount.label', null, LocaleContextHolder.locale),
-                messageSource.getMessage('feeState.label', null, LocaleContextHolder.locale),
-                messageSource.getMessage('day.label', null, LocaleContextHolder.locale),
-		        messageSource.getMessage('network.label', null, LocaleContextHolder.locale)
-        ]
-        columnNames += extras.values()
+		List<String> columnNames = [
+				'ID',
+				messageSource.getMessage('title.label', null, LocaleContextHolder.locale),
+				messageSource.getMessage('user.lastName.label', null, LocaleContextHolder.locale),
+				messageSource.getMessage('user.firstName.label', null, LocaleContextHolder.locale),
+				messageSource.getMessage('user.organisation.label', null, LocaleContextHolder.locale),
+				messageSource.getMessage('user.department.label', null, LocaleContextHolder.locale),
+				messageSource.getMessage('user.country.label', null, LocaleContextHolder.locale),
+				messageSource.getMessage('order.amount.label', null, LocaleContextHolder.locale),
+				messageSource.getMessage('feeState.label', null, LocaleContextHolder.locale),
+				messageSource.getMessage('day.label', null, LocaleContextHolder.locale),
+				messageSource.getMessage('network.label', null, LocaleContextHolder.locale)
+		]
+		columnNames += extras.values()
 
-        // Obtain results and transform them
-        Sql sql = new Sql(dataSource_payWay)
-        String dbName = ((SessionImpl) sessionFactory.currentSession).connection().catalog
-        String dbNamePayWay = ((SessionImpl) sessionFactory_payWay.currentSession).connection().catalog
+		// Obtain results and transform them
+		Sql sql = new Sql(dataSource)
+		String sqlQuery = PARTICIPANTS_SQL
 
-	    String sqlQuery = PARTICIPANTS_SQL
-			    .replace('db-name-payway', dbNamePayWay)
-			    .replace('db-name', dbName)
-
-	    // Make sure we place the right criteria for each export type
-	    String title = messageSource.getMessage('participantDate.badges.label', null, LocaleContextHolder.locale)
-	    switch (status) {
-		    case BADGES_PAYED:
-		        sqlQuery = sqlQuery.replace('extraCriteria', 'AND o.payed = 1')
-			    title = messageSource.getMessage('participantDate.badges.payed.label', null, LocaleContextHolder.locale)
-			    break;
+		// Make sure we place the right criteria for each export type
+		String title = messageSource.getMessage('participantDate.badges.label', null, LocaleContextHolder.locale)
+		switch (status) {
+			case BADGES_PAYED:
+				sqlQuery = sqlQuery.replace('extraCriteria', 'AND o.payed = 1')
+				title = messageSource.getMessage('participantDate.badges.payed.label', null, LocaleContextHolder.locale)
+				break
 			case BADGES_NOT_PAYED:
 				sqlQuery = sqlQuery.replace('extraCriteria', 'AND ((o.payed <> 1 AND o.willpaybybank = 0) OR pd.payment_id IS NULL)')
 				title = messageSource.getMessage('participantDate.badges.not.payed.label', null, LocaleContextHolder.locale)
-				break;
-		    case BADGES_UNCONFIRMED_BANK_TRANSFER:
-			    sqlQuery = sqlQuery.replace('extraCriteria', 'AND o.payed <> 1 AND o.willpaybybank = 1')
-			    title = messageSource.getMessage('participantDate.badges.unconfirmed.label', null, LocaleContextHolder.locale)
-			    break;
-		    default:
-			    sqlQuery = sqlQuery.replace('extraCriteria', '')
-	    }
+				break
+			case BADGES_UNCONFIRMED_BANK_TRANSFER:
+				sqlQuery = sqlQuery.replace('extraCriteria', 'AND o.payed <> 1 AND o.willpaybybank = 1')
+				title = messageSource.getMessage('participantDate.badges.unconfirmed.label', null, LocaleContextHolder.locale)
+				break
+			default:
+				sqlQuery = sqlQuery.replace('extraCriteria', '')
+		}
 
-	    // Query the database and create the export
-        List<Map> results = sql.rows(sqlQuery, [dateId: pageInformation.date.id])
-        results.each { Map row ->
-	        List<Long> dayIds = row.days ? row.days.split(',')*.toLong() : []
-            row.remove('days')
-            if (dayIds.size() == 1) {
-                row.put('day', days.get(dayIds.first()))
-            }
-            else {
-                row.put('day', '')
-            }
+		// Query the database and create the export
+		List<Map> results = sql.rows(sqlQuery, [dateId: pageInformation.date.id])
+		results.each { Map row ->
+			List<Long> dayIds = row.days ? row.days.split(',')*.toLong() : []
+			row.remove('days')
+			if (dayIds.size() == 1) {
+				row.put('day', days.get(dayIds.first()))
+			}
+			else {
+				row.put('day', '')
+			}
 
-            List<Long> extraIds = row.extras ? row.extras.split(',')*.toLong() : []
-            row.remove('extras')
-            extras.each { Long id, String name ->
-                if (extraIds.contains(id)) {
-                    row.put(name, trueText)
-                }
-                else {
-                    row.put(name, falseText)
-                }
-            }
+			List<Long> extraIds = row.extras ? row.extras.split(',')*.toLong() : []
+			row.remove('extras')
+			extras.each { Long id, String name ->
+				if (extraIds.contains(id)) {
+					row.put(name, trueText)
+				}
+				else {
+					row.put(name, falseText)
+				}
+			}
 
-	        String network = row.network_name
-	        row.remove('network_name')
-	        if (network) {
-	            row.put('network', "Chair $network")
-	        }
-	        else {
-		        row.put('network', null)
-	        }
+			String network = row.network_name
+			row.remove('network_name')
+			if (network) {
+				row.put('network', "Chair $network")
+			}
+			else {
+				row.put('network', null)
+			}
 
-	        row.put('amount', (row.get('amount') > 0) ? row.get('amount') / 100 : row.get('amount'))
-        }
+			row.put('amount', (row.get('amount') > 0) ? row.get('amount') / 100 : row.get('amount'))
+		}
 
-        // Create XLS export
-        return new XlsMapExport(columns, results, title, columnNames)
-    }
+		// Create XLS export
+		return new XlsMapExport(columns, results, title, columnNames)
+	}
 
 	/**
 	 * Create a specific export for the programme at a glance
@@ -171,13 +163,14 @@ class MiscExportService {
 				['id', 'lastName', 'firstName', 'email', 'organisation', 'department', 'country'],
 				results,
 				messageSource.getMessage('participantDate.multiple.label', null, LocaleContextHolder.locale),
-				['#',
-				 messageSource.getMessage('user.lastName.label', null, LocaleContextHolder.locale),
-				 messageSource.getMessage('user.firstName.label', null, LocaleContextHolder.locale),
-				 messageSource.getMessage('user.email.label', null, LocaleContextHolder.locale),
-				 messageSource.getMessage('user.organisation.label', null, LocaleContextHolder.locale),
-				 messageSource.getMessage('user.department.label', null, LocaleContextHolder.locale),
-				 messageSource.getMessage('user.country.label', null, LocaleContextHolder.locale)]
+				[   '#',
+					 messageSource.getMessage('user.lastName.label', null, LocaleContextHolder.locale),
+					 messageSource.getMessage('user.firstName.label', null, LocaleContextHolder.locale),
+					 messageSource.getMessage('user.email.label', null, LocaleContextHolder.locale),
+					 messageSource.getMessage('user.organisation.label', null, LocaleContextHolder.locale),
+					 messageSource.getMessage('user.department.label', null, LocaleContextHolder.locale),
+					 messageSource.getMessage('user.country.label', null, LocaleContextHolder.locale)
+				]
 		)
 	}
 
@@ -186,32 +179,31 @@ class MiscExportService {
 			u.department, c.name_english, o.amount, fs.name, n.name AS network_name,
             CAST(GROUP_CONCAT(DISTINCT d.day_id ORDER BY d.day_number) AS CHAR) AS days,
             CAST(GROUP_CONCAT(DISTINCT e.extra_id ORDER BY e.extra) AS CHAR) AS extras
-            FROM `db-name`.users AS u
-            INNER JOIN `db-name`.participant_date AS pd
+            FROM users AS u
+            INNER JOIN participant_date AS pd
             ON u.user_id = pd.user_id
-            LEFT JOIN `db-name`.countries AS c
+            LEFT JOIN countries AS c
             ON u.country_id = c.country_id
-            LEFT JOIN `db-name-payway`.orders AS o
-            ON pd.payment_id = o.ID
-            INNER JOIN `db-name`.fee_states AS fs
+            LEFT JOIN orders AS o
+            ON pd.payment_id = o.order_id
+            INNER JOIN fee_states AS fs
             ON pd.fee_state_id = fs.fee_state_id
-            LEFT JOIN `db-name`.participant_day AS pday
+            LEFT JOIN participant_day AS pday
             ON u.user_id = pday.user_id
-            LEFT JOIN `db-name`.days AS d
+            LEFT JOIN days AS d
             ON pday.day_id = d.day_id
-            LEFT JOIN `db-name`.participant_date_extra AS pde
+            LEFT JOIN participant_date_extra AS pde
             ON pd.participant_date_id = pde.participant_date_id
-            LEFT JOIN `db-name`.extras AS e
+            LEFT JOIN extras AS e
             ON pde.extra_id = e.extra_id
-            LEFT JOIN `db-name`.networks_chairs AS nc
+            LEFT JOIN networks_chairs AS nc
             ON u.user_id = nc.user_id
-            LEFT JOIN `db-name`.networks AS n
+            LEFT JOIN networks AS n
             ON nc.network_id = n.network_id
             WHERE u.deleted = 0
             AND pd.date_id = :dateId
             AND pd.deleted = 0
             AND (pday.date_id = :dateId OR pday.date_id IS NULL)
-			AND (pday.deleted = 0 OR pday.deleted IS NULL)
 			AND (d.date_id = :dateId OR d.date_id IS NULL)
 			AND (d.deleted = 0 OR d.deleted IS NULL)
 			AND (e.date_id = :dateId OR e.date_id IS NULL)
@@ -220,7 +212,8 @@ class MiscExportService {
                     OR (pd.payment_id IS NOT NULL AND payment_id > 0))
             extraCriteria
             GROUP BY u.user_id
-            ORDER BY u.lastname ASC, u.firstname ASC'''
+            ORDER BY u.lastname ASC, u.firstname ASC
+	'''
 
 	private static final String PROGRAM_SQL = '''
 			SELECT DATE_FORMAT(d.day, '%W %e %M') AS day, sdt.index_number, sdt.period, r.room_name, r.room_number,
@@ -242,9 +235,9 @@ class MiscExportService {
 			AND r.date_id = :dateId
 			AND r.deleted = 0
 			AND (srdt.date_id = :dateId OR srdt.date_id IS NULL)
-			AND (srdt.deleted = false OR srdt.deleted IS NULL)
+			AND (srdt.deleted = 0 OR srdt.deleted IS NULL)
 			AND (s.date_id = :dateId OR s.date_id IS NULL)
-			AND (s.deleted = false OR s.deleted IS NULL)
+			AND (s.deleted = 0 OR s.deleted IS NULL)
 			ORDER BY sdt.index_number, r.room_number
-		'''
+	'''
 }
