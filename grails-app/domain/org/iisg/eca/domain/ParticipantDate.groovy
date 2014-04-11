@@ -35,7 +35,7 @@ class ParticipantDate extends EventDateDomain {
     static mapping = {
         table 'participant_date'
         version false
-        // TODO: Causes ArrayIndexOutOfBoundsException: sort participantVolunteering: 'volunteering'
+        // Causes ArrayIndexOutOfBoundsException: sort participantVolunteering: 'volunteering'
 
         id                      column: 'participant_date_id'
         user                    column: 'user_id'

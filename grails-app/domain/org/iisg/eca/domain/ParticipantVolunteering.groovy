@@ -17,7 +17,7 @@ class ParticipantVolunteering implements Serializable {
         table 'participant_volunteering'
         version false
 
-        id              column: 'participant_volunteering_temp_id'
+        id              column: 'participant_volunteering_id'
         participantDate column: 'participant_date_id'
         volunteering    column: 'volunteering_id'
         network         column: 'network_id'

@@ -32,8 +32,11 @@ class EmailCode extends EventDomain {
      * @return The translated text to be placed in the email
      */
     String translate(Map<String, Long> identifiers) {
-	    EventDate date = EventDate.get(identifiers.dateId.toLong())
-	    Event event = date.event
+	    Event event = null
+	    if (identifiers.containsKey('dateId')) {
+		    EventDate date = EventDate.get(identifiers.get('dateId'))
+		    event = date.event
+	    }
 
         Binding binding = new Binding([sql: new Sql(dataSource), params: identifiers, getValueForSetting: { String property ->
 	        Setting.getSetting(property, event)?.value

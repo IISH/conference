@@ -621,7 +621,9 @@ class User {
 		emailToLowercase()
 
 		// Before insertion of a user, hash a new password
-		password = createPassword()
+		if (!password) {
+			password = createPassword()
+		}
 		encodePassword()
 	}
 

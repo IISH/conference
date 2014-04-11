@@ -187,7 +187,7 @@ class LoginController {
      * Gives the user a new password, if the request code is correct
      */
     def checkRequestCode() {
-        User user = User.findByEmail(params.email)
+        User user = User.get(params.id)
 
         // We need a user to give him/her a new password
         if (!user) {
@@ -202,9 +202,15 @@ class LoginController {
 		    case passwordService.CONFIRM_LOST_PASSWORD_ACCEPT:
 			    flash.message = g.message(code: 'springSecurity.forgot.success')
 			    break
-		    case passwordService.CONFIRM_LOST_PASSWORD_NOT_FOUND:
 		    case passwordService.CONFIRM_LOST_PASSWORD_CODE_EXPIRED:
+			    flash.error = true
+			    flash.message = g.message(code: 'springSecurity.forgot.code.expired')
+			    break
 		    case passwordService.CONFIRM_LOST_PASSWORD_PASSWORD_ALREADY_SENT:
+			    flash.error = true
+			    flash.message = g.message(code: 'springSecurity.forgot.password.sent')
+			    break
+		    case passwordService.CONFIRM_LOST_PASSWORD_NOT_FOUND:
 		    default:
 			    flash.error = true
 			    flash.message = g.message(code: 'springSecurity.forgot.code.incorrect')
