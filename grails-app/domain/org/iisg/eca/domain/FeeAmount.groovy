@@ -39,14 +39,16 @@ class FeeAmount extends EventDateDomain {
 
 	static namedQueries = {
 		getFeeAmountForNrDays { FeeState state, int nrDays ->
-			eq('numDaysStart', nrDays)
-			eq('numDaysEnd', nrDays)
+			le('numDaysStart', nrDays)
+			ge('numDaysEnd', nrDays)
 			eq('feeState', state)
+			order('endDate')
 		}
 
 		getFeeAmountForDate { FeeState state, Date date ->
-			eq('endDate', date)
+			ge('endDate', date)
 			eq('feeState', state)
+			order('endDate')
 		}
 
 		getFeeAmountForDateAndNrDays { FeeState state, int nrDays, Date date ->
@@ -67,7 +69,7 @@ class FeeAmount extends EventDateDomain {
             'substituteName'
     ]
 
-	static getReadableFeeAmount(BigDecimal amount) {
+	static String getReadableFeeAmount(BigDecimal amount) {
 		return amount.toString() + ' EUR'
 	}
 

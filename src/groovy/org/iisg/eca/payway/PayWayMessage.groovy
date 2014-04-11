@@ -117,7 +117,7 @@ class PayWayMessage extends TreeMap<String, Object> {
 	 * Make sure the transaction is valid by checking the SHA-1 hash
 	 */
 	boolean isValid() {
-		if (this.get('SUCCESS')?.toString()?.equalsIgnoreCase('true')) {
+		if ((this.get('SUCCESS') == null) || this.get('SUCCESS').toString().equalsIgnoreCase('true')) {
 			// Obtain the current signature
 			String originalHash = remove("SHASIGN")
 

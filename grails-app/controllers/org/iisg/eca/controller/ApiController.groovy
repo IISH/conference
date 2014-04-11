@@ -342,8 +342,15 @@ class ApiController {
 		Map response = [success: false]
 		Long id = (params.containsKey('orderId') && params.orderId.isLong()) ? params.long('orderId') : null
 		if (id) {
-			Order order = Order.get(id) ?: new Order(id: id)
-			response.put('success', order.refreshOrder())
+			Order order = Order.get(id)
+			boolean insert = false
+			if (!order) {
+				order = new Order()
+				order.setId(id)
+				insert = true
+			}
+
+			response.put('success', order.refreshOrder(insert))
 		}
 
 		render response as JSON

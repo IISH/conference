@@ -39,7 +39,7 @@ class Order {
 		version false
 		sort id: 'desc'
 
-		id              column: 'order_id'
+		id              column: 'order_id',     generator: 'assigned'
 		orderCode       column: 'ordercode'
 		participantDate column: 'participant_date_id'
 		amount          column: 'amount'
@@ -49,7 +49,7 @@ class Order {
 		createdAt       column: 'created_at'
 		updatedAt       column: 'updated_at'
 		refundedAt      column: 'refunded_at'
-		description     column: 'description', type: 'text'
+		description     column: 'description',  type: 'text'
 	}
 
 	static constraints = {
@@ -101,7 +101,7 @@ class Order {
 			message.put('paymentresult', PAYMENT_ACCEPTED)
 			PayWayMessage result = message.send('bankTransferPaymentResponse')
 
-			if ((result != null) && result.isValid() && result.get('success')) {
+			if (result != null) {
 				participant.paymentId = this.id
 				if (participant.state.id == ParticipantState.REMOVED_CANCELLED) {
 					participant.state = ParticipantState.get(ParticipantState.PARTICIPANT_DATA_CHECKED)
@@ -133,7 +133,7 @@ class Order {
 			message.put('amount', toRefund)
 			PayWayMessage result = message.send('refundPayment')
 
-			if ((result != null) && result.isValid()) {
+			if (result != null) {
 				return refreshOrder()
 			}
 		}
@@ -143,14 +143,15 @@ class Order {
 
 	/**
 	 * Refreshes the order by requesting the order details from PayWay
+	 * @param insert Whether this is an insert, or else an update
 	 * @return Whether the refresh was successful or not
 	 */
-	boolean refreshOrder() {
+	boolean refreshOrder(boolean insert = false) {
 		PayWayMessage message = new PayWayMessage()
 		message.put('orderid', this.id)
 		PayWayMessage result = message.send('orderDetails')
 
-		if ((result != null) && result.isValid()) {
+		if (result != null) {
 			this.orderCode = result.get('ORDERCODE')
 			this.amount = new Long(result.get('AMOUNT').toString())
 			this.payed = new Integer(result.get('PAYED').toString())
@@ -169,7 +170,7 @@ class Order {
 				}
 			}
 
-			return this.save()
+			return this.save(insert: insert)
 		}
 
 		return false
@@ -187,7 +188,12 @@ class Order {
 		orders.add("- $feeAmount")
 
 		participantDate.extras.each {
-			orders.add("- $it.title")
+			if (it.amount > 0) {
+				orders.add("- ${it.title}: ${FeeAmount.getReadableFeeAmount(it.amount)}")
+			}
+			else {
+				orders.add("- $it.title")
+			}
 		}
 
 		Setting showAccompanyingPersons = Setting.getSetting(Setting.SHOW_ACCOMPANYING_PERSONS)
@@ -198,7 +204,7 @@ class Order {
 
 			participantDate.accompanyingPersons.each { String accompanyingPerson ->
 				String readableFeeAmount = FeeAmount.getReadableFeeAmount(accompanyingPersonFeeAmount.feeAmount)
-				orders.add("- $accompanyingPerson $readableFeeAmount")
+				orders.add("- ${accompanyingPerson}: $readableFeeAmount")
 			}
 		}
 
