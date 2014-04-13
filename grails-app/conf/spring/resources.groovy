@@ -45,9 +45,9 @@ beans = {
         messageSource = ref('messageSource')
     }
 
-    dateConverter(DateConverter) {
+    /*dateConverter(DateConverter) {
         messageSource = ref('messageSource')
-    }
+    }*/
 
     pageInformation(PageInformation)
 }

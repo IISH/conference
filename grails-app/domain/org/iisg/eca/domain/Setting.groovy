@@ -1,8 +1,9 @@
 package org.iisg.eca.domain
 
-import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl
-
+import java.text.ParseException
 import java.text.SimpleDateFormat
+
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl
 
 /**
  * Domain class of table holding all settings
@@ -203,10 +204,16 @@ class Setting extends EventDomain {
 
 	/**
 	 * If the setting holds a date value, return the value as a date
+	 * It won't throw an exception, but returns null instead, to prevent getProperties() to fail
 	 * @return The date value
 	 */
 	Date getDateValue() {
-		return value ? SETTINGS_DATE_FORMAT.parse(value) : null
+		try {
+			return SETTINGS_DATE_FORMAT.parse(value)
+		}
+		catch (ParseException pe) {
+			return null
+		}
 	}
 
     private void setSetting() {

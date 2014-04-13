@@ -198,8 +198,8 @@ class UserAuthController {
                 Set<Long> toBeRemoved = (params["Page.to-be-deleted"]) ? params["Page.to-be-deleted"].split(';')*.toLong() : []
                 UserPage.findAllByUser(user).each { userPage -> 
                     if (toBeRemoved.contains(userPage.page.id)) {
-                        UserPage.executeUpdate("DELETE FROM UserPage WHERE user=? AND page=? AND date=?", 
-                            [user, userPage.page, pageInformation.date])
+                        UserPage.executeUpdate("DELETE FROM UserPage WHERE user=? AND page=? AND event=?",
+                            [user, userPage.page, pageInformation.date?.event])
                     }
                 }
 
@@ -212,7 +212,7 @@ class UserAuthController {
                     // Only add pages that are allowed and not in the list
                     boolean pageIsAllowed = pages.find { it.id == userPage.page.id }
                     UserPage existingUserPage = user.userPages.find { (it.page.id == userPage.page.id) && 
-                                                                      (it.date == pageInformation.date) }
+                                                                      (it.event == pageInformation.date?.event) }
 
                     if (pageIsAllowed && !existingUserPage) {
                        user.addToUserPages(userPage)

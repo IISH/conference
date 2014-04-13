@@ -186,13 +186,13 @@ class PageBuilder {
                     }
                     builder.ul(class: "property-value") {
                         builder."g:each"(in: "\${${RESULTS}.get(${c.root.eid}).get('${c.domainClass.name}')['${c.name}']}", var: "instance", status: "i") {
-                            //builder."g:if"(test: "\${!instance['deleted']}") {
+                            builder."g:if"(test: "\${instance.domainClass.hasProperty('deleted') && !instance.deleted}") {
                                 builder.li {
                                     builder.input(type: "hidden", name: "${c.property.referencedDomainClass.name}_\${i}.id", value: "\${instance.id}")
                                     buildFormColumns(c.columns)
                                     builder.span(class: "ui-icon ui-icon-circle-minus", "")
                                 }
-                            //}
+                            }
                         }
                         builder.li(class: "add") {
                             builder.span(class: "ui-icon ui-icon-circle-plus", "")
@@ -348,9 +348,9 @@ class PageBuilder {
                     }
                     builder.ul(class: "property-value", "arial-labelledby": "${c.name}-label") {
                         builder."g:each"(in: inVar, var: "element", status: "i") {
-                            //builder."g:if"(test: "\${!element['deleted']}") {
+	                        builder."g:if"(test: "\${element.domainClass.hasProperty('deleted') && !element.deleted}") {
                                 builder.li("\${element.encodeAsHTML()}")
-                            //}
+                            }
                         }
                     }
                 }
