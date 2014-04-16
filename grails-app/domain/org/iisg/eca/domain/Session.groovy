@@ -60,25 +60,33 @@ class Session extends EventDateDomain {
             updatePaperStates()
         }
     }
-    
-    void updatePaperStates() {
-        if (state.correspondingPaperState) {
-            Sql sql = new Sql(dataSource)
-            PaperState correspondingPaperState = state.correspondingPaperState
 
-            // Change all paper states of this session
-            Paper.findAllBySession(this).each { paper ->
-                // Only update papers that may be changed
-                if (paper.state.sessionStateTrigger) {
-                    // Use SQL to prevent Hibernate session exceptions
-                    sql.executeUpdate('''
+	/**
+	 * Makes sure that all papers in this session get the proper paper state and reset their email_state
+	 */
+    void updatePaperStates() {
+	    Sql sql = new Sql(dataSource)
+	    PaperState correspondingPaperState = state.correspondingPaperState
+
+	    // Change all paper states of this session
+	    Paper.findAllBySession(this).each { paper ->
+		    // Only update papers that may be changed
+		    if (correspondingPaperState && paper.state.sessionStateTrigger) {
+			    // Use SQL to prevent Hibernate session exceptions
+			    sql.executeUpdate('''
                       UPDATE papers
-                      SET paper_state_id = :paperStateId
+                      SET mail_paper_state = 1, paper_state_id = :paperStateId
                       WHERE paper_id = :paperId
-                    ''', [paperStateId: correspondingPaperState.id, paperId: paper.id])
-                }
-            }
-        }
+                ''', [paperStateId: correspondingPaperState.id, paperId: paper.id])
+		    }
+		    else {
+			    sql.executeUpdate('''
+                      UPDATE papers
+                      SET mail_paper_state = 1
+                      WHERE paper_id = :paperId
+                ''', [paperId: paper.id])
+		    }
+	    }
     }
 
     /**

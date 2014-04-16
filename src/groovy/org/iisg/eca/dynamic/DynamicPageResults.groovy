@@ -309,12 +309,14 @@ class DynamicPageResults {
             Object instance = (rId) ? domainClass.clazz.findById(rId) : domainClass.newInstance()
             
             dataContainer.forAllColumns { c ->
-                if (c.eq && (c.property.type == Boolean || c.property.type == boolean)) {                    
-                    instance = (c.eq.equals("1") == instance[c.name]) ? instance : null         
-                }
-                else if (c.eq) {
-                    instance = (c.eq == instance[c.name]) ? instance : null     
-                }               
+				if (instance) {
+					if (c.eq && (c.property.type == Boolean || c.property.type == boolean)) {
+					    instance = (c.eq.equals("1") == instance[c.name]) ? instance : null
+					}
+					else if (c.eq) {
+					    instance = (c.eq == instance[c.name]) ? instance : null
+					}
+				}
             }
             
             domainClasses.add(instance)

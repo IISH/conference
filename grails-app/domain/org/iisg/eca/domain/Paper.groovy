@@ -1,11 +1,14 @@
 package org.iisg.eca.domain
 
+import groovy.sql.Sql
 import java.math.RoundingMode
 
 /**
  * Domain class of table holding all papers
  */
 class Paper extends EventDateDomain {
+	def dataSource
+
     User user
     PaperState state
     Session session
@@ -95,8 +98,24 @@ class Paper extends EventDateDomain {
     def beforeUpdate() {
         if (isDirty('state')) {
             mailPaperState = true
+	        updateSessionState()
         }
     }
+
+	/**
+	 * Makes sure that the session also resets its email_state
+	 */
+	void updateSessionState() {
+		if (this.session) {
+			// Use SQL to prevent Hibernate session exceptions
+			Sql sql = new Sql(dataSource)
+			sql.executeUpdate('''
+                  UPDATE sessions
+                  SET mail_session_state = 1
+                  WHERE session_id = :sessionId
+            ''', [sessionId: this.session.id])
+		}
+	}
 
     @Override
     String toString() {

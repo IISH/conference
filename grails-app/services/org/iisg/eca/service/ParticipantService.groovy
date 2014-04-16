@@ -30,7 +30,7 @@ class ParticipantService {
         // Now loop over all participants returned by the database and create a map out if it
         getParticipantsWithFilters(params).eachWithIndex { participant, i ->
             List list = participants.get(participant[2].toUpperCase()[0], new ArrayList())
-            list.add([participant[0], "${participant[1]} ${participant[2]}", "(#${participant[0]}, ${participant[3]})", i])
+            list.add([participant[0], "${participant[2]}, ${participant[1]}", "(#${participant[0]}, ${participant[3]})", i])
         }
 
         participants

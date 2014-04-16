@@ -360,7 +360,7 @@ class ParticipantController {
                         }
 
                         // Save the paper
-                        paper.save(failOnError: true)
+                        paper.save(failOnError: true, flush: true)
                         i++
                     }
 
