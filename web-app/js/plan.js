@@ -146,7 +146,7 @@ $(document).ready(function() {
     sessionInfo = $('#session-info-container');
     roomInfo = $('#room-info-container');
 
-    ajaxCall('session/conflicts', {}, function(data) {
+    ajaxCall(this, 'session/conflicts', {}, function(data) {
         if ((data.noShow.length === 0) && (data.alreadyPlanned.length === 0) && (data.equipmentProblems.length === 0)) {
             $('#conflicts-searching').hide();
             $('#no-conflicts').show();
@@ -241,7 +241,7 @@ $(document).ready(function() {
             curSessionBlockParent = curSessionBlock.parent();
             curSessionId = parseInt(curSessionBlock.find('input').val());
 
-            ajaxCall('session/possibilities', {'session_id': curSessionId}, function(data) {
+            ajaxCall(this, 'session/possibilities', {'session_id': curSessionId}, function(data) {
                 var equipmentCodes = findIndexesThatMatch(data.equipment);
                 timeSlots.each(function() {
                     var timeSlot = $(this);
@@ -293,7 +293,7 @@ $(document).ready(function() {
 
         if (contPlan) {
             ajaxCall(
-                'session/planSession',
+                this, 'session/planSession',
                 {   'session_id':   curSessionId,
                     'room_id':      roomId,
                     'date_time_id': dateTimeId},
@@ -312,7 +312,7 @@ $(document).ready(function() {
         disableTableWithLoading(true);
         
         ajaxCall(
-            'session/returnSession', {'session_id': curSessionId}, function(data) {
+            this, 'session/returnSession', {'session_id': curSessionId}, function(data) {
                 if (data.success) {
                     unscheduleSessionBlock();
                 }
@@ -331,7 +331,7 @@ $(document).ready(function() {
             roomInfo.hide();
 
             var session_id = element.find('input[name=session-id]').val();
-            ajaxCall('session/sessionInfo', {'session_id': session_id}, function(data) {
+            ajaxCall(this, 'session/sessionInfo', {'session_id': session_id}, function(data) {
                 if (data.success) {
                     (data.code !== null)            ? sessionInfo.find('#code-label').next().text(data.code)                                            : sessionInfo.find('#code-label').next().text('-');
                     (data.name !== null)            ? sessionInfo.find('#name-label').next().text(data.name)                                            : sessionInfo.find('#name-label').next().text('-');
@@ -389,7 +389,7 @@ $(document).ready(function() {
             sessionInfo.hide();
 
             var roomId = element.find('input[name=room-id]').val();
-            ajaxCall('session/roomInfo', {'room_id': roomId}, function(data) {
+            ajaxCall(this, 'session/roomInfo', {'room_id': roomId}, function(data) {
                 if (data.success) {
                     (data.number !== null)  ? roomInfo.find('#roomnumnber-label').next().text(data.number)  : roomInfo.find('#roomnumnber-label').next().text('-');
                     (data.name !== null)    ? roomInfo.find('#roomname-label').next().text(data.name)       : roomInfo.find('#roomname-label').next().text('-');

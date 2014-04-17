@@ -33,7 +33,7 @@ $(document).ready(function() {
 
     $(document).on("removed-item", '.paper.ui-icon-circle-minus', function(e) {
         var paperId = $(e.target).parents('.column').children('input[type=hidden]:first').val();
-        ajaxCall('participant/removePaper', {'paper-id': paperId});
+        ajaxCall(this, 'participant/removePaper', {'paper-id': paperId});
 
         $(this).parent().text('-');
     });
@@ -60,7 +60,8 @@ $(document).ready(function() {
     });
 
     $('.order-set-payed').click(function(e) {
-        ajaxCall(messageUrl, {code: 'default.button.delete.confirm.message'}, function(data) {
+        var elem = this;
+        ajaxCall(elem, messageUrl, {code: 'default.button.delete.confirm.message'}, function(data) {
             var setPayed = confirm(data.message);
             if (setPayed) {
                 $('.errors').hide();
@@ -68,7 +69,7 @@ $(document).ready(function() {
 
                 var element = $(e.target).parents('.participant-order');
 
-                ajaxCall('participant/setPayed',
+                ajaxCall(elem, 'participant/setPayed',
                     {   'user_id':  userId,
                         'order_id': element.find('#order-id-label').next().text()
                     },
@@ -81,7 +82,8 @@ $(document).ready(function() {
     });
 
     $('.order-refund-payment').click(function(e) {
-        ajaxCall(messageUrl, {code: 'default.button.delete.confirm.message'}, function(data) {
+        var elem = this;
+        ajaxCall(elem, messageUrl, {code: 'default.button.delete.confirm.message'}, function(data) {
             var refundPayment = confirm(data.message);
             if (refundPayment) {
                 $('.errors').hide();
@@ -89,7 +91,7 @@ $(document).ready(function() {
 
                 var element = $(e.target).parents('.participant-order');
 
-                ajaxCall('participant/refundPayment', {
+                ajaxCall(elem, 'participant/refundPayment', {
                         'order_id': element.find('#order-id-label').next().text()
                     }, function(data) {
                         $(e.target).parent().text(data.state);
@@ -107,7 +109,7 @@ $(document).ready(function() {
         beforeActivate: function(event, ui) {
             if (!$.isEmptyObject(ui.newPanel) && (ui.newPanel.children().eq(1).val() == 0)) {
                 var emailId = ui.newPanel.children(":first").val();
-                ajaxCall('participant/emailDetails', {'email-id': emailId}, function(data) {
+                ajaxCall(this, 'participant/emailDetails', {'email-id': emailId}, function(data) {
                     ui.newPanel.find('#original-sent-label').next().prepend(data.orginalSent);
                     ui.newPanel.find('#copies-sent-label').next().html(data.copiesSent);
                     ui.newPanel.find('#from-label').next().text(data.from);
@@ -122,7 +124,7 @@ $(document).ready(function() {
 
     $('.resend-email').click(function(e) {
         var emailId = $(this).parents('.email-content').children(":first").val();
-        ajaxCall('participant/resendEmail', {'email-id': emailId}, function(data) {
+        ajaxCall(this, 'participant/resendEmail', {'email-id': emailId}, function(data) {
             showMessage(data);
         });
     });
@@ -147,7 +149,7 @@ $(document).ready(function() {
                     days.push($(this).val());
                 });
 
-                ajaxCall('participant/changeDays', {'user-id': userId, 'days': days.join(';')},
+                ajaxCall(this, 'participant/changeDays', {'user-id': userId, 'days': days.join(';')},
                     function(data) {
                         $('#selected-days .not-found').remove();
                         $('#selected-days ol.list-days-present').remove();
