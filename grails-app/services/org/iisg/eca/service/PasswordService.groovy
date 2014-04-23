@@ -33,7 +33,7 @@ class PasswordService {
 		EmailTemplate template = EmailTemplate.get(templateId)
 
 		SentEmail email = emailService.createEmail(user, template, false)
-		email.addAdditionalValue('PasswordParticipant', newPassword.toString())
+		email.addAdditionalValue('PasswordParticipant', newPassword)
 		emailService.sendEmail(email, true) // TODO: Allow these emails in the db in the test environment
 
 		return true
@@ -58,7 +58,11 @@ class PasswordService {
 	 * @return <code>true</code> in case the change was successful and the email was sent
 	 */
     boolean changePassword(User user, String newPassword, String newPasswordRepeat, String oldPassword=null) {
-        if (    user &&
+	    newPassword = newPassword?.trim()
+	    newPasswordRepeat = newPasswordRepeat?.trim()
+	    oldPassword = oldPassword?.trim()
+
+	    if (    user &&
                 (!oldPassword || user.isPasswordCorrect(oldPassword)) &&
                 newPassword.equals(newPasswordRepeat) &&
                 User.PASSWORD_PATTERN.matcher(newPassword).matches()) {
@@ -69,7 +73,7 @@ class PasswordService {
                 EmailTemplate template = EmailTemplate.get(templateId)
 
                 SentEmail email = emailService.createEmail(user, template, false)
-                email.addAdditionalValue('PasswordParticipant', newPassword.toString())
+                email.addAdditionalValue('PasswordParticipant', newPassword)
                 emailService.sendEmail(email, true) // TODO: Allow these emails in the db in the test environment
 
                 return true
@@ -126,6 +130,8 @@ class PasswordService {
 	 * @return The lost password status
 	 */
     int confirmLostPassword(User user, String code) {
+	    code = code?.trim()
+
         if (user && user.requestCode.equals(code)) {
             if (!user.requestCodeValidUntil || user.requestCodeValidUntil.before(new Date())) {
                 return CONFIRM_LOST_PASSWORD_CODE_EXPIRED

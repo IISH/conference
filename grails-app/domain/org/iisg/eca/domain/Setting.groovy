@@ -74,6 +74,9 @@ class Setting extends EventDomain {
 	static final String SHOW_PROGRAMME_ONLINE = 'show_programme_online'
 	static final String SHOW_STUDENT = 'show_student'
 
+	// Required fields settings
+	static final String REQUIRED_CV = 'required_cv'
+
 	// Layout settings
     static final String BANNER_BG_IMG = 'banner_bg_img'
     static final String BANNER_IMG = 'banner_img'
