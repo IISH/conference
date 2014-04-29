@@ -136,44 +136,35 @@ environments {
 }
 
 // log4j configuration
-if (Environment.current == Environment.PRODUCTION) {
-    // We assume the production environment is running in an tomcat container. If not we use the application path's target folder.
-    final String catalinaBase = System.properties.getProperty('catalina.base', './target') + "/logs"
-    File logFile = new File(catalinaBase)
-    logFile.mkdirs()
-    println("log directory: " + logFile.absolutePath)
+// We assume the production environment is running in an tomcat container. If not we use the application path's target folder.
+final String catalinaBase = System.properties.getProperty('catalina.base', './target') + "/logs"
+File logFile = new File(catalinaBase)
+logFile.mkdirs()
+println("log directory: " + logFile.absolutePath)
 
-    String loglevel = 'info' //System.properties.getProperty('loglevel', 'warn')
-    log4j = {
-        appenders {
-            console name: 'StackTrace'
-            rollingFile name: 'stacktrace', maxFileSize: 1024,
-                    file: logFile.absolutePath + '/stacktrace.log'
-        }
+String loglevel = System.properties.getProperty('loglevel', 'warn')
+log4j = {
+	appenders {
+		console name: 'StackTrace'
+		rollingFile name: 'stacktrace', maxFileSize: 1024,
+				file: logFile.absolutePath + '/stacktrace.log'
+	}
 
-        root {
-            "$loglevel"()
-        }
+	root {
+		"$loglevel"()
+	}
 
-        "$loglevel" 'org.codehaus.groovy.grails.web.servlet',  //  controllers
-                    'org.codehaus.groovy.grails.web.pages', //  GSP
-                    'org.codehaus.groovy.grails.web.sitemesh', //  layouts
-                    'org.codehaus.groovy.grails.web.mapping.filter', // URL mapping
-                    'org.codehaus.groovy.grails.web.mapping', // URL mapping
-                    'org.codehaus.groovy.grails.commons', // core / classloading
-                    'org.codehaus.groovy.grails.plugins', // plugins
-                    'org.codehaus.groovy.grails.orm.hibernate', // hibernate integration
-                    'org.springframework',
-                    'org.hibernate',
-                    'net.sf.ehcache.hibernate'
-    }
-}
-else {
-    log4j = {
-        root {
-            warn()
-        }
-    }
+	"$loglevel" 'org.codehaus.groovy.grails.web.servlet',  //  controllers
+			'org.codehaus.groovy.grails.web.pages', //  GSP
+			'org.codehaus.groovy.grails.web.sitemesh', //  layouts
+			'org.codehaus.groovy.grails.web.mapping.filter', // URL mapping
+			'org.codehaus.groovy.grails.web.mapping', // URL mapping
+			'org.codehaus.groovy.grails.commons', // core / classloading
+			'org.codehaus.groovy.grails.plugins', // plugins
+			'org.codehaus.groovy.grails.orm.hibernate', // hibernate integration
+			'org.springframework',
+			'org.hibernate',
+			'net.sf.ehcache.hibernate'
 }
 
 // Spring Security Core config
@@ -221,6 +212,25 @@ grails {
                     '/**/images/**':                  ['permitAll'],
                     '/**/favicon.ico':                ['permitAll']
             ]
+
+            providerNames = ['daoAuthenticationProvider']
+			if (Environment.current != Environment.TEST) {
+		        providerNames << 'clientCredentialsAuthenticationProvider'
+	        }
+
+	        oauthProvider {
+                grantTypes {
+                    authorizationCode = false
+                    implicit = false
+                    refreshToken = false
+                    clientCredentials = true
+                    password = false
+                }
+
+                tokenServices {
+                    accessTokenValiditySeconds = 60 * 60 * 12 // default 12 hours
+                }
+            }
         }
     }
 }

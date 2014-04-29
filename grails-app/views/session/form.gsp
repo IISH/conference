@@ -71,14 +71,6 @@
                         <g:select from="${sessionStates}" name="Session.state.id" optionKey="id" optionValue="description" value="${eventSession.state.id}" />
                     </span>
                 </div>
-                <div class="${hasErrors(bean: eventSession, field: 'enabled', 'error')}">
-                    <label class="property-label">
-                        <g:message code="default.enabled.label" />
-                    </label>
-                    <span class="property-value">
-                        <g:checkBox name="Session.enabled" checked="${eventSession.enabled}" />
-                    </span>
-                </div>
                 <div>
                     <label class="property-label">                      
                         <g:message code="network.multiple.label" />                        

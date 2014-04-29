@@ -93,10 +93,11 @@ class ExportService {
      * Returns the uploaded file of the given paper
      * @param paper The paper file to return
      * @param response The response to write the obtained file to
+     * @param prepend The string that has to be prepended to the filename of the paper
      */
-    void getPaper(Paper paper, HttpServletResponse response) {
+    void getPaper(Paper paper, HttpServletResponse response, String prepend = '') {
         response.contentType = paper.contentType
-        response.setHeader("Content-disposition", "attachment;filename=${paper.fileName}")
+        response.setHeader("Content-disposition", "attachment;filename=${prepend + paper.fileName}")
         response.outputStream << paper.file
     }
 }

@@ -84,6 +84,7 @@ class EmailTemplate extends EventDomain {
     int sortOrder = 0
     boolean showInBackend = true
     String comment
+	boolean deleted = false
 
     String testEmail
     boolean testAfterSave = false
@@ -119,7 +120,17 @@ class EmailTemplate extends EventDomain {
         sortOrder           column: 'sort_order'
         showInBackend       column: 'show_in_backend'
         comment             column: 'comment',  type: 'text'
+	    deleted             column: 'deleted'
     }
+
+	static hibernateFilters = {
+		eventFilter(condition: '(event_id = :eventId OR event_id IS NULL)', types: 'long')
+		hideDeleted(condition: 'deleted = 0', default: true)
+	}
+
+	void softDelete() {
+		deleted = true
+	}
 
     def afterInsert() {
         if (testAfterSave) {

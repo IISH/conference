@@ -5,6 +5,7 @@ package org.iisg.eca.domain
  */
 class Group extends EventDomain {
     String name
+	boolean deleted = false
 
     static hasMany = [users: User, pages: Page]
 
@@ -15,6 +16,7 @@ class Group extends EventDomain {
 
         id      column: 'group_id'
         name    column: 'name'
+        deleted column: 'deleted'
 
         users   joinTable: 'users_groups'
         pages   joinTable: 'groups_pages'
@@ -23,6 +25,15 @@ class Group extends EventDomain {
     static constraints = {
         name    blank: false,   maxSize: 50
     }
+
+	static hibernateFilters = {
+		eventFilter(condition: '(event_id = :eventId OR event_id IS NULL)', types: 'long')
+		hideDeleted(condition: 'deleted = 0', default: true)
+	}
+
+	void softDelete() {
+		deleted = true
+	}
 
     List<Page> getAllPagesInGroup() {
         Page.withCriteria {

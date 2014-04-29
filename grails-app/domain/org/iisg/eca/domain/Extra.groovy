@@ -9,6 +9,7 @@ class Extra extends EventDateDomain {
     String description
     String secondDescription
     BigDecimal amount = BigDecimal.ZERO
+	boolean deleted
 
     static belongsTo = ParticipantDate
     static hasMany = [participantDates: ParticipantDate]
@@ -23,6 +24,7 @@ class Extra extends EventDateDomain {
         description         column: 'description'
         secondDescription   column: 'description_2nd',  type: 'text'
         amount              column: 'amount'
+	    deleted             column: 'deleted'
 
         participantDates    joinTable: 'participant_date_extra'
     }
@@ -34,6 +36,26 @@ class Extra extends EventDateDomain {
         secondDescription   nullable: true
         amount              min: BigDecimal.ZERO
     }
+
+	static hibernateFilters = {
+		dateFilter(condition: '(date_id = :dateId OR date_id IS NULL)', types: 'long')
+		hideDeleted(condition: 'deleted = 0', default: true)
+	}
+
+    static apiActions = ['GET']
+
+    static apiAllowed = [
+            'id',
+            'title',
+            'extra',
+            'description',
+            'secondDescription',
+            'amount'
+    ]
+
+	void softDelete() {
+		deleted = true
+	}
 
     @Override
     String toString() {

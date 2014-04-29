@@ -4,7 +4,7 @@ package org.iisg.eca.domain
  * The abstract domain class for all domain classes
  * which contain data to be filtered per event date tenant
  */
-abstract class EventDateDomain extends DefaultDomain {
+abstract class EventDateDomain {
     /**
      * Contains the tenant to filter on
      */
@@ -30,8 +30,6 @@ abstract class EventDateDomain extends DefaultDomain {
     }
     
     static hibernateFilters = {
-        hideDeleted(condition: 'deleted = 0', default: true)
-        hideDisabled(condition: 'enabled = 1')
         dateFilter(condition: '(date_id = :dateId OR date_id IS NULL)', types: 'long')
     }
 

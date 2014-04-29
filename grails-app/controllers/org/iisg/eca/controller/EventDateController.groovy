@@ -112,7 +112,6 @@ class EventDateController {
                 Long id = params.long("Day_${i}.id")
                 if (id) {
                     day = Day.findById(id)
-                    day.deleted = false
                 }
 
                 // Otherwise create a new one

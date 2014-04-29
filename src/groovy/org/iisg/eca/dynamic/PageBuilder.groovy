@@ -186,7 +186,7 @@ class PageBuilder {
                     }
                     builder.ul(class: "property-value") {
                         builder."g:each"(in: "\${${RESULTS}.get(${c.root.eid}).get('${c.domainClass.name}')['${c.name}']}", var: "instance", status: "i") {
-                            builder."g:if"(test: "\${!instance['deleted']}") {
+                            builder."g:if"(test: "\${instance.domainClass.hasProperty('deleted') && !instance.deleted}") {
                                 builder.li {
                                     builder.input(type: "hidden", name: "${c.property.referencedDomainClass.name}_\${i}.id", value: "\${instance.id}")
                                     buildFormColumns(c.columns)
@@ -348,7 +348,7 @@ class PageBuilder {
                     }
                     builder.ul(class: "property-value", "arial-labelledby": "${c.name}-label") {
                         builder."g:each"(in: inVar, var: "element", status: "i") {
-                            builder."g:if"(test: "\${!element['deleted']}") {
+	                        builder."g:if"(test: "\${element.domainClass.hasProperty('deleted') && !element.deleted}") {
                                 builder.li("\${element.encodeAsHTML()}")
                             }
                         }
@@ -497,7 +497,7 @@ class PageBuilder {
      * @param property The propery of a column which needs an i18n label
      */
     static getCode(GrailsDomainClassProperty property) {
-        if (property.name.equalsIgnoreCase("enabled") || property.name.equalsIgnoreCase("deleted")) {
+        if (property.name.equalsIgnoreCase("deleted")) {
             return "default.${property.name}.label"
         }
         else if (property.manyToOne || property.oneToOne || property.oneToMany || property.manyToMany) {

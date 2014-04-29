@@ -7,6 +7,7 @@ class SessionDateTime extends EventDateDomain {
     Day day
     int indexNumber
     String period
+	boolean deleted = false
 
     static belongsTo = [Day, User]
     static hasMany = [  roomSessionDateTimeEquipment: RoomSessionDateTimeEquipment,
@@ -22,6 +23,7 @@ class SessionDateTime extends EventDateDomain {
         day             column: 'day_id'
         indexNumber     column: 'index_number'
         period          column: 'period'
+	    deleted         column: 'deleted'
 
         usersNotPresent                 joinTable: [name: 'participant_not_present', key: 'session_datetime_id' ]
         roomSessionDateTimeEquipment    cascade: 'all-delete-orphan'
@@ -32,6 +34,24 @@ class SessionDateTime extends EventDateDomain {
         indexNumber     min: 0
         period          blank: false,   maxSize: 30
     }
+
+	static hibernateFilters = {
+		dateFilter(condition: '(date_id = :dateId OR date_id IS NULL)', types: 'long')
+		hideDeleted(condition: 'deleted = 0', default: true)
+	}
+
+    static apiActions = ['GET']
+
+    static apiAllowed = [
+            'id',
+            'day.id',
+            'indexNumber',
+            'period'
+    ]
+
+	void softDelete() {
+		deleted = true
+	}
 
     /**
      * Searches for all date times and tries to order them in a table layout

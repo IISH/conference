@@ -140,14 +140,6 @@
                         <textarea name="User.extraInfo" cols="40" rows="5">${fieldValue(bean: user, field: 'extraInfo')}</textarea>
                     </span>
                 </div>
-                <div class="${hasErrors(bean: user, field: 'enabled', 'error')}">
-                    <label class="property-label">
-                        <g:message code="default.enabled.label" />
-                    </label>
-                    <span class="property-value">
-                        <g:checkBox name="User.enabled" checked="${user.enabled}" />
-                    </span>
-                </div>
               
                 <g:if test="${mayAuthorizeUser}">
                     <div class="${hasErrors(bean: user, field: 'roles', 'error')}">

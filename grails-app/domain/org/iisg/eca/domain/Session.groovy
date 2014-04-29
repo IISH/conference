@@ -15,6 +15,7 @@ class Session extends EventDateDomain {
     SessionState state
     boolean mailSessionState = true
     User addedBy
+	boolean deleted = false
 
     static belongsTo = [Network, SessionState, User]
     static hasMany = [  sessionParticipants: SessionParticipant,
@@ -36,6 +37,7 @@ class Session extends EventDateDomain {
         state               column: 'session_state_id'
         mailSessionState    column: 'mail_session_state'
         addedBy             column: 'added_by'
+	    deleted             column: 'deleted'
 
         networks                joinTable: 'session_in_network'
         sessionParticipants     cascade: 'all-delete-orphan'
@@ -51,6 +53,66 @@ class Session extends EventDateDomain {
         addedBy     nullable: true
     }
 
+	static hibernateFilters = {
+		dateFilter(condition: '(date_id = :dateId OR date_id IS NULL)', types: 'long')
+		hideDeleted(condition: 'deleted = 0', default: true)
+	}
+
+    static apiActions = ['GET', 'POST', 'PUT', 'DELETE']
+
+    static apiAllowed = [
+            'id',
+            'name',
+            'abstr',
+            'state.id',
+            'papers.id',
+            'networks.id',
+            'addedBy.id'
+    ]
+
+	static apiPostPut = [
+			'name',
+			'abstr',
+			'state.id',
+			'networks.id',
+			'addedBy.id'
+	]
+
+	void softDelete() {
+		deleted = true
+	}
+
+	void updateForApi(String property, String value) {
+		switch (property) {
+			case 'addedBy.id':
+				User addedBy = (value.isLong()) ? User.get(value.toLong()) : null
+				if (addedBy) {
+					this.addedBy = addedBy
+				}
+				break
+			case 'state.id':
+				SessionState state = (value.isLong()) ? SessionState.get(value.toLong()) : null
+				if (state) {
+					this.state = state
+				}
+				break
+			case 'networks.id':
+				List<Network> networks = []
+				networks += this.networks
+				networks.each { it?.removeFromSessions(this) }
+				this.save(flush: true)
+				value.split(';').each { networkId ->
+					if (networkId.toString().isLong()) {
+						Network network = Network.findById(networkId.toString().toLong())
+						if (network) {
+							this.addToNetworks(network)
+						}
+					}
+				}
+				break
+		}
+	}
+
     /**
      * Updates the paper state of all papers of this session when the state of this session has been changed
      */
@@ -60,33 +122,25 @@ class Session extends EventDateDomain {
             updatePaperStates()
         }
     }
-
-	/**
-	 * Makes sure that all papers in this session get the proper paper state and reset their email_state
-	 */
+    
     void updatePaperStates() {
-	    Sql sql = new Sql(dataSource)
-	    PaperState correspondingPaperState = state.correspondingPaperState
+        if (state.correspondingPaperState) {
+            Sql sql = new Sql(dataSource)
+            PaperState correspondingPaperState = state.correspondingPaperState
 
-	    // Change all paper states of this session
-	    Paper.findAllBySession(this).each { paper ->
-		    // Only update papers that may be changed
-		    if (correspondingPaperState && paper.state.sessionStateTrigger) {
-			    // Use SQL to prevent Hibernate session exceptions
-			    sql.executeUpdate('''
+            // Change all paper states of this session
+            Paper.findAllBySession(this).each { paper ->
+                // Only update papers that may be changed
+                if (paper.state.sessionStateTrigger) {
+                    // Use SQL to prevent Hibernate session exceptions
+                    sql.executeUpdate('''
                       UPDATE papers
-                      SET mail_paper_state = 1, paper_state_id = :paperStateId
+                      SET paper_state_id = :paperStateId
                       WHERE paper_id = :paperId
-                ''', [paperStateId: correspondingPaperState.id, paperId: paper.id])
-		    }
-		    else {
-			    sql.executeUpdate('''
-                      UPDATE papers
-                      SET mail_paper_state = 1
-                      WHERE paper_id = :paperId
-                ''', [paperId: paper.id])
-		    }
-	    }
+                    ''', [paperStateId: correspondingPaperState.id, paperId: paper.id])
+                }
+            }
+        }
     }
 
     /**
@@ -112,7 +166,7 @@ class Session extends EventDateDomain {
     
     @Override
     String toString() {
-        String readCode = (code) ? code : "-";        
+        String readCode = (code) ? code : "-"
         "${readCode}: ${name}"
     }
 }

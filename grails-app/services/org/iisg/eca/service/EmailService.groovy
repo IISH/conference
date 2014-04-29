@@ -100,12 +100,11 @@ class EmailService {
      * Tries to send the email, if succeeded the send date will be set in the database
      * @param sentEmail The email to be send
      * @param saveToDb Whether the email should be saved in the database
-     * @param forceSend Whether the email is forced to (re)send     *
+     * @param forceSend Whether the email is forced to (re)send
      */
     synchronized void sendEmail(SentEmail sentEmail, boolean saveToDb=true, boolean forceSend=false) {
         // How often may we try before giving up?
         Integer maxNumTries = new Integer(Setting.getSetting(Setting.EMAIL_MAX_NUM_TRIES).value)
-		String fromEmail = Setting.getSetting(Setting.DEFAULT_FROM_EMAIL).value
 
         // Only send the email if the maximum number of tries is not reached
         if (forceSend || (sentEmail.numTries < maxNumTries)) {
@@ -114,11 +113,15 @@ class EmailService {
             }
 
             try {
+	            String fromEmail = Setting.getSetting(Setting.DEFAULT_FROM_EMAIL).value
+	            String[] bccAddresses = Setting.getSetting(Setting.EMAIL_BCC).getMultipleValues()
+
                 // Try to send the email if we have to
                 if (sendEmailTo(sentEmail.user, sentEmail.date?.event)) {
                     mailService.sendMail {
                         from "\"${sentEmail.fromName}\" <${fromEmail}>"
 	                    replyTo sentEmail.fromEmail
+	                    bcc bccAddresses
 	                    to "\"${sentEmail.user.toString()}\" <${sentEmail.user.email}>"
                         subject sentEmail.subject
                         text sentEmail.body
@@ -155,7 +158,7 @@ class EmailService {
      */
     synchronized void sendInfoMail(String emailSubject, String message,
                                    Event event=pageInformation.date?.event, String emailAddress=null) {
-        String[] recipients = Setting.getSetting(Setting.EMAIL_ADDRESS_INFO_ERRORS, event).value.split(';')
+        String[] recipients = Setting.getSetting(Setting.EMAIL_ADDRESS_INFO_ERRORS, event).getMultipleValues()
 	    String fromEmail = Setting.getSetting(Setting.DEFAULT_FROM_EMAIL).value
 
         // If no email address is set, use the default info email address from the settings
@@ -184,6 +187,7 @@ class EmailService {
     synchronized String testEmailService(String f, String t, String s, String body) {
         String info = "";
 	    String fromEmail = Setting.getSetting(Setting.DEFAULT_FROM_EMAIL).value
+	    String[] bccAddresses = Setting.getSetting(Setting.EMAIL_BCC).getMultipleValues()
 
         try {
             // Make sure that the mail service is enabled.
@@ -201,9 +205,10 @@ class EmailService {
             }
 
             // Send the email
-            MimeMailMessage mailMessage = mailService.sendMail {
+            MimeMailMessage mailMessage = (MimeMailMessage) mailService.sendMail {
 	            from fromEmail
                 replyTo f
+	            bcc bccAddresses
                 to t
                 subject s
                 text body

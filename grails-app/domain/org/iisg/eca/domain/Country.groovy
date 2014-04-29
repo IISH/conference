@@ -16,6 +16,7 @@ class Country {
     static mapping = {
         table 'countries'
         version false
+        sort nameEnglish: 'asc'
 
         id          column: 'country_id'
         tld         column: 'tld'

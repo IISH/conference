@@ -9,11 +9,11 @@ class FeeAmount extends EventDateDomain {
     int numDaysStart
     int numDaysEnd
     BigDecimal feeAmount = new BigDecimal(9999.99)
+    String substituteName
 
     static belongsTo = FeeState
 
     static constraints = {
-        date            nullable: true
         numDaysStart    min: 1
         numDaysEnd      min: 1, validator: { val, obj ->
                             if (obj.numDaysEnd < obj.numDaysStart) {                            
@@ -21,6 +21,7 @@ class FeeAmount extends EventDateDomain {
                             }
                         }
         feeAmount       min: BigDecimal.ZERO
+        substituteName  nullable: true,         maxSize: 50
     }
 
     static mapping = {
@@ -28,15 +29,61 @@ class FeeAmount extends EventDateDomain {
         version false
 
         id              column: 'fee_amount_id'
-        date            column: 'date_id'
         feeState        column: 'fee_state_id'
         endDate         column: 'end_date'
         numDaysStart    column: 'nr_of_days_start'
         numDaysEnd      column: 'nr_of_days_end'
         feeAmount       column: 'fee_amount'
+        substituteName  column: 'substitute_name'
     }
+
+	static namedQueries = {
+		getFeeAmountForNrDays { FeeState state, int nrDays ->
+			le('numDaysStart', nrDays)
+			ge('numDaysEnd', nrDays)
+			eq('feeState', state)
+			order('endDate')
+		}
+
+		getFeeAmountForDate { FeeState state, Date date ->
+			ge('endDate', date)
+			eq('feeState', state)
+			order('endDate')
+		}
+
+		getFeeAmountForDateAndNrDays { FeeState state, int nrDays, Date date ->
+			getFeeAmountForNrDays(state, nrDays)
+			getFeeAmountForDate(state, date)
+		}
+	}
+
+    static apiActions = ['GET']
+
+    static apiAllowed = [
+            'id',
+            'feeState.id',
+            'endDate',
+            'numDaysStart',
+            'numDaysEnd',
+            'feeAmount',
+            'substituteName'
+    ]
+
+	static String getReadableFeeAmount(BigDecimal amount) {
+		return amount.toString() + ' EUR'
+	}
 
     String getNumDays() {
         (numDaysStart == numDaysEnd) ? numDaysStart : "${numDaysStart} - ${numDaysEnd}"
     }
+
+	@Override
+	String toString() {
+		String name = feeState.name
+		if (substituteName?.size() > 0) {
+			name = substituteName
+		}
+
+		return "${name}: ${getReadableFeeAmount(feeAmount)}"
+	}
 }

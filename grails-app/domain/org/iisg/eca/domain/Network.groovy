@@ -4,11 +4,15 @@ package org.iisg.eca.domain
  * Domain class of table holding all existing networks
  */
 class Network extends EventDateDomain {
+    def pageInformation
+
     String name
     String comment
+    String longDescription
     String url
     String email
     boolean showOnline = true
+	boolean deleted = false
     
     static hasMany = [  chairs: NetworkChair,
                         participantVolunteering: ParticipantVolunteering,
@@ -16,10 +20,11 @@ class Network extends EventDateDomain {
                         sessions: Session]
 
     static constraints = {
-        name    blank: false,   maxSize: 100
-        comment nullable: true
-        url     nullable: true, maxSize: 255
-        email   nullable: true, maxSize: 100,   email: true
+        name            blank: false,   maxSize: 100
+        comment         nullable: true
+        longDescription nullable: true
+        url             nullable: true, maxSize: 255
+        email           nullable: true, maxSize: 100,   email: true
     }
 
     static mapping = {
@@ -29,14 +34,67 @@ class Network extends EventDateDomain {
 
         id              column: 'network_id'
         name            column: 'name'
-        comment         column: 'comment',      type: 'text'
+        comment         column: 'comment',          type: 'text'
+        longDescription column: 'long_description', type: 'text'
         url             column: 'url'
         email           column: 'email'
         showOnline      column: 'show_online'
+	    deleted         column: 'deleted'
 
-        chairs                      sort: 'isMainChair', order: 'desc', cascade: 'all-delete-orphan'
+
+	    chairs                      sort: 'isMainChair', order: 'desc', cascade: 'all-delete-orphan'
         sessions                    joinTable: 'session_in_network'
         participantVolunteering     cascade: 'all-delete-orphan'
+    }
+
+	static hibernateFilters = {
+		dateFilter(condition: '(date_id = :dateId OR date_id IS NULL)', types: 'long')
+		hideDeleted(condition: 'deleted = 0', default: true)
+	}
+
+    static apiActions = ['GET']
+
+    static apiAllowed = [
+            'id',
+            'name',
+            'comment',
+            'longDescription',
+            'url',
+            'email',
+            'showOnline',
+            'chairs.chair.id',
+    ]
+
+	void softDelete() {
+		deleted = true
+	}
+
+    /**
+     * Returns all the users that have been accepted as participants in accepted sessions that fall in this network
+     * @return A list of users
+     */
+    List<User> getAllUsersInNetwork() {
+        return User.executeQuery('''
+            SELECT DISTINCT u
+            FROM User AS u
+            INNER JOIN u.participantDates as pd
+            INNER JOIN u.sessionParticipants AS sp
+            INNER JOIN sp.session AS s
+            INNER JOIN s.networks AS n
+            WHERE pd.date.id = :dateId
+            AND s.date.id = :dateId
+            AND n.date.id = :dateId
+            AND pd.deleted = false
+            AND s.deleted = false
+            AND n.deleted = false
+            AND n.id = :networkId
+            AND s.state.id = :sessionStateId
+            AND pd.state.id IN (:dataChecked, :participant)
+            ORDER BY u.lastName, u.firstName, u.email
+        ''', [  dateId: pageInformation.date.id, networkId : this.id,
+                sessionStateId : SessionState.SESSION_ACCEPTED,
+                dataChecked : ParticipantState.PARTICIPANT_DATA_CHECKED,
+                participant : ParticipantState.PARTICIPANT])
     }
     
     @Override

@@ -12,17 +12,25 @@ class SessionRoomDateTime extends EventDateDomain implements Serializable {
 
     static mapping = {
         table 'session_room_datetime'
-        id composite: ['room', 'sessionDateTime', 'session']
         version false
 
+        id              column: 'session_room_datetime_id'
         room            column: 'room_id'
         sessionDateTime column: 'session_datetime_id'
         session         column: 'session_id'
     }
 
-    Long getId() {
-        "${room.id}${sessionDateTime.id}${session.id}".toLong()
-    }
+    static apiActions = ['GET']
+
+    static apiAllowed = [
+            'id',
+            'session.id',
+            'room.roomName',
+            'room.roomNumber',
+            'sessionDateTime.indexNumber',
+            'sessionDateTime.day',
+            'sessionDateTime.period'
+    ]
 
     @Override
     int hashCode() {

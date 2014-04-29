@@ -14,7 +14,6 @@ import grails.plugin.springsecurity.SpringSecurityUtils
  * Controller responsible for handling requests on user authentication
  */
 class UserAuthController {
-    def sessionFactory
     def pageInformation
     
     /**
@@ -79,7 +78,7 @@ class UserAuthController {
             // Save all user related data
             bindData(user, params, [include: ['title', 'firstName', 'lastName', 'gender', 'organisation',
                         'department', 'email', 'address', 'city', 'country', 'phone', 'mobile', 'cv', 
-                        'extraInfo', 'emailDiscontinued', 'enabled']], "User")
+                        'extraInfo', 'emailDiscontinued']], "User")
             user.save()
             
             // Check for all the possible roles, whether they have to be added to the user
@@ -173,7 +172,7 @@ class UserAuthController {
             // Save all user related data
             bindData(user, params, [include: ['title', 'firstName', 'lastName', 'gender', 'organisation',
                         'department', 'email', 'address', 'city', 'country', 'phone', 'mobile', 'cv', 
-                        'extraInfo', 'emailDiscontinued', 'enabled']], "User")
+                        'extraInfo', 'emailDiscontinued']], "User")
                         
             if (mayAuthorizeUser) {
                 // Check for all the possible roles, whether they have to be removed or added to the user
@@ -199,8 +198,8 @@ class UserAuthController {
                 Set<Long> toBeRemoved = (params["Page.to-be-deleted"]) ? params["Page.to-be-deleted"].split(';')*.toLong() : []
                 UserPage.findAllByUser(user).each { userPage -> 
                     if (toBeRemoved.contains(userPage.page.id)) {
-                        UserPage.executeUpdate("DELETE FROM UserPage WHERE user=? AND page=? AND date=?", 
-                            [user, userPage.page, pageInformation.date])
+                        UserPage.executeUpdate("DELETE FROM UserPage WHERE user=? AND page=? AND event=?",
+                            [user, userPage.page, pageInformation.date?.event])
                     }
                 }
 
@@ -213,7 +212,7 @@ class UserAuthController {
                     // Only add pages that are allowed and not in the list
                     boolean pageIsAllowed = pages.find { it.id == userPage.page.id }
                     UserPage existingUserPage = user.userPages.find { (it.page.id == userPage.page.id) && 
-                                                                      (it.date == pageInformation.date) }
+                                                                      (it.event == pageInformation.date?.event) }
 
                     if (pageIsAllowed && !existingUserPage) {
                        user.addToUserPages(userPage)

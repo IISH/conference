@@ -1,4 +1,4 @@
-<%@ page import="org.iisg.eca.domain.Day; org.iisg.eca.domain.SessionDateTime; org.iisg.eca.domain.Setting; org.iisg.eca.domain.Title; org.iisg.eca.domain.FeeState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Extra; org.iisg.eca.domain.Country; org.iisg.eca.domain.SessionParticipant; org.iisg.eca.domain.payway.Order" %>
+<%@ page import="org.iisg.eca.domain.Day; org.iisg.eca.domain.SessionDateTime; org.iisg.eca.domain.Setting; org.iisg.eca.domain.Title; org.iisg.eca.domain.FeeState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Extra; org.iisg.eca.domain.Country; org.iisg.eca.domain.SessionParticipant; org.iisg.eca.domain.Order" %>
 <!doctype html>
 <html>
     <head>
@@ -338,7 +338,7 @@
                                                 <g:message code="default.add.label" args="[g.message(code: 'participantDate.accompanyingPersons.person.label')]" />
                                             </li>
                                             <li class="hidden">
-                                                <input type="text"  name="AccompanyingPerson_null" id="AccompanyingPerson_null" />
+                                                <input type="text" name="AccompanyingPerson_null" id="AccompanyingPerson_null" />
                                                 <span class="ui-icon ui-icon-circle-minus"></span>
                                             </li>
                                         </ul>
@@ -379,7 +379,7 @@
                                     <legend><g:message code="participantDate.volunteering.label" /></legend>
                                     <div class="${hasErrors(bean: participant, field: 'participantVolunteering', 'error')} ">
                                         <ul>
-                                        <g:each in="${participant.participantVolunteering}" var="instance" status="i">
+                                        <g:each in="${participantVolunteering}" var="instance" status="i">
                                             <li>
                                                 <input type="hidden" name="ParticipantVolunteering_${i}.id" value="${instance.id}" />
                                                 <label>

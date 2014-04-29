@@ -6,6 +6,7 @@ import org.iisg.eca.domain.Title
  * Controller responsible for handling requests on titles
  */
 class TitleController {
+	def pageInformation
 
     /**
      * Index action, redirects to the list action
@@ -48,11 +49,10 @@ class TitleController {
     def delete() {
         // Of course we need an id of the title
         if (params.id) {
-            Title title = Title.findById(params.id)
-            title?.softDelete()
+            Title title = Title.findByIdAndEvent(params.id, pageInformation.date.event)
 
             // Try to remove the title, send back a success or failure message
-            if (title?.save(flush: true)) {
+            if (title?.delete(flush: true)) {
                 flash.message = g.message(code: 'default.deleted.message', args: [g.message(code: 'title.label'), title.toString()])
             }
             else {

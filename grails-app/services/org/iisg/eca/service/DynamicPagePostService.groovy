@@ -9,7 +9,6 @@ import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 
 import org.codehaus.groovy.grails.commons.GrailsDomainClassProperty
 import org.codehaus.groovy.grails.commons.metaclass.GroovyDynamicMethodsInterceptor
-import org.iisg.eca.domain.DefaultDomain
 
 /**
  * Service responsible for saving the data of a form on a dynamic page
@@ -49,7 +48,7 @@ class DynamicPagePostService {
                     ids.each { idToDelete ->
                         if (idToDelete.isLong()) {
                             // See if there is a soft delete, otherwise perform a hard delete
-                            if (DefaultDomain.class.isAssignableFrom(domainClass.clazz)) {
+                            if (domainClass.clazz.hasProperty('deleted')) {
                                 Object domain = domainClass.clazz.get(idToDelete.toLong())
                                 domain?.softDelete()
                                 domain?.save()

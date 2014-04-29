@@ -73,10 +73,6 @@ class BookExportService {
                     AND s.state.id = :sessionStateId
                     AND u.enabled = true
                     AND u.deleted = false
-                    AND pd.enabled = true
-                    AND sp.enabled = true
-                    AND sp.deleted = false
-                    AND s.enabled = true
                     AND s.deleted = false
                     ORDER BY u.lastName, u.firstName
                 ''', [stateId: ParticipantState.PARTICIPANT, sessionStateId: SessionState.SESSION_ACCEPTED]).each { user ->
@@ -128,7 +124,6 @@ class BookExportService {
                         INNER JOIN s.sessionRoomDateTime AS srdt
                         INNER JOIN srdt.room AS r
                         WHERE srdt.sessionDateTime.id = :sessionDateTimeId
-                        AND srdt.deleted = false
                         AND r.deleted = false
                         ORDER BY r.roomNumber
                     ''', [sessionDateTimeId: sdt.id]).each { sessionResults ->

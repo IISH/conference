@@ -33,7 +33,7 @@ class AuthGroupController {
         // The 'save' button was clicked, save all data
         if (request.post) {
             // Save all group related data
-            bindData(group, params, [include: ["name", "pages", "enabeled"]], "Group")
+            bindData(group, params, [include: ["name", "pages"]], "Group")
             
             // Add the users to the group
             int i = 0
@@ -116,7 +116,7 @@ class AuthGroupController {
         // The 'save' button was clicked, save all data
         if (request.post) {
             // Save all group related data
-            bindData(group, params, [include: ["name", "pages", "enabeled"]], "Group")
+            bindData(group, params, [include: ["name", "pages"]], "Group")
 
             // Make sure that all pages are removed from the group if this needs to happen
             if (!params."Group.pages") {

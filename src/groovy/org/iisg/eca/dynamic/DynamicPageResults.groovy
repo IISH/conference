@@ -12,7 +12,6 @@ import org.codehaus.groovy.grails.web.context.ServletContextHolder
 
 import org.iisg.eca.domain.EventDateDomain
 import org.iisg.eca.domain.EventDomain
-import org.iisg.eca.domain.DefaultDomain
 
 /**
  * Queries the database for results based on the information from the <code>DataContainer</code>
@@ -110,7 +109,7 @@ class DynamicPageResults {
                 eq('event.id', pageInformation.date.event.id)
             }
         }
-        if (c.hasColumns() && DefaultDomain.class.isAssignableFrom(c.property.referencedDomainClass.clazz)) {
+        if (c.hasColumns() && c.property.referencedDomainClass.hasProperty('deleted')) {
             "${c.name}" {
                 eq('deleted', false)
             }

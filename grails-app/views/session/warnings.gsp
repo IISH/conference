@@ -1,4 +1,4 @@
-<%@ page import="org.iisg.eca.domain.ParticipantType; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.payway.Order" %>
+<%@ page import="org.iisg.eca.domain.ParticipantType; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Order" %>
 <!doctype html>
 <html>
 <head>

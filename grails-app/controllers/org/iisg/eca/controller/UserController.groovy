@@ -18,6 +18,11 @@ class UserController {
      */
     def pageInformation
 
+	/**
+	 * PasswordService for password related actions
+	 */
+	def passwordService
+
     /**
      * Default action: Redirects to 'show' method, which will display information of the logged in user
      */
@@ -70,23 +75,25 @@ class UserController {
         User user = User.get(springSecurityService.principal.id)
 
         if (request.post) {
+	        String oldPassword = params['User.password']
+	        String newPassword = params['User.newPassword']
+	        String newPasswordAgain = params['User.newPasswordAgain']
+
             // For a password update, the new password has to be typed twice and has to match
-            if (!params['User.newPassword'].equals(params['User.newPasswordAgain'])) {
-                user.errors.rejectValue 'password', g.message(code: 'user.password.nomatch')
+            if (!newPassword.equals(newPasswordAgain)) {
+                user.errors.rejectValue('password', 'user.password.nomatch')
             }
             // If it is indeed a password update, make sure the old password is correct
             // and the new password is not empty
-            else if (!params['User.newPassword'].isEmpty()) {
-                if (user.isPasswordCorrect(params['User.password'])) {
-                    user.password = params['User.newPassword']
-                    if (user.save(flush: true)) {
-                        flash.message = g.message(code: 'default.updated.message', args: [g.message(code: 'user.newPassword.label'), user.toString()])
-                    }
+            else if (!newPassword.isEmpty() && user.isPasswordCorrect(oldPassword)) {
+                if (passwordService.changePassword(user, newPassword, newPasswordAgain, oldPassword)) {
+                    flash.message = g.message(code: 'default.updated.message', args:
+	                        [g.message(code: 'user.newPassword.label'), user.toString()])
                 }
-                else {
-                    // Incorrect password given
-                    user.errors.rejectValue 'password', g.message(code: 'user.password.incorrect')
-                }
+            }
+	        else {
+	            // Incorrect password given
+	            user.errors.rejectValue('password', 'user.password.incorrect')
             }
         }
 

@@ -45,14 +45,6 @@
               <eca:formatText text="${room.comment}" />
             </span>
           </li>
-          <li>
-            <span id="enabled-label" class="property-label">
-              <eca:fallbackMessage code="default.enabled.label" fbCode="room.enabled.label" />
-            </span>
-            <span class="property-value" arial-labelledby="enabled-label">
-              <g:checkBox name="enabled" value="${room.enabled}" disabled="true" />
-            </span>
-          </li>
 
             <div id="room-equipment" class="columns">
                <g:each in="${equipment}" var="equip">

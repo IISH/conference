@@ -1,14 +1,11 @@
 package org.iisg.eca.domain
 
-import groovy.sql.Sql
 import java.math.RoundingMode
 
 /**
  * Domain class of table holding all papers
  */
 class Paper extends EventDateDomain {
-	def dataSource
-
     User user
     PaperState state
     Session session
@@ -25,8 +22,10 @@ class Paper extends EventDateDomain {
     byte[] file
     String equipmentComment
     boolean mailPaperState = true
+	User addedBy
+	boolean deleted = false
 
-    static belongsTo = [User, PaperState, Session, Network]
+	static belongsTo = [User, PaperState, Session, Network]
     static hasMany = [equipment: Equipment]
 
     static mapping = {
@@ -49,6 +48,8 @@ class Paper extends EventDateDomain {
         file                column: 'file',                 sqlType: 'mediumblob'
         equipmentComment    column: 'equipment_comment',    type: 'text'
         mailPaperState      column: 'mail_paper_state'
+	    addedBy             column: 'added_by'
+	    deleted             column: 'deleted'
 
         equipment           joinTable: 'paper_equipment'
     }
@@ -72,7 +73,99 @@ class Paper extends EventDateDomain {
         fileSize            nullable: true
         file                nullable: true
         equipmentComment    nullable: true
+	    addedBy             nullable: true
     }
+
+	static hibernateFilters = {
+		dateFilter(condition: '(date_id = :dateId OR date_id IS NULL)', types: 'long')
+		hideDeleted(condition: 'deleted = 0', default: true)
+	}
+
+    static apiActions = ['GET', 'POST', 'PUT', 'DELETE']
+
+    static apiAllowed = [
+            'id',
+            'user.id',
+            'state.id',
+            'session.id',
+            'title',
+            'coAuthors',
+            'abstr',
+            'networkProposal.id',
+            'sessionProposal',
+            'proposalDescription',
+            'fileName',
+            'contentType',
+            'fileSize',
+            'equipmentComment',
+            'equipment.id',
+		    'addedBy.id'
+    ]
+
+	static apiPostPut = [
+			'title',
+			'coAuthors',
+			'abstr',
+			'sessionProposal',
+			'equipmentComment',
+			'user.id',
+			'state.id',
+			'session.id',
+			'networkProposal.id',
+			'equipment.id',
+			'addedBy.id'
+	]
+
+	void softDelete() {
+		deleted = true
+	}
+
+	void updateForApi(String property, String value) {
+		switch (property) {
+			case 'user.id':
+				User user = (value.isLong()) ? User.get(value.toLong()) : null
+				if (user) {
+					this.user = user
+				}
+				break
+			case 'state.id':
+				PaperState state = (value.isLong()) ? PaperState.findById(value.toLong()) : null
+				if (state) {
+					this.state = state
+				}
+				break
+			case 'session.id':
+				Session session = (value.isLong()) ? Session.findById(value.toLong()) : null
+				if (session) {
+					this.session = session
+				}
+				break
+			case 'networkProposal.id':
+				Network networkProposal = (value.isLong()) ? Network.findById(value.toLong()) : null
+				if (networkProposal) {
+					this.networkProposal = networkProposal
+				}
+				break
+			case 'addedBy.id':
+				User addedBy = (value.isLong()) ? User.findById(value.toLong()) : null
+				if (addedBy) {
+					this.addedBy = addedBy
+				}
+				break
+			case 'equipment.id':
+				this.equipment?.clear()
+				this.save(flush: true)
+				value.split(';').each { equipmentId ->
+					if (equipmentId.toString().isLong()) {
+						Equipment equipment = Equipment.findById(equipmentId.toString().toLong())
+						if (equipment) {
+							this.addToEquipment(equipment)
+						}
+					}
+				}
+				break
+		}
+	}
 
     /**
      * Returns the file size in a human friendly readable way
@@ -92,30 +185,27 @@ class Paper extends EventDateDomain {
         return "${fileSize} bytes"
     }
 
+	/**
+	 * Removes the paper file by setting all related columns to null
+	 * @return Whether the paper was successfully removed
+	 */
+	boolean removePaperFile() {
+		this.file = null
+		this.fileName = null
+		this.fileSize = null
+		this.contentType = null
+
+		this.save()
+	}
+
     /**
      * Updates the mailPaperState when the state of this paper has been changed
      */
     def beforeUpdate() {
         if (isDirty('state')) {
             mailPaperState = true
-	        updateSessionState()
         }
     }
-
-	/**
-	 * Makes sure that the session also resets its email_state
-	 */
-	void updateSessionState() {
-		if (this.session) {
-			// Use SQL to prevent Hibernate session exceptions
-			Sql sql = new Sql(dataSource)
-			sql.executeUpdate('''
-                  UPDATE sessions
-                  SET mail_session_state = 1
-                  WHERE session_id = :sessionId
-            ''', [sessionId: this.session.id])
-		}
-	}
 
     @Override
     String toString() {

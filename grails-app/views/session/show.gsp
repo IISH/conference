@@ -54,14 +54,6 @@
             </span>
           </li>
           <li>
-            <span id="enabled-label" class="property-label">
-              <g:message code="default.enabled.label" />
-            </span>
-            <span class="property-value" arial-labelledby="enabled-label">
-              <g:checkBox name="enabled" value="${eventSession.enabled}" disabled="true" />
-            </span>
-          </li>
-          <li>
             <span id="networks-label" class="property-label">
               <g:message code="network.multiple.label"  />
             </span>

@@ -11,6 +11,7 @@ class Day extends EventDateDomain {
 
     Date day
     int dayNumber
+    boolean deleted
     
     static hasMany = [sessionDateTimes: SessionDateTime, participantPresent: ParticipantDay]
     
@@ -29,10 +30,28 @@ class Day extends EventDateDomain {
         id          column: 'day_id'
         day         column: 'day'
         dayNumber   column: 'day_number'
+        deleted     column: 'deleted'
         
         sort        'dayNumber'
         
         sessionDateTimes cascade: 'all-delete-orphan'
+    }
+
+    static hibernateFilters = {
+        dateFilter(condition: '(date_id = :dateId OR date_id IS NULL)', types: 'long')
+        hideDeleted(condition: 'deleted = 0', default: true)
+    }
+
+    static apiActions = ['GET']
+
+    static apiAllowed = [
+            'id',
+            'day',
+            'dayNumber'
+    ]
+
+    void softDelete() {
+        deleted = true
     }
     
     SimpleDateFormat getFormat() {

@@ -6,6 +6,7 @@ import org.iisg.eca.domain.ParticipantState
  * Controller responsible for handling requests on participant states
  */
 class ParticipantStateController {
+	def pageInformation
 
     /**
      * Index action, redirects to the list action
@@ -42,29 +43,28 @@ class ParticipantStateController {
         forward(controller: 'dynamicPage', action: 'dynamic', params: params)
     }
 
-    /**
-     * Removes the participant state from the current event date
-     */
-    def delete() {
-        // Of course we need an id of the participant state
-        if (params.id) {
-            ParticipantState participantState = ParticipantState.findById(params.id)
-            participantState?.softDelete()
+	/**
+	 * Removes the participant state from the current event date
+	 */
+	def delete() {
+		// Of course we need an id of the participant state
+		if (params.id) {
+			ParticipantState participantState = ParticipantState.findByIdAndEvent(params.id, pageInformation.date.event)
 
-            // Try to remove the participant state, send back a success or failure message
-            if (participantState?.save(flush: true)) {
-                flash.message = g.message(code: 'default.deleted.message', args: [g.message(code: 'participantState.label'), participantState.toString()])
-            }
-            else {
-                flash.error = true
-                flash.message = g.message(code: 'default.not.deleted.message', args: [g.message(code: 'participantState.label'), participantState.toString()])
-            }
-        }
-        else {
-            flash.error = true
-            flash.message = g.message(code: 'default.no.id.message')
-        }
+			// Try to remove the participant state, send back a success or failure message
+			if (participantState?.delete(flush: true)) {
+				flash.message = g.message(code: 'default.deleted.message', args: [g.message(code: 'participantState.label'), participantState.toString()])
+			}
+			else {
+				flash.error = true
+				flash.message = g.message(code: 'default.not.deleted.message', args: [g.message(code: 'participantState.label'), participantState.toString()])
+			}
+		}
+		else {
+			flash.error = true
+			flash.message = g.message(code: 'default.no.id.message')
+		}
 
-        redirect(uri: eca.createLink(action: 'list', noBase: true))
-    }
+		redirect(uri: eca.createLink(action: 'list', noBase: true))
+	}
 }

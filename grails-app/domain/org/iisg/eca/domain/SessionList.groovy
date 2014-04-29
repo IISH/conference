@@ -1,7 +1,5 @@
 package org.iisg.eca.domain
 
-import groovy.sql.Sql
-
 /**
  * Domain class of table holding all sessions, ONLY for listing sessions (it does not include all info)
  */

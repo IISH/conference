@@ -5,7 +5,7 @@ import org.springframework.context.i18n.LocaleContextHolder
 /**
  * Domain class of table holding all event dates
  */
-class EventDate extends DefaultDomain {
+class EventDate  {
 	def messageSource
 
 	String yearCode

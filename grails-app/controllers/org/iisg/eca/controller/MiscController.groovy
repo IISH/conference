@@ -22,7 +22,7 @@ class MiscController {
            SELECT users.user_id, lastname, firstname
            FROM users INNER JOIN participant_date ON users.user_id=participant_date.user_id
            WHERE users.enabled=1 AND users.deleted=0
-           AND participant_date.enabled=1 and participant_date.deleted=0
+           AND participant_date.deleted=0
            AND participant_date.participant_state_id IN (:new, :dataChecked, :participant, :notFinished)
            AND participant_date.date_id = :date_id
            AND
@@ -48,16 +48,16 @@ class MiscController {
         Sql sql = new Sql(dataSource)
         List<GroovyRowResult> result = sql.rows("""
            SELECT users.user_id, lastname, firstname
-           FROM users INNER JOIN participant_date ON users.user_id=participant_date.user_id
-           WHERE users.enabled=1 AND users.deleted=0
-           AND participant_date.enabled=1 and participant_date.deleted=0
+           FROM users
+           INNER JOIN participant_date ON users.user_id=participant_date.user_id
+           WHERE users.deleted=0
+           AND participant_date.deleted=0
            AND participant_date.participant_state_id IN (:new, :dataChecked, :participant, :notFinished)
            AND participant_date.date_id = :date_id
-           AND
-           (
-           firstname <> ""
-           AND firstname <> "n/a"
-           AND ( binary firstname = binary upper( firstname ) OR binary firstname = binary lower( firstname ) )
+           AND (
+	           firstname <> ""
+	           AND firstname <> "n/a"
+	           AND ( binary firstname = binary upper( firstname ) OR binary firstname = binary lower( firstname ) )
            )
            ORDER BY firstname
         """, [date_id: pageInformation.date.id, new: ParticipantState.NEW_PARTICIPANT, dataChecked: ParticipantState.PARTICIPANT_DATA_CHECKED,
@@ -78,7 +78,7 @@ class MiscController {
            SELECT users.user_id, lastname, firstname, city
            FROM users INNER JOIN participant_date ON users.user_id=participant_date.user_id
            WHERE users.enabled=1 AND users.deleted=0
-           AND participant_date.enabled=1 and participant_date.deleted=0
+           AND participant_date.deleted=0
            AND participant_date.participant_state_id IN (:new, :dataChecked, :participant, :notFinished)
            AND participant_date.date_id = :date_id
            AND
@@ -106,7 +106,7 @@ class MiscController {
            SELECT users.user_id, lastname, firstname, city, organisation
            FROM users INNER JOIN participant_date ON users.user_id=participant_date.user_id
            WHERE users.enabled=1 AND users.deleted=0
-           AND participant_date.enabled=1 and participant_date.deleted=0
+           AND participant_date.deleted=0
            AND participant_date.participant_state_id IN (:new, :dataChecked, :participant, :notFinished)
            AND participant_date.date_id = :date_id
            AND
@@ -136,8 +136,8 @@ class MiscController {
            FROM sessions A, sessions B
            WHERE A.date_id=1 AND B.date_id = :date_id
            AND A.session_name = B.session_name
-           AND A.enabled=1 AND A.deleted=0
-           AND B.enabled=1 AND B.deleted=0
+           AND A.deleted=0
+           AND B.deleted=0
            AND A.session_id <> B.session_id
            ORDER BY A.session_name, A.session_id
         """, [date_id: pageInformation.date.id])
@@ -176,7 +176,7 @@ class MiscController {
         List<GroovyRowResult> result = sql.rows("""
            SELECT session_id, session_name
            FROM sessions
-           WHERE enabled=1 AND deleted=0
+           WHERE deleted=0
            AND date_id = :date_id
            AND session_id IN (
                SELECT session_id
@@ -202,13 +202,13 @@ class MiscController {
            SELECT users.user_id, lastname, firstname
            FROM users INNER JOIN participant_date ON users.user_id=participant_date.user_id
            WHERE users.enabled=1 AND users.deleted=0
-           AND participant_date.enabled=1 and participant_date.deleted=0
+           AND participant_date.deleted=0
            AND participant_date.participant_state_id IN (:new, :dataChecked, :participant, :notFinished)
            AND participant_date.date_id = :date_id
            AND users.user_id IN (
                SELECT A.user_id FROM papers A, papers B WHERE A.user_id = B.user_id and A.paper_id <> B.paper_id and A.title = B.title and A.paper_id > B.paper_id
-               AND A.enabled=1 AND A.deleted=0
-               AND B.enabled=1 AND B.deleted=0
+               AND A.deleted=0
+               AND B.deleted=0
            )
         """, [date_id: pageInformation.date.id, new: ParticipantState.NEW_PARTICIPANT, dataChecked: ParticipantState.PARTICIPANT_DATA_CHECKED,
                 participant: ParticipantState.PARTICIPANT, notFinished: ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
@@ -232,10 +232,10 @@ class MiscController {
            LEFT JOIN papers p
            ON u.user_id = p.user_id
            WHERE u.enabled=1 AND u.deleted=0
-           AND pd.enabled=1 and pd.deleted=0
+           AND pd.deleted=0
            AND pd.participant_state_id IN (:dataChecked, :participant)
            AND pd.date_id = :date_id
-           AND p.enabled=1 AND p.deleted=0 AND p.date_id = :date_id
+           AND p.deleted=0 AND p.date_id = :date_id
            GROUP BY p.user_id
            HAVING count(*) > 1
 
@@ -257,7 +257,7 @@ class MiscController {
           SELECT users.user_id, lastname, firstname
           FROM users INNER JOIN participant_date ON users.user_id=participant_date.user_id
           WHERE users.enabled=1 AND users.deleted=0
-          AND participant_date.enabled=1 and participant_date.deleted=0
+          AND participant_date.deleted=0
           AND participant_date.participant_state_id IN (:new, :dataChecked, :participant, :notFinished)
           AND participant_date.date_id = :date_id
           AND users.user_id IN (
@@ -314,10 +314,9 @@ class MiscController {
             ON p.user_id = sp.user_id
             AND p.session_id = sp.session_id
             WHERE u.enabled=1 AND u.deleted=0
-            AND pd.enabled=1 AND pd.deleted=0
+            AND pd.deleted=0
             AND pd.participant_state_id IN (1,2)
             AND pd.date_id = :dateId
-            AND p.enabled=1
             AND p.deleted=0
             AND p.date_id = :dateId
             AND p.paper_state_id = 2
@@ -345,12 +344,8 @@ class MiscController {
             INNER JOIN users ON networks_chairs.user_id=users.user_id
             LEFT JOIN participant_date ON participant_date.user_id=users.user_id
             LEFT JOIN fee_states ON fee_states.fee_state_id=participant_date.fee_state_id
-            WHERE networks_chairs.enabled=1
-            AND networks_chairs.deleted=0
-            AND users.enabled=1
-            AND users.deleted=0
-            AND participant_date.enabled=1
-            AND participant_date.deleted=0
+            WHERE users.deleted = 0
+            AND participant_date.deleted = 0
             AND networks.date_id = :dateId
             AND participant_date.date_id = :dateId
             ORDER BY networks.name, users.lastname, users.firstname
@@ -391,14 +386,14 @@ class MiscController {
         List<GroovyRowResult> result = sql.rows("""
             SELECT session_id, session_code, session_name
             FROM `sessions`
-            WHERE enabled=1 AND deleted=0
+            WHERE deleted=0
             AND date_id=:dateId
             AND session_state_id = :accepted
             AND session_id NOT IN (
                 SELECT session_participant.session_id
                 FROM session_participant
                 INNER JOIN vw_accepted_participants ON session_participant.user_id=vw_accepted_participants.user_id
-                WHERE session_participant.enabled=1 AND session_participant.deleted=0
+                WHERE AND session_participant.deleted=0
                 AND session_participant.participant_type_id = :organizer
                 GROUP BY session_participant.session_id
             )
@@ -420,15 +415,14 @@ class MiscController {
             SELECT session_id, session_code, session_name, description
             FROM `sessions` s
             INNER JOIN session_states ss ON s.session_state_id = ss.session_state_id
-            WHERE s.enabled=1 AND s.deleted=0
+            WHERE s.deleted=0
             AND date_id=:dateId
             AND s.session_state_id IN (:accepted, :consideration)
             AND session_id NOT IN (
                 SELECT session_participant.session_id
                 FROM session_participant
                 INNER JOIN vw_accepted_participants ON session_participant.user_id=vw_accepted_participants.user_id
-                WHERE session_participant.enabled=1 AND session_participant.deleted=0
-                AND session_participant.participant_type_id = :chair
+                WHERE session_participant.participant_type_id = :chair
                 GROUP BY session_participant.session_id
             )
             ORDER BY s.session_state_id ASC, session_code ASC, session_name ASC
@@ -488,7 +482,7 @@ class MiscController {
 			INNER JOIN participant_date
 			ON users.user_id = participant_date.user_id
 			WHERE users.enabled=1 AND users.deleted=0
-			AND participant_date.enabled=1 AND participant_date.deleted=0
+			AND participant_date.deleted=0
 			AND participant_date.participant_state_id IN (1,2)
 			AND participant_date.date_id = :dateId
 			AND ( participant_date.payment_id IS NULL OR participant_date.payment_id = 0 )

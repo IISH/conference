@@ -6,32 +6,43 @@ import org.apache.commons.lang.builder.HashCodeBuilder
 /**
  * Domain class of table holding all chairs of a network
  */
-class NetworkChair extends DefaultDomain implements Serializable {
-    //Long id
+class NetworkChair implements Serializable {
     Network network
     User chair
     boolean isMainChair = false
+	boolean votedAdvisoryBoard = false
 
     static belongsTo = [Network, User]
 
     static mapping = {
         table 'networks_chairs'
-      //  id composite: ['network', 'chair']
         version false
 
-        id          column: 'network_chair_id_temp'
-        network     column: 'network_id'
-        chair       column: 'user_id'
-        isMainChair column: 'is_main_chair'
+        id                  column: 'network_chair_id'
+        network             column: 'network_id'
+        chair               column: 'user_id'
+        isMainChair         column: 'is_main_chair'
+	    votedAdvisoryBoard  column: 'voted_advisory_board'
     }
 
     static constraints = {
         network     unique: 'chair'
     }
-     /*
-    Long getId() {
-        "${network.id}${chair.id}".toLong()
-    }   */
+
+    static apiActions = ['GET', 'POST']
+
+    static apiAllowed = [
+            'id',
+		    'chair.id',
+            'network.id',
+            'chair',
+            'isMainChair',
+		    'votedAdvisoryBoard'
+    ]
+
+	static apiPostPut = [
+			'votedAdvisoryBoard'
+	]
 
     @Override
     int hashCode() {
