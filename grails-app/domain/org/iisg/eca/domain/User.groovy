@@ -643,6 +643,7 @@ class User {
 	 * @return Is a correct password or not
 	 */
 	boolean isPasswordCorrect(String plainPassword) {
+		plainPassword = plainPassword?.trim()
 		String hashedPassword = springSecurityService.encodePassword(plainPassword, saltSource.getSalt(this))
 		hashedPassword.equals(password)
 	}

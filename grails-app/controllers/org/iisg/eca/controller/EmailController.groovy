@@ -86,7 +86,7 @@ class EmailController {
         String queryName = 'allParticipants'
         String placeholder = g.message(code: 'email.all.participants.label')
         if (emailTemplate.queryTypeOne) {
-	        queryName = emailTemplate.queryTypeOne
+            queryName = emailTemplate.queryTypeOne
         }
 
         // Create a preview email with the currently logged in user

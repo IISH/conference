@@ -218,6 +218,20 @@ a:hover, .link:hover {
     clear: both;
 }
 
+input[type="button"] {
+    color: [main_color_dark];
+    font-weight: bold;
+    padding: 3px 10px;
+    text-decoration: none;
+    border: 1px solid [main_color_dark];
+    outline: none;
+    background-color: #FFFFFF;
+    text-align: center;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
 .buttons input, .buttons a {
     display: inline-block;
     min-width: 50px;
@@ -234,6 +248,9 @@ a:hover, .link:hover {
     text-align: center;
     vertical-align: middle;
     float: left;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 
 .buttons input {
@@ -812,6 +829,9 @@ span.help-text {
     font-weight: bold;
     border: 1px solid [main_color_dark];
     padding: 2px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 
 #selected-days {
@@ -1177,16 +1197,6 @@ table.payment-statistics tbody tr:hover {
 
 .ui-autocomplete-loading {
     background: url('[resource_dir]/spinner.gif') no-repeat right center;
-}
-
-/* AJAX */
-
-.ajax-loading {
-    display: inline-block;
-    background: url('[resource_dir]/spinner.gif') no-repeat left center;
-    margin-left: 10px;
-    padding-left: 25px;
-    width: 90px;
 }
 
 /* HELPERS */
