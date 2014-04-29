@@ -1199,6 +1199,16 @@ table.payment-statistics tbody tr:hover {
     background: url('[resource_dir]/spinner.gif') no-repeat right center;
 }
 
+/* AJAX */
+
+.ajax-loading {
+    display: inline-block;
+    background: url('[resource_dir]/spinner.gif') no-repeat left center;
+    margin-left: 10px;
+    padding-left: 25px;
+    width: 90px;
+}
+
 /* HELPERS */
 
 .left {

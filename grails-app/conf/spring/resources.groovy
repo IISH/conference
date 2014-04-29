@@ -5,8 +5,6 @@ import org.iisg.eca.security.SecurityEventListener
 import org.iisg.eca.utils.PageInformation
 import org.iisg.eca.utils.CustomPropertyEditorRegistrar
 
-import org.iisg.eca.converter.DateConverter
-
 import org.springframework.security.oauth2.provider.token.JdbcTokenStore
 import org.springframework.security.oauth2.provider.JdbcClientDetailsService
 
