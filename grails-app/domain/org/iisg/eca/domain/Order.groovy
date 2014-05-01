@@ -154,12 +154,12 @@ class Order {
 		if (result != null) {
 			this.orderCode = result.get('ORDERCODE')
 			this.amount = new Long(result.get('AMOUNT').toString())
-			this.refundedAmount = new Long(result.get('REFUNDEDAMOUNT').toString())
+			this.refundedAmount = (result.get('REFUNDEDAMOUNT').isLong()) ? new Long(result.get('REFUNDEDAMOUNT').toString()) : 0L
 			this.payed = new Integer(result.get('PAYED').toString())
 			this.willPayByBank = result.get('WILLPAYBYBANK')
 			this.createdAt = (Date) result.get('CREATEDAT', true)
 			this.updatedAt = (Date) result.get('UPDATEDAT', true)
-			this.refundedAt = (Date) result.get('REFUNDEDAT', true)
+			this.refundedAt =  (result.get('REFUNDEDAT')) ? (Date) result.get('REFUNDEDAT', true) : null
 			this.description = result.get('COM')
 
 			EventDate date = pageInformation.date
