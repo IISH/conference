@@ -154,7 +154,7 @@ class Order {
 		if (result != null) {
 			this.orderCode = result.get('ORDERCODE')
 			this.amount = new Long(result.get('AMOUNT').toString())
-			this.refundedAmount = (result.get('REFUNDEDAMOUNT').isLong()) ? new Long(result.get('REFUNDEDAMOUNT').toString()) : 0L
+			this.refundedAmount = (result.get('REFUNDEDAMOUNT')?.isLong()) ? new Long(result.get('REFUNDEDAMOUNT').toString()) : 0L
 			this.payed = new Integer(result.get('PAYED').toString())
 			this.willPayByBank = result.get('WILLPAYBYBANK')
 			this.createdAt = (Date) result.get('CREATEDAT', true)
