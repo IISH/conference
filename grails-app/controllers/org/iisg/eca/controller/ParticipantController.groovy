@@ -622,7 +622,6 @@ class ParticipantController {
 						// Save the participant
 						if (participant.save(flush: true)) {
 							// Everything is fine
-							order = order.refresh()
 							responseMap = [success: true, state: order.getStatusText()]
 						}
 						else {
@@ -660,7 +659,6 @@ class ParticipantController {
 				Order order = Order.findById(params.order_id.toLong())
 				if (order && order.fullRefund()) {
 					// Everything is fine
-					order = order.refresh()
 					responseMap = [success: true, state: order.getStatusText()]
 				}
 				else {
