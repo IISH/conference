@@ -156,7 +156,7 @@ class Order {
 			this.amount = new Long(result.get('AMOUNT').toString())
 			this.refundedAmount = (result.get('REFUNDEDAMOUNT')?.isLong()) ? new Long(result.get('REFUNDEDAMOUNT').toString()) : 0L
 			this.payed = new Integer(result.get('PAYED').toString())
-			this.willPayByBank = result.get('WILLPAYBYBANK')
+			this.willPayByBank = result.get('WILLPAYBYBANK').toString().equals('true')
 			this.createdAt = (Date) result.get('CREATEDAT', true)
 			this.updatedAt = (Date) result.get('UPDATEDAT', true)
 			this.refundedAt =  (result.get('REFUNDEDAT')) ? (Date) result.get('REFUNDEDAT', true) : null
