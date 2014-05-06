@@ -64,6 +64,9 @@ class EmailCreationService {
 			email.addAdditionalValue('PaymentDescription', order.description)
 			email.addAdditionalValue('PaymentFinalDate', dateFormat.format(bankTransferClosesOn.dateValue))
 
+			// Is actually not an additional value, but as BankTransferInfo contains this code, we have to insert it
+			email.addAdditionalValue('NameParticipant', user.getFullName())
+
 			return email
 		}
 
