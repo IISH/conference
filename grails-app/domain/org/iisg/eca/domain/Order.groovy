@@ -172,7 +172,7 @@ class Order {
 				}
 			}
 
-			return this.save(insert: insert)
+			return this.save(insert: insert, flush: true)
 		}
 
 		return false

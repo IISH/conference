@@ -49,8 +49,16 @@ class ParticipantType extends EventDomain {
 
 	Set<ParticipantType> getNotInCombinationWith() {
 		Set<ParticipantType> types = new HashSet<ParticipantType>()
-		types.addAll(this.rulesFirst*.secondType)
-		types.addAll(this.rulesSecond*.firstType)
+		Set<ParticipantTypeRule> firstRules = ParticipantTypeRule.findAllByFirstType(this)
+		Set<ParticipantTypeRule> secondRules = ParticipantTypeRule.findAllBySecondType(this)
+
+		if (firstRules) {
+			types.addAll(firstRules*.secondType)
+		}
+		if (secondRules) {
+			types.addAll(secondRules*.firstType)
+		}
+
 		return types
 	}
 
