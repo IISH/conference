@@ -376,13 +376,13 @@ class ParticipantController {
 						}
 
 						// Save the paper
-						paper.save(failOnError: true)
+						paper.save(flush: true, failOnError: true)
 						i++
 					}
 
 					// Save the user and the participant
-					user.save(failOnError: true)
-					participant.save(failOnError: true)
+					user.save(flush: true, failOnError: true)
+					participant.save(flush: true, failOnError: true)
 				}
 
 				// We arrived here, so everything should be fine
