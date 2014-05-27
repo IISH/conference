@@ -41,7 +41,6 @@ class Network extends EventDateDomain {
         showOnline      column: 'show_online'
 	    deleted         column: 'deleted'
 
-
 	    chairs                      sort: 'isMainChair', order: 'desc', cascade: 'all-delete-orphan'
         sessions                    joinTable: 'session_in_network'
         participantVolunteering     cascade: 'all-delete-orphan'
