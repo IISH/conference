@@ -66,7 +66,7 @@ class EmailCreationService {
 
 			// Is actually not an additional value, but as BankTransferInfo contains this code, we have to insert it
 			email.addAdditionalValue('NameParticipant', user.getFullName())
-			
+
 			return email
 		}
 

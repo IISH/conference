@@ -22,6 +22,7 @@ class Setting extends EventDomain {
 	static final String CHANGE_USER = 'change_user'
 	static final String CHECK_ACCEPTED_IP = 'check_accepted_ip'
 	static final String COUNTRY_ID = 'country_id'
+	static final String DEFAULT_EQUIPMENT_TEXT = 'default_equipment_text';
 	static final String DEFAULT_FROM_EMAIL = 'default_from_email'
 	static final String DEFAULT_NETWORK_ID = 'default_network_id'
 	static final String DEFAULT_ORGANISATION_EMAIL = 'default_organisation_email'

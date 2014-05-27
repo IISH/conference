@@ -323,10 +323,13 @@ class SessionPlannerService {
      * @param terms The search terms to filter on
      * @return The currently planned schedule
      */
-    @Cacheable("program")
+    @Cacheable(value = "program")
     List<PlannedSession> getProgram(Long dayId, Long timeId, Long networkId, Long roomId, String terms) {
         // Start by querying
         def results = SessionRoomDateTime.createCriteria().listDistinct {
+	        // Make sure session room date times of the current event date are taken
+	        eq('date.id', pageInformation.date.id)
+
             // Create aliases first for joins
             createAlias('room', 'r')
             createAlias('sessionDateTime', 'sdt')
@@ -465,6 +468,6 @@ class SessionPlannerService {
         return planning
     }
 
-    @CacheEvict("program")
+    @CacheEvict(value = "program", allEntries = true)
     void removeProgramFromCache() { }
 }
