@@ -177,7 +177,8 @@ class ApiController {
 		Long roomId = (params.roomId?.toString()?.isLong()) ? params.roomId?.toString()?.toLong() : null
 		String terms = params.terms?.toString()
 
-		List<PlannedSession> program = sessionPlannerService.getProgram(dayId, timeId, networkId, roomId, terms)
+		List<PlannedSession> program = sessionPlannerService.
+				getProgram(pageInformation.date.id, dayId, timeId, networkId, roomId, terms)
 
 		render program as JSON
 	}
@@ -223,7 +224,7 @@ class ApiController {
 
 			if (params.excel?.equalsIgnoreCase('true') || params.excel?.equalsIgnoreCase('1')) {
 				XlsMapExport xls = new XlsMapExport(
-						['lastname', 'firstname', 'email'],  users,
+						['lastname', 'firstname', 'email'], users,
 						'Sheet 1', [params.lastName, params.firstName, params.email] as List<String>)
 				response.put('xls', xls.parse().encodeBase64().toString())
 			}
@@ -253,7 +254,7 @@ class ApiController {
 				AND pd.state.id IN (:dataChecked, :participant)
 				ORDER BY t.importance DESC, u.lastName ASC, u.firstName ASC
 			''',
-					['dateId': pageInformation.date.id, 'sessionId': sessionId, 'dataChecked': ParticipantState
+					['dateId'                                       : pageInformation.date.id, 'sessionId': sessionId, 'dataChecked': ParticipantState
 							.PARTICIPANT_DATA_CHECKED, 'participant': ParticipantState.PARTICIPANT])
 		}
 		else if (networkId) {
@@ -270,9 +271,9 @@ class ApiController {
 				AND pd.state.id IN (:newParticipant, :dataChecked, :participant)
 				ORDER BY u.lastName ASC, u.firstName ASC
 			''',
-					['dateId': pageInformation.date.id, 'networkId': networkId, 'newParticipant': ParticipantState
+					['dateId'                              : pageInformation.date.id, 'networkId': networkId, 'newParticipant': ParticipantState
 							.NEW_PARTICIPANT, 'dataChecked': ParticipantState.PARTICIPANT_DATA_CHECKED,
-							'participant': ParticipantState.PARTICIPANT])
+					 'participant'                         : ParticipantState.PARTICIPANT])
 		}
 
 		render results as JSON
@@ -298,7 +299,7 @@ class ApiController {
 				AND p.networkProposal.id = :networkId
 				ORDER BY u.lastName ASC, u.firstName ASC
 			''',
-					['dateId': pageInformation.date.id, 'networkId': networkId, 'dataChecked': ParticipantState
+					['dateId'                                       : pageInformation.date.id, 'networkId': networkId, 'dataChecked': ParticipantState
 							.PARTICIPANT_DATA_CHECKED, 'participant': ParticipantState.PARTICIPANT])
 		}
 
@@ -368,7 +369,8 @@ class ApiController {
 		response.put('participant', ParticipantDate.findByUserAndDate(user, pageInformation.date))
 	}
 
-	private void actionById(Class domainClass, String idName, GrailsParameterMap params, Map defaultResponse, Closure onInstanceFound) {
+	private void actionById(Class domainClass, String idName, GrailsParameterMap params, Map defaultResponse,
+			Closure onInstanceFound) {
 		Long id = (params.containsKey(idName) && params[idName].toString().isLong()) ? params.long(idName) : null
 		if (id) {
 			def instance = domainClass.findById(id)

@@ -1,5 +1,6 @@
 package org.iisg.eca.service
 
+import org.iisg.eca.domain.EventDate
 import org.iisg.eca.utils.TimeSlot
 
 import org.iisg.eca.domain.Day
@@ -316,6 +317,7 @@ class SessionPlannerService {
 
     /**
      * Create the current planned schedule for API purposes
+     * @param dateId Because of caching issues, the date id is also necessary
      * @param dayId The day to filter on
      * @param timeId The time to filter on
      * @param networkId The network to filter on
@@ -324,13 +326,10 @@ class SessionPlannerService {
      * @return The currently planned schedule
      */
     @Cacheable(value = "program")
-    List<PlannedSession> getProgram(Long dayId, Long timeId, Long networkId, Long roomId, String terms) {
+    List<PlannedSession> getProgram(Long dateId, Long dayId, Long timeId, Long networkId, Long roomId, String terms) {
         // Start by querying
         def results = SessionRoomDateTime.createCriteria().listDistinct {
-	        // Make sure session room date times of the current event date are taken
-	        eq('date.id', pageInformation.date.id)
-
-            // Create aliases first for joins
+	        // Create aliases first for joins
             createAlias('room', 'r')
             createAlias('sessionDateTime', 'sdt')
             if (networkId || (terms?.trim()?.size() > 0)) {
@@ -345,19 +344,19 @@ class SessionPlannerService {
 
             // Default filtering on joined domain classes
             eq('r.deleted', false)
-            eq('r.date.id', pageInformation.date.id)
+            eq('r.date.id', dateId)
             eq('sdt.deleted', false)
-            eq('sdt.date.id', pageInformation.date.id)
+            eq('sdt.date.id', dateId)
             if (networkId || (terms?.trim()?.size() > 0)) {
                 eq('s.deleted', false)
-                eq('s.date.id', pageInformation.date.id)
+                eq('s.date.id', dateId)
                 eq('n.deleted', false)
-                eq('n.date.id', pageInformation.date.id)
+                eq('n.date.id', dateId)
                 if (terms?.trim()?.size() > 0) {
                     ne('sp.type.id', ParticipantType.CO_AUTHOR) // Co-authors are for internal use only
                     eq('u.deleted', false)
                     eq('p.deleted', false)
-                    eq('p.date.id', pageInformation.date.id)
+                    eq('p.date.id', dateId)
                 }
             }
 
