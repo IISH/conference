@@ -5,6 +5,7 @@ import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Paper
 import org.iisg.eca.domain.Extra
 import org.iisg.eca.domain.Title
+import org.iisg.eca.domain.Order
 import org.iisg.eca.domain.Setting
 import org.iisg.eca.domain.Network
 import org.iisg.eca.domain.FeeState
@@ -18,8 +19,6 @@ import org.iisg.eca.domain.SessionDateTime
 import org.iisg.eca.domain.ParticipantDate
 import org.iisg.eca.domain.ParticipantState
 import org.iisg.eca.domain.ParticipantVolunteering
-
-import org.iisg.eca.domain.Order
 
 import org.iisg.eca.utils.PaymentQueries
 import org.iisg.eca.utils.PaymentStatistic
@@ -537,6 +536,31 @@ class ParticipantController {
 		if (paper) {
 			exportService.getPaper(paper, response)
 		}
+	}
+
+	/**
+	 * Creates a new order and registers it also in PayWay
+	 */
+	def newOrder() {
+		String cleanAmount = params.amount.toString().replace(',', '.').replaceAll('[^\\d.]', '');
+
+		Order order = new Order()
+		order.amount = new BigDecimal(cleanAmount).movePointRight(2)
+		order.participantDate = ParticipantDate.findByIdAndDate(params.long('participantId'), pageInformation.date)
+		order.paymentMethod = params.int('method')
+		order.description = params.description.toString()
+
+		if (order.registerInPayWay()) {
+			if ((params.int('status') == Order.ORDER_NOT_PAYED) || order.setPayedAndActive(order.participantDate)) {
+				flash.message = message(code: 'default.successful.message', args: [message(code: 'order.label')])
+				redirect(uri: eca.createLink(action: 'show', id: order.participantDate.user.id, noBase: true))
+				return
+			}
+		}
+
+		flash.error = true
+		flash.message = message(code: 'default.not.successful.message', args: [message(code: 'order.label')])
+		redirect(uri: eca.createLink(action: 'show', id: order.participantDate.user.id, noBase: true))
 	}
 
 	/**

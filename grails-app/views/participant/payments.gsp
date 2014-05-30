@@ -56,8 +56,11 @@
                         <g:if test="${row.get('amount') == 0}">
                             <g:message code="order.free.label" />
                         </g:if>
-                        <g:elseif test="${row.get('willpaybybank')}">
+                        <g:elseif test="${row.get('payment_method') == org.iisg.eca.domain.Order.ORDER_BANK_PAYMENT}">
                             <g:message code="order.method.bank.label" />
+                        </g:elseif>
+                        <g:elseif test="${row.get('payment_method') == org.iisg.eca.domain.Order.ORDER_CASH_PAYMENT}">
+                            <g:message code="order.method.cash.label" />
                         </g:elseif>
                         <g:else>
                             <g:message code="order.method.ogone.label" />
@@ -142,6 +145,18 @@
 
                 <td>${PaymentStatistic.getPaymentStatistic(1L, paymentMethod).totalNoParticipants}</td>
                 <td><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(1L, paymentMethod).totalAmount}" cents="${true}" /></td>
+            </tr>
+            <tr>
+                <td class="left"><g:message code="order.method.cash.label" /></td>
+
+                <td>${PaymentStatistic.getPaymentStatistic(2L, paymentMethod).unConfirmedNoParticipants}</td>
+                <td class="line"><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(2L, paymentMethod).unConfirmedAmount}" cents="${true}" /></td>
+
+                <td>${PaymentStatistic.getPaymentStatistic(2L, paymentMethod).confirmedNoParticipants}</td>
+                <td class="line"><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(2L, paymentMethod).confirmedAmount}" cents="${true}" /></td>
+
+                <td>${PaymentStatistic.getPaymentStatistic(2L, paymentMethod).totalNoParticipants}</td>
+                <td><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(2L, paymentMethod).totalAmount}" cents="${true}" /></td>
             </tr>
             <tr class="tbl_totals">
                 <td class="left"><g:message code="default.total" /></td>

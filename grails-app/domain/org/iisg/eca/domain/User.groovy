@@ -702,7 +702,7 @@ class User {
 	 * @return The full name
 	 */
 	String getFullName() {
-		return "${firstName} ${lastName}"
+		return "${firstName.trim()} ${lastName.trim()}"
 	}
 
 	@Override

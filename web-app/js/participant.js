@@ -178,4 +178,26 @@ $(document).ready(function() {
             }
         }
     });
+
+    $('.btn_add_order').click(function() {
+        $('#new-order').dialog('open');
+    });
+
+    $('#new-order').dialog({
+        autoOpen: false,
+        modal: true,
+        minWidth: 400,
+        minHeight: 250,
+        width: 500,
+        height: 300,
+        title: "Create new order",
+        buttons: {
+            "Save" : function() {
+                $('#new-order-form').submit();
+            },
+            Cancel: function() {
+                $(this).dialog("close");
+            }
+        }
+    });
 });

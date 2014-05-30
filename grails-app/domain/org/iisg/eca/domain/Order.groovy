@@ -15,6 +15,10 @@ class Order {
 	static final int ORDER_REFUND_OGONE = 2
 	static final int ORDER_REFUND_BANK = 3
 
+	static final int ORDER_OGONE_PAYMENT = 0
+	static final int ORDER_BANK_PAYMENT = 1
+	static final int ORDER_CASH_PAYMENT = 2
+
 	static final int PAYMENT_ACCEPTED = 1
 	static final int PAYMENT_DECLINED = 2
 	static final int PAYMENT_EXCEPTION = 3
@@ -26,9 +30,9 @@ class Order {
 	long amount = 0L
 	long refundedAmount = 0L
 	int payed = ORDER_NOT_PAYED
-	boolean willPayByBank = false
+	int paymentMethod = ORDER_OGONE_PAYMENT
 	Date createdAt = new Date()
-	Date updatedAt = new Date()
+	Date updatedAtPayWay = new Date()
 	Date refundedAt
 	String description
 
@@ -45,11 +49,11 @@ class Order {
 		amount          column: 'amount'
 		refundedAmount  column: 'refunded_amount'
 		payed           column: 'payed'
-		willPayByBank   column: 'willpaybybank'
+		paymentMethod   column: 'payment_method'
 		createdAt       column: 'created_at'
-		updatedAt       column: 'updated_at'
+		updatedAtPayWay column: 'updated_at'
 		refundedAt      column: 'refunded_at'
-		description     column: 'description',  type: 'text'
+		description     column: 'description'
 	}
 
 	static constraints = {
@@ -57,7 +61,7 @@ class Order {
 		amount          min: 0L
 		refundedAmount  min: 0L
 		refundedAt                      nullable: true
-		description                     blank: false
+		description     maxSize: 100,   blank: false
 	}
 
 	BigDecimal getAmountAsBigDecimal() {
@@ -90,16 +94,36 @@ class Order {
 	}
 
 	/**
-	 * Sets a bank transfer payed and active
-	 * @param participant The participant who made the bank transfer
+	 * Get human readable text based on the payment method
+	 * @return A string indicating the payment method of this order
+	 */
+	String getPaymentMethodText() {
+		switch (paymentMethod) {
+			case ORDER_BANK_PAYMENT:
+				return messageSource.getMessage('order.method.bank.label', null, LocaleContextHolder.locale)
+				break
+			case ORDER_CASH_PAYMENT:
+				return messageSource.getMessage('order.method.cash.label', null, LocaleContextHolder.locale)
+				break
+			case ORDER_OGONE_PAYMENT:
+			default:
+				return messageSource.getMessage('order.method.ogone.label', null, LocaleContextHolder.locale)
+		}
+	}
+
+	/**
+	 * Sets a bank transfer or cash payment payed and active
+	 * @param participant The participant who made the bank transfer or cash payment
 	 * @return Whether this order may be set payed and active
 	 */
 	boolean setPayedAndActive(ParticipantDate participant) {
-		if ((this.participantDate.id == participant.id) && (this.payed == ORDER_NOT_PAYED) && this.willPayByBank) {
+		if (    (this.participantDate.id == participant.id) &&
+				(this.payed == ORDER_NOT_PAYED) &&
+				(this.paymentMethod != ORDER_OGONE_PAYMENT)) {
 			PayWayMessage message = new PayWayMessage()
 			message.put('orderid', this.id)
 			message.put('paymentresult', PAYMENT_ACCEPTED)
-			PayWayMessage result = message.send('bankTransferPaymentResponse')
+			PayWayMessage result = message.send('nonOgonePaymentResponse')
 
 			if (result != null) {
 				participant.paymentId = this.id
@@ -156,9 +180,9 @@ class Order {
 			this.amount = new Long(result.get('AMOUNT').toString())
 			this.refundedAmount = (result.get('REFUNDEDAMOUNT')?.isLong()) ? new Long(result.get('REFUNDEDAMOUNT').toString()) : 0L
 			this.payed = new Integer(result.get('PAYED').toString())
-			this.willPayByBank = result.get('WILLPAYBYBANK').toString().equals('true')
+			this.paymentMethod = new Integer(result.get('PAYMENTMETHOD').toString())
 			this.createdAt = (Date) result.get('CREATEDAT', true)
-			this.updatedAt = (Date) result.get('UPDATEDAT', true)
+			this.updatedAtPayWay = (Date) result.get('UPDATEDAT', true)
 			this.refundedAt =  (result.get('REFUNDEDAT')) ? (Date) result.get('REFUNDEDAT', true) : null
 			this.description = result.get('COM')
 
@@ -173,6 +197,34 @@ class Order {
 			}
 
 			return this.save(insert: insert, flush: true)
+		}
+
+		return false
+	}
+
+	/**
+	 * New orders should also be registered in PayWay, which this method takes care of
+	 * @return Whether the action was successful or not
+	 */
+	boolean registerInPayWay() {
+		PayWayMessage message = new PayWayMessage([
+				"AMOUNT": this.amount,
+				"CURRENCY": 'EUR',
+				"LANGUAGE": 'en_US',
+				"CN": this.participantDate.user.fullName,
+				"EMAIL": this.participantDate.user.email,
+				"OWNERTELNO": (this.participantDate.user.phone) ? this.participantDate.user.phone : null,
+				"OWNERCTY": (this.participantDate.user.country?.isoCode) ? this.participantDate.user.country?.isoCode : null,
+				"OWNERTOWN": (this.participantDate.user.city) ? this.participantDate.user.city : null,
+				"COM": this.description,
+				"PAYMENTMETHOD": this.paymentMethod,
+				"USERID": this.participantDate.user.id
+		])
+		PayWayMessage result = message.send('createOrder')
+
+		if (result?.get('success')) {
+			this.id = result.get('orderid').toString().toLong()
+			return this.save(insert: true, flush: true)
 		}
 
 		return false

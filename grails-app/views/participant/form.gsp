@@ -882,14 +882,14 @@
                                         <g:if test="${order.payed}">
                                             <g:set var="classStatus" value="green" />
                                         </g:if>
-                                        <g:elseif test="${order.willPayByBank}">
+                                        <g:elseif test="${order.paymentMethod != Order.ORDER_OGONE_PAYMENT}">
                                             <g:set var="classStatus" value="orange" />
                                         </g:elseif>
 
                                         <span class="property-value bold ${classStatus}" arial-labelledby="status-label">
                                             ${order.getStatusText()}
 
-                                            <g:if test="${order.willPayByBank && (order.payed == Order.ORDER_NOT_PAYED) && !hidePayedButton}">
+                                            <g:if test="${(order.paymentMethod != Order.ORDER_OGONE_PAYMENT) && (order.payed == Order.ORDER_NOT_PAYED) && !hidePayedButton}">
                                                 <span class="inline-button order-set-payed">
                                                     <g:message code="order.set.payed.label" />
                                                 </span>
@@ -914,12 +914,7 @@
                                             <g:message code="order.method.label" />
                                         </span>
                                         <span class="property-value" arial-labelledby="method-label">
-                                            <g:if test="${order.willPayByBank}">
-                                                <g:message code="order.method.bank.label" />
-                                            </g:if>
-                                            <g:else>
-                                                <g:message code="order.method.ogone.label" />
-                                            </g:else>
+                                            ${order.getPaymentMethodText()}
                                         </span>
                                     </li>
                                     <li>
@@ -935,7 +930,7 @@
                                             <g:message code="order.updated.at.label" />
                                         </span>
                                         <span class="property-value" arial-labelledby="updated-label">
-                                            <g:formatDate date="${order.updatedAt}" formatName="default.date.time.format" />
+                                            <g:formatDate date="${order.updatedAtPayWay}" formatName="default.date.time.format" />
                                         </span>
                                     </li>
                                     <li>
@@ -1066,6 +1061,7 @@
                 <input type="submit" name="btn_save_close" class="btn_save_close" value="${message(code: 'default.button.save.close.label')}" />
                 <g:if test="${participant}">
                     <input type="button" name="btn_add" class="btn_add" value="${message(code: 'default.add.label', args: [message(code: 'paper.label').toLowerCase()])}" />
+                    <input type="button" name="btn_add_order" class="btn_add_order" value="${message(code: 'default.add.label', args: [message(code: 'order.label').toLowerCase()])}" />
                 </g:if>
             </fieldset>
         </form>
@@ -1084,6 +1080,68 @@
                             </label>
                         </div>
                     </g:each>
+                </fieldset>
+            </form>
+        </div>
+
+        <div id="new-order" class="info">
+            <form method="post" action="../newOrder" id="new-order-form">
+                <fieldset class="form">
+                    <input type="hidden" name="participantId" value="${participant.id}" />
+                    <div>
+                        <label class="property-label">
+                            <g:message code="order.amount.label" />
+                            <span class="required-indicator">*</span>
+                        </label>
+                        <span class="property-value">
+                            <g:field type="text" name="amount" required="required" value="" />
+                        </span>
+                    </div>
+                    <div>
+                        <span class="property-label"></span>
+                        <span class="property-value">
+                            <g:radio id="bank-method" name="method" value="${Order.ORDER_BANK_PAYMENT}" checked="${true}" />
+                            <label class="property-value" for="bank-method">
+                                <g:message code="order.method.bank.label" />
+                            </label>
+                        </span>
+                    </div>
+                    <div>
+                        <span class="property-label"></span>
+                        <span class="property-value">
+                            <g:radio id="cash-method" name="method" value="${Order.ORDER_CASH_PAYMENT}" />
+                            <label class="property-value" for="cash-method">
+                                <g:message code="order.method.cash.label" />
+                            </label>
+                        </span>
+                    </div>
+                    <div>
+                        <label class="property-label">
+                            <g:message code="order.description.label" />
+                            <span class="required-indicator">*</span>
+                        </label>
+                        <span class="property-value">
+                            <input type="text" name="description" value="${curDate.getShortNameAndYear() + ' payment'}" maxlength="100" />
+                        </span>
+                    </div>
+                    <div>
+                        <span class="property-label"></span>
+                        <span class="property-value">
+                            <g:radio id="status-not-payed" name="status" value="${Order.ORDER_NOT_PAYED}" checked="${true}" />
+                            <label class="property-value" for="status-not-payed">
+                                <g:message code="order.status.not.payed.label" />
+                            </label>
+                        </span>
+                    </div>
+                    <div>
+                        <span class="property-label"></span>
+                        <span class="property-value">
+                            <g:radio id="status-payed" name="status" value="${Order.ORDER_PAYED}" />
+                            <label class="property-value" for="status-payed">
+                                <g:message code="order.status.payed.label" />
+                            </label>
+                        </span>
+                    </div>
                 </fieldset>
             </form>
         </div>
