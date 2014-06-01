@@ -72,11 +72,11 @@ class MiscExportService {
 				title = messageSource.getMessage('participantDate.badges.payed.label', null, LocaleContextHolder.locale)
 				break
 			case BADGES_NOT_PAYED:
-				sqlQuery = sqlQuery.replace('extraCriteria', 'AND ((o.payed <> 1 AND o.willpaybybank = 0) OR pd.payment_id IS NULL)')
+				sqlQuery = sqlQuery.replace('extraCriteria', 'AND ((o.payed <> 1 AND o.payment_method <> 1) OR pd.payment_id IS NULL)')
 				title = messageSource.getMessage('participantDate.badges.not.payed.label', null, LocaleContextHolder.locale)
 				break
 			case BADGES_UNCONFIRMED_BANK_TRANSFER:
-				sqlQuery = sqlQuery.replace('extraCriteria', 'AND o.payed <> 1 AND o.willpaybybank = 1')
+				sqlQuery = sqlQuery.replace('extraCriteria', 'AND o.payed <> 1 AND o.payment_method = 1')
 				title = messageSource.getMessage('participantDate.badges.unconfirmed.label', null, LocaleContextHolder.locale)
 				break
 			default:

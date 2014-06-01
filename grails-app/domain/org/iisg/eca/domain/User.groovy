@@ -75,7 +75,8 @@ class User {
                         sentEmails:             SentEmail,
                         dateTimesNotPresent:    SessionDateTime,
                         userPages:              UserPage,
-                        daysPresent:            ParticipantDay]
+                        daysPresent:            ParticipantDay,
+                        sessionsAdded:          Session]
 
     static mapping = {
         table 'users'
@@ -332,7 +333,6 @@ class User {
 			createAlias('sessionParticipants', 'sp')
 			createAlias('sp.session', 'sessions')
 
-			eq('sp.deleted', false)
 			eq('sessions.date.id', date.id)
 			eq('sessions.deleted', false)
 		}
@@ -465,23 +465,23 @@ class User {
 			}
 		}
 
-		unconfirmedBankTransfers { date ->
+	    allUnconfirmedBankPayments { date ->
 			allParticipantsSoftState(date)
 
 			participantDates {
 				orders {
-					eq('willPayByBank', true)
+					eq('paymentMethod', Order.ORDER_BANK_PAYMENT)
 					eq('payed', Order.ORDER_NOT_PAYED)
 				}
 			}
 		}
 
-		unconfirmedOnlinePayments { date ->
+		allUnconfirmedOnlinePayments { date ->
 			allParticipantsSoftState(date)
 
 			participantDates {
 				orders {
-					eq('willPayByBank', false)
+					eq('paymentMethod', Order.ORDER_OGONE_PAYMENT)
 					eq('payed', Order.ORDER_NOT_PAYED)
 				}
 			}
