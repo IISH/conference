@@ -104,7 +104,7 @@ class EmailService {
      */
     synchronized void sendEmail(SentEmail sentEmail, boolean saveToDb=true, boolean forceSend=false) {
         // How often may we try before giving up?
-        Integer maxNumTries = new Integer(Setting.getSetting(Setting.EMAIL_MAX_NUM_TRIES).value)
+        Integer maxNumTries = new Integer(Setting.getSetting(Setting.EMAIL_MAX_NUM_TRIES, sentEmail.date?.event).value)
 
         // Only send the email if the maximum number of tries is not reached
         if (forceSend || (sentEmail.numTries < maxNumTries)) {
@@ -113,8 +113,8 @@ class EmailService {
             }
 
             try {
-	            String fromEmail = Setting.getSetting(Setting.DEFAULT_FROM_EMAIL).value
-	            String[] bccAddresses = Setting.getSetting(Setting.EMAIL_BCC).getMultipleValues()
+	            String fromEmail = Setting.getSetting(Setting.DEFAULT_FROM_EMAIL, sentEmail.date?.event).value
+	            String[] bccAddresses = Setting.getSetting(Setting.EMAIL_BCC, sentEmail.date?.event).getMultipleValues()
 
                 // Try to send the email if we have to
                 if (sendEmailTo(sentEmail.user, sentEmail.date?.event)) {
@@ -159,7 +159,7 @@ class EmailService {
     synchronized void sendInfoMail(String emailSubject, String message,
                                    Event event=pageInformation.date?.event, String emailAddress=null) {
         String[] recipients = Setting.getSetting(Setting.EMAIL_ADDRESS_INFO_ERRORS, event).getMultipleValues()
-	    String fromEmail = Setting.getSetting(Setting.DEFAULT_FROM_EMAIL).value
+	    String fromEmail = Setting.getSetting(Setting.DEFAULT_FROM_EMAIL, event).value
 
         // If no email address is set, use the default info email address from the settings
         if (!emailAddress) {
