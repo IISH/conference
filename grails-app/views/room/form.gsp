@@ -30,7 +30,7 @@
                         <span class="required-indicator">*</span>
                     </label>
                     <span class="property-value">
-                        <input type="text" name="roomName" maxlength="30" required="required" value="${fieldValue(bean: room, field: 'roomName')}" />
+                        <input type="text" name="roomName" maxlength="50" required="required" value="${fieldValue(bean: room, field: 'roomName')}" />
                     </span>
                 </div>
                 <div class="${hasErrors(bean: room, field: 'roomNumber', 'error')} required">
