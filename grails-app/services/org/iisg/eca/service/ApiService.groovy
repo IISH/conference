@@ -85,7 +85,7 @@ class ApiService {
 							isNotNull(property)
 						}
                         else if (infoForProperty.convertValueForProperty(prop.toString(), val.toString()) != null) {
-							eq(property, infoForProperty.convertValueForProperty(prop.toString(), val.toString()))
+							ne(property, infoForProperty.convertValueForProperty(prop.toString(), val.toString()))
 						}
 						break
 					case 'gt':
