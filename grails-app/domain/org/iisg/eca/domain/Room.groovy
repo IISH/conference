@@ -14,7 +14,7 @@ class Room extends EventDateDomain {
     
     static constraints = {
         date        nullable: true
-        roomName    blank: false,       maxSize: 30
+        roomName    blank: false,       maxSize: 50
         roomNumber  blank: false,       maxSize: 10
         noOfSeats   nullable: false
         comment     nullable: true
