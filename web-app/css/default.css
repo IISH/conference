@@ -703,8 +703,7 @@ span.help-text {
 }
 
 #filter .buttons {
-    text-align: center;
-    padding-right: 30px;
+	margin-left: 26%;
 }
 
 #filter .buttons a, #filter .buttons input {

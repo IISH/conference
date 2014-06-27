@@ -224,7 +224,8 @@ class EcaFilters {
                     model.put('curDate', pageInformation.date)
 
                     // Also add current language information to the model
-                    model.put('curLang', LocaleContextHolder.locale.language)
+	                model.put('curLocale', LocaleContextHolder.locale)
+	                model.put('curLang', LocaleContextHolder.locale.language)
                 }
             }
         }
