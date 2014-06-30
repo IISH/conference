@@ -497,7 +497,14 @@ class User {
 	 * @return A set of roles assigned to this user
 	 */
 	Set<Role> getRoles() {
-		UserRole.findAllByUser(this, [cache: true]).collect { it.role } as Set
+		try {
+			return UserRole.findAllByUser(this, [cache: true]).collect { it.role } as Set
+		}
+		// Just return an empty set in case of an exception,
+		// this only happens during other fatal exceptions which are far more important
+		catch (Exception e) {
+			return [] as Set
+		}
 	}
 
 	/**

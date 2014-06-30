@@ -207,13 +207,14 @@ class UtilsTagLib {
 
     /**
      * Prints the menu
+     * @attr locale The locale to use for the menu item labels
      */
-    def menu = {
+    def menu = { attrs ->
         MarkupBuilder builder = new MarkupBuilder(out)
         builder.doubleQuotes = true
 
         // Let the sub menu method take care of building it
-        printSubMenu(builder, Page.getMenu())
+        printSubMenu(builder, Page.getMenu(), attrs.locale)
     }
 
     /**
@@ -330,8 +331,9 @@ class UtilsTagLib {
      * Prints the menu and its sub menus
      * @param builder The markup builder for the HTML output
      * @param menu The menu items to print
+     * @param locale The locale to use for the menu item labels
      */
-    private void printSubMenu(MarkupBuilder builder, List<MenuItem> menu) {
+    private void printSubMenu(MarkupBuilder builder, List<MenuItem> menu, Locale locale = null) {
          menu.each { menuItem ->
             builder.dd {
                 Page page = menuItem.page
@@ -343,17 +345,17 @@ class UtilsTagLib {
                     else if (page.urlQuery) {
                         link += '?' + page.urlQuery
                     }
-                    builder.a(href: link, g.message(code: page.titleCode, args: [g.message(code: page.titleArg)?.toString()?.toLowerCase()], default: page.titleDefault))
+                    builder.a(href: link, page.getTitle(locale))
                 }
                 else if (menuItem.children.size() > 0) {
-                    builder.a(href: "#${page.id}", g.message(code: page.titleCode, args: [g.message(code: page.titleArg)?.toString()?.toLowerCase()], default: page.titleDefault))
+                    builder.a(href: "#${page.id}", page.getTitle(locale))
                 }
             }
 
             // If there is a sub menu, print it as well
             if (menuItem.children.size() > 0) {
                 builder.dl(class: "sub-menu") {
-                    printSubMenu(builder, menuItem.children)
+                    printSubMenu(builder, menuItem.children, locale)
                 }
             }
         }

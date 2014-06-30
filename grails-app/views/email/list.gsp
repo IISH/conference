@@ -17,10 +17,13 @@
                 <eca:ifUserHasNoAccess controller="email" action="send">
                         ${emailTemplate.description}
                 </eca:ifUserHasNoAccess>
-
-                <span>
-                    <eca:formatText text="${emailTemplate.comment}" />
-                </span>
+				<div class="email-template-description">
+	                <g:if test="${emailTemplate.comment}">
+		                <span class="italic"><eca:formatText text="${emailTemplate.comment}" /></span> <br />
+	                </g:if>
+		            <span class="bold"><g:message code="emailTemplate.subject.label" />:</span>
+	                ${emailTemplate.subject}
+				</div>
             </li>
         </g:each>
         </ol>

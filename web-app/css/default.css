@@ -703,8 +703,7 @@ span.help-text {
 }
 
 #filter .buttons {
-    text-align: center;
-    padding-right: 30px;
+	margin-left: 26%;
 }
 
 #filter .buttons a, #filter .buttons input {
@@ -1125,7 +1124,7 @@ ul input.session-name {
     margin-bottom: 20px;
 }
 
-#email-templates li span {
+#email-templates li div.email-template-description {
     display: block;
     margin-left: 50px;
     margin-top: 10px;
@@ -1246,6 +1245,10 @@ table.payment-statistics tbody tr:hover {
 
 .bold {
     font-weight: bold;
+}
+
+.italic {
+	font-style: italic;
 }
 
 .red {
