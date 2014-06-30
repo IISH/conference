@@ -38,6 +38,13 @@ class FeeAmount extends EventDateDomain {
     }
 
 	static namedQueries = {
+		getSortedFeeAmountsForState { FeeState state ->
+			eq('feeState', state)
+			order('endDate', 'asc')
+			order('numDaysStart', 'asc')
+			order('numDaysEnd', 'asc')
+		}
+
 		getFeeAmountForNrDays { FeeState state, int nrDays ->
 			le('numDaysStart', nrDays)
 			ge('numDaysEnd', nrDays)
