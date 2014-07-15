@@ -76,6 +76,9 @@ class EmailRecipientsService {
             case 'eventDates':
                 extendCriteriaForEventDates(criteria, filters)
                 break
+            case 'extras':
+                extendCriteriaForExtras(criteria, filters)
+                break
         }
     }
 
@@ -127,6 +130,21 @@ class EmailRecipientsService {
 	            EventDate date = EventDate.get(filters.long('eventDates'))
 	            List<EventDate> eventDates = EventDate.getDateAndLaterDates(date).list()
 	            criteria.'in'('date.id', eventDates*.id)
+            }
+        }
+    }
+
+    /**
+     * Extends the criteria with filters to create emails for participants with the specified extra
+     * @param criteria The criteria to extend
+     * @param filters The values for the filters set by the user
+     */
+    private static void extendCriteriaForExtras(NamedCriteriaProxy criteria, GrailsParameterMap filters) {
+        if (filters.extra?.isLong()) {
+            criteria.participantDates {
+                criteria.extras {
+                    criteria.eq('id', filters.long('extra'))
+                }
             }
         }
     }

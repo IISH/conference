@@ -38,35 +38,48 @@ class EmailTemplate extends EventDomain {
             participant     : false,
             participantState: false,
             paperState      : false,
-            eventDates      : false
+            eventDates      : false,
+            extras          : false
     ] as HashMap<String, Boolean>
 
     private static final Map<String, Boolean> ACTION_PARTICIPANT = [
             participant     : true,
             participantState: false,
             paperState      : false,
-            eventDates      : false
+            eventDates      : false,
+            extras          : false
     ] as HashMap<String, Boolean>
 
     private static final Map<String, Boolean> ACTION_PARTICIPANT_PAPERSTATE = [
             participant     : true,
             participantState: true,
             paperState      : true,
-            eventDates      : false
+            eventDates      : false,
+            extras          : false
     ] as HashMap<String, Boolean>
 
     private static final Map<String, Boolean> ACTION_PARTICIPANT_STATE = [
             participant     : true,
             participantState: true,
             paperState      : false,
-            eventDates      : false
+            eventDates      : false,
+            extras          : false
     ] as HashMap<String, Boolean>
 
     private static final Map<String, Boolean> ACTION_EVENTDATES = [
             participant     : false,
             participantState: false,
             paperState      : false,
-            eventDates      : true
+            eventDates      : true,
+            extras          : false
+    ] as HashMap<String, Boolean>
+
+    private static final Map<String, Boolean> ACTION_EXTRAS = [
+            participant     : true,
+            participantState: false,
+            paperState      : false,
+            eventDates      : false,
+            extras          : true
     ] as HashMap<String, Boolean>
 
     /**
@@ -159,6 +172,8 @@ class EmailTemplate extends EventDomain {
                 return ACTION_PARTICIPANT_STATE
             case 'eventDates':
                 return ACTION_EVENTDATES
+            case 'extras':
+                return ACTION_EXTRAS
             default:
                 return ACTION_NULL
         }
