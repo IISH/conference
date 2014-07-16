@@ -56,7 +56,7 @@ class EmailCreationService {
 			final SimpleDateFormat dateFormat = new SimpleDateFormat('EEEE dd MMMM yyyy', Locale.US)
 
 			Setting bankTransferText = Setting.getSetting(Setting.BANK_TRANSFER_INFO)
-			Setting bankTransferClosesOn = Setting.getSetting(Setting.BANK_TRANSFER_CLOSES_ON)
+			Setting bankTransferClosesOn = Setting.getSetting(Setting.BANK_TRANSFER_LASTDATE)
 
 			email.addAdditionalValue('BankTransferInfo', bankTransferText.value)
 			email.addAdditionalValue('PaymentNumber', order.id.toString())
