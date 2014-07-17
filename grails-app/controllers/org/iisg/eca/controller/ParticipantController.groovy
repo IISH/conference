@@ -277,7 +277,7 @@ class ParticipantController {
 
 					// Remove all extras the participant is interested in and save all new information
 					participant.extras.clear()
-					params."ParticipantDate.extras".each { extraId ->
+					params.list("ParticipantDate.extras").each { extraId ->
 						participant.addToExtras(Extra.get(extraId))
 					}
 					participant.save(failOnError: true)
@@ -412,6 +412,9 @@ class ParticipantController {
 				])
 			}
 		}
+
+        user = user.refresh()
+        participant = participant.refresh()
 
 		// Show the participant data
 		render(view: "form", model: [user                   : user,
