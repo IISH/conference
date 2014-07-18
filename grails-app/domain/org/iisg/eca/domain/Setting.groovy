@@ -60,6 +60,8 @@ class Setting extends EventDomain {
     static final String WEB_ADDRESS = 'web_address'	
 	
 	// Show/hide settings
+	static final String HIDE_ALWAYS_IN_ONLINE_PROGRAM = 'hide_always_in_online_program'
+	static final String HIDE_IF_EMPTY_IN_ONLINE_PROGRAM = 'hide_if_empty_in_online_program'
 	static final String SHOW_ACCOMPANYING_PERSONS = 'show_accompanying_persons'
 	static final String SHOW_AUTHOR_REGISTRATION = 'show_author_registration'
 	static final String SHOW_AWARD = 'show_award'
@@ -73,6 +75,7 @@ class Setting extends EventDomain {
 	static final String SHOW_NETWORK = 'show_network'
 	static final String SHOW_ORGANIZER_REGISTRATION = 'show_organizer_registration'
 	static final String SHOW_PROGRAMME_ONLINE = 'show_programme_online'
+	static final String SHOW_SESSION_CODES = 'show_session_codes'
 	static final String SHOW_STUDENT = 'show_student'
 
 	// Required fields settings
