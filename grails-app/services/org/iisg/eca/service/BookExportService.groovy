@@ -61,29 +61,50 @@ class BookExportService {
      * @return A string representing the XML
      */
     String getConcordanceXml() {
-        getXml("Export of Concordance for ${getEventCode()} Programbook") { builder ->
-            builder.names {
-                User.executeQuery('''
-                    SELECT DISTINCT u
+	    User lastUser = null
+	    List<String> sessionsOfUser = []
+
+	    getXml("Export of Concordance for ${getEventCode()} Programbook") { builder ->
+		    builder.names {
+			    User.executeQuery('''
+                    SELECT DISTINCT u, r, sdt
                     FROM ParticipantDate AS pd
                     INNER JOIN pd.user AS u
                     INNER JOIN u.sessionParticipants AS sp
                     INNER JOIN sp.session AS s
+                    INNER JOIN s.sessionRoomDateTime AS srdt
+                    INNER JOIN srdt.sessionDateTime AS sdt
+                    INNER JOIN srdt.room AS r
                     WHERE pd.state.id = :stateId
                     AND s.state.id = :sessionStateId
                     AND u.enabled = true
                     AND u.deleted = false
                     AND s.deleted = false
-                    ORDER BY u.lastName, u.firstName
-                ''', [stateId: ParticipantState.PARTICIPANT, sessionStateId: SessionState.SESSION_ACCEPTED]).each { user ->
-                    builder.name {
-                        builder.lastname(user.lastName)
-                        builder.firstname(user.firstName)
-                        builder.email(user.email)
-                    }
-                }
-            }
-        }
+                    AND sdt.deleted = false
+                    AND r.deleted = false
+                    ORDER BY u.lastName, u.firstName, r.roomNumber, sdt.indexNumber
+                ''', [stateId: ParticipantState.PARTICIPANT, sessionStateId: SessionState.SESSION_ACCEPTED]).each { concordance ->
+				    User user = (User) concordance[0]
+				    Room room = (Room) concordance[1]
+				    SessionDateTime sessionDateTime = (SessionDateTime) concordance[2]
+
+				    lastUser = (lastUser) ?: user
+			        if (user.id != lastUser.id) {
+				        builder.name {
+					        builder.lastname(lastUser.lastName)
+					        builder.firstname(lastUser.firstName)
+					        builder.email(lastUser.email)
+					        builder.sessions(sessionsOfUser.join(', '))
+				        }
+
+				        sessionsOfUser = []
+				        lastUser = user
+			        }
+
+				    sessionsOfUser.add("${room.roomNumber}-${sessionDateTime.indexNumber}")
+			    }
+		    }
+	    }
     }
 
     /**
