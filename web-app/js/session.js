@@ -55,7 +55,7 @@ $(document).ready(function() {
         var element = $(this).parents('.ui-tabs-panel');
         
         ajaxCall(
-            'session/addParticipant',
+            this, 'session/addParticipant',
             {   'session_id':       sessionId,
                 'participant_id':   element.find('.participant-id').val(),
                 'type_id':          element.find('.type-id').val(),
@@ -80,7 +80,7 @@ $(document).ready(function() {
         var parentElement = element.parents('li');
 
         ajaxCall(
-            'session/deleteParticipant',
+            this, 'session/deleteParticipant',
             {   'session_id':   sessionId,
                 'user_id':      parentElement.find('.user-id').val(),
                 'type_id':      element.find('.type-id').val()

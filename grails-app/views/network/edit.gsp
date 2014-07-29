@@ -46,6 +46,14 @@
                 <textarea id="Network.comment" cols="40" name="Network.comment" rows="5">${network.comment}</textarea>
               </span>
             </div>
+            <div class="${hasErrors(bean: network, field: 'longDescription', 'error')}">
+	          <label class="property-label" for="Network.longDescription">
+		        <g:message code="network.longDescription.label" />
+	          </label>
+	          <span class="property-value">
+		        <textarea id="Network.longDescription" cols="40" name="Network.longDescription" rows="5">${network.longDescription}</textarea>
+	          </span>
+            </div>
             <div class="${hasErrors(bean: network, field: 'url', 'error')}">
               <label class="property-label" for="Network.url">
                 <g:message code="network.url.label" />

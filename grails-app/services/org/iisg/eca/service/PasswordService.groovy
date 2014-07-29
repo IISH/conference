@@ -34,7 +34,7 @@ class PasswordService {
 
 		SentEmail email = emailService.createEmail(user, template, false)
 		email.addAdditionalValue('PasswordParticipant', newPassword)
-		emailService.sendEmail(email, true) // TODO: Allow these emails in the db in the test environment
+		emailService.sendEmail(email, false)
 
 		return true
 	}
@@ -74,7 +74,7 @@ class PasswordService {
 
                 SentEmail email = emailService.createEmail(user, template, false)
                 email.addAdditionalValue('PasswordParticipant', newPassword)
-                emailService.sendEmail(email, true) // TODO: Allow these emails in the db in the test environment
+                emailService.sendEmail(email, false)
 
                 return true
             }
@@ -115,7 +115,7 @@ class PasswordService {
             email.addAdditionalValue('ID', user.id.toString())
             email.addAdditionalValue('CODE', user.requestCode)
             email.addAdditionalValue('CodeValidUntil', validUntil)
-            emailService.sendEmail(email, true) // TODO: Allow these emails in the db in the test environment
+            emailService.sendEmail(email, false)
 
             return true
         }
@@ -153,7 +153,7 @@ class PasswordService {
 
                 SentEmail email = emailService.createEmail(user, template, false)
                 email.addAdditionalValue('PasswordParticipant', newPassword)
-                emailService.sendEmail(email, true) // TODO: Allow these emails in the db in the test environment
+                emailService.sendEmail(email, false)
 
                 return CONFIRM_LOST_PASSWORD_ACCEPT
             }

@@ -52,7 +52,7 @@ class ExportService {
 
         // Parse the results and write it to the response
         response.contentType = export.contentType
-        response.setHeader("Content-disposition", "attachment;filename=${fileName}.${format.toLowerCase()}")
+        response.setHeader("Content-disposition", "attachment;filename=\"${fileName}.${format.toLowerCase()}\"")
         response.outputStream << export.parse()
     }
 
@@ -85,7 +85,7 @@ class ExportService {
 
 		// Parse the results and write it to the response
 		response.contentType = export.contentType
-		response.setHeader("Content-disposition", "attachment;filename=${title}.${format.toLowerCase()}")
+		response.setHeader("Content-disposition", "attachment;filename=\"${title}.${format.toLowerCase()}\"")
 		response.outputStream << export.parse()
 	}
 
@@ -97,7 +97,8 @@ class ExportService {
      */
     void getPaper(Paper paper, HttpServletResponse response, String prepend = '') {
         response.contentType = paper.contentType
-        response.setHeader("Content-disposition", "attachment;filename=${prepend + paper.fileName}")
+	    response.contentLength = paper.fileSize
+        response.setHeader("Content-disposition", "attachment;filename=\"${prepend + paper.fileName}\"")
         response.outputStream << paper.file
     }
 }

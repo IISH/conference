@@ -7,7 +7,7 @@ public interface PaymentQueries {
     public static final String PAYMENT_LIST = """
         SELECT * 
 		FROM (
-			SELECT u.user_id, u.lastname, u.firstname, o.payed, o.willpaybybank, o.amount, pd.participant_state_id, ps.participant_state
+			SELECT u.user_id, u.lastname, u.firstname, o.payed, o.payment_method, o.amount, pd.participant_state_id, ps.participant_state
 			FROM users AS u
 			INNER JOIN participant_date AS pd
 			ON u.user_id = pd.user_id
@@ -26,7 +26,7 @@ public interface PaymentQueries {
 		
 			UNION ALL
 		
-			SELECT u.user_id, u.lastname, u.firstname, o.payed, o.willpaybybank, o.amount, pd.participant_state_id, ps.participant_state
+			SELECT u.user_id, u.lastname, u.firstname, o.payed, o.payment_method, o.amount, pd.participant_state_id, ps.participant_state
 			FROM users AS u
 			INNER JOIN participant_date AS pd
 			ON u.user_id = pd.user_id
@@ -79,15 +79,15 @@ public interface PaymentQueries {
     // PAYMENT METHOD QUERIES
 
     public static final String PAYMENT_METHOD_SELECT =
-        "SELECT CAST(o.willpaybybank AS SIGNED) AS status, COUNT(DISTINCT u.user_id) AS no_participants, SUM(o.amount - o.refunded_amount) AS total_amount "
+        "SELECT CAST(o.payment_method AS SIGNED) AS status, COUNT(DISTINCT u.user_id) AS no_participants, SUM(o.amount - o.refunded_amount) AS total_amount "
 
     public static final String PAYMENT_METHOD_END = """
         AND (o.amount - o.refunded_amount) > 0
-		GROUP BY o.willpaybybank
+		GROUP BY o.payment_method
     """
 
     public static final String PAYMENT_METHOD_FREE = """
-        SELECT 2 AS status, COUNT(DISTINCT u.user_id) AS no_participants, SUM(o.amount - o.refunded_amount) AS total_amount
+        SELECT 3 AS status, COUNT(DISTINCT u.user_id) AS no_participants, SUM(o.amount - o.refunded_amount) AS total_amount
         ${MAIN_BODY_JOIN_USER_ID}
         ${CONFIRMED}
 		AND (o.amount - o.refunded_amount) = 0

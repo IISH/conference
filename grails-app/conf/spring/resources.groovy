@@ -1,11 +1,10 @@
 import org.iisg.eca.security.UserSaltSource
 import org.iisg.eca.security.UserDetailsService
 import org.iisg.eca.security.SecurityEventListener
+import org.iisg.eca.security.MyRequestHolderAuthenticationFilter
 
 import org.iisg.eca.utils.PageInformation
 import org.iisg.eca.utils.CustomPropertyEditorRegistrar
-
-import org.iisg.eca.converter.DateConverter
 
 import org.springframework.security.oauth2.provider.token.JdbcTokenStore
 import org.springframework.security.oauth2.provider.JdbcClientDetailsService
@@ -28,6 +27,23 @@ beans = {
         useReferer = conf.successHandler.useReferer
         redirectStrategy = ref('redirectStrategy')
     }
+
+	authenticationProcessingFilter(MyRequestHolderAuthenticationFilter) {
+		def conf = SpringSecurityUtils.securityConfig
+		authenticationManager = ref('authenticationManager')
+		sessionAuthenticationStrategy = ref('sessionAuthenticationStrategy')
+		authenticationSuccessHandler = ref('authenticationSuccessHandler')
+		authenticationFailureHandler = ref('authenticationFailureHandler')
+		rememberMeServices = ref('rememberMeServices')
+		authenticationDetailsSource = ref('authenticationDetailsSource')
+		requiresAuthenticationRequestMatcher = ref('filterProcessUrlRequestMatcher')
+		usernameParameter = conf.apf.usernameParameter // j_username
+		passwordParameter = conf.apf.passwordParameter // j_password
+		continueChainBeforeSuccessfulAuthentication = conf.apf.continueChainBeforeSuccessfulAuthentication // false
+		allowSessionCreation = conf.apf.allowSessionCreation // true
+		postOnly = conf.apf.postOnly // true
+		storeLastUsername = conf.apf.storeLastUsername // false
+	}
 
     tokenStore(JdbcTokenStore, ref('dataSource'))
 

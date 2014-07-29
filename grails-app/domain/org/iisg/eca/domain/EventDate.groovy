@@ -123,6 +123,14 @@ class EventDate  {
 		}
 	}
 
+	/**
+	 * Returns the short name of the event + the year code
+	 * @return The short name of the event + the year code
+	 */
+	String getShortNameAndYear() {
+		return "${this.event.shortName} ${this.yearCode}";
+	}
+
     @Override
     String toString() {
         "${description} ${dateAsText}"

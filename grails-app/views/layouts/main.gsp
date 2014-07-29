@@ -12,7 +12,7 @@
         <meta http-equiv="pragma" content="no-cache" />
         
         <title>
-            <g:layoutTitle default="${(curPage) ? g.message(code: curPage.titleCode, args: [g.message(code: curPage.titleArg)?.toString()?.toLowerCase()], default: curPage.titleDefault) : 'ECA'}" />
+            <g:layoutTitle default="${(curPage) ? curPage.getTitle(curLocale) : 'ECA'}" />
         </title>
         
         <link rel="stylesheet" href="${eca.createLink(controller: 'css', action: 'css', noPreviousInfo: true)}" type="text/css">
@@ -81,14 +81,14 @@
                         <dd>&nbsp;</dd>
 
                         <dt>CMS</dt>
-                        <eca:menu />
+                        <eca:menu locale="${curLocale}" />
                     </g:if>
                 </dl>
             </div>
 
             <div id="content" role="main">
                 <g:if test="${curPage}">
-                    <h1><g:message code="${curPage.titleCode}" args="${[message(code: curPage.titleArg).toString().toLowerCase()]}" default="${curPage.titleDefault}" /></h1>
+                    <h1>${curPage.getTitle(curLocale)}</h1>
                 </g:if>
 
                 <g:if test="${flash.message && flash.error && curPage}">
@@ -104,7 +104,7 @@
                 <g:layoutBody />
 
                 <span class="top right">
-                    <a href="#top"><g:message code="default.back.to.top" /> <span class="ui-icon ui-icon-triangle-1-n" /></a>
+                    <a href="#top"><g:message code="default.back.to.top" /> <span class="ui-icon ui-icon-triangle-1-n"></span></a>
                 </span>
             </div>
         </div>

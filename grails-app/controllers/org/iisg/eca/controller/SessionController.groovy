@@ -145,7 +145,7 @@ class SessionController {
         // The 'save' button was clicked, save all data
         if (request.post) {
             // Save all session related data
-            bindData(session, params, [include: ["code", "name", "abstr", "comment", "state", "enabeled"]], "Session")
+            bindData(session, params, [include: ["code", "name", "abstr", "comment", "state"]], "Session")
 
             // Remove all networks from the session (one by one, cause we don't want to delete the networks themselves)
             List<Network> networks = []
@@ -292,7 +292,15 @@ class SessionController {
             schedule:               sessionPlannerService.schedule,
             sessionsUnscheduled:    sessionPlannerService.unscheduledSessions,
             dateTimes:              SessionDateTime.findAllByDayInList(Day.list())]
-    }   
+    }
+
+	/**
+	 * Triggers to clear the program caches
+	 */
+	def clearProgramCache() {
+		sessionPlannerService.removeProgramFromCache()
+		render "Program cache cleared."
+	}
     
     /**
      * Changes the session state of the given session

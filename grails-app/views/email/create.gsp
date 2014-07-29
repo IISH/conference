@@ -1,4 +1,4 @@
-<%@ page import="org.iisg.eca.domain.EventDate; org.iisg.eca.domain.PaperState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.ParticipantDate" %>
+<%@ page import="org.iisg.eca.domain.Extra; org.iisg.eca.domain.EventDate; org.iisg.eca.domain.PaperState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.ParticipantDate" %>
 <!doctype html>
 <html>
     <head>
@@ -53,6 +53,17 @@
                         <span class="property-value">
                             <g:select name="eventDates" from="${EventDate.findAllByEvent(curDate.event)}"
                                       optionKey="id" optionValue="${{it.getDateAndLaterText()}}" />
+                        </span>
+                    </div>
+                </g:if>
+
+                <g:if test="${filterMap.extras}">
+                    <div>
+                        <label class="property-label">
+                            <g:message code="extra.label" />
+                        </label>
+                        <span class="property-value">
+                            <g:select name="extra" from="${Extra.list()}" optionKey="id" noSelection="${[null: 'No extra selected']}" />
                         </span>
                     </div>
                 </g:if>

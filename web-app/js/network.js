@@ -6,7 +6,7 @@ $(document).ready(function() {
     $('.loading').click(function(e) {
         var element = $(this);
 
-        ajaxCall('network/participantsNotScheduled', {network_id: networkId}, function(data) {
+        ajaxCall(this, 'network/participantsNotScheduled', {network_id: networkId}, function(data) {
             var participantsContainer = $('#not-in-session');
 
             if (data.participants.length === 0) {
@@ -49,7 +49,7 @@ $(document).ready(function() {
 
         var element = $(this);
 
-        ajaxCall('network/addSession', {network_id: networkId, session_id: element.prev().val()}, function(data) {
+        ajaxCall(this, 'network/addSession', {network_id: networkId, session_id: element.prev().val()}, function(data) {
             setParticipantDataForNetwork(data);
         });
     });
@@ -64,7 +64,7 @@ $(document).ready(function() {
         var code = parentElement.find('.session-code');
         var name = parentElement.find('.session-name');
 
-        ajaxCall('network/addSession',
+        ajaxCall(this, 'network/addSession',
             {   network_id:     networkId,
                 session_code:   code.val(),
                 session_name:   name.val()},
@@ -84,7 +84,7 @@ $(document).ready(function() {
         var element = $(e.target);
         var parentElement = element.parent();
 
-        ajaxCall('network/removeSession',
+        ajaxCall(this, 'network/removeSession',
             {   network_id:     networkId,
                 session_id:     parentElement.find('.session-id').val()},
             function(data) {
@@ -95,7 +95,7 @@ $(document).ready(function() {
     
     $('.session-state-select').change(function(e) {
         var element = $(this);
-        ajaxCall('session/changeState', {session_id: element.parents("span").prev().val(), state_id: element.val()},
+        ajaxCall(this, 'session/changeState', {session_id: element.parents("span").prev().val(), state_id: element.val()},
             function(data) {
                 setParticipantDataForSession(data, element.parents("span.session").next());
             }

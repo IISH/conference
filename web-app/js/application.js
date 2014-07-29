@@ -232,11 +232,33 @@ var guessUrl = function(urlToCall) {
     return urlToCall;
 }
 
-var ajaxCall = function(url, params, onSuccess, onFailure) {
+var ajaxCall = function(element, url, params, onSuccess, onFailure) {
+    element = $(element);
+    if (element.hasClass('ajax-disabled')) {
+        return;
+    }
+
+    var clickedButton = element.is("input[type='button']") || element.hasClass('inline-button');
+    if (clickedButton) {
+        element.attr('disabled', 'disabled');
+        element.addClass('ajax-disabled');
+        element.after('<span class="ajax-loading">Please wait!</span>');
+    }
+
     $('.errors').hide();
     $('.message').hide();
 
     $.getJSON(guessUrl(url), params, function(data) {
+        if (clickedButton) {
+            element.attr('disabled', '');
+            element.removeClass('ajax-disabled');
+
+            var next = element.next();
+            if (next.hasClass('ajax-loading')) {
+                next.remove();
+            }
+        }
+
         if (!data.success) {
             showErrors(data);
 
@@ -250,6 +272,16 @@ var ajaxCall = function(url, params, onSuccess, onFailure) {
     }).fail(function(jqXHR, textStatus, error) {
         if (jqXHR.status === 401) {
             location.reload();
+        }
+
+        if (clickedButton) {
+            element.attr('disabled', '');
+            element.removeClass('ajax-disabled');
+
+            var next = element.next();
+            if (next.hasClass('ajax-loading')) {
+                next.remove();
+            }
         }
 
         var data = {message: error};
@@ -410,7 +442,7 @@ $(document).ready(function() {
         var thisItem = $(e.target);
         var item = thisItem.parents('li');
 
-        ajaxCall(messageUrl, {code: 'default.button.delete.confirm.message'}, function(data) {
+        ajaxCall(this, messageUrl, {code: 'default.button.delete.confirm.message'}, function(data) {
             var deleted = confirm(data.message);
             if (deleted) {
                 if (!thisItem.hasClass('no-del')) {
@@ -425,7 +457,7 @@ $(document).ready(function() {
         var thisItem = $(e.target);
         var item = thisItem.parents('.column');
 
-        ajaxCall(messageUrl, {code: 'default.button.delete.confirm.message'}, function(data) {
+        ajaxCall(this, messageUrl, {code: 'default.button.delete.confirm.message'}, function(data) {
             var deleted = confirm(data.message);
             if (deleted) {
                 if (!thisItem.hasClass('no-del')) {
@@ -440,7 +472,7 @@ $(document).ready(function() {
         e.preventDefault();
         var thisItem = $(this);
 
-        ajaxCall(messageUrl, {code: 'default.button.delete.confirm.message'}, function(data) {
+        ajaxCall(this, messageUrl, {code: 'default.button.delete.confirm.message'}, function(data) {
             var deleted = confirm(data.message);
             if (deleted) {
                 window.location = thisItem.attr('href');
@@ -555,7 +587,7 @@ $(document).ready(function() {
         element.parent().removeClass('error');
 
         if (email !== emailValue) {
-            ajaxCall(uniqueEmailUrl, {email: email}, function(data) {
+            ajaxCall(this, uniqueEmailUrl, {email: email}, function(data) {
                 if (!data.success) {
                     element.parent().addClass('error');
                     showErrors(data);
@@ -570,7 +602,7 @@ $(document).ready(function() {
         var state_id = $(this).val();
         var column = $(this).parents("td");
 
-        ajaxCall('session/changeState', {session_id: column.prev().text(), state_id: state_id},
+        ajaxCall(this, 'session/changeState', {session_id: column.prev().text(), state_id: state_id},
             function() {
                 column.find("span.ui-icon-check").css('visibility', 'visible');
             },
@@ -584,7 +616,7 @@ $(document).ready(function() {
         var state_id = $(this).val();
         var column = $(this).parents("td");
 
-        ajaxCall('participant/changePaperState', {paper_id: column.prev().text(), state_id: state_id},
+        ajaxCall(this, 'participant/changePaperState', {paper_id: column.prev().text(), state_id: state_id},
             function() {
                 column.parent().find("span.ui-icon-check").css('visibility', 'visible');
             },
@@ -606,7 +638,7 @@ $(document).ready(function() {
                 var paperId = dialog.find('input[name=paper-id]').val();
                 var stateId = dialog.find('input[name=paper-state]:checked').val();
 
-                ajaxCall('participant/changePaperState', {paper_id: paperId, state_id: stateId},
+                ajaxCall(this, 'participant/changePaperState', {paper_id: paperId, state_id: stateId},
                     function(data) {
                         $('.paper-id[value=' + paperId + ']').parent().find('.paper-text').text(data.paper);
                         dialog.dialog("close");
@@ -639,7 +671,7 @@ $(document).ready(function() {
         var gender = $(this).val();
         var column = $(this).parents("td");
 
-        ajaxCall('participant/changeGender', {user_id: column.prev().text(), gender: gender},
+        ajaxCall(this, 'participant/changeGender', {user_id: column.prev().text(), gender: gender},
             function() {
                 column.parent().find("span.ui-icon-check").css('visibility', 'visible');
             },
@@ -664,7 +696,7 @@ $(document).ready(function() {
         var preview = $('#email-preview');
         var templateId = parseInt($('input[name=id]').val());
 
-        ajaxCall('email/refreshPreview', {id: templateId}, function(data) {
+        ajaxCall(this, 'email/refreshPreview', {id: templateId}, function(data) {
             preview.find('#from-label').next().html(data.from);
             preview.find('#to-label').next().html(data.to);
             preview.find('#subject-label').next().html(data.subject);
@@ -695,7 +727,7 @@ $(document).ready(function() {
         var id = $(e.target).parents("tr").find('td.id').text();
         var column = $(e.target).parents("td");
 
-        ajaxCall('participant/sendInvitationLetter', {user_id: id},
+        ajaxCall(this, 'participant/sendInvitationLetter', {user_id: id},
             function(data) {
                 column.find("span.ui-icon-check").css('visibility', 'visible');
                 column.prev().text(data.sent);

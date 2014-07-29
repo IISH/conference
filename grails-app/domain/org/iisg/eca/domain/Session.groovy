@@ -29,7 +29,6 @@ class Session extends EventDateDomain {
         sort code: 'asc'
 
         id                  column: 'session_id'
-        date                column: 'date_id'
         code                column: 'session_code'
         name                column: 'session_name'
         abstr               column: 'session_abstract', type: 'text'
@@ -45,7 +44,6 @@ class Session extends EventDateDomain {
     }
 
     static constraints = {
-        date        nullable: true
         code        nullable: true, maxSize: 10
         name        blank: false,   maxSize: 255
         abstr       nullable: true

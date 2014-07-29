@@ -13,13 +13,19 @@ class QueryTypeCriteriaBuilder {
 	private String queryType
 	private Closure additionalCriteria
 
-	private static final Map<String, List<String>> QUERY_TYPE_COMBINATIONS = [
+	private static final Map<String, List<String>> QUERY_TYPE_COMBINATIONS_ADD = [
 			'sessionAccepted'                  : ['sessionAcceptedOrganizers', 'sessionAcceptedCreators'],
 			'sessionInConsideration'           : ['sessionInConsiderationOrganizers', 'sessionInConsiderationCreators'],
 			'sessionNotAccepted'               : ['sessionNotAcceptedOrganizers', 'sessionNotAcceptedCreators'],
 			'sessionAcceptedNotAnswered'       : ['sessionAcceptedOrganizersNotAnswered', 'sessionAcceptedCreatorsNotAnswered'],
 			'sessionInConsiderationNotAnswered': ['sessionInConsiderationOrganizersNotAnswered', 'sessionInConsiderationCreatorsNotAnswered'],
 			'sessionNotAcceptedNotAnswered'    : ['sessionNotAcceptedOrganizersNotAnswered', 'sessionNotAcceptedCreatorsNotAnswered'],
+	]
+
+	private static final Map<String, List<String>> QUERY_TYPE_COMBINATIONS_SUBTRACT = [
+			'unconfirmedPayments'      : ['allParticipantsSoftState', 'confirmedPayments'],
+			'unconfirmedBankPayments'  : ['allUnconfirmedBankPayments', 'confirmedPayments'],
+			'unconfirmedOnlinePayments': ['allUnconfirmedOnlinePayments', 'confirmedPayments'],
 	]
 
 	public QueryTypeCriteriaBuilder(EventDate date) {
@@ -46,15 +52,30 @@ class QueryTypeCriteriaBuilder {
 	 */
 	public List getResults() {
 		List<String> queryTypes = [this.queryType]
-		if (QUERY_TYPE_COMBINATIONS.containsKey(this.queryType)) {
-			queryTypes = QUERY_TYPE_COMBINATIONS.get(this.queryType)
+		boolean add = true
+
+		if (QUERY_TYPE_COMBINATIONS_ADD.containsKey(this.queryType)) {
+			queryTypes = QUERY_TYPE_COMBINATIONS_ADD.get(this.queryType)
+		}
+		else if (QUERY_TYPE_COMBINATIONS_SUBTRACT.containsKey(this.queryType)) {
+			queryTypes = QUERY_TYPE_COMBINATIONS_SUBTRACT.get(this.queryType)
+			add = false
 		}
 
 		List results = []
+		int i = 0
 		for (String queryType : queryTypes) {
 			NamedCriteriaProxy criteria = User."$queryType"(this.date)
 			List namedQueryResults = (List) criteria(this.additionalCriteria)
-			results.addAll(namedQueryResults)
+
+			if (add || (i == 0)) {
+				results.addAll(namedQueryResults)
+			}
+			else {
+				results.removeAll(namedQueryResults)
+			}
+
+			i++
 		}
 
 		return results

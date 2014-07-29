@@ -181,13 +181,23 @@ class Page {
         "${toString()} (${action})"
     }
 
+	/**
+	 * Will attempt to generate a user-friendly title without strange capitalization's
+	 * @param locale The locale to use, will default to currently hold locale
+	 * @return The title of this page
+	 */
+	String getTitle(Locale locale = null) {
+		locale ?: LocaleContextHolder.getLocale()
+		Object[] args = []
+		if (titleArg) {
+			args = [messageSource.getMessage(titleArg, null, locale).toLowerCase(locale)]
+		}
+
+		return messageSource.getMessage(titleCode, args, titleDefault, locale).capitalize()
+	}
+
     @Override
     String toString() {
-        Object[] args = null
-        if (titleArg) {
-            args = [messageSource.getMessage(titleArg, null, LocaleContextHolder.locale)]
-        }
-
-        messageSource.getMessage(titleCode, args, titleDefault, LocaleContextHolder.locale)
+	    getTitle()
     }
 }

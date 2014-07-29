@@ -25,12 +25,7 @@ class FeeController {
 
         // Look up all fee amounts per fee state and sort them
         feeStates.each { feeState ->
-            List<FeeAmount> amounts = FeeAmount.withCriteria {
-                eq('feeState.id', feeState.id)
-                order('endDate',        'asc')
-                order('numDaysStart',   'asc')
-                order('numDaysEnd',     'asc')
-            }
+            List<FeeAmount> amounts = FeeAmount.getSortedFeeAmountsForState(feeState).list()
             feeAmounts.put(feeState, amounts)
         }
 
@@ -70,9 +65,9 @@ class FeeController {
         }
 
         // Show all fee state related information
-        render(view: "form", model: [   feeState: feeState, 
-                                        days: nrOfDays,
-                                        feeAmounts: []])
+        render(view: "form", model: [   feeState:   feeState,
+                                        days:       nrOfDays,
+                                        feeAmounts: feeState.feeAmounts])
     }
 
     def edit() {
@@ -145,9 +140,9 @@ class FeeController {
         }
 
         // Show all fee state related information
-        render(view: "form", model: [   feeState: feeState, 
-                                        days: nrOfDays,
-                                        feeAmounts: FeeAmount.findAllByFeeState(feeState)])
+        render(view: "form", model: [   feeState:   feeState,
+                                        days:       nrOfDays,
+                                        feeAmounts: FeeAmount.getSortedFeeAmountsForState(feeState).list()])
     }
 
     /**

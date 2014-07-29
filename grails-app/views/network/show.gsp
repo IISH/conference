@@ -35,6 +35,14 @@
               <eca:formatText text="${network.comment}" />
             </span>
           </li>
+	      <li>
+		    <span id="long-description-label" class="property-label">
+		       <g:message code="network.longDescription.label" />
+		    </span>
+		    <span class="property-value" arial-labelledby="long-description-label">
+		       <eca:formatText text="${network.longDescription}" />
+		    </span>
+	      </li>
           <li>
             <span id="url-label" class="property-label">
               <g:message code="network.url.label" />

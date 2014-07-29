@@ -5,6 +5,7 @@ import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Paper
 import org.iisg.eca.domain.Extra
 import org.iisg.eca.domain.Title
+import org.iisg.eca.domain.Order
 import org.iisg.eca.domain.Setting
 import org.iisg.eca.domain.Network
 import org.iisg.eca.domain.FeeState
@@ -18,8 +19,6 @@ import org.iisg.eca.domain.SessionDateTime
 import org.iisg.eca.domain.ParticipantDate
 import org.iisg.eca.domain.ParticipantState
 import org.iisg.eca.domain.ParticipantVolunteering
-
-import org.iisg.eca.domain.Order
 
 import org.iisg.eca.utils.PaymentQueries
 import org.iisg.eca.utils.PaymentStatistic
@@ -278,7 +277,7 @@ class ParticipantController {
 
 					// Remove all extras the participant is interested in and save all new information
 					participant.extras.clear()
-					params."ParticipantDate.extras".each { extraId ->
+					params.list("ParticipantDate.extras").each { extraId ->
 						participant.addToExtras(Extra.get(extraId))
 					}
 					participant.save(failOnError: true)
@@ -376,13 +375,13 @@ class ParticipantController {
 						}
 
 						// Save the paper
-						paper.save(failOnError: true)
+						paper.save(flush: true, failOnError: true)
 						i++
 					}
 
 					// Save the user and the participant
-					user.save(failOnError: true)
-					participant.save(failOnError: true)
+					user.save(flush: true, failOnError: true)
+					participant.save(flush: true, failOnError: true)
 				}
 
 				// We arrived here, so everything should be fine
@@ -413,6 +412,9 @@ class ParticipantController {
 				])
 			}
 		}
+
+        user = user.refresh()
+        participant = participant.refresh()
 
 		// Show the participant data
 		render(view: "form", model: [user                   : user,
@@ -540,6 +542,31 @@ class ParticipantController {
 	}
 
 	/**
+	 * Creates a new order and registers it also in PayWay
+	 */
+	def newOrder() {
+		String cleanAmount = params.amount.toString().replace(',', '.').replaceAll('[^\\d.]', '');
+
+		Order order = new Order()
+		order.amount = new BigDecimal(cleanAmount).movePointRight(2)
+		order.participantDate = ParticipantDate.findByIdAndDate(params.long('participantId'), pageInformation.date)
+		order.paymentMethod = params.int('method')
+		order.description = params.description.toString()
+
+		if (order.registerInPayWay()) {
+			if ((params.int('status') == Order.ORDER_NOT_PAYED) || order.setPayedAndActive(order.participantDate)) {
+				flash.message = message(code: 'default.successful.message', args: [message(code: 'order.label')])
+				redirect(uri: eca.createLink(action: 'show', id: order.participantDate.user.id, noBase: true))
+				return
+			}
+		}
+
+		flash.error = true
+		flash.message = message(code: 'default.not.successful.message', args: [message(code: 'order.label')])
+		redirect(uri: eca.createLink(action: 'show', id: order.participantDate.user.id, noBase: true))
+	}
+
+	/**
 	 * Tries to remove the uploaded paper
 	 * (AJAX call)
 	 */
@@ -622,7 +649,6 @@ class ParticipantController {
 						// Save the participant
 						if (participant.save(flush: true)) {
 							// Everything is fine
-							order = order.refresh()
 							responseMap = [success: true, state: order.getStatusText()]
 						}
 						else {
@@ -660,7 +686,6 @@ class ParticipantController {
 				Order order = Order.findById(params.order_id.toLong())
 				if (order && order.fullRefund()) {
 					// Everything is fine
-					order = order.refresh()
 					responseMap = [success: true, state: order.getStatusText()]
 				}
 				else {

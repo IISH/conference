@@ -11,6 +11,8 @@ import groovy.sql.GroovyRowResult
 import org.springframework.context.i18n.LocaleContextHolder
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 
+import java.text.Normalizer
+
 /**
  * Service responsible for requesting participant data
  */
@@ -29,7 +31,10 @@ class ParticipantService {
 
         // Now loop over all participants returned by the database and create a map out if it
         getParticipantsWithFilters(params).eachWithIndex { participant, i ->
-            List list = participants.get(participant[2].toUpperCase()[0], new ArrayList())
+	        String character = Normalizer
+			        .normalize(participant[2].toUpperCase()[0], Normalizer.Form.NFKD)
+			        .replaceAll('\\p{InCombiningDiacriticalMarks}+', '')
+	        List list = participants.get(character, new ArrayList())
             list.add([participant[0], "${participant[1]} ${participant[2]}", "(#${participant[0]}, ${participant[3]})", i])
         }
 

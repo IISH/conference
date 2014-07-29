@@ -2,7 +2,7 @@ dataSource {
     pooled = true
     driverClassName = "com.mysql.jdbc.Driver"
     dialect = org.hibernate.dialect.MySQL5InnoDBDialect
-    dbCreate = "update"
+    dbCreate = "validate"
     configClass = org.grails.plugin.hibernate.filter.HibernateFilterDomainConfiguration.class
 }
 hibernate {
