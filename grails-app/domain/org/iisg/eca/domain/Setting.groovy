@@ -125,7 +125,7 @@ class Setting extends EventDomain {
 
     static constraints = {
         property        blank: false,   maxSize: 50
-        value           blank: false
+        value           nullable: true
     }
 
     def beforeUpdate() {
