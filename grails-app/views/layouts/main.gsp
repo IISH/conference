@@ -74,9 +74,9 @@
         <div id="container">
             <div id="nav" role="navigation">
                 <dl id="menu">
-                    <g:if test="${params.event && params.date}">
+                    <g:if test="${curDate}">
                         <dt>Web</dt>
-                        <dd><a target="_blank" href="${Setting.getSetting(Setting.WEB_ADDRESS, curDate?.event).value}">${curDate.event.shortName}</a></dd>
+                        <dd><a target="_blank" href="${Setting.getSetting(Setting.WEB_ADDRESS, curDate?.event).value}">${curDate?.event?.shortName}</a></dd>
 
                         <dd>&nbsp;</dd>
 

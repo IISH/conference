@@ -37,11 +37,11 @@ class EcaFilters {
                 }
 
                 if (clientIP && IPAuthentication.isIPAllowed(clientIP)) {
-                    return
+                    return true
                 }
 
                 response.sendError(403)
-                return
+                return false
             }
         }
 
@@ -51,6 +51,9 @@ class EcaFilters {
          */
         page(controller: '*', action: '*', controllerExclude: 'ajax|api|css|login|logout') {
             before = {
+	            // Make sure old data is removed
+	            pageInformation.removePage()
+
                 if (!params.xhr) {
                     Page page = Page.findByControllerAndAction(params.controller.toString(), params.action.toString(), [cache: true])
 
@@ -78,6 +81,9 @@ class EcaFilters {
          */
         eventDate(controller: '*', action: '*', controllerExclude: 'login|logout') {
             before = {
+				// Make sure old data is removed
+	            pageInformation.removeDate()
+
                 String eventCode = params.event?.replaceAll('-', ' ')
                 String dateCode = params.date?.replaceAll('-', ' ')
                 eventCode = eventCode ?: ""
@@ -106,7 +112,13 @@ class EcaFilters {
 
                 // Event actions and user actions may be performed from outside a tenant
                 // Just like creating a new event date
-                return ((params.controller == 'event') || (params.controller = 'css') || (params.controller == 'user') || ((params.controller == 'eventDate') && (params.action == 'create')))
+	            if ((params.controller == 'event') || (params.controller == 'css') || (params.controller == 'user') || ((params.controller == 'eventDate') && (params.action == 'create'))) {
+	                return true
+                }
+	            else {
+	                redirect(controller: 'event', action: 'list')
+	                return false
+                }
             }
             afterView = { Exception e ->
                 pageInformation.removeDate()
@@ -129,12 +141,12 @@ class EcaFilters {
                     if (pageInformation.date?.event && (UserRole.findAllByUserAndEvent(user, pageInformation.date.event, [cache: true]).size() == 0)) {
                         // Unfortunately, no access to this event date specified in the database
                         response.sendError(403)
-                        return
+                        return false
                     }
                     // In case of a user with the role 'userLastDate', he/she only has access to the last date
 	                else if (pageInformation.date && user.getRoles().find { rolesOnlyLastDate.contains(it) } && !pageInformation.date.isLastDate()) {
 		                response.sendError(403)
-		                return
+		                return false
 	                }
                     else if (   !pageInformation.date && params.id &&
                                 ((params.controller == 'event') &&
@@ -150,14 +162,14 @@ class EcaFilters {
                         // If the user has access to one of the event dates of the given event, it is ok
                         if (access.size() == 0) {
                             response.sendError(403)
-                            return
+                            return false
                         }
                     }
 
                     // Now check access on page level
                     if (pageInformation.page && !pageInformation.page.hasAccess()) {
                         response.sendError(403)
-                        return
+                        return false
                     }
                 }
 
@@ -192,7 +204,7 @@ class EcaFilters {
                 }
 
                 response.sendError(403)
-                return
+                return false
             }
         }
 
