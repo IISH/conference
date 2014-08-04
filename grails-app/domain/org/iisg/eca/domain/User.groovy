@@ -15,10 +15,11 @@ import grails.plugin.springsecurity.SpringSecurityUtils
  * Domain class of table holding all registered users
  */
 class User {
-    static final int USER_STATUS_NOT_FOUND = 0;
-    static final int USER_STATUS_FOUND = 1;
-    static final int USER_STATUS_DISABLED = 2;
-    static final int USER_STATUS_DELETED = 3;
+    static final int USER_STATUS_NOT_FOUND = 0
+    static final int USER_STATUS_FOUND = 1
+    static final int USER_STATUS_DISABLED = 2
+    static final int USER_STATUS_DELETED = 3
+	static final int USER_STATUS_EMAIL_DISCONTINUED = 4
     static final Pattern PASSWORD_PATTERN = Pattern.compile('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$')
 
     /**
@@ -661,16 +662,19 @@ class User {
 	 */
 	int getStatus() {
 		// The user is at least found
-		int status = User.USER_STATUS_FOUND
+		int status = USER_STATUS_FOUND
 
 		if (this.deleted) {
-			status = User.USER_STATUS_DELETED
+			status = USER_STATUS_DELETED
 		}
 		else if (!this.enabled) {
-			status = User.USER_STATUS_DISABLED
+			status = USER_STATUS_DISABLED
+		}
+		else if (this.emailDiscontinued) {
+			status = USER_STATUS_EMAIL_DISCONTINUED
 		}
 
-		return status;
+		return status
 	}
 
 	/**
