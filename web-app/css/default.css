@@ -1176,6 +1176,12 @@ table.payment-statistics tbody tr:hover {
     cursor: default;
 }
 
+/* EMAIL TEMPLATES */
+
+#email-codes {
+    margin-bottom: 20px;
+}
+
 /* LOGIN */
 
 #login {

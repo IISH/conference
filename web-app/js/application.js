@@ -748,4 +748,11 @@ $(document).ready(function() {
     $('.participants-export-open').click(function(e) {
         $('#participants-export-dialog').dialog('open');
     });
+
+    $('#email-codes').accordion({
+        header: '.emailCodesHeader',
+        heightStyle: 'content',
+        collapsible: true,
+        active: false
+    });
 });

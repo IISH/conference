@@ -16,6 +16,32 @@
         </g:hasErrors>
         
         <form method="post" action="#">
+            <div id="email-codes">
+                <span class="emailCodesHeader">
+                    <g:message code="default.toggle.label" args="${[g.message(code: 'emailCode.multiple.label').toString().toLowerCase()]}" />
+                </span>
+                <ol class="property-list">
+                    <li>
+                        <span class="property-label">
+                            <strong>[SenderName]</strong>
+                        </span>
+                        <span class="property-value">
+                            Value of the field &quot;<g:message code="emailTemplate.sender.label" />&quot;
+                        </span>
+                    </li>
+                    <g:each in="${EmailCode.list()}" var="emailCode">
+                        <li>
+                            <span class="property-label">
+                                <strong>[${emailCode.code}]</strong>
+                            </span>
+                            <span class="property-value">
+                                ${emailCode.description}
+                            </span>
+                        </li>
+                    </g:each>
+                </ol>
+            </div>
+
           <fieldset class="form">
             <div class="${hasErrors(bean: template, field: 'usedBy', 'error')} required">
               <label class="property-label" for="emailTemplate.description">
@@ -34,17 +60,6 @@
               <span class="property-value">
                 <input id="emailTemplate.subject" maxlength="78" name="emailTemplate.subject" value="${template?.subject}" type="text" required="required" />
               </span>
-            </div>
-            <div>
-                <label class="property-label">
-                  &nbsp;
-                </label>
-                <ul class="property-value">
-                  <li>[SenderName] : Value of the field &quot;<g:message code="emailTemplate.sender.label" />&quot;</li>
-                  <g:each in="${EmailCode.list()}" var="emailCode">
-                      <li>${emailCode.toString()}</li>
-                  </g:each>
-                </ul>
             </div>
             <div class="${hasErrors(bean: template, field: 'body', 'error')} required">
               <label class="property-label" for="emailTemplate.body">
