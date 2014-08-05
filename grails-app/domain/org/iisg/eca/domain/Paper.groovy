@@ -198,6 +198,14 @@ class Paper extends EventDateDomain {
 		this.save()
 	}
 
+	/**
+	 * Check if a paper file was uploaded
+	 * @return true if a paper was uploaded
+	 */
+	boolean hasPaperFile() {
+		return ((this.fileSize != null) && (this.fileSize > 0))
+	}
+
     /**
      * Updates the mailPaperState when the state of this paper has been changed
      */
