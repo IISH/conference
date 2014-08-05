@@ -4,6 +4,7 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 
 import groovy.xml.MarkupBuilder
+import org.iisg.eca.utils.EmailFilter
 
 import org.iisg.eca.domain.Day
 import org.iisg.eca.domain.User
@@ -63,6 +64,7 @@ class BookExportService {
     String getConcordanceXml() {
 	    User lastUser = null
 	    List<String> sessionsOfUser = []
+	    EmailFilter emailFilter = new EmailFilter(pageInformation.date.event)
 
 	    getXml("Export of Concordance for ${getEventCode()} Programbook") { builder ->
 		    builder.names {
@@ -93,7 +95,12 @@ class BookExportService {
 				        builder.name {
 					        builder.lastname(lastUser.lastName)
 					        builder.firstname(lastUser.firstName)
-					        builder.email(lastUser.email)
+					        if (emailFilter.isUserAllowed(lastUser)) {
+						        builder.email(lastUser.email)
+					        }
+					        else {
+						        builder.email()
+					        }
 					        builder.sessions(sessionsOfUser.join(', '))
 				        }
 

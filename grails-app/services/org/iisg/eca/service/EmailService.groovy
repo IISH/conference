@@ -8,6 +8,7 @@ import org.iisg.eca.domain.EventDate
 import org.iisg.eca.domain.EmailCode
 import org.iisg.eca.domain.EmailTemplate
 
+import org.iisg.eca.utils.EmailFilter
 import javax.mail.internet.MimeMessage
 
 import org.springframework.mail.MailException
@@ -117,7 +118,8 @@ class EmailService {
 	            String[] bccAddresses = Setting.getSetting(Setting.EMAIL_BCC, sentEmail.date?.event).getMultipleValues()
 
                 // Try to send the email if we have to
-                if (sendEmailTo(sentEmail.user, sentEmail.date?.event)) {
+	            EmailFilter emailFilter = new EmailFilter(sentEmail.date?.event)
+                if (emailFilter.isUserAllowed(sentEmail.user)) {
                     mailService.sendMail {
                         from "\"${sentEmail.fromName}\" <${fromEmail}>"
 	                    replyTo sentEmail.fromEmail
@@ -276,26 +278,5 @@ class EmailService {
 	    if (email.subject.contains("[SenderName]")) {
 		    email.subject = email.subject.replace("[SenderName]", template.sender?.trim())
 	    }
-    }
-
-    /**
-     * Find out whether we have to send the emails really to this user
-     * @param user The user to check
-     * @param event The event for which the email is
-     * @return Whether we have to send mails to this address
-     */
-    private boolean sendEmailTo(User user, Event event) {
-        Setting regexSettingsForEvent = Setting.getSetting(Setting.DONT_SEND_EMAILS_TO, event)
-        String[] regexs = regexSettingsForEvent.value?.split()
-
-        if (regexs && regexs.length > 0) {
-            for (String regex : regexs) {
-                if (user.email.matches(regex)) {
-                    return false
-                }
-            }
-        }
-
-        return !user.emailDiscontinued
     }
 }
