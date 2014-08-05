@@ -110,6 +110,7 @@ class Setting extends EventDomain {
     String value
     boolean showInBackend = false
     boolean apiAllowedSetting = false
+	String comment
 
     static mapping = {
         table 'settings'
@@ -121,11 +122,13 @@ class Setting extends EventDomain {
         value               column: 'value',            type: 'text'
         showInBackend       column: 'show_in_backend'
         apiAllowedSetting   column: 'api_allowed'
+	    comment             column: 'comment',          type: 'text'
     }
 
     static constraints = {
         property        blank: false,   maxSize: 50
         value           nullable: true
+	    comment         nullable: true
     }
 
     def beforeUpdate() {
@@ -216,7 +219,11 @@ class Setting extends EventDomain {
 	 */
 	Date getDateValue() {
 		try {
-			return SETTINGS_DATE_FORMAT.parse(value)
+			if (value) {
+				return SETTINGS_DATE_FORMAT.parse(value)
+			}
+
+			return null
 		}
 		catch (ParseException pe) {
 			return null
