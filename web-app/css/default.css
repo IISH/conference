@@ -129,7 +129,8 @@ a:hover, .link:hover {
 .message, .errors li, #conflicts-searching, #no-conflicts, #conflicts li, #conflicts span {
     display: block;
     padding: 5px;
-    text-indent: 25px;
+    padding-left: 30px;
+    white-space: normal;
 }
 
 .message {

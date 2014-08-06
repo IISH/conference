@@ -34,7 +34,7 @@ class AjaxController {
             
             Map message = [success: true]
             if (user) {
-                String msg = g.message(code: 'default.not.unique.message', args: [g.message(code: 'user.email.label'), "", email])
+                String msg = g.message(code: 'default.not.unique.email.message', args: [email])
                 message = [success: false, message: msg]
             }
             
