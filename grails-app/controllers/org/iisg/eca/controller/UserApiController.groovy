@@ -62,13 +62,24 @@ class UserApiController {
             error = ERROR_OTHER
         }
         finally {
-            String url = UriComponentsBuilder
-                    .fromHttpUrl(params['back-url'].toString())
-                    .replaceQueryParam('e', error)
-                    .build()
-                    .toString()
+	        String backUrl = params['back-url'].toString();
 
-            redirect(url: url)
+	        // TODO: Old versions still send the absolute URL
+	        if (backUrl.startsWith('http')) {
+		        redirect(url: UriComponentsBuilder
+				        .fromHttpUrl(backUrl)
+				        .replaceQueryParam('e', error)
+				        .build()
+				        .toString())
+	        }
+	        else {
+		        redirect(url: UriComponentsBuilder
+				        .fromHttpUrl(Setting.getSetting(Setting.WEB_ADDRESS).value)
+				        .replacePath(backUrl)
+				        .replaceQueryParam('e', error)
+				        .build()
+				        .toString())
+	        }
         }
     }
 
