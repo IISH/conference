@@ -14,7 +14,7 @@ class BootStrap {
 	def grailsApplication
 	def clientDetailsService
 
-	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yy-MM-dd")
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd")
 
 	def init = { servletContext ->
 		// Set the last updated date in the database

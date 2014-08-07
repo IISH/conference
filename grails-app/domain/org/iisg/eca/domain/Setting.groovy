@@ -99,7 +99,7 @@ class Setting extends EventDomain {
 	static final String PAYWAY_PASSPHRASE_OUT = 'payway_passphrase_out'
 	static final String PAYWAY_PROJECT = 'payway_project'
 
-	private static final SimpleDateFormat SETTINGS_DATE_FORMAT = new SimpleDateFormat('yy-MM-dd')
+	private static final SimpleDateFormat SETTINGS_DATE_FORMAT = new SimpleDateFormat('yyyy-MM-dd')
 
     String property
     String value
