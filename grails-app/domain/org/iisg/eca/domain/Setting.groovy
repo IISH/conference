@@ -3,15 +3,11 @@ package org.iisg.eca.domain
 import java.text.ParseException
 import java.text.SimpleDateFormat
 
-import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl
-
 /**
  * Domain class of table holding all settings
  */
 class Setting extends EventDomain {
-    def roleHierarchy
-
-	// Default settings
+    // Default settings
 	static final String ACCOMPANYING_PERSON_DESCRIPTION = 'accompanying_person_description'
 	static final String ALLOWED_PAPER_EXTENSIONS = 'allowed_paper_extensions'
 	static final String APPLICATION_TITLE = 'application_title'
@@ -54,7 +50,6 @@ class Setting extends EventDomain {
 	static final String PREREGISTRATION_STARTDATE = 'preregistration_startdate'
 	static final String PREREGISTRATION_STARTDATE_MESSAGE = 'preregistration_startdate_message'
 	static final String REFUND_ADMINISTRATION_COSTS = 'refund_administration_costs'
-	static final String ROLE_HIERARCHY = 'role_hierarchy'
 	static final String SALT = 'salt'
 	static final String SPECTATOR_NAME = 'spectator_name'
     static final String WEB_ADDRESS = 'web_address'	
@@ -142,7 +137,6 @@ class Setting extends EventDomain {
             case EMAIL_WAITING_TIME:
             case IP_AUTHENTICATION:
             case LAST_UPDATED:
-            case ROLE_HIERARCHY:
             case SALT:
             case PAYWAY_ADDRESS:
 	            return true
@@ -152,14 +146,6 @@ class Setting extends EventDomain {
         }
     }
 
-    def afterInsert() {
-        setSetting()
-    }
-
-    def afterUpdate() {
-        setSetting()
-    }
-
 	/**
 	 * Return the setting for a given property
 	 * @param property The property in question
@@ -167,7 +153,7 @@ class Setting extends EventDomain {
 	 * @return The setting for the given property for the given event
 	 */
     static Setting getSetting(String property, Event event = null) {
-        List<Setting> settings = Setting.findAllByProperty(property, [cache: true])
+        List<Setting> settings = findAllByProperty(property, [cache: true])
 
         if (event) {
             (Setting) getByEvent(settings, event)
@@ -185,7 +171,7 @@ class Setting extends EventDomain {
 	static Map<String, String> getSettingsMapForApi() {
 		Map<String, String> settings = new TreeMap<String, String>()
 
-		Setting.withCriteria {
+		withCriteria {
 			eq('apiAllowedSetting', true)
 			order('property', 'asc')
 			order('event', 'asc')
@@ -229,21 +215,6 @@ class Setting extends EventDomain {
 			return null
 		}
 	}
-
-    private void setSetting() {
-        switch (property) {
-            case ROLE_HIERARCHY:
-                setHierarchy()
-                break
-        }
-    }
-
-    private void setHierarchy() {
-        if (property == ROLE_HIERARCHY) {
-            RoleHierarchyImpl roleHierarchy = (RoleHierarchyImpl) roleHierarchy
-            roleHierarchy.setHierarchy(value)
-        }
-    }
 
     @Override
     protected EventDomain getTenantRecord(Event event) {
