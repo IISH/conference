@@ -1,28 +1,10 @@
 package org.iisg.eca.service
-
-import org.iisg.eca.domain.EventDate
-import org.iisg.eca.utils.TimeSlot
-
-import org.iisg.eca.domain.Day
-import org.iisg.eca.domain.ParticipantType
-import org.iisg.eca.domain.Room
-import org.iisg.eca.domain.User
-import org.iisg.eca.domain.Paper
-import org.iisg.eca.domain.Session
-import org.iisg.eca.domain.Equipment
-import org.iisg.eca.domain.SessionState
-import org.iisg.eca.domain.SessionDateTime
-import org.iisg.eca.domain.SessionParticipant
-import org.iisg.eca.domain.SessionRoomDateTime
-import org.iisg.eca.domain.RoomSessionDateTimeEquipment
-
+import org.iisg.eca.domain.*
+import org.iisg.eca.utils.PlannedSession
 import org.iisg.eca.utils.TimeSlot
 import org.iisg.eca.utils.UserDateTime
-import org.iisg.eca.utils.PlannedSession
-
-import org.springframework.cache.annotation.Cacheable
 import org.springframework.cache.annotation.CacheEvict
-
+import org.springframework.cache.annotation.Cacheable
 /**
  * Service responsible for session planning activities
  */
@@ -442,7 +424,7 @@ class SessionPlannerService {
                     PlannedSession.ParticipantWithPaper participant = new PlannedSession.ParticipantWithPaper()
                     participant.typeId = sp.type.id
                     participant.type = sp.type.toString()
-                    participant.participantName = sp.user.getFullName()
+                    participant.participantName = sp.user.toString()
 
                     Paper paper = result.session.papers.find { (it.user.id == sp.user.id) && !it.deleted }
                     participant.paperId = paper.id
@@ -456,7 +438,7 @@ class SessionPlannerService {
                     PlannedSession.Participant participant = new PlannedSession.Participant()
                     participant.typeId = sp.type.id
                     participant.type = sp.type.toString()
-                    participant.participantName = sp.user.getFullName()
+                    participant.participantName = sp.user.toString()
                     return participant
                 }
             } as ArrayList<PlannedSession.Participant>

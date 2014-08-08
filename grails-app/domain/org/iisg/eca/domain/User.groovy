@@ -708,16 +708,8 @@ class User {
 		this.email = this.email.trim().toLowerCase()
 	}
 
-	/**
-	 * Returns the full name, firstname + lastname
-	 * @return The full name
-	 */
-	String getFullName() {
-		return "${firstName.trim()} ${lastName.trim()}"
-	}
-
 	@Override
 	String toString() {
-		"${lastName}, ${firstName}"
+		return "${firstName.trim()} ${lastName.trim()}"
 	}
 }

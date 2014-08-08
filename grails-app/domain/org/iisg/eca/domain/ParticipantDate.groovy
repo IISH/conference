@@ -161,8 +161,7 @@ class ParticipantDate extends EventDateDomain {
     }
 
     Order findOrder() {
-        Order order = Order.get(paymentId)
-        order
+        Order.get(paymentId)
     }
 
     @Override

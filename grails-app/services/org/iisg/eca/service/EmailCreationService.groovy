@@ -65,7 +65,7 @@ class EmailCreationService {
 			email.addAdditionalValue('PaymentFinalDate', dateFormat.format(bankTransferClosesOn.dateValue))
 
 			// Is actually not an additional value, but as BankTransferInfo contains this code, we have to insert it
-			email.addAdditionalValue('NameParticipant', user.getFullName())
+			email.addAdditionalValue('NameParticipant', user.toString())
 
 			return email
 		}
@@ -119,7 +119,7 @@ class EmailCreationService {
 						Setting.SESSION_REGISTRATION_EMAIL_TEMPLATE_ID,
 						[sessionId: session.id]
 				)
-				sentEmail.addAdditionalValue('OrganizerName', user.getFullName())
+				sentEmail.addAdditionalValue('OrganizerName', user.toString())
 
 				emails.add(sentEmail)
 			}
