@@ -235,7 +235,6 @@ class MiscExportService {
 			AND r.date_id = :dateId
 			AND r.deleted = 0
 			AND (srdt.date_id = :dateId OR srdt.date_id IS NULL)
-			AND (srdt.deleted = 0 OR srdt.deleted IS NULL)
 			AND (s.date_id = :dateId OR s.date_id IS NULL)
 			AND (s.deleted = 0 OR s.deleted IS NULL)
 			ORDER BY sdt.index_number, r.room_number
