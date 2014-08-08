@@ -56,7 +56,7 @@ grails.project.dependency.resolution = {
         compile ":hibernate-filter:0.3.2"
         compile ":mail:1.0.6"
         compile ":quartz:1.0.2"
-        compile ":spring-security-core:2.0-RC3"
+        compile ":spring-security-core:2.0-RC4"
         compile ":spring-security-oauth2-provider:1.0.5.2"
         compile ":cache:1.1.7"
 

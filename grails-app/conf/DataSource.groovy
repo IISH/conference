@@ -28,6 +28,7 @@ environments {
     production {
         dataSource {
             properties {
+	            initialSize = 8
 	            maxActive = 8
 	            maxIdle = 8
 	            minIdle = 0
