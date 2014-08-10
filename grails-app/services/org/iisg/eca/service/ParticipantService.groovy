@@ -1,17 +1,16 @@
 package org.iisg.eca.service
 
+import groovy.sql.Sql
+import groovy.sql.GroovyRowResult
+
+import java.text.Normalizer
+import org.springframework.context.i18n.LocaleContextHolder
+import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
+
 import org.iisg.eca.domain.Day
 import org.iisg.eca.domain.Extra
 import org.iisg.eca.domain.ParticipantDate
 import org.iisg.eca.domain.ParticipantState
-
-import groovy.sql.Sql
-import groovy.sql.GroovyRowResult
-
-import org.springframework.context.i18n.LocaleContextHolder
-import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
-
-import java.text.Normalizer
 
 /**
  * Service responsible for requesting participant data
@@ -84,7 +83,7 @@ class ParticipantService {
                                         or {
                                             like('address', "%${w}%")
                                             like('city', "%${w}%")
-                                        }                                        
+                                        }
                                     }
                                 }
                                 break

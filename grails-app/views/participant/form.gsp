@@ -1,4 +1,4 @@
-<%@ page import="org.iisg.eca.domain.Day; org.iisg.eca.domain.SessionDateTime; org.iisg.eca.domain.Setting; org.iisg.eca.domain.Title; org.iisg.eca.domain.FeeState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Extra; org.iisg.eca.domain.Country; org.iisg.eca.domain.SessionParticipant; org.iisg.eca.domain.Order" %>
+<%@ page import="org.iisg.eca.domain.PaperState; org.iisg.eca.domain.Equipment; org.iisg.eca.domain.Network; org.iisg.eca.domain.Volunteering; org.iisg.eca.domain.Day; org.iisg.eca.domain.SessionDateTime; org.iisg.eca.domain.Setting; org.iisg.eca.domain.Title; org.iisg.eca.domain.FeeState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Extra; org.iisg.eca.domain.Country; org.iisg.eca.domain.SessionParticipant; org.iisg.eca.domain.Order" %>
 <!doctype html>
 <html>
     <head>
@@ -6,7 +6,12 @@
         <g:javascript src="participant.js" />
     </head>
     <body>
+        <g:set var="networks" value="${Network.list()}" />
+        <g:set var="paperStates" value="${PaperState.list()}" />
+        <g:set var="equipmentList" value="${Equipment.list()}" />
+
         <input type="hidden" name="id" value="${params.id}" />
+        <input type="hidden" name="user.id" value="${user.id}">
 
         <eca:navigation ids="${participantIds}" index="${params.index}" />
 
@@ -77,7 +82,7 @@
                                     <g:message code="title.label" />
                                 </label>
                                 <span class="property-value">
-                                    <g:select from="${Title.list()}" name="User.title" optionKey="title" optionValue="title" value="${user.title}" noSelection="${['':' ']}" />
+                                    <g:select from="${Title.list()}" name="user.title" optionKey="title" optionValue="title" value="${user.title}" noSelection="${['':' ']}" />
                                 </span>
                             </div>
                             <div class="${hasErrors(bean: user, field: 'firstName', 'error')} required">
@@ -86,7 +91,7 @@
                                     <span class="required-indicator">*</span>
                                 </label>
                                 <span class="property-value">
-                                    <input type="text" name="User.firstName" required="required" maxlength="50" value="${fieldValue(bean: user, field: 'firstName')}" />
+                                    <input type="text" name="user.firstName" required="required" maxlength="50" value="${fieldValue(bean: user, field: 'firstName')}" />
                                 </span>
                             </div>
                             <div class="${hasErrors(bean: user, field: 'lastName', 'error')} required">
@@ -95,7 +100,7 @@
                                     <span class="required-indicator">*</span>
                                 </label>
                                 <span class="property-value">
-                                    <input type="text" name="User.lastName" required="required" maxlength="50" value="${fieldValue(bean: user, field: 'lastName')}" />
+                                    <input type="text" name="user.lastName" required="required" maxlength="50" value="${fieldValue(bean: user, field: 'lastName')}" />
                                 </span>
                             </div>
                             <div class="${hasErrors(bean: user, field: 'gender', 'error')} required">
@@ -103,7 +108,7 @@
                                     <g:message code="user.gender.label" />
                                 </label>
                                 <span class="property-value">
-                                    <g:select from="['M','F']" name="User.gender" value="${user.gender?.toString()}" noSelection="${['': ' ']}" />
+                                    <g:select from="['M','F']" name="user.gender" value="${user.gender?.toString()}" noSelection="${['': ' ']}" />
                                 </span>
                             </div>
                             <div class="${hasErrors(bean: user, field: 'organisation', 'error')} required">
@@ -111,7 +116,7 @@
                                     <g:message code="user.organisation.label" />
                                 </label>
                                 <span class="property-value">
-                                    <input type="text" name="User.organisation" maxlength="50" value="${fieldValue(bean: user, field: 'organisation')}" />
+                                    <input type="text" name="user.organisation" maxlength="50" value="${fieldValue(bean: user, field: 'organisation')}" />
                                 </span>
                             </div>
                             <div class="${hasErrors(bean: user, field: 'department', 'error')} required">
@@ -119,7 +124,7 @@
                                     <g:message code="user.department.label" />
                                 </label>
                                 <span class="property-value">
-                                    <input type="text" name="User.department" maxlength="50" value="${fieldValue(bean: user, field: 'department')}" />
+                                    <input type="text" name="user.department" maxlength="50" value="${fieldValue(bean: user, field: 'department')}" />
                                 </span>
                             </div>
                             <div class="${hasErrors(bean: user, field: 'email', 'error')} required">
@@ -128,7 +133,7 @@
                                     <span class="required-indicator">*</span>
                                 </label>
                                 <span class="property-value">
-                                    <input type="email" name="User.email" required="required" maxlength="100" value="${fieldValue(bean: user, field: 'email')}" />
+                                    <input type="email" name="user.email" required="required" maxlength="100" value="${fieldValue(bean: user, field: 'email')}" />
                                 </span>
                             </div>
                             <div class="${hasErrors(bean: user, field: 'emailDiscontinued', 'error')}">
@@ -136,7 +141,7 @@
                                     <g:message code="user.emailDiscontinued.label" />
                                 </label>
                                 <span class="property-value">
-                                    <g:checkBox name="User.emailDiscontinued" value="${user.emailDiscontinued}" />
+                                    <g:checkBox name="user.emailDiscontinued" value="${user.emailDiscontinued}" />
                                 </span>
                             </div>
                             <div class="${hasErrors(bean: user, field: 'address', 'error')} required">
@@ -144,7 +149,7 @@
                                     <g:message code="user.address.label" />
                                 </label>
                                 <span class="property-value">
-                                    <textarea name="User.address" cols="40" rows="5">${fieldValue(bean: user, field: 'address')}</textarea>
+                                    <textarea name="user.address" cols="40" rows="5">${fieldValue(bean: user, field: 'address')}</textarea>
                                 </span>
                             </div>
                             <div class="${hasErrors(bean: user, field: 'city', 'error')} required">
@@ -152,7 +157,7 @@
                                     <g:message code="user.city.label" />
                                 </label>
                                 <span class="property-value">
-                                    <input type="text" name="User.city" maxlength="50" value="${fieldValue(bean: user, field: 'city')}" />
+                                    <input type="text" name="user.city" maxlength="50" value="${fieldValue(bean: user, field: 'city')}" />
                                 </span>
                             </div>
                             <div class="${hasErrors(bean: user, field: 'country', 'error')} required">
@@ -160,7 +165,7 @@
                                     <g:message code="user.country.label" />
                                 </label>
                                 <span class="property-value">
-                                    <g:select name="User.country.id" from="${Country.list(sort: 'nameEnglish')}" optionKey="id" value="${user.country?.id}" noSelection="${[null:' ']}" />
+                                    <g:select name="user.country.id" from="${Country.list(sort: 'nameEnglish')}" optionKey="id" value="${user.country?.id}" noSelection="${[null:' ']}" />
                                 </span>
                             </div>
                             <div class="${hasErrors(bean: user, field: 'phone', 'error')}">
@@ -168,7 +173,7 @@
                                     <g:message code="user.phone.label" />
                                 </label>
                                 <span class="property-value">
-                                    <input type="text" name="User.phone" maxlength="50" value="${fieldValue(bean: user, field: 'phone')}" />
+                                    <input type="text" name="user.phone" maxlength="50" value="${fieldValue(bean: user, field: 'phone')}" />
                                 </span>
                             </div>
                             <div class="${hasErrors(bean: user, field: 'mobile', 'error')}">
@@ -176,7 +181,7 @@
                                     <g:message code="user.mobile.label" />
                                 </label>
                                 <span class="property-value">
-                                    <input type="text" name="User.mobile" maxlength="50" value="${fieldValue(bean: user, field: 'mobile')}" />
+                                    <input type="text" name="user.mobile" maxlength="50" value="${fieldValue(bean: user, field: 'mobile')}" />
                                 </span>
                             </div>
                             <g:if test="${Setting.getSetting(Setting.SHOW_CV, curDate?.event).value == '1'}">
@@ -185,7 +190,7 @@
                                         <g:message code="user.cv.label" />
                                     </label>
                                     <span class="property-value">
-                                        <textarea name="User.cv" cols="40" rows="5">${fieldValue(bean: user, field: 'cv')}</textarea>
+                                        <textarea name="user.cv" cols="40" rows="5">${fieldValue(bean: user, field: 'cv')}</textarea>
                                     </span>
                                 </div>
                             </g:if>
@@ -194,7 +199,7 @@
                                     <g:message code="user.extraInfo.label" />
                                 </label>
                                 <span class="property-value">
-                                    <textarea name="User.extraInfo" cols="40" rows="5">${fieldValue(bean: user, field: 'extraInfo')}</textarea>
+                                    <textarea name="user.extraInfo" cols="40" rows="5">${fieldValue(bean: user, field: 'extraInfo')}</textarea>
                                 </span>
                             </div>
                         </fieldset>
@@ -210,7 +215,7 @@
                                             <g:message code="participantDate.invitationLetterRequested.label" />
                                         </label>
                                         <span class="property-value">
-                                            <g:checkBox name="ParticipantDate.invitationLetter" checked="${participant.invitationLetter}" />
+                                            <g:checkBox name="participantDate.invitationLetter" checked="${participant.invitationLetter}" />
                                         </span>
                                     </div>
                                     <div class="${hasErrors(bean: participant, field: 'invitationLetterSent', 'error')}">
@@ -218,7 +223,7 @@
                                             <g:message code="participantDate.invitationLetterSent.label" />
                                         </label>
                                         <span class="property-value">
-                                            <g:checkBox name="ParticipantDate.invitationLetterSent" checked="${participant.invitationLetterSent}" />
+                                            <g:checkBox name="participantDate.invitationLetterSent" checked="${participant.invitationLetterSent}" />
                                         </span>
                                     </div>
                                 </fieldset>
@@ -230,12 +235,12 @@
                                         <legend><g:message code="participantDate.extra.label" /></legend>
                                     </g:if>
 
-                                    <div class="${hasErrors(bean: participant, field: 'invitationLetterSent', 'error')}">
+                                    <div class="${hasErrors(bean: participant, field: 'extras', 'error')}">
                                         <label class="property-label">
                                             ${extra.toString()}
                                         </label>
                                         <span class="property-value">
-                                            <g:checkBox name="ParticipantDate.extras" checked="${participant.extras.find { it == extra }}" value="${extra.id}" />
+                                            <g:checkBox name="participantDate.extras" checked="${participant.extras.find { it == extra }}" value="${extra.id}" />
                                         </span>
                                     </div>
                                 </g:each>
@@ -249,7 +254,7 @@
                                             <g:message code="participantDate.lowerFeeRequested.label" />
                                         </label>
                                         <span class="property-value">
-                                            <g:checkBox name="ParticipantDate.lowerFeeRequested" checked="${participant.lowerFeeRequested}" />
+                                            <g:checkBox name="participantDate.lowerFeeRequested" checked="${participant.lowerFeeRequested}" />
                                         </span>
                                     </div>
                                     <div class="${hasErrors(bean: participant, field: 'lowerFeeAnswered', 'error')}">
@@ -257,7 +262,7 @@
                                             <g:message code="participantDate.lowerFeeAnswered.label" />
                                         </label>
                                         <span class="property-value">
-                                            <g:checkBox name="ParticipantDate.lowerFeeAnswered" checked="${participant.lowerFeeAnswered}" />
+                                            <g:checkBox name="participantDate.lowerFeeAnswered" checked="${participant.lowerFeeAnswered}" />
                                         </span>
                                     </div>
                                     <div class="${hasErrors(bean: participant, field: 'lowerFeeText', 'error')}">
@@ -265,7 +270,7 @@
                                             <g:message code="participantDate.lowerFeeText.label" />
                                         </label>
                                         <span class="property-value">
-                                            <textarea name="ParticipantDate.lowerFeeText" cols="40" rows="5">${participant.lowerFeeText}</textarea>
+                                            <textarea name="participantDate.lowerFeeText" cols="40" rows="5">${participant.lowerFeeText}</textarea>
                                         </span>
                                     </div>
                                 </fieldset>
@@ -279,7 +284,7 @@
                                             <g:message code="participantDate.studentRequested.label" />
                                         </label>
                                         <span class="property-value">
-                                            <g:checkBox name="ParticipantDate.student" checked="${participant.student}" />
+                                            <g:checkBox name="participantDate.student" checked="${participant.student}" />
                                         </span>
                                     </div>
                                     <div class="${hasErrors(bean: participant, field: 'studentConfirmed', 'error')}">
@@ -287,7 +292,7 @@
                                             <g:message code="participantDate.studentConfirmed.label" />
                                         </label>
                                         <span class="property-value">
-                                            <g:checkBox name="ParticipantDate.studentConfirmed" checked="${participant.studentConfirmed}" />
+                                            <g:checkBox name="participantDate.studentConfirmed" checked="${participant.studentConfirmed}" />
                                         </span>
                                     </div>
                                     <g:if test="${Setting.getSetting(Setting.SHOW_AWARD, curDate?.event).value == '1'}">
@@ -296,7 +301,7 @@
                                                 <g:message code="participantDate.award.label" />
                                             </label>
                                             <span class="property-value">
-                                                <g:checkBox name="ParticipantDate.award" checked="${participant.award}" />
+                                                <g:checkBox name="participantDate.award" checked="${participant.award}" />
                                             </span>
                                         </div>
                                     </g:if>
@@ -310,7 +315,7 @@
                                         <g:message code="participantDate.state.label" />
                                     </label>
                                     <span class="property-value">
-                                        <g:select name="ParticipantDate.state.id" from="${ParticipantState.list()}" optionKey="id" optionValue="state" value="${participant.state.id}" />
+                                        <g:select name="participantDate.state.id" from="${ParticipantState.list()}" optionKey="id" optionValue="state" value="${participant.state.id}" />
                                     </span>
                                 </div>
                                 <div class="${hasErrors(bean: participant, field: 'feeState', 'error')} required">
@@ -318,7 +323,7 @@
                                         <g:message code="participantDate.feeState.label" />
                                     </label>
                                     <span class="property-value">
-                                        <g:select name="ParticipantDate.feeState.id" from="${FeeState.sortedFeeStates.list()}" optionKey="id" optionValue="name" value="${participant.feeState.id}" />
+                                        <g:select name="participantDate.feeState.id" from="${FeeState.sortedFeeStates.list()}" optionKey="id" optionValue="name" value="${participant.feeState.id}" />
                                     </span>
                                 </div>
                                 <g:if test="${Setting.getSetting(Setting.SHOW_ACCOMPANYING_PERSONS, curDate?.event).value == '1'}">
@@ -327,9 +332,10 @@
                                             <g:message code="participantDate.accompanyingPersons.label" />
                                         </label>
                                         <ul class="property-value">
-                                            <g:each in="${participant.accompanyingPersons}" var="instance" status="i">
+	                                        <g:set var="accompanyingPersons" value="${participant.accompanyingPersons ? participant.accompanyingPersons.sort() : []}" />
+                                            <g:each in="${accompanyingPersons}" var="instance">
                                                 <li>
-                                                    <input type="text" name="AccompanyingPerson_${i}" id="AccompanyingPerson_${i}" value="${instance}" />
+                                                    <input type="text" name="participantDate.accompanyingPersons" value="${instance}" />
                                                     <span class="ui-icon ui-icon-circle-minus"></span>
                                                 </li>
                                             </g:each>
@@ -338,7 +344,7 @@
                                                 <g:message code="default.add.label" args="[g.message(code: 'participantDate.accompanyingPersons.person.label')]" />
                                             </li>
                                             <li class="hidden">
-                                                <input type="text" name="AccompanyingPerson_null" id="AccompanyingPerson_null" />
+                                                <input type="text" name="participantDate.accompanyingPersons" />
                                                 <span class="ui-icon ui-icon-circle-minus"></span>
                                             </li>
                                         </ul>
@@ -349,7 +355,7 @@
                                         <g:message code="participantDate.extraInfo.label" />
                                     </label>
                                     <span class="property-value">
-                                        <textarea name="ParticipantDate.extraInfo" cols="40" rows="5">${fieldValue(bean: participant, field: 'extraInfo')}</textarea>
+                                        <textarea name="participantDate.extraInfo" cols="40" rows="5">${fieldValue(bean: participant, field: 'extraInfo')}</textarea>
                                     </span>
                                 </div>
                                 <div class="${hasErrors(bean: user, field: 'dateTimesNotPresent', 'error')}">
@@ -379,6 +385,7 @@
                                     <legend><g:message code="participantDate.volunteering.label" /></legend>
                                     <div class="${hasErrors(bean: participant, field: 'participantVolunteering', 'error')} ">
                                         <ul>
+                                        <g:set var="volunteering" value="${Volunteering.list()}" />
                                         <g:each in="${participantVolunteering}" var="instance" status="i">
                                             <li>
                                                 <input type="hidden" name="ParticipantVolunteering_${i}.id" value="${instance.id}" />
@@ -429,7 +436,7 @@
                     <input type="hidden" name="max-papers" value="${Setting.getSetting(Setting.MAX_PAPERS_PER_PERSON_PER_SESSION).value}" />
                     <input type="hidden" name="to-be-deleted" class="to-be-deleted" />
 
-                    <g:each in="${papers}" var="paper" status="i">
+                    <g:each in="${user.getPapersSorted().findAll { !it.isDeleted() && (it.date.id == curDate.id) }}" var="paper" status="i">
                         <div class="column">
                             <input type="hidden" name="Paper_${i}.id" value="${paper.id}" />
 
@@ -763,8 +770,8 @@
                             <div>
                                 <ol class="property-list">
                                     <li>
-                                      <span id="id-label" class="property-label">#</span>
-                                      <span class="property-value" arial-labelledby="id-label">${participantSessionInfo.session.id}</span>
+                                      <span id="session-id-label" class="property-label">#</span>
+                                      <span class="property-value" arial-labelledby="session-id-label">${participantSessionInfo.session.id}</span>
                                     </li>
                                     <li>
                                       <span id="code-label" class="property-label">
@@ -1084,7 +1091,8 @@
             </form>
         </div>
 
-        <div id="new-order" class="info">
+        <g:if test="${participant}">
+            <div id="new-order" class="info">
             <form method="post" action="../newOrder" id="new-order-form">
                 <fieldset class="form">
                     <input type="hidden" name="participantId" value="${participant.id}" />
@@ -1145,5 +1153,6 @@
                 </fieldset>
             </form>
         </div>
+        </g:if>
     </body>
 </html>

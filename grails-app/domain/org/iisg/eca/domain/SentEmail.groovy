@@ -46,6 +46,7 @@ class SentEmail extends EventDateDomain {
     }
 
     static apiActions = ['GET']
+
     static apiAllowed = [
             'id',
             'user.id',
@@ -59,6 +60,23 @@ class SentEmail extends EventDateDomain {
             'sendAsap',
             'numTries',
     ]
+
+	static namedQueries = {
+		emailsNotSent { User user ->
+			eq('user.id', user.id)
+			isNull('dateTimeSent')
+			order('dateTimeCreated', 'desc')
+		}
+
+		emailsSent { User user ->
+			Calendar cal = Calendar.getInstance()
+			cal.add(Calendar.MONTH, -18)
+
+			eq('user.id', user.id)
+			ge('dateTimeSent', cal.getTime())
+			order('dateTimeSent', 'desc')
+		}
+	}
 
     /**
      * Returns all date time copies as a list with Date objects

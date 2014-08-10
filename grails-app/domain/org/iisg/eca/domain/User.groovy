@@ -646,6 +646,56 @@ class User {
 	}
 
 	/**
+	 * Returns the participant info of this user for the given event date
+	 * @param date The event date to obtain participant data of
+	 * @return The participant date, if found
+	 */
+	ParticipantDate getParticipantForDate(EventDate date) {
+		ParticipantDate.findByUserAndDate(this, date)
+	}
+
+	/**
+	 * Creates a participant for this user for the given event date
+	 * @param date The event date of which the user participates
+	 * @return A new participant date instance (should still be saved)
+	 */
+	ParticipantDate createParticipantForDate(EventDate date) {
+		ParticipantDate participant = null
+		ParticipantDate.withoutHibernateFilters {
+			participant = ParticipantDate.findByUserAndDate(this, date)
+		}
+
+		// If we found the filtered participant, undo the deletion
+		if (participant) {
+			participant.deleted = false
+		}
+		else {
+			participant = new ParticipantDate(
+					user: this,
+					state: ParticipantState.get(ParticipantState.NEW_PARTICIPANT),
+					feeState: FeeState.get(FeeState.NO_FEE_SELECTED)
+			)
+		}
+
+		return participant
+	}
+
+	/**
+	 * Sorting here instead of using the database, to overcome issues
+	 * @return The papers of this user sorted
+	 */
+	List<Paper> getPapersSorted() {
+		if (papers) {
+			papers.sort { Paper paper1, Paper paper2 ->
+				paper1.title <=> paper2.title
+			}
+		}
+		else {
+			[]
+		}
+	}
+
+	/**
 	 * Check to see if the given password equals the hashed password
 	 * @param plainPassword The password to hash and compare
 	 * @return Is a correct password or not

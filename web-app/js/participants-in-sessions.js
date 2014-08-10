@@ -1,108 +1,108 @@
-var setParticipantDataForSession = function(data, participantsContainer) {
-    if (participantsContainer === undefined) {
-        participantsContainer = $('.session-participants');
-    }
-    
-    var item = participantsContainer.find('li.hidden');
-    item = item.clone(true);
-    
-    participantsContainer.html("");
-    setParticipants(data.participants, participantsContainer, item);
-    participantsContainer.append(item);
+var setParticipantDataForSession = function (data, participantsContainer) {
+	if (participantsContainer === undefined) {
+		participantsContainer = $('.session-participants');
+	}
 
-    var equipmentContainer = $('#session-equipment');
-    equipmentContainer.html("");
-    for (var i=0; i<data.equipment.length; i++) {
-        equipmentContainer.append("<li>" + data.equipment[i][0] + " (" + data.equipment[i][1] + ")" + "</li>");
-    }
+	var item = participantsContainer.find('li.hidden');
+	item = item.clone(true);
+
+	participantsContainer.html("");
+	setParticipants(data.participants, participantsContainer, item);
+	participantsContainer.append(item);
+
+	var equipmentContainer = $('#session-equipment');
+	equipmentContainer.html("");
+	for (var i = 0; i < data.equipment.length; i++) {
+		equipmentContainer.append("<li>" + data.equipment[i][0] + " (" + data.equipment[i][1] + ")" + "</li>");
+	}
 }
 
-var setParticipantDataForNetwork = function(data, networkSessionsContainer) {
-    if (networkSessionsContainer === undefined) {
-        networkSessionsContainer = $('#network-sessions');
-    }
-    
-    var clone = networkSessionsContainer.find('li.hidden');
-    clone = clone.clone(true);
+var setParticipantDataForNetwork = function (data, networkSessionsContainer) {
+	if (networkSessionsContainer === undefined) {
+		networkSessionsContainer = $('#network-sessions');
+	}
 
-    networkSessionsContainer.html("");
-    for (var i=0; i<data.sessions.length; i++) {
-        var item = clone.clone(true);        
-        var link = item.find('.session a').attr("href").replace("*id*", data.sessions[i].id);
-        
-        item.find('.session-id').val(data.sessions[i].id);
-        item.find('.session a').attr("href", link).text(data.sessions[i].name);
+	var clone = networkSessionsContainer.find('li.hidden');
+	clone = clone.clone(true);
 
-        var participantsContainer = item.find('.session-participants');
-        if (data.sessions[i].participants.length > 0) {
-            var participantClone = participantsContainer.find('> li');
-            setParticipants(data.sessions[i].participants, participantsContainer, participantClone.clone(true));
-            participantClone.remove();
-        }
-        else {
-            participantsContainer.remove();
-        }
+	networkSessionsContainer.html("");
+	for (var i = 0; i < data.sessions.length; i++) {
+		var item = clone.clone(true);
+		var link = item.find('.session a').attr("href").replace("*id*", data.sessions[i].id);
 
-        networkSessionsContainer.append(item);
-        item.removeClass('hidden');
-    }
-    
-    networkSessionsContainer.append(clone);
+		item.find('.session-id').val(data.sessions[i].id);
+		item.find('.session a').attr("href", link).text(data.sessions[i].name);
+
+		var participantsContainer = item.find('.session-participants');
+		if (data.sessions[i].participants.length > 0) {
+			var participantClone = participantsContainer.find('> li');
+			setParticipants(data.sessions[i].participants, participantsContainer, participantClone.clone(true));
+			participantClone.remove();
+		}
+		else {
+			participantsContainer.remove();
+		}
+
+		networkSessionsContainer.append(item);
+		item.removeClass('hidden');
+	}
+
+	networkSessionsContainer.append(clone);
 }
 
-var setParticipants = function(data, container, clone) {
-    for (var i=0; i<data.length; i++) {
-        var item = clone.clone(true);
-        
-        if (item.find('.participant-value a').size() > 0) {
-            var link = item.find('.participant-value a').attr("href").replace("*id*", data[i].id);
-            item.find('.participant-value a').attr("href", link).text(data[i].participant);
-        }
-        else {
-            item.find('.participant-value').text(data[i].participant);
-        }
-        
-        item.find('.user-id').val(data[i].id);
-        item.find('.participant-value a').attr("href", link).text(data[i].participant);
-        item.find('.participant-state-value').text("("+data[i].state+")");
+var setParticipants = function (data, container, clone) {
+	for (var i = 0; i < data.length; i++) {
+		var item = clone.clone(true);
 
-        if (data[i].paper.trim().length === 0) {
-            item.find('.participant-paper-value').remove();
-        }
-        else {
-            var paperItems = item.find('.participant-paper-value'); 
+		if (item.find('.participant-value a').size() > 0) {
+			var link = item.find('.participant-value a').attr("href").replace("*id*", data[i].id);
+			item.find('.participant-value a').attr("href", link).text(data[i].participant);
+		}
+		else {
+			item.find('.participant-value').text(data[i].participant);
+		}
 
-            if (data[i].coauthors.trim().length === 0) {
-                paperItems.last().remove();
-            }
-            else {
-                paperItems.last().text(data[i].coauthors);
-            }
+		item.find('.user-id').val(data[i].id);
+		item.find('.participant-value a').attr("href", link).text(data[i].participant);
+		item.find('.participant-state-value').text("(" + data[i].state + ")");
 
-            var paperItem = paperItems.first();
-            paperItem.find('.paper-text').text(data[i].paper);
-            paperItem.find('input[name=paper-id]').val(data[i].paperId)
-            paperItem.find('input[name=paper-state-id]').val(data[i].paperStateId)
-        }
+		if (data[i].paper.trim().length === 0) {
+			item.find('.participant-paper-value').remove();
+		}
+		else {
+			var paperItems = item.find('.participant-paper-value');
 
-        setTypes(data[i].types, item);
+			if (data[i].coauthors.trim().length === 0) {
+				paperItems.last().remove();
+			}
+			else {
+				paperItems.last().text(data[i].coauthors);
+			}
 
-        container.append(item);
-        item.removeClass('hidden');
-    }
+			var paperItem = paperItems.first();
+			paperItem.find('.paper-text').text(data[i].paper);
+			paperItem.find('input[name=paper-id]').val(data[i].paperId)
+			paperItem.find('input[name=paper-state-id]').val(data[i].paperStateId)
+		}
+
+		setTypes(data[i].types, item);
+
+		container.append(item);
+		item.removeClass('hidden');
+	}
 }
 
-var setTypes = function(data, item) {
-    var typeContainer = item.find('ul');
-    var typeClone = typeContainer.find('.participant-type-value');
-    var typeItem;
+var setTypes = function (data, item) {
+	var typeContainer = item.find('ul');
+	var typeClone = typeContainer.find('.participant-type-value');
+	var typeItem;
 
-    for (var j=0; j<data.length; j++) {
-        typeItem = typeClone.clone(true);
-        typeItem.find('.type-id').val(data[j].id);
-        typeItem.find('.participant-type-val').text(data[j].type);
-        typeContainer.append(typeItem);
-    }
+	for (var j = 0; j < data.length; j++) {
+		typeItem = typeClone.clone(true);
+		typeItem.find('.type-id').val(data[j].id);
+		typeItem.find('.participant-type-val').text(data[j].type);
+		typeContainer.append(typeItem);
+	}
 
-    typeClone.remove();
+	typeClone.remove();
 }

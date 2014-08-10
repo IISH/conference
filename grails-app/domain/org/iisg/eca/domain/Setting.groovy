@@ -23,7 +23,7 @@ class Setting extends EventDomain {
 	static final String DEFAULT_NETWORK_ID = 'default_network_id'
 	static final String DEFAULT_ORGANISATION_EMAIL = 'default_organisation_email'
 	static final String DISABLE_EMAIL_SESSIONS = 'disable_email_sessions'
-	static final String DONT_SEND_EMAILS_TO = 'dont_send_emails_to'	
+	static final String DONT_SEND_EMAILS_TO = 'dont_send_emails_to'
 	static final String EMAIL_ADDRESS_INFO_ERRORS = 'email_address_info_errors'
 	static final String EMAIL_BCC = 'email_bcc'
     static final String EMAIL_MAX_NUM_EMAILS_PER_SESSION = 'email_max_num_emails_per_session'
@@ -52,8 +52,8 @@ class Setting extends EventDomain {
 	static final String REFUND_ADMINISTRATION_COSTS = 'refund_administration_costs'
 	static final String SALT = 'salt'
 	static final String SPECTATOR_NAME = 'spectator_name'
-    static final String WEB_ADDRESS = 'web_address'	
-	
+    static final String WEB_ADDRESS = 'web_address'
+
 	// Show/hide settings
 	static final String HIDE_ALWAYS_IN_ONLINE_PROGRAM = 'hide_always_in_online_program'
 	static final String HIDE_IF_EMPTY_IN_ONLINE_PROGRAM = 'hide_if_empty_in_online_program'

@@ -25,7 +25,7 @@ class ParticipantTypeRule extends EventDomain {
      * @return A list of rules
      */
     static List<ParticipantTypeRule> getRulesForParticipantType(ParticipantType participantType) {
-        ParticipantTypeRule.findAllByFirstTypeOrSecondType(participantType, participantType)
+        findAllByFirstTypeOrSecondType(participantType, participantType)
     }
 
     @Override

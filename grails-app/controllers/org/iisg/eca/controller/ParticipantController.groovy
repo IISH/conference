@@ -1,72 +1,21 @@
 package org.iisg.eca.controller
-
-import org.iisg.eca.domain.Day
-import org.iisg.eca.domain.User
-import org.iisg.eca.domain.Paper
-import org.iisg.eca.domain.Extra
-import org.iisg.eca.domain.Title
-import org.iisg.eca.domain.Order
-import org.iisg.eca.domain.Setting
-import org.iisg.eca.domain.Network
-import org.iisg.eca.domain.FeeState
-import org.iisg.eca.domain.SentEmail
-import org.iisg.eca.domain.Equipment
-import org.iisg.eca.domain.PaperState
-import org.iisg.eca.domain.Volunteering
-import org.iisg.eca.domain.EmailTemplate
-import org.iisg.eca.domain.ParticipantDay
-import org.iisg.eca.domain.SessionDateTime
-import org.iisg.eca.domain.ParticipantDate
-import org.iisg.eca.domain.ParticipantState
-import org.iisg.eca.domain.ParticipantVolunteering
-
+import grails.converters.JSON
+import groovy.sql.Sql
+import org.iisg.eca.domain.*
 import org.iisg.eca.utils.PaymentQueries
 import org.iisg.eca.utils.PaymentStatistic
-
-import grails.converters.JSON
-import grails.validation.ValidationException
-
-import groovy.sql.Sql
-import org.springframework.web.multipart.commons.CommonsMultipartFile
-
 /**
  * Controller responsible for handling requests on participants
  */
 class ParticipantController {
-	/**
-	 * Information about the current page
-	 */
-	def pageInformation
-
-	/**
-	 * Service taking care of participant information
-	 */
-	def participantService
-
-	/**
-	 * Service taking care of participant in session related information
-	 */
-	def participantSessionService
-
-	/**
-	 * Service taking care of exporting the participants paper
-	 */
-	def exportService
-
-	/**
-	 * Service that takes care of sending emails
-	 */
-	def emailService
-
-	/**
-	 * Service that takes care of passwords
-	 */
-	def passwordService
-
-	/**
-	 * Data source of the conference databases
-	 */
 	def dataSource
+	def emailService
+	def exportService
+	def passwordService
+	def pageInformation
+	def participantService
+	def participantUpdateService
+	def participantSessionService
 
 	/**
 	 * Index action, redirects to the list action
@@ -193,7 +142,7 @@ class ParticipantController {
 	/**
 	 * Shows all participant information and allows for editing
 	 */
-	def show() {
+	def show(User user) {
 		// We need an id, check for the id
 		if (!params.id) {
 			flash.error = true
@@ -201,8 +150,6 @@ class ParticipantController {
 			redirect(uri: eca.createLink(previous: true, noBase: true))
 			return
 		}
-
-		User user = User.get(params.id)
 
 		// We also need a user to be able to show something
 		if (!user) {
@@ -212,225 +159,39 @@ class ParticipantController {
 			return
 		}
 
-		// Make sure the title is not deleted
-		Title.addTitleIfNotExists(user.title)
-
-		// Try to look up this user as a participant for the current event date
-		ParticipantDate participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
-
-		// Already collect participant ids in the case of an error
+		ParticipantDate participant = user.getParticipantForDate(pageInformation.date)
 		List participantIds = participantService.getParticipantsWithFilters(params).collect { it[0] }
 		List sessions = (participant) ? participantSessionService.getSessionsForParticipant(participant) : []
-		List participantVolunteering = participant ? ParticipantVolunteering.sortedParticipantVolunteering(participant.id).list() : []
-		List daysPresent = (user) ? ParticipantDay.findAllDaysOfUser(user) : []
+		List daysPresent = ParticipantDay.findAllDaysOfUser(user)
 		List orders = (participant) ? Order.findAllByParticipantDate(participant) : []
 
-		// Obtain the emails
-		Calendar cal = Calendar.getInstance()
-		cal.add(Calendar.MONTH, -18)
-
-		List emailsNotSent = SentEmail.withCriteria {
-			eq('user.id', user.id)
-			isNull('dateTimeSent')
-			order('dateTimeCreated', 'desc')
-		}
-		List emailsSent = SentEmail.withCriteria {
-			eq('user.id', user.id)
-			ge('dateTimeSent', cal.getTime())
-			order('dateTimeSent', 'desc')
-		}
-
-		// The 'save' button was clicked, save all data
 		if (request.post) {
-			try {
-				// Save all user information
-				bindData(user, params, [include: ['title', 'firstName', 'lastName', 'gender', 'organisation',
-				                                  'department', 'email', 'address', 'city', 'country', 'phone', 'mobile', 'cv',
-				                                  'extraInfo', 'emailDiscontinued']], "User")
-				user.save(failOnError: true)
-
-				if (!participant && params['add-to-date']?.equals('add')) {
-					// Try to find out if this participant has been deleted before or is filtered for some other reason
-					ParticipantDate.withoutHibernateFilters {
-						participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
-					}
-
-					// If we found the filtered participant, undo the deletion
-					if (participant) {
-						participant.deleted = false
-					}
-					else {
-						// This user is not a participant yet, but the user indicated he/she wants to make him/her one
-						participant = new ParticipantDate(user: user, state: ParticipantState.get(0),
-								feeState: FeeState.get(0))
-					}
-
-					participant.save(failOnError: true)
-				}
-				else if (participant) {
-					// He/she is a participant, save all of that information as well
-					bindData(participant, params,
-							[include: ['invitationLetter', 'invitationLetterSent', 'lowerFeeRequested',
-							           'lowerFeeAnswered', 'lowerFeeText', 'student', 'studentConfirmed', 'award',
-							           'state', 'feeState', 'extraInfo']], "ParticipantDate")
-					participant.save(failOnError: true)
-
-					// Remove all extras the participant is interested in and save all new information
-					participant.extras.clear()
-					params.list("ParticipantDate.extras").each { extraId ->
-						participant.addToExtras(Extra.get(extraId))
-					}
-					participant.save(failOnError: true)
-
-					// Remove all date/times the user is not present and save all new information
-					// However, we are only interested in the dates/times the participant is NOT present
-					user.dateTimesNotPresent.clear()
-					user.save(failOnError: true)
-					List<SessionDateTime> sessionDateTimes = SessionDateTime.list()
-					params.present.each { dateTimeId ->
-						sessionDateTimes.
-								remove(sessionDateTimes.find { dateTimeId.isLong() && (it.id == dateTimeId.toLong()) })
-					}
-					user.dateTimesNotPresent.addAll(sessionDateTimes)
-					user.save(failOnError: true)
-
-					// Remove all accompanying persons from the participant and save all new information
-					int i = 0
-					participant.accompanyingPersons.clear()
-					participant.save(failOnError: true, flush: true)
-					while (params["AccompanyingPerson_${i}"]) {
-						participant.accompanyingPersons << params["AccompanyingPerson_${i}"]
-						i++
-					}
-					participant.save(failOnError: true)
-
-					// Remove all volunteering offers from the participant and save all new information
-					i = 0
-					participant.participantVolunteering.clear()
-					participant.save(failOnError: true, flush: true)
-					while (params["ParticipantVolunteering_${i}"]) {
-						ParticipantVolunteering pv = new ParticipantVolunteering()
-						bindData(pv, params, [include: ['volunteering', 'network']], "ParticipantVolunteering_${i}")
-						i++
-
-						if (!participant.participantVolunteering.find { it.equalsWithoutParticipant(pv) }) {
-							participant.addToParticipantVolunteering(pv)
-						}
-					}
-					participant.save(failOnError: true)
-
-					// Check which papers have to be deleted, try to soft delete them
-					String[] ids = params["to-be-deleted"].split(';')
-					ids.each { idToDelete ->
-						if (idToDelete.isLong()) {
-							Paper paperToDelete = Paper.findById(idToDelete.toLong())
-							paperToDelete?.softDelete()
-							paperToDelete?.save(failOnError: true)
-						}
-					}
-
-					// Now try to save the paper information, one paper at the time
-					i = 0
-					while (params["Paper_${i}"]) {
-						Paper paper = null
-
-						// Try to look up the paper in the database
-						if (params["Paper_${i}.id"]?.isLong()) {
-							paper = Paper.findByUserAndId(user, params.long("Paper_${i}.id"))
-						}
-
-						// Not found, then create a new paper
-						if (!paper) {
-							paper = new Paper(state: PaperState.get(0))
-							user.addToPapers(paper)
-							paper.setDate(pageInformation.date)
-						}
-
-						// Make sure that the paper can be saved first
-						bindData(paper, params, [include: ['title', 'abstr']], "Paper_${i}")
-						paper.save(failOnError: true, flush: true)
-
-						// Also save all other paper information
-						bindData(paper, params, [include: ['coAuthors', 'state', 'comment',
-						                                   'sessionProposal', 'proposalDescription', 'networkProposal',
-						                                   'equipmentComment']], "Paper_${i}")
-						paper.save(failOnError: true)
-
-						// If a paper file is uploaded, save all file information
-						CommonsMultipartFile file = (CommonsMultipartFile) params["Paper_${i}.file"]
-						if (file?.size > 0) {
-							paper.fileSize = file.size
-							paper.contentType = file.contentType
-							paper.fileName = file.originalFilename
-							paper.file = file.bytes
-						}
-						paper.save(failOnError: true)
-
-						// Remove all equipment and save all new equipment information for this paper
-						paper.equipment?.clear()
-						params["Paper_${i}.equipment"].each { equipmentId ->
-							if (equipmentId.isLong()) {
-								paper.addToEquipment(Equipment.get(equipmentId.toLong()))
-							}
-						}
-
-						// Save the paper
-						paper.save(flush: true, failOnError: true)
-						i++
-					}
-
-					// Save the user and the participant
-					user.save(flush: true, failOnError: true)
-					participant.save(flush: true, failOnError: true)
-				}
-
-				// We arrived here, so everything should be fine
-				// Go back to the previous back with an update message
+			if (participantUpdateService.update(user, participant, params)) {
 				flash.message = g.message(code: 'default.updated.message',
 						args: [g.message(code: 'participantDate.label'), user.toString()])
+
 				if (params['btn_save_close']) {
 					redirect(uri: eca.createLink(action: 'list', noBase: true))
 					return
 				}
-			}
-			catch (ValidationException ve) {
-				// Validation failed, just send back the page and show all errors
-				render(view: "form", model: [user                   : user,
-				                             participant            : participant,
-				                             papers                 : Paper.findAllByUser(user),
-				                             volunteering           : Volunteering.list(),
-				                             participantVolunteering: participantVolunteering,
-				                             networks               : Network.list(),
-				                             paperStates            : PaperState.list(),
-				                             equipmentList          : Equipment.list(),
-				                             participantIds         : participantIds,
-				                             sessions               : sessions,
-				                             daysPresent            : daysPresent,
-				                             orders                 : orders,
-				                             emailsSent             : emailsSent,
-				                             emailsNotSent          : emailsNotSent
-				])
+
+				// If a participant was added, load it to the model, so the view correctly shows the new information
+				if (!participant && params['add-to-date']?.equals('add')) {
+					participant = user.getParticipantForDate(pageInformation.date)
+				}
 			}
 		}
 
-        user = user.refresh()
-        participant = participant.refresh()
-
-		// Show the participant data
+		List participantVolunteering = (participant) ? participant.getParticipantVolunteeringSorted() : []
 		render(view: "form", model: [user                   : user,
 		                             participant            : participant,
-		                             papers                 : Paper.findAllByUser(user),
-		                             volunteering           : Volunteering.list(),
 		                             participantVolunteering: participantVolunteering,
-		                             networks               : Network.list(),
-		                             paperStates            : PaperState.list(),
-		                             equipmentList          : Equipment.list(),
 		                             participantIds         : participantIds,
 		                             sessions               : sessions,
 		                             daysPresent            : daysPresent,
 		                             orders                 : orders,
-		                             emailsSent             : emailsSent,
-		                             emailsNotSent          : emailsNotSent
+		                             emailsSent             : SentEmail.emailsSent(user).list(),
+		                             emailsNotSent          : SentEmail.emailsNotSent(user).list()
 		])
 	}
 

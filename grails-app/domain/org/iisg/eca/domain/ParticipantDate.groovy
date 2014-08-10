@@ -160,6 +160,30 @@ class ParticipantDate extends EventDateDomain {
         }
     }
 
+	/**
+	 * Sorting here instead of using the database, to overcome issues
+	 * @return The participant volunteerings sorted
+	 */
+	List<ParticipantVolunteering> getParticipantVolunteeringSorted() {
+		if (participantVolunteering) {
+			participantVolunteering.sort { ParticipantVolunteering pv1, ParticipantVolunteering pv2 ->
+				if (pv1.volunteering.id == pv2.volunteering.id) {
+					pv1.network.name <=> pv2.network.name
+				}
+				else {
+					pv1.volunteering.description <=> pv2.volunteering.description
+				}
+			}
+		}
+		else {
+			[]
+		}
+	}
+
+	/**
+	 * The order of the participant, by payment id
+	 * @return The order in question
+	 */
     Order findOrder() {
         Order.get(paymentId)
     }
