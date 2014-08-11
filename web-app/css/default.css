@@ -72,6 +72,10 @@ select {
     max-width: 400px;
 }
 
+.ui-dialog-content select {
+    max-width: 200px;
+}
+
 select[size], select[multiple] {
     height: 100%;
 }
