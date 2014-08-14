@@ -521,8 +521,8 @@ class ParticipantController {
 				User user = User.findById(params.user_id)
 				ParticipantDate participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
 
-				EmailTemplate template = EmailTemplate.
-						findByDescriptionAndEvent('Invitation letter', pageInformation.date.event)
+				Long emailId = Setting.getSetting(Setting.INVITATION_LETTER_EMAIL_TEMPLATE_ID).value.toLong()
+				EmailTemplate template = EmailTemplate.findById(emailId)
 				User recipient = User.get(Setting.getSetting(Setting.MAIL_INVITATION_LETTERS_TO).value)
 
 				// Send invitation letter

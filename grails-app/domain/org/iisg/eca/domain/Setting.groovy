@@ -86,6 +86,7 @@ class Setting extends EventDomain {
 
     // Email templates
     static final String BANK_TRANSFER_EMAIL_TEMPLATE_ID = 'bank_transfer_email_template_id'
+	static final String INVITATION_LETTER_EMAIL_TEMPLATE_ID = 'invitation_letter_email_template_id'
     static final String LOST_PASSWORD_EMAIL_TEMPLATE_ID = 'lost_password_email_template_id'
     static final String NEW_PASSWORD_EMAIL_TEMPLATE_ID = 'new_password_email_template_id'
     static final String PAYMENT_ACCEPTED_EMAIL_TEMPLATE_ID = 'payment_accepted_email_template_id'
