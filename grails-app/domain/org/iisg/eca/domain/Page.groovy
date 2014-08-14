@@ -187,7 +187,8 @@ class Page {
 	 * @return The title of this page
 	 */
 	String getTitle(Locale locale = null) {
-		locale ?: LocaleContextHolder.getLocale()
+		locale = locale ?: LocaleContextHolder.getLocale()
+
 		Object[] args = []
 		if (titleArg) {
 			args = [messageSource.getMessage(titleArg, null, locale).toLowerCase(locale)]
