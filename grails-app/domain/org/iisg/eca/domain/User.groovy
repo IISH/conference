@@ -445,17 +445,6 @@ class User {
 			}
 		}
 
-		noPaymentAttempt { date ->
-			allParticipantsSoftState(date)
-
-			participantDates {
-				or {
-					isNull('paymentId')
-					eq('paymentId', 0L)
-				}
-			}
-		}
-
 		confirmedPayments { date ->
 			allParticipantsSoftState(date)
 
