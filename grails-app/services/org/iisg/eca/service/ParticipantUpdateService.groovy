@@ -47,10 +47,10 @@ class ParticipantUpdateService {
 				}
 
 				user.save(failOnError: true)
-				participant.save(failOnError: true)
+				participant.save(flush: true, failOnError: true)
 			}
 			else {
-				user.save(failOnError: true)
+				user.save(flush: true, failOnError: true)
 			}
 
 			return true
@@ -109,6 +109,11 @@ class ParticipantUpdateService {
 	 * @param params The data to update the participant with
 	 */
 	private void updateParticipantDate(ParticipantDate participant, GrailsParameterMap params) {
+		// If all accompanying persons were deleted by the user, then actually delete them instead of doing nothing
+		if (!params['participantDate.accompanyingPersons']) {
+			params['participantDate.accompanyingPersons'] = []
+		}
+
 		bindData(participant, params, [
 				include: ['invitationLetter', 'invitationLetterSent', 'lowerFeeRequested', 'lowerFeeAnswered',
 				          'lowerFeeText', 'student', 'studentConfirmed', 'award', 'state', 'feeState', 'extraInfo',
