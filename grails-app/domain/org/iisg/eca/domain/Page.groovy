@@ -24,8 +24,7 @@ class Page {
     Page parent
     String urlQuery
 
-    static hasMany = [  adminPages:     AdminPage,
-                        dynamicPages:   DynamicPage,
+    static hasMany = [  dynamicPages:   DynamicPage,
                         subPages:       Page,
                         groups:         Group]
     static belongsTo = [Page, Group]
