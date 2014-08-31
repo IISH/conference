@@ -25,16 +25,23 @@ class ParticipantService {
      * @param params The parameters of the current request containing the filters set by the user
      * @return A map with characters A-Z as key, which lists all participants which last names start with the keys character
      */
-    Map<String, Object[]> getParticipants(GrailsParameterMap params) {
-        Map<String, Object[]> participants = [:]
+    Map<String, List> getParticipants(GrailsParameterMap params) {
+	    Map<String, List> participants = new LinkedHashMap<String, List>()
 
         // Now loop over all participants returned by the database and create a map out if it
         getParticipantsWithFilters(params).eachWithIndex { participant, i ->
-	        String character = Normalizer
-			        .normalize(participant[2].toUpperCase()[0], Normalizer.Form.NFKD)
+	        Long id = (Long) participant[0]
+	        String firstName = participant[1]
+	        String lastName = participant[2]
+	        String participantState = participant[3]
+
+	        String character = lastName.toUpperCase().charAt(0).toString()
+	        character = Normalizer
+			        .normalize(character, Normalizer.Form.NFKD)
 			        .replaceAll('\\p{InCombiningDiacriticalMarks}+', '')
+
 	        List list = participants.get(character, new ArrayList())
-            list.add([participant[0], "${participant[1]} ${participant[2]}", "(#${participant[0]}, ${participant[3]})", i])
+            list.add([id, "$firstName $lastName", "(#$id, $participantState)", i])
         }
 
         participants
