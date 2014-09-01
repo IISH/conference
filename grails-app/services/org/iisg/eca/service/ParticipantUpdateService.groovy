@@ -86,7 +86,7 @@ class ParticipantUpdateService {
 		// Update papers
 		int i = 0
 		while (params["Paper_${i}"]) {
-			Paper paper = user.papers.find { it.id == params.long("Paper_${i}.id")}
+			Paper paper = user.papers.find { it.id == params.long("Paper_${i}.id") }
 			updatePaper(paper, user, params, i)
 			i++
 		}
