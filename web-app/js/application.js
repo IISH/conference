@@ -13,7 +13,7 @@ var decodeUrlParameters = function (urlParameters) {
 	}
 
 	return parameters;
-}
+};
 
 var setContentWidth = function () {
 	var bodyWidth = body.outerWidth(true);
@@ -21,7 +21,7 @@ var setContentWidth = function () {
 	newContentWidth -= 15; // Add extra space if scrollbar appears
 	newContentWidth = (newContentWidth < 950) ? 950 : newContentWidth;
 	content.css("width", newContentWidth + "px");
-}
+};
 
 var showErrors = function (data) {
 	var errorsBox = $('.errors');
@@ -43,7 +43,7 @@ var showErrors = function (data) {
 
 	errorsBox.show();
 	errorsBox.trigger('error');
-}
+};
 
 var showMessage = function (data) {
 	var messageBox = $('.message');
@@ -75,7 +75,7 @@ var setDatePicker = function (element, increaseDay) {
 		date.setDate(date.getDate() + 1);
 		element.datepicker('setDate', date);
 	}
-}
+};
 
 var addAutoComplete = function (element) {
 	// Have to use listener for auto complete added to dynamically added input boxes
@@ -103,7 +103,7 @@ var addAutoComplete = function (element) {
 			}
 		});
 	});
-}
+};
 
 var makeResizable = function (element) {
 	element = $(element);
@@ -116,7 +116,7 @@ var makeResizable = function (element) {
 		});
 		element.parent().css("padding-bottom", "0");
 	}
-}
+};
 
 var createNewItem = function (item, lastItem) {
 	var i = -1;
@@ -176,7 +176,7 @@ var createNewItem = function (item, lastItem) {
 	clone.removeClass("hidden");
 
 	return clone;
-}
+};
 
 var removeAnItem = function (toBeRemoved, classToStop) {
 	var setIndex = toBeRemoved.find('input[name=set-index]');
@@ -219,7 +219,7 @@ var removeAnItem = function (toBeRemoved, classToStop) {
 	}
 
 	toBeRemoved.remove();
-}
+};
 
 var guessUrl = function (urlToCall) {
 	var url = location.href.replace(location.search, '').replace(location.hash, '').replace('#', '');
@@ -293,7 +293,14 @@ var ajaxCall = function (element, url, params, onSuccess, onFailure) {
 			onFailure(data);
 		}
 	});
-}
+};
+
+var subMenusToOpen = function(openSubMenus) {
+    $('#menu dl.sub-menu').each(function () {
+        var id = $(this).prev().find('a').attr('href').substring(1);
+        $(this).toggle((openSubMenus === 'all') || ($.isNumeric(id) && ($.inArray(id, openSubMenus) !== -1)));
+    });
+};
 
 $(document).ready(function () {
 	content = $('#content');
@@ -310,13 +317,7 @@ $(document).ready(function () {
 
 	var cookieValue = $.cookie("submenus");
 	var openSubMenus = (cookieValue) ? cookieValue.split(';') : [];
-	$('#menu dl.sub-menu').each(function () {
-		var id = $(this).prev().find('a').attr('href').substring(1);
-
-		if ($.isNumeric(id) && ($.inArray(id, openSubMenus) !== -1)) {
-			$(this).show();
-		}
-	});
+    subMenusToOpen(openSubMenus);
 
 	$('textarea').each(function () {
 		makeResizable(this);
@@ -385,6 +386,33 @@ $(document).ready(function () {
 		$.cookie("submenus", openSubMenus.join(';'), {path: '/'});
 		subMenu.slideToggle('fast');
 	});
+
+    $('#menu-filter').keyup(function(e) {
+        var text = $(this).val().toLowerCase().trim();
+        var submenus = $([]);
+
+        $('#menu .menu-item').each(function() {
+            if ($(this).next().hasClass('sub-menu')) {
+                submenus = submenus.add(this);
+            }
+            else {
+                $(this).toggle($(this).text().toLowerCase().indexOf(text) >= 0);
+            }
+        });
+
+        if (text.length > 0) {
+            subMenusToOpen('all');
+            submenus.each(function() {
+                var show = ($(this).next().children(':visible').length > 0);
+                $(this).next().toggle(show);
+                $(this).toggle(show);
+            });
+        }
+        else {
+            subMenusToOpen(openSubMenus);
+            submenus.show();
+        }
+    });
 
 	$('.export-data').change(function (e) {
 		var urlParams = $(this).val();

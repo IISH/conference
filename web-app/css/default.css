@@ -609,6 +609,12 @@ span.help-text {
     padding: 10px 20px;
 }
 
+#menu-filter {
+    font-size: 90%;
+    height: 15px;
+    width: inherit;
+}
+
 /* MAIN CONTENT */
 
 #container {

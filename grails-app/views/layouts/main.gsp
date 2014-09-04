@@ -81,6 +81,9 @@
                         <dd>&nbsp;</dd>
 
                         <dt>CMS</dt>
+                        <dd>
+                            <input type="text" name="menu-filter" id="menu-filter" placeholder="${g.message(code: 'menu.filter.label')}" />
+                        </dd>
                         <eca:menu locale="${curLocale}" />
                     </g:if>
                 </dl>

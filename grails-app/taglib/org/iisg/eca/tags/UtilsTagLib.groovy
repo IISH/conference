@@ -335,7 +335,7 @@ class UtilsTagLib {
      */
     private void printSubMenu(MarkupBuilder builder, List<MenuItem> menu, Locale locale = null) {
          menu.each { menuItem ->
-            builder.dd {
+            builder.dd(class: 'menu-item') {
                 Page page = menuItem.page
                 if (page.controller && page.action) {
                     String link = eca.createLink(controller: page.controller, action: page.action)
