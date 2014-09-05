@@ -13,6 +13,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile
  */
 class ParticipantUpdateService {
 	def pageInformation
+	def passwordService
 
 	/**
 	 * Make sure we can use the bind method within all methods of this service
@@ -50,6 +51,12 @@ class ParticipantUpdateService {
 				participant.save(flush: true, failOnError: true)
 			}
 			else {
+				user.save(flush: true, failOnError: true)
+			}
+
+			// Now that the session is flushed, check whether we also have to send a new password to this user
+			if (user.sendNewPassword) {
+				passwordService.sendPassword(user)
 				user.save(flush: true, failOnError: true)
 			}
 

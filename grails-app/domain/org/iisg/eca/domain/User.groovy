@@ -631,11 +631,6 @@ class User {
 		// Make sure the email address is in lowercase
 		emailToLowercase()
 
-		// If the user did not receive his password yet, mail him/her a new one now
-		if (sendNewPassword) {
-			passwordService.sendPassword(this)
-		}
-
 		// Make sure to hash the password if changed
 		if (isDirty('password')) {
 			encodePassword()
