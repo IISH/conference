@@ -66,7 +66,7 @@ $(document).ready(function () {
 
 	$('.order-set-payed').click(function (e) {
 		var elem = this;
-		ajaxCall(elem, messageUrl, {code: 'default.button.delete.confirm.message'}, function (data) {
+		ajaxCall(elem, messageUrl, {code: 'default.button.confirm.message'}, function (data) {
 			var setPayed = confirm(data.message);
 			if (setPayed) {
 				$('.errors').hide();
@@ -88,7 +88,7 @@ $(document).ready(function () {
 
 	$('.order-refund-payment').click(function (e) {
 		var elem = this;
-		ajaxCall(elem, messageUrl, {code: 'default.button.delete.confirm.message'}, function (data) {
+		ajaxCall(elem, messageUrl, {code: 'default.button.confirm.message'}, function (data) {
 			var refundPayment = confirm(data.message);
 			if (refundPayment) {
 				$('.errors').hide();

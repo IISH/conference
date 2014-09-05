@@ -140,6 +140,9 @@
             </eca:link>
             <input type="submit" name="btn_save" class="btn_save" value="${message(code: 'default.button.save.label')}" />
             <input type="submit" name="btn_save_close" class="btn_save_close" value="${message(code: 'default.button.save.close.label')}" />
+	        <eca:link controller="${params.controller}" action="duplicate" id="${template.id}" class="btn_duplicate">
+		      <g:message code="default.button.duplicate.label" />
+	        </eca:link>
           </fieldset>
         </form>
     </body>

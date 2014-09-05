@@ -5,7 +5,7 @@ import groovy.sql.Sql
 /**
  * An email template
  */
-class EmailTemplate extends EventDomain {
+class EmailTemplate extends EventDomain implements Cloneable {
     def dataSource
 
     /**
@@ -308,6 +308,22 @@ class EmailTemplate extends EventDomain {
                 break
         }
     }
+
+	/**
+	 * Simple method to clone this email template
+	 * @return A clone of this email template instance
+	 */
+	public EmailTemplate clone() {
+		EmailTemplate emailTemplateClone = new EmailTemplate()
+
+		// Reference all properties of the current instance, except id, subject and description
+		emailTemplateClone.properties = properties
+		emailTemplateClone.id = null
+		emailTemplateClone.subject = "(DUPLICATE) $subject"
+		emailTemplateClone.description = "(DUPLICATE) $description"
+
+		return emailTemplateClone
+	}
 
     @Override
     String toString() {

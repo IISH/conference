@@ -130,4 +130,37 @@ class EmailTemplateController {
 
         redirect(uri: eca.createLink(action: 'list', noBase: true))
     }
+
+	/**
+	 * Duplicates the given email template
+	 */
+	def duplicate() {
+		if (!params.id) {
+			flash.error = true
+			flash.message = g.message(code: 'default.no.id.message')
+			redirect(uri: eca.createLink(previous: true, noBase: true))
+			return
+		}
+
+		EmailTemplate originalTemplate = EmailTemplate.findById(params.id)
+
+		if (!originalTemplate) {
+			flash.error = true
+			flash.message = g.message(code: 'default.not.found.message', args: [message(code: 'emailTemplate.label')])
+			redirect(uri: eca.createLink(previous: true, noBase: true))
+			return
+		}
+
+		EmailTemplate duplicatedTemplate = originalTemplate.clone()
+
+		if (duplicatedTemplate.save(flush: true)) {
+			flash.message = g.message(code: 'default.duplicated.message', args: [g.message(code: 'emailTemplate.label'), originalTemplate.toString()])
+			redirect(uri: eca.createLink(action: 'edit', id: duplicatedTemplate.id, noBase: true))
+		}
+		else {
+			flash.error = true
+			flash.message = g.message(code: 'default.not.duplicated.message', args: [g.message(code: 'emailTemplate.label'), originalTemplate.toString()])
+			redirect(uri: eca.createLink(previous: true, noBase: true))
+		}
+	}
 }

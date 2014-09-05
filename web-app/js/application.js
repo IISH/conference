@@ -473,7 +473,7 @@ $(document).ready(function () {
 		var thisItem = $(e.target);
 		var item = thisItem.parents('li');
 
-		ajaxCall(this, messageUrl, {code: 'default.button.delete.confirm.message'}, function (data) {
+		ajaxCall(this, messageUrl, {code: 'default.button.confirm.message'}, function (data) {
 			var deleted = confirm(data.message);
 			if (deleted) {
 				if (!thisItem.hasClass('no-del')) {
@@ -488,7 +488,7 @@ $(document).ready(function () {
 		var thisItem = $(e.target);
 		var item = thisItem.parents('.column');
 
-		ajaxCall(this, messageUrl, {code: 'default.button.delete.confirm.message'}, function (data) {
+		ajaxCall(this, messageUrl, {code: 'default.button.confirm.message'}, function (data) {
 			var deleted = confirm(data.message);
 			if (deleted) {
 				if (!thisItem.hasClass('no-del')) {
@@ -499,11 +499,11 @@ $(document).ready(function () {
 		});
 	});
 
-	$('a.btn_delete').click(function (e) {
+	$('a.btn_delete, a.btn_duplicate').click(function (e) {
 		e.preventDefault();
 		var thisItem = $(this);
 
-		ajaxCall(this, messageUrl, {code: 'default.button.delete.confirm.message'}, function (data) {
+		ajaxCall(this, messageUrl, {code: 'default.button.confirm.message'}, function (data) {
 			var deleted = confirm(data.message);
 			if (deleted) {
 				window.location = thisItem.attr('href');
