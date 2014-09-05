@@ -27,6 +27,7 @@ class User {
      */
     def static pageInformation
     def clientDetailsService
+	def passwordService
     def tokenServices
 
     /**
@@ -53,6 +54,7 @@ class User {
     String requestCode
     Date requestCodeValidUntil
     Date newPasswordEmailed
+	boolean sendNewPassword = false
     String phone
     String fax
     String mobile
@@ -99,6 +101,7 @@ class User {
         requestCode             column: 'request_code'
         requestCodeValidUntil   column: 'request_code_valid_until'
         newPasswordEmailed      column: 'new_password_emailed'
+	    sendNewPassword         column: 'send_new_password'
         phone                   column: 'phone'
         fax                     column: 'fax'
         mobile                  column: 'mobile'
@@ -627,6 +630,11 @@ class User {
 	def beforeUpdate() {
 		// Make sure the email address is in lowercase
 		emailToLowercase()
+
+		// If the user did not receive his password yet, mail him/her a new one now
+		if (sendNewPassword) {
+			passwordService.sendPassword(this)
+		}
 
 		// Make sure to hash the password if changed
 		if (isDirty('password')) {

@@ -25,15 +25,17 @@ class PasswordService {
 	/**
 	 * Allows for sending a new password to a user
 	 * @param user he user who's password has to be emailed
-	 * @param newPassword The new password of the user
 	 * @return <code>true</code> in case the email was sent
 	 */
-	boolean sendPassword(User user, String newPassword) {
+	boolean sendPassword(User user) {
+		user.password = user.createPassword()
+		user.sendNewPassword = false
+
 		Long templateId = Setting.getSetting(Setting.NEW_PASSWORD_EMAIL_TEMPLATE_ID).value.toLong()
 		EmailTemplate template = EmailTemplate.get(templateId)
 
 		SentEmail email = emailService.createEmail(user, template, false)
-		email.addAdditionalValue('PasswordParticipant', newPassword)
+		email.addAdditionalValue('PasswordParticipant', user.password)
 		emailService.sendEmail(email, false)
 
 		return true

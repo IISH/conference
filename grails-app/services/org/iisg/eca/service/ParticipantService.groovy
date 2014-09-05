@@ -8,7 +8,9 @@ import org.springframework.context.i18n.LocaleContextHolder
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 
 import org.iisg.eca.domain.Day
+import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Extra
+import org.iisg.eca.domain.FeeState
 import org.iisg.eca.domain.ParticipantDate
 import org.iisg.eca.domain.ParticipantState
 
@@ -218,5 +220,38 @@ class ParticipantService {
             [(it[0]) : (it[1])]
         }
     }
+
+	/**
+	 * Creates a new participant for the current event date
+	 * @param emailAddress The email address of the user in question
+	 * @return The new participant
+	 */
+	ParticipantDate createNewParticipant(String emailAddress) {
+		ParticipantDate participant = null
+		User user = User.findByEmail(emailAddress)
+
+		// There is also no user with this email address, so create one
+		if (!user) {
+			user = new User(lastName: 'n/a', firstName: 'n/a', email: emailAddress, sendNewPassword: true)
+		}
+		else {
+			// Does the participant exist in the database already, maybe deleted?
+			ParticipantDate.withoutHibernateFilters {
+				participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
+			}
+
+			// Make sure that we undo the deletion if found
+			if (participant) {
+				participant.deleted = false
+				return participant
+			}
+		}
+
+		// This user is not a participant yet, but the user indicated he/she wants to make him/her one
+		if (!participant) {
+			return new ParticipantDate(user: user, state: ParticipantState.get(ParticipantState.NEW_PARTICIPANT),
+					feeState: FeeState.get(FeeState.NO_FEE_SELECTED))
+		}
+	}
 }
 

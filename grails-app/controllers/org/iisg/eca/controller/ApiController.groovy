@@ -330,9 +330,7 @@ class ApiController {
 
 	def mailNewPassword() {
 		actionById(User, 'userId', params, ['success': false]) { User user, Map response ->
-			user.password = User.createPassword()
-			passwordService.sendPassword(user, user.password)
-
+			passwordService.sendPassword(user)
 			if (user.save()) {
 				response.put('success', true)
 			}

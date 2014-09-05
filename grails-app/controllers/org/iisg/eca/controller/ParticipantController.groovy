@@ -1,9 +1,12 @@
 package org.iisg.eca.controller
-import grails.converters.JSON
-import groovy.sql.Sql
+
 import org.iisg.eca.domain.*
 import org.iisg.eca.utils.PaymentQueries
 import org.iisg.eca.utils.PaymentStatistic
+
+import groovy.sql.Sql
+import grails.converters.JSON
+
 /**
  * Controller responsible for handling requests on participants
  */
@@ -11,7 +14,6 @@ class ParticipantController {
 	def dataSource
 	def emailService
 	def exportService
-	def passwordService
 	def pageInformation
 	def participantService
 	def participantUpdateService
@@ -84,58 +86,29 @@ class ParticipantController {
 				return
 			}
 
-			String password = null
-			ParticipantDate participant = null
-			User user = User.findByEmail(params.email)
+			String email = params.email.toString().trim()
+			User user = User.findByEmail(email)
+			ParticipantDate participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
 
-			if (!user) {
-				user = new User(lastName: "n/a", firstName: "n/a", email: params.email)
-				password = User.createPassword()
-				user.password = password
-			}
-			else {
-				// Does the participant exist in the database already
-				participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
-
-				if (participant) {
-					flash.message = g.message(code: 'default.exists.message',
-							args: [user.toString(), g.message(code: 'participantDate.label')])
-					redirect(uri: eca.createLink(action: 'show', id: user.id, noBase: true))
-					return
-				}
-
-				// Look for the participant, maybe he is deleted
-				ParticipantDate.withoutHibernateFilters {
-					participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
-				}
-
-				// If we found the filtered participant, undo the deletion
-				if (participant) {
-					participant.deleted = false
-				}
-			}
-
-			// This user is not a participant yet, but the user indicated he/she wants to make him/her one
-			if (!participant) {
-				participant =
-						new ParticipantDate(user: user, state: ParticipantState.get(ParticipantState.NEW_PARTICIPANT),
-								feeState: FeeState.get(FeeState.NO_FEE_SELECTED))
-			}
-
-			if (user.save(flush: true) && participant.save(flush: true)) {
-				// Also create a new password that will be emailed to the participant
-				if (password) {
-					passwordService.sendPassword(user, password)
-				}
-
-				flash.message = g.message(code: 'default.created.message',
-						args: [g.message(code: 'participantDate.label'), participant.toString()])
+			if (participant) {
+				flash.message = g.message(code: 'default.exists.message',
+						args: [user.toString(), g.message(code: 'participantDate.label')])
 				redirect(uri: eca.createLink(action: 'show', id: user.id, noBase: true))
 				return
 			}
-			else {
-				return [participant: participant]
+
+			// Participant is not found, so create one
+			participant = participantService.createNewParticipant(email)
+			user = participant.user
+
+			if (user.save() && participant.save()) {
+				flash.message = g.message(code: 'default.created.message',
+						args: [g.message(code: 'participantDate.label'), participant.toString()])
+				redirect(uri: eca.createLink(action: 'show', id: participant.user.id, noBase: true))
+				return
 			}
+
+			return [participant: participant]
 		}
 	}
 
