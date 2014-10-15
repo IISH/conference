@@ -128,7 +128,7 @@ class UserController {
 
 		    List users = queryTypeCriteriaBuilder.getUniqueResults()
 		    render users.collect { user ->
-		        [label: "${user[1]}, ${user[2]}", value: user[0]]
+		        [label: "${user[1]}, ${user[2]} (#${user[0]})", value: user[0]]
 		    } as JSON
 		}
     }

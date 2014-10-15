@@ -1202,6 +1202,7 @@ table.payment-statistics tbody tr:hover {
 /* AUTOCOMPLETE */
 
 .ui-autocomplete {
+    min-width: 300px;
     max-height: 100px;
     overflow-y: auto;
     overflow-x: hidden;
