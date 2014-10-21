@@ -9,6 +9,8 @@ class Extra extends EventDateDomain {
     String description
     String secondDescription
     BigDecimal amount = BigDecimal.ZERO
+	boolean isFinalRegistration = true
+	int sortOrder = 0
 	boolean deleted
 
     static belongsTo = ParticipantDate
@@ -17,6 +19,7 @@ class Extra extends EventDateDomain {
     static mapping = {
         table 'extras'
         version false
+	    sort 'sortOrder'
 
         id                  column: 'extra_id'
         title               column: 'title'
@@ -24,6 +27,8 @@ class Extra extends EventDateDomain {
         description         column: 'description'
         secondDescription   column: 'description_2nd',  type: 'text'
         amount              column: 'amount'
+	    isFinalRegistration column: 'is_final_registration'
+	    sortOrder           column: 'sort_order'
 	    deleted             column: 'deleted'
 
         participantDates    joinTable: 'participant_date_extra'
@@ -50,7 +55,9 @@ class Extra extends EventDateDomain {
             'extra',
             'description',
             'secondDescription',
-            'amount'
+            'amount',
+		    'isFinalRegistration',
+		    'sortOrder'
     ]
 
 	void softDelete() {

@@ -117,7 +117,7 @@ class ParticipantDate extends EventDateDomain {
     void updateForApi(String property, String value) {
         switch (property) {
             case 'extras.id':
-                this.extras.clear()
+                this.extras?.clear()
                 this.save(flush: true)
                 value.split(';').each { extraId ->
                     if (extraId.toString().isLong()) {
@@ -129,7 +129,7 @@ class ParticipantDate extends EventDateDomain {
                 }
                 break
 	        case 'accompanyingPersons':
-		        this.accompanyingPersons.clear()
+		        this.accompanyingPersons?.clear()
 		        this.save(flush: true)
 		        this.accompanyingPersons = JSON.parse(value)*.trim()
 		        break

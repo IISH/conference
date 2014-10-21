@@ -82,7 +82,7 @@ class EmailService {
 
     /**
      * Creates an email based on the template and the information about the user
-     * @param emailTemplate The template used for the email content     *
+     * @param emailTemplate The template used for the email content
      * @param identifiers A map with ids that should identify the type of information the body should contain
      * @param updateRecords Indicates whether related records of the recipient should be updated
      * @param date The event date of which to extract participant information from
@@ -104,6 +104,11 @@ class EmailService {
      * @param forceSend Whether the email is forced to (re)send
      */
     synchronized void sendEmail(SentEmail sentEmail, boolean saveToDb=true, boolean forceSend=false) {
+        // Only continue if mail is not hard disabled
+	    if (grailsApplication.config.grails.mail.disabled) {
+	        return
+        }
+
         // How often may we try before giving up?
         Integer maxNumTries = new Integer(Setting.getSetting(Setting.EMAIL_MAX_NUM_TRIES, sentEmail.date?.event).value)
 
