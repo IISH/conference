@@ -57,7 +57,7 @@ var showMessage = function (data) {
 	messageBox.text(data.message);
 	messageBox.show();
 	messageBox.trigger('message');
-}
+};
 
 var setDatePicker = function (element, increaseDay) {
 	element = $(element);
@@ -186,7 +186,7 @@ var removeAnItem = function (toBeRemoved, classToStop) {
 
 	var next = toBeRemoved.next();
 	while (!next.hasClass(classToStop)) {
-		var elements = next.find('input[name], select[name]')
+		var elements = next.find('input[name], select[name], textarea[name]');
 		var nameSplit = elements.attr("name").split('.');
 		var number = nameSplit[0].split('_')[1];
 		if ($.isNumeric(number)) {
@@ -232,7 +232,7 @@ var guessUrl = function (urlToCall) {
 	}
 
 	return urlToCall;
-}
+};
 
 var ajaxCall = function (element, url, params, onSuccess, onFailure) {
 	element = $(element);

@@ -588,13 +588,13 @@
 
                             <fieldset class="form">
                                 <legend><g:message code="equipment.label" /></legend>
-                                <g:each in="${equipmentList}" var="equipment">
+                                <g:each in="${equipmentList}" var="equip">
                                     <div class="${hasErrors(bean: paper, field: 'equipment', 'error')}">
                                         <label class="property-label">
-                                            ${equipment.equipment}
+                                            ${equip.equipment}
                                         </label>
                                         <span class="property-value">
-                                            <g:checkBox name="Paper_${i}.equipment" value="${equipment.id}" checked="${paper.equipment.find { it == equipment }}" />
+                                            <g:checkBox name="Paper_${i}.equipment" value="${equip.id}" checked="${paper.hasEquipmentWithId(equip.id)}" />
                                         </span>
                                     </div>
                                 </g:each>

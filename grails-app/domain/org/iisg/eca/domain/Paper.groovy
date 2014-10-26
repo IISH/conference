@@ -201,6 +201,15 @@ class Paper extends EventDateDomain {
 		return ((this.fileSize != null) && (this.fileSize > 0))
 	}
 
+	/**
+	 * Whether the paper presentation requires the equipment with the given id
+	 * @param equipmentId The equipment id in question
+	 * @return True if the paper presentation requires the given equipment
+	 */
+	boolean hasEquipmentWithId(long equipmentId) {
+		return equipment?.find { it.id == equipmentId }
+	}
+
     /**
      * Updates the mailPaperState when the state of this paper has been changed
      */
