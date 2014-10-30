@@ -26,6 +26,8 @@ class ApiService {
 		DomainClassInfo domainClassInfo = new DomainClassInfo(grailsApplication, domain)
 		List<String> allowed = getAllowed(domainClassInfo)
 		Map validProperties = params.subMap(params.keySet().intersect(allowed)).findAll { it.value instanceof String }
+		validProperties.remove('event')
+		validProperties.remove('date')
 
 		int max = (params.max?.isInteger() && params.max <= MAX_NUM_RETURNED_RECORDS) ? params.int('max') :
 				MAX_NUM_RETURNED_RECORDS
@@ -41,10 +43,10 @@ class ApiService {
 
 		return domainClassInfo.getDomainClass().createCriteria().list(props) {
 			validProperties.each { property, value ->
-				def (val, method) = value.toString().split('::')
-
-				if (method == null) {
-					method = 'eq'
+				def val = value
+				def method = 'eq'
+				if (value.toString().contains('::')) {
+					(val, method) = value.toString().split('::')
 				}
 
 				DomainClassInfo infoForProperty = domainClassInfo

@@ -2,7 +2,7 @@ package org.iisg.eca.controller
 
 import grails.converters.JSON
 import grails.orm.PagedResultList
-
+import org.iisg.eca.domain.EventDate
 import org.iisg.eca.domain.Order
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Paper
@@ -326,6 +326,10 @@ class ApiController {
 
 	def eventDateInfo() {
 		render pageInformation.date as JSON
+	}
+
+	def eventDates() {
+		render EventDate.getAllForEvent(pageInformation.date.event).list() as JSON
 	}
 
 	def mailNewPassword() {
