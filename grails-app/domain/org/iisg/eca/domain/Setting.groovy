@@ -8,7 +8,6 @@ import java.text.SimpleDateFormat
  */
 class Setting extends EventDomain {
     // Default settings
-	static final String ACCOMPANYING_PERSON_DESCRIPTION = 'accompanying_person_description'
 	static final String ALLOWED_PAPER_EXTENSIONS = 'allowed_paper_extensions'
 	static final String APPLICATION_TITLE = 'application_title'
 	static final String AUTHOR_REGISTRATION_LASTDATE = 'author_registration_lastdate'
@@ -18,7 +17,6 @@ class Setting extends EventDomain {
 	static final String CHANGE_USER = 'change_user'
 	static final String CHECK_ACCEPTED_IP = 'check_accepted_ip'
 	static final String COUNTRY_ID = 'country_id'
-	static final String DEFAULT_EQUIPMENT_TEXT = 'default_equipment_text'
 	static final String DEFAULT_FROM_EMAIL = 'default_from_email'
 	static final String DEFAULT_NETWORK_ID = 'default_network_id'
 	static final String DEFAULT_ORGANISATION_EMAIL = 'default_organisation_email'
@@ -30,7 +28,6 @@ class Setting extends EventDomain {
     static final String EMAIL_MAX_NUM_TRIES = 'email_max_num_tries'
     static final String EMAIL_MIN_MINUTES_BETWEEN_SENDING = 'email_min_minutes_between_sending'
     static final String EMAIL_WAITING_TIME = 'email_waiting_time'
-	static final String FINAL_REGISTRATION_INTRO_TEXT = 'final_registration_intro_text'
 	static final String FINAL_REGISTRATION_LASTDATE = 'final_registration_lastdate'
 	static final String IP_AUTHENTICATION = 'ip_authentication'
 	static final String LAST_UPDATED = 'last_updated'
@@ -40,18 +37,13 @@ class Setting extends EventDomain {
 	static final String NETWORK_NAME_PLURAL = 'network_name_plural'
 	static final String NETWORK_NAME_SINGULAR = 'network_name_singular'
 	static final String NUM_CANDIDATE_VOTES_ADVISORY_BOARD = 'num_candidate_votes_advisory_board'
-	static final String ONLINE_PROGRAM_HEADER = 'online_program_header'
-	static final String ONLINE_PROGRAM_UNDER_CONSTRUCTION = 'online_program_under_construction'
 	static final String ORGANIZER_REGISTRATION_LASTDATE = 'organizer_registration_lastdate'
 	static final String PATH_FOR_ADMIN_MENU = 'path_for_admin_menu'
 	static final String PATH_FOR_MENU = 'path_for_menu'
 	static final String PREREGISTRATION_LASTDATE = 'preregistration_lastdate'
-	static final String PREREGISTRATION_LASTDATE_MESSAGE = 'preregistration_lastdate_message'
 	static final String PREREGISTRATION_STARTDATE = 'preregistration_startdate'
-	static final String PREREGISTRATION_STARTDATE_MESSAGE = 'preregistration_startdate_message'
 	static final String REFUND_ADMINISTRATION_COSTS = 'refund_administration_costs'
 	static final String SALT = 'salt'
-	static final String SPECTATOR_NAME = 'spectator_name'
     static final String WEB_ADDRESS = 'web_address'
 
 	// Show/hide settings

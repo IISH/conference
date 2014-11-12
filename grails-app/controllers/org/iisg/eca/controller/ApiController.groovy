@@ -4,6 +4,7 @@ import grails.converters.JSON
 import grails.orm.PagedResultList
 import org.iisg.eca.domain.EventDate
 import org.iisg.eca.domain.Order
+import org.iisg.eca.domain.Translate
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Paper
 import org.iisg.eca.domain.Network
@@ -212,6 +213,11 @@ class ApiController {
 	def settings() {
 		Map<String, String> settings = Setting.getSettingsMapForApi()
 		render settings as JSON
+	}
+
+	def translations() {
+		Map<String, String> translations = Translate.getTranslationsMap()
+		render translations as JSON
 	}
 
 	def participantsInNetwork() {
