@@ -131,9 +131,7 @@ class Paper extends EventDateDomain {
 				break
 			case 'session.id':
 				Session session = (value.isLong()) ? Session.findById(value.toLong()) : null
-				if (session) {
-					this.session = session
-				}
+				this.session = session
 				break
 			case 'networkProposal.id':
 				Network networkProposal = (value.isLong()) ? Network.findById(value.toLong()) : null

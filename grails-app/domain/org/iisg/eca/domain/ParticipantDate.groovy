@@ -91,6 +91,7 @@ class ParticipantDate extends EventDateDomain {
             'student',
             'award',
 		    'accompanyingPersons',
+		    'extraInfo',
             'extras.id',
             'participantVolunteering.id',
 		    'addedBy.id'
@@ -103,6 +104,7 @@ class ParticipantDate extends EventDateDomain {
 		    'student',
 		    'award',
 		    'accompanyingPersons',
+		    'extraInfo',
             'extras.id',
 		    'state.id',
 		    'feeState.id',

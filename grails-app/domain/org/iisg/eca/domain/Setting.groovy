@@ -42,6 +42,7 @@ class Setting extends EventDomain {
 	static final String PATH_FOR_MENU = 'path_for_menu'
 	static final String PREREGISTRATION_LASTDATE = 'preregistration_lastdate'
 	static final String PREREGISTRATION_STARTDATE = 'preregistration_startdate'
+	static final String PREREGISTRATION_SESSIONS = 'preregistration_sessions'
 	static final String REFUND_ADMINISTRATION_COSTS = 'refund_administration_costs'
 	static final String SALT = 'salt'
     static final String WEB_ADDRESS = 'web_address'
@@ -56,6 +57,8 @@ class Setting extends EventDomain {
 	static final String SHOW_CV	= 'show_cv'
 	static final String SHOW_DAYS = 'show_days'
 	static final String SHOW_DAYS_SESSION_PLANNED = 'show_days_session_planned'
+	static final String SHOW_EQUIPMENT = 'show_equipment'
+	static final String SHOW_GENERAL_COMMENTS = 'show_general_comments'
 	static final String SHOW_INVITATION_LETTER = 'show_invitation_letter'
 	static final String SHOW_LANGUAGE_COACH_PUPIL = 'show_language_coach_pupil'
 	static final String SHOW_LOWER_FEE = 'show_lower_fee'
@@ -63,8 +66,9 @@ class Setting extends EventDomain {
 	static final String SHOW_ORGANIZER_REGISTRATION = 'show_organizer_registration'
 	static final String SHOW_PROGRAMME_ONLINE = 'show_programme_online'
 	static final String SHOW_SESSION_CODES = 'show_session_codes'
+	static final String SHOW_SESSION_PARTICIPANT_TYPES_REGISTRATION = 'show_session_participant_types_registration'
 	static final String SHOW_STUDENT = 'show_student'
-
+	
 	// Required fields settings
 	static final String REQUIRED_CV = 'required_cv'
 
