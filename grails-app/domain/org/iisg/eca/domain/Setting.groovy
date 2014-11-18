@@ -68,7 +68,7 @@ class Setting extends EventDomain {
 	static final String SHOW_SESSION_CODES = 'show_session_codes'
 	static final String SHOW_SESSION_PARTICIPANT_TYPES_REGISTRATION = 'show_session_participant_types_registration'
 	static final String SHOW_STUDENT = 'show_student'
-	
+
 	// Required fields settings
 	static final String REQUIRED_CV = 'required_cv'
 

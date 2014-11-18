@@ -108,16 +108,17 @@ class EmailCreationService {
 		Set<SentEmail> emails = new HashSet<SentEmail>()
 
 		// First create the mail for the participant who just registered
-		SentEmail email = findAndCreateEmail(user, Setting.PRE_REGISTRATION_EMAIL_TEMPLATE_ID)
+		SentEmail email = findAndCreateEmail(user, Setting.PRE_REGISTRATION_EMAIL_TEMPLATE_ID,
+				[addedByUserId: user.id])
 		emails.add(email)
 
 		// Now for each created session also mail the session participants
-		Session.findAllByAddedBy(user).each { session ->
-			SessionParticipant.findAllBySession(session)*.user.unique().each { sessionParticipant ->
+		SessionParticipant.findAllByAddedBy(user)*.session.unique().each { session ->
+			SessionParticipant.findAllBySessionAndAddedBy(session, user)*.user.unique().each { sessionParticipant ->
 				SentEmail sentEmail = findAndCreateEmail(
 						sessionParticipant,
 						Setting.SESSION_REGISTRATION_EMAIL_TEMPLATE_ID,
-						[sessionId: session.id]
+						[sessionId: session.id, addedByUserId: user.id]
 				)
 				sentEmail.addAdditionalValue('OrganizerName', user.toString())
 
