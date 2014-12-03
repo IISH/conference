@@ -79,7 +79,7 @@ grails.spring.bean.packages = []
 grails.web.disable.multipart = false
 
 // request parameters to mask when logging exceptions
-grails.exceptionresolver.params.exclude = ['password']
+grails.exceptionresolver.params.exclude = ['password', 'client_secret']
 
 // enable query caching by default, if false, you have to specify 'cache: true' in the query to cache queries
 grails.hibernate.cache.queries = false
@@ -215,7 +215,7 @@ grails {
 
             providerNames = ['daoAuthenticationProvider']
 			if (Environment.current != Environment.TEST) {
-		        providerNames << 'clientCredentialsAuthenticationProvider'
+		        providerNames.add(0, 'clientCredentialsAuthenticationProvider')
 	        }
 
 	        oauthProvider {
