@@ -77,8 +77,13 @@ class UrlMappings {
             action = 'accessToken'
         }
 
-        name apiProgram: "/$event/$date/api/program" (controller: "api", parseRequest: true) {
-            action = 'program'
+	    // TODO: Deprecated, please use programme instead...
+	    name apiProgram: "/$event/$date/api/program" (controller: "api", parseRequest: true) {
+		    action = 'programme'
+	    }
+
+        name apiProgramme: "/$event/$date/api/programme" (controller: "api", parseRequest: true) {
+            action = 'programme'
         }
 
         name sendEmail: "/$event/$date/api/sendEmail" (controller: "api", parseRequest: true) {

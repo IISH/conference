@@ -57,6 +57,7 @@ class EventDate  {
 			'dateAsText',
 			'description',
 			'longDescription',
+			'lastDate',
 			'event'
 	]
 
@@ -98,6 +99,10 @@ class EventDate  {
 		''', ['eventId': event.id], [cache: true]).first()
 	}
 
+	/**
+	 * Returns a version of this event date for usage in an URL
+	 * @return A version of this event date for usage in an URL
+	 */
     String getUrl() {
         yearCode.replaceAll('\\s', '-')
     }

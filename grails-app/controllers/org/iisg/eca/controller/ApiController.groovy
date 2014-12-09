@@ -171,17 +171,17 @@ class ApiController {
 		}
 	}
 
-	def program() {
+	def programme() {
 		Long dayId = (params.dayId?.toString()?.isLong()) ? params.dayId?.toString()?.toLong() : null
 		Long timeId = (params.timeId?.toString()?.isLong()) ? params.timeId?.toString()?.toLong() : null
 		Long networkId = (params.networkId?.toString()?.isLong()) ? params.networkId?.toString()?.toLong() : null
 		Long roomId = (params.roomId?.toString()?.isLong()) ? params.roomId?.toString()?.toLong() : null
 		String terms = params.terms?.toString()
 
-		List<PlannedSession> program = sessionPlannerService.
-				getProgram(pageInformation.date.id, dayId, timeId, networkId, roomId, terms)
+		List<PlannedSession> programme = sessionPlannerService.
+				getProgramme(pageInformation.date.id, dayId, timeId, networkId, roomId, terms)
 
-		render program as JSON
+		render programme as JSON
 	}
 
 	def sendEmail() {

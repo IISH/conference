@@ -52,6 +52,6 @@ class MaintenanceJob {
         }
 
         // Also flush the program cache
-        sessionPlannerService.removeProgramFromCache()
+        sessionPlannerService.removeProgrammeFromCache()
     }
 }

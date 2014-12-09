@@ -1,5 +1,7 @@
 package org.iisg.eca.controller
 
+import org.iisg.eca.domain.Event
+import org.iisg.eca.domain.EventDate
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Paper
 import org.iisg.eca.domain.Setting
@@ -7,6 +9,8 @@ import org.iisg.eca.domain.Setting
 import org.apache.commons.io.FilenameUtils
 import org.springframework.web.util.UriComponentsBuilder
 import org.springframework.web.multipart.commons.CommonsMultipartFile
+
+import javax.servlet.http.HttpServletResponse
 
 class UserApiController {
     private static final int ERROR_NONE = 0
@@ -84,15 +88,18 @@ class UserApiController {
     }
 
     def downloadPaper() {
-        Paper paper = Paper.findById(params.id)
+	    Date downloadPaperLastDate = Setting.getSetting(Setting.DOWNLOAD_PAPER_LASTDATE).getDateValue()
+	    if (pageInformation.date.isLastDate() && (downloadPaperLastDate.compareTo(new Date().clearTime()) >= 0)) {
+		    Paper paper = Paper.findById(params.id)
 
-        // Let the export service deal with returning the uploaded paper
-        if (paper && (paper.fileSize > 0)) {
-            String prepend = "${pageInformation.date.event.getUrl()}-${pageInformation.date.getUrl()}-${paper.user.id}-"
-            exportService.getPaper(paper, response, prepend)
-        }
-        else {
-            render 'Paper not found!'
-        }
+		    // Let the export service deal with returning the uploaded paper
+		    if (paper && (paper.fileSize > 0)) {
+			    String prepend = "${pageInformation.date.event.getUrl()}-${pageInformation.date.getUrl()}-${paper.user.id}-"
+			    exportService.getPaper(paper, response, prepend)
+			    return
+		    }
+	    }
+
+	    render 'Paper not found!'
     }
 }

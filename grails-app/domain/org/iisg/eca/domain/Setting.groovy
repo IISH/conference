@@ -22,6 +22,7 @@ class Setting extends EventDomain {
 	static final String DEFAULT_ORGANISATION_EMAIL = 'default_organisation_email'
 	static final String DISABLE_EMAIL_SESSIONS = 'disable_email_sessions'
 	static final String DONT_SEND_EMAILS_TO = 'dont_send_emails_to'
+	static final String DOWNLOAD_PAPER_LASTDATE = 'download_paper_lastdate'
 	static final String EMAIL_ADDRESS_INFO_ERRORS = 'email_address_info_errors'
 	static final String EMAIL_BCC = 'email_bcc'
     static final String EMAIL_MAX_NUM_EMAILS_PER_SESSION = 'email_max_num_emails_per_session'
@@ -48,8 +49,8 @@ class Setting extends EventDomain {
     static final String WEB_ADDRESS = 'web_address'
 
 	// Show/hide settings
-	static final String HIDE_ALWAYS_IN_ONLINE_PROGRAM = 'hide_always_in_online_program'
-	static final String HIDE_IF_EMPTY_IN_ONLINE_PROGRAM = 'hide_if_empty_in_online_program'
+	static final String HIDE_ALWAYS_IN_ONLINE_PROGRAMME = 'hide_always_in_online_programme'
+	static final String HIDE_IF_EMPTY_IN_ONLINE_PROGRAMME = 'hide_if_empty_in_online_programme'
 	static final String SHOW_ACCOMPANYING_PERSONS = 'show_accompanying_persons'
 	static final String SHOW_AUTHOR_REGISTRATION = 'show_author_registration'
 	static final String SHOW_AWARD = 'show_award'

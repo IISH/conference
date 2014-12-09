@@ -65,6 +65,10 @@ class Event {
 		return datesByEvent
 	}
 
+	/**
+	 * Returns a version of this event for usage in an URL
+	 * @return A version of this event for usage in an URL
+	 */
     String getUrl() {
         code.replaceAll('\\s', '-')
     }

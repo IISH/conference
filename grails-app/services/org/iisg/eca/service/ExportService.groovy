@@ -99,6 +99,9 @@ class ExportService {
         response.contentType = paper.contentType
 	    response.contentLength = paper.fileSize
         response.setHeader("Content-disposition", "attachment;filename=\"${prepend + paper.fileName}\"")
-        response.outputStream << paper.file
+
+	    OutputStream outputStream = response.getOutputStream()
+	    outputStream << paper.file
+	    outputStream.flush()
     }
 }

@@ -297,9 +297,9 @@ class SessionController {
 	/**
 	 * Triggers to clear the program caches
 	 */
-	def clearProgramCache() {
-		sessionPlannerService.removeProgramFromCache()
-		render "Program cache cleared."
+	def clearProgrammeCache() {
+		sessionPlannerService.removeProgrammeFromCache()
+		render "Programme cache cleared."
 	}
     
     /**
