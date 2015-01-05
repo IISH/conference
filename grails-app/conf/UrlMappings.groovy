@@ -49,6 +49,9 @@ class UrlMappings {
             action = 'list'
         }
 
+        // Robots.txt
+        "/robots.txt" (view: "/robots")
+
         /*
          * API CALLS
          */

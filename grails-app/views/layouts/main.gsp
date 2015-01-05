@@ -4,27 +4,28 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="robots" content="noindex,nofollow">
 
         <meta http-equiv="cache-control" content="max-age=0" />
         <meta http-equiv="cache-control" content="no-cache" />
         <meta http-equiv="expires" content="-1" />
         <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
         <meta http-equiv="pragma" content="no-cache" />
-        
+
         <title>
             <g:layoutTitle default="${(curPage) ? curPage.getTitle(curLocale) : 'ECA'}" />
         </title>
-        
+
         <link rel="stylesheet" href="${eca.createLink(controller: 'css', action: 'css', noPreviousInfo: true)}" type="text/css">
         <link rel="stylesheet" href="${resource(dir: 'css', file: 'jquery-ui.css')}" type="text/css">
-        
+
         <g:javascript library="jquery" plugin="jquery" />
         <r:layoutResources />
         <g:javascript src="jquery.cookie.js" />
         <g:javascript src="jquery.placeholder.js" />
-        <g:javascript src="jquery-ui.js" />        
+        <g:javascript src="jquery-ui.js" />
         <g:javascript src="application.js" />
-        
+
         <g:layoutHead />
     </head>
     <body>
@@ -35,11 +36,11 @@
                 </a>
                 <a href="http://socialhistory.org/" target="_blank" class="hosted">Hosted by IISH</a>
             </div>
-          
+
             <div id="banner-container">
                 <div id="banner"></div>
             </div>
-          
+
             <div id="banner-menu">
                 <g:if test="${curDate}">
                     <div id="event-switcher">
@@ -58,7 +59,7 @@
                         </a></li>
                     </ul>
                 </div>
-                
+
                 <sec:ifLoggedIn>
                     <div id="loggedin">
                         <g:message code="springSecurity.loggedin.welcome" args="${[sec.loggedInUserInfo(field: 'fullName')]}" />
@@ -70,7 +71,7 @@
                 </sec:ifLoggedIn>
             </div>
         </div>
-      
+
         <div id="container">
             <div id="nav" role="navigation">
                 <dl id="menu">
