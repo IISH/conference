@@ -313,43 +313,36 @@ class SessionPlannerService {
     List<PlannedSession> getProgramme(Long dateId, Long dayId, Long timeId, Long networkId, Long roomId, String terms) {
         // Start by querying
         def results = SessionRoomDateTime.createCriteria().listDistinct {
-	        // Create aliases first for joins
+            // Create aliases first for joins
             createAlias('room', 'r')
             createAlias('sessionDateTime', 'sdt')
-	        createAlias('sdt.day', 'd')
-            createAlias('session', 's')
-	        createAlias('s.papers', 'p')
-            createAlias('s.networks', 'n')
-            createAlias('s.sessionParticipants', 'sp')
-	        createAlias('sp.type', 't')
-            createAlias('sp.user', 'u')
-
-	        // Set fetch modes
-	        fetchMode('r', FetchMode.JOIN)
-	        fetchMode('sdt', FetchMode.JOIN)
-	        fetchMode('d', FetchMode.JOIN)
-	        fetchMode('s', FetchMode.JOIN)
-	        fetchMode('p', FetchMode.JOIN)
-	        fetchMode('n', FetchMode.JOIN)
-	        fetchMode('sp', FetchMode.JOIN)
-	        fetchMode('t', FetchMode.JOIN)
-	        fetchMode('u', FetchMode.JOIN)
+            if (networkId || (terms?.trim()?.size() > 0)) {
+                createAlias('session', 's')
+                createAlias('s.networks', 'n')
+                if (terms?.trim()?.size() > 1) {
+                    createAlias('s.sessionParticipants', 'sp')
+                    createAlias('sp.user', 'u')
+                    createAlias('s.papers', 'p')
+                }
+            }
 
             // Default filtering on joined domain classes
             eq('r.deleted', false)
             eq('r.date.id', dateId)
             eq('sdt.deleted', false)
-	        eq('sdt.date.id', dateId)
-	        eq('d.deleted', false)
-	        eq('d.date.id', dateId)
-            eq('s.deleted', false)
-            eq('s.date.id', dateId)
-	        eq('p.deleted', false)
-	        eq('p.date.id', dateId)
-            eq('n.deleted', false)
-            eq('n.date.id', dateId)
-            ne('sp.type.id', ParticipantType.CO_AUTHOR) // Co-authors are for internal use only
-            eq('u.deleted', false)
+            eq('sdt.date.id', dateId)
+            if (networkId || (terms?.trim()?.size() > 0)) {
+                eq('s.deleted', false)
+                eq('s.date.id', dateId)
+                eq('n.deleted', false)
+                eq('n.date.id', dateId)
+                if (terms?.trim()?.size() > 0) {
+                    ne('sp.type.id', ParticipantType.CO_AUTHOR) // Co-authors are for internal use only
+                    eq('u.deleted', false)
+                    eq('p.deleted', false)
+                    eq('p.date.id', dateId)
+                }
+            }
 
             // Set ids, if provided with ids
             if (roomId) {
@@ -375,7 +368,7 @@ class SessionPlannerService {
                                 like('u.firstName', "%${t.trim()}%")
                                 like('u.lastName', "%${t.trim()}%")
                                 like('p.title', "%${t.trim()}%")
-	                            like('p.coAuthors', "%${t.trim()}%")
+                                like('p.coAuthors', "%${t.trim()}%")
                                 like('s.name', "%${t.trim()}%")
                             }
                         }
