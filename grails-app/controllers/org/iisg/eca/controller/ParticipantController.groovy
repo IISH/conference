@@ -16,6 +16,7 @@ class ParticipantController {
 	def exportService
 	def pageInformation
 	def participantService
+	def emailCreationService
 	def participantUpdateService
 	def participantSessionService
 
@@ -573,7 +574,7 @@ class ParticipantController {
 				SentEmail email = SentEmail.findById(params.long('email-id'))
 				if (email) {
 					emailService.sendEmail(email, true, true)
-					Map response = ['success': true, message: 'Email has been succesfully resend!']
+					Map response = ['success': true, message: 'Email has been successfully resend!']
 					render response as JSON
 				}
 			}
@@ -582,6 +583,37 @@ class ParticipantController {
 			if (!responseMap) {
 				responseMap = [success: false, message: g.
 						message(code: 'default.not.found.message', args: ["${g.message(code: 'email.label')}"])]
+			}
+
+			render responseMap as JSON
+		}
+	}
+
+	/**
+	 * Resend the registration completed email
+	 * (AJAX call)
+	 */
+	def resendRegistrationEmail() {
+		// If this is an AJAX call, continue
+		if (request.xhr) {
+			Map responseMap = null
+
+			if (params['user-id']?.isLong()) {
+				User user = User.findById(params.long('user-id'))
+				if (user) {
+					emailCreationService.createPreRegistrationEmail(user).each { SentEmail email ->
+						emailService.sendEmail(email, true, true)
+					}
+
+					Map response = ['success': true, message: 'Registration email has been successfully send!']
+					render response as JSON
+				}
+			}
+
+			// If there is no responseMap defined yet, it can only mean the email could not be found
+			if (!responseMap) {
+				responseMap = [success: false, message: g.message(code: 'default.not.found.message',
+						args: ["${g.message(code: 'user.label')}"])]
 			}
 
 			render responseMap as JSON

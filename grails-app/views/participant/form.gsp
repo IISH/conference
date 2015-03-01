@@ -1054,6 +1054,11 @@
                             </ol>
                         </g:each>
                     </div>
+
+                    <input type="hidden" name="user-id" value="${user.id}" />
+                    <span class="inline-button resend-registration-email">
+                        <g:message code="email.resend.registration.label" />
+                    </span>
                 </div>
             </div>
 

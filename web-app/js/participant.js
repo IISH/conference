@@ -134,6 +134,13 @@ $(document).ready(function () {
 		});
 	});
 
+    $('.resend-registration-email').click(function (e) {
+        var userId = $('input[name=user-id]').val();
+        ajaxCall(this, 'participant/resendRegistrationEmail', {'user-id': userId}, function (data) {
+            showMessage(data);
+        });
+    });
+
 	$('.change-present-days').click(function () {
 		$('#edit-days').dialog('open');
 	});
