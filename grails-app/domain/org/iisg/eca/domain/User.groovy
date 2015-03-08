@@ -15,76 +15,75 @@ import grails.plugin.springsecurity.SpringSecurityUtils
  * Domain class of table holding all registered users
  */
 class User {
-    static final int USER_STATUS_NOT_FOUND = 0
-    static final int USER_STATUS_FOUND = 1
-    static final int USER_STATUS_DISABLED = 2
-    static final int USER_STATUS_DELETED = 3
+	static final int USER_STATUS_NOT_FOUND = 0
+	static final int USER_STATUS_FOUND = 1
+	static final int USER_STATUS_DISABLED = 2
+	static final int USER_STATUS_DELETED = 3
 	static final int USER_STATUS_EMAIL_DISCONTINUED = 4
-    static final Pattern PASSWORD_PATTERN = Pattern.compile('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$')
+	static final Pattern PASSWORD_PATTERN = Pattern.compile('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$')
 
-    /**
-     * Information about the current page
-     */
-    def static pageInformation
-    def clientDetailsService
-	def passwordService
-    def tokenServices
+	/**
+	 * Information about the current page
+	 */
+	def static pageInformation
+	def clientDetailsService
+	def tokenServices
 
-    /**
-     * The saltSource is responsible for the creation of salts
-     */
-    def saltSource
+	/**
+	 * The saltSource is responsible for the creation of salts
+	 */
+	def saltSource
 
-    /**
-     * Information about the currently logged in user
-     */
-    transient springSecurityService
+	/**
+	 * Information about the currently logged in user
+	 */
+	transient springSecurityService
 
-    String email
-    String lastName
-    String firstName
-    String gender
-    String title
-    String address
-    String city
-    Country country
-    String language = 'en'
-    String password
-    String salt
-    String requestCode
-    Date requestCodeValidUntil
-    Date newPasswordEmailed
+	String email
+	String lastName
+	String firstName
+	String gender
+	String title
+	String address
+	String city
+	Country country
+	String language = 'en'
+	String password
+	String salt
+	String requestCode
+	Date requestCodeValidUntil
+	Date newPasswordEmailed
 	boolean sendNewPassword = false
-    String phone
-    String fax
-    String mobile
-    String organisation
-    String department
-    String cv
-    String extraInfo
-    Date dateAdded = new Date()
-    boolean emailDiscontinued = false
+	String phone
+	String fax
+	String mobile
+	String organisation
+	String department
+	String cv
+	String extraInfo
+	Date dateAdded = new Date()
+	boolean emailDiscontinued = false
 	boolean enabled = true
 	boolean deleted = false
 	User addedBy
 
-    static belongsTo = [Country, Group]
-    static hasMany = [  groups:                 Group,
-                        networks:               NetworkChair,
-                        participantDates:       ParticipantDate,
-                        userRoles:              UserRole,
-                        papers:                 Paper,
-                        sessionParticipants:    SessionParticipant,
-                        sentEmails:             SentEmail,
-                        dateTimesNotPresent:    SessionDateTime,
-                        userPages:              UserPage,
-                        daysPresent:            ParticipantDay,
-                        sessionsAdded:          Session]
+	static belongsTo = [Country, Group]
+	static hasMany = [groups             : Group,
+					  networks           : NetworkChair,
+					  participantDates   : ParticipantDate,
+					  userRoles          : UserRole,
+					  papers             : Paper,
+					  sessionParticipants: SessionParticipant,
+					  sentEmails         : SentEmail,
+					  dateTimesNotPresent: SessionDateTime,
+					  userPages          : UserPage,
+					  daysPresent        : ParticipantDay,
+					  sessionsAdded      : Session]
 
-    static mapping = {
-        table 'users'
-        version false
-        sort "lastName"
+	static mapping = {
+		table 'users'
+		version false
+		sort "lastName"
 
         id                      column: 'user_id'
         email                   column: 'email'
@@ -154,110 +153,115 @@ class User {
 
     static apiActions = ['GET', 'POST', 'PUT']
 
-    static apiAllowed = [
-            'id',
-            'email',
-            'lastName',
-            'firstName',
-            'gender',
-            'title',
-            'address',
-            'city',
-            'country.id',
-            'phone',
-            'fax',
-            'mobile',
-            'organisation',
-            'department',
-            'cv',
-            'extraInfo',
-            'papers.id',
-            'daysPresent.day.id',
-		    'addedBy.id'
-    ]
+	static apiAllowed = [
+			'id',
+			'email',
+			'lastName',
+			'firstName',
+			'gender',
+			'title',
+			'address',
+			'city',
+			'country.id',
+			'phone',
+			'fax',
+			'mobile',
+			'organisation',
+			'department',
+			'cv',
+			'extraInfo',
+			'papers.id',
+			'daysPresent.day.id',
+			'addedBy.id'
+	]
 
-    static apiPostPut = [
-		    'email',
-		    'lastName',
-		    'firstName',
-		    'gender',
-		    'city',
-		    'address',
-		    'phone',
-		    'fax',
-		    'mobile',
-		    'organisation',
-		    'department',
-		    'cv',
-		    'country.id',
-            'daysPresent.day.id',
-		    'addedBy.id'
-    ]
+	static apiPostPut = [
+			'email',
+			'lastName',
+			'firstName',
+			'gender',
+			'city',
+			'address',
+			'phone',
+			'fax',
+			'mobile',
+			'organisation',
+			'department',
+			'cv',
+			'country.id',
+			'daysPresent.day.id',
+			'addedBy.id'
+	]
 
-    static namedQueries = {
-        allUsers {
-            order('lastName', "asc")
-            order('firstName', "asc")
-        }
+	static namedQueries = {
+		allUsers {
+			order('lastName', "asc")
+			order('firstName', "asc")
+		}
 
-        networkChairs { date ->
-            allUsers()
+		networkChairs { date ->
+			allUsers()
 
-            networks {
-                network {
-                    eq('date.id', date.id)
-                    eq('deleted', false)
-                }
-            }
-        }
+			networks {
+				network {
+					eq('showOnline', true)
+					eq('date.id', date.id)
+					eq('deleted', false)
+				}
+			}
+		}
 
-        allParticipantUsers {
-            allUsers()
+		networkChairsInfo { date ->
+			networkChairs(date)
+		}
 
-            participantDates {
-                eq('deleted', false)
-            }
-        }
+		allParticipantUsers {
+			allUsers()
 
-        allParticipants { date ->
-            allParticipantUsers()
+			participantDates {
+				eq('deleted', false)
+			}
+		}
 
-            participantDates {
-                'in'('state.id', [ParticipantState.PARTICIPANT_DATA_CHECKED, ParticipantState.PARTICIPANT])
-                eq('date.id', date.id)
-            }
-        }
+		allParticipants { date ->
+			allParticipantUsers()
 
-        allParticipantsSoftState { date ->
-            allParticipantUsers()
+			participantDates {
+				'in'('state.id', [ParticipantState.PARTICIPANT_DATA_CHECKED, ParticipantState.PARTICIPANT])
+				eq('date.id', date.id)
+			}
+		}
 
-            participantDates {
-                'in'('state.id', [  ParticipantState.NEW_PARTICIPANT, ParticipantState.PARTICIPANT_DATA_CHECKED,
-                                    ParticipantState.PARTICIPANT, ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
-                eq('date.id', date.id)
-            }
-        }
+		allParticipantsSoftState { date ->
+			allParticipantUsers()
 
-        allParticipantsNotDeleted { date ->
-            allParticipantUsers()
+			participantDates {
+				'in'('state.id', [ParticipantState.NEW_PARTICIPANT, ParticipantState.PARTICIPANT_DATA_CHECKED,
+								  ParticipantState.PARTICIPANT, ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
+				eq('date.id', date.id)
+			}
+		}
 
-            participantDates {
-                not {
-                    'in'('state.id', [  ParticipantState.REMOVED_CANCELLED, ParticipantState.REMOVED_DOUBLE_ENTRY,
-                                        ParticipantState.WILL_BE_REMOVED])
-                }
-                eq('date.id', date.id)
-            }
-        }
+		allParticipantsNotDeleted { date ->
+			allParticipantUsers()
 
-	    allParticipantsToBeRemoved { date ->
-		    allParticipantUsers()
+			participantDates {
+				not {
+					'in'('state.id', [ParticipantState.REMOVED_CANCELLED, ParticipantState.REMOVED_DOUBLE_ENTRY,
+									  ParticipantState.WILL_BE_REMOVED])
+				}
+				eq('date.id', date.id)
+			}
+		}
 
-		    participantDates {
-			    eq('state.id', ParticipantState.WILL_BE_REMOVED)
-			    eq('date.id', date.id)
-		    }
-	    }
+		allParticipantsToBeRemoved { date ->
+			allParticipantUsers()
+
+			participantDates {
+				eq('state.id', ParticipantState.WILL_BE_REMOVED)
+				eq('date.id', date.id)
+			}
+		}
 
 		allParticipantPapers { date ->
 			allParticipants(date)
@@ -458,7 +462,7 @@ class User {
 			}
 		}
 
-	    allUnconfirmedBankPayments { date ->
+		allUnconfirmedBankPayments { date ->
 			allParticipantsSoftState(date)
 
 			participantDates {

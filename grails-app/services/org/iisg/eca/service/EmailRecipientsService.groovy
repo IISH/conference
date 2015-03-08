@@ -29,29 +29,29 @@ class EmailRecipientsService {
 
         // If only one user is chosen, different rules count
         boolean oneUserChosen = (filterMap['participant'] && filters.participant?.isLong())
-		String queryType = 'allParticipants'
+        String queryType = 'allParticipants'
 
         // The email template chosen could contain a query type (a named query to call)
         if (!oneUserChosen && template.queryTypeMultiple) {
-	        queryType = template.queryTypeMultiple
+            queryType = template.queryTypeMultiple
         }
         else if (oneUserChosen && template.queryTypeOne) {
-	        queryType = template.queryTypeOne
+            queryType = template.queryTypeOne
         }
 
-	    QueryTypeCriteriaBuilder queryTypeCriteriaBuilder = new QueryTypeCriteriaBuilder(pageInformation.date, queryType)
-	    queryTypeCriteriaBuilder.setAdditionalCriteria {
-		    // Extend the criteria by calling helper methods that set extra filters
-		    for (String filterName : filterMap.keySet()) {
-			    // Extra filters cannot be set when only one user was chosen
-			    if (filterMap.get(filterName) && (!oneUserChosen || filterName.equals('participant'))) {
-				    extendCriteriaFor(filterName, delegate, filters)
-			    }
-		    }
+        QueryTypeCriteriaBuilder queryTypeCriteriaBuilder = new QueryTypeCriteriaBuilder(pageInformation.date, queryType)
+        queryTypeCriteriaBuilder.setAdditionalCriteria {
+            // Extend the criteria by calling helper methods that set extra filters
+            for (String filterName : filterMap.keySet()) {
+                // Extra filters cannot be set when only one user was chosen
+                if (filterMap.get(filterName) && (!oneUserChosen || filterName.equals('participant'))) {
+                    extendCriteriaFor(filterName, delegate, filters)
+                }
+            }
 
-		    // Find out which ids to return
-		    projectionsForCriteria(delegate, template)
-	    }
+            // Find out which ids to return
+            projectionsForCriteria(delegate, template)
+        }
 
         return queryTypeCriteriaBuilder.getUniqueResults() as List<Long[]>
     }
@@ -111,7 +111,7 @@ class EmailRecipientsService {
      * @param criteria The criteria to extend
      * @param filters The values for the filters set by the user
      */
-	private static void extendCriteriaForPaperState(NamedCriteriaProxy criteria, GrailsParameterMap filters) {
+    private static void extendCriteriaForPaperState(NamedCriteriaProxy criteria, GrailsParameterMap filters) {
         if (filters.paperState?.isLong()) {
             criteria.papers {
                 criteria.eq('state.id', filters.long('paperState'))
@@ -127,9 +127,9 @@ class EmailRecipientsService {
     private static void extendCriteriaForEventDates(NamedCriteriaProxy criteria, GrailsParameterMap filters) {
         criteria.participantDates {
             if (filters.eventDates?.isLong()) {
-	            EventDate date = EventDate.get(filters.long('eventDates'))
-	            List<EventDate> eventDates = EventDate.getDateAndLaterDates(date).list()
-	            criteria.'in'('date.id', eventDates*.id)
+                EventDate date = EventDate.get(filters.long('eventDates'))
+                List<EventDate> eventDates = EventDate.getDateAndLaterDates(date).list()
+                criteria.'in'('date.id', eventDates*.id)
             }
         }
     }
@@ -164,7 +164,15 @@ class EmailRecipientsService {
             }
 
             for (String association : template.getAssociationsNames()) {
-	            criteria.property("${association}.id")
+                if (association.contains('.')) {
+                    String[] associations = association.split('\\.')
+                    "${associations[0]}" {
+                        criteria.property("${associations[1]}.id")
+                    }
+                }
+                else {
+                    criteria.property("${association}.id")
+                }
             }
         }
     }

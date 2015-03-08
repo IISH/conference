@@ -42,11 +42,13 @@ class EmailService {
      * @param date The event date of which to extract participant information from
      * @param sendAsap Whether the email should be send as soon as possible
      * @param additionalValues A map of additional values to add to the email
+     * @param extraParticipantIds A list with extra participant identifiers
      * @return The email ready to be send
      */
     SentEmail createEmail(User user, EmailTemplate emailTemplate, boolean updateRecords=true,
                           Map<String, Long> identifiers=[:], EventDate date=pageInformation.date,
-                          boolean sendAsap=false, Map<String, String> additionalValues=[:]) {
+                          boolean sendAsap=false, Map<String, String> additionalValues=[:],
+                          List<Long> extraParticipantIds=[]) {
         // First make sure the identifiers are correctly set
         if (!identifiers) {
             identifiers = [:]
@@ -70,7 +72,7 @@ class EmailService {
         email.sendAsap = sendAsap
 
 	    // Translate the codes in the email
-	    translateCodes(emailTemplate, email, identifiers, additionalValues)
+	    translateCodes(emailTemplate, email, identifiers, additionalValues, extraParticipantIds)
 
         // Update the recipients records, as his email is created and ready to be send
         if (updateRecords) {
@@ -88,13 +90,14 @@ class EmailService {
      * @param date The event date of which to extract participant information from
      * @param sendAsap Whether the email should be send as soon as possible
      * @param additionalValues A map of additional values to add to the email
+     * @param extraParticipantIds A list with extra participant identifiers
      * @return The email ready to be send
      */
     SentEmail createEmail(EmailTemplate emailTemplate, Map<String, Long> identifiers, boolean updateRecords=true,
                           EventDate date=pageInformation.date, boolean sendAsap=false,
-                          Map<String, String> additionalValues=[:]) {
+                          Map<String, String> additionalValues=[:], List<Long> extraParticipantIds=[]) {
         User user = User.get(identifiers.get(EmailTemplate.USER_ID))
-        createEmail(user, emailTemplate, updateRecords, identifiers, date, sendAsap, additionalValues)
+        createEmail(user, emailTemplate, updateRecords, identifiers, date, sendAsap, additionalValues, extraParticipantIds)
     }
 
     /**
@@ -250,17 +253,19 @@ class EmailService {
 	 * @param email The email message
 	 * @param identifiers The ids of records to extract participant information from
 	 * @param additionalValues A map of additional values to add to the email
+     * @param extraParticipantIds A list with extra participant identifiers
 	 */
-    void translateCodes(EmailTemplate template, SentEmail email, Map<String, Long> identifiers, Map<String, String> additionalValues=[:]) {
+    void translateCodes(EmailTemplate template, SentEmail email, Map<String, Long> identifiers,
+                        Map<String, String> additionalValues=[:], List<Long> extraParticipantIds=[]) {
         // Collect all available codes and check for each one whether the email uses the code
         EmailCode.list().each { code ->
 	        // If the email contains the code, replace all occurrences with user specific information
             if (email.body.contains("[${code.code}]")) {
-	            email.body = email.body.replace("[$code.code]", code.translate(identifiers))
+	            email.body = email.body.replace("[$code.code]", code.translate(identifiers, extraParticipantIds))
             }
 
 	        if (email.subject.contains("[${code.code}]")) {
-		        email.subject = email.subject.replace("[$code.code]", code.translate(identifiers))
+		        email.subject = email.subject.replace("[$code.code]", code.translate(identifiers, extraParticipantIds))
 	        }
         }
 

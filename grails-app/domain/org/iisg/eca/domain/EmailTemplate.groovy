@@ -19,9 +19,10 @@ class EmailTemplate extends EventDomain implements Cloneable {
     public static final String QUERY_ALL_SESSION_PARTICIPANTS_NOT_ANSWERED = "allSessionParticipantsNotAnswered"
     public static final String QUERY_ALL_SESSION_CHAIRS_NOT_ANSWERED = "allSessionChairsNotAnswered"
     public static final String QUERY_NO_PAYMENT_INFO = "noPaymentInfo"
-	public static final String QUERY_SESSION_ACCEPTED_NOT_ANSWERED = "sessionAcceptedNotAnswered"
-	public static final String QUERY_SESSION_IN_CONSIDERATION_NOT_ANSWERED = "sessionInConsiderationNotAnswered"
-	public static final String QUERY_SESSION_NOT_ACCEPTED_NOT_ANSWERED = "sessionNotAcceptedNotAnswered"
+    public static final String QUERY_SESSION_ACCEPTED_NOT_ANSWERED = "sessionAcceptedNotAnswered"
+    public static final String QUERY_SESSION_IN_CONSIDERATION_NOT_ANSWERED = "sessionInConsiderationNotAnswered"
+    public static final String QUERY_SESSION_NOT_ACCEPTED_NOT_ANSWERED = "sessionNotAcceptedNotAnswered"
+    public static final String QUERY_NETWORK_CHAIRS_INFO = "networkChairsInfo"
 
     /**
      * The identifier names
@@ -29,7 +30,8 @@ class EmailTemplate extends EventDomain implements Cloneable {
     public static final String USER_ID = 'userId'
     public static final String DATE_ID = 'dateId'
     public static final String PAPER_ID = 'paperId'
-	public static final String SESSION_ID = 'sessionId'
+    public static final String SESSION_ID = 'sessionId'
+    public static final String NETWORK_ID = 'networkId'
 
     /**
      * What to filter on for each action when sending mails?
@@ -97,7 +99,7 @@ class EmailTemplate extends EventDomain implements Cloneable {
     int sortOrder = 0
     boolean showInBackend = true
     String comment
-	boolean deleted = false
+    boolean deleted = false
 
     String testEmail
     boolean testAfterSave = false
@@ -136,14 +138,14 @@ class EmailTemplate extends EventDomain implements Cloneable {
 	    deleted             column: 'deleted'
     }
 
-	static hibernateFilters = {
-		eventFilter(condition: '(event_id = :eventId OR event_id IS NULL)', types: 'long')
-		hideDeleted(condition: 'deleted = 0', default: true)
-	}
+    static hibernateFilters = {
+        eventFilter(condition: '(event_id = :eventId OR event_id IS NULL)', types: 'long')
+        hideDeleted(condition: 'deleted = 0', default: true)
+    }
 
-	void softDelete() {
-		deleted = true
-	}
+    void softDelete() {
+        deleted = true
+    }
 
     def afterInsert() {
         if (testAfterSave) {
@@ -199,28 +201,31 @@ class EmailTemplate extends EventDomain implements Cloneable {
         this.testAfterSave = false
     }
 
-	/**
+    /**
      * Finds out the names of the associations to call for ids,
      * based on the given query type
      * @attr queryType The specific query type
      * @return An array with the associations if called from a <code>User</code>
      */
-	String[] getAssociationsNames() {
-		switch (this.queryTypeMultiple) {
-			case QUERY_PAPER_ACCEPTED_NOT_ANSWERED:
-			case QUERY_PAPER_IN_CONSIDERATION_NOT_ANSWERED:
-			case QUERY_PAPER_NOT_ACCEPTED_NOT_ANSWERED:
-				return ['papers']
-				break
-			case QUERY_SESSION_ACCEPTED_NOT_ANSWERED:
-			case QUERY_SESSION_IN_CONSIDERATION_NOT_ANSWERED:
-			case QUERY_SESSION_NOT_ACCEPTED_NOT_ANSWERED:
-				return ['sessions']
-				break
-			default:
-				return []
-		}
-	}
+    String[] getAssociationsNames() {
+        switch (this.queryTypeMultiple) {
+            case QUERY_PAPER_ACCEPTED_NOT_ANSWERED:
+            case QUERY_PAPER_IN_CONSIDERATION_NOT_ANSWERED:
+            case QUERY_PAPER_NOT_ACCEPTED_NOT_ANSWERED:
+                return ['papers']
+                break
+            case QUERY_SESSION_ACCEPTED_NOT_ANSWERED:
+            case QUERY_SESSION_IN_CONSIDERATION_NOT_ANSWERED:
+            case QUERY_SESSION_NOT_ACCEPTED_NOT_ANSWERED:
+                return ['sessions']
+                break
+            case QUERY_NETWORK_CHAIRS_INFO:
+                return ['networks.network']
+                break
+            default:
+                return []
+        }
+    }
 
     /**
      * Returns a map that identifies the ids,
@@ -235,11 +240,14 @@ class EmailTemplate extends EventDomain implements Cloneable {
             case QUERY_PAPER_NOT_ACCEPTED_NOT_ANSWERED:
                 return [(USER_ID): identifiers[0], (PAPER_ID): identifiers[1]]
                 break
-	        case QUERY_SESSION_ACCEPTED_NOT_ANSWERED:
-	        case QUERY_SESSION_IN_CONSIDERATION_NOT_ANSWERED:
-	        case QUERY_SESSION_NOT_ACCEPTED_NOT_ANSWERED:
-		        return [(USER_ID): identifiers[0], (SESSION_ID): identifiers[1]]
-		        break
+            case QUERY_SESSION_ACCEPTED_NOT_ANSWERED:
+            case QUERY_SESSION_IN_CONSIDERATION_NOT_ANSWERED:
+            case QUERY_SESSION_NOT_ACCEPTED_NOT_ANSWERED:
+                return [(USER_ID): identifiers[0], (SESSION_ID): identifiers[1]]
+                break
+            case QUERY_NETWORK_CHAIRS_INFO:
+                return [(USER_ID): identifiers[0], (NETWORK_ID): identifiers[1]]
+                break
             default:
                 return [(USER_ID): identifiers[0]]
         }
@@ -263,15 +271,15 @@ class EmailTemplate extends EventDomain implements Cloneable {
                     AND     paper_id = :paperId
                 ''', identifiers)
                 break
-	        case QUERY_SESSION_ACCEPTED_NOT_ANSWERED:
-	        case QUERY_SESSION_IN_CONSIDERATION_NOT_ANSWERED:
-	        case QUERY_SESSION_NOT_ACCEPTED_NOT_ANSWERED:
-		        sql.executeUpdate('''
+            case QUERY_SESSION_ACCEPTED_NOT_ANSWERED:
+            case QUERY_SESSION_IN_CONSIDERATION_NOT_ANSWERED:
+            case QUERY_SESSION_NOT_ACCEPTED_NOT_ANSWERED:
+                sql.executeUpdate('''
                     UPDATE  sessions
                     SET     mail_session_state = 0
                     WHERE   session_id = :sessionId
                 ''', identifiers)
-		        break
+                break
             case QUERY_STUDENT_LOWER_FEE_NOT_ANSWERED:
             case QUERY_NO_STUDENT_LOWER_FEE_NOT_ANSWERED:
                 sql.executeUpdate('''
@@ -309,21 +317,43 @@ class EmailTemplate extends EventDomain implements Cloneable {
         }
     }
 
-	/**
-	 * Simple method to clone this email template
-	 * @return A clone of this email template instance
-	 */
-	public EmailTemplate clone() {
-		EmailTemplate emailTemplateClone = new EmailTemplate()
+    /**
+     * Returns extra participant ids required for the creation of certain emails
+     * @return List of extra participant ids
+     */
+    public List<Long> getExtraParticipantIds() {
+        // When emailing info to network chairs, it only concerns new participants (data checked)
+        if (queryTypeMultiple == QUERY_NETWORK_CHAIRS_INFO) {
+            ParticipantState state = ParticipantState.get(ParticipantState.PARTICIPANT_DATA_CHECKED)
+            List<ParticipantDate> participants = ParticipantDate.findAllByState(state)
 
-		// Reference all properties of the current instance, except id, subject and description
-		emailTemplateClone.properties = properties
-		emailTemplateClone.id = null
-		emailTemplateClone.subject = "(DUPLICATE) $subject"
-		emailTemplateClone.description = "(DUPLICATE) $description"
+            // We can now safely update the status in the database, mails about the new participants are in creation
+            ParticipantDate.executeUpdate(
+                    'UPDATE ParticipantDate pd SET pd.state.id = :newId WHERE pd.state.id = :oldId',
+                    [newId: ParticipantState.PARTICIPANT, oldId: ParticipantState.PARTICIPANT_DATA_CHECKED]
+            )
 
-		return emailTemplateClone
-	}
+            return participants*.id
+        }
+
+        return []
+    }
+
+    /**
+     * Simple method to clone this email template
+     * @return A clone of this email template instance
+     */
+    public EmailTemplate clone() {
+        EmailTemplate emailTemplateClone = new EmailTemplate()
+
+        // Reference all properties of the current instance, except id, subject and description
+        emailTemplateClone.properties = properties
+        emailTemplateClone.id = null
+        emailTemplateClone.subject = "(DUPLICATE) $subject"
+        emailTemplateClone.description = "(DUPLICATE) $description"
+
+        return emailTemplateClone
+    }
 
     @Override
     String toString() {

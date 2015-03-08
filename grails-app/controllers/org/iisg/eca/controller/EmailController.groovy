@@ -75,9 +75,15 @@ class EmailController {
         if (request.post) {
             // Find all the recipients, so we can create all the individual emails
             List<Long[]> recipients = emailRecipientsService.getRecipientsFor(emailTemplate, params)
+			List<Long> extraParticipantIds = emailTemplate.getExtraParticipantIds()
 
             // But place the actual creation in the background, as it could take a while
-            CreateEmailJob.triggerNow([recipients: recipients, template: emailTemplate, date: pageInformation.date])
+            CreateEmailJob.triggerNow([
+		            recipients: recipients,
+		            template: emailTemplate,
+		            date: pageInformation.date,
+		            extraParticipantIds: extraParticipantIds
+            ])
 
             flash.message = g.message(code: 'email.background.message', args: [recipients.size()])
         }

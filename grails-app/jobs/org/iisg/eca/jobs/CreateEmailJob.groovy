@@ -12,14 +12,14 @@ class CreateEmailJob {
      * The email service responsible for the creation of the emails
      */
     def emailService
-    
+
     /**
      * Make sure the job is only executed once, only when explicitly triggered
      */
     static triggers = {
         simple repeatCount: 0
     }
-    
+
     /**
      * Create emails for all users specified, with the template specified,
      * @param context The context containing a map with all users and the template needed
@@ -30,6 +30,7 @@ class CreateEmailJob {
             List<Long[]> recipients = context.mergedJobDataMap.get('recipients')
             EmailTemplate template = context.mergedJobDataMap.get('template')
             EventDate date = context.mergedJobDataMap.get('date')
+            List<Long> extraParticipantIds = context.mergedJobDataMap.get('extraParticipantIds')
 
             // If they are correctly send, we can start creating the emails
             if (recipients && template && date) {
@@ -38,7 +39,9 @@ class CreateEmailJob {
                         Map<String, Long> identifiers = template.getIdentifiersMap(recipient)
 
                         // Let the emailService create all the emails
-                        SentEmail email = emailService.createEmail(template, identifiers, true, date)
+                        SentEmail email = emailService.createEmail(
+                                template, identifiers, true, date, false, [:], extraParticipantIds
+                        )
                         email.save()
                     }
 

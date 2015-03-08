@@ -3,7 +3,6 @@ package org.iisg.eca.domain
 import groovy.sql.Sql
 
 class EmailCode extends EventDomain {
-    def pageInformation
     def dataSource
 
     String code
@@ -29,22 +28,28 @@ class EmailCode extends EventDomain {
     /**
      * Translates this code with data from the database using the specified identifiers
      * @param identifiers A map which contains all ids to filter data upon
+     * @param extraParticipantIds A list with extra participant identifiers required for translating certain email codes
      * @return The translated text to be placed in the email
      */
-    String translate(Map<String, Long> identifiers) {
-	    Event event = null
-	    if (identifiers.containsKey('dateId')) {
-		    EventDate date = EventDate.get(identifiers.get('dateId'))
-		    event = date.event
-	    }
+    String translate(Map<String, Long> identifiers, List<Long> extraParticipantIds = []) {
+        Event event = null
+        if (identifiers.containsKey('dateId')) {
+            EventDate date = EventDate.get(identifiers.get('dateId'))
+            event = date.event
+        }
 
-        Binding binding = new Binding([sql: new Sql(dataSource), params: identifiers, getValueForSetting: { String property ->
-	        Setting.getSetting(property, event)?.value
-        }])
+        Binding binding = new Binding([
+                sql                : new Sql(dataSource),
+                params             : identifiers,
+                extraParticipantIds: extraParticipantIds,
+                getValueForSetting : { String property ->
+                    Setting.getSetting(property, event)?.value
+                }
+        ])
 
         GroovyShell shell = new GroovyShell(binding)
-	    Object ret = shell.evaluate(groovyScript)
-	    ret.toString()
+        Object ret = shell.evaluate(groovyScript)
+        ret.toString()
     }
 
     @Override
