@@ -7,6 +7,7 @@ import groovy.sql.Sql
  */
 class EmailTemplate extends EventDomain implements Cloneable {
     def dataSource
+    def pageInformation
 
     /**
      * The possible query types for multiple participants which requires an action after creation
@@ -329,8 +330,13 @@ class EmailTemplate extends EventDomain implements Cloneable {
 
             // We can now safely update the status in the database, mails about the new participants are in creation
             ParticipantDate.executeUpdate(
-                    'UPDATE ParticipantDate pd SET pd.state.id = :newId WHERE pd.state.id = :oldId',
-                    [newId: ParticipantState.PARTICIPANT, oldId: ParticipantState.PARTICIPANT_DATA_CHECKED]
+                    'UPDATE ParticipantDate pd ' +
+                    'SET pd.state.id = :newId ' +
+                    'WHERE pd.state.id = :oldId ' +
+                    'AND pd.date.id = :dateId',
+                    [newId: ParticipantState.PARTICIPANT,
+                     oldId: ParticipantState.PARTICIPANT_DATA_CHECKED,
+                     dateId: pageInformation.date.id]
             )
 
             return participants*.id
