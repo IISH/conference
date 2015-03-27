@@ -574,7 +574,7 @@ class ParticipantController {
 				SentEmail email = SentEmail.findById(params.long('email-id'))
 				if (email) {
 					emailService.sendEmail(email, true, true)
-					Map response = ['success': true, message: 'Email has been successfully resend!']
+					Map response = ['success': true, message: 'Email has been successfully resent!']
 					render response as JSON
 				}
 			}
@@ -605,7 +605,7 @@ class ParticipantController {
 						emailService.sendEmail(email, true, true)
 					}
 
-					Map response = ['success': true, message: 'Registration email has been successfully send!']
+					Map response = ['success': true, message: 'Registration email has been successfully sent!']
 					render response as JSON
 				}
 			}
