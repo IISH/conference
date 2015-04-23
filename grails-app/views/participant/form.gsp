@@ -546,7 +546,7 @@
                                     </label>
                                     <span class="property-value">
                                         <span>
-                                            <g:if test="${paper.session}">
+                                            <g:if test="${paper.session && !paper.session.deleted}">
                                                 <eca:link controller="session" action="show" id="${paper.session.id}">
                                                     ${fieldValue(bean: paper, field: 'session')}
                                                 </eca:link>
