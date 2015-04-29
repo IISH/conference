@@ -256,12 +256,14 @@ class ApiController {
 				WHERE u.deleted = false
 				AND (p.deleted = false OR p IS NULL)
 				AND (p.date.id = :dateId OR p IS NULL)
+				AND (p.session.id = :sessionId OR p IS NULL)
 				AND sp.session.id = :sessionId
 				AND pd.state.id IN (:dataChecked, :participant)
 				ORDER BY t.importance DESC, u.lastName ASC, u.firstName ASC
 			''',
-					['dateId'                                       : pageInformation.date.id, 'sessionId': sessionId, 'dataChecked': ParticipantState
-							.PARTICIPANT_DATA_CHECKED, 'participant': ParticipantState.PARTICIPANT])
+					['dateId' : pageInformation.date.id, 'sessionId' : sessionId,
+                     'dataChecked' : ParticipantState.PARTICIPANT_DATA_CHECKED,
+                     'participant' : ParticipantState.PARTICIPANT])
 		}
 		else if (networkId) {
 			results = ParticipantDate.executeQuery('''
@@ -277,9 +279,10 @@ class ApiController {
 				AND pd.state.id IN (:newParticipant, :dataChecked, :participant)
 				ORDER BY u.lastName ASC, u.firstName ASC
 			''',
-					['dateId'                              : pageInformation.date.id, 'networkId': networkId, 'newParticipant': ParticipantState
-							.NEW_PARTICIPANT, 'dataChecked': ParticipantState.PARTICIPANT_DATA_CHECKED,
-					 'participant'                         : ParticipantState.PARTICIPANT])
+					['dateId' : pageInformation.date.id, 'networkId': networkId,
+                     'newParticipant' : ParticipantState.NEW_PARTICIPANT,
+                     'dataChecked' : ParticipantState.PARTICIPANT_DATA_CHECKED,
+					 'participant' : ParticipantState.PARTICIPANT])
 		}
 
 		render results as JSON
