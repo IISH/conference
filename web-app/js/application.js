@@ -252,7 +252,7 @@ var ajaxCall = function (element, url, params, onSuccess, onFailure) {
 
 	$.getJSON(guessUrl(url), params, function (data) {
 		if (clickedButton) {
-			element.attr('disabled', '');
+			element.removeAttr('disabled');
 			element.removeClass('ajax-disabled');
 
 			var next = element.next();
@@ -277,7 +277,7 @@ var ajaxCall = function (element, url, params, onSuccess, onFailure) {
 		}
 
 		if (clickedButton) {
-			element.attr('disabled', '');
+			element.removeAttr('disabled');
 			element.removeClass('ajax-disabled');
 
 			var next = element.next();
