@@ -245,20 +245,23 @@ class ApiController {
 		Long networkId = (params.networkId?.toString()?.isLong()) ? params.networkId.toString().toLong() : null
 		List results = []
 
-		if (sessionId) {
+		// comment: sessionId -1 is a special code, it means show all paper participants without a session, these
+		// participants will be shown in a special session called 'individual paper proposals'...
+
+		if (sessionId && sessionId > 0) {
 			results = ParticipantDate.executeQuery('''
 				SELECT u, p, t
 				FROM ParticipantDate AS pd
-				INNER JOIN pd.user AS u
-				INNER JOIN u.sessionParticipants AS sp
-				INNER JOIN sp.type AS t
-				LEFT JOIN u.papers AS p
+					INNER JOIN pd.user AS u
+					INNER JOIN u.sessionParticipants AS sp
+					INNER JOIN sp.type AS t
+					LEFT JOIN u.papers AS p
 				WHERE u.deleted = false
-				AND (p.deleted = false OR p IS NULL)
-				AND (p.date.id = :dateId OR p IS NULL)
-				AND (p.session.id = :sessionId OR p IS NULL)
-				AND sp.session.id = :sessionId
-				AND pd.state.id IN (:dataChecked, :participant)
+					AND (p.deleted = false OR p IS NULL)
+					AND (p.date.id = :dateId OR p IS NULL)
+					AND (p.session.id = :sessionId OR p IS NULL)
+					AND sp.session.id = :sessionId
+					AND pd.state.id IN (:dataChecked, :participant)
 				ORDER BY t.importance DESC, u.lastName ASC, u.firstName ASC
 			''',
 					['dateId' : pageInformation.date.id, 'sessionId' : sessionId,
@@ -269,14 +272,14 @@ class ApiController {
 			results = ParticipantDate.executeQuery('''
 				SELECT u, p
 				FROM ParticipantDate AS pd
-				INNER JOIN pd.user AS u
-				INNER JOIN u.papers AS p
+					INNER JOIN pd.user AS u
+					INNER JOIN u.papers AS p
 				WHERE u.deleted = false
-				AND p.deleted = false
-				AND p.date.id = :dateId
-				AND p.session.id IS NULL
-				AND p.networkProposal.id = :networkId
-				AND pd.state.id IN (:newParticipant, :dataChecked, :participant)
+					AND p.deleted = false
+					AND p.date.id = :dateId
+					AND p.session.id IS NULL
+					AND p.networkProposal.id = :networkId
+					AND pd.state.id IN (:newParticipant, :dataChecked, :participant)
 				ORDER BY u.lastName ASC, u.firstName ASC
 			''',
 					['dateId' : pageInformation.date.id, 'networkId': networkId,
