@@ -2,18 +2,19 @@ package org.iisg.eca.controller
 
 import grails.converters.JSON
 import grails.orm.PagedResultList
-import org.iisg.eca.domain.EventDate
 import org.iisg.eca.domain.Order
-import org.iisg.eca.domain.Translate
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Paper
 import org.iisg.eca.domain.Network
 import org.iisg.eca.domain.Setting
 import org.iisg.eca.domain.Session
 import org.iisg.eca.domain.SentEmail
+import org.iisg.eca.domain.EventDate
+import org.iisg.eca.domain.Translate
 import org.iisg.eca.domain.ParticipantDate
 import org.iisg.eca.domain.ParticipantType
 import org.iisg.eca.domain.ParticipantState
+import org.iisg.eca.domain.SessionParticipant
 
 import org.iisg.eca.export.XlsMapExport
 import org.iisg.eca.utils.PlannedSession
@@ -239,6 +240,78 @@ class ApiController {
 			}
 		}
 	}
+
+    def participantsPapersInNetwork() {
+        actionById(Network, 'networkId', params, ['success': false]) { Network network, Map response ->
+            List usersSessions = ParticipantDate.executeQuery('''
+				SELECT DISTINCT u, s
+                FROM ParticipantDate AS pd
+                INNER JOIN pd.user AS u
+                INNER JOIN u.sessionParticipants AS sp
+                INNER JOIN sp.session AS s
+                INNER JOIN s.networks AS n
+                WHERE u.deleted = false
+                AND sp.date.id = :dateId
+                AND s.deleted = false
+                AND s.date.id = :dateId
+                AND n.id = :networkId
+                AND pd.state.id IN (:newParticipant, :dataChecked, :participant)
+                ORDER BY u.lastName ASC, u.firstName ASC
+			''', ['dateId'        : pageInformation.date.id, 'networkId': network.id,
+                  'newParticipant': ParticipantState.NEW_PARTICIPANT,
+                  'dataChecked'   : ParticipantState.PARTICIPANT_DATA_CHECKED,
+                  'participant'   : ParticipantState.PARTICIPANT])
+
+            Session lastSession = null
+            Set<Paper> papersForSession = []
+            List<Map> users = []
+            usersSessions.each { userAndSession ->
+                User user = userAndSession[0]
+                Session session = userAndSession[1]
+
+                if (!lastSession || (lastSession.id != session.id)) {
+                    lastSession = session
+                    papersForSession = session.papers
+                }
+
+                boolean paperFound = false
+                papersForSession.each { Paper paper ->
+                    if (!paper.deleted && (paper.user.id == user.id)) {
+                        paperFound = true
+                        users << ['network'     : network.name, 'lastname': user.lastName, 'firstname': user.firstName,
+                                  'email'       : user.email, 'session': session.name,
+                                  'sessionstate': session.state.description,
+                                  'roles'       : SessionParticipant.findAllByUserAndSession(user, session)*.type.join(', '),
+                                  'papertitle'  : paper.title, 'paperabstract': paper.abstr,
+                                  'paperstate'  : paper.state.description]
+                    }
+                }
+
+                if (!paperFound) {
+                    users << ['network'     : network.name, 'lastname': user.lastName, 'firstname': user.firstName,
+                              'email'       : user.email, 'session': session.name,
+                              'sessionstate': session.state.description,
+                              'roles'       : SessionParticipant.findAllByUserAndSession(user, session)*.type.join(', '),
+                              'papertitle'  : null, 'paperabstract': null, 'paperstate': null]
+                }
+            }
+
+            response.put('success', true)
+
+            if (params.excel?.equalsIgnoreCase('true') || params.excel?.equalsIgnoreCase('1')) {
+                XlsMapExport xls = new XlsMapExport(
+                        ['network', 'lastname', 'firstname', 'email', 'session',
+                         'sessionstate', 'roles', 'papertitle', 'paperabstract',
+                         'paperstate'], users, 'Sheet 1',
+                        [params.networkName, params.lastName, params.firstName,
+                         params.email, params.session, params.sessionState, params.roles,
+                         params.paperTitle, params.paperAbstract, params.paperST] as List<String>)
+                response.put('xls', xls.parse().encodeBase64().toString())
+            } else {
+                response.put('users', users)
+            }
+        }
+    }
 
 	def participantsInSession() {
 		Long sessionId = (params.sessionId?.toString()?.isLong()) ? params.sessionId.toString().toLong() : null
