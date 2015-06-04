@@ -113,6 +113,10 @@ class UrlMappings {
             action = 'participantsInNetwork'
         }
 
+        name participantsPapersInNetwork: "/$event/$date/api/participantsPapersInNetwork" (controller: "api", parseRequest: true) {
+            action = 'participantsPapersInNetwork'
+        }
+
 	    name participantsInSession: "/$event/$date/api/participantsInSession" (controller: "api", parseRequest: true) {
 		    action = 'participantsInSession'
 	    }
