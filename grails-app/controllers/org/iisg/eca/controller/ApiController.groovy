@@ -255,12 +255,13 @@ class ApiController {
                 AND s.deleted = false
                 AND s.date.id = :dateId
                 AND n.id = :networkId
-                AND pd.state.id IN (:newParticipant, :dataChecked, :participant)
+                AND pd.state.id IN (:newParticipant, :dataChecked, :participant, :notFinished)
                 ORDER BY u.lastName ASC, u.firstName ASC
-			''', ['dateId'        : pageInformation.date.id, 'networkId': network.id,
-                  'newParticipant': ParticipantState.NEW_PARTICIPANT,
-                  'dataChecked'   : ParticipantState.PARTICIPANT_DATA_CHECKED,
-                  'participant'   : ParticipantState.PARTICIPANT])
+			''', ['dateId'         : pageInformation.date.id, 'networkId': network.id,
+                  'newParticipant' : ParticipantState.NEW_PARTICIPANT,
+                  'dataChecked'    : ParticipantState.PARTICIPANT_DATA_CHECKED,
+                  'participant'    : ParticipantState.PARTICIPANT,
+		          'notFinished'    : ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
 
             List<Map> users = []
             Map<Long, Set<Paper>> papersPersSession = new HashMap<>()
@@ -329,12 +330,14 @@ class ApiController {
 				AND (p.date.id = :dateId OR p IS NULL)
 				AND (p.session.id = :sessionId OR p IS NULL)
 				AND sp.session.id = :sessionId
-				AND pd.state.id IN (:dataChecked, :participant)
+				AND pd.state.id IN (:newParticipant, :dataChecked, :participant, :notFinished)
 				ORDER BY t.importance DESC, u.lastName ASC, u.firstName ASC
 			''',
-					['dateId' : pageInformation.date.id, 'sessionId' : sessionId,
-                     'dataChecked' : ParticipantState.PARTICIPANT_DATA_CHECKED,
-                     'participant' : ParticipantState.PARTICIPANT])
+					['dateId'         : pageInformation.date.id, 'sessionId' : sessionId,
+					 'newParticipant' : ParticipantState.NEW_PARTICIPANT,
+					 'dataChecked'    : ParticipantState.PARTICIPANT_DATA_CHECKED,
+                     'participant'    : ParticipantState.PARTICIPANT,
+                     'notFinished'    : ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
 		}
 		else if (networkId) {
 			results = ParticipantDate.executeQuery('''
@@ -347,13 +350,14 @@ class ApiController {
 				AND p.date.id = :dateId
 				AND p.session.id IS NULL
 				AND p.networkProposal.id = :networkId
-				AND pd.state.id IN (:newParticipant, :dataChecked, :participant)
+				AND pd.state.id IN (:newParticipant, :dataChecked, :participant, :notFinished)
 				ORDER BY u.lastName ASC, u.firstName ASC
 			''',
-					['dateId' : pageInformation.date.id, 'networkId': networkId,
+					['dateId'         : pageInformation.date.id, 'networkId': networkId,
                      'newParticipant' : ParticipantState.NEW_PARTICIPANT,
-                     'dataChecked' : ParticipantState.PARTICIPANT_DATA_CHECKED,
-					 'participant' : ParticipantState.PARTICIPANT])
+                     'dataChecked'    : ParticipantState.PARTICIPANT_DATA_CHECKED,
+					 'participant'    : ParticipantState.PARTICIPANT,
+					 'notFinished'    : ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
 		}
 
 		render results as JSON
@@ -375,12 +379,16 @@ class ApiController {
 				AND pd.date.id = :dateId
 				AND (s.deleted = false OR s IS NULL)
 				AND (s.date.id = :dateId OR s IS NULL)
-				AND pd.state.id IN (:dataChecked, :participant)
+				AND pd.state.id IN (:newParticipant, :dataChecked, :participant, :notFinished)
 				AND p.networkProposal.id = :networkId
 				ORDER BY u.lastName ASC, u.firstName ASC
 			''',
-					['dateId'                                       : pageInformation.date.id, 'networkId': networkId, 'dataChecked': ParticipantState
-							.PARTICIPANT_DATA_CHECKED, 'participant': ParticipantState.PARTICIPANT])
+					['dateId'         : pageInformation.date.id,
+					 'networkId'      : networkId,
+					 'newParticipant' : ParticipantState.NEW_PARTICIPANT,
+					 'dataChecked'    : ParticipantState.PARTICIPANT_DATA_CHECKED,
+					 'participant'    : ParticipantState.PARTICIPANT,
+					 'notFinished'    : ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
 		}
 
 		render results as JSON
