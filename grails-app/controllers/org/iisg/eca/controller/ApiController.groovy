@@ -269,7 +269,7 @@ class ApiController {
                 Session session = userAndSession[1]
 
                 if (!papersPersSession.containsKey(session.id)) {
-                    papersPersSession.put(session.id, session.papers)
+                    papersPersSession.put(session.id, session.papers ?: new HashSet<>())
                 }
 
                 boolean paperFound = false
