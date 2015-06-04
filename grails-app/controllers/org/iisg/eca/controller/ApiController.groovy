@@ -243,6 +243,7 @@ class ApiController {
 
     def participantsPapersInNetwork() {
         actionById(Network, 'networkId', params, ['success': false]) { Network network, Map response ->
+            // TODO: AND sp.date.id = :dateId ???
             List usersSessions = ParticipantDate.executeQuery('''
 				SELECT DISTINCT u, s
                 FROM ParticipantDate AS pd
@@ -251,7 +252,6 @@ class ApiController {
                 INNER JOIN sp.session AS s
                 INNER JOIN s.networks AS n
                 WHERE u.deleted = false
-                AND sp.date.id = :dateId
                 AND s.deleted = false
                 AND s.date.id = :dateId
                 AND n.id = :networkId
@@ -262,20 +262,18 @@ class ApiController {
                   'dataChecked'   : ParticipantState.PARTICIPANT_DATA_CHECKED,
                   'participant'   : ParticipantState.PARTICIPANT])
 
-            Session lastSession = null
-            Set<Paper> papersForSession = []
             List<Map> users = []
+            Map<Long, Set<Paper>> papersPersSession = new HashMap<>()
             usersSessions.each { userAndSession ->
                 User user = userAndSession[0]
                 Session session = userAndSession[1]
 
-                if (!lastSession || (lastSession.id != session.id)) {
-                    lastSession = session
-                    papersForSession = session.papers
+                if (!papersPersSession.containsKey(session.id)) {
+                    papersPersSession.put(session.id, session.papers)
                 }
 
                 boolean paperFound = false
-                papersForSession.each { Paper paper ->
+                papersPersSession.get(session.id).each { Paper paper ->
                     if (!paper.deleted && (paper.user.id == user.id)) {
                         paperFound = true
                         users << ['network'     : network.name, 'lastname': user.lastName, 'firstname': user.firstName,
