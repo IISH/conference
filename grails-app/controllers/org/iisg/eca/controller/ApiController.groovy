@@ -256,7 +256,7 @@ class ApiController {
                 AND s.date.id = :dateId
                 AND n.id = :networkId
                 AND pd.state.id IN (:newParticipant, :dataChecked, :participant, :notFinished)
-                ORDER BY u.lastName ASC, u.firstName ASC
+                ORDER BY s.name ASC, u.lastName ASC, u.firstName ASC
 			''', ['dateId'         : pageInformation.date.id, 'networkId': network.id,
                   'newParticipant' : ParticipantState.NEW_PARTICIPANT,
                   'dataChecked'    : ParticipantState.PARTICIPANT_DATA_CHECKED,
