@@ -299,9 +299,8 @@ class ApiController {
 
             if (params.excel?.equalsIgnoreCase('true') || params.excel?.equalsIgnoreCase('1')) {
                 XlsMapExport xls = new XlsMapExport(
-                        ['network', 'lastname', 'firstname', 'email', 'session',
-                         'sessionstate', 'roles', 'papertitle', 'paperabstract',
-                         'paperstate'], users, 'Sheet 1',
+                        ['network', 'lastname', 'firstname', 'email', 'session', 'sessionstate', 'roles',
+                         'papertitle', 'paperstate', 'paperabstract'], users, 'Sheet 1',
                         [params.networkName, params.lastName, params.firstName,
                          params.email, params.session, params.sessionState, params.roles,
                          params.paperTitle, params.paperAbstract, params.paperST] as List<String>)
