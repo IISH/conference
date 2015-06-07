@@ -224,15 +224,15 @@ class ApiController {
 	def participantsInNetwork() {
 		actionById(Network, 'networkId', params, ['success': false]) { Network network, Map response ->
 			List<Map> users = network.allUsersInNetwork.collect {
-				['lastname': it.lastName, 'firstname': it.firstName, 'email': it.email]
+				['network': network.name, 'lastname': it.lastName, 'firstname': it.firstName, 'email': it.email]
 			}
 
 			response.put('success', true)
 
 			if (params.excel?.equalsIgnoreCase('true') || params.excel?.equalsIgnoreCase('1')) {
 				XlsMapExport xls = new XlsMapExport(
-						['lastname', 'firstname', 'email'], users,
-						'Sheet 1', [params.lastName, params.firstName, params.email] as List<String>)
+						['network', 'lastname', 'firstname', 'email'], users,
+						'Sheet 1', [params.networkName, params.lastName, params.firstName, params.email] as List<String>)
 				response.put('xls', xls.parse().encodeBase64().toString())
 			}
 			else {
@@ -303,7 +303,7 @@ class ApiController {
                          'papertitle', 'paperstate', 'paperabstract'], users, 'Sheet 1',
                         [params.networkName, params.lastName, params.firstName,
                          params.email, params.session, params.sessionState, params.roles,
-                         params.paperTitle, params.paperAbstract, params.paperST] as List<String>)
+                         params.paperTitle, params.paperST, params.paperAbstract] as List<String>)
                 response.put('xls', xls.parse().encodeBase64().toString())
             } else {
                 response.put('users', users)
