@@ -241,9 +241,8 @@ class ApiController {
 		}
 	}
 
-    def participantsPapersInNetwork() {
+    def sessionPapersInNetworkXls() {
         actionById(Network, 'networkId', params, ['success': false]) { Network network, Map response ->
-            // TODO: AND sp.date.id = :dateId ???
             List usersSessions = ParticipantDate.executeQuery('''
 				SELECT DISTINCT u, s
                 FROM ParticipantDate AS pd
@@ -257,7 +256,8 @@ class ApiController {
                 AND n.id = :networkId
                 AND pd.state.id IN (:newParticipant, :dataChecked, :participant, :notFinished)
                 ORDER BY s.name ASC, u.lastName ASC, u.firstName ASC
-			''', ['dateId'         : pageInformation.date.id, 'networkId': network.id,
+			''', ['dateId'         : pageInformation.date.id,
+                  'networkId'      : network.id,
                   'newParticipant' : ParticipantState.NEW_PARTICIPANT,
                   'dataChecked'    : ParticipantState.PARTICIPANT_DATA_CHECKED,
                   'participant'    : ParticipantState.PARTICIPANT,
@@ -310,6 +310,61 @@ class ApiController {
             }
         }
     }
+
+	// individual papers in network (xls)
+	def individualPapersInNetworkXls() {
+		actionById(Network, 'networkId', params, ['success': false]) { Network network, Map response ->
+			List usersPapers = ParticipantDate.executeQuery('''
+				SELECT DISTINCT u, p
+                FROM ParticipantDate AS pd
+                    INNER JOIN pd.user AS u
+                    INNER JOIN u.papers AS p
+                WHERE u.deleted = false
+	                AND p.networkProposal.id = :networkId
+	                AND pd.state.id IN (:newParticipant, :dataChecked, :participant, :notFinished)
+	                AND p.session.id IS NULL
+	                AND p.deleted = false
+	                AND p.date.id = :dateId
+	                AND u.deleted = false
+	                AND pd.deleted = false
+                ORDER BY u.lastName ASC, u.firstName ASC
+			''', ['dateId'         : pageInformation.date.id,
+			      'networkId'      : network.id,
+			      'newParticipant' : ParticipantState.NEW_PARTICIPANT,
+			      'dataChecked'    : ParticipantState.PARTICIPANT_DATA_CHECKED,
+			      'participant'    : ParticipantState.PARTICIPANT,
+			      'notFinished'    : ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
+
+			List<Map> users = []
+
+			usersPapers.each { userAndPaper ->
+				User user = userAndPaper[0]
+				Paper paper = userAndPaper[1]
+
+				users << ['network'      : network.name,
+				          'lastname'     : user.lastName,
+				          'firstname'    : user.firstName,
+				          'email'        : user.email,
+				          'papertitle'   : paper.title,
+				          'paperabstract': paper.abstr,
+						  'paperstate'   : paper.state.description]
+			}
+
+			response.put('success', true)
+
+			if (params.excel?.equalsIgnoreCase('true') || params.excel?.equalsIgnoreCase('1')) {
+				XlsMapExport xls = new XlsMapExport(
+						['network', 'lastname', 'firstname',
+						 'email', 'papertitle', 'paperstate', 'paperabstract'],
+						users, 'Sheet 1',
+						[params.networkName, params.lastName, params.firstName,
+						 params.email, params.paperTitle, params.paperST, params.paperAbstract] as List<String>)
+				response.put('xls', xls.parse().encodeBase64().toString())
+			} else {
+				response.put('users', users)
+			}
+		}
+	}
 
 	def participantsInSession() {
 		Long sessionId = (params.sessionId?.toString()?.isLong()) ? params.sessionId.toString().toLong() : null

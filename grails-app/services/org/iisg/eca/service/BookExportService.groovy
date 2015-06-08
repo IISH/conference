@@ -85,7 +85,7 @@ class BookExportService {
                     AND sdt.deleted = false
                     AND r.deleted = false
                     ORDER BY u.lastName, u.firstName, r.roomNumber, sdt.indexNumber
-                ''', [stateId: ParticipantState.PARTICIPANT, sessionStateId: SessionState.SESSION_ACCEPTED]).each { concordance ->
+                ''', [stateId: ParticipantState.PARTICIPANT,sessionStateId: SessionState.SESSION_ACCEPTED]).each { concordance ->
 				    User user = (User) concordance[0]
 				    Room room = (Room) concordance[1]
 				    SessionDateTime sessionDateTime = (SessionDateTime) concordance[2]
