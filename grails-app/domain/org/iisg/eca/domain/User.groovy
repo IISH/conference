@@ -760,4 +760,11 @@ class User {
 	String toString() {
 		return "${firstName.trim()} ${lastName.trim()}"
 	}
+
+	/**
+	 * Return firstname and lastname
+	 */
+	String getFullName() {
+		return "${firstName} ${lastName}".trim()
+	}
 }
