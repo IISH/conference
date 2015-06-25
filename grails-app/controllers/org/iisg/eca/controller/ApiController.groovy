@@ -376,7 +376,7 @@ class ApiController {
 
 		if (sessionId && sessionId > 0) {
 			results = ParticipantDate.executeQuery('''
-				SELECT u, p, t
+				SELECT u, pd, p, t
 				FROM ParticipantDate AS pd
 					INNER JOIN pd.user AS u
 					INNER JOIN u.sessionParticipants AS sp
@@ -400,7 +400,7 @@ class ApiController {
 		}
 		else if (networkId) {
 			results = ParticipantDate.executeQuery('''
-				SELECT u, p
+				SELECT u, pd, p
 				FROM ParticipantDate AS pd
 					INNER JOIN pd.user AS u
 					INNER JOIN u.papers AS p
