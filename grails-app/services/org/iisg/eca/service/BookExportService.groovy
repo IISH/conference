@@ -77,7 +77,7 @@ class BookExportService {
                     INNER JOIN s.sessionRoomDateTime AS srdt
                     INNER JOIN srdt.sessionDateTime AS sdt
                     INNER JOIN srdt.room AS r
-                    WHERE pd.state.id = :stateId
+                    WHERE pd.state.id IN ( :stateParticipantDataChecked, :stateParticipant )
                     AND s.state.id = :sessionStateId
                     AND u.enabled = true
                     AND u.deleted = false
@@ -85,7 +85,11 @@ class BookExportService {
                     AND sdt.deleted = false
                     AND r.deleted = false
                     ORDER BY u.lastName, u.firstName, r.roomNumber, sdt.indexNumber
-                ''', [stateId: ParticipantState.PARTICIPANT,sessionStateId: SessionState.SESSION_ACCEPTED]).each { concordance ->
+                ''', [
+					    stateParticipantDataChecked: ParticipantState.PARTICIPANT_DATA_CHECKED,
+					    stateParticipant: ParticipantState.PARTICIPANT,
+						sessionStateId: SessionState.SESSION_ACCEPTED
+			        ]).each { concordance ->
 				    User user = (User) concordance[0]
 				    Room room = (Room) concordance[1]
 				    SessionDateTime sessionDateTime = (SessionDateTime) concordance[2]
