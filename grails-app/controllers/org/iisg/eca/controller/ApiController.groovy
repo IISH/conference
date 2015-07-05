@@ -241,9 +241,9 @@ class ApiController {
 		}
 	}
 
-    def sessionPapersInNetworkXls() {
-        actionById(Network, 'networkId', params, ['success': false]) { Network network, Map response ->
-            List usersSessions = ParticipantDate.executeQuery('''
+	def sessionPapersInNetworkXls() {
+		actionById(Network, 'networkId', params, ['success': false]) { Network network, Map response ->
+			List usersSessions = ParticipantDate.executeQuery('''
 				SELECT DISTINCT u, s
                 FROM ParticipantDate AS pd
                 INNER JOIN pd.user AS u
@@ -257,59 +257,127 @@ class ApiController {
                 AND pd.state.id IN (:newParticipant, :dataChecked, :participant, :notFinished)
                 ORDER BY s.name ASC, u.lastName ASC, u.firstName ASC
 			''', ['dateId'         : pageInformation.date.id,
-                  'networkId'      : network.id,
-                  'newParticipant' : ParticipantState.NEW_PARTICIPANT,
-                  'dataChecked'    : ParticipantState.PARTICIPANT_DATA_CHECKED,
-                  'participant'    : ParticipantState.PARTICIPANT,
-		          'notFinished'    : ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
+			      'networkId'      : network.id,
+			      'newParticipant' : ParticipantState.NEW_PARTICIPANT,
+			      'dataChecked'    : ParticipantState.PARTICIPANT_DATA_CHECKED,
+			      'participant'    : ParticipantState.PARTICIPANT,
+			      'notFinished'    : ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
 
-            List<Map> users = []
-            Map<Long, Set<Paper>> papersPersSession = new HashMap<>()
-            usersSessions.each { userAndSession ->
-                User user = userAndSession[0]
-                Session session = userAndSession[1]
+			List<Map> users = []
+			Map<Long, Set<Paper>> papersPersSession = new HashMap<>()
+			usersSessions.each { userAndSession ->
+				User user = userAndSession[0]
+				Session session = userAndSession[1]
 
-                if (!papersPersSession.containsKey(session.id)) {
-                    papersPersSession.put(session.id, session.papers ?: new HashSet<>())
-                }
+				if (!papersPersSession.containsKey(session.id)) {
+					papersPersSession.put(session.id, session.papers ?: new HashSet<>())
+				}
 
-                boolean paperFound = false
-                papersPersSession.get(session.id).each { Paper paper ->
-                    if (!paper.deleted && (paper.user.id == user.id)) {
-                        paperFound = true
-                        users << ['network'     : network.name, 'lastname': user.lastName, 'firstname': user.firstName,
-                                  'email'       : user.email, 'session': session.name,
-                                  'sessionstate': session.state.description,
-                                  'roles'       : SessionParticipant.findAllByUserAndSession(user, session)*.type.join(', '),
-                                  'papertitle'  : paper.title, 'paperabstract': paper.abstr,
-                                  'paperstate'  : paper.state.description]
-                    }
-                }
+				boolean paperFound = false
+				papersPersSession.get(session.id).each { Paper paper ->
+					if (!paper.deleted && (paper.user.id == user.id)) {
+						paperFound = true
+						users << ['network'     : network.name, 'lastname': user.lastName, 'firstname': user.firstName,
+						          'email'       : user.email, 'session': session.name,
+						          'sessionstate': session.state.description,
+						          'roles'       : SessionParticipant.findAllByUserAndSession(user, session)*.type.join(', '),
+						          'papertitle'  : paper.title, 'paperabstract': paper.abstr,
+						          'paperstate'  : paper.state.description]
+					}
+				}
 
-                if (!paperFound) {
-                    users << ['network'     : network.name, 'lastname': user.lastName, 'firstname': user.firstName,
-                              'email'       : user.email, 'session': session.name,
-                              'sessionstate': session.state.description,
-                              'roles'       : SessionParticipant.findAllByUserAndSession(user, session)*.type.join(', '),
-                              'papertitle'  : null, 'paperabstract': null, 'paperstate': null]
-                }
-            }
+				if (!paperFound) {
+					users << ['network'     : network.name, 'lastname': user.lastName, 'firstname': user.firstName,
+					          'email'       : user.email, 'session': session.name,
+					          'sessionstate': session.state.description,
+					          'roles'       : SessionParticipant.findAllByUserAndSession(user, session)*.type.join(', '),
+					          'papertitle'  : null, 'paperabstract': null, 'paperstate': null]
+				}
+			}
 
-            response.put('success', true)
+			response.put('success', true)
 
-            if (params.excel?.equalsIgnoreCase('true') || params.excel?.equalsIgnoreCase('1')) {
-                XlsMapExport xls = new XlsMapExport(
-                        ['network', 'lastname', 'firstname', 'email', 'session', 'sessionstate', 'roles',
-                         'papertitle', 'paperstate', 'paperabstract'], users, 'Sheet 1',
-                        [params.networkName, params.lastName, params.firstName,
-                         params.email, params.session, params.sessionState, params.roles,
-                         params.paperTitle, params.paperST, params.paperAbstract] as List<String>)
-                response.put('xls', xls.parse().encodeBase64().toString())
-            } else {
-                response.put('users', users)
-            }
-        }
-    }
+			if (params.excel?.equalsIgnoreCase('true') || params.excel?.equalsIgnoreCase('1')) {
+				XlsMapExport xls = new XlsMapExport(
+						['network', 'lastname', 'firstname', 'email', 'session', 'sessionstate', 'roles',
+						 'papertitle', 'paperstate', 'paperabstract'], users, 'Sheet 1',
+						[params.networkName, params.lastName, params.firstName,
+						 params.email, params.session, params.sessionState, params.roles,
+						 params.paperTitle, params.paperST, params.paperAbstract] as List<String>)
+				response.put('xls', xls.parse().encodeBase64().toString())
+			} else {
+				response.put('users', users)
+			}
+		}
+	}
+
+	def sessionPapersInNetworkAcceptedXls() {
+		actionById(Network, 'networkId', params, ['success': false]) { Network network, Map response ->
+			List usersSessions = ParticipantDate.executeQuery('''
+				SELECT DISTINCT u, s
+                FROM ParticipantDate AS pd
+                INNER JOIN pd.user AS u
+                INNER JOIN u.sessionParticipants AS sp
+                INNER JOIN sp.session AS s
+                INNER JOIN s.networks AS n
+                WHERE u.deleted = false
+                AND s.deleted = false
+                AND s.date.id = :dateId
+                AND n.id = :networkId
+                AND pd.state.id IN (:dataChecked, :participant)
+                ORDER BY s.name ASC, u.lastName ASC, u.firstName ASC
+			''', ['dateId'         : pageInformation.date.id,
+			      'networkId'      : network.id,
+			      'dataChecked'    : ParticipantState.PARTICIPANT_DATA_CHECKED,
+			      'participant'    : ParticipantState.PARTICIPANT])
+
+			List<Map> users = []
+			Map<Long, Set<Paper>> papersPersSession = new HashMap<>()
+			usersSessions.each { userAndSession ->
+				User user = userAndSession[0]
+				Session session = userAndSession[1]
+
+				if (!papersPersSession.containsKey(session.id)) {
+					papersPersSession.put(session.id, session.papers ?: new HashSet<>())
+				}
+
+				boolean paperFound = false
+				papersPersSession.get(session.id).each { Paper paper ->
+					if (!paper.deleted && (paper.user.id == user.id)) {
+						paperFound = true
+						users << ['network'     : network.name, 'lastname': user.lastName, 'firstname': user.firstName,
+						          'email'       : user.email, 'session': session.name,
+						          'sessionstate': session.state.description,
+						          'roles'       : SessionParticipant.findAllByUserAndSession(user, session)*.type.join(', '),
+						          'papertitle'  : paper.title, 'paperabstract': paper.abstr,
+						          'paperstate'  : paper.state.description]
+					}
+				}
+
+				if (!paperFound) {
+					users << ['network'     : network.name, 'lastname': user.lastName, 'firstname': user.firstName,
+					          'email'       : user.email, 'session': session.name,
+					          'sessionstate': session.state.description,
+					          'roles'       : SessionParticipant.findAllByUserAndSession(user, session)*.type.join(', '),
+					          'papertitle'  : null, 'paperabstract': null, 'paperstate': null]
+				}
+			}
+
+			response.put('success', true)
+
+			if (params.excel?.equalsIgnoreCase('true') || params.excel?.equalsIgnoreCase('1')) {
+				XlsMapExport xls = new XlsMapExport(
+						['network', 'lastname', 'firstname', 'email', 'session', 'sessionstate', 'roles',
+						 'papertitle', 'paperstate', 'paperabstract'], users, 'Sheet 1',
+						[params.networkName, params.lastName, params.firstName,
+						 params.email, params.session, params.sessionState, params.roles,
+						 params.paperTitle, params.paperST, params.paperAbstract] as List<String>)
+				response.put('xls', xls.parse().encodeBase64().toString())
+			} else {
+				response.put('users', users)
+			}
+		}
+	}
 
 	// individual papers in network (xls)
 	def individualPapersInNetworkXls() {

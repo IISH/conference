@@ -117,6 +117,10 @@ class UrlMappings {
 		    action = 'sessionPapersInNetworkXls'
 	    }
 
+	    name sessionPapersInNetworkAcceptedXls: "/$event/$date/api/sessionPapersInNetworkAcceptedXls" (controller: "api", parseRequest: true) {
+		    action = 'sessionPapersInNetworkAcceptedXls'
+	    }
+
 	    name individualPapersInNetworkXls: "/$event/$date/api/individualPapersInNetworkXls" (controller: "api", parseRequest: true) {
 		    action = 'individualPapersInNetworkXls'
 	    }
