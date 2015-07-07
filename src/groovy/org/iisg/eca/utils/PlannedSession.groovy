@@ -38,5 +38,6 @@ final class PlannedSession {
         String paperName
         String coAuthors
 	    boolean hasDownload = false
+	    String paperAbstract
     }
 }

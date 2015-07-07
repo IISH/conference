@@ -433,6 +433,7 @@ class SessionPlannerService {
                     participant.paperName = paper.title
                     participant.coAuthors = paper.coAuthors
 	                participant.hasDownload = paper.hasPaperFile()
+	                participant.paperAbstract = paper.abstr
 
                     return participant
                 }
