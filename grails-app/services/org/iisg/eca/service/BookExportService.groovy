@@ -35,10 +35,11 @@ class BookExportService {
         getXml("Export of Days for ${getEventCode()} Programbook (English)") { builder ->
             builder.days {
                 Day.executeQuery('''
-                    SELECT d, sdt
-                    FROM Day AS d
-                    INNER JOIN d.sessionDateTimes AS sdt
-                    ORDER BY d.id, sdt.indexNumber
+					SELECT d, sdt
+					FROM Day AS d
+					INNER JOIN d.sessionDateTimes AS sdt
+					WHERE sdt.deleted = false
+					ORDER BY d.id, sdt.indexNumber
                 ''').each { results ->
                     builder.day {
                         Day d = results[0]
@@ -50,7 +51,11 @@ class BookExportService {
 
                         String[] times = sdt.period.split('-')
                         builder.starttime(times[0].trim())
-                        builder.endtime(times[1].trim())
+	                    if ( times.length >= 2 ) {
+		                    builder.endtime(times[1].trim())
+	                    } else {
+		                    builder.endtime(null)
+	                    }
                     }
                 }
             }
@@ -130,10 +135,11 @@ class BookExportService {
 
         getXml("Export ${getEventCode()} Programbook (Sessions) (English)") { builder ->
             Day.executeQuery('''
-                SELECT d, sdt
-                FROM Day AS d
-                INNER JOIN d.sessionDateTimes AS sdt
-                ORDER BY d.id, sdt.indexNumber
+				SELECT d, sdt
+				FROM Day AS d
+				INNER JOIN d.sessionDateTimes AS sdt
+				WHERE sdt.deleted = false
+				ORDER BY d.id, sdt.indexNumber
             ''').each { results ->
                 Day d = results[0]
                 SessionDateTime sdt = results[1]
@@ -147,7 +153,11 @@ class BookExportService {
 
                         String[] times = sdt.period.split('-')
                         builder.starttime(times[0].trim())
-                        builder.endtime(times[1].trim())
+	                    if ( times.length >= 2 ) {
+		                    builder.endtime(times[1].trim())
+	                    } else {
+		                    builder.endtime(null)
+	                    }
                     }
 
                     Session.executeQuery('''
@@ -275,6 +285,7 @@ class BookExportService {
                         builder.presenter("$user.firstName $user.lastName")
                         builder.copresenters(paper.coAuthors)
                         builder.subject(paper.title)
+	                    builder.abstract(paper.abstr)
                     }
                 }
             }
