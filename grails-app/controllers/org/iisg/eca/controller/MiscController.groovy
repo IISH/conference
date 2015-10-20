@@ -393,7 +393,7 @@ class MiscController {
                 SELECT session_participant.session_id
                 FROM session_participant
                 INNER JOIN vw_accepted_participants ON session_participant.user_id=vw_accepted_participants.user_id
-                WHERE AND session_participant.deleted=0
+                WHERE session_participant.deleted=0
                 AND session_participant.participant_type_id = :organizer
                 GROUP BY session_participant.session_id
             )
