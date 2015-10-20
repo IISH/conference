@@ -306,17 +306,19 @@ class SessionPlannerService {
      * @param timeId The time to filter on
      * @param networkId The network to filter on
      * @param roomId The room to filter on
+     * @param sessionId The session to filter on
      * @param terms The search terms to filter on
      * @return The currently planned schedule
      */
     @Cacheable(value = "programme")
-    List<PlannedSession> getProgramme(Long dateId, Long dayId, Long timeId, Long networkId, Long roomId, String terms) {
+    List<PlannedSession> getProgramme(Long dateId, Long dayId, Long timeId, Long networkId, Long roomId, Long sessionId,
+                                      String terms) {
         // Start by querying
         def results = SessionRoomDateTime.createCriteria().listDistinct {
             // Create aliases first for joins
             createAlias('room', 'r')
             createAlias('sessionDateTime', 'sdt')
-            if (networkId || (terms?.trim()?.size() > 0)) {
+            if (sessionId || networkId || (terms?.trim()?.size() > 0)) {
                 createAlias('session', 's')
                 createAlias('s.networks', 'n')
                 if (terms?.trim()?.size() > 1) {
@@ -331,7 +333,7 @@ class SessionPlannerService {
             eq('r.date.id', dateId)
             eq('sdt.deleted', false)
             eq('sdt.date.id', dateId)
-            if (networkId || (terms?.trim()?.size() > 0)) {
+            if (sessionId || networkId || (terms?.trim()?.size() > 0)) {
                 eq('s.deleted', false)
                 eq('s.date.id', dateId)
                 eq('n.deleted', false)
@@ -356,6 +358,9 @@ class SessionPlannerService {
             }
             if (networkId) {
                 eq('n.id', networkId)
+            }
+            if (sessionId) {
+                eq('s.id', sessionId)
             }
 
             // Filter using the terms
