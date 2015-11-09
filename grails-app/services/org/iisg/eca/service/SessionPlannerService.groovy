@@ -1,12 +1,14 @@
 package org.iisg.eca.service
 
 import org.hibernate.FetchMode
+import org.hibernate.criterion.CriteriaSpecification
 import org.iisg.eca.domain.*
 import org.iisg.eca.utils.PlannedSession
 import org.iisg.eca.utils.TimeSlot
 import org.iisg.eca.utils.UserDateTime
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
+
 /**
  * Service responsible for session planning activities
  */
@@ -318,31 +320,46 @@ class SessionPlannerService {
             // Create aliases first for joins
             createAlias('room', 'r')
             createAlias('sessionDateTime', 'sdt')
-            if (sessionId || networkId || (terms?.trim()?.size() > 0)) {
-                createAlias('session', 's')
+            createAlias('sdt.day', 'd')
+            createAlias('session', 's')
+            if (networkId || (terms?.trim()?.size() > 0)) {
                 createAlias('s.networks', 'n')
                 if (terms?.trim()?.size() > 1) {
-                    createAlias('s.sessionParticipants', 'sp')
-                    createAlias('sp.user', 'u')
-                    createAlias('s.papers', 'p')
+                    createAlias('s.sessionParticipants', 'sp', CriteriaSpecification.LEFT_JOIN)
+                    createAlias('sp.user', 'u', CriteriaSpecification.LEFT_JOIN)
+                    createAlias('s.papers', 'p', CriteriaSpecification.LEFT_JOIN)
                 }
             }
+
+            // Also fetch the joined tables
+            fetchMode('r', FetchMode.JOIN)
+            fetchMode('sdt', FetchMode.JOIN)
+            fetchMode('d', FetchMode.JOIN)
+            fetchMode('s', FetchMode.JOIN)
 
             // Default filtering on joined domain classes
             eq('r.deleted', false)
             eq('r.date.id', dateId)
             eq('sdt.deleted', false)
             eq('sdt.date.id', dateId)
-            if (sessionId || networkId || (terms?.trim()?.size() > 0)) {
-                eq('s.deleted', false)
-                eq('s.date.id', dateId)
+            eq('s.deleted', false)
+            eq('s.date.id', dateId)
+            if (networkId || (terms?.trim()?.size() > 0)) {
                 eq('n.deleted', false)
                 eq('n.date.id', dateId)
                 if (terms?.trim()?.size() > 0) {
                     ne('sp.type.id', ParticipantType.CO_AUTHOR) // Co-authors are for internal use only
-                    eq('u.deleted', false)
-                    eq('p.deleted', false)
-                    eq('p.date.id', dateId)
+                    or {
+                        isNull('u.id')
+                        eq('u.deleted', false)
+                    }
+                    or {
+                        isNull('p.id')
+                        and {
+                            eq('p.deleted', false)
+                            eq('p.date.id', dateId)
+                        }
+                    }
                 }
             }
 
@@ -351,7 +368,7 @@ class SessionPlannerService {
                 eq('r.id', roomId)
             }
             if (dayId) {
-                eq('sdt.day.id', dayId)
+                eq('d.id', dayId)
             }
             if (timeId) {
                 eq('sdt.id', timeId)
@@ -386,6 +403,50 @@ class SessionPlannerService {
             order('r.roomNumber', 'asc')
         }
 
+        // Query all other required values as well
+        def networks = Network.list()
+        def networksBySession = Network.withCriteria {
+            if (sessionId) {
+                sessions {
+                    eq('id', sessionId)
+                }
+            }
+
+            projections {
+                property('id')
+                sessions {
+                    property('id')
+                }
+            }
+        }
+
+        def papers = Paper.withCriteria {
+            createAlias('session', 's')
+            fetchMode('s', FetchMode.JOIN)
+
+            if (sessionId) {
+                eq('s.id', sessionId)
+            }
+        }
+
+        def sessionParticipants = SessionParticipant.withCriteria {
+            createAlias('session', 's')
+            createAlias('user', 'u')
+            createAlias('type', 't')
+
+            fetchMode('s', FetchMode.JOIN)
+            fetchMode('u', FetchMode.JOIN)
+            fetchMode('t', FetchMode.JOIN)
+
+            if (sessionId) {
+                eq('s.id', sessionId)
+            }
+
+            order('t.importance', 'desc')
+            order('u.lastName', 'asc')
+            order('u.firstName', 'asc')
+        }
+
         // Now create PlannedSession classes out of the results
         List<PlannedSession> planning = new ArrayList<PlannedSession>()
         results.each { result ->
@@ -406,41 +467,37 @@ class SessionPlannerService {
             plannedSession.sessionCode = result.session.code
             plannedSession.sessionName = result.session.name
 
-            plannedSession.networks = result.session.networks.collect {
-                if (it.showOnline && !it.deleted) {
-                    PlannedSession.Network network = new PlannedSession.Network()
-                    network.networkId = it.id
-                    network.networkName = it.name
-                    return network
+            plannedSession.networks = networksBySession
+                    .findAll { it[1] == result.session.id }
+                    .collect {
+                def network = networks.find { n -> n.id == it[0] }
+                if (network.showOnline && !network.deleted) {
+                    PlannedSession.Network plannedNetwork = new PlannedSession.Network()
+                    plannedNetwork.networkId = network.id
+                    plannedNetwork.networkName = network.name
+                    return plannedNetwork
                 }
             }
 
-            def sessionParticipants = result.session.sessionParticipants.sort { a, b ->
-                if (b.type.importance != a.type.importance) {
-                    b.type.importance <=> a.type.importance
-                }
-                else if (b.user.lastName != a.user.lastName) {
-                    a.user.lastName <=> b.user.lastName
-                }
-                else {
-                    a.user.firstName <=> b.user.firstName
-                }
-            }
-            plannedSession.participants = sessionParticipants.collect { sp ->
+            plannedSession.participants = sessionParticipants
+                    .findAll { it.session.id == result.session.id }
+                    .collect { sp ->
                 if (sp.type.withPaper) {
                     PlannedSession.ParticipantWithPaper participant = new PlannedSession.ParticipantWithPaper()
                     participant.typeId = sp.type.id
                     participant.type = sp.type.toString()
                     participant.participantName = sp.user.toString()
 
-                    Paper paper = result.session.papers.find { (it.user.id == sp.user.id) && !it.deleted }
-                    participant.paperId = paper.id
-                    participant.paperName = paper.title
-                    participant.coAuthors = paper.coAuthors
-	                participant.hasDownload = paper.hasPaperFile()
-	                participant.paperAbstract = paper.abstr
+                    Paper paper = papers.find { it.user.id == sp.user.id }
+                    if (paper) {
+                        participant.paperId = paper.id
+                        participant.paperName = paper.title
+                        participant.coAuthors = paper.coAuthors
+                        participant.hasDownload = paper.hasPaperFile()
+                        participant.paperAbstract = paper.abstr
 
-                    return participant
+                        return participant
+                    }
                 }
                 else {
                     PlannedSession.Participant participant = new PlannedSession.Participant()
@@ -449,6 +506,7 @@ class SessionPlannerService {
                     participant.participantName = sp.user.toString()
                     return participant
                 }
+                return null
             } as ArrayList<PlannedSession.Participant>
             plannedSession.participants.removeAll(Collections.singleton(null))
 
