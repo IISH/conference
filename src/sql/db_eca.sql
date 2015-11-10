@@ -654,7 +654,7 @@ INSERT INTO `pages` (`page_id`, `title_code`, `title_arg`, `title_default`, `con
 (87, 'default.create.label', 'volunteering.label', 'Create volunteering job', 'volunteering', 'create', 999, 0, NULL, NULL, 1, 0, NULL),
 (88, 'default.edit.label', 'volunteering.label', 'Edit volunteering job', 'volunteering', 'edit', 999, 0, NULL, NULL, 1, 0, NULL),
 (89, 'volunteering.label', NULL, 'Show volunteering job', 'volunteering', 'show', 999, 0, NULL, NULL, 1, 0, NULL),
-(90, 'default.list.label', 'extra.label', 'Extra list', 'participant', 'extras', 125, 1, NULL, 68, 1, 0, 'sort_0=firstName:asc;lastName:asc'),
+(90, 'default.list.label', 'extra.label', 'Extra list (final)', 'participant', 'extras', 125, 1, NULL, 68, 1, 0, 'sort_0=firstName:asc;lastName:asc'),
 (91, 'default.create.label', 'user.label', 'Create user', 'userAuth', 'create', 999, 0, NULL, NULL, 1, 0, NULL),
 (92, 'email.test.label', NULL, 'Send test mail', 'email', 'test', 999, 0, NULL, NULL, 1, 0, NULL),
 (93, 'default.misc.menu.label', NULL, 'Misc »', NULL, NULL, 150, 1, NULL, NULL, 1, 0, NULL),

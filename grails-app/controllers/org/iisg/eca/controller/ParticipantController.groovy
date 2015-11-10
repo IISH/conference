@@ -42,9 +42,16 @@ class ParticipantController {
 	}
 
 	/**
-	 * Shows all participants that showed interest for one of the extras
+	 * Shows all participants that showed interest for one of the extras (final-registration)
 	 */
 	def extras() {
+		forward(controller: 'dynamicPage', action: 'dynamic', params: params)
+	}
+
+	/**
+	 * Shows all participants that showed interest for one of the extras (pre-registration)
+	 */
+	def extraspre() {
 		forward(controller: 'dynamicPage', action: 'dynamic', params: params)
 	}
 
