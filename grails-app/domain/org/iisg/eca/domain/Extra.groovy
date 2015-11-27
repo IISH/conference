@@ -35,8 +35,8 @@ class Extra extends EventDateDomain {
     }
 
     static constraints = {
-        title               nullable: true, masSize: 30
-        extra               blank: false,   maxSize: 30
+        title               nullable: true, masSize: 60
+        extra               blank: false,   maxSize: 50
         description         nullable: true, maxSize: 100
         secondDescription   nullable: true
         amount              min: BigDecimal.ZERO
