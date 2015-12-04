@@ -43,6 +43,7 @@ class Setting extends EventDomain {
 	static final String ORGANIZER_REGISTRATION_LASTDATE = 'organizer_registration_lastdate'
 	static final String PATH_FOR_ADMIN_MENU = 'path_for_admin_menu'
 	static final String PATH_FOR_MENU = 'path_for_menu'
+    static final String PAYMENT_ON_SITE_STARTDATE = 'payment_on_site_startdate'
 	static final String PREREGISTRATION_LASTDATE = 'preregistration_lastdate'
 	static final String PREREGISTRATION_STARTDATE = 'preregistration_startdate'
 	static final String PREREGISTRATION_SESSIONS = 'preregistration_sessions'

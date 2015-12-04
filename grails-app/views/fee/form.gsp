@@ -71,6 +71,16 @@
                                 </span>
                             </div>
 
+                            <div class="${hasErrors(bean: amount, field: 'feeAmountOnSite', 'error')} required">
+                                <label class="property-label">
+                                    <g:message code="feeAmount.feeAmountOnSite.label" />
+                                    <span class="required-indicator">*</span>
+                                </label>
+                                <span class="property-value">
+                                    <g:field type="text" name="feeAmount_${i}.feeAmountOnSite" required="required" value="${amount.feeAmountOnSite}" />
+                                </span>
+                            </div>
+
                             <div class="${hasErrors(bean: amount, field: 'endDate', 'error')} required">
                                 <label class="property-label">
                                     <g:message code="feeAmount.endDate.label" />
@@ -125,6 +135,16 @@
                             </label>
                             <span class="property-value">
                                 <g:field type="text" name="feeAmount_null.feeAmount" required="required" value="9999.99" />
+                            </span>
+                        </div>
+
+                        <div class="required">
+                            <label class="property-label">
+                                <g:message code="feeAmount.feeAmountOnSite.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <span class="property-value">
+                                <g:field type="text" name="feeAmount_null.feeAmountOnSite" required="required" value="9999.99" />
                             </span>
                         </div>
 

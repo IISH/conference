@@ -9,6 +9,7 @@ class FeeAmount extends EventDateDomain {
     int numDaysStart
     int numDaysEnd
     BigDecimal feeAmount = new BigDecimal(9999.99)
+    BigDecimal feeAmountOnSite = new BigDecimal(9999.99)
     String substituteName
 
     static belongsTo = FeeState
@@ -21,6 +22,11 @@ class FeeAmount extends EventDateDomain {
                             }
                         }
         feeAmount       min: BigDecimal.ZERO
+        feeAmountOnSite validator: { val, obj ->
+                            if (obj.feeAmount.compareTo(obj.feeAmountOnSite) > 0) {
+                                ["feeAmount.validation.onsite.message"]
+                            }
+                        }
         substituteName  nullable: true,         maxSize: 50
     }
 
@@ -34,6 +40,7 @@ class FeeAmount extends EventDateDomain {
         numDaysStart    column: 'nr_of_days_start'
         numDaysEnd      column: 'nr_of_days_end'
         feeAmount       column: 'fee_amount'
+        feeAmountOnSite column: 'fee_amount_on_site'
         substituteName  column: 'substitute_name'
     }
 
@@ -73,6 +80,7 @@ class FeeAmount extends EventDateDomain {
             'numDaysStart',
             'numDaysEnd',
             'feeAmount',
+            'feeAmountOnSite',
             'substituteName'
     ]
 
