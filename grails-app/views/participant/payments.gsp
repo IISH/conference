@@ -113,13 +113,13 @@
             <tr>
                 <td class="left"><g:message code="order.free.label" /></td>
 
-                <td>${PaymentStatistic.getPaymentStatistic(2L, paymentMethod).unConfirmedNoParticipants}</td>
+                <td>${PaymentStatistic.getPaymentStatistic(3L, paymentMethod).unConfirmedNoParticipants}</td>
                 <td class="line"><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(2L, paymentMethod).unConfirmedAmount}" cents="${true}" /></td>
 
-                <td>${PaymentStatistic.getPaymentStatistic(2L, paymentMethod).confirmedNoParticipants}</td>
+                <td>${PaymentStatistic.getPaymentStatistic(3L, paymentMethod).confirmedNoParticipants}</td>
                 <td class="line"><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(2L, paymentMethod).confirmedAmount}" cents="${true}" /></td>
 
-                <td>${PaymentStatistic.getPaymentStatistic(2L, paymentMethod).totalNoParticipants}</td>
+                <td>${PaymentStatistic.getPaymentStatistic(3L, paymentMethod).totalNoParticipants}</td>
                 <td><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(2L, paymentMethod).totalAmount}" cents="${true}" /></td>
             </tr>
             <tr>

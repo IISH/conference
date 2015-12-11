@@ -51,7 +51,7 @@ class FeeController {
             while (params."feeAmount_${i}") {
                 FeeAmount feeAmount = new FeeAmount()
                 bindData(feeAmount, params, [include:
-		            ['substituteName', 'endDate', 'numDaysStart', 'numDaysEnd', 'feeAmount']], "feeAmount_${i}")
+		            ['substituteName', 'endDate', 'numDaysStart', 'numDaysEnd', 'feeAmount', 'feeAmountOnSite']], "feeAmount_${i}")
                 feeState.addToFeeAmounts(feeAmount)
                 i++
             }
@@ -118,7 +118,7 @@ class FeeController {
 
                 // Save the fee amount, add it to the fee state and remove it from the deletion list
                 bindData(feeAmount, params, [include:
-		            ['substituteName', 'endDate', 'numDaysStart', 'numDaysEnd', 'feeAmount']], "feeAmount_${i}")
+		            ['substituteName', 'endDate', 'numDaysStart', 'numDaysEnd', 'feeAmount', 'feeAmountOnSite']], "feeAmount_${i}")
                 feeState.addToFeeAmounts(feeAmount)
                 toBeDeleted.remove(feeAmount)
                 i++
