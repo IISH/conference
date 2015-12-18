@@ -27,6 +27,13 @@ class ParticipantController {
 		redirect(uri: eca.createLink(action: 'list', noBase: true, noPreviousInfo: true, params: params))
 	}
 
+    /**
+     * Shows a list of all papers for the current event date
+     */
+    def papers() {
+        forward(controller: 'dynamicPage', action: 'dynamic', params: params)
+    }
+
 	/**
 	 * Shows all invitations requests made by participants
 	 */
