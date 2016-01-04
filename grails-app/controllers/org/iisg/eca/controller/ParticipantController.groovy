@@ -670,4 +670,27 @@ class ParticipantController {
 			render responseMap as JSON
 		}
 	}
+
+    /**
+     * Triggers an order refresh from PayWay
+     */
+    def refreshOrder() {
+        if (params.id) {
+            Order order = Order.get(params.id)
+            boolean insert = false
+            if (!order) {
+                order = new Order()
+                order.setId(params.id)
+                insert = true
+            }
+
+            if (order.refreshOrder(insert)) {
+                render "Order successfully refreshed."
+            }
+            else {
+                render "Failure to refresh order."
+            }
+        }
+        render "No order id given."
+    }
 }
