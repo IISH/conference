@@ -90,6 +90,7 @@ class Setting extends EventDomain {
 	static final String LOST_PASSWORD_EMAIL_TEMPLATE_ID = 'lost_password_email_template_id'
 	static final String NEW_PASSWORD_EMAIL_TEMPLATE_ID = 'new_password_email_template_id'
 	static final String PAYMENT_ACCEPTED_EMAIL_TEMPLATE_ID = 'payment_accepted_email_template_id'
+    static final String PAYMENT_ON_SITE_EMAIL_TEMPLATE_ID = 'payment_on_site_email_template_id'
 	static final String PRE_REGISTRATION_EMAIL_TEMPLATE_ID = 'pre_registration_email_template_id'
 	static final String SESSION_REGISTRATION_EMAIL_TEMPLATE_ID = 'session_registration_email_template_id'
 	static final String UPDATED_PASSWORD_EMAIL_TEMPLATE_ID = 'updated_password_email_template_id'
