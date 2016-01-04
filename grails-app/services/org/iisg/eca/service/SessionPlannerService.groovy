@@ -488,7 +488,7 @@ class SessionPlannerService {
                     participant.type = sp.type.toString()
                     participant.participantName = sp.user.toString()
 
-                    Paper paper = papers.find { it.user.id == sp.user.id }
+                    Paper paper = papers.find { (it.user.id == sp.user.id) && (it.session.id == result.session.id) }
                     if (paper) {
                         participant.paperId = paper.id
                         participant.paperName = paper.title
