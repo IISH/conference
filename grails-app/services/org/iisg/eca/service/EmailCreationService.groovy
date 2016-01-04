@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat
 import org.iisg.eca.domain.Day
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Order
-import org.iisg.eca.domain.Session
 import org.iisg.eca.domain.Setting
 import org.iisg.eca.domain.SentEmail
 import org.iisg.eca.domain.FeeAmount
@@ -35,6 +34,8 @@ class EmailCreationService {
 				break
 			case Setting.PAYMENT_ACCEPTED_EMAIL_TEMPLATE_ID:
 				return [createPaymentAcceptedEmail(user, Order.get(props.long('orderId')))] as Set<SentEmail>
+            case Setting.PAYMENT_ON_SITE_EMAIL_TEMPLATE_ID:
+                return [createPaymentOnSiteEmail(user, Order.get(props.long('orderId')))] as Set<SentEmail>
 			case Setting.PRE_REGISTRATION_EMAIL_TEMPLATE_ID:
 				return createPreRegistrationEmail(user)
 			default:
@@ -97,6 +98,31 @@ class EmailCreationService {
 
 		return null
 	}
+
+    /**
+     * Creates an email that informs the user his payment on site has been registered
+     * @param user The user to whom the email is addressed
+     * @param order The order
+     * @return An email ready to be sent
+     */
+    SentEmail createPaymentOnSiteEmail(User user, Order order) {
+        SentEmail email = findAndCreateEmail(user, Setting.PAYMENT_ON_SITE_EMAIL_TEMPLATE_ID)
+
+        // Make sure the given order belongs to the given user
+        if (order.participantDate.user.id == user.id) {
+            List<Day> daysPresent = ParticipantDay.findAllDaysOfUser(user)
+
+            email.addAdditionalValue('PaymentNumber', order.id.toString())
+            email.addAdditionalValue('PaymentAmount', FeeAmount.getReadableFeeAmount(order.amountAsBigDecimal))
+            email.addAdditionalValue('PaymentDescription', order.description)
+            email.addAdditionalValue('OrderDescription', order.getExtendedOrderDescription())
+            email.addAdditionalValue('DaysPresent', daysPresent.join('\n'))
+
+            return email
+        }
+
+        return null
+    }
 
 	/**
 	 * Creates emails that informs the user about his pre-registration
