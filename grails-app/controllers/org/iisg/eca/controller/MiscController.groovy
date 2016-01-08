@@ -508,5 +508,44 @@ class MiscController {
 				export:     true
 		])
 	}
+
+    def additionalEquipment() {
+        Sql sql = new Sql(dataSource)
+        List<GroovyRowResult> result = sql.rows("""
+            SELECT users.user_id, users.lastname, users.firstname, papers.equipment_comment
+            FROM users
+            INNER JOIN participant_date
+            ON users.user_id = participant_date.user_id
+            INNER JOIN papers
+            ON users.user_id = papers.user_id
+            WHERE equipment_comment IS NOT NULL
+            AND users.deleted = 0
+            AND participant_date.deleted = 0
+            AND papers.deleted = 0
+            AND participant_date.date_id = :dateId
+            AND papers.date_id = :dateId
+            AND participant_date.participant_state_id IN (0,1,2,999)
+            ORDER BY equipment_comment, lastname, firstname
+        """, [dateId: pageInformation.date.id])
+
+        List<String> columns = ['lastname', 'firstname', 'equipment_comment'] as List<String>
+        List<String> headers = ["Last name", "First name", "Equipment comment"] as List<String>
+        String info = "Participants with additional equipment comments"
+
+        // If an export of the results is requested, try to delegate the request to the export service
+        if (params.format) {
+            exportService.getSQLExport(params.format, response, columns, result, info, headers, params.sep)
+            return
+        }
+
+        render(view: "list", model: [
+                data:       result,
+                headers:    headers,
+                controller: "participant",
+                action:     "show",
+                info:       info,
+                export:     true
+        ])
+    }
 }
 
