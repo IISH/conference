@@ -309,12 +309,13 @@ class SessionPlannerService {
      * @param networkId The network to filter on
      * @param roomId The room to filter on
      * @param sessionId The session to filter on
+     * @param participantId The favorite sessions of the participant to filter on
      * @param terms The search terms to filter on
      * @return The currently planned schedule
      */
-    @Cacheable(value = "programme")
+    @Cacheable(value = "programme", condition = "#participantId == null")
     List<PlannedSession> getProgramme(Long dateId, Long dayId, Long timeId, Long networkId, Long roomId, Long sessionId,
-                                      String terms) {
+                                      Long participantId, String terms) {
         // Start by querying
         def results = SessionRoomDateTime.createCriteria().listDistinct {
             // Create aliases first for joins
@@ -329,6 +330,9 @@ class SessionPlannerService {
                     createAlias('sp.user', 'u', CriteriaSpecification.LEFT_JOIN)
                     createAlias('s.papers', 'p', CriteriaSpecification.LEFT_JOIN)
                 }
+            }
+            if (participantId) {
+                createAlias('s.participantsFavorite', 'pf')
             }
 
             // Also fetch the joined tables
@@ -378,6 +382,9 @@ class SessionPlannerService {
             }
             if (sessionId) {
                 eq('s.id', sessionId)
+            }
+            if (participantId) {
+                eq('pf.id', participantId)
             }
 
             // Filter using the terms

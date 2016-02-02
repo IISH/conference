@@ -30,7 +30,8 @@ class ParticipantDate extends EventDateDomain {
 	static hasMany = [  extras: Extra,
 	                    participantVolunteering: ParticipantVolunteering,
 	                    orders: Order,
-	                    accompanyingPersons: String]
+	                    accompanyingPersons: String,
+                        favoriteSessions: Session]
 
     static mapping = {
         table 'participant_date'
@@ -59,6 +60,7 @@ class ParticipantDate extends EventDateDomain {
 	    deleted                 column: 'deleted'
 
         extras                  joinTable: 'participant_date_extra'
+        favoriteSessions        joinTable: 'participant_favorite_session'
         participantVolunteering cascade: 'all-delete-orphan'
 	    accompanyingPersons     joinTable: [name:   'accompanying_persons',
 	                                        key:    'participant_date_id',
@@ -94,6 +96,7 @@ class ParticipantDate extends EventDateDomain {
 		    'extraInfo',
             'extras.id',
             'participantVolunteering.id',
+            'favoriteSessions.id',
 		    'addedBy.id'
     ]
 
@@ -109,6 +112,7 @@ class ParticipantDate extends EventDateDomain {
 		    'state.id',
 		    'feeState.id',
 		    'user.id',
+            'favoriteSessions.id',
 		    'addedBy.id'
     ]
 
@@ -126,6 +130,18 @@ class ParticipantDate extends EventDateDomain {
                         Extra extra = Extra.findById(extraId.toString().toLong())
                         if (extra) {
                             this.addToExtras(extra)
+                        }
+                    }
+                }
+                break
+            case 'favoriteSessions.id':
+                this.favoriteSessions?.clear()
+                this.save(flush: true)
+                value.split(';').each { sessionId ->
+                    if (sessionId.toString().isLong()) {
+                        Session session = Session.findById(sessionId.toString().toLong())
+                        if (session) {
+                            this.addToFavoriteSessions(session)
                         }
                     }
                 }

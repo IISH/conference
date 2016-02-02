@@ -178,10 +178,11 @@ class ApiController {
 		Long networkId = (params.networkId?.toString()?.isLong()) ? params.networkId?.toString()?.toLong() : null
 		Long roomId = (params.roomId?.toString()?.isLong()) ? params.roomId?.toString()?.toLong() : null
         Long sessionId = (params.sessionId?.toString()?.isLong()) ? params.sessionId?.toString()?.toLong() : null
+        Long participantId = (params.participantId?.toString()?.isLong()) ? params.participantId?.toString()?.toLong() : null
 		String terms = params.terms?.toString()
 
 		List<PlannedSession> programme = sessionPlannerService.
-				getProgramme(pageInformation.date.id, dayId, timeId, networkId, roomId, sessionId, terms)
+				getProgramme(pageInformation.date.id, dayId, timeId, networkId, roomId, sessionId, participantId, terms)
 
 		render programme as JSON
 	}
