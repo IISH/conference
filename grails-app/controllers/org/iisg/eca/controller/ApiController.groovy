@@ -2,6 +2,7 @@ package org.iisg.eca.controller
 
 import grails.converters.JSON
 import grails.orm.PagedResultList
+import org.iisg.eca.domain.Extra
 import org.iisg.eca.domain.Order
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Paper
@@ -168,6 +169,21 @@ class ApiController {
 		actionById(User, 'userId', params, ['success': false]) { User user, Map response ->
 			OAuth2AccessToken token = user.getAccessToken()
 			response.put('access_token', token.getValue())
+			response.put('success', true)
+		}
+	}
+
+	def noParticipantsWithExtra() {
+		actionById(Extra, 'extraId', params, ['success': false]) { Extra extra, Map response ->
+			int numberOfParticipants = User.allParticipantsNotDeleted(pageInformation.date).count {
+				participantDates {
+					extras {
+						idEq(extra.id)
+					}
+				}
+			}
+
+			response.put('no_participants', numberOfParticipants)
 			response.put('success', true)
 		}
 	}

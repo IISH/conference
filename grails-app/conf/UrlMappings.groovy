@@ -80,6 +80,10 @@ class UrlMappings {
             action = 'accessToken'
         }
 
+        name noParticipantsWithExtra: "/$event/$date/api/noParticipantsWithExtra" (controller: "api", parseRequest: true) {
+            action = 'noParticipantsWithExtra'
+        }
+
         name apiProgramme: "/$event/$date/api/programme" (controller: "api", parseRequest: true) {
             action = 'programme'
         }
