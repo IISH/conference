@@ -132,7 +132,7 @@ environments {
     production {
         grails.logging.jul.usebridge = false
         grails.mail.disabled = false
-        grails.mail.props = ['mail.smtp.from': grails.mail.returnPath]
+        //grails.mail.props = ['mail.smtp.from': grails.mail.returnPath]
     }
 }
 
