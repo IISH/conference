@@ -10,6 +10,7 @@ class Extra extends EventDateDomain {
     String secondDescription
     BigDecimal amount = BigDecimal.ZERO
 	boolean isFinalRegistration = true
+    Integer maxSeats
 	int sortOrder = 0
 	boolean deleted
 
@@ -28,6 +29,7 @@ class Extra extends EventDateDomain {
         secondDescription   column: 'description_2nd',  type: 'text'
         amount              column: 'amount'
 	    isFinalRegistration column: 'is_final_registration'
+        maxSeats            column: 'max_seats'
 	    sortOrder           column: 'sort_order'
 	    deleted             column: 'deleted'
 
@@ -40,6 +42,7 @@ class Extra extends EventDateDomain {
         description         nullable: true, maxSize: 100
         secondDescription   nullable: true
         amount              min: BigDecimal.ZERO
+        maxSeats            nullable: true, min: 1
     }
 
 	static hibernateFilters = {
@@ -57,6 +60,7 @@ class Extra extends EventDateDomain {
             'secondDescription',
             'amount',
 		    'isFinalRegistration',
+            'maxSeats',
 		    'sortOrder'
     ]
 
