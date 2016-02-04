@@ -833,6 +833,7 @@
                 </div>
 
                 <div id="payments-tab" class="columns">
+                    <g:set var="amounts" value="${[]}" />
                     <g:set var="hidePayedButton" value="${false}" />
 
                     <g:each in="${orders}" var="order">
@@ -896,11 +897,13 @@
                                         <span class="property-value bold ${classStatus}" arial-labelledby="status-label">
                                             ${order.getStatusText()}
 
-                                            <g:if test="${(order.paymentMethod != Order.ORDER_OGONE_PAYMENT) && (order.payed == Order.ORDER_NOT_PAYED) && !hidePayedButton}">
+                                            <g:if test="${  (order.paymentMethod != Order.ORDER_OGONE_PAYMENT) &&
+                                                            (order.payed == Order.ORDER_NOT_PAYED) &&
+                                                            !hidePayedButton && !amounts.contains(order.amount)}">
                                                 <span class="inline-button order-set-payed">
                                                     <g:message code="order.set.payed.label" />
                                                 </span>
-                                                <g:set var="hidePayedButton" value="${true}" />
+                                                <g:set var="amounts" value="${amounts + [order.amount]}" />
                                             </g:if>
 
                                             <g:if test="${order.payed == Order.ORDER_PAYED}">

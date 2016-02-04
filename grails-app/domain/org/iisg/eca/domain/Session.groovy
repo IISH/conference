@@ -17,11 +17,12 @@ class Session extends EventDateDomain {
     User addedBy
 	boolean deleted = false
 
-    static belongsTo = [Network, SessionState, User]
+    static belongsTo = [Network, SessionState, User, ParticipantDate]
     static hasMany = [  sessionParticipants: SessionParticipant,
                         papers: Paper,
                         sessionRoomDateTime: SessionRoomDateTime,
-                        networks: Network]
+                        networks: Network,
+                        participantsFavorite: ParticipantDate]
 
     static mapping = {
         table 'sessions'
@@ -39,6 +40,7 @@ class Session extends EventDateDomain {
 	    deleted             column: 'deleted'
 
         networks                joinTable: 'session_in_network'
+        participantsFavorite    joinTable: 'participant_favorite_session'
         sessionParticipants     cascade: 'all-delete-orphan'
         sessionRoomDateTime     cascade: 'all-delete-orphan'  
     }

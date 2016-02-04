@@ -2,6 +2,7 @@ package org.iisg.eca.controller
 
 import grails.converters.JSON
 import grails.orm.PagedResultList
+import org.iisg.eca.domain.Extra
 import org.iisg.eca.domain.Order
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Paper
@@ -172,16 +173,32 @@ class ApiController {
 		}
 	}
 
+	def noParticipantsWithExtra() {
+		actionById(Extra, 'extraId', params, ['success': false]) { Extra extra, Map response ->
+			int numberOfParticipants = User.allParticipantsNotDeleted(pageInformation.date).count {
+				participantDates {
+					extras {
+						idEq(extra.id)
+					}
+				}
+			}
+
+			response.put('no_participants', numberOfParticipants)
+			response.put('success', true)
+		}
+	}
+
 	def programme() {
 		Long dayId = (params.dayId?.toString()?.isLong()) ? params.dayId?.toString()?.toLong() : null
 		Long timeId = (params.timeId?.toString()?.isLong()) ? params.timeId?.toString()?.toLong() : null
 		Long networkId = (params.networkId?.toString()?.isLong()) ? params.networkId?.toString()?.toLong() : null
 		Long roomId = (params.roomId?.toString()?.isLong()) ? params.roomId?.toString()?.toLong() : null
         Long sessionId = (params.sessionId?.toString()?.isLong()) ? params.sessionId?.toString()?.toLong() : null
+        Long participantId = (params.participantId?.toString()?.isLong()) ? params.participantId?.toString()?.toLong() : null
 		String terms = params.terms?.toString()
 
 		List<PlannedSession> programme = sessionPlannerService.
-				getProgramme(pageInformation.date.id, dayId, timeId, networkId, roomId, sessionId, terms)
+				getProgramme(pageInformation.date.id, dayId, timeId, networkId, roomId, sessionId, participantId, terms)
 
 		render programme as JSON
 	}
