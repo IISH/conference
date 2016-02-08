@@ -190,9 +190,17 @@ class ParticipantController {
 		Sql sql = new Sql(dataSource)
 		Long dateId = pageInformation.date.id
 
+		String paymentsList = PaymentQueries.PAYMENT_LIST_ALL
+		if (params.filter == 'notPayed') {
+			paymentsList = PaymentQueries.PAYMENT_LIST_NOT_PAYED
+		}
+		else if (params.filter == 'notCompleted') {
+			paymentsList = PaymentQueries.PAYMENT_LIST_NOT_COMPLETED
+		}
+
 		render(view: "payments", model: [
 				paymentsList                 :
-						sql.rows(PaymentQueries.PAYMENT_LIST, [dateId: dateId]),
+						sql.rows(paymentsList, [dateId: dateId]),
 				paymentMethod                :
 						PaymentStatistic.createMap(
 							sql.rows(PaymentQueries.PAYMENT_METHOD_UNCONFIRMED, [dateId: dateId]),

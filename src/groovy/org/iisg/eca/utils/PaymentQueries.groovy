@@ -4,49 +4,65 @@ package org.iisg.eca.utils
  * Collection of all queries to obtain payment statistics
  */
 public interface PaymentQueries {
-    public static final String PAYMENT_LIST = """
-        SELECT * 
+    public static final String PAYMENT_LIST_MAIN_PART_1 = """
+        SELECT u.user_id, u.lastname, u.firstname, o.payed, o.payment_method, o.amount, pd.participant_state_id, ps.participant_state
+        FROM users AS u
+        INNER JOIN participant_date AS pd
+        ON u.user_id = pd.user_id
+        INNER JOIN participant_states AS ps
+        ON pd.participant_state_id = ps.participant_state_id
+        LEFT JOIN orders AS o
+    """
+
+    public static final String PAYMENT_LIST_MAIN_PART_2 = """
+        WHERE u.deleted = 0
+        AND pd.date_id = :dateId
+        AND pd.deleted = 0
+        AND (
+            pd.participant_state_id IN (1,2)
+            OR pd.payment_id IS NOT NULL
+        )
+    """
+
+    public static final String PAYMENT_LIST_MAIN_PAYED = """
+        ${PAYMENT_LIST_MAIN_PART_1}
+        ON pd.participant_date_id = o.participant_date_id
+        ${PAYMENT_LIST_MAIN_PART_2}
+    """
+
+    public static final String PAYMENT_LIST_MAIN_NOT_PAYED = """
+        ${PAYMENT_LIST_MAIN_PART_1}
+         ON pd.payment_id = o.order_id
+        ${PAYMENT_LIST_MAIN_PART_2}
+    """
+
+    public static final String PAYMENT_LIST_ALL = """
+        SELECT *
 		FROM (
-			SELECT u.user_id, u.lastname, u.firstname, o.payed, o.payment_method, o.amount, pd.participant_state_id, ps.participant_state
-			FROM users AS u
-			INNER JOIN participant_date AS pd
-			ON u.user_id = pd.user_id
-			INNER JOIN participant_states AS ps
-			ON pd.participant_state_id = ps.participant_state_id
-			LEFT JOIN orders AS o
-			ON pd.participant_date_id = o.participant_date_id
-			WHERE u.deleted = 0
-			AND pd.date_id = :dateId
-			AND pd.deleted = 0
-			AND (
-				pd.participant_state_id IN (1,2)
-				OR pd.payment_id IS NOT NULL
-			)
+			${PAYMENT_LIST_MAIN_PAYED}
 			AND o.payed = 1
-		
+
 			UNION ALL
-		
-			SELECT u.user_id, u.lastname, u.firstname, o.payed, o.payment_method, o.amount, pd.participant_state_id, ps.participant_state
-			FROM users AS u
-			INNER JOIN participant_date AS pd
-			ON u.user_id = pd.user_id
-			INNER JOIN participant_states AS ps
-			ON pd.participant_state_id = ps.participant_state_id
-			LEFT JOIN orders AS o
-			ON pd.payment_id = o.order_id
-			WHERE u.deleted = 0
-			AND pd.date_id = :dateId
-			AND pd.deleted = 0
-			AND (
-				pd.participant_state_id IN (1,2)
-				OR pd.payment_id IS NOT NULL
-			)
+
+			${PAYMENT_LIST_MAIN_NOT_PAYED}
 			AND (
 				o.payed <> 1
 				OR o.payed IS NULL
 			)
 		) a
-		ORDER BY lastname ASC, firstname ASC 
+		ORDER BY lastname ASC, firstname ASC
+    """
+
+    public static final String PAYMENT_LIST_NOT_PAYED = """
+        ${PAYMENT_LIST_MAIN_NOT_PAYED}
+        AND o.payed IS NULL
+		ORDER BY lastname ASC, firstname ASC
+    """
+
+    public static final String PAYMENT_LIST_NOT_COMPLETED = """
+        ${PAYMENT_LIST_MAIN_NOT_PAYED}
+        AND o.payed <> 1
+		ORDER BY lastname ASC, firstname ASC
     """
 
     // MAIN PARTS OF THE QUERIES
