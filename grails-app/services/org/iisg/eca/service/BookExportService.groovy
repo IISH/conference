@@ -258,9 +258,12 @@ class BookExportService {
             }
 
             sessionParticipants.each { type, users ->
-                builder."${type.type.toLowerCase()}s" {
-                    users.each { user ->
-                        builder."${type.type.toLowerCase()}name"("$user.firstName $user.lastName")
+                // Co-authors are for internal use only
+                if (type.id != ParticipantType.CO_AUTHOR) {
+                    builder."${type.type.toLowerCase()}s" {
+                        users.each { user ->
+                            builder."${type.type.toLowerCase()}name"("$user.firstName $user.lastName")
+                        }
                     }
                 }
             }
