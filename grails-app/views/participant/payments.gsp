@@ -10,6 +10,13 @@
     <a href="#statistics"><g:message code="payment.go.to.statistics.label" /></a>
 </div>
 
+<g:set var="back" value="${params.back ? "&back=${params.back}" : ''}"/>
+<ul class="payments-filters">
+    <li><a href="?filter=all${back}"><g:message code="payment.show.all" /></a></li>
+    <li><a href="?filter=notPayed${back}"><g:message code="payment.show.not.payed" /></a></li>
+    <li><a href="?filter=notCompleted${back}"><g:message code="payment.show.not.completed" /></a></li>
+</ul>
+
 <div class="tbl_container">
     <input type="hidden" name="url" value="${eca.createLink(controller: 'participant', action: 'show', id: 0)}" />
 
