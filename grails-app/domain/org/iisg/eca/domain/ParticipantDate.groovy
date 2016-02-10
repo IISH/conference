@@ -116,6 +116,12 @@ class ParticipantDate extends EventDateDomain {
 		    'addedBy.id'
     ]
 
+    def beforeInsert() {
+        super.beforeInsert()
+        user.emailDiscontinued = false
+        return true
+    }
+
 	void softDelete() {
 		deleted = true
 	}
