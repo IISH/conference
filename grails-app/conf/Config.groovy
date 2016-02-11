@@ -132,6 +132,11 @@ environments {
     production {
         grails.logging.jul.usebridge = false
         grails.mail.disabled = false
+        grails.mail.props = [
+                'mail.smtp.timeout': 60000,
+                'mail.smtp.writetimeout': 60000,
+                'mail.smtp.connectiontimeout': 60000
+        ]
         //grails.mail.props = ['mail.smtp.from': grails.mail.returnPath]
     }
 }
