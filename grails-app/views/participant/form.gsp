@@ -911,7 +911,12 @@
 
                                                 <g:if test="${order.amount > 0}">
                                                     <sec:ifAnyGranted roles="admin,superAdmin">
-                                                        <span class="inline-button order-refund-payment">
+                                                        <g:set var="refundBtnClass" value="inline-button order-refund-payment"/>
+                                                        <g:if test="${Setting.getSetting(Setting.SHOW_REFUND_DIALOG).booleanValue}">
+                                                            <g:set var="refundBtnClass" value="${refundBtnClass} refund-dialog"/>
+                                                        </g:if>
+                                                        <span class="${refundBtnClass}" data-order-id="${order.id}"
+                                                              data-amount="${order.standardAmountToBeRefunded}">
                                                             <g:message code="order.refund.payment.label" />
                                                         </span>
                                                     </sec:ifAnyGranted>
@@ -1083,25 +1088,40 @@
             </fieldset>
         </form>
 
-        <div id="edit-days" class="info">
-            <input type="hidden" name="user-id" value="${user.id}" />
-            <form method="post" action="#">
-                <fieldset class="form">
-                    <g:each in="${Day.list()}" var="day">
-                        <div>
-                            <span class="property-label">
-                                <g:checkBox name="day" value="${day.id}" id="edit-day-${day.id}" checked="${user.daysPresent.find { it.day.id == day.id }}" />
-                            </span>
-                            <label class="property-value" for="edit-day-${day.id}">
-                                ${day.toString()}
-                            </label>
-                        </div>
-                    </g:each>
-                </fieldset>
-            </form>
-        </div>
-
         <g:if test="${participant}">
+            <div id="edit-days" class="info">
+                <input type="hidden" name="user-id" value="${user.id}" />
+                <form method="post" action="#">
+                    <fieldset class="form">
+                        <g:each in="${Day.list()}" var="day">
+                            <div>
+                                <span class="property-label">
+                                    <g:checkBox name="day" value="${day.id}" id="edit-day-${day.id}" checked="${user.daysPresent.find { it.day.id == day.id }}" />
+                                </span>
+                                <label class="property-value" for="edit-day-${day.id}">
+                                    ${day.toString()}
+                                </label>
+                            </div>
+                        </g:each>
+                    </fieldset>
+                </form>
+            </div>
+
+            <div id="refund-payment" class="info">
+                <form method="post" action="#">
+                    <fieldset class="form">
+                        <div>
+                            <label class="property-label">
+                                <g:message code="order.refunded.amount.label" />
+                            </label>
+                            <span class="property-value">
+                                <g:field type="text" name="amount" required="required" value="" />
+                            </span>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+
             <div id="new-order" class="info">
             <form method="post" action="../newOrder" id="new-order-form">
                 <fieldset class="form">
