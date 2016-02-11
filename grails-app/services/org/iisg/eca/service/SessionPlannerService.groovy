@@ -90,9 +90,7 @@ class SessionPlannerService {
      * @return A list of sessions that have the same participants scheduled as the given one
      */
     List<Session> getSessionsWithSameParticipants(Session session) {
-        SessionParticipant.disableHibernateFilter('hideDeleted')
-
-        List<Session> result = (List<Session>) SessionParticipant.executeQuery('''
+        (List<Session>) SessionParticipant.executeQuery('''
             SELECT DISTINCT sp.session
             FROM SessionParticipant AS sp
             WHERE EXISTS (
@@ -103,9 +101,6 @@ class SessionPlannerService {
             )
             AND sp.session.id <> :sessionId
         ''', [sessionId: session.id])
-
-        SessionParticipant.enableHibernateFilter('hideDeleted')
-        result
     }
 
     /**

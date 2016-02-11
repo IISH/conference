@@ -33,7 +33,7 @@ var findIndexesThatMatch = function (equipmentIds) {
 	}
 
 	return ids;
-}
+};
 
 var isBestChoice = function (equipmentComboCode, equipmentIds) {
 	if (equipmentIds.length === equipment[equipmentComboCode].ids.length) {
@@ -57,7 +57,7 @@ var isBestChoice = function (equipmentComboCode, equipmentIds) {
 	else {
 		return false;
 	}
-}
+};
 
 var disableTableWithLoading = function (enable) {
 	var overlay = $('#loading');
@@ -78,7 +78,7 @@ var disableTableWithLoading = function (enable) {
 	else {
 		overlay.hide();
 	}
-}
+};
 
 var unselectSession = function () {
 	curSessionBlock.removeClass('selected');
@@ -93,7 +93,7 @@ var unselectSession = function () {
 	$('#unschedule-session').hide();
 
 	disableTableWithLoading(false);
-}
+};
 
 var unscheduleSessionBlock = function () {
 	var sessionCode = curSessionBlock.text().trim();
@@ -108,7 +108,7 @@ var unscheduleSessionBlock = function () {
 	});
 
 	$('#sessions-unscheduled').append(curSessionBlock);
-}
+};
 
 $(document).ready(function () {
 	var equipmentCombos = $('.equipment-combos');
@@ -142,9 +142,12 @@ $(document).ready(function () {
 		}
 	});
 
-	timeSlots = $('#schedule td.time-slot');
+	timeSlots = $('#schedule').find('td.time-slot');
 	sessionInfo = $('#session-info-container');
 	roomInfo = $('#room-info-container');
+
+	var sessionBlock = $('.session-block');
+	var roomIndicator = $('.room-indicator');
 
 	ajaxCall(this, 'session/conflicts', {}, function (data) {
 			if ((data.noShow.length === 0) && (data.alreadyPlanned.length === 0) && (data.equipmentProblems.length === 0)) {
@@ -222,7 +225,7 @@ $(document).ready(function () {
 		}
 	});
 
-	$('.session-block').click(function (e) {
+	sessionBlock.click(function (e) {
 		e.stopPropagation();
 		disableTableWithLoading(true);
 
@@ -321,7 +324,7 @@ $(document).ready(function () {
 		);
 	});
 
-	$('.session-block').mouseenter(function () {
+	sessionBlock.mouseenter(function () {
 		var element = $(this);
 
 		clearTimeout(timeOut);
@@ -339,6 +342,15 @@ $(document).ready(function () {
 					(data.comment !== null) ? sessionInfo.find('#commnent-label').next().text(data.comment) : sessionInfo.find('#commnent-label').next().text('-');
 					(data.equipment.length > 0) ? sessionInfo.find('#equipment-label').next().html('<li>' + data.equipment.join('</li><li>') + '</li>') : sessionInfo.find('#equipment-label').next().text('-');
 
+					if (data.problems.length > 0) {
+						sessionInfo.find('#problems-label').closest('li').show();
+						sessionInfo.find('#problems-label').next().html('<li>' + data.problems.join('</li><li>') + '</li>');
+					}
+					else {
+						sessionInfo.find('#problems-label').closest('li').hide();
+						sessionInfo.find('#problems-label').next().text('');
+					}
+
 					setParticipantDataForSession(data);
 					if (data.participants.length === 0) {
 						sessionInfo.find('#participants-label').next().prepend('<li>-</li>');
@@ -348,9 +360,10 @@ $(document).ready(function () {
 					sessionInfo.find('#code-label').next().text(data.message);
 				}
 
+				var content = $('#content');
 				var position = element.position();
-				var contentWidth = $('#content').outerWidth();
-				var contentHeight = $('#content').outerHeight();
+				var contentWidth = content.outerWidth();
+				var contentHeight = content.outerHeight();
 				var infoElementWidth = sessionInfo.outerWidth();
 				var infoElementHeight = sessionInfo.outerHeight();
 
@@ -374,12 +387,12 @@ $(document).ready(function () {
 		}, 500);
 	});
 
-	$('.session-block').mouseleave(function () {
+	sessionBlock.mouseleave(function () {
 		clearTimeout(timeOut);
 		sessionInfo.hide();
 	});
 
-	$('.room-indicator').mouseenter(function () {
+	roomIndicator.mouseenter(function () {
 		var element = $(this);
 
 		clearTimeout(timeOut);
@@ -420,7 +433,7 @@ $(document).ready(function () {
 		}, 500);
 	});
 
-	$('.room-indicator').mouseleave(function () {
+	roomIndicator.mouseleave(function () {
 		clearTimeout(timeOut);
 		roomInfo.hide();
 	});

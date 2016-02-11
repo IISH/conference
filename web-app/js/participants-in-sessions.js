@@ -15,7 +15,7 @@ var setParticipantDataForSession = function (data, participantsContainer) {
 	for (var i = 0; i < data.equipment.length; i++) {
 		equipmentContainer.append("<li>" + data.equipment[i][0] + " (" + data.equipment[i][1] + ")" + "</li>");
 	}
-}
+};
 
 var setParticipantDataForNetwork = function (data, networkSessionsContainer) {
 	if (networkSessionsContainer === undefined) {
@@ -48,7 +48,7 @@ var setParticipantDataForNetwork = function (data, networkSessionsContainer) {
 	}
 
 	networkSessionsContainer.append(clone);
-}
+};
 
 var setParticipants = function (data, container, clone) {
 	for (var i = 0; i < data.length; i++) {
@@ -81,8 +81,8 @@ var setParticipants = function (data, container, clone) {
 
 			var paperItem = paperItems.first();
 			paperItem.find('.paper-text').text(data[i].paper);
-			paperItem.find('input[name=paper-id]').val(data[i].paperId)
-			paperItem.find('input[name=paper-state-id]').val(data[i].paperStateId)
+			paperItem.find('input[name=paper-id]').val(data[i].paperId);
+			paperItem.find('input[name=paper-state-id]').val(data[i].paperStateId);
 		}
 
 		setTypes(data[i].types, item);
@@ -90,7 +90,7 @@ var setParticipants = function (data, container, clone) {
 		container.append(item);
 		item.removeClass('hidden');
 	}
-}
+};
 
 var setTypes = function (data, item) {
 	var typeContainer = item.find('ul');
@@ -105,4 +105,4 @@ var setTypes = function (data, item) {
 	}
 
 	typeClone.remove();
-}
+};

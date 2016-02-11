@@ -3,7 +3,7 @@ package org.iisg.eca.domain
 /**
  * Domain class of table holding all days and times during which sessions can be planned
  */
-class SessionDateTime extends EventDateDomain {
+class SessionDateTime extends EventDateDomain implements Comparable<SessionDateTime> {
     Day day
     int indexNumber
     String period
@@ -77,6 +77,11 @@ class SessionDateTime extends EventDateDomain {
          
         mainList.add(curList)
         mainList
+    }
+
+    @Override
+    public int compareTo(SessionDateTime o) {
+        indexNumber.compareTo(o.indexNumber)
     }
     
     @Override

@@ -673,6 +673,43 @@ class SessionController {
                 possibilitiesResponse.put('comment',        session.comment)
                 possibilitiesResponse.put('equipment',      sessionPlannerService.getEquipment(session).collect { it.toString() })
                 possibilitiesResponse.put('participants',   participantSessionService.getParticipantSessionInfoMap(participants))
+
+                // Find out what planning problems there are
+                List<String> problems = []
+                if (!session.plannedDateTime) {
+                    Set<User> users = participants*.participant*.user as Set<User>
+
+                    Map<SessionDateTime, Set<User>> dateTimesSameParticipants = new TreeMap<>()
+                    List<Session> sessionsSameParticipants = sessionPlannerService.getSessionsWithSameParticipants(session)
+                    sessionsSameParticipants.each { Session sessionsSameParticipant ->
+                        sessionsSameParticipant.sessionParticipants.each { SessionParticipant sessionParticipant ->
+                            if (users.contains(sessionParticipant.user)) {
+                                SessionDateTime plannedDateTime = sessionParticipant.session.plannedDateTime
+                                Set<User> sameUsers = dateTimesSameParticipants.get(plannedDateTime, new HashSet<User>())
+                                sameUsers.add(sessionParticipant.user)
+                                dateTimesSameParticipants.put(plannedDateTime, sameUsers)
+                            }
+                        }
+                    }
+
+                    problems += dateTimesSameParticipants.collect { SessionDateTime dateTime, Set<User> problemUsers ->
+                        g.message(code: 'session.alreadyPlannedProblem.label', args: [dateTime, problemUsers.join(', ')])
+                    }
+
+                    Map<SessionDateTime, Set<User>> dateTimesParticipantNotPresent = new TreeMap<>()
+                    users.each { User user ->
+                        user.dateTimesNotPresent.each { SessionDateTime dateTime ->
+                            Set<User> usersNotPresent = dateTimesParticipantNotPresent.get(dateTime, new HashSet<User>())
+                            usersNotPresent.add(user)
+                            dateTimesParticipantNotPresent.put(dateTime, usersNotPresent)
+                        }
+                    }
+
+                    problems += dateTimesParticipantNotPresent.collect { SessionDateTime dateTime, Set<User> problemUsers ->
+                        g.message(code: 'session.notPresentProblem.label', args: [dateTime, problemUsers.join(', ')])
+                    }
+                }
+                possibilitiesResponse.put('problems', problems)
             }
             else {
                 possibilitiesResponse = [success: false, message: g.message(code: 'default.not.found.message', args: [g.message(code: 'session.label')])]
