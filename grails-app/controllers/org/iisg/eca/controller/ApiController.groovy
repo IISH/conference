@@ -137,9 +137,8 @@ class ApiController {
 			if (user) {
 				response.put('status', user.getStatus())
 
-				if ((user.getStatus() == User.USER_STATUS_FOUND) && !passwordService.lostPassword(user)) {
-					response.put('status', User.USER_STATUS_NOT_FOUND)
-				}
+				boolean success = passwordService.lostPassword(user)
+				response.put('success', success)
 			}
 		}
 
