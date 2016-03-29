@@ -112,6 +112,19 @@ class Order {
 	}
 
 	/**
+	 * Returns the standard amount to be refunded if one wishes to do so
+	 * @return The standard amount to be refunded
+	 */
+	long getStandardAmountToBeRefunded() {
+		long toRefund = 0L
+		Setting refundCosts = Setting.getSetting(Setting.REFUND_ADMINISTRATION_COSTS)
+		if (refundCosts?.value?.isLong()) {
+			toRefund = this.amount - refundCosts.value.toLong()
+		}
+		return toRefund
+	}
+
+	/**
 	 * Sets a bank transfer or cash payment payed and active
 	 * @param participant The participant who made the bank transfer or cash payment
 	 * @return Whether this order may be set payed and active
@@ -142,12 +155,12 @@ class Order {
 	 * Perform a full refund minus the administration costs
 	 * @return Whether the refund was successful
 	 */
-	boolean fullRefund() {
-		Long toRefund = 0L
-		Setting refundCosts = Setting.getSetting(Setting.REFUND_ADMINISTRATION_COSTS)
-		if (refundCosts?.value?.isLong()) {
-			toRefund = this.amount - refundCosts.value.toLong()
-		}
+	boolean fullRefund(BigDecimal amount) {
+		long toRefund = getStandardAmountToBeRefunded()
+		if (amount) {
+            toRefund = amount.movePointRight(2).longValue()
+        }
+
 		long totalRefunded = this.refundedAmount + toRefund
 
 		// Only if a payment has taken place and the total amount to refund does not exceed the payed amount the refund can continue

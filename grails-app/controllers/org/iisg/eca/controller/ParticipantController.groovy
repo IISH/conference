@@ -441,7 +441,8 @@ class ParticipantController {
 			// If we have a user id and order id, try to find the record for the order id
 			if (params.order_id?.isLong()) {
 				Order order = Order.findById(params.order_id.toLong())
-				if (order && order.fullRefund()) {
+				BigDecimal amount = (params.double('amount')) ? new BigDecimal(params.double('amount')) : null
+				if (order && order.fullRefund(amount)) {
 					// Everything is fine
 					responseMap = [success: true, state: order.getStatusText()]
 				}

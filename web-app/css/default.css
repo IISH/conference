@@ -867,6 +867,18 @@ span.help-text {
     margin-top: 30px;
 }
 
+#refund-payment input {
+    width: 70px;
+}
+
+#refund-payment .property-label {
+    width: 50%;
+}
+
+#refund-payment .property-value {
+    margin: 0 0 0 55%;
+}
+
 /* ROOMS */
 
 #room-equipment .column {

@@ -13,11 +13,11 @@ var moveTabs = function () {
 		size += message.outerHeight(true) - parseInt(message.css('margin-top').replace('px', ''));
 	}
 
-	$('#participant-form #tabs > ul:first-child').css('top', tabsHeight - size + 'px');
-}
+	$('#participant-form').find('#tabs > ul:first-child').css('top', tabsHeight - size + 'px');
+};
 
 $(document).ready(function () {
-	var tabs = $('#participant-form #tabs > ul:first-child');
+	var tabs = $('#participant-form').find('#tabs > ul:first-child');
 	tabsHeight = parseInt(tabs.css('top').replace('px', ''));
 	moveTabs();
 
@@ -45,8 +45,8 @@ $(document).ready(function () {
 		}
 	});
 
-	$('#participant-form .btn_add').on('before-add-item', function (e, infoObj) {
-		var noPapers = $('#papers-tab .column').length - 1;
+	$('#participant-form').find('.btn_add').on('before-add-item', function (e, infoObj) {
+		var noPapers = $('#papers-tab').find('.column').length - 1;
 		var maxPapers = null;
 
 		var maxPapersVal = $('input[name=max-papers]').val();
@@ -87,24 +87,47 @@ $(document).ready(function () {
 	});
 
 	$('.order-refund-payment').click(function (e) {
-		var elem = this;
-		ajaxCall(elem, messageUrl, {code: 'default.button.confirm.message'}, function (data) {
-			var refundPayment = confirm(data.message);
-			if (refundPayment) {
-				$('.errors').hide();
-				$('.message').hide();
+		var elem = $(this);
+		if (elem.hasClass('refund-dialog')) {
+			var amount = parseInt(elem.data('amount')) / 100;
 
-				var element = $(e.target).parents('.participant-order');
+			var dialog = $('#refund-payment');
+			dialog.data('org-btn', elem);
+			dialog.find('input[name=amount]').val(amount);
 
-				ajaxCall(elem, 'participant/refundPayment', {
-						'order_id': element.find('#order-id-label').next().text()
-					}, function (data) {
-						$(e.target).parent().text(data.state);
-					}
-				);
+			dialog.dialog('open');
+		}
+		else {
+			ajaxCall(elem, messageUrl, {code: 'default.button.confirm.message'}, function (data) {
+				var shouldRefundPayment = confirm(data.message);
+				if (shouldRefundPayment) {
+					refundPayment(elem, elem);
+				}
+			});
+		}
+	});
+
+	var refundPayment = function (orgBtn, trigger, amount, callback) {
+		$('.errors').hide();
+		$('.message').hide();
+
+		var data = {'order_id': orgBtn.data('order-id')};
+		if (amount) {
+			data.amount = amount;
+		}
+
+		ajaxCall(trigger, 'participant/refundPayment', data, function (data) {
+			orgBtn.parent().text(data.state);
+
+			if (callback) {
+				callback();
+			}
+		}, function () {
+			if (callback) {
+				callback();
 			}
 		});
-	});
+	};
 
 	$('#emails-not-sent, #emails-sent').accordion({
 		header: '.emailHeader',
@@ -163,8 +186,9 @@ $(document).ready(function () {
 
 				ajaxCall(this, 'participant/changeDays', {'user-id': userId, 'days': days.join(';')},
 					function (data) {
-						$('#selected-days .not-found').remove();
-						$('#selected-days ol.list-days-present').remove();
+						var selectedDays = $('#selected-days');
+						selectedDays.find('.not-found').remove();
+						selectedDays.find('ol.list-days-present').remove();
 
 						if ($.isArray(data.daysPresent)) {
 							var htmlDaysPresent = '';
@@ -172,10 +196,10 @@ $(document).ready(function () {
 								htmlDaysPresent += '<li>' + data.daysPresent[i] + '</li>';
 							}
 
-							$('#selected-days .header').after('<ol class="list-days-present">' + htmlDaysPresent + '</ol>');
+							selectedDays.find('.header').after('<ol class="list-days-present">' + htmlDaysPresent + '</ol>');
 						}
 						else {
-							$('#selected-days .header').after('<span class="not-found">' + data.daysPresent + '</span>');
+							selectedDays.find('.header').after('<span class="not-found">' + data.daysPresent + '</span>');
 						}
 
 						dialog.dialog("close");
@@ -184,6 +208,28 @@ $(document).ready(function () {
 						alert(data.message);
 					}
 				);
+			},
+			Cancel: function () {
+				$(this).dialog("close");
+			}
+		}
+	});
+
+	$('#refund-payment').dialog({
+		autoOpen: false,
+		modal: true,
+		minWidth: 250,
+		minHeight: 130,
+		title: "Refund payment",
+		buttons: {
+			"Save": function () {
+				var dialog = $(this);
+				var orgBtn = dialog.data('org-btn');
+				var amount = dialog.find('input[name=amount]').val();
+
+				refundPayment(orgBtn, dialog, amount, function () {
+					dialog.dialog("close");
+				});
 			},
 			Cancel: function () {
 				$(this).dialog("close");

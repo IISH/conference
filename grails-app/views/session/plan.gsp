@@ -63,7 +63,7 @@
 
         <div id="conflicts">
             <span>
-                <g:message code="session.conflics.found.label" />
+                <g:message code="session.conflicts.found.label" />
             </span>
             <ul> </ul>
         </div>
@@ -174,6 +174,12 @@
                             <g:message code="equipment.label" />
                         </span>
                         <ul class="property-value" aria-labelledby="equipment-label"> </ul>
+                    </li>
+                    <li>
+                        <span id="problems-label" class="property-label">
+                            <g:message code="session.problems.label" />
+                        </span>
+                        <ul class="property-value" aria-labelledby="problems-label"> </ul>
                     </li>
                 </ol>
             </div>

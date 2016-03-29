@@ -18,6 +18,7 @@ class PasswordService {
     static final int CONFIRM_LOST_PASSWORD_ACCEPT = 1
     static final int CONFIRM_LOST_PASSWORD_PASSWORD_ALREADY_SENT = 2
     static final int CONFIRM_LOST_PASSWORD_CODE_EXPIRED = 3
+    static final int CONFIRM_LOST_PASSWORD_ERROR = 4
 
     def emailService
     def messageSource
@@ -38,7 +39,7 @@ class PasswordService {
 		email.addAdditionalValue('PasswordParticipant', user.password)
 		emailService.sendEmail(email, false)
 
-		return true
+		return email.dateTimeSent
 	}
 
 	/**
@@ -78,7 +79,7 @@ class PasswordService {
                 email.addAdditionalValue('PasswordParticipant', newPassword)
                 emailService.sendEmail(email, false)
 
-                return true
+                return email.dateTimeSent
             }
         }
 
@@ -119,7 +120,7 @@ class PasswordService {
             email.addAdditionalValue('CodeValidUntil', validUntil)
             emailService.sendEmail(email, false)
 
-            return true
+            return email.dateTimeSent
         }
 
         return false
@@ -157,7 +158,7 @@ class PasswordService {
                 email.addAdditionalValue('PasswordParticipant', newPassword)
                 emailService.sendEmail(email, false)
 
-                return CONFIRM_LOST_PASSWORD_ACCEPT
+                return email.dateTimeSent ? CONFIRM_LOST_PASSWORD_ACCEPT : CONFIRM_LOST_PASSWORD_ERROR
             }
         }
 
