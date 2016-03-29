@@ -30,6 +30,8 @@ class MaintenanceJob {
      * Collect the maintenance queries from the database and run them in order
      */
     def execute() {
+        log.warn("Running maintenance job")
+
         MaintenanceQuery.withNewSession { session ->
             Sql sql = new Sql(dataSource)
 
@@ -52,6 +54,8 @@ class MaintenanceJob {
         }
 
         // Also flush the program cache
-        sessionPlannerService.removeProgrammeFromCache()
+        // TODO: Disable sessionPlannerService.removeProgrammeFromCache()
+
+        log.warn("Finished maintenance job")
     }
 }
