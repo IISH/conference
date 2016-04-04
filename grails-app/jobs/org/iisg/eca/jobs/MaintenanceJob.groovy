@@ -16,7 +16,8 @@ class MaintenanceJob {
      */
     static triggers = {
         cron name: "maintenance0800", cronExpression: "0 0 8 ? * *"
-        cron name: "maintenance1230", cronExpression: "0 30 12 ? * *"
+	    //cron name: "maintenance1230", cronExpression: "0 30 12 ? * *"
+	    //cron name: "maintenance1600", cronExpression: "0 0 16 ? * *"
     }
     
     // No concurrent jobs, wait until the previous one is finished
@@ -53,7 +54,8 @@ class MaintenanceJob {
         }
 
         // Also flush the program cache
-        // TODO: Disable sessionPlannerService.removeProgrammeFromCache()
+	    // TODO: create setting for enabling/disabling 'program clear cache'
+        sessionPlannerService.removeProgrammeFromCache()
 
         log.warn("Finished maintenance job")
     }
