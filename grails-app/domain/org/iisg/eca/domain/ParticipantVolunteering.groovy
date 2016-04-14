@@ -18,9 +18,9 @@ class ParticipantVolunteering implements Serializable {
         version false
 
         id              column: 'participant_volunteering_id'
-        participantDate column: 'participant_date_id'
-        volunteering    column: 'volunteering_id'
-        network         column: 'network_id'
+        participantDate column: 'participant_date_id',          fetch: 'join'
+        volunteering    column: 'volunteering_id',              fetch: 'join'
+        network         column: 'network_id',                   fetch: 'join'
 
         sort    volunteering: 'description'
     }

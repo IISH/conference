@@ -14,11 +14,12 @@ class UserRole extends EventDomain implements Serializable {
 
     static mapping = {
         table 'users_roles'
+        cache true
         version false
 
         id      column: 'user_role_id'
-        user    column: 'user_id'
-        role    column: 'role_id'
+        user    column: 'user_id', fetch: 'join'
+        role    column: 'role_id', fetch: 'join'
     }
     
     @Override

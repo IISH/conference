@@ -36,7 +36,7 @@ class Session extends EventDateDomain {
         comment             column: 'session_comment',  type: 'text'
         state               column: 'session_state_id'
         mailSessionState    column: 'mail_session_state'
-        addedBy             column: 'added_by'
+        addedBy             column: 'added_by',         fetch: 'join'
 	    deleted             column: 'deleted'
 
         networks                joinTable: 'session_in_network'

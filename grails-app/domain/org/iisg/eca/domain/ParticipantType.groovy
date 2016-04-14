@@ -22,6 +22,7 @@ class ParticipantType extends EventDomain {
 
     static mapping = {
         table 'participant_types'
+	    cache true
         version false
 
         id          column: 'participant_type_id'

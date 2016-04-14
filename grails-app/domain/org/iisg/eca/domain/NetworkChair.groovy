@@ -19,8 +19,8 @@ class NetworkChair implements Serializable {
         version false
 
         id                  column: 'network_chair_id'
-        network             column: 'network_id'
-        chair               column: 'user_id'
+        network             column: 'network_id',       fetch: 'join'
+        chair               column: 'user_id',          fetch: 'join'
         isMainChair         column: 'is_main_chair'
 	    votedAdvisoryBoard  column: 'voted_advisory_board'
     }

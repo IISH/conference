@@ -93,7 +93,7 @@ class User {
         title                   column: 'title'
         address                 column: 'address',      type: 'text'
         city                    column: 'city'
-        country                 column: 'country_id'
+        country                 column: 'country_id',   fetch: 'join'
         language                column: 'language'
         password                column: 'password'
         salt                    column: 'salt'
@@ -112,7 +112,7 @@ class User {
         emailDiscontinued       column: 'email_discontinued'
 	    enabled                 column: 'enabled'
 	    deleted                 column: 'deleted'
-		addedBy                 column: 'added_by'
+		addedBy                 column: 'added_by',     fetch: 'join'
 
         groups                  joinTable: 'users_groups'
         dateTimesNotPresent     joinTable: 'participant_not_present'
@@ -515,7 +515,7 @@ class User {
 		// If the user is granted access to all events, just return a list of all events
 		// Otherwise, only return the events he/she is specifically given access to
 		if (SpringSecurityUtils.ifAnyGranted(roles*.role.join(','))) {
-			events = Event.listOrderByShortName()
+			events = Event.listOrderByShortName([cache: true])
 		}
 		else {
 			events = Event.executeQuery('''

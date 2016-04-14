@@ -13,6 +13,7 @@ class IPAuthentication {
 
     static mapping = {
         table 'ip_authentication'
+        cache true
         version false
 
         id          column: 'ip_authentication_id'
@@ -97,13 +98,13 @@ class IPAuthentication {
      */
     static boolean isIPAllowed(byte[] ipAddress) {
         // Is IP authentication enabled?
-        Setting ipAuth = Setting.findByProperty(Setting.IP_AUTHENTICATION, [cache: true])
+        Setting ipAuth = Setting.getSetting(Setting.IP_AUTHENTICATION)
         if (ipAuth.value.equals('0')) {
             return true
         }
 
         // First check the block IP addresses
-        for (IPAuthentication rule : IPAuthentication.findAllByAllowed(false, [cache: true])) {
+        for (IPAuthentication rule : findAllByAllowed(false, [cache: true])) {
             byte[] start = getByteRepresentationOfIP(rule.startIP)
             byte[] end = getByteRepresentationOfIP(rule.endIP)
 
@@ -114,13 +115,13 @@ class IPAuthentication {
         }
 
         // See if we should check allowed IP addresses
-        Setting checkAllowed = Setting.findByProperty(Setting.CHECK_ACCEPTED_IP, [cache: true])
-        if (checkAllowed.value.equals('0')) {
+        Setting checkAllowed = Setting.getSetting(Setting.CHECK_ACCEPTED_IP)
+        if (!checkAllowed.getBooleanValue()) {
             return true
         }
 
         // Check if the IP address is explicitly allowed
-        for (IPAuthentication rule : IPAuthentication.findAllByAllowed(true, [cache: true])) {
+        for (IPAuthentication rule : findAllByAllowed(true, [cache: true])) {
             byte[] start = getByteRepresentationOfIP(rule.startIP)
             byte[] end = getByteRepresentationOfIP(rule.endIP)
 

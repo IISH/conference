@@ -13,6 +13,7 @@ class Event {
 
     static mapping = {
         table 'events'
+        cache true
         version false
 
         id          column: 'event_id'
@@ -47,7 +48,7 @@ class Event {
 	 * @return A map with all the events and its event dates the given user has access to
 	 */
 	static Map<Event, List<EventDate>> getEventsAndDatesWithAccess(User user) {
-		List<Event> events = user.events
+		List<Event> events = user.getEvents()
 		
 		// Loop over all the events and collect the event dates
 		Map<Event, List<EventDate>> datesByEvent = [:]

@@ -18,9 +18,9 @@ class RoomSessionDateTimeEquipment extends EventDateDomain implements Serializab
         id composite: ['room', 'sessionDateTime', 'equipment']
         version false
 
-        room            column: 'room_id'
-        sessionDateTime column: 'session_datetime_id'
-        equipment       column: 'equipment_id'
+        room            column: 'room_id',              fetch: 'join'
+        sessionDateTime column: 'session_datetime_id',  fetch: 'join'
+        equipment       column: 'equipment_id',         fetch: 'join'
     }
 
     Long getId() {

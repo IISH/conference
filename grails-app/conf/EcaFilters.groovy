@@ -154,9 +154,10 @@ class EcaFilters {
                         // Event and event date are tenants, but accessible from outside a tenant
                         // So check these specific actions, which need an event id, now
                         List<UserRole> access = UserRole.withCriteria {
+                            cache(true)
+
                             eq('user.id', user.id)
                             eq('event.id', params.id)
-                            cache(true)
                         }
 
                         // If the user has access to one of the event dates of the given event, it is ok

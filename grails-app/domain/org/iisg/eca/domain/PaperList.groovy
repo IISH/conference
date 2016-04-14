@@ -19,10 +19,11 @@ class PaperList extends EventDateDomain {
         version false
 
         id                  column: 'paper_id'
-        state               column: 'paper_state_id'
-        session             column: 'session_id'
+	    user                column: 'user_id',              fetch: 'join'
+        state               column: 'paper_state_id',       fetch: 'join'
+        session             column: 'session_id',           fetch: 'join'
         title               column: 'title'
-        networkProposal     column: 'network_proposal_id'
+        networkProposal     column: 'network_proposal_id',  fetch: 'join'
         sessionProposal     column: 'session_proposal'
 	    deleted             column: 'deleted'
     }

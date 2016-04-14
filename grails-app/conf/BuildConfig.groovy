@@ -39,6 +39,7 @@ grails.project.dependency.resolution = {
 
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
+        compile 'net.sf.ehcache:ehcache-core:2.6.11'
         compile 'net.sourceforge.jexcelapi:jxl:2.6.12'
         runtime 'mysql:mysql-connector-java:5.1.31'
 	    runtime('org.codehaus.groovy.modules.http-builder:http-builder:0.7') {
@@ -61,7 +62,9 @@ grails.project.dependency.resolution = {
         compile ":cache:1.1.7"
 
         // plugins needed at runtime but not for compilation
-	    runtime ':hibernate:3.6.10.8' // Hibernate 4 instead: ":hibernate4:4.3.1.2"
+	    runtime(":hibernate:3.6.10.8") { // Hibernate 4 instead: ":hibernate4:4.3.1.2"
+            excludes 'ehcache-core'
+        }
         runtime ":jquery:1.11.1"
         runtime ":resources:1.2.1"
 

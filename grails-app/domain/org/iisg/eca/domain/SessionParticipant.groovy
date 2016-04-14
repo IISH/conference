@@ -17,10 +17,10 @@ class SessionParticipant extends EventDateDomain {
         type sort: 'importance', order: 'desc'
 
         id      column: 'session_participant_id'
-        user    column: 'user_id'
-        session column: 'session_id'
-        type    column: 'participant_type_id'
-	    addedBy column: 'added_by'
+        user    column: 'user_id',              fetch: 'join'
+        session column: 'session_id',           fetch: 'join'
+        type    column: 'participant_type_id',  fetch: 'join'
+	    addedBy column: 'added_by',             fetch: 'join'
     }
 
 	static constraints = {
