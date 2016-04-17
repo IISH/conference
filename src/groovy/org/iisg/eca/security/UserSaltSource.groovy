@@ -17,7 +17,9 @@ class UserSaltSource extends ReflectionSaltSource {
      */
     @Override
     Object getSalt(UserDetails user) {
-        createSalt(user[userPropertyToUse])
+        if (user instanceof MyUserDetails) {
+            createSalt(user[userPropertyToUse])
+        }
     }
 
     /**

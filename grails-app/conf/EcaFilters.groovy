@@ -9,11 +9,11 @@ import org.iisg.eca.domain.EventDateDomain
 import org.iisg.eca.domain.IPAuthentication
 
 import org.apache.commons.lang.RandomStringUtils
-import org.iisg.eca.security.EventDateClientDetails
 import org.springframework.context.i18n.LocaleContextHolder
 
 import grails.plugin.springsecurity.SpringSecurityUtils
 import org.springframework.security.oauth2.provider.ClientDetails
+import org.springframework.security.oauth2.provider.ClientRegistrationException
 
 /**
  * All filters for accessing a page
@@ -21,7 +21,7 @@ import org.springframework.security.oauth2.provider.ClientDetails
 class EcaFilters {
     def pageInformation
     def grailsApplication
-    def clientDetailsService
+    def gormClientDetailsService
     def springSecurityService
 
     def filters = {
@@ -184,25 +184,28 @@ class EcaFilters {
          */
         authFilterApi(controller: 'api', action: '*') {
             before = {
-                String clientId
-                if (springSecurityService.principal instanceof String) {
-                    clientId = springSecurityService.principal
-                }
-                else {
-                    clientId = springSecurityService.principal?.username
-                }
+                try {
+                    String clientId
+                    if (springSecurityService.principal instanceof String) {
+                        clientId = springSecurityService.principal
+                    }
+                    else {
+                        clientId = springSecurityService.principal?.username
+                    }
 
-                ClientDetails client = clientDetailsService.loadClientByClientId(clientId)
-                if (client) {
-                    EventDateClientDetails clientDetails = new EventDateClientDetails(client)
-                    String[] eventCodes = clientDetails.getEvents()
+                    ClientDetails client = gormClientDetailsService.loadClientByClientId(clientId)
+                    if (client) {
+                        String events = client.additionalInformation.get('events', '')
+                        String[] eventCodes = events?.split(',')
 
-                    // Find out if the client is allowed to request data from the requested event
-                    if (eventCodes?.contains(pageInformation.date.event.code)) {
-                        // Everything is ok, allow access
-                        return true
+                        // Find out if the client is allowed to request data from the requested event
+                        if (eventCodes?.contains(pageInformation.date.event.code)) {
+                            // Everything is ok, allow access
+                            return true
+                        }
                     }
                 }
+                catch (ClientRegistrationException gre) { }
 
                 response.sendError(403)
                 return false
