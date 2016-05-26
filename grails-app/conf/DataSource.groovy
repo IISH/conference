@@ -29,6 +29,7 @@ environments {
     }
     production {
         dataSource {
+	        logSql = false
             properties {
 	            initialSize = 8
 	            maxActive = 8
