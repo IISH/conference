@@ -1,10 +1,12 @@
 package org.iisg.eca.domain
 
 import grails.converters.JSON
+import org.iisg.eca.filter.SoftDelete
 
 /**
  * Domain class of table holding all participants (users) who signed up for an event date
  */
+@SoftDelete
 class ParticipantDate extends EventDateDomain {
     User user
     ParticipantState state
@@ -74,11 +76,6 @@ class ParticipantDate extends EventDateDomain {
 	    addedBy         nullable: true
     }
 
-	static hibernateFilters = {
-		dateFilter(condition: '(date_id = :dateId OR date_id IS NULL)', types: 'long')
-		hideDeleted(condition: 'deleted = 0', default: true)
-	}
-
     static apiActions = ['GET', 'POST', 'PUT', 'DELETE']
 
     static apiAllowed = [
@@ -121,10 +118,6 @@ class ParticipantDate extends EventDateDomain {
         user.emailDiscontinued = false
         return true
     }
-
-	void softDelete() {
-		deleted = true
-	}
 
     void updateForApi(String property, String value) {
         switch (property) {

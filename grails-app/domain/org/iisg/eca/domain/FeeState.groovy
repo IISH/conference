@@ -1,8 +1,11 @@
 package org.iisg.eca.domain
 
+import org.iisg.eca.filter.SoftDelete
+
 /**
  * Domain class of table holding all fee states
  */
+@SoftDelete
 class FeeState extends EventDateDomain {
     static final long NO_FEE_SELECTED = 0L
 
@@ -31,11 +34,6 @@ class FeeState extends EventDateDomain {
 		feeAmounts              sort: 'endDate', cascade: 'all-delete-orphan'
     }
 
-	static hibernateFilters = {
-		dateFilter(condition: '(date_id = :dateId OR date_id IS NULL)', types: 'long')
-		hideDeleted(condition: 'deleted = 0', default: true)
-	}
-
     static apiActions = ['GET']
 
     static apiAllowed = [
@@ -53,10 +51,6 @@ class FeeState extends EventDateDomain {
             order('name', 'asc')
         }
     }
-
-	void softDelete() {
-		deleted = true
-	}
 
 	static FeeState getDefaultFee() {
 		withCriteria {

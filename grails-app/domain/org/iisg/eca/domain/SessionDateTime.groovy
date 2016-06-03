@@ -1,8 +1,11 @@
 package org.iisg.eca.domain
 
+import org.iisg.eca.filter.SoftDelete
+
 /**
  * Domain class of table holding all days and times during which sessions can be planned
  */
+@SoftDelete
 class SessionDateTime extends EventDateDomain implements Comparable<SessionDateTime> {
     Day day
     int indexNumber
@@ -35,11 +38,6 @@ class SessionDateTime extends EventDateDomain implements Comparable<SessionDateT
         period          blank: false,   maxSize: 30
     }
 
-	static hibernateFilters = {
-		dateFilter(condition: '(date_id = :dateId OR date_id IS NULL)', types: 'long')
-		hideDeleted(condition: 'deleted = 0', default: true)
-	}
-
     static apiActions = ['GET']
 
     static apiAllowed = [
@@ -48,10 +46,6 @@ class SessionDateTime extends EventDateDomain implements Comparable<SessionDateT
             'indexNumber',
             'period'
     ]
-
-	void softDelete() {
-		deleted = true
-	}
 
     /**
      * Searches for all date times and tries to order them in a table layout

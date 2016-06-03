@@ -87,7 +87,7 @@ class DynamicPageService {
         }
 
         // Use the cache to fill the elements on the page with the requested data from the database
-        Template tmpl = groovyPagesTemplateEngine.createTemplate(dynamicPage.cache, 'temp')
+        Template tmpl = groovyPagesTemplateEngine.createTemplate(dynamicPage.cache, "dynamic-page-${dynamicPage.id}")
         StringWriter out = new StringWriter()
 
         tmpl.make([page: dynamicPage, results: results]).writeTo(out)

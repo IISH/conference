@@ -1,18 +1,19 @@
 package org.iisg.eca.controller
 
+import org.apache.commons.io.IOUtils
 import org.iisg.eca.domain.Setting
 
 class CssController {
-    def css() {
-        String path = servletContext.getRealPath("css/default.css")
-        File cssFile = new File(path)
+    def servletContext
 
-        if (!cssFile.exists()) {
+    def css() {
+        InputStream is = servletContext.getResourceAsStream("/css/default.css")
+        if (is == null) {
             response.sendError(404)
             return
         }
 
-        String css = cssFile.text
+        String css = IOUtils.toString(is, 'UTF-8')
 
         String bannerImg = Setting.getSetting(Setting.BANNER_IMG).value
         if (!bannerImg.startsWith("http")) {

@@ -1,8 +1,11 @@
 package org.iisg.eca.domain
 
+import org.iisg.eca.filter.SoftDelete
+
 /**
  * Domain class of table holding all existing permission groups
  */
+@SoftDelete
 class Group extends EventDomain {
     String name
 	boolean deleted = false
@@ -26,15 +29,6 @@ class Group extends EventDomain {
     static constraints = {
         name    blank: false,   maxSize: 50
     }
-
-	static hibernateFilters = {
-		eventFilter(condition: '(event_id = :eventId OR event_id IS NULL)', types: 'long')
-		hideDeleted(condition: 'deleted = 0', default: true)
-	}
-
-	void softDelete() {
-		deleted = true
-	}
 
     List<Page> getAllPagesInGroup() {
         Page.withCriteria {

@@ -1,8 +1,11 @@
 package org.iisg.eca.domain
 
+import org.iisg.eca.filter.SoftDelete
+
 /**
  * Domain class of table holding all papers, ONLY for listing papers (it does not include all info)
  */
+@SoftDelete
 class PaperList extends EventDateDomain {
     User user
     PaperState state
@@ -34,11 +37,6 @@ class PaperList extends EventDateDomain {
         networkProposal     nullable: true
         sessionProposal     nullable: true, maxSize: 500
     }
-
-	static hibernateFilters = {
-		dateFilter(condition: '(date_id = :dateId OR date_id IS NULL)', types: 'long')
-		hideDeleted(condition: 'deleted = 0', default: true)
-	}
 
     @Override
     String toString() {

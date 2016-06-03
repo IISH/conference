@@ -1,11 +1,14 @@
 package org.iisg.eca.domain
 
+import org.iisg.eca.filter.SoftDelete
+
 import java.text.SimpleDateFormat
 import org.springframework.context.i18n.LocaleContextHolder
 
 /**
  * Domain class of table holding all event days
  */
+@SoftDelete
 class Day extends EventDateDomain {
     def messageSource
 
@@ -37,11 +40,6 @@ class Day extends EventDateDomain {
         sessionDateTimes cascade: 'all-delete-orphan'
     }
 
-    static hibernateFilters = {
-        dateFilter(condition: '(date_id = :dateId OR date_id IS NULL)', types: 'long')
-        hideDeleted(condition: 'deleted = 0', default: true)
-    }
-
     static apiActions = ['GET']
 
     static apiAllowed = [
@@ -49,10 +47,6 @@ class Day extends EventDateDomain {
             'day',
             'dayNumber'
     ]
-
-    void softDelete() {
-        deleted = true
-    }
     
     SimpleDateFormat getFormat() {
         String dateFormat = messageSource.getMessage('default.date.format', null, LocaleContextHolder.locale)

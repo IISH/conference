@@ -34,6 +34,7 @@ class ApiController {
 	def pageInformation
 	def sessionPlannerService
 	def apiService
+	def hibernateFilterHelper
 
 	/*
 	 * GENERAL CRUD API CALLS
@@ -83,9 +84,9 @@ class ApiController {
 		Map response = ['status': User.USER_STATUS_NOT_FOUND] as Map<String, Object>
 
 		if (email && password) {
-			User.disableHibernateFilter('hideDeleted')
+			hibernateFilterHelper.disableSoftDeleteFilter()
 			User user = User.findByEmail(email)
-			User.enableHibernateFilter('hideDeleted')
+			hibernateFilterHelper.enableSoftDeleteFilter()
 
 			if (user && user.isPasswordCorrect(password)) {
 				returnUserInfo(response, user)
@@ -101,9 +102,9 @@ class ApiController {
 		String email = params.userId?.toString()
 
 		if (userId || email) {
-			User.disableHibernateFilter('hideDeleted')
+			hibernateFilterHelper.disableSoftDeleteFilter()
 			User user = (userId) ? User.findById(userId) : User.findByEmail(email)
-			User.enableHibernateFilter('hideDeleted')
+			hibernateFilterHelper.enableSoftDeleteFilter()
 
 			if (user) {
 				returnUserInfo(response, user)
@@ -130,9 +131,9 @@ class ApiController {
 		Map response = ['status': User.USER_STATUS_NOT_FOUND] as Map<String, Object>
 
 		if (email) {
-			User.disableHibernateFilter('hideDeleted')
+			hibernateFilterHelper.disableSoftDeleteFilter()
 			User user = User.findByEmail(email)
-			User.enableHibernateFilter('hideDeleted')
+			hibernateFilterHelper.enableSoftDeleteFilter()
 
 			if (user) {
 				response.put('status', user.getStatus())
@@ -151,9 +152,9 @@ class ApiController {
 		Map response = ['status': User.USER_STATUS_NOT_FOUND] as Map<String, Object>
 
 		if (id && code) {
-			User.disableHibernateFilter('hideDeleted')
+			hibernateFilterHelper.disableSoftDeleteFilter()
 			User user = User.findById(id)
-			User.enableHibernateFilter('hideDeleted')
+			hibernateFilterHelper.enableSoftDeleteFilter()
 
 			if (user) {
 				int status = passwordService.confirmLostPassword(user, code)

@@ -1,10 +1,10 @@
-grails.servlet.version = "2.5" // Change depending on target container compliance (2.5 or 3.0)
+grails.servlet.version = "3.0" // Change depending on target container compliance (2.5 or 3.0)
 grails.project.class.dir = "target/classes"
 grails.project.test.class.dir = "target/test-classes"
 grails.project.test.reports.dir = "target/test-reports"
 grails.project.work.dir = "target/work"
-grails.project.target.level = 1.6
-grails.project.source.level = 1.6
+grails.project.target.level = 1.8
+grails.project.source.level = 1.8
 //grails.project.war.file = "target/${appName}-${appVersion}.war"
 
 grails.project.fork = [test: false]
@@ -41,36 +41,33 @@ grails.project.dependency.resolution = {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
         compile 'net.sf.ehcache:ehcache-core:2.6.11'
         compile 'net.sourceforge.jexcelapi:jxl:2.6.12'
+
         runtime 'mysql:mysql-connector-java:5.1.31'
 	    runtime('org.codehaus.groovy.modules.http-builder:http-builder:0.7') {
 		    excludes 'xalan'
 		    excludes 'xml-apis'
 		    excludes 'groovy'
 	    }
+
+        test "org.grails:grails-datastore-test-support:1.0.2-grails-2.4"
     }
 
     plugins {
         // plugins for the build system only
-	    build ':tomcat:7.0.50.1'
+        build ":tomcat:8.0.22" // or ":tomcat:7.0.55.3"
 
         // plugins for the compile step
-        compile ":hibernate-filter:0.3.2"
         compile ":mail:1.0.7"
         compile ":quartz:1.0.2"
         compile ":spring-security-core:2.0.0"
         compile ":spring-security-oauth2-provider:2.0-RC5"
         compile ":cache:1.1.8"
+        compile ":asset-pipeline:2.5.7"
 
         // plugins needed at runtime but not for compilation
-	    runtime(":hibernate:3.6.10.8") { // Hibernate 4 instead: ":hibernate4:4.3.1.2"
+	    runtime(":hibernate4:4.3.5.5") {
             excludes 'ehcache-core'
         }
         runtime ":jquery:1.11.1"
-        runtime ":resources:1.2.1"
-
-        // Uncomment these (or add new ones) to enable additional resources capabilities
-        //runtime ":zipped-resources:1.0.1"
-        //runtime ":cached-resources:1.1"
-        //runtime ":yui-minify-resources:0.1.5"
     }
 }

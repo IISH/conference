@@ -1,10 +1,13 @@
 package org.iisg.eca.domain
 
+import org.iisg.eca.filter.SoftDelete
+
 import java.math.RoundingMode
 
 /**
  * Domain class of table holding all papers
  */
+@SoftDelete
 class Paper extends EventDateDomain {
     User user
     PaperState state
@@ -72,11 +75,6 @@ class Paper extends EventDateDomain {
 	    addedBy             nullable: true
     }
 
-	static hibernateFilters = {
-		dateFilter(condition: '(date_id = :dateId OR date_id IS NULL)', types: 'long')
-		hideDeleted(condition: 'deleted = 0', default: true)
-	}
-
     static apiActions = ['GET', 'POST', 'PUT', 'DELETE']
 
     static apiAllowed = [
@@ -111,10 +109,6 @@ class Paper extends EventDateDomain {
 			'equipment.id',
 			'addedBy.id'
 	]
-
-	void softDelete() {
-		deleted = true
-	}
 
 	void updateForApi(String property, String value) {
 		switch (property) {

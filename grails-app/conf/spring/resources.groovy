@@ -1,3 +1,4 @@
+import org.iisg.eca.filter.HibernateFilterHelper
 import org.iisg.eca.security.UserSaltSource
 import org.iisg.eca.security.UserDetailsService
 import org.iisg.eca.security.SecurityEventListener
@@ -59,4 +60,8 @@ beans = {
     }*/
 
     pageInformation(PageInformation)
+
+	hibernateFilterHelper(HibernateFilterHelper) {
+		sessionFactory = ref('sessionFactory')
+	}
 }

@@ -34,7 +34,7 @@ class AlwaysAllowHTTPBuilder extends HTTPBuilder {
 	/**
 	 * @see groovyx.net.http.HTTPBuilder
 	 */
-	public AlwaysAllowHTTPBuilder(java.lang.Object defaultURI) throws java.net.URISyntaxException {
+	public AlwaysAllowHTTPBuilder(Object defaultURI) throws URISyntaxException {
 		this()
 		this.setUri(defaultURI)
 	}
@@ -42,8 +42,7 @@ class AlwaysAllowHTTPBuilder extends HTTPBuilder {
 	/**
 	 * @see groovyx.net.http.HTTPBuilder
 	 */
-	public AlwaysAllowHTTPBuilder(java.lang.Object defaultURI, java.lang.Object defaultContentType)
-			throws java.net.URISyntaxException {
+	public AlwaysAllowHTTPBuilder(Object defaultURI, Object defaultContentType) throws URISyntaxException {
 		this()
 		this.setUri(defaultURI)
 		this.defaultContentType = defaultContentType

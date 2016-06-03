@@ -23,8 +23,18 @@ class EcaFilters {
     def grailsApplication
     def gormClientDetailsService
     def springSecurityService
+    def hibernateFilterHelper
 
     def filters = {
+
+        /**
+         * Make sure that, at least for the current Hibernate session, the soft delete filter is enabled
+         */
+        softDeletion(controller: '*', action: '*', controllerExclude: 'css') {
+            before = {
+                hibernateFilterHelper.enableSoftDeleteFilter()
+            }
+        }
 
         /**
          * Perform IP authentication, is user allowed to access the application?
@@ -94,25 +104,16 @@ class EcaFilters {
                 EventDate date = EventDate.findByEventAndYearCode(event, dateCode, [cache: true])
 
                 if (date) {
-                    pageInformation.date = date
-
                     // Enable Hibernate filters on the domain classes for this event date
-                    grailsApplication.domainClasses.each { domainClass -> 
-                        Class domain = domainClass.clazz
-                        if (EventDateDomain.class.isAssignableFrom(domain)) {
-                            domain.enableHibernateFilter('dateFilter').setParameter('dateId', date.id)
-                        }
-                        else if (EventDomain.class.isAssignableFrom(domain)) {
-                            domain.enableHibernateFilter('eventFilter').setParameter('eventId', date.event.id)  
-                        }
-                    }
-                    
+                    pageInformation.date = date
+                    hibernateFilterHelper.enableEventDateFilter(date)
                     return true
                 }
 
                 // Event actions and user actions may be performed from outside a tenant
                 // Just like creating a new event date
-	            if ((params.controller == 'event') || (params.controller == 'css') || (params.controller == 'user') || ((params.controller == 'eventDate') && (params.action == 'create'))) {
+	            if ((params.controller == 'event') || (params.controller == 'css') || (params.controller == 'user') ||
+                        ((params.controller == 'eventDate') && (params.action == 'create'))) {
 	                return true
                 }
 	            else {

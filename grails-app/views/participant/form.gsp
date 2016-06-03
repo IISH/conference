@@ -3,7 +3,7 @@
 <html>
     <head>
         <meta name="layout" content="main">
-        <g:javascript src="participant.js" />
+        <asset:javascript src="participant.js" />
     </head>
     <body>
         <g:set var="networks" value="${Network.list()}" />

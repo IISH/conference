@@ -1,8 +1,11 @@
 package org.iisg.eca.domain
 
+import org.iisg.eca.filter.SoftDelete
+
 /**
  * Domain class of table holding all available equipment
  */
+@SoftDelete
 class Equipment extends EventDateDomain {
     String code
     String equipment
@@ -37,11 +40,6 @@ class Equipment extends EventDateDomain {
         roomSessionDateTimeEquipment cascade: 'all-delete-orphan'
     }
 
-	static hibernateFilters = {
-		dateFilter(condition: '(date_id = :dateId OR date_id IS NULL)', types: 'long')
-		hideDeleted(condition: 'deleted = 0', default: true)
-	}
-
     static apiActions = ['GET']
 
     static apiAllowed = [
@@ -51,10 +49,6 @@ class Equipment extends EventDateDomain {
             'description',
             'imageUrl'
     ]
-
-	void softDelete() {
-		deleted = true
-	}
     
     @Override
     String toString() {

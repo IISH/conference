@@ -35,9 +35,6 @@ grails.mime.types = [
 // URL Mapping Cache Max Size, defaults to 5000
 //grails.urlmapping.cache.maxsize = 1000
 
-// What URL patterns should be processed by the resources plugin
-grails.resources.adhoc.patterns = ['/images/*', '/css/*', '/js/*', '/plugins/*']
-
 // Legacy setting for codec used to encode data with ${}
 grails.views.default.codec = "html"
 
@@ -84,7 +81,7 @@ grails.exceptionresolver.params.exclude = ['password', 'client_secret']
 // enable query caching by default, if false, you have to specify 'cache: true' in the query to cache queries
 grails.hibernate.cache.queries = false
 
-// Set to true to fallback to the Spring binder instead
+// TODO: Set to true to fallback to the Spring binder instead
 grails.databinding.useSpringBinder = true
 
 // Make sure grails.config.locations is initialized

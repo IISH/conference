@@ -28,10 +28,6 @@ abstract class EventDomain {
     static mapping = {
         event   column: 'event_id'
     }
-    
-    static hibernateFilters = {
-        eventFilter(condition: '(event_id = :eventId OR event_id IS NULL)', types: 'long')
-    }
 
     /**
      * Make sure that when a new record is inserted in the database,

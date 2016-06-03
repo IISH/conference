@@ -3,16 +3,16 @@ dataSource {
     driverClassName = "com.mysql.jdbc.Driver"
     dialect = org.hibernate.dialect.MySQL5InnoDBDialect
     dbCreate = "validate"
-    configClass = org.grails.plugin.hibernate.filter.HibernateFilterDomainConfiguration.class
-    logSql = true
+    configClass = org.iisg.eca.filter.ECAHibernateConfiguration
+    logSql = false
 }
 hibernate {
     generate_statistics = true
     cache.use_second_level_cache = true
     cache.use_query_cache = true
-    cache.region.factory_class = 'net.sf.ehcache.hibernate.EhCacheRegionFactory' // Hibernate 3
+    //cache.region.factory_class = 'net.sf.ehcache.hibernate.EhCacheRegionFactory' // Hibernate 3
     //cache.region.factory_class = 'net.sf.ehcache.hibernate.SingletonEhCacheRegionFactory' // Hibernate 3 singleton
-    //cache.region.factory_class = 'org.hibernate.cache.ehcache.EhCacheRegionFactory' // Hibernate 4
+    cache.region.factory_class = 'org.hibernate.cache.ehcache.EhCacheRegionFactory' // Hibernate 4
     //cache.region.factory_class = 'org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory' // Hibernate 4 singleton
 }
 // environment specific settings

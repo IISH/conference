@@ -1,8 +1,11 @@
 package org.iisg.eca.domain
 
+import org.iisg.eca.filter.SoftDelete
+
 /**
  * Domain class of table holding all existing networks
  */
+@SoftDelete
 class Network extends EventDateDomain {
     def pageInformation
 
@@ -46,11 +49,6 @@ class Network extends EventDateDomain {
         participantVolunteering     cascade: 'all-delete-orphan'
     }
 
-	static hibernateFilters = {
-		dateFilter(condition: '(date_id = :dateId OR date_id IS NULL)', types: 'long')
-		hideDeleted(condition: 'deleted = 0', default: true)
-	}
-
     static apiActions = ['GET']
 
     static apiAllowed = [
@@ -63,10 +61,6 @@ class Network extends EventDateDomain {
             'showOnline',
             'chairs.chair.id',
     ]
-
-	void softDelete() {
-		deleted = true
-	}
 
     /**
      * Returns all the users that have been accepted as participants in accepted sessions that fall in this network

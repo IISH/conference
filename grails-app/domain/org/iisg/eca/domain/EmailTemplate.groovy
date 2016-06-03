@@ -1,10 +1,12 @@
 package org.iisg.eca.domain
 
 import groovy.sql.Sql
+import org.iisg.eca.filter.SoftDelete
 
 /**
  * An email template
  */
+@SoftDelete
 class EmailTemplate extends EventDomain implements Cloneable {
     def dataSource
     def pageInformation
@@ -137,15 +139,6 @@ class EmailTemplate extends EventDomain implements Cloneable {
         showInBackend       column: 'show_in_backend'
         comment             column: 'comment',  type: 'text'
 	    deleted             column: 'deleted'
-    }
-
-    static hibernateFilters = {
-        eventFilter(condition: '(event_id = :eventId OR event_id IS NULL)', types: 'long')
-        hideDeleted(condition: 'deleted = 0', default: true)
-    }
-
-    void softDelete() {
-        deleted = true
     }
 
     def afterInsert() {

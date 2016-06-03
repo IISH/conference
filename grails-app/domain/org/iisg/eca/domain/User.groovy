@@ -1,5 +1,6 @@
 package org.iisg.eca.domain
 
+import org.iisg.eca.filter.SoftDelete
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.oauth2.common.OAuth2AccessToken
 import org.springframework.security.oauth2.provider.ClientDetails
@@ -14,6 +15,7 @@ import grails.plugin.springsecurity.SpringSecurityUtils
 /**
  * Domain class of table holding all registered users
  */
+@SoftDelete
 class User {
 	static final int USER_STATUS_NOT_FOUND = 0
 	static final int USER_STATUS_FOUND = 1
@@ -29,6 +31,7 @@ class User {
 	def gormClientDetailsService
 	def gormTokenStoreService
 	def tokenServices
+	def hibernateFilterHelper
 
 	/**
 	 * The saltSource is responsible for the creation of salts
@@ -147,10 +150,6 @@ class User {
         extraInfo                               nullable: true
 	    addedBy                                 nullable: true
     }
-
-	static hibernateFilters = {
-		hideDeleted(condition: 'deleted = 0', default: true)
-	}
 
     static apiActions = ['GET', 'POST', 'PUT']
 
@@ -486,10 +485,6 @@ class User {
 		}
 	}
 
-	void softDelete() {
-		deleted = true
-	}
-
 	/**
 	 * Returns all roles assigned to this user
 	 * @return A set of roles assigned to this user
@@ -659,10 +654,9 @@ class User {
 	 * @return A new participant date instance (should still be saved)
 	 */
 	ParticipantDate createParticipantForDate(EventDate date) {
-		ParticipantDate participant = null
-		ParticipantDate.withoutHibernateFilters {
-			participant = ParticipantDate.findByUserAndDate(this, date)
-		}
+		hibernateFilterHelper.disableSoftDeleteFilter()
+		ParticipantDate participant = ParticipantDate.findByUserAndDate(this, date)
+		hibernateFilterHelper.enableSoftDeleteFilter()
 
 		// If we found the filtered participant, undo the deletion
 		if (participant) {

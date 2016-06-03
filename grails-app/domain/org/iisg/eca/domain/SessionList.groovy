@@ -1,8 +1,11 @@
 package org.iisg.eca.domain
 
+import org.iisg.eca.filter.SoftDelete
+
 /**
  * Domain class of table holding all sessions, ONLY for listing sessions (it does not include all info)
  */
+@SoftDelete
 class SessionList extends EventDateDomain {
     def dataSource
 
@@ -29,11 +32,6 @@ class SessionList extends EventDateDomain {
         code        nullable: true, maxSize: 10
         name        blank: false,   maxSize: 255
     }
-
-	static hibernateFilters = {
-		dateFilter(condition: '(date_id = :dateId OR date_id IS NULL)', types: 'long')
-		hideDeleted(condition: 'deleted = 0', default: true)
-	}
 
     @Override
     String toString() {

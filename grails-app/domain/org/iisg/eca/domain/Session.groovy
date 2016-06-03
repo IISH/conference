@@ -1,10 +1,12 @@
 package org.iisg.eca.domain
 
 import groovy.sql.Sql
+import org.iisg.eca.filter.SoftDelete
 
 /**
  * Domain class of table holding all sessions
  */
+@SoftDelete
 class Session extends EventDateDomain {
     def dataSource
 
@@ -53,11 +55,6 @@ class Session extends EventDateDomain {
         addedBy     nullable: true
     }
 
-	static hibernateFilters = {
-		dateFilter(condition: '(date_id = :dateId OR date_id IS NULL)', types: 'long')
-		hideDeleted(condition: 'deleted = 0', default: true)
-	}
-
     static apiActions = ['GET', 'POST', 'PUT', 'DELETE']
 
     static apiAllowed = [
@@ -77,10 +74,6 @@ class Session extends EventDateDomain {
 			'networks.id',
 			'addedBy.id'
 	]
-
-	void softDelete() {
-		deleted = true
-	}
 
 	void updateForApi(String property, String value) {
 		switch (property) {

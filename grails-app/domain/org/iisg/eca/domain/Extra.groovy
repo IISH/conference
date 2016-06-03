@@ -1,8 +1,11 @@
 package org.iisg.eca.domain
 
+import org.iisg.eca.filter.SoftDelete
+
 /**
  * Domain class of table holding all extras for a particular event
  */
+@SoftDelete
 class Extra extends EventDateDomain {
     String title
     String extra
@@ -45,11 +48,6 @@ class Extra extends EventDateDomain {
         maxSeats            nullable: true, min: 1
     }
 
-	static hibernateFilters = {
-		dateFilter(condition: '(date_id = :dateId OR date_id IS NULL)', types: 'long')
-		hideDeleted(condition: 'deleted = 0', default: true)
-	}
-
     static apiActions = ['GET']
 
     static apiAllowed = [
@@ -63,10 +61,6 @@ class Extra extends EventDateDomain {
             'maxSeats',
 		    'sortOrder'
     ]
-
-	void softDelete() {
-		deleted = true
-	}
 
     @Override
     String toString() {

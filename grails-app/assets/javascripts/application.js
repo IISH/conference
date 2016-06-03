@@ -1,3 +1,7 @@
+//= require jquery
+//= require jquery.cookie
+//= require jquery.placeholder
+//= require jquery-ui
 var content, body, navWidth, contentMargin, emailValue;
 
 var messageUrl = 'ajax/message';

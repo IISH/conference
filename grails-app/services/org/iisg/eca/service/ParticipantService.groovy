@@ -21,6 +21,7 @@ class ParticipantService {
     def dataSource
     def messageSource
     def pageInformation
+	def hibernateFilterHelper
 
     /**
      * Returns all participants of the current event date with filters set by the user
@@ -236,9 +237,9 @@ class ParticipantService {
 		}
 		else {
 			// Does the participant exist in the database already, maybe deleted?
-			ParticipantDate.withoutHibernateFilters {
-				participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
-			}
+			hibernateFilterHelper.disableSoftDeleteFilter()
+			participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
+			hibernateFilterHelper.enableSoftDeleteFilter()
 
 			// Make sure that we undo the deletion if found
 			if (participant) {
