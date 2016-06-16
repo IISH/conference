@@ -39,9 +39,9 @@ class ParticipantDate extends EventDateDomain {
         // Causes ArrayIndexOutOfBoundsException: sort participantVolunteering: 'volunteering'
 
         id                      column: 'participant_date_id'
-        user                    column: 'user_id'
-        state                   column: 'participant_state_id'
-        feeState                column: 'fee_state_id'
+        user                    column: 'user_id',              fetch: 'join'
+        state                   column: 'participant_state_id', fetch: 'join'
+        feeState                column: 'fee_state_id',         fetch: 'join'
         paymentId               column: 'payment_id'
         dateAdded               column: 'date_added'
         invitationLetter        column: 'invitation_letter'
@@ -56,7 +56,7 @@ class ParticipantDate extends EventDateDomain {
         studentConfirmed        column: 'student_confirmed'
         award                   column: 'award'
         extraInfo               column: 'extra_info',   type: 'text'
-	    addedBy                 column: 'added_by'
+	    addedBy                 column: 'added_by',     fetch: 'join'
 	    deleted                 column: 'deleted'
 
         extras                  joinTable: 'participant_date_extra'

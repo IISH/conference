@@ -20,7 +20,7 @@ class SessionList extends EventDateDomain {
         id      column: 'session_id'
         code    column: 'session_code'
         name    column: 'session_name'
-        state   column: 'session_state_id'
+        state   column: 'session_state_id', fetch: 'join'
 	    deleted column: 'deleted'
     }
 

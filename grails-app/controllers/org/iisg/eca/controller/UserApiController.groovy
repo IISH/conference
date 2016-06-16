@@ -1,7 +1,5 @@
 package org.iisg.eca.controller
 
-import org.iisg.eca.domain.Event
-import org.iisg.eca.domain.EventDate
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Paper
 import org.iisg.eca.domain.Setting
@@ -9,8 +7,6 @@ import org.iisg.eca.domain.Setting
 import org.apache.commons.io.FilenameUtils
 import org.springframework.web.util.UriComponentsBuilder
 import org.springframework.web.multipart.commons.CommonsMultipartFile
-
-import javax.servlet.http.HttpServletResponse
 
 class UserApiController {
     private static final int ERROR_NONE = 0

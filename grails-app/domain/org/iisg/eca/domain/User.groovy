@@ -3,8 +3,8 @@ package org.iisg.eca.domain
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.oauth2.common.OAuth2AccessToken
 import org.springframework.security.oauth2.provider.ClientDetails
-import org.springframework.security.oauth2.provider.DefaultAuthorizationRequest
 import org.springframework.security.oauth2.provider.OAuth2Authentication
+import org.springframework.security.oauth2.provider.OAuth2Request
 
 import java.util.regex.Pattern
 import java.security.SecureRandom
@@ -26,7 +26,8 @@ class User {
 	 * Information about the current page
 	 */
 	def static pageInformation
-	def clientDetailsService
+	def gormClientDetailsService
+	def gormTokenStoreService
 	def tokenServices
 
 	/**
@@ -93,7 +94,7 @@ class User {
         title                   column: 'title'
         address                 column: 'address',      type: 'text'
         city                    column: 'city'
-        country                 column: 'country_id'
+        country                 column: 'country_id',   fetch: 'join'
         language                column: 'language'
         password                column: 'password'
         salt                    column: 'salt'
@@ -112,7 +113,7 @@ class User {
         emailDiscontinued       column: 'email_discontinued'
 	    enabled                 column: 'enabled'
 	    deleted                 column: 'deleted'
-		addedBy                 column: 'added_by'
+		addedBy                 column: 'added_by',     fetch: 'join'
 
         groups                  joinTable: 'users_groups'
         dateTimesNotPresent     joinTable: 'participant_not_present'
@@ -515,7 +516,7 @@ class User {
 		// If the user is granted access to all events, just return a list of all events
 		// Otherwise, only return the events he/she is specifically given access to
 		if (SpringSecurityUtils.ifAnyGranted(roles*.role.join(','))) {
-			events = Event.listOrderByShortName()
+			events = Event.listOrderByShortName([cache: true])
 		}
 		else {
 			events = Event.executeQuery('''
@@ -571,7 +572,7 @@ class User {
 	 * @return An OAuth2 access token
 	 */
 	OAuth2AccessToken getAccessToken() {
-		Collection<OAuth2AccessToken> tokens = tokenServices.findTokensByUserName(this.email)
+		Collection<OAuth2AccessToken> tokens = gormTokenStoreService.findTokensByClientIdAndUserName('userClient', this.email)
 		OAuth2AccessToken token = (tokens?.size() > 0) ? tokens.first() : null
 
 		// If the token expires within an hour, then request a new one already
@@ -579,13 +580,15 @@ class User {
 		calendar.add(Calendar.HOUR, 1)
 
 		if (!token || token.expired || calendar.time.after(token.expiration)) {
-			ClientDetails client = clientDetailsService.loadClientByClientId('userClient')
-			DefaultAuthorizationRequest ar = new DefaultAuthorizationRequest(client.clientId, client.scope)
-			ar.setApproved(true)
-			UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(this.email,
-					this.password, client.authorities)
-			OAuth2Authentication oauth2Auth = new OAuth2Authentication(ar, authToken)
-			token = tokenServices.createAccessToken(oauth2Auth)
+			ClientDetails client = gormClientDetailsService.loadClientByClientId('userClient')
+
+			UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+					this.email, this.password, client.authorities)
+			OAuth2Request oauthRequest = new OAuth2Request([:], client.clientId, client.authorities,
+					true, client.scope, client.resourceIds, '', [] as Set, [:])
+
+			OAuth2Authentication oAuth2Authentication = new OAuth2Authentication(oauthRequest, authToken)
+			token = tokenServices.createAccessToken(oAuth2Authentication)
 		}
 
 		return token

@@ -31,6 +31,7 @@ class Page {
 
     static mapping = {
         table 'pages'
+        cache true
         version false
         sort controller: 'asc'
 
@@ -43,7 +44,7 @@ class Page {
         sortOrder       column: 'sort_order'
         showInMenu      column: 'show_in_menu'
         description     column: 'description',      type: 'text'
-        parent          column: 'parent_page_id'
+        parent          column: 'parent_page_id',   fetch: 'join'
         urlQuery        column: 'url_query'
 
         groups  joinTable: 'groups_pages'
@@ -100,7 +101,8 @@ class Page {
     }
     
     static List<MenuItem> getMenu() {
-        getSubMenu(Page.menuPages().list())
+        List<Page> pages = Page.menuPages().list()
+        getSubMenu(pages)
     }
     
     private static List<MenuItem> getSubMenu(List<Page> pages) {

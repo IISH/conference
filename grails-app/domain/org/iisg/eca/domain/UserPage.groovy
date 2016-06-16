@@ -19,10 +19,11 @@ class UserPage extends EventDomain implements Serializable {
     static mapping = {
         table 'users_pages'
         id composite: ['user', 'page']
+        cache true
         version false
 
-        user        column: 'user_id'
-        page        column: 'page_id'
+        user        column: 'user_id', fetch: 'join'
+        page        column: 'page_id', fetch: 'join'
         denied      column: 'denied'
     }
 

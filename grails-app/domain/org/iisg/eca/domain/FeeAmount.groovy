@@ -35,7 +35,7 @@ class FeeAmount extends EventDateDomain {
         version false
 
         id              column: 'fee_amount_id'
-        feeState        column: 'fee_state_id'
+        feeState        column: 'fee_state_id',     fetch: 'join'
         endDate         column: 'end_date'
         numDaysStart    column: 'nr_of_days_start'
         numDaysEnd      column: 'nr_of_days_end'

@@ -15,9 +15,9 @@ class SessionRoomDateTime extends EventDateDomain implements Serializable {
         version false
 
         id              column: 'session_room_datetime_id'
-        room            column: 'room_id'
-        sessionDateTime column: 'session_datetime_id'
-        session         column: 'session_id'
+        room            column: 'room_id',              fetch: 'join'
+        sessionDateTime column: 'session_datetime_id',  fetch: 'join'
+        session         column: 'session_id',           fetch: 'join'
     }
 
     static apiActions = ['GET']

@@ -33,7 +33,7 @@ class SentEmail extends EventDateDomain {
         version false
 
         id                  column: 'sent_email_id'
-        user                column: 'user_id'
+        user                column: 'user_id',                  fetch: 'join'
         fromName            column: 'from_name'
         fromEmail           column: 'from_email'
         subject             column: 'subject'

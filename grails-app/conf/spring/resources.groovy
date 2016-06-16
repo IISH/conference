@@ -1,13 +1,10 @@
 import org.iisg.eca.security.UserSaltSource
 import org.iisg.eca.security.UserDetailsService
 import org.iisg.eca.security.SecurityEventListener
-import org.iisg.eca.security.MyRequestHolderAuthenticationFilter
+import org.iisg.eca.security.MyUsernamePasswordAuthenticationFilter
 
 import org.iisg.eca.utils.PageInformation
 import org.iisg.eca.utils.CustomPropertyEditorRegistrar
-
-import org.springframework.security.oauth2.provider.token.JdbcTokenStore
-import org.springframework.security.oauth2.provider.JdbcClientDetailsService
 
 import grails.plugin.springsecurity.SpringSecurityUtils
 import org.springframework.web.servlet.i18n.CookieLocaleResolver
@@ -28,7 +25,7 @@ beans = {
         redirectStrategy = ref('redirectStrategy')
     }
 
-	authenticationProcessingFilter(MyRequestHolderAuthenticationFilter) {
+	authenticationProcessingFilter(MyUsernamePasswordAuthenticationFilter) {
 		def conf = SpringSecurityUtils.securityConfig
 		authenticationManager = ref('authenticationManager')
 		sessionAuthenticationStrategy = ref('sessionAuthenticationStrategy')
@@ -44,10 +41,6 @@ beans = {
 		postOnly = conf.apf.postOnly // true
 		storeLastUsername = conf.apf.storeLastUsername // false
 	}
-
-    tokenStore(JdbcTokenStore, ref('dataSource'))
-
-	clientDetailsService(JdbcClientDetailsService, ref('dataSource'))
 
     saltSource(UserSaltSource) {
         userPropertyToUse = application.config.grails.plugin.springsecurity.dao.reflectionSaltSourceProperty

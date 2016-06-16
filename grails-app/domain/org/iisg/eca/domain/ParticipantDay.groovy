@@ -15,8 +15,8 @@ class ParticipantDay extends EventDateDomain {
         version false
 
         id      column: 'participant_day_id'
-        user    column: 'user_id'
-        day     column: 'day_id'
+        user    column: 'user_id',  fetch: 'join'
+        day     column: 'day_id',   fetch: 'join'
     }
 
     static List<Day> findAllDaysOfUser(User user) {

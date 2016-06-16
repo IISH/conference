@@ -1,18 +1,16 @@
+import org.iisg.eca.domain.OAuthClientDetails
 import org.iisg.eca.domain.Setting
 import org.iisg.eca.domain.DynamicPage
 
-import org.springframework.security.oauth2.provider.ClientDetails
-import org.springframework.security.oauth2.provider.BaseClientDetails
 import org.springframework.security.oauth2.provider.NoSuchClientException
 
 import grails.converters.JSON
 import grails.util.Environment
 import java.text.SimpleDateFormat
-import org.springframework.security.core.authority.SimpleGrantedAuthority
 
 class BootStrap {
 	def grailsApplication
-	def clientDetailsService
+	def gormClientDetailsService
 
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd")
 
@@ -36,15 +34,15 @@ class BootStrap {
 		// Make sure we always have a user OAuth 2 client
 		if (Environment.current != Environment.TEST) {
 			try {
-				clientDetailsService.loadClientByClientId('userClient')
+				gormClientDetailsService.loadClientByClientId('userClient')
 			}
 			catch (NoSuchClientException nsce) {
-				ClientDetails userClient = new BaseClientDetails()
-				userClient.clientId = 'userClient'
-				userClient.authorizedGrantTypes = ["client_credentials"]
-				userClient.setAuthorities([new SimpleGrantedAuthority('ROLE_USER_API')])
-
-				clientDetailsService.addClientDetails(userClient)
+				OAuthClientDetails userClient = new OAuthClientDetails(
+						clientId: 'userClient',
+						authority: 'ROLE_USER_API',
+						grantType: 'client_credentials',
+				)
+				userClient.save()
 			}
 		}
 

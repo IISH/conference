@@ -31,6 +31,7 @@ class EventDate  {
 
     static mapping = {
         table 'dates'
+		cache true
         version false
 
         id                  column: 'date_id'
@@ -41,7 +42,7 @@ class EventDate  {
         description         column: 'description'
         longDescription     column: 'long_description', sqlType: 'text'
         createStatistics    column: 'create_statistics'
-        event               column: 'event_id'
+        event               column: 'event_id',			fetch: 'join'
 
         days                sort: 'dayNumber',  order: 'asc'
         sort                startDate: 'desc'

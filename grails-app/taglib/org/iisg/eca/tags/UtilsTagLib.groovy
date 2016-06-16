@@ -155,15 +155,31 @@ class UtilsTagLib {
     }
 
     /**
+     * Tag returning the full name of the logged in user
+     */
+    def fullName = {
+        def principal = springSecurityService.principal
+        if (principal.metaClass.respondsTo(principal, 'getDomainClass')) {
+            principal = principal.domainClass
+        }
+
+        if (principal.hasProperty('fullName')) {
+            out << principal.fullName
+        }
+    }
+
+    /**
      * Tag printing all roles of the logged in user in a user-friendly way
      */
     def roles = {
-        // Get all the roles of the currently logged in user
-        String userRoles = User.get(springSecurityService.principal.id).roles.join(', ')
+        if (springSecurityService.principal.hasProperty('id')) {
+            // Get all the roles of the currently logged in user
+            String userRoles = User.get(springSecurityService.principal.id).roles.join(', ')
 
-        // If he has any roles, return them
-        if (!userRoles.isEmpty()) {
-            out << "(${userRoles.toLowerCase()})"
+            // If he has any roles, return them
+            if (!userRoles.isEmpty()) {
+                out << "(${userRoles.toLowerCase()})"
+            }
         }
     }
 
@@ -176,27 +192,29 @@ class UtilsTagLib {
         builder.doubleQuotes = true
 
         // Get all events and dates the user has access to
-	    User user = User.get(springSecurityService.principal.id)
-        List<Event> events = user.events
-	    Map<Event, List<EventDate>> datesByEvent = Event.getEventsAndDatesWithAccess(user)
+        if (springSecurityService.principal.hasProperty('id')) {
+            User user = User.get(springSecurityService.principal.id)
+            List<Event> events = user.events
+            Map<Event, List<EventDate>> datesByEvent = Event.getEventsAndDatesWithAccess(user)
 
-        // Now with all the information available, create the select box
-        builder.form(method: "get", action: eca.createLink(controller: 'event', action: 'switchEvent')) {
-            builder.input(type: 'hidden', name: 'back', value: pageInformation.sessionIdentifier)
-            builder.select(id: "event_switcher", name: "event_switcher") {
-                events.each { event ->
-                    builder.optgroup(label: event.toString()) {
-                        datesByEvent.get(event).each { date ->
-                            String htmlReadyDate = "${date.description} &nbsp;&nbsp; ${date.dateAsText}"
+            // Now with all the information available, create the select box
+            builder.form(method: "get", action: eca.createLink(controller: 'event', action: 'switchEvent')) {
+                builder.input(type: 'hidden', name: 'back', value: pageInformation.sessionIdentifier)
+                builder.select(id: "event_switcher", name: "event_switcher") {
+                    events.each { event ->
+                        builder.optgroup(label: event.toString()) {
+                            datesByEvent.get(event).each { date ->
+                                String htmlReadyDate = "${date.description} &nbsp;&nbsp; ${date.dateAsText}"
 
-                            // If this is the current/selected date, make sure it is visible
-                            if (attrs.date?.id == date.id) {
-                                builder.option(value: "${date.id}|${params.controller}", selected: "selected")
-                                builder.mkp.yieldUnescaped htmlReadyDate
-                            }
-                            else {
-                                builder.option(value: "${date.id}|${params.controller}")
-                                builder.mkp.yieldUnescaped htmlReadyDate
+                                // If this is the current/selected date, make sure it is visible
+                                if (attrs.date?.id == date.id) {
+                                    builder.option(value: "${date.id}|${params.controller}", selected: "selected")
+                                    builder.mkp.yieldUnescaped htmlReadyDate
+                                }
+                                else {
+                                    builder.option(value: "${date.id}|${params.controller}")
+                                    builder.mkp.yieldUnescaped htmlReadyDate
+                                }
                             }
                         }
                     }

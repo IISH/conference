@@ -33,13 +33,14 @@ class Paper extends EventDateDomain {
         version false
 
         id                  column: 'paper_id'
-        state               column: 'paper_state_id'
-        session             column: 'session_id'
+	    user				column: 'user_id',              fetch: 'join'
+        state               column: 'paper_state_id',       fetch: 'join'
+        session             column: 'session_id',           fetch: 'join'
         title               column: 'title'
         coAuthors           column: 'co_authors'
         abstr               column: 'abstract',             type: 'text'
         comment             column: 'comment',              type: 'text'
-        networkProposal     column: 'network_proposal_id'
+        networkProposal     column: 'network_proposal_id',  fetch: 'join'
         sessionProposal     column: 'session_proposal'
         proposalDescription column: 'proposal_description', type: 'text'
         fileName            column: 'filename'

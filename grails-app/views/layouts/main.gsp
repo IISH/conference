@@ -62,7 +62,7 @@
 
                 <sec:ifLoggedIn>
                     <div id="loggedin">
-                        <g:message code="springSecurity.loggedin.welcome" args="${[sec.loggedInUserInfo(field: 'fullName')]}" />
+                        <g:message code="springSecurity.loggedin.welcome" args="${[eca.fullName()]}" />
                         <span class="roles">
                             <eca:roles />
                         </span>

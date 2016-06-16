@@ -20,7 +20,7 @@ class SessionDateTime extends EventDateDomain implements Comparable<SessionDateT
         sort 'indexNumber'
 
         id              column: 'session_datetime_id'
-        day             column: 'day_id'
+        day             column: 'day_id',   fetch: 'join'
         indexNumber     column: 'index_number'
         period          column: 'period'
 	    deleted         column: 'deleted'

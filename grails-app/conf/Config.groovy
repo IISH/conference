@@ -166,6 +166,8 @@ log4j = {
 			'org.springframework',
 			'org.hibernate',
 			'net.sf.ehcache.hibernate'
+
+    // debug 'org.hibernate.cache'
 }
 
 // Spring Security Core config
@@ -214,12 +216,46 @@ grails {
                     '/**/favicon.ico':                ['permitAll']
             ]
 
-            providerNames = ['daoAuthenticationProvider']
-			if (Environment.current != Environment.TEST) {
-		        providerNames.add(0, 'clientCredentialsAuthenticationProvider')
-	        }
+            providerNames = ['daoAuthenticationProvider', 'anonymousAuthenticationProvider']
+
+	        filterChain.chainMap = [
+			        '/oauth/token'  : 'JOINED_FILTERS,' +
+					        '-authenticationProcessingFilter,' +
+					        '-exceptionTranslationFilter,' +
+					        '-logoutFilter,' +
+					        '-oauth2ProviderFilter,' +
+					        '-rememberMeAuthenticationFilter,' +
+					        '-securityContextPersistenceFilter',
+
+			        '/**/api/**'    : 'JOINED_FILTERS,' +
+					        '-authenticationProcessingFilter,' +
+					        '-exceptionTranslationFilter,' +
+					        '-logoutFilter,' +
+					        '-oauth2BasicAuthenticationFilter,' +
+					        '-rememberMeAuthenticationFilter,' +
+					        '-securityContextPersistenceFilter',
+
+			        '/**/userApi/**': 'JOINED_FILTERS,' +
+					        '-authenticationProcessingFilter,' +
+					        '-exceptionTranslationFilter,' +
+					        '-logoutFilter,' +
+					        '-oauth2BasicAuthenticationFilter,' +
+					        '-rememberMeAuthenticationFilter,' +
+					        '-securityContextPersistenceFilter',
+
+			        '/**'           : 'JOINED_FILTERS,' +
+					        '-basicAuthenticationFilter,' +
+					        '-clientCredentialsTokenEndpointFilter,' +
+					        '-oauth2BasicAuthenticationFilter,' +
+					        '-oauth2ExceptionTranslationFilter,' +
+					        '-oauth2ProviderFilter,' +
+					        '-statelessSecurityContextPersistenceFilter'
+	        ]
 
 	        oauthProvider {
+		        clientLookup.className = 'org.iisg.eca.domain.OAuthClientDetails'
+		        accessTokenLookup.className = 'org.iisg.eca.domain.OAuthAccessToken'
+
                 grantTypes {
                     authorizationCode = false
                     implicit = false

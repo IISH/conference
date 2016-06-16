@@ -17,12 +17,13 @@ class SessionState extends EventDomain {
 
     static mapping = {
         table 'session_states'
+        cache true
         version false
 
         id                      column: 'session_state_id'
         description             column: 'description'
         shortDescription        column: 'short_description'
-        correspondingPaperState column: 'corresponding_paper_state_id'
+        correspondingPaperState column: 'corresponding_paper_state_id', fetch: 'join'
     }
     
     static constraints = {
