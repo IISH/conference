@@ -9,6 +9,7 @@ class SessionList extends EventDateDomain {
     String code
     String name
     SessionState state
+    SessionType type
 	boolean deleted = false
 
     static belongsTo = SessionState
@@ -21,6 +22,7 @@ class SessionList extends EventDateDomain {
         code    column: 'session_code'
         name    column: 'session_name'
         state   column: 'session_state_id', fetch: 'join'
+        type    column: 'session_type_id',  fetch: 'join'
 	    deleted column: 'deleted'
     }
 
@@ -28,6 +30,7 @@ class SessionList extends EventDateDomain {
         date        nullable: true
         code        nullable: true, maxSize: 10
         name        blank: false,   maxSize: 255
+        type        nullable: true
     }
 
 	static hibernateFilters = {

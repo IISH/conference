@@ -12,6 +12,7 @@ import org.iisg.eca.domain.Network
 import org.iisg.eca.domain.Session
 import org.iisg.eca.domain.Equipment
 import org.iisg.eca.domain.DynamicPage
+import org.iisg.eca.domain.SessionType
 import org.iisg.eca.domain.SessionState
 import org.iisg.eca.domain.SessionDateTime
 import org.iisg.eca.domain.ParticipantType
@@ -145,7 +146,7 @@ class SessionController {
         // The 'save' button was clicked, save all data
         if (request.post) {
             // Save all session related data
-            bindData(session, params, [include: ["code", "name", "abstr", "comment", "state"]], "Session")
+            bindData(session, params, [include: ["code", "name", "abstr", "comment", "state", "type"]], "Session")
 
             // Remove all networks from the session (one by one, cause we don't want to delete the networks themselves)
             List<Network> networks = []
@@ -182,7 +183,8 @@ class SessionController {
                                         participants:   participants,
                                         equipment:      equipment,
                                         networks:       Network.list(),
-                                        sessionStates:  SessionState.list()])
+                                        sessionStates:  SessionState.list(),
+                                        sessionTypes:   SessionType.list()])
     }
 
     def paperMismatch() {

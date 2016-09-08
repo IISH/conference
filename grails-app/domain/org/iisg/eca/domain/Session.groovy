@@ -13,11 +13,12 @@ class Session extends EventDateDomain {
     String abstr
     String comment
     SessionState state
+    SessionType type
     boolean mailSessionState = true
     User addedBy
 	boolean deleted = false
 
-    static belongsTo = [Network, SessionState, User, ParticipantDate]
+    static belongsTo = [Network, SessionState, SessionType, User, ParticipantDate]
     static hasMany = [  sessionParticipants: SessionParticipant,
                         papers: Paper,
                         sessionRoomDateTime: SessionRoomDateTime,
@@ -35,6 +36,7 @@ class Session extends EventDateDomain {
         abstr               column: 'session_abstract', type: 'text'
         comment             column: 'session_comment',  type: 'text'
         state               column: 'session_state_id'
+        type                column: 'session_type_id'
         mailSessionState    column: 'mail_session_state'
         addedBy             column: 'added_by',         fetch: 'join'
 	    deleted             column: 'deleted'
@@ -50,6 +52,7 @@ class Session extends EventDateDomain {
         name        blank: false,   maxSize: 255
         abstr       nullable: true
         comment     nullable: true
+        type        nullable: true
         addedBy     nullable: true
     }
 
@@ -65,6 +68,7 @@ class Session extends EventDateDomain {
             'name',
             'abstr',
             'state.id',
+            'type.id',
             'papers.id',
             'networks.id',
             'addedBy.id'
@@ -74,6 +78,7 @@ class Session extends EventDateDomain {
 			'name',
 			'abstr',
 			'state.id',
+            'type.id',
 			'networks.id',
 			'addedBy.id'
 	]
@@ -96,6 +101,9 @@ class Session extends EventDateDomain {
 					this.state = state
 				}
 				break
+            case 'type.id':
+                this.type = (value.isLong()) ? SessionType.get(value.toLong()) : null
+                break
 			case 'networks.id':
 				List<Network> networks = []
 				networks += this.networks
