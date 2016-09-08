@@ -1,4 +1,4 @@
-<%@ page import="org.iisg.eca.domain.Country; org.iisg.eca.domain.Title" %>
+<%@ page import="org.iisg.eca.domain.Setting; org.iisg.eca.domain.Country; org.iisg.eca.domain.Title" %>
 <!doctype html>
 <html>
     <head>
@@ -64,14 +64,16 @@
                         <input type="text" name="User.organisation" maxlength="50" value="${fieldValue(bean: user, field: 'organisation')}" />
                     </span>
                 </div>
-                <div class="${hasErrors(bean: user, field: 'department', 'error')} required">
-                    <label class="property-label">
-                        <g:message code="user.department.label" />
-                    </label>
-                    <span class="property-value">
-                        <input type="text" name="User.department" maxlength="50" value="${fieldValue(bean: user, field: 'department')}" />
-                    </span>
-                </div>
+                <g:if test="${Setting.getSetting(Setting.SHOW_DEPARTMENT).booleanValue}">
+                    <div class="${hasErrors(bean: user, field: 'department', 'error')} required">
+                        <label class="property-label">
+                            <g:message code="user.department.label" />
+                        </label>
+                        <span class="property-value">
+                            <input type="text" name="User.department" maxlength="50" value="${fieldValue(bean: user, field: 'department')}" />
+                        </span>
+                    </div>
+                </g:if>
                 <div class="${hasErrors(bean: user, field: 'email', 'error')} required">
                     <label class="property-label">
                         <g:message code="user.email.label" />

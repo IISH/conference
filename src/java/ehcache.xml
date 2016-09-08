@@ -330,6 +330,13 @@
            memoryStoreEvictionPolicy="LRU"
     />
 
+    <cache name="org.iisg.eca.domain.SessionType"
+           maxElementsInMemory="25"
+           eternal="true"
+           overflowToDisk="false"
+           memoryStoreEvictionPolicy="LRU"
+    />
+
     <cache name="org.iisg.eca.domain.Setting"
            maxElementsInMemory="500"
            eternal="true"
