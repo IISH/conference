@@ -69,6 +69,16 @@
                         </span>
                     </div>
                 </g:if>
+                <g:if test="${Setting.getSetting(Setting.SHOW_EDUCATION).booleanValue}">
+                    <div class="${hasErrors(bean: user, field: 'education', 'error')} required">
+                        <label class="property-label">
+                            <g:message code="user.education.label" />
+                        </label>
+                        <span class="property-value">
+                            <input type="text" name="User.education" maxlength="50" value="${fieldValue(bean: user, field: 'education')}" />
+                        </span>
+                    </div>
+                </g:if>
                 <div class="${hasErrors(bean: user, field: 'email', 'error')} required">
                     <label class="property-label">
                         <g:message code="user.email.label" />

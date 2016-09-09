@@ -60,6 +60,7 @@ class User {
 	String mobile
 	String organisation
 	String department
+	String education
 	String cv
 	String extraInfo
 	Date dateAdded = new Date()
@@ -107,6 +108,7 @@ class User {
         mobile                  column: 'mobile'
         organisation            column: 'organisation'
         department              column: 'department'
+		education				column: 'education'
         cv                      column: 'cv',           type: 'text'
         extraInfo               column: 'extra_info',   type: 'text'
         dateAdded               column: 'date_added'
@@ -143,6 +145,7 @@ class User {
         mobile                  maxSize: 50,    nullable: true
         organisation            maxSize: 255,   nullable: true
         department              maxSize: 255,   nullable: true
+		education				maxSize: 255,	nullable: true
         cv                                      nullable: true
         extraInfo                               nullable: true
 	    addedBy                                 nullable: true
@@ -169,6 +172,7 @@ class User {
 			'mobile',
 			'organisation',
 			'department',
+			'education',
 			'cv',
 			'extraInfo',
 			'papers.id',
@@ -188,6 +192,7 @@ class User {
 			'mobile',
 			'organisation',
 			'department',
+			'education',
 			'cv',
 			'country.id',
 			'daysPresent.day.id',

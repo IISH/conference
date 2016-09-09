@@ -48,7 +48,8 @@ class UserController {
         }
         else if (request.post) {
             bindData(user, params, [include: ['title', 'firstName', 'lastName', 'gender', 'organisation', 'department',
-                    'email', 'address', 'city', 'country', 'phone', 'mobile', 'cv', 'extraInfo', 'emailDiscontinued']], "User")
+                    'education', 'email', 'address', 'city', 'country', 'phone', 'mobile', 'cv',
+                    'extraInfo', 'emailDiscontinued']], "User")
 
             if (!user.save(flush: true)) {
                 render(view: "edit", model: [user: user])

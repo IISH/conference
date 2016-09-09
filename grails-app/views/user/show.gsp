@@ -63,6 +63,16 @@
                     </span>
                 </li>
             </g:if>
+            <g:if test="${Setting.getSetting(Setting.SHOW_EDUCATION).booleanValue}">
+                <li>
+                    <span id="education-label" class="property-label">
+                        <g:message code="user.education.label" />
+                    </span>
+                    <span class="property-value" aria-labelledby="education-label">
+                        <g:fieldValue bean="${user}" field="education"/>
+                    </span>
+                </li>
+            </g:if>
             <li>
                 <span id="email-label" class="property-label">
                     <g:message code="user.email.label" />

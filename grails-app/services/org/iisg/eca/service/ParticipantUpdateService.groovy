@@ -75,7 +75,7 @@ class ParticipantUpdateService {
 	private void updateUser(User user, GrailsParameterMap params) {
 		bindData(user, params, [
 				include: ['title', 'firstName', 'lastName', 'gender', 'organisation',
-				          'department', 'email', 'address', 'city', 'country', 'phone', 'mobile', 'cv',
+				          'department', 'education', 'email', 'address', 'city', 'country', 'phone', 'mobile', 'cv',
 				          'extraInfo', 'emailDiscontinued']
 		], "user")
 	}
