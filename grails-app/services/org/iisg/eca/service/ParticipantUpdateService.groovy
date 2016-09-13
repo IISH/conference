@@ -122,7 +122,7 @@ class ParticipantUpdateService {
 		}
 
 		bindData(participant, params, [
-				include: ['invitationLetter', 'invitationLetterSent', 'lowerFeeRequested', 'lowerFeeAnswered',
+				include: ['ageRange', 'invitationLetter', 'invitationLetterSent', 'lowerFeeRequested', 'lowerFeeAnswered',
 				          'lowerFeeText', 'student', 'studentConfirmed', 'award', 'state', 'feeState', 'extraInfo',
 				          'accompanyingPersons']
 		], "participantDate")

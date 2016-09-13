@@ -243,6 +243,13 @@
 
     -->
 
+    <cache name="org.iisg.eca.domain.AgeRange"
+           maxElementsInMemory="50"
+           eternal="true"
+           overflowToDisk="false"
+           memoryStoreEvictionPolicy="LRU"
+    />
+
     <cache name="org.iisg.eca.domain.Country"
            maxElementsInMemory="500"
            eternal="true"

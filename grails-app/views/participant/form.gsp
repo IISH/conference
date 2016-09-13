@@ -1,4 +1,4 @@
-<%@ page import="org.iisg.eca.domain.PaperState; org.iisg.eca.domain.Equipment; org.iisg.eca.domain.Network; org.iisg.eca.domain.Volunteering; org.iisg.eca.domain.Day; org.iisg.eca.domain.SessionDateTime; org.iisg.eca.domain.Setting; org.iisg.eca.domain.Title; org.iisg.eca.domain.FeeState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Extra; org.iisg.eca.domain.Country; org.iisg.eca.domain.SessionParticipant; org.iisg.eca.domain.Order" %>
+<%@ page import="org.iisg.eca.domain.AgeRange; org.iisg.eca.domain.PaperState; org.iisg.eca.domain.Equipment; org.iisg.eca.domain.Network; org.iisg.eca.domain.Volunteering; org.iisg.eca.domain.Day; org.iisg.eca.domain.SessionDateTime; org.iisg.eca.domain.Setting; org.iisg.eca.domain.Title; org.iisg.eca.domain.FeeState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Extra; org.iisg.eca.domain.Country; org.iisg.eca.domain.SessionParticipant; org.iisg.eca.domain.Order" %>
 <!doctype html>
 <html>
     <head>
@@ -52,7 +52,6 @@
                                             </span>
                                         </g:if>
                                     </span>
-
                                 </li>
                                 <li>
                                     <span id="date-added-label" class="property-label">
@@ -215,6 +214,21 @@
                                 </span>
                             </div>
                         </fieldset>
+
+                        <g:if test="${participant && Setting.getSetting(Setting.SHOW_AGE_RANGE).booleanValue}">
+                            <fieldset class="form">
+                                <legend><g:message code="participantDate.personal.registration.label" /></legend>
+                                <div class="${hasErrors(bean: user, field: 'country', 'error')} required">
+                                    <label class="property-label">
+                                        <g:message code="participantDate.ageRange.label" />
+                                    </label>
+                                    <span class="property-value">
+                                        <g:select name="participantDate.ageRange.id" from="${AgeRange.list()}" optionKey="id"
+                                                  value="${participant.ageRange?.id}" noSelection="${[null:' ']}" />
+                                    </span>
+                                </div>
+                            </fieldset>
+                        </g:if>
                     </div>
 
                     <div class="column">

@@ -141,7 +141,7 @@ class ParticipantService {
             ON participant_date.participant_state_id = participant_states.participant_state_id
             AND participant_date.date_id = :dateId
             AND participant_date.deleted = 0
-            GROUP BY participant_states.participant_state
+            GROUP BY participant_states.participant_state_id, participant_states.participant_state
             ORDER BY participant_states.participant_state_id
         ''', [dateId: pageInformation.date.id]).collect { it.values() as Object[] }
 
