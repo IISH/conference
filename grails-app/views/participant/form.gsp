@@ -550,22 +550,24 @@
                                         <input type="button" id="btn_network" name="btn_network" value="${g.message(code: "default.goto")}" />
                                     </span>
                                 </div>
-                                <div class="${hasErrors(bean: paper, field: 'sessionProposal', 'error')}">
-                                    <label class="property-label">
-                                        <g:message code="paper.sessionProposal.label" />
-                                    </label>
-                                    <span class="property-value">
-                                        <input type="text" name="Paper_${i}.sessionProposal" maxlength="500" value="${fieldValue(bean: paper, field: 'sessionProposal')}" />
-                                    </span>
-                                </div>
-                                <div class="${hasErrors(bean: paper, field: 'proposalDescription', 'error')}">
-                                    <label class="property-label">
-                                        <g:message code="paper.proposalDescription.label" />
-                                    </label>
-                                    <span class="property-value">
-                                        <textarea name="Paper_${i}.proposalDescription" cols="40" rows="5">${fieldValue(bean: paper, field: 'proposalDescription')}</textarea>
-                                    </span>
-                                </div>
+                                <g:if test="${Setting.getSetting(Setting.SHOW_SESSION_PROPOSAL, curDate?.event).value == '1'}">
+                                    <div class="${hasErrors(bean: paper, field: 'sessionProposal', 'error')}">
+                                        <label class="property-label">
+                                            <g:message code="paper.sessionProposal.label" />
+                                        </label>
+                                        <span class="property-value">
+                                            <input type="text" name="Paper_${i}.sessionProposal" maxlength="500" value="${fieldValue(bean: paper, field: 'sessionProposal')}" />
+                                        </span>
+                                    </div>
+                                    <div class="${hasErrors(bean: paper, field: 'proposalDescription', 'error')}">
+                                        <label class="property-label">
+                                            <g:message code="paper.proposalDescription.label" />
+                                        </label>
+                                        <span class="property-value">
+                                            <textarea name="Paper_${i}.proposalDescription" cols="40" rows="5">${fieldValue(bean: paper, field: 'proposalDescription')}</textarea>
+                                        </span>
+                                    </div>
+                                </g:if>
                                 <div>
                                     <label class="property-label">
                                         <g:message code="session.label" />

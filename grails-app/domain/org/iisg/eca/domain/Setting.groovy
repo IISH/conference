@@ -41,6 +41,7 @@ class Setting extends EventDomain {
 	static final String NETWORK_NAME_SINGULAR = 'network_name_singular'
 	static final String NUM_CANDIDATE_VOTES_ADVISORY_BOARD = 'num_candidate_votes_advisory_board'
 	static final String ORGANIZER_REGISTRATION_LASTDATE = 'organizer_registration_lastdate'
+	static final String PARTICIPANT_TYPES_COMBINATION_INFO = 'participant_types_combination_info'
 	static final String PATH_FOR_ADMIN_MENU = 'path_for_admin_menu'
 	static final String PATH_FOR_MENU = 'path_for_menu'
     static final String PAYMENT_ON_SITE_STARTDATE = 'payment_on_site_startdate'
@@ -75,6 +76,7 @@ class Setting extends EventDomain {
 	static final String SHOW_REFUND_DIALOG = 'show_refund_dialog'
 	static final String SHOW_SESSION_CODES = 'show_session_codes'
 	static final String SHOW_SESSION_PARTICIPANT_TYPES_REGISTRATION = 'show_session_participant_types_registration'
+	static final String SHOW_SESSION_PROPOSAL = 'show_session_proposal'
 	static final String SHOW_SESSION_TYPES = 'show_session_types';
 	static final String SHOW_STUDENT = 'show_student'
 
