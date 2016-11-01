@@ -491,6 +491,16 @@
                                         <textarea name="Paper_${i}.abstr" required="required" cols="40" rows="5">${fieldValue(bean: paper, field: 'abstr')}</textarea>
                                     </span>
                                 </div>
+                                <g:if test="${Setting.getSetting(Setting.SHOW_PAPER_TYPE_OF_CONTRIBUTION, curDate?.event).value == '1'}">
+                                    <div class="${hasErrors(bean: paper, field: 'typeOfContribution', 'error')}">
+                                        <label class="property-label">
+                                            <g:message code="paper.typeOfContribution.label" />
+                                        </label>
+                                        <span class="property-value">
+                                            <input type="text" name="Paper_${i}.typeOfContribution" maxlength="100" value="${fieldValue(bean: paper, field: 'typeOfContribution')}" />
+                                        </span>
+                                    </div>
+                                </g:if>
                                 <div>
                                     <label class="property-label">
                                         <g:message code="paper.file.label" />
@@ -664,6 +674,16 @@
                                     <textarea name="Paper_null.abstr" required="required" cols="40" rows="5"></textarea>
                                 </span>
                             </div>
+                            <g:if test="${Setting.getSetting(Setting.SHOW_PAPER_TYPE_OF_CONTRIBUTION, curDate?.event).value == '1'}">
+                                <div>
+                                    <label class="property-label">
+                                        <g:message code="paper.typeOfContribution.label" />
+                                    </label>
+                                    <span class="property-value">
+                                        <input type="text" name="Paper_null.typeOfContribution" maxlength="100" />
+                                    </span>
+                                </div>
+                            </g:if>
                             <div>
                                 <label class="property-label">
                                     <g:message code="paper.file.label" />

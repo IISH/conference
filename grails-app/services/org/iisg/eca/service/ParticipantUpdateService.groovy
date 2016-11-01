@@ -201,7 +201,7 @@ class ParticipantUpdateService {
 		user.addToPapers(paper)
 
 		bindData(paper, params, [
-				include: ['title', 'abstr', 'coAuthors', 'state', 'comment', 'sessionProposal',
+				include: ['title', 'abstr', 'typeOfContribution', 'coAuthors', 'state', 'comment', 'sessionProposal',
 				          'proposalDescription', 'networkProposal', 'equipmentComment']
 		], "Paper_$i".toString())
 

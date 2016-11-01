@@ -12,6 +12,7 @@ class Paper extends EventDateDomain {
     String title
     String coAuthors
     String abstr
+	String typeOfContribution
     String comment
     Network networkProposal
     String sessionProposal
@@ -39,6 +40,7 @@ class Paper extends EventDateDomain {
         title               column: 'title'
         coAuthors           column: 'co_authors'
         abstr               column: 'abstract',             type: 'text'
+		typeOfContribution	column: 'type_of_contribution'
         comment             column: 'comment',              type: 'text'
         networkProposal     column: 'network_proposal_id',  fetch: 'join'
         sessionProposal     column: 'session_proposal'
@@ -60,6 +62,7 @@ class Paper extends EventDateDomain {
         title               blank: false,   maxSize: 500
         coAuthors           nullable: true, maxSize: 500
         abstr               blank: false
+		typeOfContribution	nullable: true,	maxSize: 100
         comment             nullable: true
         networkProposal     nullable: true
         sessionProposal     nullable: true, maxSize: 500
@@ -87,6 +90,7 @@ class Paper extends EventDateDomain {
             'title',
             'coAuthors',
             'abstr',
+			'typeOfContribution',
             'networkProposal.id',
             'sessionProposal',
             'proposalDescription',
@@ -102,6 +106,7 @@ class Paper extends EventDateDomain {
 			'title',
 			'coAuthors',
 			'abstr',
+			'typeOfContribution',
 			'sessionProposal',
 			'equipmentComment',
 			'user.id',
