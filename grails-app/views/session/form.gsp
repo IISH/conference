@@ -78,6 +78,7 @@
                         </label>
                         <span class="property-value">
                             <g:select from="${sessionTypes}" name="Session.type.id" optionKey="id" optionValue="type" value="${eventSession.type?.id}" noSelection="${['': ' ']}" />
+                            <input type="text" name="Session.differentType" value="${fieldValue(bean: eventSession, field: 'differentType')}" />
                         </span>
                     </div>
                 </g:if>

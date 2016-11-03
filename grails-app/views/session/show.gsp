@@ -60,6 +60,7 @@
                 </span>
                 <span class="property-value" arial-labelledby="type-label">
                     <eca:formatText text="${eventSession.type}" />
+                    <eca:formatText text="${eventSession.differentType}" />
                 </span>
             </li>
           </g:if>

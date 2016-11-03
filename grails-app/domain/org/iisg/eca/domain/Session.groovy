@@ -14,6 +14,7 @@ class Session extends EventDateDomain {
     String comment
     SessionState state
     SessionType type
+    String differentType
     boolean mailSessionState = true
     User addedBy
 	boolean deleted = false
@@ -37,6 +38,7 @@ class Session extends EventDateDomain {
         comment             column: 'session_comment',  type: 'text'
         state               column: 'session_state_id'
         type                column: 'session_type_id'
+        differentType       column: 'session_different_type'
         mailSessionState    column: 'mail_session_state'
         addedBy             column: 'added_by',         fetch: 'join'
 	    deleted             column: 'deleted'
@@ -48,12 +50,13 @@ class Session extends EventDateDomain {
     }
 
     static constraints = {
-        code        nullable: true, maxSize: 10
-        name        blank: false,   maxSize: 255
-        abstr       nullable: true
-        comment     nullable: true
-        type        nullable: true
-        addedBy     nullable: true
+        code            nullable: true, maxSize: 10
+        name            blank: false,   maxSize: 255
+        abstr           nullable: true
+        comment         nullable: true
+        type            nullable: true
+        differentType   nullable: true, maxSize: 50
+        addedBy         nullable: true
     }
 
 	static hibernateFilters = {
@@ -67,6 +70,7 @@ class Session extends EventDateDomain {
             'id',
             'name',
             'abstr',
+            'differentType',
             'state.id',
             'type.id',
             'papers.id',
@@ -77,6 +81,7 @@ class Session extends EventDateDomain {
 	static apiPostPut = [
 			'name',
 			'abstr',
+            'differentType',
 			'state.id',
             'type.id',
 			'networks.id',
