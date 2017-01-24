@@ -49,7 +49,7 @@ class ExportController {
 	}
 
 	def badgesUnconfirmed() {
-		Export badges = miscExportService.getParticipantsExport(miscExportService.BADGES_UNCONFIRMED_BANK_TRANSFER)
+		Export badges = miscExportService.getParticipantsExport(miscExportService.BADGES_UNCONFIRMED)
 
 		response.contentType = badges.contentType
 		response.setHeader("Content-disposition",
