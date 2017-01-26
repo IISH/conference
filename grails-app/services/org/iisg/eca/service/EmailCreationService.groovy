@@ -1,5 +1,8 @@
 package org.iisg.eca.service
 
+import org.iisg.eca.domain.ParticipantDate
+import org.iisg.eca.domain.ParticipantState
+
 import java.text.SimpleDateFormat
 
 import org.iisg.eca.domain.Day
@@ -19,6 +22,7 @@ import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
  */
 class EmailCreationService {
 	def emailService
+	def pageInformation
 
 	/**
 	 * Creates a specific email or emails
@@ -133,6 +137,13 @@ class EmailCreationService {
 	Set<SentEmail> createPreRegistrationEmail(User user) {
 		Set<SentEmail> emails = new HashSet<SentEmail>()
 
+		// Make sure the participant state is updated as well
+		ParticipantDate participant = user.getParticipantForDate(pageInformation.date)
+		if (participant?.stateId == ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION) {
+			participant.state = ParticipantState.get(ParticipantState.NEW_PARTICIPANT)
+			participant.save()
+		}
+
 		// First create the mail for the participant who just registered
 		SentEmail email = findAndCreateEmail(user, Setting.PRE_REGISTRATION_EMAIL_TEMPLATE_ID,
 				[addedByUserId: user.id])
@@ -141,6 +152,14 @@ class EmailCreationService {
 		// Now for each created session also mail the session participants
 		SessionParticipant.findAllByAddedBy(user)*.session.unique().each { session ->
 			SessionParticipant.findAllBySessionAndAddedBy(session, user)*.user.unique().each { sessionParticipant ->
+				// Make sure the participant state is updated as well
+				ParticipantDate pd = sessionParticipant.getParticipantForDate(pageInformation.date)
+				if (pd?.stateId == ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION) {
+					pd.state = ParticipantState.get(ParticipantState.NEW_PARTICIPANT)
+					pd.save()
+				}
+
+				// Then create the email
 				SentEmail sentEmail = findAndCreateEmail(
 						sessionParticipant,
 						Setting.SESSION_REGISTRATION_EMAIL_TEMPLATE_ID,
