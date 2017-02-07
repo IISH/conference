@@ -20,6 +20,8 @@ class User {
 	static final int USER_STATUS_DISABLED = 2
 	static final int USER_STATUS_DELETED = 3
 	static final int USER_STATUS_EMAIL_DISCONTINUED = 4
+	static final int USER_STATUS_PARTICIPANT_CANCELLED = 5
+	static final int USER_STATUS_PARTICIPANT_DOUBLE_ENTRY = 6
 	static final Pattern PASSWORD_PATTERN = Pattern.compile('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$')
 
 	/**
@@ -715,20 +717,23 @@ class User {
 	 * @return The status
 	 */
 	int getStatus() {
-		// The user is at least found
-		int status = USER_STATUS_FOUND
-
+		ParticipantDate participant = getParticipantForDate(pageInformation.date)
 		if (this.deleted) {
-			status = USER_STATUS_DELETED
+			return USER_STATUS_DELETED
 		}
-		else if (!this.enabled) {
-			status = USER_STATUS_DISABLED
+		if (!this.enabled) {
+			return USER_STATUS_DISABLED
 		}
-		else if (this.emailDiscontinued) {
-			status = USER_STATUS_EMAIL_DISCONTINUED
+		if (this.emailDiscontinued) {
+			return USER_STATUS_EMAIL_DISCONTINUED
 		}
-
-		return status
+		if (participant && (participant.stateId == ParticipantState.REMOVED_CANCELLED)) {
+			return USER_STATUS_PARTICIPANT_CANCELLED
+		}
+		if (participant && (participant.stateId == ParticipantState.REMOVED_DOUBLE_ENTRY)) {
+			return USER_STATUS_PARTICIPANT_DOUBLE_ENTRY
+		}
+		return USER_STATUS_FOUND
 	}
 
 	/**
