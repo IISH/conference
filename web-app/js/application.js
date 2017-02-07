@@ -782,6 +782,20 @@ $(document).ready(function () {
 		$('#participants-export-dialog').dialog('open');
 	});
 
+    $('#network-export-dialog').dialog({
+        autoOpen: false,
+        minWidth: 400,
+        minHeight: 80,
+        title: "Network export"
+    });
+
+    $('.network-export-open').click(function (e) {
+    	var elem = $(this);
+        var dialog = $('#network-export-dialog');
+		dialog.find('form:first').attr('action', elem.data('submit'));
+		dialog.dialog('open');
+    });
+
 	$('#email-codes').accordion({
 		header: '.emailCodesHeader',
 		heightStyle: 'content',

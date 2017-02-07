@@ -26,6 +26,14 @@ abstract class MapExport implements Export {
     }
 
     /**
+     * Returns the results
+     * @return The results
+     */
+    List<Map> getResults() {
+        return results
+    }
+
+    /**
      * Returns the title of the resulting file
      * @return The title
      */
