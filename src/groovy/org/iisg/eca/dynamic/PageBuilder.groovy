@@ -316,7 +316,7 @@ class PageBuilder {
                         else if (c.property.oneToMany || c.property.manyToMany) {
                             builder.td("\${row.${c.columnPath.join('.')}.join(', ')}")
                         }
-                        else  {
+                        else {
                             builder.td("\${row.${c.columnPath.join('.')}}")
                         }
                     }
