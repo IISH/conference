@@ -245,7 +245,7 @@ class DynamicPageResults {
         HibernateCriteriaBuilder criteria = dataContainer.domainClass.clazz.createCriteria()
         criteriaForColumn.delegate = criteria
 
-        criteria.list {
+        criteria.listDistinct {
             // If there are child columns defined, then first set the level to the referencing domain class
             dataContainer.forAllColumnsWithChildren { withChild ->
                 "${withChild.name}" {
