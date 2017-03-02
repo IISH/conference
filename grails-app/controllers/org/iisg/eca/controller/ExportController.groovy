@@ -18,19 +18,19 @@ class ExportController {
 
 	def days() {
 		response.contentType = "application/xml"
-		response.setHeader("Content-disposition", "attachment;filename=days.xml")
+		response.setHeader("Content-disposition", "attachment;filename=\"days.xml\"")
 		response.outputStream << bookExportService.daysXml
 	}
 
 	def concordance() {
 		response.contentType = "application/xml"
-		response.setHeader("Content-disposition", "attachment;filename=concordance.xml")
+		response.setHeader("Content-disposition", "attachment;filename=\"concordance.xml\"")
 		response.outputStream << bookExportService.concordanceXml
 	}
 
 	def sessions() {
 		response.contentType = "application/xml"
-		response.setHeader("Content-disposition", "attachment;filename=sessions.xml")
+		response.setHeader("Content-disposition", "attachment;filename=\"sessions.xml\"")
 		response.outputStream << bookExportService.sessionsXml
 	}
 
@@ -39,7 +39,7 @@ class ExportController {
 
 		response.contentType = badges.contentType
 		response.setHeader("Content-disposition",
-				"attachment;filename=${badges.getTitle()}.${badges.getExtension().toLowerCase()}")
+				"attachment;filename=\"${badges.getTitle()}.${badges.getExtension().toLowerCase()}\"")
 		response.outputStream << badges.parse()
 	}
 
@@ -48,7 +48,7 @@ class ExportController {
 
 		response.contentType = badges.contentType
 		response.setHeader("Content-disposition",
-				"attachment;filename=${badges.getTitle()}.${badges.getExtension().toLowerCase()}")
+				"attachment;filename=\"${badges.getTitle()}.${badges.getExtension().toLowerCase()}\"")
 		response.outputStream << badges.parse()
 	}
 
@@ -57,7 +57,7 @@ class ExportController {
 
 		response.contentType = badges.contentType
 		response.setHeader("Content-disposition",
-				"attachment;filename=${badges.getTitle()}.${badges.getExtension().toLowerCase()}")
+				"attachment;filename=\"${badges.getTitle()}.${badges.getExtension().toLowerCase()}\"")
 		response.outputStream << badges.parse()
 	}
 
@@ -66,7 +66,7 @@ class ExportController {
 
 		response.contentType = program.contentType
 		response.setHeader("Content-disposition",
-				"attachment;filename=${program.getTitle()}.${program.getExtension().toLowerCase()}")
+				"attachment;filename=\"${program.getTitle()}.${program.getExtension().toLowerCase()}\"")
 		response.outputStream << program.parse()
 	}
 
@@ -75,7 +75,7 @@ class ExportController {
 
 		response.contentType = participants.contentType
 		response.setHeader("Content-disposition",
-				"attachment;filename=${participants.getTitle()}.${participants.getExtension().toLowerCase()}")
+				"attachment;filename=\"${participants.getTitle()}.${participants.getExtension().toLowerCase()}\"")
 		response.outputStream << participants.parse()
 	}
 
@@ -157,7 +157,7 @@ class ExportController {
 
 				response.contentType = export.contentType
 				response.setHeader("Content-disposition",
-						"attachment;filename=${export.getTitle()}.${export.getExtension().toLowerCase()}")
+						"attachment;filename=\"${export.getTitle()}.${export.getExtension().toLowerCase()}\"")
 				response.outputStream << export.parse()
 
 				return
