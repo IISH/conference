@@ -443,6 +443,15 @@ class ApiController {
 				insert = true
 			}
 
+			Long participantId = (params.containsKey('participantId')
+					&& params.participantId.isLong()) ? params.long('participantId') : null
+			if (participantId) {
+				ParticipantDate participant = ParticipantDate.get(participantId)
+				if (participant) {
+					order.participantDate = participant
+				}
+			}
+
 			response.put('success', order.refreshOrder(insert))
 		}
 
