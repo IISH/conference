@@ -199,6 +199,7 @@ class Order {
 			this.refundedAt =  (result.get('REFUNDEDAT')) ? (Date) result.get('REFUNDEDAT', true) : null
 			this.description = result.get('COM')
 
+			// TODO: Is now deprecated:
 			EventDate date = pageInformation.date
 			Long userId = result.get('USERID')?.toString()?.isLong() ? new Long(result.get('USERID').toString()) : null
 			if (date && userId) {
@@ -207,6 +208,11 @@ class Order {
 				if (participant) {
 					this.participantDate = participant
 				}
+			}
+
+			if ((this.payed == PAYMENT_ACCEPTED) && (this.participantDate.stateId == ParticipantState.REMOVED_CANCELLED)) {
+				this.participantDate.state = ParticipantState.get(ParticipantState.PARTICIPANT)
+				this.participantDate.save()
 			}
 
 			return this.save(insert: insert, flush: true)
