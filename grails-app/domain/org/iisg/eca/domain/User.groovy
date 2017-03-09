@@ -729,7 +729,7 @@ class User {
 	 */
 	int getStatus() {
 		ParticipantDate participant = getParticipantForDate(pageInformation.date)
-		if (this.deleted) {
+		if (this.deleted || (participant?.deleted)) {
 			return USER_STATUS_DELETED
 		}
 		if (!this.enabled) {
