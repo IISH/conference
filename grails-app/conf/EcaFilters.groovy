@@ -46,10 +46,10 @@ class EcaFilters {
         }
 
         /**
-         *  Every page (except login/logout/xhr) should be in the database, so lookup the page information from the database
+         *  Almost every page should be in the database, so lookup the page information from the database
          *  If it is there, cache the page information for this request
          */
-        page(controller: '*', action: '*', controllerExclude: 'ajax|api|css|login|logout') {
+        page(controller: '*', action: '*', controllerExclude: 'ajax|api|css|login|logout|order') {
             before = {
 	            // Make sure old data is removed
 	            pageInformation.removePage()
@@ -79,7 +79,7 @@ class EcaFilters {
          *  Lookup the event and event date for this request in the database
          *  If it is there, allow access and cache the event date information for this request
          */
-        eventDate(controller: '*', action: '*', controllerExclude: 'login|logout') {
+        eventDate(controller: '*', action: '*', controllerExclude: 'login|logout|order') {
             before = {
 				// Make sure old data is removed
 	            pageInformation.removeDate()
@@ -128,7 +128,7 @@ class EcaFilters {
         /**
          * The authorization filter
          */
-        authFilter(controller: '*', action: '*', controllerExclude: 'login|logout|css|api|userApi') {
+        authFilter(controller: '*', action: '*', controllerExclude: 'login|logout|css|api|userApi|order') {
             before = {
                 List<Role> rolesFullRights = Role.findAllByFullRights(true, [cache: true])
 				List<Role> rolesOnlyLastDate = Role.findAllByOnlyLastDate(true, [cache: true])
