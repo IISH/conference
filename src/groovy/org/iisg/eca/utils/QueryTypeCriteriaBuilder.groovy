@@ -24,6 +24,8 @@ class QueryTypeCriteriaBuilder {
 
 	private static final Map<String, List<String>> QUERY_TYPE_COMBINATIONS_SUBTRACT = [
 			'unconfirmedPayments'      : ['allParticipantsSoftState', 'confirmedPayments'],
+			'unconfirmedPaymentsSoft'  : ['allParticipantsSoftState', 'confirmedPayments', 'allUnconfirmedCashPayments'],
+			'unconfirmedCashPayments'  : ['allUnconfirmedCashPayments', 'confirmedPayments'],
 			'unconfirmedBankPayments'  : ['allUnconfirmedBankPayments', 'confirmedPayments'],
 			'unconfirmedOnlinePayments': ['allUnconfirmedOnlinePayments', 'confirmedPayments'],
 	]
