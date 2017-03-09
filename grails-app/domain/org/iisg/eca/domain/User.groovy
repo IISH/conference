@@ -470,6 +470,17 @@ class User {
 			}
 		}
 
+		allUnconfirmedCashPayments { date ->
+			allParticipantsSoftState(date)
+
+			participantDates {
+				orders {
+					eq('paymentMethod', Order.ORDER_CASH_PAYMENT)
+					eq('payed', Order.ORDER_NOT_PAYED)
+				}
+			}
+		}
+
 		allUnconfirmedBankPayments { date ->
 			allParticipantsSoftState(date)
 
