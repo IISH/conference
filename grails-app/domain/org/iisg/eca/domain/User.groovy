@@ -70,6 +70,7 @@ class User {
 	boolean enabled = true
 	boolean deleted = false
 	User addedBy
+	User mergedWith
 
 	static belongsTo = [Country, Group]
 	static hasMany = [groups             : Group,
@@ -82,7 +83,18 @@ class User {
 					  dateTimesNotPresent: SessionDateTime,
 					  userPages          : UserPage,
 					  daysPresent        : ParticipantDay,
-					  sessionsAdded      : Session]
+					  mergedWithUsers	 : User,
+
+					  sessionsAdded      		: Session,
+					  papersAdded		 		: Paper,
+					  participantsAdded  		: ParticipantDate,
+					  sessionParticipantsAdded	: SessionParticipant,
+					  usersAdded				: User]
+
+	static mappedBy = [papers             : 'user', papersAdded: 'addedBy',
+					   participantDates   : 'user', participantsAdded: 'addedBy',
+					   sessionParticipants: 'user', sessionParticipantsAdded: 'addedBy',
+					   mergedWithUsers    : 'mergedWith', usersAdded: 'addedBy']
 
 	static mapping = {
 		table 'users'
@@ -118,6 +130,7 @@ class User {
 	    enabled                 column: 'enabled'
 	    deleted                 column: 'deleted'
 		addedBy                 column: 'added_by',     fetch: 'join'
+		mergedWith             	column: 'merged_with'
 
         groups                  joinTable: 'users_groups'
         dateTimesNotPresent     joinTable: 'participant_not_present'
@@ -151,6 +164,7 @@ class User {
         cv                                      nullable: true
         extraInfo                               nullable: true
 	    addedBy                                 nullable: true
+		mergedWith                              nullable: true
     }
 
 	static hibernateFilters = {

@@ -146,7 +146,7 @@ a:hover, .link:hover {
             box-shadow: 0 0 3px 1px [main_color_dark];
 }
 
-.errors {
+.errors, .err {
     margin: 30px 30px 20px;
     color: #cc0000;
        -moz-box-shadow: 0 0 3px 1px #ff8888;
@@ -774,7 +774,7 @@ span.help-text {
     }
 }
 
-#participant-form .column {
+#participant-form .column, #merge-columns .column {
     width: 50%;
     margin: 0;
     padding: 0;
@@ -784,11 +784,11 @@ span.help-text {
     margin-bottom: 20px;
 }
 
-#participant-form .property-label {
+#participant-form .property-label, #merge-columns .property-label {
     width: 33%;
 }
 
-#participant-form .property-value {
+#participant-form .property-value, #merge-columns .property-value {
     margin-left: 35%;
 }
 

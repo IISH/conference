@@ -7,12 +7,7 @@ import java.text.Normalizer
 import org.springframework.context.i18n.LocaleContextHolder
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 
-import org.iisg.eca.domain.Day
-import org.iisg.eca.domain.User
-import org.iisg.eca.domain.Extra
-import org.iisg.eca.domain.FeeState
-import org.iisg.eca.domain.ParticipantDate
-import org.iisg.eca.domain.ParticipantState
+import org.iisg.eca.domain.*
 
 /**
  * Service responsible for requesting participant data
@@ -249,9 +244,154 @@ class ParticipantService {
 
 		// This user is not a participant yet, but the user indicated he/she wants to make him/her one
 		if (!participant) {
-			return new ParticipantDate(user: user, state: ParticipantState.get(ParticipantState.NEW_PARTICIPANT),
+            participant = new ParticipantDate(user: user, state: ParticipantState.get(ParticipantState.NEW_PARTICIPANT),
 					feeState: FeeState.get(FeeState.NO_FEE_SELECTED))
 		}
-	}
-}
 
+        return participant
+	}
+
+    /**
+     * Merges two users
+     * @param userA The (participant) user which should remain
+     * @param userB The user which should be merged into user A
+     * @return Whether the merge was successful
+     */
+    boolean mergeParticipantUsers(User userA, User userB) {
+        ParticipantDate.disableHibernateFilter('dateFilter')
+        ParticipantDate.disableHibernateFilter('hideDeleted')
+
+        // Collect all participant dates for the users and compare them
+        Set<ParticipantDate> participantDatesA = userA.participantDates
+        Set<ParticipantDate> participantDatesB = userB.participantDates
+
+        Set<Long> datesConflict = participantDatesA
+                .collect { it.dateId }
+                .intersect(participantDatesB.collect { it.dateId })
+        // TODO: For later: datesConflict.remove(pageInformation.date.id)
+
+        // If there are no conflicts, continue with the merge
+        if (datesConflict.size() > 0)
+            return false
+
+        // TODO: For later: Start by merging all of user Bs participant dates
+        /*participantDatesB.each { ParticipantDate participantB ->
+            if (!success) return
+            ParticipantDate participantA = null
+
+            // When we merge two participants of the same (current) date
+            if (participantB.date == pageInformation.date) {
+                participantA = userA.getParticipantForDate(pageInformation.date)
+
+                // Move certain properties of participant B to participant A
+                ParticipantVolunteering.executeUpdate(
+                        'update ParticipantVolunteering set participantDate = ? where participantDate = ?',
+                        [participantA, participantB])
+                Order.executeUpdate(
+                        'update Order set participantDate = ? where participantDate = ?',
+                        [participantA, participantB])
+
+                new ArrayList<>(participantB.extras).each { Extra extra ->
+                    extra.removeFromParticipantDates(participantB)
+                    extra.addToParticipantDates(participantA)
+                }
+
+                new ArrayList<>(participantB.favoriteSessions).each { Session session ->
+                    session.removeFromParticipantsFavorite(participantB)
+                    session.addToParticipantsFavorite(participantA)
+                }
+
+                participantA.accompanyingPersons = participantB.accompanyingPersons
+                participantB.accompanyingPersons = null
+
+                // Check which creation date is older
+                if (participantB.dateAdded.before(participantA.dateAdded)) {
+                    participantA.dateAdded = participantB.dateAdded
+                }
+
+                // Move payment participant B to participant A, if newer
+                if (participantB.paymentId) {
+                    if (!participantA.paymentId) {
+                        participantA.paymentId = participantB.paymentId
+                        participantB.paymentId = null
+                    }
+                    else {
+                        Order orderA = participantA.findOrder()
+                        Order orderB = participantB.findOrder()
+
+                        if (orderB.createdAt.before(orderA.createdAt)) {
+                            participantA.paymentId = participantB.paymentId
+                            participantB.paymentId = null
+                        }
+                    }
+                }
+
+                // Mark participant B a duplicate registration
+                participantB.state = ParticipantState.get(ParticipantState.REMOVED_DOUBLE_ENTRY)
+            }
+
+            // Change the user
+            participantB.user = userA
+
+            success = (!participantA || participantB.save(flush: true)) && participantA.save(flush: true)
+        }
+
+        // If we successfully merged the participants, continue with the users
+        if (!success)
+            return false;*/
+
+        // Go over all foreign keys and update them
+        ParticipantDate.executeUpdate('update ParticipantDate set user = ? where user = ?', [userA, userB])
+        NetworkChair.executeUpdate('update NetworkChair set chair = ? where chair = ?', [userA, userB])
+        UserRole.executeUpdate('update UserRole set user = ? where user = ?', [userA, userB])
+        Paper.executeUpdate('update Paper set user = ? where user = ?', [userA, userB])
+        SessionParticipant.executeUpdate('update SessionParticipant set user = ? where user = ?', [userA, userB])
+        SentEmail.executeUpdate('update SentEmail set user = ? where user = ?', [userA, userB])
+        UserPage.executeUpdate('update UserPage set user = ? where user = ?', [userA, userB])
+        ParticipantDay.executeUpdate('update ParticipantDay set user = ? where user = ?', [userA, userB])
+
+        Session.executeUpdate('update Session set addedBy = ? where addedBy = ?', [userA, userB])
+        Paper.executeUpdate('update Paper set addedBy = ? where addedBy = ?', [userA, userB])
+        SessionParticipant.executeUpdate('update SessionParticipant set addedBy = ? where addedBy = ?', [userA, userB])
+
+        new ArrayList<>(userB.groups).each { Group group ->
+            group.removeFromUsers(userB)
+            group.addToUsers(userA)
+        }
+
+        new ArrayList<>(userB.dateTimesNotPresent).each { SessionDateTime sessionDateTime ->
+            sessionDateTime.removeFromUsersNotPresent(userB)
+            sessionDateTime.addToUsersNotPresent(userA)
+        }
+
+        // Switch email addresses by using temporary values
+        String emailA = userA.email
+        String emailB = userB.email
+        userA.email = emailA + ".conference-shs.org"
+        userB.email = emailB + ".conference-shs.org"
+
+        // Check which creation date is older
+        if (userB.dateAdded.before(userA.dateAdded)) {
+            userA.dateAdded = userB.dateAdded
+        }
+
+        // Mark userB merged and deleted
+        userB.softDelete()
+        userB.mergedWith = userA
+
+        boolean success = userA.save(flush: true) && userB.save(flush: true)
+
+        // Now actually swap the email addresses and update the addedBy
+        if (success) {
+            userA.email = emailB
+            userB.email = emailA
+
+            User.executeUpdate('update User set addedBy = ? where addedBy = ?', [userA, userB])
+            ParticipantDate.executeUpdate('update ParticipantDate set addedBy = ? where addedBy = ?', [userA, userB])
+
+            success = userA.save() && userB.save()
+        }
+
+        return success
+    }
+}

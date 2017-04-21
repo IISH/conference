@@ -620,10 +620,10 @@ $(document).ready(function () {
 		element.parent().removeClass('error');
 
 		if (email !== emailValue) {
-			ajaxCall(this, uniqueEmailUrl, {email: email}, function (data) {
-				if (!data.success) {
-					element.parent().addClass('error');
-					showErrors(data);
+			var ajaxData = {user: element.data('user'), email: email, back: element.data('back')};
+			ajaxCall(this, uniqueEmailUrl, ajaxData, null, function (data) {
+				if (data.mergeLink) {
+                    $('.errors').find('li').append('<br>').append(data.mergeLink);
 				}
 			});
 		}
