@@ -316,14 +316,14 @@ class ApiController {
 			results = ParticipantDate.executeQuery('''
 				SELECT u, pd, p, t
 				FROM ParticipantDate AS pd
-					INNER JOIN pd.user AS u
-					INNER JOIN u.sessionParticipants AS sp
-					INNER JOIN sp.type AS t
-					LEFT JOIN u.papers AS p WITH (
-						(p.deleted = false OR p IS NULL)
-						AND (p.date.id = :dateId OR p IS NULL)
-						AND (p.session.id = :sessionId OR p IS NULL)
-					)
+				INNER JOIN pd.user AS u
+				INNER JOIN u.sessionParticipants AS sp
+				INNER JOIN sp.type AS t
+				LEFT JOIN u.papers AS p WITH (
+					(p.deleted = false OR p IS NULL)
+					AND (p.date.id = :dateId OR p IS NULL)
+					AND (p.session.id = :sessionId OR p IS NULL)
+				)
 				WHERE u.deleted = false
 				AND sp.session.id = :sessionId
 				AND pd.state.id IN (:newParticipant, :dataChecked, :participant, :notFinished)

@@ -27,7 +27,7 @@ class Paper extends EventDateDomain {
 	boolean deleted = false
 
 	static belongsTo = [User, PaperState, Session, Network]
-    static hasMany = [equipment: Equipment]
+    static hasMany = [equipment: Equipment, sessionParticipantPapers: SessionParticipantPaper]
 
     static mapping = {
         table 'papers'
@@ -54,7 +54,8 @@ class Paper extends EventDateDomain {
 	    addedBy             column: 'added_by'
 	    deleted             column: 'deleted'
 
-        equipment           joinTable: 'paper_equipment'
+        equipment           		joinTable: 'paper_equipment'
+		sessionParticipantPapers	cascade: 'none'
     }
 
     static constraints = {
