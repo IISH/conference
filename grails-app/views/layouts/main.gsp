@@ -79,6 +79,14 @@
                         <dt>Web</dt>
                         <dd><a target="_blank" href="${Setting.getSetting(Setting.WEB_ADDRESS, curDate?.event).value}">${curDate?.event?.shortName}</a></dd>
 
+                        <g:if test="${Setting.getSetting(Setting.ONLINE_PROGRAMME_URL, curDate?.event)?.value}">
+                            <dd>
+                                <a target="_blank" href="${Setting.getSetting(Setting.ONLINE_PROGRAMME_URL, curDate?.event).value}">
+                                    <g:message code="default.online.programme.label" />
+                                </a>
+                            </dd>
+                        </g:if>
+
                         <dd>&nbsp;</dd>
 
                         <dt>CMS</dt>

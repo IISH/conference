@@ -40,6 +40,7 @@ class Setting extends EventDomain {
 	static final String NETWORK_NAME_PLURAL = 'network_name_plural'
 	static final String NETWORK_NAME_SINGULAR = 'network_name_singular'
 	static final String NUM_CANDIDATE_VOTES_ADVISORY_BOARD = 'num_candidate_votes_advisory_board'
+	static final String ONLINE_PROGRAMME_URL = 'online_programme_url'
 	static final String ORGANIZER_REGISTRATION_LASTDATE = 'organizer_registration_lastdate'
 	static final String PARTICIPANT_TYPES_COMBINATION_INFO = 'participant_types_combination_info'
 	static final String PATH_FOR_ADMIN_MENU = 'path_for_admin_menu'
