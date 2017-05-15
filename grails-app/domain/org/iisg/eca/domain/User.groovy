@@ -343,6 +343,38 @@ class User {
 			}
 		}
 
+		freeFeeAmount { date ->
+			allParticipantsSoftState(date)
+
+			participantDates {
+				feeState {
+					feeAmounts {
+						eq('date.id', date.id)
+						eq('feeAmount', BigDecimal.ZERO)
+					}
+
+					eq('date.id', date.id)
+					eq('deleted', false)
+				}
+			}
+		}
+
+		notFreeFeeAmount { date ->
+			allParticipantsSoftState(date)
+
+			participantDates {
+				feeState {
+					feeAmounts {
+						eq('date.id', date.id)
+						gt('feeAmount', BigDecimal.ZERO)
+					}
+
+					eq('date.id', date.id)
+					eq('deleted', false)
+				}
+			}
+		}
+
 		allSessionParticipants { date ->
 			allParticipants(date)
 
