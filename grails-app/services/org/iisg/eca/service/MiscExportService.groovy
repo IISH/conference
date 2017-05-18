@@ -215,17 +215,14 @@ class MiscExportService {
 	 */
 	XlsMapExport getSessionPapersInNetworkExport(Network network, String title, List<String> columnNames) {
 		List usersSessionsPapers = ParticipantDate.executeQuery('''
-				SELECT DISTINCT u, s, (
-					SELECT p
-					FROM Paper AS p
-					WHERE p IS NULL 
-					OR (s.id = p.session.id AND u.id = p.user.id)
-				)
+				SELECT DISTINCT u, s, p
                 FROM ParticipantDate AS pd
                 INNER JOIN pd.user AS u
                 INNER JOIN u.sessionParticipants AS sp
                 INNER JOIN sp.session AS s
                 INNER JOIN s.networks AS n
+                LEFT JOIN sp.sessionParticipantPapers AS spp
+                LEFT JOIN spp.paper AS p
                 WHERE u.deleted = false
                 AND s.deleted = false
                 AND s.date.id = :dateId
@@ -272,17 +269,14 @@ class MiscExportService {
 	 */
 	XlsMapExport getSessionPapersInNetworkAcceptedExport(Network network, String title, List<String> columnNames) {
 		List usersSessionsPapers = ParticipantDate.executeQuery('''
-				SELECT DISTINCT u, s, (
-					SELECT p
-					FROM Paper AS p
-					WHERE p IS NULL 
-					OR (s.id = p.session.id AND u.id = p.user.id)
-				)
+				SELECT DISTINCT u, s, p
                 FROM ParticipantDate AS pd
                 INNER JOIN pd.user AS u
                 INNER JOIN u.sessionParticipants AS sp
                 INNER JOIN sp.session AS s
                 INNER JOIN s.networks AS n
+			 	LEFT JOIN sp.sessionParticipantPapers AS spp
+                LEFT JOIN spp.paper AS p
                 WHERE u.deleted = false
                 AND s.deleted = false
                 AND s.date.id = :dateId
