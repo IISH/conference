@@ -144,7 +144,8 @@
                                     <span class="required-indicator">*</span>
                                 </label>
                                 <span class="property-value">
-                                    <input type="email" name="user.email" required="required" maxlength="100" value="${fieldValue(bean: user, field: 'email')}" />
+                                    <input type="email" name="user.email" required="required" maxlength="100" value="${fieldValue(bean: user, field: 'email')}"
+                                           data-user="${user.id}" data-back="${curPageId}" />
                                 </span>
                             </div>
                             <div class="${hasErrors(bean: user, field: 'emailDiscontinued', 'error')}">

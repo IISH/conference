@@ -324,6 +324,43 @@ class ParticipantController {
 	}
 
 	/**
+	 * Merges two users
+	 */
+	def merge() {
+		if (params.id && params.user) {
+			User userA = User.get(params.id)
+			User userB = User.get(params.user)
+
+			if (userA && userB) {
+				if (request.get) {
+					render(view: "merge", model: [userA: userA, userB: userB])
+					return
+				}
+				else {
+					if (participantService.mergeParticipantUsers(userA, userB)) {
+						flash.message = g.message(code: 'default.merge.success.message')
+					}
+					else {
+						flash.error = true
+						flash.message = g.message(code: 'default.merge.fail.message')
+					}
+
+					redirect(uri: eca.createLink(previous: true, noBase: true))
+					return
+				}
+			}
+
+			flash.error = true
+			flash.message = g.message(code: 'default.not.found.message', args: [g.message(code: 'user.label')])
+			redirect(uri: eca.createLink(previous: true, noBase: true))
+		}
+
+		flash.error = true
+		flash.message = g.message(code: 'default.no.id.message')
+		redirect(uri: eca.createLink(previous: true, noBase: true))
+	}
+
+	/**
 	 * Tries to remove the uploaded paper
 	 * (AJAX call)
 	 */
