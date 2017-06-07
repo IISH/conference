@@ -127,7 +127,7 @@ class ApiController {
 
 	def lostPassword() {
 		String email = params.email?.toString()
-		Map response = ['status': User.USER_STATUS_NOT_FOUND] as Map<String, Object>
+		Map response = ['success': false, 'status': User.USER_STATUS_NOT_FOUND] as Map<String, Object>
 
 		if (email) {
 			User.disableHibernateFilter('hideDeleted')
