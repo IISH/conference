@@ -1,5 +1,7 @@
 package org.iisg.eca.service
 
+import org.iisg.eca.domain.Setting
+
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
@@ -220,7 +222,12 @@ class BookExportService {
      */
     private void forEachSession(Session session, Room room, SessionDateTime sdt, MarkupBuilder builder) {
         builder.session {
+            builder.sessioncode(session.code)
             builder.sessionname(session.name)
+
+            if (Setting.getSetting(Setting.SHOW_SESSION_ABSTRACT_EXPORT).booleanValue) {
+                builder.sessionabstract(session.abstr)
+            }
 
             builder.location {
                 builder.code("${room.roomNumber}-${sdt.indexNumber}")
