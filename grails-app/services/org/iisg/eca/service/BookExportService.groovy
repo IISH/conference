@@ -269,7 +269,11 @@ class BookExportService {
                 if (type.id != ParticipantType.CO_AUTHOR) {
                     builder."${type.type.toLowerCase()}s" {
                         users.each { user ->
-                            builder."${type.type.toLowerCase()}name"("$user.firstName $user.lastName")
+                            builder."${type.type.toLowerCase()}name"("$user.firstName $user.lastName") // DEPRECATED
+                            builder."${type.type.toLowerCase()}" {
+                                builder.name("$user.firstName $user.lastName")
+                                builder.organisation("$user.organisation")
+                            }
                         }
                     }
                 }
