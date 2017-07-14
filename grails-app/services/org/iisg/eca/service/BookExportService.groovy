@@ -293,6 +293,7 @@ class BookExportService {
 
                     builder.paper {
                         builder.presenter("$user.firstName $user.lastName")
+                        builder.organisation("$user.organisation")
                         builder.copresenters(paper.coAuthors)
                         builder.subject(paper.title)
 	                    builder.abstract(paper.abstr)
