@@ -60,7 +60,7 @@ class DynamicPageController {
                 return
             }
 
-            render(view: '../layouts/content.gsp', model: [page: dynamicPage, content: dynamicPageService.getTemplate(dynamicPage, params, allResults)])
+            render(view: '../layouts/content.gsp', model: [page: dynamicPage, content: dynamicPageService.getTemplate(dynamicPage, allResults)])
         }
         else if (request.post) {
             // Find out from which element the post request was made using the eid (element id)
@@ -71,7 +71,7 @@ class DynamicPageController {
             // If there are no results, it was most likely not a form; just return the same page
             // Otherwise, overwrite the results of the element that was just saved with new information
             if (!results) {
-               render(view: '../layouts/content.gsp', model: [page: dynamicPage, content: dynamicPageService.getTemplate(dynamicPage, params, allResults)])
+               render(view: '../layouts/content.gsp', model: [page: dynamicPage, content: dynamicPageService.getTemplate(dynamicPage, allResults)])
                return
             }
             else {
@@ -80,7 +80,7 @@ class DynamicPageController {
             
             // If validation fails, return the page and show the errors
             if (!results.get().grep { it.hasErrors() }.isEmpty()) {
-                render(view: '../layouts/content.gsp', model: [page: dynamicPage, content: dynamicPageService.getTemplate(dynamicPage, params, allResults)])
+                render(view: '../layouts/content.gsp', model: [page: dynamicPage, content: dynamicPageService.getTemplate(dynamicPage, allResults)])
                 return
             }
 
@@ -92,7 +92,7 @@ class DynamicPageController {
                 redirect(uri: eca.createLink(previous: true, noBase: true))
             }
             else {
-                render(view: '../layouts/content.gsp', model: [page: dynamicPage, content: dynamicPageService.getTemplate(dynamicPage, params, allResults)])
+                render(view: '../layouts/content.gsp', model: [page: dynamicPage, content: dynamicPageService.getTemplate(dynamicPage, allResults)])
             }
         }
     }

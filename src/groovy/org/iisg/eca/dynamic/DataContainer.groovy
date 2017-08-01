@@ -196,7 +196,7 @@ class DataContainer extends ContainerElement {
      * @return The class names to give this container
      */
     String getClassNames() {
-        classNames
+        classNames ?: ''
     }
 
     /**

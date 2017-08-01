@@ -20,6 +20,7 @@ class Column extends ContainerElement {
     private String interactive
     private String textarea
     private String eq
+    private String filterColumn
 
     /**
      * Creates a new <code>Column</code> element
@@ -39,6 +40,7 @@ class Column extends ContainerElement {
         this.hideFilter = false
         this.textarea = null
         this.eq = null
+        this.filterColumn = null
     }
 
     /**
@@ -199,6 +201,16 @@ class Column extends ContainerElement {
         }
     }
 
+    String getFilterColumn() {
+        filterColumn
+    }
+
+    void setFilterColumn(String filterColumn) {
+        if (filterColumn && (filterColumn.trim().length() > 0)) {
+            this.filterColumn = filterColumn.trim()
+        }
+    }
+
     /**
     * Returns all of the elements on the way to the root
     * @returns A list of all the elements on the way to the root
@@ -206,6 +218,10 @@ class Column extends ContainerElement {
     List<Column> getColumnPath() {
         List<Element> path = this.path
         path.grep { it instanceof Column }
+    }
+
+    String getFullName() {
+        getColumnPath().map { it.name }.join('.')
     }
 
     /**
