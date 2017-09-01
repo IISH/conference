@@ -261,7 +261,13 @@ class MiscController {
           AND participant_date.participant_state_id IN (:new, :dataChecked, :participant, :notFinished)
           AND participant_date.date_id = :date_id
           AND users.user_id IN (
-            SELECT user_id FROM `papers` WHERE session_id IN (SELECT session_id FROM sessions WHERE deleted=1 ) OR session_id NOT IN (SELECT session_id FROM sessions) ) ;
+            SELECT user_id FROM `papers` 
+            WHERE papers.deleted=0 
+            AND (
+              session_id IN (SELECT session_id FROM sessions WHERE deleted=1) 
+              OR session_id NOT IN (SELECT session_id FROM sessions) 
+            )
+          );
         """, [date_id: pageInformation.date.id, new: ParticipantState.NEW_PARTICIPANT, dataChecked: ParticipantState.PARTICIPANT_DATA_CHECKED,
                 participant: ParticipantState.PARTICIPANT, notFinished: ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
 
