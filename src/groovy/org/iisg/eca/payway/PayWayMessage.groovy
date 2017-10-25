@@ -106,6 +106,7 @@ class PayWayMessage extends TreeMap<String, Object> {
 
 		// Create the hash
 		List<String> keyValues = collect { k, v -> "$k=$v" }
+		log.error('aaa789 ' + passPhrase)
 		String toBeHashed = keyValues.join(passPhrase) + passPhrase
 		String hash = toBeHashed.encodeAsSHA1()
 
@@ -118,7 +119,7 @@ class PayWayMessage extends TreeMap<String, Object> {
 	 */
 	boolean isValid() {
         log.error('PayWayMessage - IsValid()')
-        log.error('PayWayMessage - this.get(): ' + this.get('SUCCESS'))
+        log.error('PayWayMessage - this.get(\'SUCCESS\'): ' + this.get('SUCCESS'))
         log.error('PayWayMessage - this.get(\'SUCCESS\').toString().equalsIgnoreCase(\'true\'): ' + this.get('SUCCESS').toString().equalsIgnoreCase('true'))
 		if ((this.get('SUCCESS') == null) || this.get('SUCCESS').toString().equalsIgnoreCase('true')) {
             log.error('PayWayMessage - IsValid() 2222')
@@ -133,6 +134,7 @@ class PayWayMessage extends TreeMap<String, Object> {
 			// Compare the hashes
 			String newHash = get("SHASIGN")
             log.error('newHash: ' + newHash)
+            // TODO PROBLEEM
             log.error('newHash.equalsIgnoreCase(originalHash): ' + newHash.equalsIgnoreCase(originalHash))
 			return newHash.equalsIgnoreCase(originalHash)
 		}
