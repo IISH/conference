@@ -21,37 +21,42 @@ class OrderController {
         log.error('queryParams: ' + queryParams.toString())
         log.error('message: ' + message.toString())
 
-        if (message.containsKey('POST') && message.isValid()) {
+        log.error('both: ' + (message.containsKey('POST') && message.isValid()))
+
+        if (message.containsKey('POST')) {
             log.error('Start 1')
 
-            boolean insert = false
-            long orderId = new Long(message.get('orderid').toString())
+            if (message.isValid()) {
+                log.error('Start 11')
 
-            log.error('Start 2')
+                boolean insert = false
+                long orderId = new Long(message.get('orderid').toString())
 
-            // Obtain the order (or create a new order) and refresh
-            Order order = Order.get(orderId)
-            if (!order) {
-                order = new Order()
-                order.setId(orderId)
-                insert = true
+                log.error('Start 2')
+
+                // Obtain the order (or create a new order) and refresh
+                Order order = Order.get(orderId)
+                if (!order) {
+                    order = new Order()
+                    order.setId(orderId)
+                    insert = true
+                }
+                log.error('Refresh order')
+                order.refreshOrder(insert)
+
+                // If the payment is accepted and we know the participant, sent the payment accepted email
+                if ((order.getPayed() == Order.PAYMENT_ACCEPTED) && order.participantDate) {
+                    log.error('Send mail!')
+                    SentEmail email = emailCreationService.createPaymentAcceptedEmail(order.participantDate.user, order)
+                    emailService.sendEmail(email)
+                } else if (!order.participantDate) {
+                    log.error('Unknown participant for order ' + order.id)
+                }
+
+                log.error('OK!')
+                render(text: 'OK')
+                return
             }
-            log.error('Refresh order')
-            order.refreshOrder(insert)
-
-            // If the payment is accepted and we know the participant, sent the payment accepted email
-            if ((order.getPayed() == Order.PAYMENT_ACCEPTED) && order.participantDate) {
-                log.error('Send mail!')
-                SentEmail email = emailCreationService.createPaymentAcceptedEmail(order.participantDate.user, order)
-                emailService.sendEmail(email)
-            }
-            else if (!order.participantDate) {
-                log.error('Unknown participant for order ' + order.id)
-            }
-
-            log.error('OK!')
-            render(text: 'OK')
-            return
         }
 
         log.error('POST: ' + message.containsKey('POST'))
