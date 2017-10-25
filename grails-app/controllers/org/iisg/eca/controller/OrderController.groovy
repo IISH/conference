@@ -16,10 +16,12 @@ class OrderController {
         Map<String, Object> queryParams = WebUtils.fromQueryString(request.queryString)
         PayWayMessage message = new PayWayMessage(queryParams)
         if (message.containsKey('POST') && message.isValid()) {
+            log.warn('Start 1')
+
             boolean insert = false
             long orderId = new Long(message.get('orderid').toString())
 
-            log.warn('Start')
+            log.warn('Start 2')
 
             // Obtain the order (or create a new order) and refresh
             Order order = Order.get(orderId)
