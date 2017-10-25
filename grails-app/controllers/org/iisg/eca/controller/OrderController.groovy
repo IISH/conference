@@ -13,6 +13,8 @@ class OrderController {
     def emailCreationService
 
     def post() {
+        log.error('Start 0')
+
         Map<String, Object> queryParams = WebUtils.fromQueryString(request.queryString)
         PayWayMessage message = new PayWayMessage(queryParams)
         if (message.containsKey('POST') && message.isValid()) {
