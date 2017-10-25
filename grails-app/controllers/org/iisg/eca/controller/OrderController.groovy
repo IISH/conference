@@ -19,6 +19,8 @@ class OrderController {
             boolean insert = false
             long orderId = new Long(message.get('orderid').toString())
 
+            log.warn('Start')
+
             // Obtain the order (or create a new order) and refresh
             Order order = Order.get(orderId)
             if (!order) {
@@ -26,10 +28,12 @@ class OrderController {
                 order.setId(orderId)
                 insert = true
             }
+            log.warn('Refresh order')
             order.refreshOrder(insert)
 
             // If the payment is accepted and we know the participant, sent the payment accepted email
             if ((order.getPayed() == Order.PAYMENT_ACCEPTED) && order.participantDate) {
+                log.warn('Send mail!')
                 SentEmail email = emailCreationService.createPaymentAcceptedEmail(order.participantDate.user, order)
                 emailService.sendEmail(email)
             }
@@ -37,6 +41,7 @@ class OrderController {
                 log.warn('Unknown participant for order ' + order.id)
             }
 
+            log.warn('OK!')
             render(text: 'OK')
             return
         }
