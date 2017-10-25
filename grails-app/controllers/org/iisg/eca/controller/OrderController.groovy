@@ -40,6 +40,12 @@ class OrderController {
             render(text: 'OK')
             return
         }
+
+        if (!message.containsKey('POST'))
+            log.error('Received an post order with no key POST')
+        if (!message.isValid())
+            log.error('Received an invalid post order message')
+
         response.sendError(400)
     }
 }
