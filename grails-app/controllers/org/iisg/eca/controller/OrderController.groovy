@@ -17,6 +17,10 @@ class OrderController {
 
         Map<String, Object> queryParams = WebUtils.fromQueryString(request.queryString)
         PayWayMessage message = new PayWayMessage(queryParams)
+
+        log.error('queryParams: ' + queryParams.toString())
+        log.error('message: ' + message.toString())
+
         if (message.containsKey('POST') && message.isValid()) {
             log.error('Start 1')
 
@@ -49,6 +53,9 @@ class OrderController {
             render(text: 'OK')
             return
         }
+
+        log.error('POST: ' + message.containsKey('POST'))
+        log.error('isValid: ' + message.isValid())
 
         if (!message.containsKey('POST'))
             log.error('Received an post order with no key POST')
