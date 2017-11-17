@@ -62,24 +62,32 @@ class UserApiController {
             error = ERROR_OTHER
         }
         finally {
-	        String backUrl = params['back-url'].toString();
+            if (params['back-url']) {
+                String backUrl = params['back-url'].toString();
 
-	        // TODO: Old versions still send the absolute URL
-	        if (backUrl.startsWith('http')) {
-		        redirect(url: UriComponentsBuilder
-				        .fromHttpUrl(backUrl)
-				        .replaceQueryParam('e', error)
-				        .build()
-				        .toString())
-	        }
-	        else {
-		        redirect(url: UriComponentsBuilder
-				        .fromHttpUrl(Setting.getSetting(Setting.WEB_ADDRESS).value)
-				        .replacePath(backUrl)
-				        .replaceQueryParam('e', error)
-				        .build()
-				        .toString())
-	        }
+                // TODO: Old versions still send the absolute URL
+                if (backUrl.startsWith('http')) {
+                    redirect(url: UriComponentsBuilder
+                            .fromHttpUrl(backUrl)
+                            .replaceQueryParam('e', error)
+                            .build()
+                            .toString())
+                }
+                else {
+                    redirect(url: UriComponentsBuilder
+                            .fromHttpUrl(Setting.getSetting(Setting.WEB_ADDRESS).value)
+                            .replacePath(backUrl)
+                            .replaceQueryParam('e', error)
+                            .build()
+                            .toString())
+                }
+            }
+            else if (error == ERROR_NONE) {
+                render 'OK'
+            }
+            else {
+                response.sendError(400, error.toString())
+            }
         }
     }
 

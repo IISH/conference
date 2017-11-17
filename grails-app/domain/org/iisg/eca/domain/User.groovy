@@ -83,6 +83,7 @@ class User {
 					  dateTimesNotPresent: SessionDateTime,
 					  userPages          : UserPage,
 					  daysPresent        : ParticipantDay,
+					  reviews    		 : PaperReview,
 					  mergedWithUsers	 : User,
 
 					  sessionsAdded      		: Session,
@@ -138,6 +139,7 @@ class User {
         papers                  cascade: 'all-delete-orphan'
         sessionParticipants     cascade: 'all-delete-orphan'
         daysPresent             cascade: 'all-delete-orphan'
+		reviews					cascade: 'all-delete-orphan'
     }
 
     static constraints = {

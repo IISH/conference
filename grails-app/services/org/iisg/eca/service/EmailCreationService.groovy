@@ -1,5 +1,6 @@
 package org.iisg.eca.service
 
+import org.iisg.eca.domain.PaperReview
 import org.iisg.eca.domain.ParticipantDate
 import org.iisg.eca.domain.ParticipantState
 
@@ -172,6 +173,18 @@ class EmailCreationService {
 		}
 
 		return emails
+	}
+
+	/**
+	 * Creates an email that informs the user that he has been assigned to review a paper
+	 * @param paperReview The paper review
+	 * @return An email ready to be sent
+	 */
+	SentEmail createPaperReviewerEmail(PaperReview paperReview) {
+		SentEmail email = findAndCreateEmail(paperReview.reviewer, Setting.PAPER_REVIEWER_EMAIL_TEMPLATE_ID)
+		email.addAdditionalValue('PaperTitle', paperReview.paper.title)
+		email.addAdditionalValue('PaperId', paperReview.paper.id.toString())
+		return email
 	}
 
 	/**

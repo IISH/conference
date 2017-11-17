@@ -30,6 +30,7 @@ class Setting extends EventDomain {
 	static final String EMAIL_MAX_NUM_TRIES = 'email_max_num_tries'
 	static final String EMAIL_MIN_MINUTES_BETWEEN_SENDING = 'email_min_minutes_between_sending'
 	static final String EMAIL_WAITING_TIME = 'email_waiting_time'
+	static final String ENABLE_PAPER_REVIEWS = 'enable_paper_reviews'
 	static final String FINAL_REGISTRATION_LASTDATE = 'final_registration_lastdate'
 	static final String GENERAL_TERMS_CONDITIONS_LINK = 'general_terms_conditions_link'
 	static final String IP_AUTHENTICATION = 'ip_authentication'
@@ -73,6 +74,7 @@ class Setting extends EventDomain {
 	static final String SHOW_LOWER_FEE = 'show_lower_fee'
 	static final String SHOW_NETWORK = 'show_network'
 	static final String SHOW_ORGANIZER_REGISTRATION = 'show_organizer_registration'
+	static final String SHOW_PAPER_KEYWORDS = 'show_paper_keywords';
 	static final String SHOW_PAPER_TYPE_OF_CONTRIBUTION = 'show_paper_type_of_contribution'
 	static final String SHOW_PROGRAMME_ONLINE = 'show_programme_online'
 	static final String SHOW_REFUND_DIALOG = 'show_refund_dialog'
@@ -85,6 +87,7 @@ class Setting extends EventDomain {
 
 	// Required fields settings
 	static final String REQUIRED_CV = 'required_cv'
+	static final String REQUIRED_PAPER_UPLOAD = 'required_paper_upload'
 
 	// Layout settings
 	static final String BANNER_BG_IMG = 'banner_bg_img'
@@ -104,6 +107,7 @@ class Setting extends EventDomain {
 	static final String PRE_REGISTRATION_EMAIL_TEMPLATE_ID = 'pre_registration_email_template_id'
 	static final String SESSION_REGISTRATION_EMAIL_TEMPLATE_ID = 'session_registration_email_template_id'
 	static final String UPDATED_PASSWORD_EMAIL_TEMPLATE_ID = 'updated_password_email_template_id'
+	static final String PAPER_REVIEWER_EMAIL_TEMPLATE_ID = 'paper_reviewer_email_template_id'
 
 	// PayWay settings
 	static final String PAYWAY_ADDRESS = 'payway_address'

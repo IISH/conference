@@ -298,7 +298,8 @@ input[type="button"] {
 .form > div > .property-value, .property-list li > .property-value, .value {
     display: block;
     text-align: left;
-    margin: 0 0 0 26%;
+    margin: 0 0 0 25%;
+    padding-left: 20px;
     white-space: normal;
     word-wrap: break-word;
 }
@@ -308,7 +309,7 @@ input[type="button"] {
 }
 
 .column.form > div > .property-value {
-    margin: 0 0 0 36%;
+    margin: 0 0 0 33%;
 }
 
 ul input[type=text], ul input[type=password], ul input[type=number],
@@ -789,7 +790,7 @@ span.help-text {
 }
 
 #participant-form .property-value, #merge-columns .property-value {
-    margin-left: 35%;
+    margin-left: 33%;
 }
 
 #participant-form input, #participant-form select, #participant-form textarea {
@@ -802,7 +803,7 @@ span.help-text {
 }
 
 #papers-tab .column {
-    height: 850px;
+    height: 860px;
 }
 
 #sessions-tab .column {
@@ -876,7 +877,18 @@ span.help-text {
 }
 
 #refund-payment .property-value {
-    margin: 0 0 0 55%;
+    margin: 0 0 0 50%;
+}
+
+#paper-review input {
+    width: 50px;
+}
+
+span.avgReviewScore {
+    margin-left: 5px;
+    font-style: italic;
+    font-size: 8pt;
+    color: grey;
 }
 
 /* ROOMS */
@@ -1239,6 +1251,16 @@ table.payment-statistics tbody tr:hover {
 
 .ui-autocomplete-loading {
     background: url('[resource_dir]/spinner.gif') no-repeat right center;
+}
+
+/* DIALOG */
+
+.ui-dialog .ui-dialog-titlebar {
+    border: none;
+}
+
+.ui-dialog .ui-dialog-buttonpane {
+    border: none;
 }
 
 /* AJAX */

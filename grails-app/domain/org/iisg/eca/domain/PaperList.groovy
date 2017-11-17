@@ -10,9 +10,11 @@ class PaperList extends EventDateDomain {
     String title
     Network networkProposal
     String sessionProposal
+    BigDecimal avgReviewScore
 	boolean deleted = false
 
 	static belongsTo = [User, PaperState, Session, Network]
+    static hasMany = [reviews: PaperReview]
 
     static mapping = {
         table 'papers'
@@ -25,7 +27,10 @@ class PaperList extends EventDateDomain {
         title               column: 'title'
         networkProposal     column: 'network_proposal_id',  fetch: 'join'
         sessionProposal     column: 'session_proposal'
+        avgReviewScore		column: 'avg_review_score'
 	    deleted             column: 'deleted'
+
+        reviews             joinTable: [name: 'paper_reviews', key: 'paper_id'],    fetch: 'join'
     }
 
     static constraints = {
@@ -33,6 +38,7 @@ class PaperList extends EventDateDomain {
         title               blank: false,   maxSize: 500
         networkProposal     nullable: true
         sessionProposal     nullable: true, maxSize: 500
+        avgReviewScore		nullable: true
     }
 
 	static hibernateFilters = {

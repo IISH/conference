@@ -13,6 +13,9 @@ class Paper extends EventDateDomain {
     String coAuthors
     String abstr
 	String typeOfContribution
+	String keywords
+	String reviewComment
+	BigDecimal avgReviewScore
     String comment
     Network networkProposal
     String sessionProposal
@@ -27,7 +30,11 @@ class Paper extends EventDateDomain {
 	boolean deleted = false
 
 	static belongsTo = [User, PaperState, Session, Network]
-    static hasMany = [equipment: Equipment, sessionParticipantPapers: SessionParticipantPaper]
+    static hasMany = [
+			equipment: Equipment,
+			reviews: PaperReview,
+			sessionParticipantPapers: SessionParticipantPaper
+	]
 
     static mapping = {
         table 'papers'
@@ -41,6 +48,9 @@ class Paper extends EventDateDomain {
         coAuthors           column: 'co_authors'
         abstr               column: 'abstract',             type: 'text'
 		typeOfContribution	column: 'type_of_contribution'
+		keywords			column: 'keywords',				type: 'text'
+		reviewComment		column: 'review_comment',		type: 'text'
+		avgReviewScore		column: 'avg_review_score'
         comment             column: 'comment',              type: 'text'
         networkProposal     column: 'network_proposal_id',  fetch: 'join'
         sessionProposal     column: 'session_proposal'
@@ -55,6 +65,7 @@ class Paper extends EventDateDomain {
 	    deleted             column: 'deleted'
 
         equipment           		joinTable: 'paper_equipment'
+		reviews					    cascade: 'all-delete-orphan'
 		sessionParticipantPapers	cascade: 'none'
     }
 
@@ -64,6 +75,9 @@ class Paper extends EventDateDomain {
         coAuthors           nullable: true, maxSize: 500
         abstr               blank: false
 		typeOfContribution	nullable: true,	maxSize: 100
+		keywords			nullable: true
+		reviewComment		nullable: true
+		avgReviewScore		nullable: true
         comment             nullable: true
         networkProposal     nullable: true
         sessionProposal     nullable: true, maxSize: 500
@@ -92,6 +106,7 @@ class Paper extends EventDateDomain {
             'coAuthors',
             'abstr',
 			'typeOfContribution',
+			'keywords',
             'networkProposal.id',
             'sessionProposal',
             'proposalDescription',
@@ -100,6 +115,7 @@ class Paper extends EventDateDomain {
             'fileSize',
             'equipmentComment',
             'equipment.id',
+			'reviews.id',
 		    'addedBy.id'
     ]
 
@@ -108,6 +124,7 @@ class Paper extends EventDateDomain {
 			'coAuthors',
 			'abstr',
 			'typeOfContribution',
+			'keywords',
 			'sessionProposal',
 			'equipmentComment',
 			'user.id',
@@ -218,6 +235,22 @@ class Paper extends EventDateDomain {
 	 */
 	boolean hasEquipmentWithId(long equipmentId) {
 		return equipment?.find { it.id == equipmentId }
+	}
+
+	/**
+	 * Updates the average score for all reviews of this paper
+	 */
+	boolean updateAvgReviewScore() {
+		BigDecimal total = BigDecimal.ZERO
+		int count = 0
+		this.reviews.each { review ->
+			review.scores.each { score ->
+				total = total.add(score.score)
+				count++
+			}
+		}
+		this.avgReviewScore = (count > 0) ? total.divide(count, 1, RoundingMode.HALF_UP) : null
+		this.save()
 	}
 
     /**

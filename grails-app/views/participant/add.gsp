@@ -4,9 +4,9 @@
         <meta name="layout" content="main">
     </head>
     <body>
-        <g:hasErrors bean="${participant?.user}">
+        <g:hasErrors bean="${user}">
           <ul class="errors" role="alert">
-            <g:eachError bean="${participant?.user}" var="error">
+            <g:eachError bean="${user}" var="error">
               <li>
                 <g:message error="${error}" />
               </li>
@@ -23,6 +23,15 @@
                     </label>
                     <span class="property-value">
                         <input type="email" name="email" class="no-email-validation" required="required" value="${params.email}" />
+                    </span>
+                </div>
+                <div class="required">
+                    <label class="property-label">
+                        <g:message code="user.register.label" />
+                        <span class="required-indicator">*</span>
+                    </label>
+                    <span class="property-value">
+                        <g:checkBox name="participant" checked="${true}" />
                     </span>
                 </div>
             </fieldset>
