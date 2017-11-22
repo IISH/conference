@@ -125,12 +125,13 @@ class UserController {
 				        }
 			        }
 		        }
+
+                maxResults(15)
 		    }
 
 		    List users = queryTypeCriteriaBuilder.getUniqueResults()
 		    render users.collect { user ->
-		        [label: "${user[1]}, ${user[2]} (#${user[0]})", value: user[0]]
-                // [id: user[0], lastName: user[1], firstName: user[2], email: user[3]]
+                [id: user[0], lastName: user[1], firstName: user[2], email: user[3]]
 		    } as JSON
 		}
     }

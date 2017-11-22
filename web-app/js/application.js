@@ -80,24 +80,38 @@ var setDatePicker = function (element, increaseDay) {
 var addAutoComplete = function (element) {
 	// Have to use listener for auto complete added to dynamically added input boxes
 	$(element).on('focus', function () {
-		$(this).autocomplete({
-			minLength: 3,
-			source: function (request, response) {
-				var queryName = $(this.element).prevAll(".ac-query").val();
+		var elem = $(this);
+		if (elem.parent().hasClass('easy-autocomplete'))
+			return;
 
-				$.getJSON(guessUrl('user/usersAutoComplete'), {query: queryName, terms: request.term}, function (data) {
-					response(data);
-				});
-			},
-			search: function (event, ui) {
-				$(event.target).prevAll(".ac-value").val("");
-			},
-			select: function (event, ui) {
-				$(event.target).val(ui.item.label);
-				$(event.target).prevAll(".ac-value").val(ui.item.value);
-				return false;
+		elem.easyAutocomplete({
+            url: function (phrase) {
+                var queryName = elem.parent().prevAll(".ac-query").val();
+                return guessUrl('user/usersAutoComplete') + '?terms=' + phrase + '&query=' + queryName;
+            },
+            getValue: function (element) {
+                return element.lastName + ', ' + element.firstName;
+            },
+            template: {
+                type: 'custom',
+                method: function (value, item) {
+                    return value + ' <span class="ac-id">#' + item.id + '</span>' +
+						'<span class="ac-email">' + item.email + '</span>';
+                }
+            },
+			list: {
+                maxNumberOfElements: 15,
+                match: {
+                    enabled: true
+                },
+                onChooseEvent: function () {
+                    var id = elem.getSelectedItemData().id;
+                    elem.parent().prevAll(".ac-value").val(id);
+                }
 			}
 		});
+
+		elem.focus();
 	});
 };
 

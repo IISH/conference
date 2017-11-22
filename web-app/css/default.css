@@ -280,7 +280,6 @@ input[type="button"] {
     min-height: 22px;
     margin: 5px 0 0;
     line-height: 1.8;
-    overflow: hidden;
 }
 
 .form > div ul > li:first-child, .property-list li ul > li:first-child {
@@ -1251,6 +1250,24 @@ table.payment-statistics tbody tr:hover {
 
 .ui-autocomplete-loading {
     background: url('[resource_dir]/spinner.gif') no-repeat right center;
+}
+
+div.easy-autocomplete-container ul li, div.easy-autocomplete-container ul .eac-category {
+    width: 250px;
+    padding: 4px 8px;
+    min-height: 0;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.easy-autocomplete-container li .ac-id, .easy-autocomplete-container li .ac-email {
+    font-style: italic;
+    font-size: 8pt;
+    color: grey;
+}
+
+.easy-autocomplete-container li .ac-email {
+    display: block;
 }
 
 /* DIALOG */
