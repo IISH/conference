@@ -158,15 +158,10 @@ class Paper extends EventDateDomain {
 				this.session = session
 				break
 			case 'networkProposal.id':
-                log.warn("Setting network proposal for paper with name ${title} and id ${id}. Value is ${value} .")
 				Network networkProposal = (value.isLong()) ? Network.findById(value.toLong()) : null
 				if (networkProposal) {
 					this.networkProposal = networkProposal
-                    log.warn("Setting network proposal for paper with name ${title} and id ${id}. Network proposal is ${networkProposal} .")
 				}
-                else {
-                    log.warn("Setting network proposal for paper with name ${title} and id ${id}. Network appears to be null: ${networkProposal} .")
-                }
 				break
 			case 'addedBy.id':
 				User addedBy = (value.isLong()) ? User.findById(value.toLong()) : null

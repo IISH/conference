@@ -244,11 +244,19 @@ class ParticipantUpdateService {
 			else {
 				PaperReview paperReview = new PaperReview()
 				bindData(paperReview, params, [include: ['reviewer']], "PaperReview_${i}_${j}".toString())
-				paperReview.paper = paper
-				paper.addToReviews(paperReview)
 
-				SentEmail email = emailCreationService.createPaperReviewerEmail(paperReview)
-				emailService.sendEmail(email, true, true)
+				// Make sure the reviewer is not already added before and is not the paper author
+				PaperReview doublePaperReview = paper.reviews.find { it.reviewer.id == paperReview.reviewer.id }
+				if (doublePaperReview) {
+					toBeDeleted.remove(doublePaperReview)
+				}
+				else if (paperReview.reviewer.id != paper.user.id) {
+					paperReview.paper = paper
+					paper.addToReviews(paperReview)
+
+					SentEmail email = emailCreationService.createPaperReviewerEmail(paperReview)
+					emailService.sendEmail(email, true, true)
+				}
 			}
 
 			j++
