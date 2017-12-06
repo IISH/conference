@@ -28,6 +28,8 @@ class QueryTypeCriteriaBuilder {
 			'unconfirmedCashPayments'  : ['allUnconfirmedCashPayments', 'confirmedPayments'],
 			'unconfirmedBankPayments'  : ['allUnconfirmedBankPayments', 'confirmedPayments'],
 			'unconfirmedOnlinePayments': ['allUnconfirmedOnlinePayments', 'confirmedPayments'],
+			'noPaymentInfoFree'		   : ['noPaymentInfo', 'notFreeFeeAmount'],
+			'noPaymentInfoNotFree'     : ['noPaymentInfo', 'freeFeeAmount'],
 	]
 
 	public QueryTypeCriteriaBuilder(EventDate date) {

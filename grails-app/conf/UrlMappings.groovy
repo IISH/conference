@@ -31,11 +31,6 @@ class UrlMappings {
             controller = 'user'
         }
 
-        // Order is separate from an event
-        name order: "/order/$action" {
-            controller = 'order'
-        }
-
         // Creating a new event is separate from AN event
         name createEvent: "/event/create" {
             controller = 'event'

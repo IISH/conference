@@ -32,7 +32,7 @@
                             <g:message code="default.button.cancel.label" />
                         </eca:link>
                         <eca:link action="add">
-                            <g:message code="default.add.label" args="[g.message(code: 'participantDate.label')]" />
+                            <g:message code="default.add.label" args="[g.message(code: 'user.participant.label')]" />
                         </eca:link>
                         <input type="submit" value="${message(code: 'default.button.search.label')}" />
                     </fieldset>

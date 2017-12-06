@@ -687,9 +687,11 @@ class SessionController {
                         sessionsSameParticipant.sessionParticipants.each { SessionParticipant sessionParticipant ->
                             if (users.contains(sessionParticipant.user)) {
                                 SessionDateTime plannedDateTime = sessionParticipant.session.plannedDateTime
-                                Set<User> sameUsers = dateTimesSameParticipants.get(plannedDateTime, new HashSet<User>())
-                                sameUsers.add(sessionParticipant.user)
-                                dateTimesSameParticipants.put(plannedDateTime, sameUsers)
+                                if (plannedDateTime) {
+                                    Set<User> sameUsers = dateTimesSameParticipants.get(plannedDateTime, new HashSet<User>())
+                                    sameUsers.add(sessionParticipant.user)
+                                    dateTimesSameParticipants.put(plannedDateTime, sameUsers)
+                                }
                             }
                         }
                     }

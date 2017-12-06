@@ -16,14 +16,16 @@
             <g:layoutTitle default="${(curPage) ? curPage.getTitle(curLocale) : 'ECA'}" />
         </title>
 
-        <link rel="stylesheet" href="${eca.createLink(controller: 'css', action: 'css', noPreviousInfo: true)}" type="text/css">
         <link rel="stylesheet" href="${resource(dir: 'css', file: 'jquery-ui.css')}" type="text/css">
+        <link rel="stylesheet" href="${resource(dir: 'css', file: 'easy-autocomplete.css')}" type="text/css">
+        <link rel="stylesheet" href="${eca.createLink(controller: 'css', action: 'css', noPreviousInfo: true)}" type="text/css">
 
         <g:javascript library="jquery" plugin="jquery" />
         <r:layoutResources />
         <g:javascript src="jquery.cookie.js" />
         <g:javascript src="jquery.placeholder.js" />
         <g:javascript src="jquery-ui.js" />
+        <g:javascript src="jquery.easy-autocomplete.min.js" />
         <g:javascript src="application.js" />
 
         <g:layoutHead />
@@ -78,6 +80,14 @@
                     <g:if test="${curDate}">
                         <dt>Web</dt>
                         <dd><a target="_blank" href="${Setting.getSetting(Setting.WEB_ADDRESS, curDate?.event).value}">${curDate?.event?.shortName}</a></dd>
+
+                        <g:if test="${Setting.getSetting(Setting.ONLINE_PROGRAMME_URL, curDate?.event)?.value}">
+                            <dd>
+                                <a target="_blank" href="${Setting.getSetting(Setting.ONLINE_PROGRAMME_URL, curDate?.event).value}">
+                                    <g:message code="default.online.programme.label" />
+                                </a>
+                            </dd>
+                        </g:if>
 
                         <dd>&nbsp;</dd>
 

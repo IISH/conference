@@ -79,7 +79,7 @@ class EcaFilters {
          *  Lookup the event and event date for this request in the database
          *  If it is there, allow access and cache the event date information for this request
          */
-        eventDate(controller: '*', action: '*', controllerExclude: 'login|logout|order') {
+        eventDate(controller: '*', action: '*', controllerExclude: 'login|logout') {
             before = {
 				// Make sure old data is removed
 	            pageInformation.removeDate()
@@ -238,6 +238,7 @@ class EcaFilters {
                     // Add the pageInformation bean information to all models by default
                     model.put('curPage', pageInformation.page)
                     model.put('curDate', pageInformation.date)
+                    model.put('curPageId', pageInformation.sessionIdentifier)
 
                     // Also add current language information to the model
 	                model.put('curLocale', LocaleContextHolder.locale)

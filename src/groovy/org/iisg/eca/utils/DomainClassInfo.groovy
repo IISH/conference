@@ -65,6 +65,8 @@ class DomainClassInfo {
                 return (value.equals('1') || value.equalsIgnoreCase('true'))
             case 'date':
                 return value?.isLong() ? new Date(value.toLong() * 1000) : null
+            case 'bigDecimal':
+                return new BigDecimal(value);
 	        case 'string':
 		        if ((value == null) || value.trim().isEmpty()) {
 			        return this.propertyAllowsNull(property) ? null : ''

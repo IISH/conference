@@ -4,6 +4,7 @@ package org.iisg.eca.controller
  * Controller responsible for handling requests on settings
  */
 class SettingController {
+    def sessionFactory
 
     /**
      * Index action, redirects to the list action
@@ -24,5 +25,15 @@ class SettingController {
      */
     def edit() {
         forward(controller: 'dynamicPage', action: 'dynamic', params: params)
+    }
+
+    /**
+     * Clear all Hibernates caches
+     */
+    def clearCache() {
+        sessionFactory.cache.evictQueryRegions()
+        sessionFactory.cache.evictEntityRegions()
+        sessionFactory.cache.evictCollectionRegions()
+        render "Cache cleared."
     }
 }
