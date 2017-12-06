@@ -412,6 +412,10 @@ span.help-text {
     text-align: left;
 }
 
+.tbl_container tbody tr:nth-child(even) {
+    background-color: #f7f7f7;
+}
+
 .tbl_container tbody tr:hover {
     background-color: [main_color_bg];
     cursor: pointer;
@@ -459,6 +463,14 @@ span.help-text {
     color: [main_color_dark];
     font-weight: bold;
     text-align: right;
+}
+
+.tbl_container ul {
+    list-style: square;
+}
+
+.tbl_container li {
+    line-height: 1.5;
 }
 
 .asc_selected, .asc_unselected, .desc_selected, .desc_unselected {
@@ -652,6 +664,10 @@ span.help-text {
     background-color: #FFFFFF;
     box-shadow: 0 0 3px 1px [main_color_dark];
     position: absolute;
+}
+
+.menu ul {
+    list-style: none;
 }
 
 .menu li {

@@ -217,11 +217,11 @@ class Column extends ContainerElement {
     */
     List<Column> getColumnPath() {
         List<Element> path = this.path
-        path.grep { it instanceof Column }
+        path.grep { it instanceof Column } as List<Column>
     }
 
     String getFullName() {
-        getColumnPath().map { it.name }.join('.')
+        getColumnPath().collect { it.name }.join('.')
     }
 
     /**
@@ -230,5 +230,9 @@ class Column extends ContainerElement {
      */
     boolean canBeShown() {
         (!hasColumns() && (!constrainedProperty || constrainedProperty.display))
+    }
+
+    Column getParentColumn() {
+        (parent instanceof Column) ? parent : null
     }
 }

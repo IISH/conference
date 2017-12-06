@@ -185,11 +185,9 @@ class DynamicPageResults {
                             }
                         }
                         else if ((c.property.oneToMany || c.property.manyToMany) && c.filterColumn) {
-                            "${c.fullName}" {
-                                String[] filters = filter.split()
-                                filter = "%${filters.join('%')}%"
-                                like(c.filterColumn, filter)
-                            }
+                            String[] filters = filter.split()
+                            filter = "%${filters.join('%')}%"
+                            like("${c.fullName}.${c.filterColumn}", filter)
                         }
                     }
                     else if (c.filter) {
@@ -212,9 +210,7 @@ class DynamicPageResults {
 
                     // Figure out if we're filtering on a relationship to another domain class or not
                     if (c.property.otherSide instanceof GrailsDomainClassProperty && value) {
-                        "${c.fullName}" {
-                            eq("id", value.toLong())
-                        }
+                        eq("${c.fullName}.id", value.toLong())
                     }
                     else if (value) {
                         if (c.property.type == Boolean || c.property.type == boolean) {
@@ -236,24 +232,18 @@ class DynamicPageResults {
 
                 // Make sure that referenced domain classes also filter events, event dates and soft deletes
                 if (c.hasColumns() && pageInformation.date && EventDateDomain.class.isAssignableFrom(c.property.referencedDomainClass.clazz)) {
-                    "${c.fullName}" {
-                        eq('date.id', pageInformation.date.id)
-                    }
+                    eq("${c.fullName}.date.id", pageInformation.date.id)
                 }
                 if (c.hasColumns() && pageInformation.date && EventDomain.class.isAssignableFrom(c.property.referencedDomainClass.clazz)) {
-                    "${c.fullName}" {
-                        eq('event.id', pageInformation.date.event.id)
-                    }
+                    eq("${c.fullName}.event.id", pageInformation.date.event.id)
                 }
                 if (c.hasColumns() && c.property.referencedDomainClass.hasProperty('deleted')) {
-                    "${c.fullName}" {
-                        eq('deleted', false)
-                    }
+                    eq("${c.fullName}.deleted", false)
                 }
             }
             
             // Sort the columns
-            params["sort_${dataContainer.eid}"]?.split(';').each { sortInfo -> 
+            params["sort_${dataContainer.eid}"]?.split(';')?.each { sortInfo ->
                 sortInfo = sortInfo?.split(':')
                 Column column = dataContainer.getColumnInHierarchy(sortInfo[0]?.trim())
                 
@@ -263,14 +253,7 @@ class DynamicPageResults {
                 }
                 
                 if (column && (sort == "asc" || sort == "desc")) {
-                    if (column.parent instanceof Column) {
-                        "${column.parent.name}" {
-                            order(column.name, sort)
-                        }
-                    }
-                    else {
-                        order(column.name, sort)
-                    }
+                    order(column.fullName, sort)
                 }
             }
         }
