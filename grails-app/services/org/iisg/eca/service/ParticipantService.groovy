@@ -61,6 +61,15 @@ class ParticipantService {
                     String[] words = filter.split()
                     and {
                         switch (type) {
+                            case "id":
+                                for (String w : words) {
+                                    if (!w.isEmpty() && w.isLong()) {
+                                        or {
+                                            eq('id', w.toLong())
+                                        }
+                                    }
+                                }
+                                break
                             case "organisation":
                                 for (String w : words) {
                                     if (!w.isEmpty()) {
