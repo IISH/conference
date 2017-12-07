@@ -54,7 +54,7 @@ grails.project.dependency.resolution = {
 
     plugins {
         // plugins for the build system only
-        build ":tomcat:8.0.22" // or ":tomcat:7.0.55.3"
+        build ":tomcat:8.0.33" // or ":tomcat:7.0.55.3"
 
         // plugins for the compile step
         compile ":mail:1.0.7"
@@ -62,7 +62,7 @@ grails.project.dependency.resolution = {
         compile ":spring-security-core:2.0.0"
         compile ":spring-security-oauth2-provider:2.0-RC5"
         compile ":cache:1.1.8"
-        compile ":asset-pipeline:2.5.7"
+        compile ":asset-pipeline:2.14.1"
 
         // plugins needed at runtime but not for compilation
 	    runtime(":hibernate4:4.3.5.5") {
