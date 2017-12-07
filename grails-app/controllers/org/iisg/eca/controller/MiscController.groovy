@@ -553,5 +553,41 @@ class MiscController {
                 export:     true
         ])
     }
+
+    def favoriteSessions() {
+        Sql sql = new Sql(dataSource)
+        List<GroovyRowResult> result = sql.rows("""
+            SELECT session_code, session_name, count(*) AS aantal
+            FROM participant_favorite_session
+            INNER JOIN sessions ON participant_favorite_session.session_id = sessions.session_id
+            INNER JOIN participant_date ON participant_favorite_session.participant_date_id = participant_date.participant_date_id
+            WHERE sessions.session_state_id = 2
+            AND sessions.deleted = 0
+            AND participant_date.deleted = 0
+            AND participant_date.participant_state_id IN (0,1,2)
+            AND sessions.date_id = :dateId
+            GROUP BY sessions.date_id, session_code, session_name
+            ORDER BY sessions.date_id, count(*) DESC, session_code, session_name
+        """, [dateId: pageInformation.date.id])
+
+        List<String> columns = ['session_code', 'session_name', 'aantal'] as List<String>
+        List<String> headers = ["Session code", "Session name", "Times added as favorite"] as List<String>
+        String info = "Number of times sessions are added as a favorite session by participants"
+
+        // If an export of the results is requested, try to delegate the request to the export service
+        if (params.format) {
+            exportService.getSQLExport(params.format, response, columns, result, info, headers, params.sep)
+            return
+        }
+
+        render(view: "list", model: [
+                data      : result,
+                headers   : headers,
+                controller: "session",
+                action    : "show",
+                info      : info,
+                export    : true
+        ])
+    }
 }
 

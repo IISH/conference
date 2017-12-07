@@ -58,7 +58,6 @@
                                 <g:else>
                                     <td>
                                 </g:else>
-
                                     ${column}
                                 </td>
                             </g:each>
