@@ -1,4 +1,4 @@
-<%@ page import="org.iisg.eca.domain.PaperState" %>
+<%@ page import="org.iisg.eca.domain.Setting; org.iisg.eca.domain.PaperState" %>
 <!doctype html>
 <html>
     <head>
@@ -53,6 +53,17 @@
               <eca:formatText text="${eventSession.state}" />
             </span>
           </li>
+          <g:if test="${Setting.getSetting(Setting.SHOW_SESSION_TYPES, curDate?.event).value == '1'}">
+            <li>
+                <span id="type-label" class="property-label">
+                    <g:message code="session.type.label" />
+                </span>
+                <span class="property-value" arial-labelledby="type-label">
+                    <eca:formatText text="${eventSession.type}" />
+                    <eca:formatText text="${eventSession.differentType}" />
+                </span>
+            </li>
+          </g:if>
           <li>
             <span id="networks-label" class="property-label">
               <g:message code="network.multiple.label"  />

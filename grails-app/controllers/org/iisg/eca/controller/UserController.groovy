@@ -48,7 +48,8 @@ class UserController {
         }
         else if (request.post) {
             bindData(user, params, [include: ['title', 'firstName', 'lastName', 'gender', 'organisation', 'department',
-                    'email', 'address', 'city', 'country', 'phone', 'mobile', 'cv', 'extraInfo', 'emailDiscontinued']], "User")
+                    'education', 'email', 'address', 'city', 'country', 'phone', 'mobile', 'cv',
+                    'extraInfo', 'emailDiscontinued']], "User")
 
             if (!user.save(flush: true)) {
                 render(view: "edit", model: [user: user])
@@ -113,7 +114,7 @@ class UserController {
 		    QueryTypeCriteriaBuilder queryTypeCriteriaBuilder = new QueryTypeCriteriaBuilder(pageInformation.date, queryType)
 		    queryTypeCriteriaBuilder.setAdditionalCriteria {
 		        projections {
-			        distinct(['id', 'lastName', 'firstName'])
+			        distinct(['id', 'lastName', 'firstName', 'email'])
 		        }
 
 		        or {
@@ -124,11 +125,13 @@ class UserController {
 				        }
 			        }
 		        }
+
+                maxResults(15)
 		    }
 
 		    List users = queryTypeCriteriaBuilder.getUniqueResults()
 		    render users.collect { user ->
-		        [label: "${user[1]}, ${user[2]} (#${user[0]})", value: user[0]]
+                [id: user[0], lastName: user[1], firstName: user[2], email: user[3]]
 		    } as JSON
 		}
     }

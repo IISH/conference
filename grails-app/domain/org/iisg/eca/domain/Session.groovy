@@ -15,11 +15,13 @@ class Session extends EventDateDomain {
     String abstr
     String comment
     SessionState state
+    SessionType type
+    String differentType
     boolean mailSessionState = true
     User addedBy
 	boolean deleted = false
 
-    static belongsTo = [Network, SessionState, User, ParticipantDate]
+    static belongsTo = [Network, SessionState, SessionType, User, ParticipantDate]
     static hasMany = [  sessionParticipants: SessionParticipant,
                         papers: Paper,
                         sessionRoomDateTime: SessionRoomDateTime,
@@ -37,6 +39,8 @@ class Session extends EventDateDomain {
         abstr               column: 'session_abstract', type: 'text'
         comment             column: 'session_comment',  type: 'text'
         state               column: 'session_state_id'
+        type                column: 'session_type_id'
+        differentType       column: 'session_different_type'
         mailSessionState    column: 'mail_session_state'
         addedBy             column: 'added_by',         fetch: 'join'
 	    deleted             column: 'deleted'
@@ -48,11 +52,13 @@ class Session extends EventDateDomain {
     }
 
     static constraints = {
-        code        nullable: true, maxSize: 10
-        name        blank: false,   maxSize: 255
-        abstr       nullable: true
-        comment     nullable: true
-        addedBy     nullable: true
+        code            nullable: true, maxSize: 10
+        name            blank: false,   maxSize: 255
+        abstr           nullable: true
+        comment         nullable: true
+        type            nullable: true
+        differentType   nullable: true, maxSize: 50
+        addedBy         nullable: true
     }
 
     static apiActions = ['GET', 'POST', 'PUT', 'DELETE']
@@ -61,7 +67,9 @@ class Session extends EventDateDomain {
             'id',
             'name',
             'abstr',
+            'differentType',
             'state.id',
+            'type.id',
             'papers.id',
             'networks.id',
             'addedBy.id'
@@ -70,7 +78,9 @@ class Session extends EventDateDomain {
 	static apiPostPut = [
 			'name',
 			'abstr',
+            'differentType',
 			'state.id',
+            'type.id',
 			'networks.id',
 			'addedBy.id'
 	]
@@ -89,6 +99,9 @@ class Session extends EventDateDomain {
 					this.state = state
 				}
 				break
+            case 'type.id':
+                this.type = (value.isLong()) ? SessionType.get(value.toLong()) : null
+                break
 			case 'networks.id':
 				List<Network> networks = []
 				networks += this.networks

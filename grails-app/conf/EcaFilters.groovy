@@ -56,10 +56,10 @@ class EcaFilters {
         }
 
         /**
-         *  Every page (except login/logout/xhr) should be in the database, so lookup the page information from the database
+         *  Almost every page should be in the database, so lookup the page information from the database
          *  If it is there, cache the page information for this request
          */
-        page(controller: '*', action: '*', controllerExclude: 'ajax|api|css|login|logout') {
+        page(controller: '*', action: '*', controllerExclude: 'ajax|api|css|login|logout|order') {
             before = {
 	            // Make sure old data is removed
 	            pageInformation.removePage()
@@ -129,7 +129,7 @@ class EcaFilters {
         /**
          * The authorization filter
          */
-        authFilter(controller: '*', action: '*', controllerExclude: 'login|logout|css|api|userApi') {
+        authFilter(controller: '*', action: '*', controllerExclude: 'login|logout|css|api|userApi|order') {
             before = {
                 List<Role> rolesFullRights = Role.findAllByFullRights(true, [cache: true])
 				List<Role> rolesOnlyLastDate = Role.findAllByOnlyLastDate(true, [cache: true])
@@ -239,6 +239,7 @@ class EcaFilters {
                     // Add the pageInformation bean information to all models by default
                     model.put('curPage', pageInformation.page)
                     model.put('curDate', pageInformation.date)
+                    model.put('curPageId', pageInformation.sessionIdentifier)
 
                     // Also add current language information to the model
 	                model.put('curLocale', LocaleContextHolder.locale)

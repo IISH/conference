@@ -22,6 +22,8 @@ class User {
 	static final int USER_STATUS_DISABLED = 2
 	static final int USER_STATUS_DELETED = 3
 	static final int USER_STATUS_EMAIL_DISCONTINUED = 4
+	static final int USER_STATUS_PARTICIPANT_CANCELLED = 5
+	static final int USER_STATUS_PARTICIPANT_DOUBLE_ENTRY = 6
 	static final Pattern PASSWORD_PATTERN = Pattern.compile('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$')
 
 	/**
@@ -63,6 +65,7 @@ class User {
 	String mobile
 	String organisation
 	String department
+	String education
 	String cv
 	String extraInfo
 	Date dateAdded = new Date()
@@ -70,6 +73,7 @@ class User {
 	boolean enabled = true
 	boolean deleted = false
 	User addedBy
+	User mergedWith
 
 	static belongsTo = [Country, Group]
 	static hasMany = [groups             : Group,
@@ -82,7 +86,19 @@ class User {
 					  dateTimesNotPresent: SessionDateTime,
 					  userPages          : UserPage,
 					  daysPresent        : ParticipantDay,
-					  sessionsAdded      : Session]
+					  reviews    		 : PaperReview,
+					  mergedWithUsers	 : User,
+
+					  sessionsAdded      		: Session,
+					  papersAdded		 		: Paper,
+					  participantsAdded  		: ParticipantDate,
+					  sessionParticipantsAdded	: SessionParticipant,
+					  usersAdded				: User]
+
+	static mappedBy = [papers             : 'user', papersAdded: 'addedBy',
+					   participantDates   : 'user', participantsAdded: 'addedBy',
+					   sessionParticipants: 'user', sessionParticipantsAdded: 'addedBy',
+					   mergedWithUsers    : 'mergedWith', usersAdded: 'addedBy']
 
 	static mapping = {
 		table 'users'
@@ -110,6 +126,7 @@ class User {
         mobile                  column: 'mobile'
         organisation            column: 'organisation'
         department              column: 'department'
+		education				column: 'education'
         cv                      column: 'cv',           type: 'text'
         extraInfo               column: 'extra_info',   type: 'text'
         dateAdded               column: 'date_added'
@@ -117,6 +134,7 @@ class User {
 	    enabled                 column: 'enabled'
 	    deleted                 column: 'deleted'
 		addedBy                 column: 'added_by',     fetch: 'join'
+		mergedWith             	column: 'merged_with'
 
         groups                  joinTable: 'users_groups'
         dateTimesNotPresent     joinTable: 'participant_not_present'
@@ -124,6 +142,7 @@ class User {
         papers                  cascade: 'all-delete-orphan'
         sessionParticipants     cascade: 'all-delete-orphan'
         daysPresent             cascade: 'all-delete-orphan'
+		reviews					cascade: 'all-delete-orphan'
     }
 
     static constraints = {
@@ -146,9 +165,11 @@ class User {
         mobile                  maxSize: 50,    nullable: true
         organisation            maxSize: 255,   nullable: true
         department              maxSize: 255,   nullable: true
+		education				maxSize: 255,	nullable: true
         cv                                      nullable: true
         extraInfo                               nullable: true
 	    addedBy                                 nullable: true
+		mergedWith                              nullable: true
     }
 
     static apiActions = ['GET', 'POST', 'PUT']
@@ -168,6 +189,7 @@ class User {
 			'mobile',
 			'organisation',
 			'department',
+			'education',
 			'cv',
 			'extraInfo',
 			'papers.id',
@@ -187,6 +209,7 @@ class User {
 			'mobile',
 			'organisation',
 			'department',
+			'education',
 			'cv',
 			'country.id',
 			'daysPresent.day.id',
@@ -335,6 +358,38 @@ class User {
 			}
 		}
 
+		freeFeeAmount { date ->
+			allParticipantsSoftState(date)
+
+			participantDates {
+				feeState {
+					feeAmounts {
+						eq('date.id', date.id)
+						eq('feeAmount', BigDecimal.ZERO)
+					}
+
+					eq('date.id', date.id)
+					eq('deleted', false)
+				}
+			}
+		}
+
+		notFreeFeeAmount { date ->
+			allParticipantsSoftState(date)
+
+			participantDates {
+				feeState {
+					feeAmounts {
+						eq('date.id', date.id)
+						gt('feeAmount', BigDecimal.ZERO)
+					}
+
+					eq('date.id', date.id)
+					eq('deleted', false)
+				}
+			}
+		}
+
 		allSessionParticipants { date ->
 			allParticipants(date)
 
@@ -458,6 +513,17 @@ class User {
 			participantDates {
 				orders {
 					eq('payed', Order.ORDER_PAYED)
+				}
+			}
+		}
+
+		allUnconfirmedCashPayments { date ->
+			allParticipantsSoftState(date)
+
+			participantDates {
+				orders {
+					eq('paymentMethod', Order.ORDER_CASH_PAYMENT)
+					eq('payed', Order.ORDER_NOT_PAYED)
 				}
 			}
 		}
@@ -704,20 +770,23 @@ class User {
 	 * @return The status
 	 */
 	int getStatus() {
-		// The user is at least found
-		int status = USER_STATUS_FOUND
-
-		if (this.deleted) {
-			status = USER_STATUS_DELETED
+		ParticipantDate participant = getParticipantForDate(pageInformation.date)
+		if (this.deleted || (participant?.deleted)) {
+			return USER_STATUS_DELETED
 		}
-		else if (!this.enabled) {
-			status = USER_STATUS_DISABLED
+		if (!this.enabled) {
+			return USER_STATUS_DISABLED
 		}
-		else if (this.emailDiscontinued) {
-			status = USER_STATUS_EMAIL_DISCONTINUED
+		if (this.emailDiscontinued) {
+			return USER_STATUS_EMAIL_DISCONTINUED
 		}
-
-		return status
+		if (participant && (participant.stateId == ParticipantState.REMOVED_CANCELLED)) {
+			return USER_STATUS_PARTICIPANT_CANCELLED
+		}
+		if (participant && (participant.stateId == ParticipantState.REMOVED_DOUBLE_ENTRY)) {
+			return USER_STATUS_PARTICIPANT_DOUBLE_ENTRY
+		}
+		return USER_STATUS_FOUND
 	}
 
 	/**

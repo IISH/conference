@@ -77,7 +77,7 @@ class UserAuthController {
         if (request.post) {
             // Save all user related data
             bindData(user, params, [include: ['title', 'firstName', 'lastName', 'gender', 'organisation',
-                        'department', 'email', 'address', 'city', 'country', 'phone', 'mobile', 'cv', 
+                        'department', 'education', 'email', 'address', 'city', 'country', 'phone', 'mobile', 'cv',
                         'extraInfo', 'emailDiscontinued']], "User")
             user.save()
             
@@ -171,7 +171,7 @@ class UserAuthController {
         if (request.post) {
             // Save all user related data
             bindData(user, params, [include: ['title', 'firstName', 'lastName', 'gender', 'organisation',
-                        'department', 'email', 'address', 'city', 'country', 'phone', 'mobile', 'cv', 
+                        'department', 'education', 'email', 'address', 'city', 'country', 'phone', 'mobile', 'cv',
                         'extraInfo', 'emailDiscontinued']], "User")
                         
             if (mayAuthorizeUser) {

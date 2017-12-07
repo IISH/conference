@@ -168,6 +168,18 @@ $(document).ready(function () {
 		$('#edit-days').dialog('open');
 	});
 
+    $('.change-paper-review').click(function () {
+        var elem = $(this);
+        var dialog = $('#paper-review');
+        dialog.find('input,textarea').val('');
+        elem.closest('li').find('input').each(function () {
+			var name = $(this).attr('name').split('.')[1];
+            dialog.find('[name=' + name + ']').val($(this).val());
+            dialog.data('paper-review', elem.closest('li'));
+        });
+		dialog.dialog('open');
+    });
+
 	$('#edit-days').dialog({
 		autoOpen: false,
 		modal: true,
@@ -245,9 +257,9 @@ $(document).ready(function () {
 	$('#new-order').dialog({
 		autoOpen: false,
 		modal: true,
-		minWidth: 400,
+		minWidth: 410,
 		minHeight: 250,
-		width: 500,
+		width: 510,
 		height: 300,
 		title: "Create new order",
 		buttons: {
@@ -259,4 +271,34 @@ $(document).ready(function () {
 			}
 		}
 	});
+
+    $('#paper-review').dialog({
+        autoOpen: false,
+        modal: true,
+        minWidth: 400,
+        minHeight: 250,
+        width: 500,
+        height: 300,
+        title: "Paper review",
+        buttons: {
+            "Save": function () {
+                var dialog = $(this);
+                var paperReviewElem = dialog.data('paper-review');
+
+                var data = {};
+                dialog.find('input, textarea').each(function () {
+                	data[$(this).attr('name')] = $(this).val();
+                    paperReviewElem.find('input[name$=' + $(this).attr('name') + ']').val($(this).val());
+                });
+
+                ajaxCall(this, 'paper/updateReview', data, function (data) {
+                    paperReviewElem.find('.avg-score').text(data.avgScore);
+                    dialog.dialog("close");
+                });
+            },
+            Cancel: function () {
+                $(this).dialog("close");
+            }
+        }
+    });
 });

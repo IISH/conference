@@ -10,6 +10,7 @@ class SessionParticipant extends EventDateDomain {
 	User addedBy
 
     static belongsTo = [User, Session, ParticipantType]
+	static hasMany = [sessionParticipantPapers: SessionParticipantPaper]
 
     static mapping = {
         table 'session_participant'
@@ -21,7 +22,9 @@ class SessionParticipant extends EventDateDomain {
         session column: 'session_id',           fetch: 'join'
         type    column: 'participant_type_id',  fetch: 'join'
 	    addedBy column: 'added_by',             fetch: 'join'
-    }
+
+		sessionParticipantPapers cascade: 'none'
+	}
 
 	static constraints = {
 		addedBy nullable: true

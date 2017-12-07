@@ -1,5 +1,7 @@
 package org.iisg.eca.service
 
+import org.iisg.eca.domain.Setting
+
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
@@ -220,7 +222,12 @@ class BookExportService {
      */
     private void forEachSession(Session session, Room room, SessionDateTime sdt, MarkupBuilder builder) {
         builder.session {
+            builder.sessioncode(session.code)
             builder.sessionname(session.name)
+
+            if (Setting.getSetting(Setting.SHOW_SESSION_ABSTRACT_EXPORT).booleanValue) {
+                builder.sessionabstract(session.abstr)
+            }
 
             builder.location {
                 builder.code("${room.roomNumber}-${sdt.indexNumber}")
@@ -262,7 +269,11 @@ class BookExportService {
                 if (type.id != ParticipantType.CO_AUTHOR) {
                     builder."${type.type.toLowerCase()}s" {
                         users.each { user ->
-                            builder."${type.type.toLowerCase()}name"("$user.firstName $user.lastName")
+                            builder."${type.type.toLowerCase()}name"("$user.firstName $user.lastName") // DEPRECATED
+                            builder."${type.type.toLowerCase()}" {
+                                builder.name("$user.firstName $user.lastName")
+                                builder.organisation("$user.organisation")
+                            }
                         }
                     }
                 }
@@ -286,6 +297,7 @@ class BookExportService {
 
                     builder.paper {
                         builder.presenter("$user.firstName $user.lastName")
+                        builder.organisation("$user.organisation")
                         builder.copresenters(paper.coAuthors)
                         builder.subject(paper.title)
 	                    builder.abstract(paper.abstr)

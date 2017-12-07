@@ -2,6 +2,12 @@ package org.iisg.eca.service
 
 import org.iisg.eca.domain.Day
 import org.iisg.eca.domain.Extra
+import org.iisg.eca.domain.Network
+import org.iisg.eca.domain.Paper
+import org.iisg.eca.domain.ParticipantDate
+import org.iisg.eca.domain.ParticipantState
+import org.iisg.eca.domain.Session
+import org.iisg.eca.domain.SessionParticipant
 import org.iisg.eca.domain.User
 
 import org.iisg.eca.export.Export
@@ -18,7 +24,7 @@ import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 class MiscExportService {
 	public static final int BADGES_PAYED = 0
 	public static final int BADGES_NOT_PAYED = 1
-	public static final int BADGES_UNCONFIRMED_BANK_TRANSFER = 2
+	public static final int BADGES_UNCONFIRMED = 2
 
 	def dataSource
 	def messageSource
@@ -72,13 +78,15 @@ class MiscExportService {
 				title = messageSource.getMessage('participantDate.badges.payed.label', null, LocaleContextHolder.locale)
 				break
 			case BADGES_NOT_PAYED:
-				sqlQuery = sqlQuery.replace('extraCriteria', 'AND ((o.payed <> 1 AND o.payment_method <> 1) ' +
-						'OR pd.payment_id IS NULL) ' +
+				sqlQuery = sqlQuery.replace('extraCriteria',
+						'AND ((o.payed <> 1 AND o.payment_method <> 1) OR pd.payment_id IS NULL) ' +
 						'AND pd.participant_state_id IN (1,2)')
 				title = messageSource.getMessage('participantDate.badges.not.payed.label', null, LocaleContextHolder.locale)
 				break
-			case BADGES_UNCONFIRMED_BANK_TRANSFER:
-				sqlQuery = sqlQuery.replace('extraCriteria', 'AND o.payed <> 1 AND o.payment_method = 1 ' +
+			case BADGES_UNCONFIRMED:
+				sqlQuery = sqlQuery.replace('extraCriteria',
+						'AND o.payed <> 1 ' +
+						'AND (o.payment_method = 1 OR o.payment_method = 2) ' +
 						'AND pd.participant_state_id IN (1,2)')
 				title = messageSource.getMessage('participantDate.badges.unconfirmed.label', null, LocaleContextHolder.locale)
 				break
@@ -174,6 +182,180 @@ class MiscExportService {
 					 messageSource.getMessage('user.department.label', null, LocaleContextHolder.locale),
 					 messageSource.getMessage('user.country.label', null, LocaleContextHolder.locale)
 				]
+		)
+	}
+
+	/**
+	 * Creates an export of (accepted) participants in a network set by the user
+	 * @param network The network
+	 * @param title The title
+	 * @param columnNames The column names
+	 * @return An Excel export of all matching participants
+	 */
+	XlsMapExport getParticipantsInNetworkExport(Network network, String title, List<String> columnNames) {
+		return new XlsMapExport(
+				['network', 'lastname', 'firstname', 'email'],
+				network.allUsersInNetwork.collect {
+					['network'  : network.name,
+					 'lastname' : it.lastName,
+					 'firstname': it.firstName,
+					 'email'    : it.emailDiscontinued ? null : it.email]
+				},
+				title,
+				columnNames
+		)
+	}
+
+	/**
+	 * Creates an export of accepted users, sessions and papers in a network set by the user
+	 * @param network The network
+	 * @param title The title
+	 * @param columnNames The column names
+	 * @return An Excel export of all matching participants
+	 */
+	XlsMapExport getSessionPapersInNetworkExport(Network network, String title, List<String> columnNames) {
+		List usersSessionsPapers = ParticipantDate.executeQuery('''
+				SELECT DISTINCT u, s, p
+                FROM ParticipantDate AS pd
+                INNER JOIN pd.user AS u
+                INNER JOIN u.sessionParticipants AS sp
+                INNER JOIN sp.session AS s
+                INNER JOIN s.networks AS n
+                LEFT JOIN sp.sessionParticipantPapers AS spp
+                LEFT JOIN spp.paper AS p
+                WHERE u.deleted = false
+                AND s.deleted = false
+                AND s.date.id = :dateId
+                AND n.id = :networkId
+                AND pd.state.id IN (:newParticipant, :dataChecked, :participant, :notFinished)
+                ORDER BY s.name ASC, u.lastName ASC, u.firstName ASC
+			''', ['dateId'         : pageInformation.date.id,
+				  'networkId'      : network.id,
+				  'newParticipant' : ParticipantState.NEW_PARTICIPANT,
+				  'dataChecked'    : ParticipantState.PARTICIPANT_DATA_CHECKED,
+				  'participant'    : ParticipantState.PARTICIPANT,
+				  'notFinished'    : ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
+
+		return new XlsMapExport(
+				['network', 'lastname', 'firstname', 'email', 'session', 'sessionstate', 'roles',
+				 'papertitle', 'paperstate', 'paperabstract'],
+				usersSessionsPapers.collect { userSessionPaper ->
+					User user = userSessionPaper[0] as User
+					Session session = userSessionPaper[1] as Session
+					Paper paper = userSessionPaper[2] as Paper
+
+					return ['network'      : network.name,
+							'lastname'     : user.lastName,
+							'firstname'    : user.firstName,
+							'email'        : user.emailDiscontinued ? null : user.email,
+							'session'      : session.name,
+							'sessionstate' : session.state.description,
+							'roles'        : SessionParticipant.findAllByUserAndSession(user, session)*.type.join(', '),
+							'papertitle'   : paper?.title,
+							'paperabstract': paper?.abstr,
+							'paperstate'   : paper?.state?.description]
+				},
+				title,
+				columnNames
+		)
+	}
+
+	/**
+	 * Creates an export of accepted users, sessions and papers in a network set by the user
+	 * @param network The network
+	 * @param title The title
+	 * @param columnNames The column names
+	 * @return An Excel export of all matching participants
+	 */
+	XlsMapExport getSessionPapersInNetworkAcceptedExport(Network network, String title, List<String> columnNames) {
+		List usersSessionsPapers = ParticipantDate.executeQuery('''
+				SELECT DISTINCT u, s, p
+                FROM ParticipantDate AS pd
+                INNER JOIN pd.user AS u
+                INNER JOIN u.sessionParticipants AS sp
+                INNER JOIN sp.session AS s
+                INNER JOIN s.networks AS n
+			 	LEFT JOIN sp.sessionParticipantPapers AS spp
+                LEFT JOIN spp.paper AS p
+                WHERE u.deleted = false
+                AND s.deleted = false
+                AND s.date.id = :dateId
+                AND n.id = :networkId
+                AND pd.state.id IN (:dataChecked, :participant)
+                ORDER BY s.name ASC, u.lastName ASC, u.firstName ASC
+			''', ['dateId'         : pageInformation.date.id,
+				  'networkId'      : network.id,
+				  'dataChecked'    : ParticipantState.PARTICIPANT_DATA_CHECKED,
+				  'participant'    : ParticipantState.PARTICIPANT])
+
+		return new XlsMapExport(
+				['network', 'lastname', 'firstname', 'email', 'session', 'sessionstate', 'roles',
+				 'papertitle', 'paperstate', 'paperabstract'],
+				usersSessionsPapers.collect { userSessionPaper ->
+					User user = userSessionPaper[0] as User
+					Session session = userSessionPaper[1] as Session
+					Paper paper = userSessionPaper[2] as Paper
+
+					return ['network'     : network.name,
+							'lastname'    : user.lastName,
+							'firstname'   : user.firstName,
+							'email'        : user.emailDiscontinued ? null : user.email,
+							'session'     : session.name,
+							'sessionstate': session.state.description,
+							'roles'       : SessionParticipant.findAllByUserAndSession(user, session)*.type.join(', '),
+							'papertitle'  : paper?.title, 'paperabstract': paper?.abstr,
+							'paperstate'  : paper?.state?.description]
+				},
+				title,
+				columnNames
+		)
+	}
+
+	/**
+	 * Creates an export of papers without a session in a network set by the user
+	 * @param network The network
+	 * @param title The title
+	 * @param columnNames The column names
+	 * @return An Excel export of all matching participants
+	 */
+	XlsMapExport getIndividualPapersInNetworkExport(Network network, String title, List<String> columnNames) {
+		List usersPapers = ParticipantDate.executeQuery('''
+				SELECT DISTINCT u, p
+                FROM ParticipantDate AS pd
+				INNER JOIN pd.user AS u
+				INNER JOIN u.papers AS p
+                WHERE u.deleted = false
+				AND p.networkProposal.id = :networkId
+				AND pd.state.id IN (:newParticipant, :dataChecked, :participant, :notFinished)
+				AND p.session.id IS NULL
+				AND p.deleted = false
+				AND p.date.id = :dateId
+				AND u.deleted = false
+				AND pd.deleted = false
+                ORDER BY u.lastName ASC, u.firstName ASC
+			''', ['dateId'         : pageInformation.date.id,
+				  'networkId'      : network.id,
+				  'newParticipant' : ParticipantState.NEW_PARTICIPANT,
+				  'dataChecked'    : ParticipantState.PARTICIPANT_DATA_CHECKED,
+				  'participant'    : ParticipantState.PARTICIPANT,
+				  'notFinished'    : ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
+
+		return new XlsMapExport(
+				['network', 'lastname', 'firstname', 'email', 'papertitle', 'paperstate', 'paperabstract'],
+				usersPapers.collect { userAndPaper ->
+					User user = userAndPaper[0] as User
+					Paper paper = userAndPaper[1] as Paper
+
+					return ['network'      : network.name,
+							'lastname'     : user.lastName,
+							'firstname'    : user.firstName,
+							'email'        : user.emailDiscontinued ? null : user.email,
+							'papertitle'   : paper.title,
+							'paperabstract': paper.abstr,
+							'paperstate'   : paper.state.description]
+				},
+				title,
+				columnNames
 		)
 	}
 

@@ -13,6 +13,7 @@ class ParticipantDate extends EventDateDomain {
     FeeState feeState
     Long paymentId
     Date dateAdded = new Date()
+    AgeRange ageRange
     boolean invitationLetter = false
     boolean invitationLetterSent = false
     boolean lowerFeeRequested = false
@@ -28,7 +29,7 @@ class ParticipantDate extends EventDateDomain {
 	User addedBy
 	boolean deleted = false
 
-    static belongsTo = [User, ParticipantState, FeeState]
+    static belongsTo = [User, ParticipantState, FeeState, AgeRange]
 	static hasMany = [  extras: Extra,
 	                    participantVolunteering: ParticipantVolunteering,
 	                    orders: Order,
@@ -46,6 +47,7 @@ class ParticipantDate extends EventDateDomain {
         feeState                column: 'fee_state_id',         fetch: 'join'
         paymentId               column: 'payment_id'
         dateAdded               column: 'date_added'
+        ageRange                column: 'age_range_id',         fetch: 'join'
         invitationLetter        column: 'invitation_letter'
         invitationLetterSent    column: 'invitation_letter_sent'
         lowerFeeRequested       column: 'lower_fee_requested'
@@ -71,6 +73,7 @@ class ParticipantDate extends EventDateDomain {
 
     static constraints = {
         paymentId       nullable: true
+        ageRange        nullable: true
         lowerFeeText    nullable: true, maxSize: 255
         extraInfo       nullable: true
 	    addedBy         nullable: true
@@ -84,6 +87,7 @@ class ParticipantDate extends EventDateDomain {
             'state.id',
             'feeState.id',
             'paymentId',
+            'ageRange.id',
             'invitationLetter',
             'lowerFeeRequested',
             'lowerFeeText',
@@ -99,6 +103,7 @@ class ParticipantDate extends EventDateDomain {
 
     static apiPostPut = [
 		    'paymentId',
+            'ageRange.id',
 		    'invitationLetter',
 		    'lowerFeeRequested',
 		    'student',
@@ -168,6 +173,9 @@ class ParticipantDate extends EventDateDomain {
 			        this.user = user
 		        }
 		        break
+            case 'ageRange.id':
+                this.ageRange = (value.isLong()) ? AgeRange.findById(value.toLong()) : null
+                break
 	        case 'addedBy.id':
 		        User addedBy = (value.isLong()) ? User.findById(value.toLong()) : null
 		        if (addedBy) {

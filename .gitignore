@@ -46,3 +46,4 @@
 *.class
 *.iml
 *.ipr
+.slcache

@@ -27,13 +27,6 @@ class ParticipantController {
 		redirect(uri: eca.createLink(action: 'list', noBase: true, noPreviousInfo: true, params: params))
 	}
 
-    /**
-     * Shows a list of all papers for the current event date
-     */
-    def papers() {
-        forward(controller: 'dynamicPage', action: 'dynamic', params: params)
-    }
-
 	/**
 	 * Shows all invitations requests made by participants
 	 */
@@ -90,7 +83,7 @@ class ParticipantController {
 	}
 
 	/**
-	 * Add a new participant to the current event date
+	 * Add a new user and/or participant to the current event date
 	 */
 	def add() {
 		if (request.post) {
@@ -102,28 +95,29 @@ class ParticipantController {
 			}
 
 			String email = params.email.toString().trim()
+			boolean registerParticipant = params.participant
+
 			User user = User.findByEmail(email)
 			ParticipantDate participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
 
-			if (participant) {
+			if (user && (!registerParticipant || (registerParticipant && participant))) {
 				flash.message = g.message(code: 'default.exists.message',
-						args: [user.toString(), g.message(code: 'participantDate.label')])
+						args: [user.toString(), g.message(code: 'user.label')])
 				redirect(uri: eca.createLink(action: 'show', id: user.id, noBase: true))
 				return
 			}
 
-			// Participant is not found, so create one
-			participant = participantService.createNewParticipant(email)
-			user = participant.user
+			// User and/or participant is not found, so create one
+			user = participantService.createNewUser(email, registerParticipant)
 
-			if (user.save() && participant.save()) {
+			if (user.save()) {
 				flash.message = g.message(code: 'default.created.message',
-						args: [g.message(code: 'participantDate.label'), participant.toString()])
-				redirect(uri: eca.createLink(action: 'show', id: participant.user.id, noBase: true))
+						args: [g.message(code: 'user.label'), user.toString()])
+				redirect(uri: eca.createLink(action: 'show', id: user.id, noBase: true))
 				return
 			}
 
-			return [participant: participant]
+			return [user: user]
 		}
 	}
 
@@ -324,6 +318,43 @@ class ParticipantController {
 	}
 
 	/**
+	 * Merges two users
+	 */
+	def merge() {
+		if (params.id && params.user) {
+			User userA = User.get(params.id)
+			User userB = User.get(params.user)
+
+			if (userA && userB) {
+				if (request.get) {
+					render(view: "merge", model: [userA: userA, userB: userB])
+					return
+				}
+				else {
+					if (participantService.mergeParticipantUsers(userA, userB)) {
+						flash.message = g.message(code: 'default.merge.success.message')
+					}
+					else {
+						flash.error = true
+						flash.message = g.message(code: 'default.merge.fail.message')
+					}
+
+					redirect(uri: eca.createLink(previous: true, noBase: true))
+					return
+				}
+			}
+
+			flash.error = true
+			flash.message = g.message(code: 'default.not.found.message', args: [g.message(code: 'user.label')])
+			redirect(uri: eca.createLink(previous: true, noBase: true))
+		}
+
+		flash.error = true
+		flash.message = g.message(code: 'default.no.id.message')
+		redirect(uri: eca.createLink(previous: true, noBase: true))
+	}
+
+	/**
 	 * Tries to remove the uploaded paper
 	 * (AJAX call)
 	 */
@@ -343,45 +374,6 @@ class ParticipantController {
 			// That's it
 			Map returnMap = [success: true]
 			render returnMap as JSON
-		}
-	}
-
-	/**
-	 * Change the paper state of the given paper
-	 * (AJAX call)
-	 */
-	def changePaperState() {
-		// If this is an AJAX call, continue
-		if (request.xhr) {
-			Map responseMap = null
-
-			// If we have a paper id and state id, try to find the records for these ids
-			if (params.paper_id?.isLong() && params.state_id?.isLong()) {
-				Paper paper = Paper.findById(params.paper_id)
-				PaperState state = PaperState.findById(params.state_id)
-
-				// Change the paper state if they both exist
-				if (paper && state) {
-					paper.state = state
-
-					// Save the paper
-					if (paper.save(flush: true)) {
-						// Everything is fine
-						responseMap = [success: true, paper: "${g.message(code: 'paper.label')}: ${paper.toString()} (${state.toString()})"]
-					}
-					else {
-						responseMap = [success: false, message: paper.errors.allErrors.collect { g.message(error: it) }]
-					}
-				}
-			}
-
-			// If there is no responseMap defined yet, it can only mean the paper or state could not be found
-			if (!responseMap) {
-				responseMap = [success: false, message: g.message(code: 'default.not.found.message',
-						args: ["${g.message(code: 'paper.label')}, ${g.message(code: 'paper.state.label')}"])]
-			}
-
-			render responseMap as JSON
 		}
 	}
 

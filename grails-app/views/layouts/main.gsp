@@ -1,4 +1,4 @@
-<%@ page import="org.springframework.context.i18n.LocaleContextHolder; java.text.SimpleDateFormat; org.iisg.eca.domain.Setting; org.springframework.validation.FieldError" %>
+<%@ page import="org.springframework.context.i18n.LocaleContextHolder; java.text.SimpleDateFormat; org.iisg.eca.domain.Setting;org.springframework.validation.FieldError" %>
 <!doctype html>
 <html lang="en">
     <head>
@@ -17,6 +17,7 @@
         </title>
 
         <link rel="stylesheet" href="${eca.createLink(controller: 'css', action: 'css', noPreviousInfo: true)}" type="text/css">
+        <asset:stylesheet src="easy-autocomplete.css"/>
         <asset:stylesheet src="jquery-ui.css"/>
 
         <asset:javascript src="application.js" />
@@ -73,6 +74,14 @@
                     <g:if test="${curDate}">
                         <dt>Web</dt>
                         <dd><a target="_blank" href="${Setting.getSetting(Setting.WEB_ADDRESS, curDate?.event).value}">${curDate?.event?.shortName}</a></dd>
+
+                        <g:if test="${Setting.getSetting(Setting.ONLINE_PROGRAMME_URL, curDate?.event)?.value}">
+                            <dd>
+                                <a target="_blank" href="${Setting.getSetting(Setting.ONLINE_PROGRAMME_URL, curDate?.event).value}">
+                                    <g:message code="default.online.programme.label" />
+                                </a>
+                            </dd>
+                        </g:if>
 
                         <dd>&nbsp;</dd>
 

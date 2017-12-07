@@ -1,3 +1,4 @@
+<%@ page import="org.iisg.eca.domain.Setting" %>
 <!doctype html>
 <html>
     <head>
@@ -52,14 +53,26 @@
                     <g:fieldValue bean="${user}" field="organisation"/>
                 </span>
             </li>
-            <li>
-                <span id="department-label" class="property-label">
-                    <g:message code="user.department.label" />
-                </span>
-                <span class="property-value" aria-labelledby="department-label">
-                    <g:fieldValue bean="${user}" field="department"/>
-                </span>
-            </li>
+            <g:if test="${Setting.getSetting(Setting.SHOW_DEPARTMENT).booleanValue}">
+                <li>
+                    <span id="department-label" class="property-label">
+                        <g:message code="user.department.label" />
+                    </span>
+                    <span class="property-value" aria-labelledby="department-label">
+                        <g:fieldValue bean="${user}" field="department"/>
+                    </span>
+                </li>
+            </g:if>
+            <g:if test="${Setting.getSetting(Setting.SHOW_EDUCATION).booleanValue}">
+                <li>
+                    <span id="education-label" class="property-label">
+                        <g:message code="user.education.label" />
+                    </span>
+                    <span class="property-value" aria-labelledby="education-label">
+                        <g:fieldValue bean="${user}" field="education"/>
+                    </span>
+                </li>
+            </g:if>
             <li>
                 <span id="email-label" class="property-label">
                     <g:message code="user.email.label" />

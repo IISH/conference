@@ -30,7 +30,7 @@ class UrlMappings {
         name user: "/user/$action" {
             controller = 'user'
         }
-        
+
         // Creating a new event is separate from AN event
         name createEvent: "/event/create" {
             controller = 'event'

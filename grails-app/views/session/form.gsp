@@ -71,6 +71,17 @@
                         <g:select from="${sessionStates}" name="Session.state.id" optionKey="id" optionValue="description" value="${eventSession.state.id}" />
                     </span>
                 </div>
+                <g:if test="${Setting.getSetting(Setting.SHOW_SESSION_TYPES, curDate?.event).value == '1'}">
+                    <div class="${hasErrors(bean: eventSession, field: 'type', 'error')}">
+                        <label class="property-label">
+                            <g:message code="session.type.label" />
+                        </label>
+                        <span class="property-value">
+                            <g:select from="${sessionTypes}" name="Session.type.id" optionKey="id" optionValue="type" value="${eventSession.type?.id}" noSelection="${['': ' ']}" />
+                            <input type="text" name="Session.differentType" value="${fieldValue(bean: eventSession, field: 'differentType')}" />
+                        </span>
+                    </div>
+                </g:if>
                 <div>
                     <label class="property-label">                      
                         <g:message code="network.multiple.label" />                        

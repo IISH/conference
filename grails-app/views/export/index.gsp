@@ -1,4 +1,4 @@
-<%@ page import="org.iisg.eca.domain.FeeState" %>
+<%@ page import="org.iisg.eca.domain.Network; org.iisg.eca.domain.FeeState" %>
 <!doctype html>
 <html>
     <head>
@@ -47,6 +47,24 @@
                     </li>
                 </ol>
             </li>
+
+            <li>
+                <h3>Network export</h3>
+                <ol>
+                    <li>
+                        <a href="#" class="network-export-open" data-submit="participantsInNetwork">Create Excel Export of participants in a network</a>
+                    </li>
+                    <li>
+                        <a href="#" class="network-export-open" data-submit="sessionPapersInNetwork">Create Excel Export of session papers in a network</a>
+                    </li>
+                    <li>
+                        <a href="#" class="network-export-open" data-submit="sessionPapersInNetworkAccepted">Create Excel Export of accepted session papers in a network</a>
+                    </li>
+                    <li>
+                        <a href="#" class="network-export-open" data-submit="individualPapersInNetwork">Create Excel Export of individual paper proposals in a network</a>
+                    </li>
+                </ol>
+            </li>
         </ul>
 
         <div id="participants-export-dialog">
@@ -58,6 +76,24 @@
                         </label>
                         <span class="property-value">
                             <g:select name="feeStateId" from="${FeeState.sortedFeeStates.list()}" optionKey="id" optionValue="name" noSelection="${['null': 'Filter on fee state']}" />
+                        </span>
+                    </div>
+                </fieldset>
+                <fieldset class="buttons">
+                    <input type="submit" name="export" value="${g.message(code: 'default.export.menu.label')}" />
+                </fieldset>
+            </form>
+        </div>
+
+        <div id="network-export-dialog">
+            <form method="post" action="">
+                <fieldset class="form dialog">
+                    <div>
+                        <label class="property-label">
+                            <g:message code="network.label" />
+                        </label>
+                        <span class="property-value">
+                            <g:select name="networkId" from="${Network.where { showOnline == true }}" optionKey="id" optionValue="name" />
                         </span>
                     </div>
                 </fieldset>
