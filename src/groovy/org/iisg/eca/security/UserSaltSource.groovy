@@ -38,10 +38,10 @@ class UserSaltSource extends ReflectionSaltSource {
      */
     private static Object createSalt(String userSalt) {
         String staticSalt
-        //Setting.withNewSession {
+        Setting.withNewSession {
             // Get the static salt from the settings table
             staticSalt = Setting.getSetting(Setting.SALT).value
-        //}
+        }
         staticSalt + userSalt
     }
 }

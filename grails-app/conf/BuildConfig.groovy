@@ -65,7 +65,7 @@ grails.project.dependency.resolution = {
         compile ":asset-pipeline:2.14.1"
 
         // plugins needed at runtime but not for compilation
-	    runtime(":hibernate4:4.3.5.5") {
+	    runtime(":hibernate4:4.3.10") {
             excludes 'ehcache-core'
         }
         runtime ":jquery:1.11.1"

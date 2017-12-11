@@ -30,10 +30,6 @@ class PaperReview extends EventDateDomain {
         avgScore nullable: true
     }
 
-    static hibernateFilters = {
-        dateFilter(condition: '(date_id = :dateId OR date_id IS NULL)', types: 'long')
-    }
-
     static apiActions = ['GET', 'POST']
 
     static apiAllowed = [

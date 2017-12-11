@@ -1,12 +1,15 @@
 package org.iisg.eca.domain
 
+import org.iisg.eca.filter.SoftDelete
+
 /**
  * Domain class of table holding all possible review criteria
  */
+@SoftDelete
 class ReviewCriteria extends EventDateDomain {
     String name
     int sortOrder = 0
-    boolean deleted
+    boolean deleted = false
 
     static hasMany = [scores: PaperReviewScore]
 
@@ -23,11 +26,6 @@ class ReviewCriteria extends EventDateDomain {
 
     static constraints = {
         name blank: false, maxSize: 30
-    }
-
-    static hibernateFilters = {
-        dateFilter(condition: '(date_id = :dateId OR date_id IS NULL)', types: 'long')
-        hideDeleted(condition: 'deleted = 0', default: true)
     }
 
     static apiActions = ['GET']

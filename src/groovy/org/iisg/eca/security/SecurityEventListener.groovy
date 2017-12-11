@@ -19,10 +19,10 @@ class SecurityEventListener extends SavedRequestAwareAuthenticationSuccessHandle
     void onAuthenticationSuccess(final HttpServletRequest request, final HttpServletResponse response, final Authentication authentication)
             throws ServletException, IOException {
         String lang
-        //User.withNewSession {
+        User.withNewSession {
             // Find the language of the logged in user in the database
             lang = User.get(authentication.principal.id).language
-        //}
+        }
 
         // If found, update/create the language cookie
         if (lang) {
