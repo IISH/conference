@@ -233,7 +233,9 @@ class ParticipantUpdateService {
 	 */
 	private void updatePaperReviews(Paper paper, GrailsParameterMap params, int i) {
 		Set<PaperReview> toBeDeleted = []
-		toBeDeleted += paper.reviews
+		if ((paper.reviews != null) && (paper.reviews.size() > 0)) {
+			toBeDeleted += paper.reviews
+		}
 
 		int j = 0
 		while (params["PaperReview_${i}_${j}"]) {
