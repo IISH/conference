@@ -5,6 +5,7 @@ import org.iisg.eca.domain.EventDateDomain
 
 import org.hibernate.MappingException
 import org.hibernate.mapping.Filterable
+import org.hibernate.mapping.Collection
 import org.hibernate.engine.spi.FilterDefinition
 
 import org.codehaus.groovy.grails.commons.GrailsClass
@@ -20,6 +21,10 @@ import org.codehaus.groovy.grails.orm.hibernate.cfg.GrailsAnnotationConfiguratio
 class ECAHibernateConfiguration extends GrailsAnnotationConfiguration {
     private GrailsApplication grailsApplication
 
+    private FilterDefinition softDeleteFilterDefinition
+    private FilterDefinition eventFilterDefinition
+    private FilterDefinition eventDateFilterDefinition
+
     @Override
     public void setGrailsApplication(GrailsApplication grailsApplication) {
         super.setGrailsApplication(grailsApplication)
@@ -29,57 +34,52 @@ class ECAHibernateConfiguration extends GrailsAnnotationConfiguration {
     @Override
     protected void secondPassCompile() throws MappingException {
         super.secondPassCompile()
+        setFilterDefinitions()
+        applyFilters()
+    }
 
-        addFilterDefinition(getSoftDeleteFilterDefinition())
-        addFilterDefinition(getEventFilterDefinition())
-        addFilterDefinition(getEventDateFilterDefinition())
+    private void setFilterDefinitions() {
+        softDeleteFilterDefinition = new FilterDefinition('softDeleteFilter', 'deleted = 0', [:])
+        addFilterDefinition(softDeleteFilterDefinition)
 
+        eventFilterDefinition = new FilterDefinition('eventFilter', '(event_id = :eventId OR event_id IS NULL)',
+                ['eventId': typeResolver.basic('long')])
+        addFilterDefinition(eventFilterDefinition)
+
+        eventDateFilterDefinition = new FilterDefinition('eventDateFilter', '(date_id = :dateId OR date_id IS NULL)',
+                ['dateId': typeResolver.basic('long')])
+        addFilterDefinition(eventDateFilterDefinition)
+    }
+
+    private void applyFilters() {
         for (GrailsClass grailsClass : grailsApplication.domainClasses) {
             Class domain = grailsClass.clazz
             DefaultGrailsDomainClass domainClass = (DefaultGrailsDomainClass) grailsClass
 
-            applyForDomainClass(domain, getClassMapping(domain.getName()))
+            applyForDomainClass(domain, getClassMapping(domain.getName()), false)
             for (GrailsDomainClassProperty column : domainClass.associations) {
-                // Only possible on collections (oneToMany, manyToMany)
-                // TODO: manyToMany fails: filter is applied to join table, resulting in invalid SQL
-                if (column.oneToMany) {
-                    applyForDomainClass(
-                            column.referencedPropertyType,
-                            getCollectionMapping("${domain.getName()}.${column.name}")
-                    )
+                if (column.oneToMany || column.manyToMany) {
+                    Filterable collectionMapping = getCollectionMapping("${domain.getName()}.${column.name}")
+                    applyForDomainClass(column.referencedPropertyType, collectionMapping, column.manyToMany)
                 }
             }
         }
     }
 
-    private FilterDefinition getSoftDeleteFilterDefinition() {
-        return new FilterDefinition('softDeleteFilter', 'deleted = 0', [:])
+    private void applyForDomainClass(Class domain, Filterable entity, boolean isManyToMany) {
+        if (domain.isAnnotationPresent(SoftDelete))
+            addFilterToEntity(entity, softDeleteFilterDefinition, isManyToMany)
+
+        if (EventDomain.class.isAssignableFrom(domain))
+            addFilterToEntity(entity, eventFilterDefinition, isManyToMany)
+        else if (EventDateDomain.class.isAssignableFrom(domain))
+            addFilterToEntity(entity, eventDateFilterDefinition, isManyToMany)
     }
 
-    private FilterDefinition getEventFilterDefinition() {
-        return new FilterDefinition('eventFilter', '(event_id = :eventId OR event_id IS NULL)',
-                ['eventId': typeResolver.basic('long')])
-    }
-
-    private FilterDefinition getEventDateFilterDefinition() {
-        new FilterDefinition('eventDateFilter', '(date_id = :dateId OR date_id IS NULL)',
-                ['dateId': typeResolver.basic('long')])
-    }
-
-    private void applyForDomainClass(Class domain, Filterable entity) {
-        if (domain.isAnnotationPresent(SoftDelete)) {
-            addFilterToEntity(entity, getSoftDeleteFilterDefinition())
-        }
-
-        if (EventDomain.class.isAssignableFrom(domain)) {
-            addFilterToEntity(entity, getEventFilterDefinition())
-        }
-        else if (EventDateDomain.class.isAssignableFrom(domain)) {
-            addFilterToEntity(entity, getEventDateFilterDefinition())
-        }
-    }
-
-    private static void addFilterToEntity(Filterable entity, FilterDefinition filterDefinition) {
-        entity.addFilter(filterDefinition.getFilterName(), filterDefinition.getDefaultFilterCondition(), true, [:], [:])
+    private static void addFilterToEntity(Filterable entity, FilterDefinition filterDefinition, boolean isManyToMany) {
+        if (isManyToMany && (entity instanceof Collection))
+            entity.addManyToManyFilter(filterDefinition.getFilterName(), filterDefinition.getDefaultFilterCondition(), true, [:], [:])
+        else
+            entity.addFilter(filterDefinition.getFilterName(), filterDefinition.getDefaultFilterCondition(), true, [:], [:])
     }
 }
