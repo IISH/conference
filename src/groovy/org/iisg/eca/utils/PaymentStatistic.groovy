@@ -1,11 +1,13 @@
 package org.iisg.eca.utils
 
 import groovy.sql.GroovyRowResult
+import groovy.transform.CompileStatic
 
 /**
  * Wrapper class of a payment statistic, holding the numbers of participants and the amounts
  * for both the unconfirmed and the confirmed state of a status
  */
+@CompileStatic
 class PaymentStatistic {
     private long unConfirmedNoParticipants = 0L
     private long unConfirmedAmount = 0L
@@ -66,21 +68,21 @@ class PaymentStatistic {
         Map<Long, PaymentStatistic> paymentStatisticsMap = new HashMap<Long, PaymentStatistic>()
 
         unconfirmed.each { row ->
-            Long status = new Long(row.get('status'))
+            Long status = new Long(row.get('status').toString())
             PaymentStatistic statistic = paymentStatisticsMap.get(status, new PaymentStatistic())
 
-            statistic.unConfirmedAmount = (row.get('total_amount') != null) ? row.get('total_amount') : 0L
-            statistic.unConfirmedNoParticipants = (row.get('no_participants') != null) ? row.get('no_participants') : 0L
+            statistic.unConfirmedAmount = (row.get('total_amount') != null) ? (Long) row.get('total_amount') : 0L
+            statistic.unConfirmedNoParticipants = (row.get('no_participants') != null) ? (Long) row.get('no_participants') : 0L
 
             paymentStatisticsMap.put(status, statistic)
         }
 
         confirmed.each { row ->
-            Long status = new Long(row.get('status'))
+            Long status = new Long(row.get('status').toString())
             PaymentStatistic statistic = paymentStatisticsMap.get(status, new PaymentStatistic())
 
-            statistic.confirmedAmount = (row.get('total_amount') != null) ? row.get('total_amount') : 0L
-            statistic.confirmedNoParticipants = (row.get('no_participants') != null) ? row.get('no_participants') : 0L
+            statistic.confirmedAmount = (row.get('total_amount') != null) ? (Long) row.get('total_amount') : 0L
+            statistic.confirmedNoParticipants = (row.get('no_participants') != null) ? (Long) row.get('no_participants') : 0L
 
             paymentStatisticsMap.put(status, statistic)
         }

@@ -1,5 +1,6 @@
 package org.iisg.eca.export
 
+import groovy.transform.CompileStatic
 import jxl.CellView
 import jxl.Workbook
 import jxl.WorkbookSettings
@@ -9,10 +10,12 @@ import jxl.write.WritableFont
 import jxl.write.WritableSheet
 import jxl.write.WritableWorkbook
 import jxl.write.WritableCellFormat
+import org.iisg.eca.dynamic.Column
 
 /**
  * Export xls (Excel) files
  */
+@CompileStatic
 class XlsDynamicPageExport extends DynamicPageExport {
     private static final String CONTENT_TYPE = 'application/vnd.ms-excel'
     private static final String EXTENSION = 'xls'
@@ -68,7 +71,7 @@ class XlsDynamicPageExport extends DynamicPageExport {
         }
 
         results.eachWithIndex { result, i ->
-            columns.grep { it.canBeShown() && !it.isHidden() }.eachWithIndex { c, j ->
+            columns.grep { Column it -> it.canBeShown() && !it.isHidden() }.eachWithIndex { c, j ->
                 def value = result
                 c.columnPath.each { value = value[it.toString()] }
                 sheet.addCell(new Label(j, i+1, value.toString(), format))

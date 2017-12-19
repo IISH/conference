@@ -49,7 +49,8 @@ class PageBuilder extends ElementBuilder {
                     case DataContainer.Type.OVERVIEW:
                         overviewBuilder.build(element)
                 }
-            } else {
+            }
+            else {
                 build(element)
             }
         }

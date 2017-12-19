@@ -1,7 +1,11 @@
 package org.iisg.eca.export
+
+import groovy.transform.CompileStatic
+
 /**
  * Export csv files
  */
+@CompileStatic
 class CsvMapExport extends MapExport {
     private static final String CONTENT_TYPE = 'text/csv'
     private static final String EXTENSION = 'csv'

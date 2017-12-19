@@ -1,8 +1,11 @@
 package org.iisg.eca.dynamic
 
+import groovy.transform.CompileStatic
+
 /**
  * An element which contains other elements
  */
+@CompileStatic
 class ContainerElement extends Element {
     private List<Element> elements
     
@@ -81,7 +84,7 @@ class ContainerElement extends Element {
      */
     List<Column> getAllColumns() {
         List<Column> columns = new ArrayList<Column>()
-        forAllColumns {
+        forAllColumns { Column it ->
             columns.add(it)
         }
         columns
@@ -103,7 +106,7 @@ class ContainerElement extends Element {
      */  
     Column getColumnInHierarchy(String name) {
         Column column = null
-        forAllColumns { c -> 
+        forAllColumns { Column c ->
             if (c.name.equalsIgnoreCase(name)) {
                 column = c
             }
@@ -193,7 +196,7 @@ class ContainerElement extends Element {
      * @return A list of buttons with the given type
      */  
     List<Button> getButtonsByType(Button.Type type) {
-        elements.findAll { (it instanceof Button) && (it.buttonType == type) } as List<Button>
+        elements.findAll { (it instanceof Button) && (it.type == type) } as List<Button>
     }
 }
 

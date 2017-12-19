@@ -1,5 +1,6 @@
 package org.iisg.eca.security
 
+import groovy.transform.CompileStatic
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Setting
 
@@ -9,6 +10,7 @@ import org.springframework.security.authentication.dao.ReflectionSaltSource
 /**
  * Extension of the <code>ReflectionSaltSource</code> class to allow a combination of a static salt and user salts
  */
+@CompileStatic
 class UserSaltSource extends ReflectionSaltSource {
     /**
      * Get the salt used to authenticate the given user
@@ -18,7 +20,7 @@ class UserSaltSource extends ReflectionSaltSource {
     @Override
     Object getSalt(UserDetails user) {
         if (user instanceof MyUserDetails) {
-            createSalt(user[userPropertyToUse])
+            createSalt((String) user[userPropertyToUse])
         }
     }
 
@@ -28,7 +30,7 @@ class UserSaltSource extends ReflectionSaltSource {
      * @return The salt to authenticate the given user
      */
     Object getSalt(User user) {
-        createSalt(user[userPropertyToUse])
+        createSalt((String) user[userPropertyToUse])
     }
 
     /**

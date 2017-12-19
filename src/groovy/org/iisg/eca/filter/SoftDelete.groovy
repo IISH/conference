@@ -1,4 +1,4 @@
-package org.iisg.eca.filter;
+package org.iisg.eca.filter
 
 import java.lang.annotation.Target
 import java.lang.annotation.Retention
@@ -10,12 +10,12 @@ import java.lang.annotation.RetentionPolicy
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface SoftDelete {
+@interface SoftDelete {
 
     /**
      * Name of the column that indicates whether the instance is soft deleted
      *
      * @return The name of the soft-delete column
      */
-    public abstract String value() default 'deleted'
+    abstract String value() default 'deleted'
 }

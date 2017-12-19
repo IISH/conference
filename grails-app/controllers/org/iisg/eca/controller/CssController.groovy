@@ -39,7 +39,7 @@ class CssController {
         String mainColorBg = Setting.getSetting(Setting.MAIN_COLOR_BG).value
         css = css.replace("[${Setting.MAIN_COLOR_BG}]", mainColorBg)
 
-        css = css.replace("[resource_dir]", g.resource(dir: 'images'))
+        css = css.replace("[resource_dir]", g.resource(dir: 'assets'))
 
         render(text: css, contentType: "text/css")
     }

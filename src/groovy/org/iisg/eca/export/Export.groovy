@@ -1,29 +1,32 @@
 package org.iisg.eca.export
 
+import groovy.transform.CompileStatic
+
 /**
  * An export interface
  */
+@CompileStatic
 interface Export {
     /**
      * Returns the content type of the resulting file
      * @return The content type
      */
-    public String getContentType()
+    String getContentType()
 
     /**
      * Returns the extension of the resulting file
      * @return The extension
      */
-    public String getExtension()
+    String getExtension()
 
     /**
      * Returns the title of the resulting file
      * @return The title
      */
-    public String getTitle()
+    String getTitle()
 
     /**
      * Parses the element
      */
-    public parse()
+    Object parse()
 }

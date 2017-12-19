@@ -38,7 +38,7 @@ abstract class DynamicPageExport implements Export {
                     UTILS.fallbackMessage(code: PageBuilder.getCode(c.property), fbCode: PageBuilder.getFbCode(c.property))
                 }
             }
-        }
+        } as List<String>
         columnNames.removeAll { it == null }
     }
 

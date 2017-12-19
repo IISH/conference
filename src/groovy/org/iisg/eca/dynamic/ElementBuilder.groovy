@@ -6,7 +6,7 @@ import org.codehaus.groovy.grails.commons.GrailsDomainClassProperty
 abstract class ElementBuilder {
     protected static final String RESULTS = "results"
 
-    protected MarkupBuilder builder;
+    protected MarkupBuilder builder
 
     /**
      * Builds all of the buttons in the given list
@@ -46,7 +46,7 @@ abstract class ElementBuilder {
      * Returns the i18n lookup code for the given column property
      * @param property The property of a column which needs an i18n label
      */
-    protected static getCode(GrailsDomainClassProperty property) {
+    static getCode(GrailsDomainClassProperty property) {
         if (property.name.equalsIgnoreCase("deleted")) {
             return "default.${property.name}.label"
         }
@@ -62,7 +62,7 @@ abstract class ElementBuilder {
      * Returns the i18n fallback lookup code for the given column property, in case the first one does not exist
      * @param property The property of a column which needs a secondary i18n label
      */
-    protected static getFbCode(GrailsDomainClassProperty property) {
+    static getFbCode(GrailsDomainClassProperty property) {
         "${property.domainClass.propertyName}.${property.name}.label"
     }
 }

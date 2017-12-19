@@ -1,8 +1,11 @@
 package org.iisg.eca.dynamic
 
+import groovy.transform.CompileStatic
+
 /**
  * An element which represents a button on a dynamic page
  */
+@CompileStatic
 class Button extends Element {
     private Type type
     private String controller

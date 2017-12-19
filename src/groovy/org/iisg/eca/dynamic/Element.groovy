@@ -1,8 +1,11 @@
 package org.iisg.eca.dynamic
 
+import groovy.transform.CompileStatic
+
 /**
  * An element of a dynamic page
  */
+@CompileStatic
 abstract class Element {
     private String name
     private ContainerElement parent     

@@ -1,5 +1,7 @@
 package org.iisg.eca.utils
 
+import groovy.transform.CompileStatic
+
 import java.util.regex.Pattern
 
 import org.iisg.eca.domain.User
@@ -9,6 +11,7 @@ import org.iisg.eca.domain.Setting
 /**
  * Simple utility class to check whether users or just simply email addresses can be sent an email
  */
+@CompileStatic
 class EmailFilter {
 	private Set<Pattern> emailPatterns
 
@@ -16,7 +19,7 @@ class EmailFilter {
 	 * Creates a new email filter utility class for the given event
 	 * @param event The event
 	 */
-	public EmailFilter(Event event) {
+	EmailFilter(Event event) {
 		this.emailPatterns = new HashSet<Pattern>()
 
 		// Cache the current regular expression for use with multiple email addresses
@@ -32,7 +35,7 @@ class EmailFilter {
 	 * @param user The user in question
 	 * @return Whether the user is allowed
 	 */
-	public boolean isUserAllowed(User user) {
+	boolean isUserAllowed(User user) {
 		if (!user.emailDiscontinued) {
 			return isEmailAddressAllowed(user.email)
 		}
@@ -45,7 +48,7 @@ class EmailFilter {
 	 * @param emailAddress The email address
 	 * @return Whether the email address is allowed
 	 */
-	public boolean isEmailAddressAllowed(String emailAddress) {
+	boolean isEmailAddressAllowed(String emailAddress) {
 		for (Pattern emailPattern : this.emailPatterns) {
 			if (emailPattern.matcher(emailAddress).matches()) {
 				return false

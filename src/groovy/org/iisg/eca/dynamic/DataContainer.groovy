@@ -1,10 +1,12 @@
 package org.iisg.eca.dynamic
 
+import groovy.transform.CompileStatic
 import org.codehaus.groovy.grails.commons.GrailsDomainClass
 
 /**
  * A representation of an element from a dynamic page
  */
+@CompileStatic
 class DataContainer extends ContainerElement {
     private int eid
     private Type type
@@ -71,7 +73,7 @@ class DataContainer extends ContainerElement {
      */
     Set<GrailsDomainClass> getAllDomainClasses() {
         Set<GrailsDomainClass> domainClasses = new HashSet<GrailsDomainClass>()
-        forAllColumns { c -> 
+        forAllColumns { Column c ->
             domainClasses.add(c.domainClass)
         }
         domainClasses
@@ -83,7 +85,7 @@ class DataContainer extends ContainerElement {
      */
     Set<GrailsDomainClass> getDomainClasses() {
         Set<GrailsDomainClass> domainClasses = new HashSet<GrailsDomainClass>()
-        columns.each { c ->
+        columns.each { Column c ->
             domainClasses.add(c.domainClass)
         }
         domainClasses
@@ -96,7 +98,7 @@ class DataContainer extends ContainerElement {
      */
     Set<GrailsDomainClass> getDomainClassesOfMultiples() {
         Set<GrailsDomainClass> domainClasses = new HashSet<GrailsDomainClass>()
-        forAllColumnsWithChildren { c ->
+        forAllColumnsWithChildren { Column c ->
             c.columns.each { domainClasses.add(it.domainClass) }
         }
         domainClasses
@@ -109,7 +111,7 @@ class DataContainer extends ContainerElement {
      */
     Set<Column> getAllColumnsForDomainClass(GrailsDomainClass domainClass) {
         Set<Column> columns = new HashSet<Column>()
-        forAllColumns { c -> 
+        forAllColumns { Column c ->
             if (c.domainClass == domainClass) {
                 columns.add(c)
             }

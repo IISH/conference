@@ -1,5 +1,6 @@
 package org.iisg.eca.security
 
+import groovy.transform.CompileStatic
 import org.springframework.security.core.GrantedAuthority
 import grails.plugin.springsecurity.userdetails.GrailsUser
 
@@ -7,6 +8,7 @@ import grails.plugin.springsecurity.userdetails.GrailsUser
  * Extension of the <code>GrailsUser</code> class to include extra user information necessary
  * for authentication and session information extraction
  */
+@CompileStatic
 class MyUserDetails extends GrailsUser {
     // Necessary for displaying the name of the logged in user on every page
     final String fullName

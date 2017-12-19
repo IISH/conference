@@ -1,5 +1,6 @@
 package org.iisg.eca.export
 
+import groovy.transform.CompileStatic
 import jxl.CellView
 import jxl.Workbook
 import jxl.WorkbookSettings
@@ -13,6 +14,7 @@ import jxl.write.WritableCellFormat
 /**
  * Export xls (Excel) files
  */
+@CompileStatic
 class XlsMapExport extends MapExport {
     private static final String CONTENT_TYPE = 'application/vnd.ms-excel'
     private static final String EXTENSION = 'xls'

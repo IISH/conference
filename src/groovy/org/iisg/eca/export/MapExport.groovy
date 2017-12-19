@@ -1,10 +1,11 @@
 package org.iisg.eca.export
 
-import groovy.sql.GroovyRowResult
+import groovy.transform.CompileStatic
 
 /**
  * An abstract implementation of the <code>Export</code> interface
  */
+@CompileStatic
 abstract class MapExport implements Export {
     protected List<String> columns
     protected List<Map> results

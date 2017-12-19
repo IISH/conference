@@ -1,5 +1,6 @@
 package org.iisg.eca.dynamic
 
+import groovy.transform.CompileStatic
 import org.codehaus.groovy.grails.commons.GrailsDomainClass
 import org.codehaus.groovy.grails.commons.GrailsDomainClassProperty
 import org.codehaus.groovy.grails.validation.ConstrainedProperty
@@ -7,6 +8,7 @@ import org.codehaus.groovy.grails.validation.ConstrainedProperty
 /**
  * An element representing a column in the database / property of a domain class
  */
+@CompileStatic
 class Column extends ContainerElement {
     private GrailsDomainClass domainClass
     private boolean id
@@ -29,7 +31,7 @@ class Column extends ContainerElement {
      * @param elements A column can only contain other columns; they need a relationship
      */
     Column(String name, GrailsDomainClass domainClass, List<Column> elements) {
-        super(name, elements)
+        super(name, elements as List<Element>)
         this.domainClass = domainClass
         this.id = false
         this.readOnly = false
@@ -233,6 +235,6 @@ class Column extends ContainerElement {
     }
 
     Column getParentColumn() {
-        (parent instanceof Column) ? parent : null
+        (parent instanceof Column) ? (Column) parent : null
     }
 }
