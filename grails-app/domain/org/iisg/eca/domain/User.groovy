@@ -256,6 +256,16 @@ class User {
 			}
 		}
 
+		allParticipantsSoftStateRegistered { date ->
+			allParticipantUsers()
+
+			participantDates {
+				'in'('state.id', [ParticipantState.NEW_PARTICIPANT, ParticipantState.PARTICIPANT_DATA_CHECKED,
+								  ParticipantState.PARTICIPANT])
+				eq('date.id', date.id)
+			}
+		}
+
 		allParticipantsSoftState { date ->
 			allParticipantUsers()
 
