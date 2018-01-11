@@ -147,6 +147,13 @@ class ParticipantController {
 		List daysPresent = ParticipantDay.findAllDaysOfUser(user)
 		List orders = (participant) ? Order.findAllByParticipantDate(participant) : []
 
+		// Make sure the main order is listed first
+		if (participant?.paymentId) {
+			Order order = orders.find { it.id == participant.paymentId }
+			orders.remove(order)
+			orders.add(0, order)
+		}
+
 		if (request.post) {
 			if (participantUpdateService.update(user, participant, params)) {
 				flash.message = g.message(code: 'default.updated.message',
