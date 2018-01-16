@@ -39,12 +39,15 @@
                     </span>
                 </div>
                 <g:if test="${Setting.getSetting(Setting.SHOW_PAPER_TYPE_OF_CONTRIBUTION, curDate?.event).value == '1'}">
-                    <div class="${hasErrors(bean: paper, field: 'typeOfContribution', 'error')}">
+                    <div class="${hasErrors(bean: paper, field: 'type', 'error')}">
                         <label class="property-label">
-                            <g:message code="paper.typeOfContribution.label" />
+                            <g:message code="paper.type.label" />
                         </label>
                         <span class="property-value">
-                            <input type="text" name="Paper_${i}.typeOfContribution" maxlength="100" value="${fieldValue(bean: paper, field: 'typeOfContribution')}" />
+                            <input type="text" name="Paper_${i}.differentType" maxlength="100" value="${fieldValue(bean: paper, field: 'differentType')}" />
+
+                            <g:select from="${paperTypes}" name="Paper.type.id" optionKey="id" optionValue="type" value="${paper.type?.id}" noSelection="${['': ' ']}" />
+                            <input type="text" name="Paper.differentType" value="${fieldValue(bean: eventSession, field: 'differentType')}" />
                         </span>
                     </div>
                 </g:if>
@@ -274,10 +277,10 @@
             <g:if test="${Setting.getSetting(Setting.SHOW_PAPER_TYPE_OF_CONTRIBUTION, curDate?.event).value == '1'}">
                 <div>
                     <label class="property-label">
-                        <g:message code="paper.typeOfContribution.label" />
+                        <g:message code="paper.differentType.label" />
                     </label>
                     <span class="property-value">
-                        <input type="text" name="Paper_null.typeOfContribution" maxlength="100" />
+                        <input type="text" name="Paper_null.differentType" maxlength="100" />
                     </span>
                 </div>
             </g:if>

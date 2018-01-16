@@ -12,7 +12,8 @@ class Paper extends EventDateDomain {
     String title
     String coAuthors
     String abstr
-	String typeOfContribution
+	PaperType type
+	String differentType
 	String keywords
 	String reviewComment
 	BigDecimal avgReviewScore
@@ -29,7 +30,7 @@ class Paper extends EventDateDomain {
 	User addedBy
 	boolean deleted = false
 
-	static belongsTo = [User, PaperState, Session, Network]
+	static belongsTo = [User, PaperState, PaperType, Session, Network]
     static hasMany = [
 			equipment: Equipment,
 			reviews: PaperReview,
@@ -47,7 +48,8 @@ class Paper extends EventDateDomain {
         title               column: 'title'
         coAuthors           column: 'co_authors'
         abstr               column: 'abstract',             type: 'text'
-		typeOfContribution	column: 'type_of_contribution'
+		type                column: 'paper_type_id'
+		differentType		column: 'different_type'
 		keywords			column: 'keywords',				type: 'text'
 		reviewComment		column: 'review_comment',		type: 'text'
 		avgReviewScore		column: 'avg_review_score'
@@ -74,7 +76,8 @@ class Paper extends EventDateDomain {
         title               blank: false,   maxSize: 500
         coAuthors           nullable: true, maxSize: 500
         abstr               blank: false
-		typeOfContribution	nullable: true,	maxSize: 100
+		type            	nullable: true
+		differentType		nullable: true,	maxSize: 100
 		keywords			nullable: true
 		reviewComment		nullable: true
 		avgReviewScore		nullable: true
@@ -105,7 +108,7 @@ class Paper extends EventDateDomain {
             'title',
             'coAuthors',
             'abstr',
-			'typeOfContribution',
+			'differentType',
 			'keywords',
             'networkProposal.id',
             'sessionProposal',
@@ -123,7 +126,7 @@ class Paper extends EventDateDomain {
 			'title',
 			'coAuthors',
 			'abstr',
-			'typeOfContribution',
+			'differentType',
 			'keywords',
 			'sessionProposal',
 			'equipmentComment',
