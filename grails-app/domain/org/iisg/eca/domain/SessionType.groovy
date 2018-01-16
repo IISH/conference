@@ -18,7 +18,7 @@ class SessionType extends EventDomain {
     }
     
     static constraints = {
-        type    blank: false,   maxSize: 30
+        type    blank: false,   maxSize: 100
     }
 
     static apiActions = ['GET']
