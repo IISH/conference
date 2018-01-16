@@ -119,6 +119,7 @@ class Paper extends EventDateDomain {
             'equipmentComment',
             'equipment.id',
 			'reviews.id',
+			'type.id',
 		    'addedBy.id'
     ]
 
@@ -135,7 +136,8 @@ class Paper extends EventDateDomain {
 			'session.id',
 			'networkProposal.id',
 			'equipment.id',
-			'addedBy.id'
+			'addedBy.id',
+			'type.id'
 	]
 
 	void softDelete() {
@@ -171,6 +173,9 @@ class Paper extends EventDateDomain {
 				if (addedBy) {
 					this.addedBy = addedBy
 				}
+				break
+			case 'type.id':
+				this.type = (value.isLong()) ? PaperType.get(value.toLong()) : null
 				break
 			case 'equipment.id':
 				this.equipment?.clear()
