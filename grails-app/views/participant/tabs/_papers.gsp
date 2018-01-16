@@ -44,9 +44,9 @@
                             <g:message code="paper.type.label" />
                         </label>
                         <span class="property-value">
-                            <g:select from="${paperTypes}" name="Paper.type.id" optionKey="id" optionValue="type" value="${paper.type?.id}" noSelection="${['': ' ']}" />
+                            <g:select from="${paperTypes}" name="Paper_${i}.type.id" optionKey="id" optionValue="type" value="${paper.type?.id}" noSelection="${['': ' ']}" />
                             <g:if test="${Setting.getSetting(Setting.SHOW_OPTIONAL_PAPER_TYPE, curDate?.event).value == '1'}">
-                                <input type="text" name="Paper.differentType" value="${fieldValue(bean: paper, field: 'differentType')}" />
+                                <input type="text" name="Paper_${i}.differentType" value="${fieldValue(bean: paper, field: 'differentType')}" />
                             </g:if>
                         </span>
                     </div>
@@ -274,13 +274,16 @@
                     <textarea name="Paper_null.abstr" required="required" cols="40" rows="5"></textarea>
                 </span>
             </div>
-            <g:if test="${Setting.getSetting(Setting.SHOW_PAPER_TYPE_OF_CONTRIBUTION, curDate?.event).value == '1'}">
-                <div>
+            <g:if test="${Setting.getSetting(Setting.SHOW_PAPER_TYPES, curDate?.event).value == '1'}">
+                <div class="${hasErrors(bean: paper, field: 'type', 'error')}">
                     <label class="property-label">
-                        <g:message code="paper.differentType.label" />
+                        <g:message code="paper.type.label" />
                     </label>
                     <span class="property-value">
-                        <input type="text" name="Paper_null.differentType" maxlength="100" />
+                        <g:select from="${paperTypes}" name="Paper_null.type.id" optionKey="id" optionValue="type" value="${paper.type?.id}" noSelection="${['': ' ']}" />
+                        <g:if test="${Setting.getSetting(Setting.SHOW_OPTIONAL_PAPER_TYPE, curDate?.event).value == '1'}">
+                            <input type="text" name="Paper_null.differentType" value="${fieldValue(bean: paper, field: 'differentType')}" />
+                        </g:if>
                     </span>
                 </div>
             </g:if>
