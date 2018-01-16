@@ -77,8 +77,10 @@
                             <g:message code="session.type.label" />
                         </label>
                         <span class="property-value">
-                            <g:select from="${sessionTypes}" name="Session.type.id" optionKey="id" optionValue="type" value="${paper.type?.id}" noSelection="${['': ' ']}" />
-                            <input type="text" name="Paper.differentType" value="${fieldValue(bean: paper, field: 'differentType')}" />
+                            <g:select from="${sessionTypes}" name="Session.type.id" optionKey="id" optionValue="type" value="${eventSession.type?.id}" noSelection="${['': ' ']}" />
+                            <g:if test="${Setting.getSetting(Setting.SHOW_OPTIONAL_SESSION_TYPE, curDate?.event).value == '1'}">
+                                <input type="text" name="Session.differentType" value="${fieldValue(bean: eventSession, field: 'differentType')}" />
+                            </g:if>
                         </span>
                     </div>
                 </g:if>

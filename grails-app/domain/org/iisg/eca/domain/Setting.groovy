@@ -73,16 +73,18 @@ class Setting extends EventDomain {
 	static final String SHOW_LANGUAGE_COACH_PUPIL = 'show_language_coach_pupil'
 	static final String SHOW_LOWER_FEE = 'show_lower_fee'
 	static final String SHOW_NETWORK = 'show_network'
+	static final String SHOW_OPTIONAL_PAPER_TYPE = 'show_optional_paper_type'
+	static final String SHOW_OPTIONAL_SESSION_TYPE = 'show_optional_session_type'
 	static final String SHOW_ORGANIZER_REGISTRATION = 'show_organizer_registration'
-	static final String SHOW_PAPER_KEYWORDS = 'show_paper_keywords';
-	static final String SHOW_PAPER_TYPE_OF_CONTRIBUTION = 'show_paper_type_of_contribution'
+	static final String SHOW_PAPER_KEYWORDS = 'show_paper_keywords'
+	static final String SHOW_PAPER_TYPES = 'show_paper_types'
 	static final String SHOW_PROGRAMME_ONLINE = 'show_programme_online'
 	static final String SHOW_REFUND_DIALOG = 'show_refund_dialog'
 	static final String SHOW_SESSION_ABSTRACT_EXPORT = 'show_session_abstract_export'
 	static final String SHOW_SESSION_CODES = 'show_session_codes'
 	static final String SHOW_SESSION_PARTICIPANT_TYPES_REGISTRATION = 'show_session_participant_types_registration'
 	static final String SHOW_SESSION_PROPOSAL = 'show_session_proposal'
-	static final String SHOW_SESSION_TYPES = 'show_session_types';
+	static final String SHOW_SESSION_TYPES = 'show_session_types'
 	static final String SHOW_STUDENT = 'show_student'
 
 	// Required fields settings

@@ -176,6 +176,7 @@ class ParticipantController {
 		                             participant            : participant,
 		                             participantVolunteering: participantVolunteering,
 		                             participantIds         : participantIds,
+									 paperTypes             : PaperType.list(),
 		                             sessions               : sessions,
 		                             daysPresent            : daysPresent,
 		                             orders                 : orders,

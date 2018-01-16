@@ -55,7 +55,7 @@ class Session extends EventDateDomain {
         abstr           nullable: true
         comment         nullable: true
         type            nullable: true
-        differentType   nullable: true, maxSize: 50
+        differentType   nullable: true, maxSize: 100
         addedBy         nullable: true
     }
 

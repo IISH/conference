@@ -38,16 +38,16 @@
                         <textarea name="Paper_${i}.abstr" required="required" cols="40" rows="5">${fieldValue(bean: paper, field: 'abstr')}</textarea>
                     </span>
                 </div>
-                <g:if test="${Setting.getSetting(Setting.SHOW_PAPER_TYPE_OF_CONTRIBUTION, curDate?.event).value == '1'}">
+                <g:if test="${Setting.getSetting(Setting.SHOW_PAPER_TYPES, curDate?.event).value == '1'}">
                     <div class="${hasErrors(bean: paper, field: 'type', 'error')}">
                         <label class="property-label">
                             <g:message code="paper.type.label" />
                         </label>
                         <span class="property-value">
-                            <input type="text" name="Paper_${i}.differentType" maxlength="100" value="${fieldValue(bean: paper, field: 'differentType')}" />
-
                             <g:select from="${paperTypes}" name="Paper.type.id" optionKey="id" optionValue="type" value="${paper.type?.id}" noSelection="${['': ' ']}" />
-                            <input type="text" name="Paper.differentType" value="${fieldValue(bean: eventSession, field: 'differentType')}" />
+                            <g:if test="${Setting.getSetting(Setting.SHOW_OPTIONAL_PAPER_TYPE, curDate?.event).value == '1'}">
+                                <input type="text" name="Paper.differentType" value="${fieldValue(bean: paper, field: 'differentType')}" />
+                            </g:if>
                         </span>
                     </div>
                 </g:if>
