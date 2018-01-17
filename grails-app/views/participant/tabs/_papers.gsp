@@ -280,7 +280,7 @@
                         <g:message code="paper.type.label" />
                     </label>
                     <span class="property-value">
-                        <g:select from="${paperTypes}" name="Paper_null.type.id" optionKey="id" optionValue="type" value="${paper.type?.id}" noSelection="${['': ' ']}" />
+                        <g:select from="${paperTypes}" name="Paper_null.type.id" optionKey="id" optionValue="type" noSelection="${['': ' ']}" />
                         <g:if test="${Setting.getSetting(Setting.SHOW_OPTIONAL_PAPER_TYPE, curDate?.event).value == '1'}">
                             <input type="text" name="Paper_null.differentType" value="${fieldValue(bean: paper, field: 'differentType')}" />
                         </g:if>
