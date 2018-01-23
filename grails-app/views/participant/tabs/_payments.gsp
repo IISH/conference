@@ -54,10 +54,11 @@
                         </span>
 
                         <g:set var="classStatus" value="red" />
-                        <g:if test="${order.payed}">
+                        <g:if test="${order.payed == Order.ORDER_PAYED}">
                             <g:set var="classStatus" value="green" />
                         </g:if>
-                        <g:elseif test="${order.paymentMethod != Order.ORDER_OGONE_PAYMENT}">
+                        <g:elseif test="${order.paymentMethod != Order.ORDER_OGONE_PAYMENT ||
+                                order.payed == Order.ORDER_REFUND_OGONE || order.payed == Order.ORDER_REFUND_BANK}">
                             <g:set var="classStatus" value="orange" />
                         </g:elseif>
 
