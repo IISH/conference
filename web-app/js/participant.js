@@ -174,7 +174,9 @@ $(document).ready(function () {
         dialog.find('input,textarea').val('');
         elem.closest('li').find('input').each(function () {
 			var name = $(this).attr('name').split('.')[1];
-            dialog.find('[name=' + name + ']').val($(this).val());
+			var dialogElem = dialog.find('[name=' + name + ']');
+            dialogElem.is(':checkbox')
+				? dialogElem.prop('checked', $(this).val() === 'true') : dialogElem.val($(this).val());
             dialog.data('paper-review', elem.closest('li'));
         });
 		dialog.dialog('open');
@@ -276,9 +278,9 @@ $(document).ready(function () {
         autoOpen: false,
         modal: true,
         minWidth: 400,
-        minHeight: 250,
+        minHeight: 350,
         width: 500,
-        height: 300,
+        height: 400,
         title: "Paper review",
         buttons: {
             "Save": function () {
@@ -287,8 +289,16 @@ $(document).ready(function () {
 
                 var data = {};
                 dialog.find('input, textarea').each(function () {
-                	data[$(this).attr('name')] = $(this).val();
-                    paperReviewElem.find('input[name$=' + $(this).attr('name') + ']').val($(this).val());
+                	if ($(this).is('[type=checkbox]')) {
+                        data[$(this).attr('name')] = $(this).is(':checked');
+                        paperReviewElem.find('input[name$=' + $(this).attr('name') + ']').val(
+                        	$(this).is(':checked') ? 'true' : 'false'
+						);
+					}
+                	else {
+                        data[$(this).attr('name')] = $(this).val();
+                        paperReviewElem.find('input[name$=' + $(this).attr('name') + ']').val($(this).val());
+                    }
                 });
 
                 ajaxCall(this, 'paper/updateReview', data, function (data) {

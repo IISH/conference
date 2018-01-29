@@ -130,6 +130,8 @@
                                     <span class="ui-icon ui-icon-circle-minus"></span>
 
                                     <input type="hidden" name="PaperReview_${i}_${ipr}.review" value="${instance.review}" />
+                                    <input type="hidden" name="PaperReview_${i}_${ipr}.reviewComments" value="${instance.comments}" />
+                                    <input type="hidden" name="PaperReview_${i}_${ipr}.reviewAward" value="${instance.award}" />
                                     <g:each in="${instance.scores}" var="score">
                                         <input type="hidden" name="PaperReview_${i}_${ipr}.criteria_${score.criteria.id}" value="${score.score}" />
                                     </g:each>
@@ -141,7 +143,7 @@
                             </li>
                             <li class="hidden">
                                 <input type="hidden" name="PaperReview_${i}_null.id" />
-                                <eca:usersAutoComplete name="PaperReview_${i}_null.reviewer.id" labelValue="" idValue="" queryName="allUsers" required="required" />
+                                <eca:usersAutoComplete name="PaperReview_${i}_null.reviewer.id" labelValue="" idValue="" queryName="allReviewersConfirmed" required="required" />
                                 <span class="ui-icon ui-icon-circle-minus"></span>
                             </li>
                         </ul>

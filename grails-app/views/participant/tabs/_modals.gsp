@@ -117,6 +117,22 @@
                         <textarea name="review" cols="40" rows="5"></textarea>
                     </span>
                 </div>
+                <div>
+                    <label class="property-label">
+                        <g:message code="paper.reviewComments.label" />
+                    </label>
+                    <span class="property-value">
+                        <textarea name="reviewComments" cols="40" rows="5"></textarea>
+                    </span>
+                </div>
+                <div>
+                    <span class="property-label">
+                        <g:checkBox name="reviewAward"/>
+                    </span>
+                    <label class="property-value">
+                        <g:message code="paper.reviewAward.label" />
+                    </label>
+                </div>
             </fieldset>
         </form>
     </div>

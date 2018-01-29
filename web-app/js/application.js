@@ -793,6 +793,20 @@ $(document).ready(function () {
 		dialog.dialog('open');
     });
 
+    $('#import-dialog').dialog({
+        autoOpen: false,
+        minWidth: 500,
+        minHeight: 80,
+        title: "Import CSV"
+    });
+
+    $('.import-open').click(function (e) {
+        var elem = $(this);
+        var dialog = $('#import-dialog');
+        dialog.find('form:first').attr('action', elem.data('submit'));
+        dialog.dialog('open');
+    });
+
 	$('#email-codes').accordion({
 		header: '.emailCodesHeader',
 		heightStyle: 'content',

@@ -96,6 +96,8 @@ class PaperController {
                     toBeDeleted.each { paperReview.removeFromScores(it) }
 
                     paperReview.review = !params.review.isEmpty() ? params.review.trim() : null
+                    paperReview.comments = !params.reviewComments.isEmpty() ? params.reviewComments.trim() : null
+                    paperReview.award = params.reviewAward == 'true'
                     paperReview.avgScore = (count > 0) ? total.divide(count, 1, RoundingMode.HALF_UP) : null
 
                     // Save the paper review

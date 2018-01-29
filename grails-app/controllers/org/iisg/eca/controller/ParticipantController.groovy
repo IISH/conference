@@ -56,6 +56,13 @@ class ParticipantController {
 	}
 
 	/**
+	 * Shows all users who are on the reviewers list
+	 */
+	def reviewers() {
+		forward(controller: 'dynamicPage', action: 'dynamic', params: params)
+	}
+
+	/**
 	 * Shows all participants with no discontinued email
 	 */
 	def listAll() {

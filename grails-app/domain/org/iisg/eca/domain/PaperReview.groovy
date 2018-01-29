@@ -7,6 +7,8 @@ class PaperReview extends EventDateDomain {
     Paper paper
     User reviewer
     String review
+    String comments
+    boolean award = false
     BigDecimal avgScore
 
     static belongsTo = [Paper, User]
@@ -20,6 +22,8 @@ class PaperReview extends EventDateDomain {
         paper     column: 'paper_id'
         reviewer  column: 'reviewer_id'
         review    column: 'review',          type: 'text'
+        comments  column: 'comments',        type: 'text'
+        award     column: 'award'
         avgScore  column: 'avg_score'
 
         scores    cascade: 'all-delete-orphan'
@@ -27,6 +31,7 @@ class PaperReview extends EventDateDomain {
 
     static constraints = {
         review   nullable: true
+        comments nullable: true
         avgScore nullable: true
     }
 
@@ -41,11 +46,15 @@ class PaperReview extends EventDateDomain {
             'paper.id',
             'reviewer.id',
             'review',
+            'comments',
+            'award',
             'avgScore'
     ]
 
     static apiPostPut = [
             'review',
+            'comments',
+            'award',
             'avgScore'
     ]
 

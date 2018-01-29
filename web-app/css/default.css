@@ -1166,14 +1166,14 @@ ul input.session-name {
     background: url("[resource_dir]/skin/exclamation.png") no-repeat scroll 7px 50% transparent;
 }
 
-/* EMAIL AND EXPORT */
+/* EMAIL, IMPORT AND EXPORT */
 
-#email-templates li, #export ol li {
+#email-templates li, #import ol li, #export ol li {
     margin: 10px 0;
     list-style: decimal inside;
 }
 
-#export ol {
+#export ol, #import ol {
     padding-left: 20px;
     margin-bottom: 20px;
 }

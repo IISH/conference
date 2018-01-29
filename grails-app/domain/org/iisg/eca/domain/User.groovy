@@ -84,6 +84,7 @@ class User {
 					  userPages          : UserPage,
 					  daysPresent        : ParticipantDay,
 					  reviews    		 : PaperReview,
+				      reviewers			 : Reviewer,
 					  mergedWithUsers	 : User,
 
 					  sessionsAdded      		: Session,
@@ -140,6 +141,7 @@ class User {
         sessionParticipants     cascade: 'all-delete-orphan'
         daysPresent             cascade: 'all-delete-orphan'
 		reviews					cascade: 'all-delete-orphan'
+		reviewers				cascade: 'all-delete-orphan'
     }
 
     static constraints = {
@@ -237,6 +239,30 @@ class User {
 
 		networkChairsInfo { date ->
 			networkChairs(date)
+		}
+
+		allReviewers { date ->
+			allUsers()
+
+			reviewers {
+				eq('date.id', date.id)
+			}
+		}
+
+		allNewReviewers { date ->
+			allReviewers(date)
+
+			reviewers {
+				isNull('confirmed')
+			}
+		}
+
+		allReviewersConfirmed { date ->
+			allReviewers(date)
+
+			reviewers {
+				eq('confirmed', true)
+			}
 		}
 
 		allParticipantUsers {
