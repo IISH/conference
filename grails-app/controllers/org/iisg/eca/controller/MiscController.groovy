@@ -491,13 +491,13 @@ class MiscController {
 			LEFT JOIN session_participant AS sp 
 			ON u.user_id = sp.user_id
 			LEFT JOIN sessions AS s
-			ON sp.session_id = s.session_id AND s.deleted = 0 AND s.date_id = :dateId
+			ON sp.session_id = s.session_id AND s.deleted = 0 AND s.date_id = :dateId AND s.session_state_id = 2
 			WHERE u.deleted = 0 AND pd.deleted = 0
-			AND pd.date_id = :dateId AND sp.date_id = :dateId 
+			AND pd.date_id = :dateId
 			AND pd.participant_state_id IN (1, 2)
 			AND (pd.payment_id IS NULL OR pd.payment_id = 0)
 			GROUP BY u.user_id
-			ORDER BY sessions, u.lastname, u.firstname, u.email
+			ORDER BY GROUP_CONCAT(DISTINCT s.session_code ORDER BY s.session_code) IS NULL, u.lastname, u.firstname, u.email
         """, [dateId: pageInformation.date.id])
 
 		List<String> columns = ['lastname', 'firstname', 'email', 'sessions'] as List<String>
