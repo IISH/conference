@@ -419,7 +419,7 @@ class MiscController {
         Sql sql = new Sql(dataSource)
         List<GroovyRowResult> result = sql.rows("""
             SELECT session_id, session_code, session_name, description
-            FROM `sessions` s
+            FROM sessions s
             INNER JOIN session_states ss ON s.session_state_id = ss.session_state_id
             WHERE s.deleted=0
             AND date_id=:dateId
@@ -483,20 +483,25 @@ class MiscController {
 	def noPaymentAttempt() {
 		Sql sql = new Sql(dataSource)
 		List<GroovyRowResult> result = sql.rows("""
-            SELECT users.user_id, users.lastname, users.firstname, users.email
-			FROM users
-			INNER JOIN participant_date
-			ON users.user_id = participant_date.user_id
-			WHERE users.enabled=1 AND users.deleted=0
-			AND participant_date.deleted=0
-			AND participant_date.participant_state_id IN (1,2)
-			AND participant_date.date_id = :dateId
-			AND ( participant_date.payment_id IS NULL OR participant_date.payment_id = 0 )
-			ORDER BY lastname, firstname, email
+            SELECT u.user_id, u.lastname, u.firstname, u.email,
+            CAST(GROUP_CONCAT(DISTINCT s.session_code ORDER BY s.session_code) AS CHAR) AS sessions
+			FROM users AS u
+			INNER JOIN participant_date AS pd
+			ON u.user_id = pd.user_id
+			LEFT JOIN session_participant AS sp 
+			ON u.user_id = sp.user_id
+			LEFT JOIN sessions AS s
+			ON sp.session_id = s.session_id AND s.deleted = 0 AND s.date_id = :dateId
+			WHERE u.deleted = 0 AND pd.deleted = 0
+			AND pd.date_id = :dateId AND sp.date_id = :dateId 
+			AND pd.participant_state_id IN (1, 2)
+			AND (pd.payment_id IS NULL OR pd.payment_id = 0)
+			GROUP BY u.user_id
+			ORDER BY sessions, u.lastname, u.firstname, u.email
         """, [dateId: pageInformation.date.id])
 
-		List<String> columns = ['lastname', 'firstname', 'email'] as List<String>
-		List<String> headers = ["Last name", "First name", "E-mail"] as List<String>
+		List<String> columns = ['lastname', 'firstname', 'email', 'sessions'] as List<String>
+		List<String> headers = ["Last name", "First name", "E-mail", "Sessions"] as List<String>
 		String info = "Participants without any made payment attempt"
 
 		// If an export of the results is requested, try to delegate the request to the export service
