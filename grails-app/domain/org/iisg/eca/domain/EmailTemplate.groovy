@@ -24,6 +24,9 @@ class EmailTemplate extends EventDomain implements Cloneable {
     public static final String QUERY_SESSION_IN_CONSIDERATION_NOT_ANSWERED = "sessionInConsiderationNotAnswered"
     public static final String QUERY_SESSION_NOT_ACCEPTED_NOT_ANSWERED = "sessionNotAcceptedNotAnswered"
     public static final String QUERY_NETWORK_CHAIRS_INFO = "networkChairsInfo"
+    public static final String QUERY_ALL_REVIEWERS = "allReviewers"
+    public static final String QUERY_ALL_NEW_REVIEWERS = "allNewReviewers"
+    public static final String QUERY_ALL_REVIEWERS_CONFIRMED = "allReviewersConfirmed"
 
     /**
      * The identifier names
@@ -33,6 +36,7 @@ class EmailTemplate extends EventDomain implements Cloneable {
     public static final String PAPER_ID = 'paperId'
     public static final String SESSION_ID = 'sessionId'
     public static final String NETWORK_ID = 'networkId'
+    public static final String REVIEWER_ID = 'reviewerId'
 
     /**
      * What to filter on for each action when sending mails?
@@ -223,6 +227,11 @@ class EmailTemplate extends EventDomain implements Cloneable {
             case QUERY_NETWORK_CHAIRS_INFO:
                 return ['networks.network']
                 break
+            case QUERY_ALL_REVIEWERS:
+            case QUERY_ALL_NEW_REVIEWERS:
+            case QUERY_ALL_REVIEWERS_CONFIRMED:
+                return ['reviewers']
+                break
             default:
                 return []
         }
@@ -248,6 +257,11 @@ class EmailTemplate extends EventDomain implements Cloneable {
                 break
             case QUERY_NETWORK_CHAIRS_INFO:
                 return [(USER_ID): identifiers[0], (NETWORK_ID): identifiers[1]]
+                break
+            case QUERY_ALL_REVIEWERS:
+            case QUERY_ALL_NEW_REVIEWERS:
+            case QUERY_ALL_REVIEWERS_CONFIRMED:
+                return [(USER_ID): identifiers[0], (REVIEWER_ID): identifiers[1]]
                 break
             default:
                 return [(USER_ID): identifiers[0]]
