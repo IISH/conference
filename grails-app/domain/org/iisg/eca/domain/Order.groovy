@@ -243,6 +243,7 @@ class Order {
 
 		if (result?.get('success')) {
 			this.id = result.get('orderid').toString().toLong()
+			this.participantDate.paymentId = this.id
 			return this.save(insert: true, flush: true)
 		}
 
