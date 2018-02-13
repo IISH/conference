@@ -8,12 +8,13 @@ class PaperList extends EventDateDomain {
     PaperState state
     Session session
     String title
+    PaperType type
     Network networkProposal
     String sessionProposal
     BigDecimal avgReviewScore
 	boolean deleted = false
 
-	static belongsTo = [User, PaperState, Session, Network]
+	static belongsTo = [User, PaperState, Session, PaperType, Network]
     static hasMany = [reviews: PaperReview]
 
     static mapping = {
@@ -25,6 +26,7 @@ class PaperList extends EventDateDomain {
         state               column: 'paper_state_id',       fetch: 'join'
         session             column: 'session_id',           fetch: 'join'
         title               column: 'title'
+        type                column: 'paper_type_id'
         networkProposal     column: 'network_proposal_id',  fetch: 'join'
         sessionProposal     column: 'session_proposal'
         avgReviewScore		column: 'avg_review_score'
@@ -36,6 +38,7 @@ class PaperList extends EventDateDomain {
     static constraints = {
         session             nullable: true
         title               blank: false,   maxSize: 500
+        type            	nullable: true
         networkProposal     nullable: true
         sessionProposal     nullable: true, maxSize: 500
         avgReviewScore		nullable: true
