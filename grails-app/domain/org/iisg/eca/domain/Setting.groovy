@@ -80,7 +80,6 @@ class Setting extends EventDomain {
 	static final String SHOW_PAPER_TYPES = 'show_paper_types'
 	static final String SHOW_PROGRAMME_ONLINE = 'show_programme_online'
 	static final String SHOW_REFUND_DIALOG = 'show_refund_dialog'
-	static final String SHOW_SESSION_ABSTRACT_EXPORT = 'show_session_abstract_export'
 	static final String SHOW_SESSION_CODES = 'show_session_codes'
 	static final String SHOW_SESSION_PARTICIPANT_TYPES_REGISTRATION = 'show_session_participant_types_registration'
 	static final String SHOW_SESSION_PROPOSAL = 'show_session_proposal'
