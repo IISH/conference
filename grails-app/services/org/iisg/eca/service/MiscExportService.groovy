@@ -341,7 +341,7 @@ class MiscExportService {
 				  'notFinished'    : ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
 
 		return new XlsMapExport(
-				['network', 'lastname', 'firstname', 'email', 'papertitle', 'paperstate', 'paperabstract'],
+				['network', 'lastname', 'firstname', 'email', 'paperid', 'papertitle', 'coauthors', 'paperstate', 'paperabstract'],
 				usersPapers.collect { userAndPaper ->
 					User user = userAndPaper[0] as User
 					Paper paper = userAndPaper[1] as Paper
@@ -350,9 +350,11 @@ class MiscExportService {
 							'lastname'     : user.lastName,
 							'firstname'    : user.firstName,
 							'email'        : user.emailDiscontinued ? null : user.email,
+							'paperid'	   : paper.id,
 							'papertitle'   : paper.title,
-							'paperabstract': paper.abstr,
-							'paperstate'   : paper.state.description]
+							'coauthors'    : paper.coAuthors,
+							'paperstate'   : paper.state.description,
+							'paperabstract': paper.abstr]
 				},
 				title,
 				columnNames

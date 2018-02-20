@@ -141,9 +141,11 @@ class ExportController {
 					messageSource.getMessage('user.lastName.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('user.firstName.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('user.email.label', null, LocaleContextHolder.locale),
+					'#',
 					messageSource.getMessage('paper.label', null, LocaleContextHolder.locale),
-					messageSource.getMessage('paper.abstr.label', null, LocaleContextHolder.locale),
-					messageSource.getMessage('paper.state.label', null, LocaleContextHolder.locale)
+					messageSource.getMessage('paper.coAuthors.label', null, LocaleContextHolder.locale),
+					messageSource.getMessage('paper.state.label', null, LocaleContextHolder.locale),
+					messageSource.getMessage('paper.abstr.label', null, LocaleContextHolder.locale)
 			])
 		}
 	}
