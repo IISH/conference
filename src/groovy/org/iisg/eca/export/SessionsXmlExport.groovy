@@ -20,13 +20,15 @@ class SessionsXmlExport extends XmlExport {
     private static final DateFormat MONTH_FORMATTER = new SimpleDateFormat('MMMMM', Locale.US)
     private static final DateFormat YEAR_FORMATTER = new SimpleDateFormat('yyyy', Locale.US)
 
+    private boolean printCoAuthors
     private Map<SessionDateTime, List> sessionsByDateTime
     private Map<Session, List<Network>> networksBySession
     private Map<Session, Map<ParticipantType, List<User>>> sessionParticipantsBySession
     private Map<Session, List> papersBySession
 
-    SessionsXmlExport(String description) {
+    SessionsXmlExport(String description, boolean printCoAuthors) {
         super(description)
+        this.printCoAuthors = printCoAuthors
         setNetworks()
         setSessionPapers()
         setSessionsByDateTime()
@@ -171,12 +173,13 @@ class SessionsXmlExport extends XmlExport {
 
             sessionParticipantsBySession.get(session)?.each { type, users ->
                 // Co-authors are for internal use only
-                if (type.id != ParticipantType.CO_AUTHOR) {
+                if ((type.id != ParticipantType.CO_AUTHOR) || this.printCoAuthors) {
                     builder."${type.type.toLowerCase()}s" {
                         users.each { user ->
                             builder."${type.type.toLowerCase()}" {
+                                builder.'person-id'(user.id)
                                 builder.name("$user.firstName $user.lastName")
-                                builder.organisation("$user.organisation")
+                                builder.organisation(user.organisation)
                             }
                         }
                     }
@@ -189,8 +192,9 @@ class SessionsXmlExport extends XmlExport {
                     User user = (User) paperInfo[1]
 
                     builder.paper {
+                        builder.'person-id'(user.id)
                         builder.presenter("$user.firstName $user.lastName")
-                        builder.organisation("$user.organisation")
+                        builder.organisation(user.organisation)
                         builder.copresenters(paper.coAuthors)
                         builder.subject(paper.title)
                         builder.abstract(paper.abstr)

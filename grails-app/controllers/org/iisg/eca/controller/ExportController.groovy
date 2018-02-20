@@ -31,7 +31,12 @@ class ExportController {
 	def sessions() {
 		response.contentType = "application/xml"
 		response.setHeader("Content-disposition", "attachment;filename=\"sessions.xml\"")
-		response.outputStream << bookExportService.sessionsXml
+		response.outputStream << bookExportService.getSessionsXml(false)
+	}
+
+	def programme() {
+		response.contentType = "application/xml"
+		response.outputStream << bookExportService.getSessionsXml(true)
 	}
 
 	def badgesPayed() {

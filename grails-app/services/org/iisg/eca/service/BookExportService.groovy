@@ -35,11 +35,12 @@ class BookExportService {
 
     /**
      * Creates an XML with all the sessions
+     * @param printCoAuthors Whether to print the co-authors
      * @return A string representing the XML
      */
-    String getSessionsXml() {
+    String getSessionsXml(boolean printCoAuthors) {
         SessionsXmlExport sessionsXmlExport =
-                new SessionsXmlExport("Export ${getEventCode()} Programbook (Sessions) (English)")
+                new SessionsXmlExport("Export ${getEventCode()} Programbook (Sessions) (English)", printCoAuthors)
         sessionsXmlExport.toString()
     }
 
