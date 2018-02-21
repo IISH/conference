@@ -61,9 +61,7 @@ class SessionsXmlExport extends XmlExport {
             FROM Paper AS p
             INNER JOIN p.user AS u
             INNER JOIN p.session AS s
-            INNER JOIN u.sessionParticipants AS sp
-            INNER JOIN sp.type AS t
-            WHERE u.deleted = false AND s.deleted = false AND t.withPaper = true
+            WHERE u.deleted = false AND s.deleted = false
             ORDER BY u.lastName, u.firstName
         ''').each { paperInfo ->
             Paper paper = (Paper) paperInfo[0]
