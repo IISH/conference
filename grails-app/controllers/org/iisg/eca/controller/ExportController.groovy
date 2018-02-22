@@ -144,6 +144,7 @@ class ExportController {
 					'#',
 					messageSource.getMessage('paper.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('paper.coAuthors.label', null, LocaleContextHolder.locale),
+                    messageSource.getMessage('paper.type.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('paper.state.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('paper.abstr.label', null, LocaleContextHolder.locale)
 			])
