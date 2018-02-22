@@ -34,11 +34,6 @@ class ExportController {
 		response.outputStream << bookExportService.getSessionsXml(false)
 	}
 
-	def programme() {
-		response.contentType = "application/xml"
-		response.outputStream << bookExportService.getSessionsXml(true)
-	}
-
 	def badgesPayed() {
 		Export badges = miscExportService.getParticipantsExport(miscExportService.BADGES_PAYED)
 
