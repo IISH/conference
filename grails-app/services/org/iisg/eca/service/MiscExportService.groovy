@@ -4,6 +4,7 @@ import org.iisg.eca.domain.Day
 import org.iisg.eca.domain.Extra
 import org.iisg.eca.domain.Network
 import org.iisg.eca.domain.Paper
+import org.iisg.eca.domain.PaperType
 import org.iisg.eca.domain.ParticipantDate
 import org.iisg.eca.domain.ParticipantState
 import org.iisg.eca.domain.Session
@@ -320,10 +321,11 @@ class MiscExportService {
 	 */
 	XlsMapExport getIndividualPapersInNetworkExport(Network network, String title, List<String> columnNames) {
 		List usersPapers = ParticipantDate.executeQuery('''
-				SELECT DISTINCT u, p
+				SELECT DISTINCT u, p, t
                 FROM ParticipantDate AS pd
 				INNER JOIN pd.user AS u
 				INNER JOIN u.papers AS p
+				INNER JOIN p.type AS t
                 WHERE u.deleted = false
 				AND p.networkProposal.id = :networkId
 				AND pd.state.id IN (:newParticipant, :dataChecked, :participant, :notFinished)
@@ -341,10 +343,11 @@ class MiscExportService {
 				  'notFinished'    : ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
 
 		return new XlsMapExport(
-				['network', 'lastname', 'firstname', 'email', 'paperid', 'papertitle', 'coauthors', 'paperstate', 'paperabstract'],
+				['network', 'lastname', 'firstname', 'email', 'paperid', 'papertitle', 'coauthors', 'papertype', 'paperstate', 'paperabstract'],
 				usersPapers.collect { userAndPaper ->
 					User user = userAndPaper[0] as User
 					Paper paper = userAndPaper[1] as Paper
+					PaperType type = userAndPaper[2] as PaperType
 
 					return ['network'      : network.name,
 							'lastname'     : user.lastName,
@@ -353,6 +356,7 @@ class MiscExportService {
 							'paperid'	   : paper.id,
 							'papertitle'   : paper.title,
 							'coauthors'    : paper.coAuthors,
+							'papertype'	   : type.type,
 							'paperstate'   : paper.state.description,
 							'paperabstract': paper.abstr]
 				},

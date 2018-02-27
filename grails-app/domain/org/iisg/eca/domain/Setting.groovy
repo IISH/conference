@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat
  */
 class Setting extends EventDomain {
 	// Default settings
+	static final String ACCESS_TOKEN = 'access_token'
 	static final String ALLOWED_PAPER_EXTENSIONS = 'allowed_paper_extensions'
 	static final String APPLICATION_TITLE = 'application_title'
 	static final String AUTHOR_REGISTRATION_LASTDATE = 'author_registration_lastdate'

@@ -34,11 +34,6 @@ class ExportController {
 		response.outputStream << bookExportService.getSessionsXml(false)
 	}
 
-	def programme() {
-		response.contentType = "application/xml"
-		response.outputStream << bookExportService.getSessionsXml(true)
-	}
-
 	def badgesPayed() {
 		Export badges = miscExportService.getParticipantsExport(miscExportService.BADGES_PAYED)
 
@@ -149,6 +144,7 @@ class ExportController {
 					'#',
 					messageSource.getMessage('paper.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('paper.coAuthors.label', null, LocaleContextHolder.locale),
+                    messageSource.getMessage('paper.type.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('paper.state.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('paper.abstr.label', null, LocaleContextHolder.locale)
 			])
