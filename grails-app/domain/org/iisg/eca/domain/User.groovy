@@ -65,6 +65,8 @@ class User {
 	String education
 	String cv
 	String extraInfo
+	int dietaryWishes = 0
+	String otherDietaryWishes
 	Date dateAdded = new Date()
 	boolean emailDiscontinued = false
 	boolean enabled = true
@@ -127,6 +129,8 @@ class User {
 		education				column: 'education'
         cv                      column: 'cv',           type: 'text'
         extraInfo               column: 'extra_info',   type: 'text'
+		dietaryWishes			column: 'dietary_wishes'
+		otherDietaryWishes		column: 'other_dietary_wishes'
         dateAdded               column: 'date_added'
         emailDiscontinued       column: 'email_discontinued'
 	    enabled                 column: 'enabled'
@@ -167,6 +171,7 @@ class User {
 		education				maxSize: 255,	nullable: true
         cv                                      nullable: true
         extraInfo                               nullable: true
+		otherDietaryWishes		maxSize: 255,	nullable: true
 	    addedBy                                 nullable: true
 		mergedWith                              nullable: true
     }
@@ -195,6 +200,8 @@ class User {
 			'education',
 			'cv',
 			'extraInfo',
+			'dietaryWishes',
+			'otherDietaryWishes',
 			'papers.id',
 			'daysPresent.day.id',
 			'addedBy.id'
@@ -214,6 +221,8 @@ class User {
 			'department',
 			'education',
 			'cv',
+			'dietaryWishes',
+			'otherDietaryWishes',
 			'country.id',
 			'daysPresent.day.id',
 			'addedBy.id'
