@@ -65,7 +65,7 @@ class User {
 	String education
 	String cv
 	String extraInfo
-	int dietaryWishes = 0
+	Integer dietaryWishes
 	String otherDietaryWishes
 	Date dateAdded = new Date()
 	boolean emailDiscontinued = false
@@ -171,6 +171,7 @@ class User {
 		education				maxSize: 255,	nullable: true
         cv                                      nullable: true
         extraInfo                               nullable: true
+		dietaryWishes							nullable: true
 		otherDietaryWishes		maxSize: 255,	nullable: true
 	    addedBy                                 nullable: true
 		mergedWith                              nullable: true
