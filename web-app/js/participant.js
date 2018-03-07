@@ -277,9 +277,9 @@ $(document).ready(function () {
     $('#paper-review').dialog({
         autoOpen: false,
         modal: true,
-        minWidth: 400,
+        minWidth: 500,
         minHeight: 350,
-        width: 500,
+        width: 700,
         height: 400,
         title: "Paper review",
         buttons: {
