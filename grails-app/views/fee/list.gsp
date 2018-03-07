@@ -15,6 +15,10 @@
                 <span class="action"><g:message code="feeState.isAccompanyingPersonFee.label" /></span>
             </g:if>
 
+            <g:if test="${ feeState.isStudentFee }">
+                <span class="action"><g:message code="feeState.isStudentFee.label" /></span>
+            </g:if>
+
             <span class="action">
                 <eca:ifUserHasAccess controller="${params.controller}" action="edit">
                     <eca:link controller="fee" action="edit" id="${feeState.id}">

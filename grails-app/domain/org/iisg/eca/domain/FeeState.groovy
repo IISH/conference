@@ -8,6 +8,7 @@ class FeeState extends EventDateDomain {
 
     String name
     boolean isDefaultFee = false
+    boolean isStudentFee = false
 	boolean isAccompanyingPersonFee = false
 	boolean deleted = false
     
@@ -25,6 +26,7 @@ class FeeState extends EventDateDomain {
         id                      column: 'fee_state_id'
         name                    column: 'name'
         isDefaultFee            column: 'is_default_fee'
+        isStudentFee            column: 'is_student_fee'
 	    isAccompanyingPersonFee column: 'is_accompanying_person_fee'
 	    deleted                 column: 'deleted'
 
@@ -42,6 +44,7 @@ class FeeState extends EventDateDomain {
             'id',
             'name',
             'isDefaultFee',
+            'isStudentFee',
 		    'isAccompanyingPersonFee',
             'feeAmounts.id'
     ]
@@ -49,6 +52,7 @@ class FeeState extends EventDateDomain {
     static namedQueries = {
         sortedFeeStates {
             order('isDefaultFee', 'desc')
+            order('isStudentFee', 'desc')
 	        order('isAccompanyingPersonFee', 'desc')
             order('name', 'asc')
         }
@@ -63,6 +67,12 @@ class FeeState extends EventDateDomain {
 			eq('isDefaultFee', true)
 		}.first()
 	}
+
+    static FeeState getStudentFee() {
+        withCriteria {
+            eq('isStudentFee', true)
+        }.first()
+    }
 
 	static FeeState getAccompanyingPersonFee() {
 		withCriteria {
