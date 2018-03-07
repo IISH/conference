@@ -67,6 +67,7 @@ class Setting extends EventDomain {
 	static final String SHOW_DAYS = 'show_days'
 	static final String SHOW_DAYS_SESSION_PLANNED = 'show_days_session_planned'
 	static final String SHOW_DEPARTMENT = 'show_department'
+	static final String SHOW_DIETARY_WISHES = 'show_dietary_wishes'
 	static final String SHOW_EDUCATION = 'show_education'
 	static final String SHOW_EQUIPMENT = 'show_equipment'
 	static final String SHOW_GENERAL_COMMENTS = 'show_general_comments'

@@ -22,7 +22,10 @@ class User {
 	static final int USER_STATUS_EMAIL_DISCONTINUED = 4
 	static final int USER_STATUS_PARTICIPANT_CANCELLED = 5
 	static final int USER_STATUS_PARTICIPANT_DOUBLE_ENTRY = 6
+
 	static final Pattern PASSWORD_PATTERN = Pattern.compile('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$')
+
+	static final List<Integer> DIETARY_WISHES_IDS = [1, 2, 3, 0]
 
 	/**
 	 * Information about the current page

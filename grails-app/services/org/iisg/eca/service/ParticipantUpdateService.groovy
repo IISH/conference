@@ -78,7 +78,7 @@ class ParticipantUpdateService {
 		bindData(user, params, [
 				include: ['title', 'firstName', 'lastName', 'gender', 'organisation',
 				          'department', 'education', 'email', 'address', 'city', 'country', 'phone', 'mobile', 'cv',
-				          'extraInfo', 'emailDiscontinued']
+				          'dietaryWishes', 'otherDietaryWishes', 'extraInfo', 'emailDiscontinued']
 		], "user")
 	}
 

@@ -1,4 +1,4 @@
-<%@ page import="org.iisg.eca.domain.AgeRange; org.iisg.eca.domain.PaperState; org.iisg.eca.domain.Equipment; org.iisg.eca.domain.Network; org.iisg.eca.domain.Volunteering; org.iisg.eca.domain.Day; org.iisg.eca.domain.SessionDateTime; org.iisg.eca.domain.Setting; org.iisg.eca.domain.Title; org.iisg.eca.domain.FeeState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Extra; org.iisg.eca.domain.Country; org.iisg.eca.domain.SessionParticipant; org.iisg.eca.domain.Order; org.iisg.eca.domain.PaperReview; org.iisg.eca.domain.ReviewCriteria" %>
+<%@ page import="org.iisg.eca.domain.AgeRange; org.iisg.eca.domain.PaperState; org.iisg.eca.domain.Equipment; org.iisg.eca.domain.Network; org.iisg.eca.domain.Volunteering; org.iisg.eca.domain.Day; org.iisg.eca.domain.SessionDateTime; org.iisg.eca.domain.Setting; org.iisg.eca.domain.Title; org.iisg.eca.domain.FeeState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Extra; org.iisg.eca.domain.Country; org.iisg.eca.domain.SessionParticipant; org.iisg.eca.domain.Order; org.iisg.eca.domain.PaperReview; org.iisg.eca.domain.ReviewCriteria; org.iisg.eca.domain.User" %>
 <div id="personal-tab" class="columns">
     <div class="column">
         <div>
@@ -169,6 +169,27 @@
                     </label>
                     <span class="property-value">
                         <textarea name="user.cv" cols="40" rows="5">${fieldValue(bean: user, field: 'cv')}</textarea>
+                    </span>
+                </div>
+            </g:if>
+            <g:if test="${Setting.getSetting(Setting.SHOW_DIETARY_WISHES, curDate?.event).value == '1'}">
+                <div class="${hasErrors(bean: user, field: 'dietaryWishes', 'error')}">
+                    <label class="property-label">
+                        <g:message code="user.dietaryWishes.label" />
+                    </label>
+                    <span class="property-value">
+                        <g:select name="user.dietaryWishes" from="${User.DIETARY_WISHES_IDS}"
+                                  valueMessagePrefix="user.dietaryWishes" value="${user.dietaryWishes}"
+                                  noSelection="${['': ' ']}" />
+                    </span>
+                </div>
+                <div class="${hasErrors(bean: user, field: 'otherDietaryWishes', 'error')}">
+                    <label class="property-label">
+                        <g:message code="user.otherDietaryWishes.label" />
+                    </label>
+                    <span class="property-value">
+                        <input type="text" name="user.otherDietaryWishes" maxlength="255"
+                               value="${fieldValue(bean: user, field: 'otherDietaryWishes')}" />
                     </span>
                 </div>
             </g:if>
