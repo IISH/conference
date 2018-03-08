@@ -131,7 +131,7 @@ class EmailService {
                     mailService.sendMail {
                         from "\"${sentEmail.fromName}\" <${fromEmail}>"
 	                    replyTo sentEmail.fromEmail
-	                    bcc bccAddresses
+                        if (bccAddresses.length > 0) bcc bccAddresses
 	                    to "\"${sentEmail.user.toString()}\" <${sentEmail.user.email}>"
                         subject sentEmail.subject
                         text sentEmail.body
@@ -218,7 +218,7 @@ class EmailService {
             MimeMailMessage mailMessage = (MimeMailMessage) mailService.sendMail {
 	            from fromEmail
                 replyTo f
-	            bcc bccAddresses
+                if (bccAddresses.length > 0) bcc bccAddresses
                 to t
                 subject s
                 text body
