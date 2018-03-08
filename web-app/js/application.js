@@ -80,28 +80,38 @@ var setDatePicker = function (element, increaseDay) {
 var addAutoComplete = function (element) {
 	// Have to use listener for auto complete added to dynamically added input boxes
 	$(element).on('focus', function () {
-		$(this).autocomplete({
-			minLength: 3,
-			source: function (request, response) {
-				var queryName = $(this.element).prevAll(".ac-query").val();
+		var elem = $(this);
+		if (elem.parent().hasClass('easy-autocomplete'))
+			return;
 
-				$.getJSON(guessUrl('user/usersAutoComplete'), {query: queryName, terms: request.term}, function (data) {
-					response(data);
-				});
-			},
-			search: function (event, ui) {
-				$(event.target).prevAll(".ac-value").val("");
-			},
-			focus: function (event, ui) {
-				$(event.target).val(ui.item.label);
-				return false;
-			},
-			select: function (event, ui) {
-				$(event.target).val(ui.item.label);
-				$(event.target).prevAll(".ac-value").val(ui.item.value);
-				return false;
+		elem.easyAutocomplete({
+            url: function (phrase) {
+                var queryName = elem.parent().prevAll(".ac-query").val();
+                return guessUrl('user/usersAutoComplete') + '?terms=' + phrase + '&query=' + queryName;
+            },
+            getValue: function (element) {
+                return element.lastName + ', ' + element.firstName;
+            },
+            template: {
+                type: 'custom',
+                method: function (value, item) {
+                    return value + ' <span class="ac-id">#' + item.id + '</span>' +
+						'<span class="ac-email">' + item.email + '</span>';
+                }
+            },
+			list: {
+                maxNumberOfElements: 15,
+                match: {
+                    enabled: true
+                },
+                onChooseEvent: function () {
+                    var id = elem.getSelectedItemData().id;
+                    elem.parent().prevAll(".ac-value").val(id);
+                }
 			}
 		});
+
+		elem.focus();
 	});
 };
 
@@ -122,7 +132,8 @@ var createNewItem = function (item, lastItem) {
 	var i = -1;
 	if ((lastItem.length !== 0) && (lastItem.hasClass('column') || lastItem.is('li'))) {
 		var nameSplit = lastItem.find('input[name], select[name], textarea[name]').attr("name").split('.');
-		var number = nameSplit[0].split('_')[1];
+        var idSplit = nameSplit[0].split('_');
+		var number = idSplit[idSplit.length - 1];
 		if ($.isNumeric(number)) {
 			i = number;
 		}
@@ -188,7 +199,8 @@ var removeAnItem = function (toBeRemoved, classToStop) {
 	while (!next.hasClass(classToStop)) {
 		var elements = next.find('input[name], select[name], textarea[name]');
 		var nameSplit = elements.attr("name").split('.');
-		var number = nameSplit[0].split('_')[1];
+        var idSplit = nameSplit[0].split('_');
+        var number = idSplit[idSplit.length - 1];
 		if ($.isNumeric(number)) {
 			var newNumber = number - 1;
 			elements.each(function () {
@@ -313,15 +325,15 @@ $(document).ready(function () {
 
 	$('#loading').hide();
 
-	$.Placeholder.init();
+	/*$.Placeholder.init();*/
 
 	var cookieValue = $.cookie("submenus");
 	var openSubMenus = (cookieValue) ? cookieValue.split(';') : [];
     subMenusToOpen(openSubMenus);
 
-	$('textarea').each(function () {
+	/*$('textarea').each(function () {
 		makeResizable(this);
-	});
+	});*/
 
 	$('#tabs').tabs({
 		active: $.cookie("tab"),
@@ -469,35 +481,20 @@ $(document).ready(function () {
 		}
 	});
 
-	$(document).on('click', 'fieldset li span.ui-icon-circle-minus', function (e) {
-		var thisItem = $(e.target);
-		var item = thisItem.parents('li');
+    $(document).on('click', '.columns.copy span.ui-icon-circle-minus, fieldset li span.ui-icon-circle-minus', function (e) {
+        var thisItem = $(e.target);
+        var item = thisItem.closest('.column, li');
 
-		ajaxCall(this, messageUrl, {code: 'default.button.confirm.message'}, function (data) {
-			var deleted = confirm(data.message);
-			if (deleted) {
-				if (!thisItem.hasClass('no-del')) {
-					removeAnItem(item, 'add');
-				}
-				thisItem.trigger('removed-item');
-			}
-		});
-	});
-
-	$(document).on('click', '.columns.copy span.ui-icon-circle-minus', function (e) {
-		var thisItem = $(e.target);
-		var item = thisItem.parents('.column');
-
-		ajaxCall(this, messageUrl, {code: 'default.button.confirm.message'}, function (data) {
-			var deleted = confirm(data.message);
-			if (deleted) {
-				if (!thisItem.hasClass('no-del')) {
-					removeAnItem(item, 'hidden');
-				}
-				thisItem.trigger('removed-item');
-			}
-		});
-	});
+        ajaxCall(this, messageUrl, {code: 'default.button.confirm.message'}, function (data) {
+            var deleted = confirm(data.message);
+            if (deleted) {
+                if (!thisItem.hasClass('no-del')) {
+                    removeAnItem(item, item.is('li') ? 'add' : 'hidden');
+                }
+                thisItem.trigger('removed-item');
+            }
+        });
+    });
 
 	$('a.btn_delete, a.btn_duplicate').click(function (e) {
 		e.preventDefault();
@@ -649,7 +646,7 @@ $(document).ready(function () {
 		var state_id = $(this).val();
 		var column = $(this).parents("td");
 
-		ajaxCall(this, 'participant/changePaperState', {paper_id: column.prev().text(), state_id: state_id},
+		ajaxCall(this, 'paper/changeState', {paper_id: column.prev().text(), state_id: state_id},
 			function () {
 				column.parent().find("span.ui-icon-check").css('visibility', 'visible');
 			},
@@ -794,6 +791,20 @@ $(document).ready(function () {
         var dialog = $('#network-export-dialog');
 		dialog.find('form:first').attr('action', elem.data('submit'));
 		dialog.dialog('open');
+    });
+
+    $('#import-dialog').dialog({
+        autoOpen: false,
+        minWidth: 500,
+        minHeight: 80,
+        title: "Import CSV"
+    });
+
+    $('.import-open').click(function (e) {
+        var elem = $(this);
+        var dialog = $('#import-dialog');
+        dialog.find('form:first').attr('action', elem.data('submit'));
+        dialog.dialog('open');
     });
 
 	$('#email-codes').accordion({

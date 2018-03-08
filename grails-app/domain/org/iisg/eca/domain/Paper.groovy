@@ -12,7 +12,11 @@ class Paper extends EventDateDomain {
     String title
     String coAuthors
     String abstr
-	String typeOfContribution
+	PaperType type
+	String differentType
+	String keywords
+	String reviewComment
+	BigDecimal avgReviewScore
     String comment
     Network networkProposal
     String sessionProposal
@@ -26,8 +30,12 @@ class Paper extends EventDateDomain {
 	User addedBy
 	boolean deleted = false
 
-	static belongsTo = [User, PaperState, Session, Network]
-    static hasMany = [equipment: Equipment, sessionParticipantPapers: SessionParticipantPaper]
+	static belongsTo = [User, PaperState, PaperType, Session, Network]
+    static hasMany = [
+			equipment: Equipment,
+			reviews: PaperReview,
+			sessionParticipantPapers: SessionParticipantPaper
+	]
 
     static mapping = {
         table 'papers'
@@ -40,7 +48,11 @@ class Paper extends EventDateDomain {
         title               column: 'title'
         coAuthors           column: 'co_authors'
         abstr               column: 'abstract',             type: 'text'
-		typeOfContribution	column: 'type_of_contribution'
+		type                column: 'paper_type_id'
+		differentType		column: 'different_type'
+		keywords			column: 'keywords',				type: 'text'
+		reviewComment		column: 'review_comment',		type: 'text'
+		avgReviewScore		column: 'avg_review_score'
         comment             column: 'comment',              type: 'text'
         networkProposal     column: 'network_proposal_id',  fetch: 'join'
         sessionProposal     column: 'session_proposal'
@@ -55,6 +67,7 @@ class Paper extends EventDateDomain {
 	    deleted             column: 'deleted'
 
         equipment           		joinTable: 'paper_equipment'
+		reviews					    cascade: 'all-delete-orphan'
 		sessionParticipantPapers	cascade: 'none'
     }
 
@@ -63,7 +76,11 @@ class Paper extends EventDateDomain {
         title               blank: false,   maxSize: 500
         coAuthors           nullable: true, maxSize: 500
         abstr               blank: false
-		typeOfContribution	nullable: true,	maxSize: 100
+		type            	nullable: true
+		differentType		nullable: true,	maxSize: 100
+		keywords			nullable: true
+		reviewComment		nullable: true
+		avgReviewScore		nullable: true
         comment             nullable: true
         networkProposal     nullable: true
         sessionProposal     nullable: true, maxSize: 500
@@ -91,7 +108,8 @@ class Paper extends EventDateDomain {
             'title',
             'coAuthors',
             'abstr',
-			'typeOfContribution',
+			'differentType',
+			'keywords',
             'networkProposal.id',
             'sessionProposal',
             'proposalDescription',
@@ -100,6 +118,8 @@ class Paper extends EventDateDomain {
             'fileSize',
             'equipmentComment',
             'equipment.id',
+			'reviews.id',
+			'type.id',
 		    'addedBy.id'
     ]
 
@@ -107,7 +127,8 @@ class Paper extends EventDateDomain {
 			'title',
 			'coAuthors',
 			'abstr',
-			'typeOfContribution',
+			'differentType',
+			'keywords',
 			'sessionProposal',
 			'equipmentComment',
 			'user.id',
@@ -115,7 +136,8 @@ class Paper extends EventDateDomain {
 			'session.id',
 			'networkProposal.id',
 			'equipment.id',
-			'addedBy.id'
+			'addedBy.id',
+			'type.id'
 	]
 
 	void softDelete() {
@@ -141,21 +163,19 @@ class Paper extends EventDateDomain {
 				this.session = session
 				break
 			case 'networkProposal.id':
-                log.warn("Setting network proposal for paper with name ${title} and id ${id}. Value is ${value} .")
 				Network networkProposal = (value.isLong()) ? Network.findById(value.toLong()) : null
 				if (networkProposal) {
 					this.networkProposal = networkProposal
-                    log.warn("Setting network proposal for paper with name ${title} and id ${id}. Network proposal is ${networkProposal} .")
 				}
-                else {
-                    log.warn("Setting network proposal for paper with name ${title} and id ${id}. Network appears to be null: ${networkProposal} .")
-                }
 				break
 			case 'addedBy.id':
 				User addedBy = (value.isLong()) ? User.findById(value.toLong()) : null
 				if (addedBy) {
 					this.addedBy = addedBy
 				}
+				break
+			case 'type.id':
+				this.type = (value.isLong()) ? PaperType.get(value.toLong()) : null
 				break
 			case 'equipment.id':
 				this.equipment?.clear()
@@ -218,6 +238,22 @@ class Paper extends EventDateDomain {
 	 */
 	boolean hasEquipmentWithId(long equipmentId) {
 		return equipment?.find { it.id == equipmentId }
+	}
+
+	/**
+	 * Updates the average score for all reviews of this paper
+	 */
+	boolean updateAvgReviewScore() {
+		BigDecimal total = BigDecimal.ZERO
+		int count = 0
+		this.reviews.each { review ->
+			review.scores.each { score ->
+				total = total.add(score.score)
+				count++
+			}
+		}
+		this.avgReviewScore = (count > 0) ? total.divide(count, 1, RoundingMode.HALF_UP) : null
+		this.save()
 	}
 
     /**

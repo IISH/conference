@@ -44,7 +44,7 @@ class FeeController {
         // The 'save' button was clicked, save all data
         if (request.post) {
             // Save all fee state related data
-            bindData(feeState, params, [include: ['name', 'isDefaultFee', 'isAccompanyingPersonFee']], 'feeState')
+            bindData(feeState, params, [include: ['name', 'isDefaultFee', 'isStudentFee', 'isAccompanyingPersonFee']], 'feeState')
 
             // Save all possible fee amounts
             int i = 0

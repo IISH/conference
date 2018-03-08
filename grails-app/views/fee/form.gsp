@@ -33,6 +33,15 @@
                     </span>
                 </div>
 
+                <div class="${hasErrors(bean: feeState, field: 'isStudentFee', 'error')} ">
+                    <label class="property-label">
+                        <g:message code="feeState.isStudentFee.label" />
+                    </label>
+                    <span class="property-value">
+                        <g:checkBox name="feeState.isStudentFee" value="${feeState?.isStudentFee}" />
+                    </span>
+                </div>
+
                 <div class="${hasErrors(bean: feeState, field: 'isAccompanyingPersonFee', 'error')} ">
                     <label class="property-label">
                         <g:message code="feeState.isAccompanyingPersonFee.label" />

@@ -14,6 +14,8 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile
 class ParticipantUpdateService {
 	def pageInformation
 	def passwordService
+	def emailCreationService
+	def emailService
 
 	/**
 	 * Make sure we can use the bind method within all methods of this service
@@ -76,7 +78,7 @@ class ParticipantUpdateService {
 		bindData(user, params, [
 				include: ['title', 'firstName', 'lastName', 'gender', 'organisation',
 				          'department', 'education', 'email', 'address', 'city', 'country', 'phone', 'mobile', 'cv',
-				          'extraInfo', 'emailDiscontinued']
+				          'dietaryWishes', 'otherDietaryWishes', 'extraInfo', 'emailDiscontinued']
 		], "user")
 	}
 
@@ -201,8 +203,8 @@ class ParticipantUpdateService {
 		user.addToPapers(paper)
 
 		bindData(paper, params, [
-				include: ['title', 'abstr', 'typeOfContribution', 'coAuthors', 'state', 'comment', 'sessionProposal',
-				          'proposalDescription', 'networkProposal', 'equipmentComment']
+				include: ['title', 'abstr', 'type', 'differentType', 'coAuthors', 'state', 'reviewComment', 'comment',
+						  'sessionProposal', 'proposalDescription', 'networkProposal', 'equipmentComment']
 		], "Paper_$i".toString())
 
 		CommonsMultipartFile file = (CommonsMultipartFile) params["Paper_${i}.file"]
@@ -218,6 +220,51 @@ class ParticipantUpdateService {
 			paper.addToEquipment(Equipment.get(equipmentId))
 		}
 
+		updatePaperReviews(paper, params, i)
+
 		paper.save(flush: true, failOnError: true)
+	}
+
+	/**
+	 * Update the paper reviews of a specific paper of the user for the current event date
+	 * @param paper The paper of which the reviews should be updated
+	 * @param params The paper reviews data to update
+	 * @param i The counter, to identify the paper data from <code>params</code> to update the paper reviews with
+	 */
+	private void updatePaperReviews(Paper paper, GrailsParameterMap params, int i) {
+		Set<PaperReview> toBeDeleted = []
+		if ((paper.reviews != null) && (paper.reviews.size() > 0)) {
+			toBeDeleted += paper.reviews
+		}
+
+		int j = 0
+		while (params["PaperReview_${i}_${j}"]) {
+			if (params["PaperReview_${i}_${j}.id"].toString().isLong()) {
+				Long id = params.long("PaperReview_${i}_${j}.id")
+				toBeDeleted.removeAll { it.id == id }
+			}
+			else {
+				PaperReview paperReview = new PaperReview()
+				bindData(paperReview, params, [include: ['reviewer']], "PaperReview_${i}_${j}".toString())
+
+				// Make sure the reviewer is not already added before and is not the paper author
+				PaperReview doublePaperReview = paper.reviews.find { it.reviewer.id == paperReview.reviewer.id }
+				if (doublePaperReview) {
+					toBeDeleted.remove(doublePaperReview)
+				}
+				else if (paperReview.reviewer.id != paper.user.id) {
+					paperReview.paper = paper
+					paper.addToReviews(paperReview)
+
+					SentEmail email = emailCreationService.createPaperReviewerEmail(paperReview)
+					emailService.sendEmail(email, true, true)
+				}
+			}
+
+			j++
+		}
+
+		// Whatever is left should be deleted
+		toBeDeleted.each { paper.removeFromReviews(it) }
 	}
 }

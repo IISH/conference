@@ -14,7 +14,7 @@
                                 <g:message code="default.button.searchin.label" />
                             </label>
                             <span class="property-value">
-                                <g:select id="filter-type" name="filter-type" valueMessagePrefix="search.for" from="['name', 'organisation', 'address']" value="${params['filter-type']}" />
+                                <g:select id="filter-type" name="filter-type" valueMessagePrefix="search.for" from="['name', 'id', 'organisation', 'address']" value="${params['filter-type']}" />
                             </span>
                         </div>
                         <div>
@@ -32,7 +32,7 @@
                             <g:message code="default.button.cancel.label" />
                         </eca:link>
                         <eca:link action="add">
-                            <g:message code="default.add.label" args="[g.message(code: 'participantDate.label')]" />
+                            <g:message code="default.add.label" args="[g.message(code: 'user.participant.label')]" />
                         </eca:link>
                         <input type="submit" value="${message(code: 'default.button.search.label')}" />
                     </fieldset>

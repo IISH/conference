@@ -31,7 +31,7 @@ class ExportController {
 	def sessions() {
 		response.contentType = "application/xml"
 		response.setHeader("Content-disposition", "attachment;filename=\"sessions.xml\"")
-		response.outputStream << bookExportService.sessionsXml
+		response.outputStream << bookExportService.getSessionsXml(false)
 	}
 
 	def badgesPayed() {
@@ -141,9 +141,12 @@ class ExportController {
 					messageSource.getMessage('user.lastName.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('user.firstName.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('user.email.label', null, LocaleContextHolder.locale),
+					'#',
 					messageSource.getMessage('paper.label', null, LocaleContextHolder.locale),
-					messageSource.getMessage('paper.abstr.label', null, LocaleContextHolder.locale),
-					messageSource.getMessage('paper.state.label', null, LocaleContextHolder.locale)
+					messageSource.getMessage('paper.coAuthors.label', null, LocaleContextHolder.locale),
+                    messageSource.getMessage('paper.type.label', null, LocaleContextHolder.locale),
+					messageSource.getMessage('paper.state.label', null, LocaleContextHolder.locale),
+					messageSource.getMessage('paper.abstr.label', null, LocaleContextHolder.locale)
 			])
 		}
 	}

@@ -1,7 +1,7 @@
 package org.iisg.eca.controller
 
 import grails.converters.JSON
-
+import org.iisg.eca.domain.PaperReview
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Setting
 import org.iisg.eca.domain.SentEmail
@@ -32,6 +32,8 @@ class EmailController {
      * To create a preview email with the currently logged in user
      */
     def springSecurityService
+
+    def emailCreationService
 
     /**
      * Index action, redirects to the list action
@@ -148,6 +150,13 @@ class EmailController {
                                 body:       eca.formatText(text: previewEmail.body)]
 
             render responseMap as JSON
+        }
+    }
+
+    def reviewers() {
+        PaperReview.list().each { PaperReview paperReview ->
+            SentEmail email = emailCreationService.createPaperReviewerEmail(paperReview)
+            emailService.sendEmail(email, true, false)
         }
     }
 }

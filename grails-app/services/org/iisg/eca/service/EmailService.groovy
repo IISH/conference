@@ -280,6 +280,17 @@ class EmailService {
 	        }
         }
 
+        // And for the identifiers
+        identifiers.each { identifier ->
+            if (email.body.contains("[${identifier.key}]")) {
+                email.body = email.body.replace("[$identifier.key]", identifier.value.toString())
+            }
+
+            if (email.subject.contains("[${identifier.key}]")) {
+                email.subject = email.subject.replace("[$identifier.key]", identifier.value.toString())
+            }
+        }
+
         // Also update the special code SenderName
         if (email.body.contains("[SenderName]")) {
 	        email.body = email.body.replace("[SenderName]", template.sender?.trim())

@@ -4,6 +4,7 @@ import org.iisg.eca.domain.Day
 import org.iisg.eca.domain.Extra
 import org.iisg.eca.domain.Network
 import org.iisg.eca.domain.Paper
+import org.iisg.eca.domain.PaperType
 import org.iisg.eca.domain.ParticipantDate
 import org.iisg.eca.domain.ParticipantState
 import org.iisg.eca.domain.Session
@@ -47,7 +48,7 @@ class MiscExportService {
 		String trueText = messageSource.getMessage('default.boolean.true', null, LocaleContextHolder.locale)
 		String falseText = messageSource.getMessage('default.boolean.false', null, LocaleContextHolder.locale)
 
-		List<String> columns = ['user_id', 'title', 'lastname', 'firstname', 'organisation', 'department',
+		List<String> columns = ['user_id', 'title', 'lastname', 'firstname', 'email', 'organisation', 'department',
 		                        'name_english', 'amount', 'name', 'day', 'network']
 		columns += extras.values()
 
@@ -56,6 +57,7 @@ class MiscExportService {
 				messageSource.getMessage('title.label', null, LocaleContextHolder.locale),
 				messageSource.getMessage('user.lastName.label', null, LocaleContextHolder.locale),
 				messageSource.getMessage('user.firstName.label', null, LocaleContextHolder.locale),
+				messageSource.getMessage('user.email.label', null, LocaleContextHolder.locale),
 				messageSource.getMessage('user.organisation.label', null, LocaleContextHolder.locale),
 				messageSource.getMessage('user.department.label', null, LocaleContextHolder.locale),
 				messageSource.getMessage('user.country.label', null, LocaleContextHolder.locale),
@@ -79,15 +81,14 @@ class MiscExportService {
 				break
 			case BADGES_NOT_PAYED:
 				sqlQuery = sqlQuery.replace('extraCriteria',
-						'AND ((o.payed <> 1 AND o.payment_method <> 1) OR pd.payment_id IS NULL) ' +
-						'AND pd.participant_state_id IN (1,2)')
+						'AND ((o.payed <> 1 AND o.payment_method = 0) OR pd.payment_id IS NULL) '
+						+ 'AND pd.participant_state_id IN (1,2)')
 				title = messageSource.getMessage('participantDate.badges.not.payed.label', null, LocaleContextHolder.locale)
 				break
 			case BADGES_UNCONFIRMED:
 				sqlQuery = sqlQuery.replace('extraCriteria',
-						'AND o.payed <> 1 ' +
-						'AND (o.payment_method = 1 OR o.payment_method = 2) ' +
-						'AND pd.participant_state_id IN (1,2)')
+						'AND o.payed <> 1 AND (o.payment_method = 1 OR o.payment_method = 2) '
+						+ 'AND pd.participant_state_id IN (1,2)')
 				title = messageSource.getMessage('participantDate.badges.unconfirmed.label', null, LocaleContextHolder.locale)
 				break
 			default:
@@ -320,10 +321,11 @@ class MiscExportService {
 	 */
 	XlsMapExport getIndividualPapersInNetworkExport(Network network, String title, List<String> columnNames) {
 		List usersPapers = ParticipantDate.executeQuery('''
-				SELECT DISTINCT u, p
+				SELECT DISTINCT u, p, t
                 FROM ParticipantDate AS pd
 				INNER JOIN pd.user AS u
 				INNER JOIN u.papers AS p
+				INNER JOIN p.type AS t
                 WHERE u.deleted = false
 				AND p.networkProposal.id = :networkId
 				AND pd.state.id IN (:newParticipant, :dataChecked, :participant, :notFinished)
@@ -341,18 +343,22 @@ class MiscExportService {
 				  'notFinished'    : ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
 
 		return new XlsMapExport(
-				['network', 'lastname', 'firstname', 'email', 'papertitle', 'paperstate', 'paperabstract'],
+				['network', 'lastname', 'firstname', 'email', 'paperid', 'papertitle', 'coauthors', 'papertype', 'paperstate', 'paperabstract'],
 				usersPapers.collect { userAndPaper ->
 					User user = userAndPaper[0] as User
 					Paper paper = userAndPaper[1] as Paper
+					PaperType type = userAndPaper[2] as PaperType
 
 					return ['network'      : network.name,
 							'lastname'     : user.lastName,
 							'firstname'    : user.firstName,
 							'email'        : user.emailDiscontinued ? null : user.email,
+							'paperid'	   : paper.id,
 							'papertitle'   : paper.title,
-							'paperabstract': paper.abstr,
-							'paperstate'   : paper.state.description]
+							'coauthors'    : paper.coAuthors,
+							'papertype'	   : type.type,
+							'paperstate'   : paper.state.description,
+							'paperabstract': paper.abstr]
 				},
 				title,
 				columnNames
@@ -360,42 +366,56 @@ class MiscExportService {
 	}
 
 	private static final String PARTICIPANTS_SQL = '''
-			SELECT u.user_id, u.title, u.lastname, u.firstname, u.organisation,
+			SELECT u.user_id, u.title, u.lastname, u.firstname, u.email, u.organisation,
 			u.department, c.name_english, o.amount, fs.name, n.name AS network_name,
             CAST(GROUP_CONCAT(DISTINCT d.day_id ORDER BY d.day_number) AS CHAR) AS days,
             CAST(GROUP_CONCAT(DISTINCT e.extra_id ORDER BY e.extra) AS CHAR) AS extras
+            
             FROM users AS u
+            
             INNER JOIN participant_date AS pd
             ON u.user_id = pd.user_id
+            
             LEFT JOIN countries AS c
             ON u.country_id = c.country_id
+            
             LEFT JOIN orders AS o
             ON pd.payment_id = o.order_id
+            
             INNER JOIN fee_states AS fs
             ON pd.fee_state_id = fs.fee_state_id
+            
             LEFT JOIN participant_day AS pday
-            ON u.user_id = pday.user_id
+            ON u.user_id = pday.user_id 
+            AND (pday.date_id = :dateId OR pday.date_id IS NULL)
+            
             LEFT JOIN days AS d
-            ON pday.day_id = d.day_id
+            ON pday.day_id = d.day_id 
+            AND (d.date_id = :dateId OR d.date_id IS NULL) 
+            AND (d.deleted = 0 OR d.deleted IS NULL)
+            
             LEFT JOIN participant_date_extra AS pde
             ON pd.participant_date_id = pde.participant_date_id
+            
             LEFT JOIN extras AS e
             ON pde.extra_id = e.extra_id
+            AND (e.date_id = :dateId OR e.date_id IS NULL)
+            AND (e.deleted = 0 OR e.deleted IS NULL)
+            
             LEFT JOIN networks_chairs AS nc
             ON u.user_id = nc.user_id
+            
             LEFT JOIN networks AS n
             ON nc.network_id = n.network_id
+            
             WHERE u.deleted = 0
             AND pd.date_id = :dateId
             AND pd.deleted = 0
-            AND (pday.date_id = :dateId OR pday.date_id IS NULL)
-			AND (d.date_id = :dateId OR d.date_id IS NULL)
-			AND (d.deleted = 0 OR d.deleted IS NULL)
-			AND (e.date_id = :dateId OR e.date_id IS NULL)
-			AND (e.deleted = 0 OR e.deleted IS NULL)
             AND (   pd.participant_state_id IN (1,2)
-                    OR (pd.payment_id IS NOT NULL AND payment_id > 0))
+                    OR (pd.payment_id IS NOT NULL AND pd.payment_id > 0))
+                    
             extraCriteria
+            
             GROUP BY u.user_id
             ORDER BY u.lastname ASC, u.firstname ASC
 	'''

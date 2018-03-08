@@ -419,7 +419,7 @@ class MiscController {
         Sql sql = new Sql(dataSource)
         List<GroovyRowResult> result = sql.rows("""
             SELECT session_id, session_code, session_name, description
-            FROM `sessions` s
+            FROM sessions s
             INNER JOIN session_states ss ON s.session_state_id = ss.session_state_id
             WHERE s.deleted=0
             AND date_id=:dateId
@@ -483,20 +483,25 @@ class MiscController {
 	def noPaymentAttempt() {
 		Sql sql = new Sql(dataSource)
 		List<GroovyRowResult> result = sql.rows("""
-            SELECT users.user_id, users.lastname, users.firstname, users.email
-			FROM users
-			INNER JOIN participant_date
-			ON users.user_id = participant_date.user_id
-			WHERE users.enabled=1 AND users.deleted=0
-			AND participant_date.deleted=0
-			AND participant_date.participant_state_id IN (1,2)
-			AND participant_date.date_id = :dateId
-			AND ( participant_date.payment_id IS NULL OR participant_date.payment_id = 0 )
-			ORDER BY lastname, firstname, email
+            SELECT u.user_id, u.lastname, u.firstname, u.email,
+            CAST(GROUP_CONCAT(DISTINCT s.session_code ORDER BY s.session_code) AS CHAR) AS sessions
+			FROM users AS u
+			INNER JOIN participant_date AS pd
+			ON u.user_id = pd.user_id
+			LEFT JOIN session_participant AS sp 
+			ON u.user_id = sp.user_id
+			LEFT JOIN sessions AS s
+			ON sp.session_id = s.session_id AND s.deleted = 0 AND s.date_id = :dateId AND s.session_state_id = 2
+			WHERE u.deleted = 0 AND pd.deleted = 0
+			AND pd.date_id = :dateId
+			AND pd.participant_state_id IN (1, 2)
+			AND (pd.payment_id IS NULL OR pd.payment_id = 0)
+			GROUP BY u.user_id
+			ORDER BY GROUP_CONCAT(DISTINCT s.session_code ORDER BY s.session_code) IS NULL, u.lastname, u.firstname, u.email
         """, [dateId: pageInformation.date.id])
 
-		List<String> columns = ['lastname', 'firstname', 'email'] as List<String>
-		List<String> headers = ["Last name", "First name", "E-mail"] as List<String>
+		List<String> columns = ['lastname', 'firstname', 'email', 'sessions'] as List<String>
+		List<String> headers = ["Last name", "First name", "E-mail", "Sessions"] as List<String>
 		String info = "Participants without any made payment attempt"
 
 		// If an export of the results is requested, try to delegate the request to the export service
@@ -551,6 +556,42 @@ class MiscController {
                 action:     "show",
                 info:       info,
                 export:     true
+        ])
+    }
+
+    def favoriteSessions() {
+        Sql sql = new Sql(dataSource)
+        List<GroovyRowResult> result = sql.rows("""
+            SELECT session_code, session_name, count(*) AS aantal
+            FROM participant_favorite_session
+            INNER JOIN sessions ON participant_favorite_session.session_id = sessions.session_id
+            INNER JOIN participant_date ON participant_favorite_session.participant_date_id = participant_date.participant_date_id
+            WHERE sessions.session_state_id = 2
+            AND sessions.deleted = 0
+            AND participant_date.deleted = 0
+            AND participant_date.participant_state_id IN (0,1,2)
+            AND sessions.date_id = :dateId
+            GROUP BY sessions.date_id, session_code, session_name
+            ORDER BY sessions.date_id, count(*) DESC, session_code, session_name
+        """, [dateId: pageInformation.date.id])
+
+        List<String> columns = ['session_code', 'session_name', 'aantal'] as List<String>
+        List<String> headers = ["Session code", "Session name", "Times added as favorite"] as List<String>
+        String info = "Number of times sessions are added as a favorite session by participants"
+
+        // If an export of the results is requested, try to delegate the request to the export service
+        if (params.format) {
+            exportService.getSQLExport(params.format, response, columns, result, info, headers, params.sep)
+            return
+        }
+
+        render(view: "list", model: [
+                data      : result,
+                headers   : headers,
+                controller: "session",
+                action    : "show",
+                info      : info,
+                export    : true
         ])
     }
 }

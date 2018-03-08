@@ -31,10 +31,10 @@
                         <eca:link action="badgesPayed">Create Excel Export of participants for badges (Payed)</eca:link>
                     </li>
                     <li>
-                        <eca:link action="badgesNotPayed">Create Excel Export of participants for badges (Not payed)</eca:link>
+                        <eca:link action="badgesNotPayed">Create Excel Export of participants for badges (Not payed online or no attempt)</eca:link>
                     </li>
                     <li>
-                        <eca:link action="badgesUnconfirmed">Create Excel Export of participants for badges (Unconfirmed bank transfers)</eca:link>
+                        <eca:link action="badgesUnconfirmed">Create Excel Export of participants for badges (Unconfirmed bank transfers and on-site payments)</eca:link>
                     </li>
                 </ol>
             </li>

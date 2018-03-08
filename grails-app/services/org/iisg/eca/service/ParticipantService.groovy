@@ -61,6 +61,15 @@ class ParticipantService {
                     String[] words = filter.split()
                     and {
                         switch (type) {
+                            case "id":
+                                for (String w : words) {
+                                    if (!w.isEmpty() && w.isLong()) {
+                                        or {
+                                            eq('id', w.toLong())
+                                        }
+                                    }
+                                }
+                                break
                             case "organisation":
                                 for (String w : words) {
                                     if (!w.isEmpty()) {
@@ -217,19 +226,19 @@ class ParticipantService {
     }
 
 	/**
-	 * Creates a new participant for the current event date
+	 * Creates a new user and/or participant for the current event date
 	 * @param emailAddress The email address of the user in question
-	 * @return The new participant
+	 * @return The new user
 	 */
-	ParticipantDate createNewParticipant(String emailAddress) {
+	User createNewUser(String emailAddress, boolean createParticipant) {
 		ParticipantDate participant = null
 		User user = User.findByEmail(emailAddress)
 
-		// There is also no user with this email address, so create one
+		// There is no user with this email address, so create one
 		if (!user) {
 			user = new User(lastName: 'n/a', firstName: 'n/a', email: emailAddress, sendNewPassword: true)
 		}
-		else {
+		else if (createParticipant) {
 			// Does the participant exist in the database already, maybe deleted?
 			ParticipantDate.withoutHibernateFilters {
 				participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
@@ -238,17 +247,23 @@ class ParticipantService {
 			// Make sure that we undo the deletion if found
 			if (participant) {
 				participant.deleted = false
-				return participant
+				return user
 			}
 		}
 
 		// This user is not a participant yet, but the user indicated he/she wants to make him/her one
-		if (!participant) {
-            participant = new ParticipantDate(user: user, state: ParticipantState.get(ParticipantState.NEW_PARTICIPANT),
-					feeState: FeeState.get(FeeState.NO_FEE_SELECTED))
+		if (createParticipant && !participant) {
+            participant = new ParticipantDate(
+                    state: ParticipantState.get(ParticipantState.NEW_PARTICIPANT),
+					feeState: FeeState.get(FeeState.NO_FEE_SELECTED)
+            )
+            user.addToParticipantDates(participant)
 		}
 
-        return participant
+        // Make sure that we undo the deletion if found deleted
+        user.deleted = false
+
+        return user
 	}
 
     /**

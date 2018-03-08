@@ -9,7 +9,7 @@ import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 import org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes
 
 import org.codehaus.groovy.grails.web.context.ServletContextHolder
-
+import org.hibernate.criterion.CriteriaSpecification
 import org.iisg.eca.domain.EventDateDomain
 import org.iisg.eca.domain.EventDomain
 
@@ -17,105 +17,14 @@ import org.iisg.eca.domain.EventDomain
  * Queries the database for results based on the information from the <code>DataContainer</code>
  */
 class DynamicPageResults {
-    def static ctx = ServletContextHolder.servletContext.getAttribute(GrailsApplicationAttributes.APPLICATION_CONTEXT)
-    def static pageInformation = ctx.getBean('pageInformation')
+    static ctx = ServletContextHolder.servletContext.getAttribute(GrailsApplicationAttributes.APPLICATION_CONTEXT)
+    static pageInformation = ctx.getBean('pageInformation')
 
     private DataContainer dataContainer
     private GrailsParameterMap params
     private List results
     private Map<String, Object> newInstances
 
-    /**
-     * A closure to filter on only one column,
-     * which can be used for all columns in a Hibernate criteria builder
-     * So delegate the criteria to this closure
-     */
-    static Closure criteriaForColumn = { params, dataContainer, c, filterAll = true ->
-        // Only sort and filter on those that will be displayed anyway
-        if (!c.hasColumns() && (!c.constrainedProperty || c.constrainedProperty.display) && !c.hidden && filterAll) {
-            String filter = params["filter_${dataContainer.eid}_${c.name}"]            
-
-            // Place a filter on this column (currently only Strings and booleans) if specified by the user
-            if (filter && !filter.isEmpty()) {
-                if (c.property.type == Boolean || c.property.type == boolean) {
-                    if ((filter == "0") || (filter == "1")) {
-                        delegate.eq(c.name, filter.equals("1"))
-                    }
-                }
-                else if (c.property.type == String)  {
-                    String[] filters = filter.split()
-                    filter = "%${filters.join('%')}%"
-                    delegate.like(c.name, filter)
-                }
-                else if (c.property.manyToOne || c.property.oneToOne)  {
-                    if (filter?.isLong()) {
-                        delegate.eq(c.name + ".id", new Long(filter))
-                    }
-                    else if (c.filter) {
-                        delegate.isNull(c.name + ".id")
-                    }
-                }
-            }
-            else if (c.filter) {
-                delegate.isNull(c.name + ".id") 
-            }
-        }
-
-        // Now apply the filter from the column description, if there is one
-        if (c.eq) {
-            String value = null
-            // Figure out the exact value to filter on, the given property or from the url...
-            if (c.eq.equalsIgnoreCase("url")) {
-                if (params.id) {
-                    value = params.id
-                }
-            }
-            else {
-                value = c.eq
-            }
-
-            // Figure out if we're filtering on a relationship to another domain class or not
-            if (c.property.otherSide instanceof GrailsDomainClassProperty && value) {
-                delegate."${c.name}" {
-                    delegate.eq("id", value.toLong())
-                }
-            }
-            else if (value) {
-                if (c.property.type == Boolean || c.property.type == boolean) {
-                    delegate.eq(c.name, value.equals("1"))
-                }
-                else if (value.equalsIgnoreCase("null")) {
-                    delegate.isNull(c.name)
-                }
-                else {
-                    delegate.eq(c.name, value)
-                }
-            }
-        }
-        
-        // Also check for empty values
-        if (c.notEmpty) {
-            delegate.isNotEmpty(c.name)
-        }
-
-        // Make sure that referenced domain classes also filter events, event dates and soft deletes
-        if (c.hasColumns() && pageInformation.date && EventDateDomain.class.isAssignableFrom(c.property.referencedDomainClass.clazz)) {
-            "${c.name}" {
-                eq('date.id', pageInformation.date.id)
-            }
-        }
-        if (c.hasColumns() && pageInformation.date && EventDomain.class.isAssignableFrom(c.property.referencedDomainClass.clazz)) {
-            "${c.name}" {
-                eq('event.id', pageInformation.date.event.id)
-            }
-        }
-        if (c.hasColumns() && c.property.referencedDomainClass.hasProperty('deleted')) {
-            "${c.name}" {
-                eq('deleted', false)
-            }
-        }
-    }
-    
     /**
      * Creates a new <code>DynamicPageResults</code> instance
      * for the specified data container element
@@ -243,30 +152,98 @@ class DynamicPageResults {
     private List getList(boolean filterAll = true) {
         // The criteria builder will be used to query the database, so delegate it to the closure we just defined
         HibernateCriteriaBuilder criteria = dataContainer.domainClass.clazz.createCriteria()
-        criteriaForColumn.delegate = criteria
-
         criteria.listDistinct {
             // If there are child columns defined, then first set the level to the referencing domain class
             dataContainer.forAllColumnsWithChildren { withChild ->
-                "${withChild.name}" {
-                    and {
-                        // Then Loop over all the columns and place filters if needed
-                        dataContainer.getAllColumnsForDomainClass(withChild.property.referencedDomainClass).each { c ->
-                            criteriaForColumn(params, dataContainer, c, filterAll)
+                createAlias(withChild.name, withChild.name, CriteriaSpecification.LEFT_JOIN)
+            }
+
+            // Loop over all the columns and place filters if needed
+            dataContainer.getAllColumns().each { c ->
+                // Only sort and filter on those that will be displayed anyway
+                if (!c.hasColumns() && (!c.constrainedProperty || c.constrainedProperty.display) && !c.hidden && filterAll) {
+                    String filter = params["filter_${dataContainer.eid}_${c.name}"]
+
+                    // Place a filter on this column (currently only Strings and booleans) if specified by the user
+                    if (filter && !filter.isEmpty()) {
+                        if (c.property.type == Boolean || c.property.type == boolean) {
+                            if ((filter == "0") || (filter == "1")) {
+                                eq(c.fullName, filter.equals("1"))
+                            }
+                        }
+                        else if (c.property.type == String)  {
+                            String[] filters = filter.split()
+                            filter = "%${filters.join('%')}%"
+                            like(c.fullName, filter)
+                        }
+                        else if (c.property.manyToOne || c.property.oneToOne)  {
+                            if (filter?.isLong()) {
+                                eq(c.fullName + ".id", new Long(filter))
+                            }
+                            else if (c.filter) {
+                                isNull(c.fullName + ".id")
+                            }
+                        }
+                        else if ((c.property.oneToMany || c.property.manyToMany) && c.filterColumn) {
+                            String[] filters = filter.split()
+                            filter = "%${filters.join('%')}%"
+                            like("${c.fullName}.${c.filterColumn}", filter)
+                        }
+                    }
+                    else if (c.filter) {
+                        isNull(c.fullName + ".id")
+                    }
+                }
+
+                // Now apply the filter from the column description, if there is one
+                if (c.eq) {
+                    String value = null
+                    // Figure out the exact value to filter on, the given property or from the url...
+                    if (c.eq.equalsIgnoreCase("url")) {
+                        if (params.id) {
+                            value = params.id
+                        }
+                    }
+                    else {
+                        value = c.eq
+                    }
+
+                    // Figure out if we're filtering on a relationship to another domain class or not
+                    if (c.property.otherSide instanceof GrailsDomainClassProperty && value) {
+                        eq("${c.fullName}.id", value.toLong())
+                    }
+                    else if (value) {
+                        if (c.property.type == Boolean || c.property.type == boolean) {
+                            eq(c.fullName, value.equals("1"))
+                        }
+                        else if (value.equalsIgnoreCase("null")) {
+                            isNull(c.fullName)
+                        }
+                        else {
+                            eq(c.fullName, value)
                         }
                     }
                 }
-            }
 
-            and {
-                // Loop over all the columns and place filters if needed
-                dataContainer.getAllColumnsForDomainClass(dataContainer.domainClass).each { c ->
-                    criteriaForColumn(params, dataContainer, c, filterAll)
+                // Also check for empty values
+                if (c.notEmpty) {
+                    isNotEmpty(c.fullName)
+                }
+
+                // Make sure that referenced domain classes also filter events, event dates and soft deletes
+                if (c.hasColumns() && pageInformation.date && EventDateDomain.class.isAssignableFrom(c.property.referencedDomainClass.clazz)) {
+                    eq("${c.fullName}.date.id", pageInformation.date.id)
+                }
+                if (c.hasColumns() && pageInformation.date && EventDomain.class.isAssignableFrom(c.property.referencedDomainClass.clazz)) {
+                    eq("${c.fullName}.event.id", pageInformation.date.event.id)
+                }
+                if (c.hasColumns() && c.property.referencedDomainClass.hasProperty('deleted')) {
+                    eq("${c.fullName}.deleted", false)
                 }
             }
             
             // Sort the columns
-            params["sort_${dataContainer.eid}"]?.split(';').each { sortInfo -> 
+            params["sort_${dataContainer.eid}"]?.split(';')?.each { sortInfo ->
                 sortInfo = sortInfo?.split(':')
                 Column column = dataContainer.getColumnInHierarchy(sortInfo[0]?.trim())
                 
@@ -276,14 +253,7 @@ class DynamicPageResults {
                 }
                 
                 if (column && (sort == "asc" || sort == "desc")) {
-                    if (column.parent instanceof Column) {
-                        "${column.parent.name}" {
-                            order(column.name, sort)
-                        }
-                    }
-                    else {
-                        order(column.name, sort)
-                    }
+                    order(column.fullName, sort)
                 }
             }
         }

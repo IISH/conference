@@ -22,7 +22,10 @@ class User {
 	static final int USER_STATUS_EMAIL_DISCONTINUED = 4
 	static final int USER_STATUS_PARTICIPANT_CANCELLED = 5
 	static final int USER_STATUS_PARTICIPANT_DOUBLE_ENTRY = 6
+
 	static final Pattern PASSWORD_PATTERN = Pattern.compile('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$')
+
+	static final List<Integer> DIETARY_WISHES_IDS = [1, 2, 3, 0]
 
 	/**
 	 * Information about the current page
@@ -65,6 +68,8 @@ class User {
 	String education
 	String cv
 	String extraInfo
+	Integer dietaryWishes
+	String otherDietaryWishes
 	Date dateAdded = new Date()
 	boolean emailDiscontinued = false
 	boolean enabled = true
@@ -83,6 +88,8 @@ class User {
 					  dateTimesNotPresent: SessionDateTime,
 					  userPages          : UserPage,
 					  daysPresent        : ParticipantDay,
+					  reviews    		 : PaperReview,
+				      reviewers			 : Reviewer,
 					  mergedWithUsers	 : User,
 
 					  sessionsAdded      		: Session,
@@ -125,6 +132,8 @@ class User {
 		education				column: 'education'
         cv                      column: 'cv',           type: 'text'
         extraInfo               column: 'extra_info',   type: 'text'
+		dietaryWishes			column: 'dietary_wishes'
+		otherDietaryWishes		column: 'other_dietary_wishes'
         dateAdded               column: 'date_added'
         emailDiscontinued       column: 'email_discontinued'
 	    enabled                 column: 'enabled'
@@ -138,6 +147,8 @@ class User {
         papers                  cascade: 'all-delete-orphan'
         sessionParticipants     cascade: 'all-delete-orphan'
         daysPresent             cascade: 'all-delete-orphan'
+		reviews					cascade: 'all-delete-orphan'
+		reviewers				cascade: 'all-delete-orphan'
     }
 
     static constraints = {
@@ -163,6 +174,8 @@ class User {
 		education				maxSize: 255,	nullable: true
         cv                                      nullable: true
         extraInfo                               nullable: true
+		dietaryWishes							nullable: true
+		otherDietaryWishes		maxSize: 255,	nullable: true
 	    addedBy                                 nullable: true
 		mergedWith                              nullable: true
     }
@@ -191,6 +204,8 @@ class User {
 			'education',
 			'cv',
 			'extraInfo',
+			'dietaryWishes',
+			'otherDietaryWishes',
 			'papers.id',
 			'daysPresent.day.id',
 			'addedBy.id'
@@ -210,6 +225,8 @@ class User {
 			'department',
 			'education',
 			'cv',
+			'dietaryWishes',
+			'otherDietaryWishes',
 			'country.id',
 			'daysPresent.day.id',
 			'addedBy.id'
@@ -237,6 +254,30 @@ class User {
 			networkChairs(date)
 		}
 
+		allReviewers { date ->
+			allUsers()
+
+			reviewers {
+				eq('date.id', date.id)
+			}
+		}
+
+		allNewReviewers { date ->
+			allReviewers(date)
+
+			reviewers {
+				isNull('confirmed')
+			}
+		}
+
+		allReviewersConfirmed { date ->
+			allReviewers(date)
+
+			reviewers {
+				eq('confirmed', true)
+			}
+		}
+
 		allParticipantUsers {
 			allUsers()
 
@@ -250,6 +291,16 @@ class User {
 
 			participantDates {
 				'in'('state.id', [ParticipantState.PARTICIPANT_DATA_CHECKED, ParticipantState.PARTICIPANT])
+				eq('date.id', date.id)
+			}
+		}
+
+		allParticipantsSoftStateRegistered { date ->
+			allParticipantUsers()
+
+			participantDates {
+				'in'('state.id', [ParticipantState.NEW_PARTICIPANT, ParticipantState.PARTICIPANT_DATA_CHECKED,
+								  ParticipantState.PARTICIPANT])
 				eq('date.id', date.id)
 			}
 		}

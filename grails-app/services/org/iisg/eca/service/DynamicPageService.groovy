@@ -73,11 +73,10 @@ class DynamicPageService {
      * Returns a template of the dynamic page for the current request
      * with the results of a particular element on the page
      * @param dynamicPage A dynamic page with the described elements
-     * @param params The parameters of the current request
      * @param results The results to display
      * @return A template of the page with all the results
      */
-    def getTemplate(DynamicPage dynamicPage, GrailsParameterMap params, Map<Integer, DynamicPageResults> results)  {
+    def getTemplate(DynamicPage dynamicPage, Map<Integer, DynamicPageResults> results)  {
         // If there is no cache found in the database, create it now
         if (!dynamicPage.cache) {
             PageBuilder builder = new PageBuilder(dynamicPage.elements)
@@ -203,6 +202,7 @@ class DynamicPageService {
                 column.interactive  = element.@interactive.text()
                 column.textarea     = element.@textarea.text()
                 column.eq           = element.@eq.text()
+                column.filterColumn = element.@filterColumn.text()
 
                 elements.add(column)
             }  

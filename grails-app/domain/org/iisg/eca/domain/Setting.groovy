@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat
  */
 class Setting extends EventDomain {
 	// Default settings
+	static final String ACCESS_TOKEN = 'access_token'
 	static final String ALLOWED_PAPER_EXTENSIONS = 'allowed_paper_extensions'
 	static final String APPLICATION_TITLE = 'application_title'
 	static final String AUTHOR_REGISTRATION_LASTDATE = 'author_registration_lastdate'
@@ -30,6 +31,7 @@ class Setting extends EventDomain {
 	static final String EMAIL_MAX_NUM_TRIES = 'email_max_num_tries'
 	static final String EMAIL_MIN_MINUTES_BETWEEN_SENDING = 'email_min_minutes_between_sending'
 	static final String EMAIL_WAITING_TIME = 'email_waiting_time'
+	static final String ENABLE_PAPER_REVIEWS = 'enable_paper_reviews'
 	static final String FINAL_REGISTRATION_LASTDATE = 'final_registration_lastdate'
 	static final String GENERAL_TERMS_CONDITIONS_LINK = 'general_terms_conditions_link'
 	static final String IP_AUTHENTICATION = 'ip_authentication'
@@ -65,6 +67,7 @@ class Setting extends EventDomain {
 	static final String SHOW_DAYS = 'show_days'
 	static final String SHOW_DAYS_SESSION_PLANNED = 'show_days_session_planned'
 	static final String SHOW_DEPARTMENT = 'show_department'
+	static final String SHOW_DIETARY_WISHES = 'show_dietary_wishes'
 	static final String SHOW_EDUCATION = 'show_education'
 	static final String SHOW_EQUIPMENT = 'show_equipment'
 	static final String SHOW_GENERAL_COMMENTS = 'show_general_comments'
@@ -72,19 +75,22 @@ class Setting extends EventDomain {
 	static final String SHOW_LANGUAGE_COACH_PUPIL = 'show_language_coach_pupil'
 	static final String SHOW_LOWER_FEE = 'show_lower_fee'
 	static final String SHOW_NETWORK = 'show_network'
+	static final String SHOW_OPTIONAL_PAPER_TYPE = 'show_optional_paper_type'
+	static final String SHOW_OPTIONAL_SESSION_TYPE = 'show_optional_session_type'
 	static final String SHOW_ORGANIZER_REGISTRATION = 'show_organizer_registration'
-	static final String SHOW_PAPER_TYPE_OF_CONTRIBUTION = 'show_paper_type_of_contribution'
+	static final String SHOW_PAPER_KEYWORDS = 'show_paper_keywords'
+	static final String SHOW_PAPER_TYPES = 'show_paper_types'
 	static final String SHOW_PROGRAMME_ONLINE = 'show_programme_online'
 	static final String SHOW_REFUND_DIALOG = 'show_refund_dialog'
-	static final String SHOW_SESSION_ABSTRACT_EXPORT = 'show_session_abstract_export'
 	static final String SHOW_SESSION_CODES = 'show_session_codes'
 	static final String SHOW_SESSION_PARTICIPANT_TYPES_REGISTRATION = 'show_session_participant_types_registration'
 	static final String SHOW_SESSION_PROPOSAL = 'show_session_proposal'
-	static final String SHOW_SESSION_TYPES = 'show_session_types';
+	static final String SHOW_SESSION_TYPES = 'show_session_types'
 	static final String SHOW_STUDENT = 'show_student'
 
 	// Required fields settings
 	static final String REQUIRED_CV = 'required_cv'
+	static final String REQUIRED_PAPER_UPLOAD = 'required_paper_upload'
 
 	// Layout settings
 	static final String BANNER_BG_IMG = 'banner_bg_img'
@@ -104,6 +110,7 @@ class Setting extends EventDomain {
 	static final String PRE_REGISTRATION_EMAIL_TEMPLATE_ID = 'pre_registration_email_template_id'
 	static final String SESSION_REGISTRATION_EMAIL_TEMPLATE_ID = 'session_registration_email_template_id'
 	static final String UPDATED_PASSWORD_EMAIL_TEMPLATE_ID = 'updated_password_email_template_id'
+	static final String PAPER_REVIEWER_EMAIL_TEMPLATE_ID = 'paper_reviewer_email_template_id'
 
 	// PayWay settings
 	static final String PAYWAY_ADDRESS = 'payway_address'
