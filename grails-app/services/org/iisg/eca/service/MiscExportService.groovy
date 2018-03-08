@@ -81,15 +81,12 @@ class MiscExportService {
 				break
 			case BADGES_NOT_PAYED:
 				sqlQuery = sqlQuery.replace('extraCriteria',
-						'AND ((o.payed <> 1 AND o.payment_method <> 1) OR pd.payment_id IS NULL) ' +
-						'AND pd.participant_state_id IN (1,2)')
+						'AND ((o.payed <> 1 AND o.payment_method = 0) OR pd.payment_id IS NULL)')
 				title = messageSource.getMessage('participantDate.badges.not.payed.label', null, LocaleContextHolder.locale)
 				break
 			case BADGES_UNCONFIRMED:
 				sqlQuery = sqlQuery.replace('extraCriteria',
-						'AND o.payed <> 1 ' +
-						'AND (o.payment_method = 1 OR o.payment_method = 2) ' +
-						'AND pd.participant_state_id IN (1,2)')
+						'AND o.payed <> 1 AND (o.payment_method = 1 OR o.payment_method = 2) ')
 				title = messageSource.getMessage('participantDate.badges.unconfirmed.label', null, LocaleContextHolder.locale)
 				break
 			default:
@@ -371,38 +368,52 @@ class MiscExportService {
 			u.department, c.name_english, o.amount, fs.name, n.name AS network_name,
             CAST(GROUP_CONCAT(DISTINCT d.day_id ORDER BY d.day_number) AS CHAR) AS days,
             CAST(GROUP_CONCAT(DISTINCT e.extra_id ORDER BY e.extra) AS CHAR) AS extras
+            
             FROM users AS u
+            
             INNER JOIN participant_date AS pd
             ON u.user_id = pd.user_id
+            
             LEFT JOIN countries AS c
             ON u.country_id = c.country_id
+            
             LEFT JOIN orders AS o
             ON pd.payment_id = o.order_id
+            
             INNER JOIN fee_states AS fs
             ON pd.fee_state_id = fs.fee_state_id
+            
             LEFT JOIN participant_day AS pday
             ON u.user_id = pday.user_id 
             AND (pday.date_id = :dateId OR pday.date_id IS NULL)
+            
             LEFT JOIN days AS d
             ON pday.day_id = d.day_id 
             AND (d.date_id = :dateId OR d.date_id IS NULL) 
             AND (d.deleted = 0 OR d.deleted IS NULL)
+            
             LEFT JOIN participant_date_extra AS pde
             ON pd.participant_date_id = pde.participant_date_id
+            
             LEFT JOIN extras AS e
             ON pde.extra_id = e.extra_id
             AND (e.date_id = :dateId OR e.date_id IS NULL)
             AND (e.deleted = 0 OR e.deleted IS NULL)
+            
             LEFT JOIN networks_chairs AS nc
             ON u.user_id = nc.user_id
+            
             LEFT JOIN networks AS n
             ON nc.network_id = n.network_id
+            
             WHERE u.deleted = 0
             AND pd.date_id = :dateId
             AND pd.deleted = 0
             AND (   pd.participant_state_id IN (1,2)
                     OR (pd.payment_id IS NOT NULL AND pd.payment_id > 0))
+                    
             extraCriteria
+            
             GROUP BY u.user_id
             ORDER BY u.lastname ASC, u.firstname ASC
 	'''
