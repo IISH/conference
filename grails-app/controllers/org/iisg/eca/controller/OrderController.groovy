@@ -13,24 +13,13 @@ class OrderController {
     def emailCreationService
 
     def post() {
-        log.error('aaa1')
-
         Map<String, Object> queryParams = WebUtils.fromQueryString(request.queryString)
         PayWayMessage message = new PayWayMessage(queryParams)
 
-        log.error('aaa2')
-
         if (message.containsKey('POST')) {
-
-            log.error('aaa3')
-
             if (message.isValid()) {
-
-                log.error('aaa4')
-
                 boolean insert = false // is it a new order
                 long orderId = new Long(message.get('orderid').toString())
-                log.error ('orderId: ' + orderId )
 
                 // Obtain the order (or create a new order) and refresh
                 Order order = Order.get(orderId)
@@ -42,25 +31,13 @@ class OrderController {
                 }
                 order.refreshOrder(insert)
 
-                log.error ('orderId (2): ' + orderId )
-
                 // If the payment is accepted and we know the participant, sent the payment accepted email
-                log.error('order.getPayed(): ' + order.getPayed())
-                log.error('order.participantDate: ' + order.participantDate)
-                if ( (order.getPayed() == Order.PAYMENT_ACCEPTED) && order.participantDate ) {
-                    log.error('aaa5a');
-
+                if ((order.getPayed() == Order.PAYMENT_ACCEPTED) && order.participantDate) {
                     SentEmail email = emailCreationService.createPaymentAcceptedEmail(order.participantDate.user, order)
                     emailService.sendEmail(email)
                 }
-                else {
-                    log.error('aaa5b');
-                    if (!order.participantDate) {
-                        log.error('aaa5b1');
-                        log.warn('Unknown participant for order ' + order.id)
-                    } else {
-                        log.error('aaa5b2');
-                    }
+                else if (!order.participantDate) {
+                    log.warn('Unknown participant for order ' + order.id)
                 }
 
                 render(text: 'OK')
@@ -68,7 +45,6 @@ class OrderController {
             }
         }
 
-        log.error('aaaError');
         response.sendError(400)
     }
 }

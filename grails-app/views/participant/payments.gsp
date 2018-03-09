@@ -1,4 +1,4 @@
-<%@ page import="org.iisg.eca.utils.PaymentStatistic" %>
+<%@ page import="org.iisg.eca.domain.Order; org.iisg.eca.utils.PaymentStatistic" %>
 <!doctype html>
 <html>
 <head>
@@ -48,11 +48,14 @@
                 <td>${row.get('lastname')}</td>
                 <td>${row.get('firstname')}</td>
 
-                <g:if test="${row.get('payed') == null || row.get('payed') == 0}">
+                <g:if test="${row.get('payed') == null || row.get('payed') != Order.ORDER_PAYED}">
                     <td class="warning">
                         <g:if test="${row.get('payed') == null}">
                             <g:message code="payment.no.attempt.label" />
                         </g:if>
+                        <g:elseif test="${row.get('payed') == Order.ORDER_REFUND_OGONE || row.get('payed') == Order.ORDER_REFUND_BANK}">
+                            <g:message code="payment.refund.label" />
+                        </g:elseif>
                         <g:else>
                             <g:message code="payment.not.completed.label" />
                         </g:else>
@@ -63,10 +66,10 @@
                         <g:if test="${row.get('amount') == 0}">
                             <g:message code="order.free.label" />
                         </g:if>
-                        <g:elseif test="${row.get('payment_method') == org.iisg.eca.domain.Order.ORDER_BANK_PAYMENT}">
+                        <g:elseif test="${row.get('payment_method') == Order.ORDER_BANK_PAYMENT}">
                             <g:message code="order.method.bank.label" />
                         </g:elseif>
-                        <g:elseif test="${row.get('payment_method') == org.iisg.eca.domain.Order.ORDER_CASH_PAYMENT}">
+                        <g:elseif test="${row.get('payment_method') == Order.ORDER_CASH_PAYMENT}">
                             <g:message code="order.method.cash.label" />
                         </g:elseif>
                         <g:else>
@@ -77,7 +80,7 @@
 
                 <td>
                     <g:if test="${row.get('payed') == 1}">
-                        <eca:getAmount amount="${row.get('amount')}" cents="${true}" />
+                        <eca:getAmount amount="${row.get('amount') - row.get('refunded_amount')}" cents="${true}" />
                     </g:if>
                 </td>
 
@@ -104,7 +107,7 @@
                 <th>&nbsp;</th>
                 <th colspan="2"><g:message code="payment.unconfirmed.label" /></th>
                 <th colspan="2"><g:message code="payment.confirmed.label" /></th>
-                <th colspan="2"><g:message code="payment.total.label" /></th>
+                <th colspan="2"><g:message code="payment.refunded.label" /></th>
             </tr>
             <tr class="subheader">
                 <th>&nbsp;</th>
@@ -126,8 +129,8 @@
                 <td>${PaymentStatistic.getPaymentStatistic(3L, paymentMethod).confirmedNoParticipants}</td>
                 <td class="line"><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(2L, paymentMethod).confirmedAmount}" cents="${true}" /></td>
 
-                <td>${PaymentStatistic.getPaymentStatistic(3L, paymentMethod).totalNoParticipants}</td>
-                <td><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(2L, paymentMethod).totalAmount}" cents="${true}" /></td>
+                <td>${PaymentStatistic.getPaymentStatistic(3L, paymentMethod).refundedNoParticipants}</td>
+                <td><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(2L, paymentMethod).refundedAmount}" cents="${true}" /></td>
             </tr>
             <tr>
                 <td class="left"><g:message code="order.method.ogone.label" /></td>
@@ -138,8 +141,8 @@
                 <td>${PaymentStatistic.getPaymentStatistic(0L, paymentMethod).confirmedNoParticipants}</td>
                 <td class="line"><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(0L, paymentMethod).confirmedAmount}" cents="${true}" /></td>
 
-                <td>${PaymentStatistic.getPaymentStatistic(0L, paymentMethod).totalNoParticipants}</td>
-                <td><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(0L, paymentMethod).totalAmount}" cents="${true}" /></td>
+                <td>${PaymentStatistic.getPaymentStatistic(0L, paymentMethod).refundedNoParticipants}</td>
+                <td><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(0L, paymentMethod).refundedAmount}" cents="${true}" /></td>
             </tr>
             <tr>
                 <td class="left"><g:message code="order.method.bank.label" /></td>
@@ -150,8 +153,8 @@
                 <td>${PaymentStatistic.getPaymentStatistic(1L, paymentMethod).confirmedNoParticipants}</td>
                 <td class="line"><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(1L, paymentMethod).confirmedAmount}" cents="${true}" /></td>
 
-                <td>${PaymentStatistic.getPaymentStatistic(1L, paymentMethod).totalNoParticipants}</td>
-                <td><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(1L, paymentMethod).totalAmount}" cents="${true}" /></td>
+                <td>${PaymentStatistic.getPaymentStatistic(1L, paymentMethod).refundedNoParticipants}</td>
+                <td><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(1L, paymentMethod).refundedAmount}" cents="${true}" /></td>
             </tr>
             <tr>
                 <td class="left"><g:message code="order.method.cash.label" /></td>
@@ -162,8 +165,8 @@
                 <td>${PaymentStatistic.getPaymentStatistic(2L, paymentMethod).confirmedNoParticipants}</td>
                 <td class="line"><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(2L, paymentMethod).confirmedAmount}" cents="${true}" /></td>
 
-                <td>${PaymentStatistic.getPaymentStatistic(2L, paymentMethod).totalNoParticipants}</td>
-                <td><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(2L, paymentMethod).totalAmount}" cents="${true}" /></td>
+                <td>${PaymentStatistic.getPaymentStatistic(2L, paymentMethod).refundedNoParticipants}</td>
+                <td><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(2L, paymentMethod).refundedAmount}" cents="${true}" /></td>
             </tr>
             <tr class="tbl_totals">
                 <td class="left"><g:message code="default.total" /></td>
@@ -174,8 +177,8 @@
                 <td>${PaymentStatistic.getTotalPaymentStatistic(paymentMethod).confirmedNoParticipants}</td>
                 <td class="line"><eca:getAmount amount="${PaymentStatistic.getTotalPaymentStatistic(paymentMethod).confirmedAmount}" cents="${true}" /></td>
 
-                <td>${PaymentStatistic.getTotalPaymentStatistic(paymentMethod).totalNoParticipants}</td>
-                <td><eca:getAmount amount="${PaymentStatistic.getTotalPaymentStatistic(paymentMethod).totalAmount}" cents="${true}" /></td>
+                <td>${PaymentStatistic.getTotalPaymentStatistic(paymentMethod).refundedNoParticipants}</td>
+                <td><eca:getAmount amount="${PaymentStatistic.getTotalPaymentStatistic(paymentMethod).refundedAmount}" cents="${true}" /></td>
             </tr>
         </tbody>
     </table>
@@ -192,7 +195,7 @@
                 <th>&nbsp;</th>
                 <th colspan="2"><g:message code="payment.unconfirmed.label" /></th>
                 <th colspan="2"><g:message code="payment.confirmed.label" /></th>
-                <th colspan="2"><g:message code="payment.total.label" /></th>
+                <th colspan="2"><g:message code="payment.refunded.label" /></th>
             </tr>
             <tr class="subheader">
                 <th>&nbsp;</th>
@@ -215,8 +218,8 @@
                     <td>${PaymentStatistic.getPaymentStatistic(row.get('amount'), paymentAmount).confirmedNoParticipants}</td>
                     <td class="line"><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(row.get('amount'), paymentAmount).confirmedAmount}" cents="${true}" /></td>
 
-                    <td>${PaymentStatistic.getPaymentStatistic(row.get('amount'), paymentAmount).totalNoParticipants}</td>
-                    <td><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(row.get('amount'), paymentAmount).totalAmount}" cents="${true}" /></td>
+                    <td>${PaymentStatistic.getPaymentStatistic(row.get('amount'), paymentAmount).refundedNoParticipants}</td>
+                    <td><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(row.get('amount'), paymentAmount).refundedAmount}" cents="${true}" /></td>
                 </tr>
             </g:each>
 
@@ -229,8 +232,8 @@
                 <td>${PaymentStatistic.getTotalPaymentStatistic(paymentAmount).confirmedNoParticipants}</td>
                 <td class="line"><eca:getAmount amount="${PaymentStatistic.getTotalPaymentStatistic(paymentAmount).confirmedAmount}" cents="${true}" /></td>
 
-                <td>${PaymentStatistic.getTotalPaymentStatistic(paymentAmount).totalNoParticipants}</td>
-                <td><eca:getAmount amount="${PaymentStatistic.getTotalPaymentStatistic(paymentAmount).totalAmount}" cents="${true}" /></td>
+                <td>${PaymentStatistic.getTotalPaymentStatistic(paymentAmount).refundedNoParticipants}</td>
+                <td><eca:getAmount amount="${PaymentStatistic.getTotalPaymentStatistic(paymentAmount).refundedAmount}" cents="${true}" /></td>
             </tr>
         </tbody>
     </table>
@@ -247,7 +250,7 @@
                 <th>&nbsp;</th>
                 <th colspan="2"><g:message code="payment.unconfirmed.label" /></th>
                 <th colspan="2"><g:message code="payment.confirmed.label" /></th>
-                <th colspan="2"><g:message code="payment.total.label" /></th>
+                <th colspan="2"><g:message code="payment.refunded.label" /></th>
             </tr>
             <tr class="subheader">
                 <th>&nbsp;</th>
@@ -269,8 +272,8 @@
                 <td>${PaymentStatistic.getPaymentStatistic(1L, participantState).confirmedNoParticipants}</td>
                 <td class="line"><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(1L, participantState).confirmedAmount}" cents="${true}" /></td>
 
-                <td>${PaymentStatistic.getPaymentStatistic(1L, participantState).totalNoParticipants}</td>
-                <td><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(1L, participantState).totalAmount}" cents="${true}" /></td>
+                <td>${PaymentStatistic.getPaymentStatistic(1L, participantState).refundedNoParticipants}</td>
+                <td><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(1L, participantState).refundedAmount}" cents="${true}" /></td>
             </tr>
             <tr>
                 <td class="left"><g:message code="participantDate.other.state.label" /></td>
@@ -281,8 +284,8 @@
                 <td>${PaymentStatistic.getPaymentStatistic(0L, participantState).confirmedNoParticipants}</td>
                 <td class="line"><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(0L, participantState).confirmedAmount}" cents="${true}" /></td>
 
-                <td>${PaymentStatistic.getPaymentStatistic(0L, participantState).totalNoParticipants}</td>
-                <td><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(0L, participantState).totalAmount}" cents="${true}" /></td>
+                <td>${PaymentStatistic.getPaymentStatistic(0L, participantState).refundedNoParticipants}</td>
+                <td><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(0L, participantState).refundedAmount}" cents="${true}" /></td>
             </tr>
             <tr class="tbl_totals">
                 <td class="left"><g:message code="default.total" /></td>
@@ -293,8 +296,8 @@
                 <td>${PaymentStatistic.getTotalPaymentStatistic(participantState).confirmedNoParticipants}</td>
                 <td class="line"><eca:getAmount amount="${PaymentStatistic.getTotalPaymentStatistic(participantState).confirmedAmount}" cents="${true}" /></td>
 
-                <td>${PaymentStatistic.getTotalPaymentStatistic(participantState).totalNoParticipants}</td>
-                <td><eca:getAmount amount="${PaymentStatistic.getTotalPaymentStatistic(participantState).totalAmount}" cents="${true}" /></td>
+                <td>${PaymentStatistic.getTotalPaymentStatistic(participantState).refundedNoParticipants}</td>
+                <td><eca:getAmount amount="${PaymentStatistic.getTotalPaymentStatistic(participantState).refundedAmount}" cents="${true}" /></td>
             </tr>
         </tbody>
     </table>
@@ -339,6 +342,15 @@
             <tr>
                 <td class="left"><g:message code="payment.number.no.attempt.label" /></td>
                 <td>${participantsTotalNoAttempt.get('no_participants')}</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="left"><g:message code="payment.number.refunded.label" /></td>
+                <td>${participantsTotalRefunded.get('no_participants')}</td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>

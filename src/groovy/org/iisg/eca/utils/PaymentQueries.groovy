@@ -3,9 +3,10 @@ package org.iisg.eca.utils
 /**
  * Collection of all queries to obtain payment statistics
  */
-public interface PaymentQueries {
+interface PaymentQueries {
     public static final String PAYMENT_LIST_MAIN_PART_1 = """
-        SELECT u.user_id, u.lastname, u.firstname, o.payed, o.payment_method, o.amount, pd.participant_state_id, ps.participant_state
+        SELECT u.user_id, u.lastname, u.firstname, o.payed, o.payment_method, 
+        o.amount, o.refunded_amount, pd.participant_state_id, ps.participant_state
         FROM users AS u
         INNER JOIN participant_date AS pd
         ON u.user_id = pd.user_id
@@ -90,7 +91,8 @@ public interface PaymentQueries {
     """
 
     public static final String UNCONFIRMED = " AND o.payed = 0 "
-    public static final String CONFIRMED = " AND o.payed > 0 "
+    public static final String CONFIRMED = " AND o.payed = 1 "
+    public static final String REFUNDED = " AND (o.payed = 2 OR o.payed = 3) "
 
     // PAYMENT METHOD QUERIES
 
@@ -115,14 +117,20 @@ public interface PaymentQueries {
         UNCONFIRMED +
         PAYMENT_METHOD_END
 
-    public static final String PAYMENT_METHOD_CONFIRMED_BANK =
+    public static final String PAYMENT_METHOD_CONFIRMED_NOT_FREE =
         PAYMENT_METHOD_SELECT +
         MAIN_BODY_JOIN_USER_ID +
         CONFIRMED +
         PAYMENT_METHOD_END
 
+    public static final String PAYMENT_METHOD_REFUNDED =
+        PAYMENT_METHOD_SELECT +
+        MAIN_BODY_JOIN_USER_ID +
+        REFUNDED +
+        PAYMENT_METHOD_END
+
     public static final String PAYMENT_METHOD_CONFIRMED = """
-        ${PAYMENT_METHOD_CONFIRMED_BANK}
+        ${PAYMENT_METHOD_CONFIRMED_NOT_FREE}
         UNION ALL
         ${PAYMENT_METHOD_FREE}
     """
@@ -145,6 +153,12 @@ public interface PaymentQueries {
         PAYMENT_AMOUNT_SELECT +
         MAIN_BODY_JOIN_USER_ID +
         CONFIRMED +
+        PAYMENT_AMOUNT_END
+
+    public static final String PAYMENT_AMOUNT_REFUNDED =
+        PAYMENT_AMOUNT_SELECT +
+        MAIN_BODY_JOIN_USER_ID +
+        REFUNDED +
         PAYMENT_AMOUNT_END
 
     public static final String PAYMENT_AMOUNT_LIST = """
@@ -184,6 +198,20 @@ public interface PaymentQueries {
         AND pd.participant_state_id IN (1,2)
     """
 
+    public static final String PARTICIPANT_STATE_REFUNDED = """
+        SELECT 0 AS status, COUNT(DISTINCT u.user_id) AS no_participants, SUM(o.amount - o.refunded_amount) AS total_amount
+        ${MAIN_BODY_JOIN_USER_ID}
+        ${REFUNDED}
+        AND pd.participant_state_id NOT IN (1,2)
+
+        UNION ALL
+
+        SELECT 1 AS status, COUNT(DISTINCT u.user_id) AS no_participants, SUM(o.amount - o.refunded_amount) AS total_amount
+        ${MAIN_BODY_JOIN_USER_ID}
+        ${REFUNDED}
+        AND pd.participant_state_id IN (1,2)
+    """
+
     // TOTALS PARTICIPANTS
 
     public static final String PARTICIPANTS_TOTAL = """
@@ -203,6 +231,13 @@ public interface PaymentQueries {
 	    SELECT COUNT(DISTINCT u.user_id) AS no_participants
 	    ${MAIN_BODY_JOIN_PAYMENT_ID}
 	    ${UNCONFIRMED}
+	    AND pd.participant_state_id IN (1,2)
+	"""
+
+    public static final String PARTICIPANTS_TOTAL_REFUNDED = """
+	    SELECT COUNT(DISTINCT u.user_id) AS no_participants
+	    ${MAIN_BODY_JOIN_PAYMENT_ID}
+	    ${REFUNDED}
 	    AND pd.participant_state_id IN (1,2)
 	"""
 

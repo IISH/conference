@@ -13,6 +13,9 @@ class PaymentStatistic {
     private long confirmedNoParticipants = 0L
     private long confirmedAmount = 0L
 
+    private long refundedNoParticipants = 0L
+    private long refundedAmount = 0L
+
     PaymentStatistic() { }
 
     long getUnConfirmedNoParticipants() {
@@ -47,12 +50,20 @@ class PaymentStatistic {
         this.confirmedAmount = confirmedAmount
     }
 
-    long getTotalNoParticipants() {
-        this.unConfirmedNoParticipants + this.confirmedNoParticipants
+    long getRefundedNoParticipants() {
+        return refundedNoParticipants
     }
 
-    long getTotalAmount() {
-        this.unConfirmedAmount + this.confirmedAmount
+    void setRefundedNoParticipants(long refundedNoParticipants) {
+        this.refundedNoParticipants = refundedNoParticipants
+    }
+
+    long getRefundedAmount() {
+        return refundedAmount
+    }
+
+    void setRefundedAmount(long refundedAmount) {
+        this.refundedAmount = refundedAmount
     }
 
     /**
@@ -60,9 +71,10 @@ class PaymentStatistic {
      * stored in a map with the status of each statistic as the key
      * @param unconfirmed The query results of the unconfirmed state
      * @param confirmed The query results of the confirmed state
+     * @param refunded The query results of the refunded state
      * @return A map holding the payment statistics
      */
-    static Map<Long, PaymentStatistic> createMap(List<GroovyRowResult> unconfirmed, List<GroovyRowResult> confirmed) {
+    static Map<Long, PaymentStatistic> createMap(List<GroovyRowResult> unconfirmed, List<GroovyRowResult> confirmed, List<GroovyRowResult> refunded) {
         Map<Long, PaymentStatistic> paymentStatisticsMap = new HashMap<Long, PaymentStatistic>()
 
         unconfirmed.each { row ->
@@ -81,6 +93,16 @@ class PaymentStatistic {
 
             statistic.confirmedAmount = (row.get('total_amount') != null) ? row.get('total_amount') : 0L
             statistic.confirmedNoParticipants = (row.get('no_participants') != null) ? row.get('no_participants') : 0L
+
+            paymentStatisticsMap.put(status, statistic)
+        }
+
+        refunded.each { row ->
+            Long status = new Long(row.get('status'))
+            PaymentStatistic statistic = paymentStatisticsMap.get(status, new PaymentStatistic())
+
+            statistic.refundedAmount = (row.get('total_amount') != null) ? row.get('total_amount') : 0L
+            statistic.refundedNoParticipants = (row.get('no_participants') != null) ? row.get('no_participants') : 0L
 
             paymentStatisticsMap.put(status, statistic)
         }
@@ -118,6 +140,8 @@ class PaymentStatistic {
             totalPaymentStatistic.unConfirmedAmount += statistic.unConfirmedAmount
             totalPaymentStatistic.confirmedNoParticipants += statistic.confirmedNoParticipants
             totalPaymentStatistic.confirmedAmount += statistic.confirmedAmount
+            totalPaymentStatistic.refundedNoParticipants += statistic.refundedNoParticipants
+            totalPaymentStatistic.refundedAmount += statistic.refundedAmount
         }
 
         totalPaymentStatistic

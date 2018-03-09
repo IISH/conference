@@ -213,17 +213,20 @@ class ParticipantController {
 				paymentMethod                :
 						PaymentStatistic.createMap(
 							sql.rows(PaymentQueries.PAYMENT_METHOD_UNCONFIRMED, [dateId: dateId]),
-							sql.rows(PaymentQueries.PAYMENT_METHOD_CONFIRMED, [dateId: dateId])
+							sql.rows(PaymentQueries.PAYMENT_METHOD_CONFIRMED, [dateId: dateId]),
+							sql.rows(PaymentQueries.PAYMENT_METHOD_REFUNDED, [dateId: dateId])
 						),
 				paymentAmount                :
 						PaymentStatistic.createMap(
 							sql.rows(PaymentQueries.PAYMENT_AMOUNT_UNCONFIRMED, [dateId: dateId]),
-							sql.rows(PaymentQueries.PAYMENT_AMOUNT_CONFIRMED, [dateId: dateId])
+							sql.rows(PaymentQueries.PAYMENT_AMOUNT_CONFIRMED, [dateId: dateId]),
+							sql.rows(PaymentQueries.PAYMENT_AMOUNT_REFUNDED, [dateId: dateId])
 						),
 				participantState             :
 						PaymentStatistic.createMap(
 							sql.rows(PaymentQueries.PARTICIPANT_STATE_UNCONFIRMED, [dateId: dateId]),
-							sql.rows(PaymentQueries.PARTICIPANT_STATE_CONFIRMED, [dateId: dateId])
+							sql.rows(PaymentQueries.PARTICIPANT_STATE_CONFIRMED, [dateId: dateId]),
+							sql.rows(PaymentQueries.PARTICIPANT_STATE_REFUNDED, [dateId: dateId])
 						),
 				paymentAmountsList           :
 						sql.rows(PaymentQueries.PAYMENT_AMOUNT_LIST, [dateId: dateId]),
@@ -233,6 +236,8 @@ class ParticipantController {
 						sql.rows(PaymentQueries.PARTICIPANTS_TOTAL_PAYMENT_NOT_COMPLETE, [dateId: dateId]).first(),
 				participantsTotalNoAttempt   :
 						sql.rows(PaymentQueries.PARTICIPANTS_TOTAL_NO_ATTEMPT, [dateId: dateId]).first(),
+				participantsTotalRefunded   :
+						sql.rows(PaymentQueries.PARTICIPANTS_TOTAL_REFUNDED, [dateId: dateId]).first(),
 				participantsTotal            :
 						sql.rows(PaymentQueries.PARTICIPANTS_TOTAL, [dateId: dateId]).first()
 		])
