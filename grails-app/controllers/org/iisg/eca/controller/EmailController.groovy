@@ -155,8 +155,10 @@ class EmailController {
 
     def reviewers() {
         PaperReview.list().each { PaperReview paperReview ->
-            SentEmail email = emailCreationService.createPaperReviewerEmail(paperReview)
-            emailService.sendEmail(email, true, false)
+            if (paperReview.review == null) {
+                SentEmail email = emailCreationService.createPaperReviewerEmail(paperReview)
+                emailService.sendEmail(email, true, false)
+            }
         }
     }
 }
