@@ -711,7 +711,7 @@ $(document).ready(function () {
 		);
 	});
 
-	$("#network-select, #session-select").change(function (e) {
+	$("#network-select, #session-select, #query-type-select").change(function (e) {
 		$(this).parents('form').submit();
 	});
 

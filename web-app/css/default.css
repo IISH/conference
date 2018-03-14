@@ -1329,6 +1329,10 @@ div.easy-autocomplete-container ul li, div.easy-autocomplete-container ul .eac-c
     min-height: 0;
 }
 
+.margin {
+    margin-bottom: 15px;
+}
+
 .inline {
     display: inline-block;
 }

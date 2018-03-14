@@ -135,4 +135,34 @@ class UserController {
 		    } as JSON
 		}
     }
+
+    /**
+     * Show query types
+     */
+    def queryType() {
+        if (params.q) {
+            Set<String> queryTypes = QueryTypeCriteriaBuilder.getQueryTypes()
+            if (params.q in queryTypes) {
+                QueryTypeCriteriaBuilder queryTypeCriteriaBuilder = new QueryTypeCriteriaBuilder(pageInformation.date, params.q)
+                queryTypeCriteriaBuilder.setAdditionalCriteria {
+                    projections {
+                        distinct(['id', 'lastName', 'firstName'])
+                    }
+                }
+                List users = queryTypeCriteriaBuilder.getUniqueResults()
+
+                render(view: 'queryType', model: [users: users, queryTypes: queryTypes])
+                return
+            }
+
+            flash.error = true
+            flash.message = g.message(code: 'default.not.found.message', args: [params.q])
+            redirect(uri: eca.createLink(previous: true, noBase: true))
+            return
+        }
+
+        flash.error = true
+        flash.message = g.message(code: 'default.no.id.message')
+        redirect(uri: eca.createLink(previous: true, noBase: true))
+    }
 }

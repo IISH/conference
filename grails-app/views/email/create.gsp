@@ -11,6 +11,13 @@
 
         <form method="post" action="#">
             <fieldset class="form">
+                <div>
+                    <span class="property-value">
+                        <eca:link controller="user" action="queryType" params="${[q:emailTemplate.queryTypeMultiple]}" target="_blank">
+                            <g:message code="email.receivers.label" />
+                        </eca:link>
+                    </span>
+                </div>
 
                 <g:if test="${filterMap.participant}">
                     <div>

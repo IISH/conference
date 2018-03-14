@@ -31,12 +31,12 @@ class QueryTypeCriteriaBuilder {
 			'noPaymentInfoNotFree'     : ['noPaymentInfo', 'freeFeeAmount'],
 	]
 
-	public QueryTypeCriteriaBuilder(EventDate date) {
+	QueryTypeCriteriaBuilder(EventDate date) {
 		this.date = date
 		this.queryType = 'allParticipants'
 	}
 
-	public QueryTypeCriteriaBuilder(EventDate date, String queryType) {
+	QueryTypeCriteriaBuilder(EventDate date, String queryType) {
 		this.date = date
 		this.queryType = queryType
 	}
@@ -45,7 +45,7 @@ class QueryTypeCriteriaBuilder {
 	 * Additional criteria that will be added to the query type when building the query
 	 * @param additionalCriteria The additional criteria to add
 	 */
-	public void setAdditionalCriteria(Closure additionalCriteria) {
+	void setAdditionalCriteria(Closure additionalCriteria) {
 		this.additionalCriteria = additionalCriteria
 	}
 
@@ -53,7 +53,7 @@ class QueryTypeCriteriaBuilder {
 	 * Returns the database results from the specified query type and additional criteria
 	 * @return A list with User objects or other properties as specified in the additional criteria
 	 */
-	public List getResults() {
+	List getResults() {
 		List<String> queryTypes = [this.queryType]
 		boolean add = true
 
@@ -88,7 +88,26 @@ class QueryTypeCriteriaBuilder {
 	 * Returns the unique database results from the specified query type and additional criteria
 	 * @return A unique list with User objects or other properties as specified in the additional criteria
 	 */
-	public List getUniqueResults() {
+	List getUniqueResults() {
 		return getResults()?.unique()
+	}
+
+	/**
+	 * Returns a set of all available query types
+	 * @return A set of query types
+	 */
+	static Set<String> getQueryTypes() {
+		MethodNamesExtractor methodNamesExtractor = new MethodNamesExtractor()
+
+		Closure namedQueries = (Closure) User.namedQueries.clone()
+		namedQueries.resolveStrategy = Closure.DELEGATE_ONLY
+		namedQueries.delegate = methodNamesExtractor
+		namedQueries.call()
+
+		Set<String> queryTypes = methodNamesExtractor.methodNames
+		queryTypes.addAll(QUERY_TYPE_COMBINATIONS_ADD.keySet())
+		queryTypes.addAll(QUERY_TYPE_COMBINATIONS_SUBTRACT.keySet())
+
+		return queryTypes
 	}
 }
