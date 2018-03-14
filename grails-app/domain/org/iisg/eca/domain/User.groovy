@@ -278,6 +278,30 @@ class User {
 			}
 		}
 
+		allAssignedReviewers { date ->
+			allUsers()
+
+			reviews {
+				eq('date.id', date.id)
+			}
+		}
+
+		allAssignedOpenReviewers { date ->
+			allAssignedReviewers(date)
+
+			reviews {
+				isNull('review')
+			}
+		}
+
+		allAssignedClosedReviewers { date ->
+			allAssignedReviewers(date)
+
+			reviews {
+				isNotNull('review')
+			}
+		}
+
 		allParticipantUsers {
 			allUsers()
 
