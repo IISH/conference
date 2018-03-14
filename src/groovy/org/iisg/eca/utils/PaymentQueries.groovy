@@ -125,7 +125,7 @@ interface PaymentQueries {
 
     public static final String PAYMENT_METHOD_REFUNDED =
         PAYMENT_METHOD_SELECT +
-        MAIN_BODY_JOIN_USER_ID +
+        MAIN_BODY_JOIN_PAYMENT_ID +
         REFUNDED +
         PAYMENT_METHOD_END
 
@@ -157,7 +157,7 @@ interface PaymentQueries {
 
     public static final String PAYMENT_AMOUNT_REFUNDED =
         PAYMENT_AMOUNT_SELECT +
-        MAIN_BODY_JOIN_USER_ID +
+        MAIN_BODY_JOIN_PAYMENT_ID +
         REFUNDED +
         PAYMENT_AMOUNT_END
 
@@ -200,7 +200,7 @@ interface PaymentQueries {
 
     public static final String PARTICIPANT_STATE_REFUNDED = """
         SELECT 0 AS status, COUNT(DISTINCT u.user_id) AS no_participants, SUM(o.amount - o.refunded_amount) AS total_amount
-        ${MAIN_BODY_JOIN_USER_ID}
+        ${MAIN_BODY_JOIN_PAYMENT_ID}
         ${REFUNDED}
         AND pd.participant_state_id NOT IN (1,2)
 
