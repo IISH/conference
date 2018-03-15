@@ -207,7 +207,7 @@ interface PaymentQueries {
         UNION ALL
 
         SELECT 1 AS status, COUNT(DISTINCT u.user_id) AS no_participants, SUM(o.amount - o.refunded_amount) AS total_amount
-        ${MAIN_BODY_JOIN_USER_ID}
+        ${MAIN_BODY_JOIN_PAYMENT_ID}
         ${REFUNDED}
         AND pd.participant_state_id IN (1,2)
     """
