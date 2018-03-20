@@ -177,6 +177,8 @@ class SessionsXmlExport extends XmlExport {
                             builder."${type.type.toLowerCase()}" {
                                 builder.'person-id'(user.id)
                                 builder.name("$user.firstName $user.lastName")
+                                builder.firstname(user.firstName)
+                                builder.lastname(user.lastName)
                                 builder.organisation(user.organisation)
                             }
                         }
@@ -192,6 +194,8 @@ class SessionsXmlExport extends XmlExport {
                     builder.paper {
                         builder.'person-id'(user.id)
                         builder.presenter("$user.firstName $user.lastName")
+                        builder.firstname(user.firstName)
+                        builder.lastname(user.lastName)
                         builder.organisation(user.organisation)
                         builder.copresenters(paper.coAuthors)
                         builder.subject(paper.title)
