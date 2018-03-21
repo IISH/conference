@@ -75,7 +75,7 @@ class QueryTypeCriteriaBuilder {
 				results.addAll(namedQueryResults)
 			}
 			else {
-				results.removeAll(namedQueryResults)
+				results.removeAll { result -> namedQueryResults.find { result == it } }
 			}
 
 			i++
