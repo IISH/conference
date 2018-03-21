@@ -124,13 +124,13 @@
                 <td class="left"><g:message code="order.free.label" /></td>
 
                 <td>${PaymentStatistic.getPaymentStatistic(3L, paymentMethod).unConfirmedNoParticipants}</td>
-                <td class="line"><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(2L, paymentMethod).unConfirmedAmount}" cents="${true}" /></td>
+                <td class="line"><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(3L, paymentMethod).unConfirmedAmount}" cents="${true}" /></td>
 
                 <td>${PaymentStatistic.getPaymentStatistic(3L, paymentMethod).confirmedNoParticipants}</td>
-                <td class="line"><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(2L, paymentMethod).confirmedAmount}" cents="${true}" /></td>
+                <td class="line"><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(3L, paymentMethod).confirmedAmount}" cents="${true}" /></td>
 
                 <td>${PaymentStatistic.getPaymentStatistic(3L, paymentMethod).refundedNoParticipants}</td>
-                <td><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(2L, paymentMethod).refundedAmount}" cents="${true}" /></td>
+                <td><eca:getAmount amount="${PaymentStatistic.getPaymentStatistic(3L, paymentMethod).refundedAmount}" cents="${true}" /></td>
             </tr>
             <tr>
                 <td class="left"><g:message code="order.method.ogone.label" /></td>
