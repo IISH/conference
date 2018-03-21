@@ -79,7 +79,7 @@
                 </g:else>
 
                 <td>
-                    <g:if test="${row.get('payed') == 1}">
+                    <g:if test="${row.get('payed') != null && row.get('payed') != 0}">
                         <eca:getAmount amount="${row.get('amount') - row.get('refunded_amount')}" cents="${true}" />
                     </g:if>
                 </td>
