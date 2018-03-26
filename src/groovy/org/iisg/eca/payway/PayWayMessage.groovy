@@ -120,24 +120,16 @@ class PayWayMessage extends TreeMap<String, Object> {
 	 * Make sure the transaction is valid by checking the SHA-1 hash
 	 */
 	boolean isValid() {
-        log.error('PayWayMessage - IsValid()')
-        log.error('PayWayMessage - this.get(\'SUCCESS\'): ' + this.get('SUCCESS'))
-        log.error('PayWayMessage - this.get(\'SUCCESS\').toString().equalsIgnoreCase(\'true\'): ' + this.get('SUCCESS').toString().equalsIgnoreCase('true'))
 		if ((this.get('SUCCESS') == null) || this.get('SUCCESS').toString().equalsIgnoreCase('true')) {
-            log.error('PayWayMessage - IsValid() 2222')
-
 			// Obtain the current signature
 			String originalHash = remove("SHASIGN")
-            log.error('originalHash: ' + originalHash)
 
 			// Sign the transaction
 			signTransaction(false)
 
 			// Compare the hashes
 			String newHash = get("SHASIGN")
-            log.error('newHash: ' + newHash)
-            // TODO PROBLEEM
-            log.error('newHash.equalsIgnoreCase(originalHash): ' + newHash.equalsIgnoreCase(originalHash))
+
 			return newHash.equalsIgnoreCase(originalHash)
 		}
 

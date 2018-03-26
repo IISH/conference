@@ -1,5 +1,6 @@
 package org.iisg.eca.domain
 
+import grails.validation.ValidationException
 import org.iisg.eca.payway.PayWayMessage
 import org.springframework.context.i18n.LocaleContextHolder
 
@@ -184,41 +185,48 @@ class Order {
 	 * @return Whether the refresh was successful or not
 	 */
 	boolean refreshOrder(boolean insert = false) {
-		PayWayMessage message = new PayWayMessage()
-		message.put('orderid', this.id)
-		PayWayMessage result = message.send('orderDetails')
+		try {
+			PayWayMessage message = new PayWayMessage()
+			message.put('orderid', this.id)
+			PayWayMessage result = message.send('orderDetails')
 
-		if (result != null) {
-			this.orderCode = result.get('ORDERCODE')
-			this.amount = new Long(result.get('AMOUNT').toString())
-			this.refundedAmount = (result.get('REFUNDEDAMOUNT')?.isLong()) ? new Long(result.get('REFUNDEDAMOUNT').toString()) : 0L
-			this.payed = new Integer(result.get('PAYED').toString())
-			this.paymentMethod = new Integer(result.get('PAYMENTMETHOD').toString())
-			this.createdAt = (Date) result.get('CREATEDAT', true)
-			this.updatedAtPayWay = (Date) result.get('UPDATEDAT', true)
-			this.refundedAt =  (result.get('REFUNDEDAT')) ? (Date) result.get('REFUNDEDAT', true) : null
-			this.description = result.get('COM')
+			if (result != null) {
+				this.orderCode = result.get('ORDERCODE')
+				this.amount = new Long(result.get('AMOUNT').toString())
+				this.refundedAmount = (result.get('REFUNDEDAMOUNT')?.isLong()) ? new Long(result.get('REFUNDEDAMOUNT').toString()) : 0L
+				this.payed = new Integer(result.get('PAYED').toString())
+				this.paymentMethod = new Integer(result.get('PAYMENTMETHOD').toString())
+				this.createdAt = (Date) result.get('CREATEDAT', true)
+				this.updatedAtPayWay = (Date) result.get('UPDATEDAT', true)
+				this.refundedAt = (result.get('REFUNDEDAT')) ? (Date) result.get('REFUNDEDAT', true) : null
+				this.description = result.get('COM')
 
-			// TODO: Is now deprecated:
-			EventDate date = pageInformation.date
-			Long userId = result.get('USERID')?.toString()?.isLong() ? new Long(result.get('USERID').toString()) : null
-			if (date && userId) {
-				User user = User.get(userId)
-				ParticipantDate participant = ParticipantDate.findByUserAndDate(user, date)
-				if (participant) {
-					this.participantDate = participant
+				// TODO: Is now deprecated:
+				EventDate date = pageInformation.date
+				Long userId = result.get('USERID')?.toString()?.isLong() ? new Long(result.get('USERID').toString()) : null
+				if (date && userId) {
+					User user = User.get(userId)
+					ParticipantDate participant = ParticipantDate.findByUserAndDate(user, date)
+					if (participant) {
+						this.participantDate = participant
+					}
 				}
+
+				if ((this.payed == PAYMENT_ACCEPTED) && (this.participantDate.stateId == ParticipantState.REMOVED_CANCELLED)) {
+					this.participantDate.state = ParticipantState.get(ParticipantState.PARTICIPANT)
+					this.participantDate.save()
+				}
+
+				this.save(insert: insert, flush: true, failOnError: true)
+				return true
 			}
 
-			if ((this.payed == PAYMENT_ACCEPTED) && (this.participantDate.stateId == ParticipantState.REMOVED_CANCELLED)) {
-				this.participantDate.state = ParticipantState.get(ParticipantState.PARTICIPANT)
-				this.participantDate.save()
-			}
-
-			return this.save(insert: insert, flush: true)
+			return false
 		}
-
-		return false
+		catch (ValidationException ve) {
+			log.error("Failed to refresh order", ve)
+			return false
+		}
 	}
 
 	/**
