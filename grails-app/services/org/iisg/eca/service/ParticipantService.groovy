@@ -200,9 +200,10 @@ class ParticipantService {
             WHERE u.deleted = false
             AND pd.date.id = :dateId
             AND pd.deleted = false
+            AND pd.state.id IN (:participantDataChecked, :participant)
             GROUP BY d.id
             ORDER BY d.dayNumber
-        ''', [dateId: pageInformation.date.id]).collectEntries {
+        ''', [dateId: pageInformation.date.id, participantDataChecked: ParticipantState.PARTICIPANT_DATA_CHECKED, participant: ParticipantState.PARTICIPANT]).collectEntries {
             [(it[0]) : (it[1])]
         }
     }
@@ -218,9 +219,10 @@ class ParticipantService {
             INNER JOIN e.participantDates AS pd
             WHERE pd.date.id = :dateId
             AND pd.deleted = false
+            AND pd.state.id IN (:participantDataChecked, :participant)
             GROUP BY e.id
             ORDER BY e.extra
-        ''', [dateId: pageInformation.date.id]).collectEntries {
+        ''', [dateId: pageInformation.date.id, participantDataChecked: ParticipantState.PARTICIPANT_DATA_CHECKED, participant: ParticipantState.PARTICIPANT]).collectEntries {
             [(it[0]) : (it[1])]
         }
     }
