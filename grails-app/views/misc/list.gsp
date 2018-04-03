@@ -48,9 +48,14 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <g:set var="prev" />
                     <g:each in="${data}" var="row" status="i">
                         <tr>
                             <td class="counter">${i+1}</td>
+
+                            <g:set var="skip" value="${!groupBy || (prev == row.get(groupBy))}" />
+                            <g:set var="prev" value="${row.get(groupBy)}" />
+
                             <g:each in="${row.values()}" var="column" status="j">
                                 <g:if test="${j == 0}">
                                     <td class="id hidden">
@@ -58,7 +63,14 @@
                                 <g:else>
                                     <td>
                                 </g:else>
+
+                                <g:if test="${(j == 0) || !groupCount || (groupCount <= j) || !skip}">
                                     ${column}
+                                </g:if>
+                                <g:else>
+                                    &nbsp;
+                                </g:else>
+
                                 </td>
                             </g:each>
                         </tr>

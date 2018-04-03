@@ -559,6 +559,59 @@ class MiscController {
         ])
     }
 
+    def paperReviews() {
+        Sql sql = new Sql(dataSource)
+        List<GroovyRowResult> result = sql.rows("""
+            SELECT p.user_id, p.title, ps.short_description, p.avg_review_score, pr.review, pr.comments, pr.award, pr.avg_score, 
+                   GROUP_CONCAT(CONCAT(rc.name, ': ', prs.score) ORDER BY rc.sort_order DESC SEPARATOR ' / ') AS scores
+            FROM papers AS p
+            INNER JOIN users AS u
+            ON u.user_id = p.user_id
+            INNER JOIN participant_date AS pd
+            ON u.user_id = pd.user_id        
+            INNER JOIN paper_states AS ps
+            ON p.paper_state_id = ps.paper_state_id
+            LEFT JOIN paper_reviews AS pr 
+            ON p.paper_id = pr.paper_id
+            LEFT JOIN paper_review_scores AS prs
+            ON pr.paper_review_id = prs.paper_review_id
+            LEFT JOIN review_criteria AS rc 
+            ON prs.review_criteria_id = rc.review_criteria_id
+            WHERE p.deleted = 0
+            AND u.deleted = 0
+            AND pd.deleted = 0
+            AND rc.deleted = 0
+            AND p.date_id = :dateId
+            AND pd.date_id = :dateId
+            AND pr.date_id = :dateId
+            AND rc.date_id = :dateId
+            AND pd.participant_state_id IN (0,1,2,999)
+            GROUP BY pr.paper_review_id
+            ORDER BY ps.short_description ASC, p.title ASC
+        """, [dateId: pageInformation.date.id])
+
+        List<String> columns = ['title', 'short_description', 'avg_review_score', 'review', 'comments', 'award', 'avg_score', 'scores'] as List<String>
+        List<String> headers = ["Title", "State", "Avg score all reviews", "Review", "Reviewers comments", "Eligible for award?", "Avg score", "Scores"] as List<String>
+        String info = "All paper reviews"
+
+        // If an export of the results is requested, try to delegate the request to the export service
+        if (params.format) {
+            exportService.getSQLExport(params.format, response, columns, result, info, headers, params.sep)
+            return
+        }
+
+        render(view: "list", model: [
+                data:       result,
+                headers:    headers,
+                controller: "participant",
+                action:     "show",
+                info:       info,
+                export:     true,
+                groupBy:    'title',
+                groupCount: 4
+        ])
+    }
+
     def favoriteSessions() {
         Sql sql = new Sql(dataSource)
         List<GroovyRowResult> result = sql.rows("""
