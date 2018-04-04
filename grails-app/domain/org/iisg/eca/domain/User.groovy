@@ -257,25 +257,20 @@ class User {
 		allReviewers { date ->
 			allUsers()
 
-			reviewers {
-				eq('date.id', date.id)
-			}
+			createAlias('reviewers', 'reviewers')
+			eq('reviewers.date.id', date.id)
 		}
 
 		allNewReviewers { date ->
 			allReviewers(date)
 
-			reviewers {
-				isNull('confirmed')
-			}
+			isNull('reviewers.confirmed')
 		}
 
 		allReviewersConfirmed { date ->
 			allReviewers(date)
 
-			reviewers {
-				eq('confirmed', true)
-			}
+			eq('reviewers.confirmed', true)
 		}
 
 		allAssignedReviewers { date ->

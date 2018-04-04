@@ -171,9 +171,7 @@ class EmailRecipientsService {
                     }
                 }
                 else {
-                    "${association}" {
-                        criteria.property("id")
-                    }
+                    criteria.property("${association}.id")
                 }
             }
         }
