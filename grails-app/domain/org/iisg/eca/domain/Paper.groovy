@@ -28,6 +28,7 @@ class Paper extends EventDateDomain {
     String equipmentComment
     boolean mailPaperState = true
 	User addedBy
+	int sortOrder = 0
 	boolean deleted = false
 
 	static belongsTo = [User, PaperState, PaperType, Session, Network]
@@ -64,6 +65,7 @@ class Paper extends EventDateDomain {
         equipmentComment    column: 'equipment_comment',    type: 'text'
         mailPaperState      column: 'mail_paper_state'
 	    addedBy             column: 'added_by'
+		sortOrder 			column: 'sort_order'
 	    deleted             column: 'deleted'
 
         equipment           		joinTable: 'paper_equipment'
@@ -120,7 +122,8 @@ class Paper extends EventDateDomain {
             'equipment.id',
 			'reviews.id',
 			'type.id',
-		    'addedBy.id'
+		    'addedBy.id',
+			'sortOrder'
     ]
 
 	static apiPostPut = [

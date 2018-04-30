@@ -204,7 +204,7 @@ class ParticipantUpdateService {
 
 		bindData(paper, params, [
 				include: ['title', 'abstr', 'type', 'differentType', 'coAuthors', 'state', 'reviewComment', 'comment',
-						  'sessionProposal', 'proposalDescription', 'networkProposal', 'equipmentComment']
+						  'sessionProposal', 'proposalDescription', 'networkProposal', 'equipmentComment', 'sortOrder']
 		], "Paper_$i".toString())
 
 		CommonsMultipartFile file = (CommonsMultipartFile) params["Paper_${i}.file"]

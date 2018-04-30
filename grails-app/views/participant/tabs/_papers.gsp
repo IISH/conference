@@ -89,6 +89,14 @@
                         <g:select from="${paperStates}" name="Paper_${i}.state.id" optionKey="id" optionValue="description" value="${paper.state.id}" />
                     </span>
                 </div>
+                <div class="${hasErrors(bean: paper, field: 'sortOrder', 'error')} ">
+                    <label class="property-label">
+                        <g:message code="paper.sortOrder.label" />
+                    </label>
+                    <span class="property-value">
+                        <input type="number" name="Paper_${i}.sortOrder" value="${paper?.sortOrder}" />
+                    </span>
+                </div>
                 <div class="${hasErrors(bean: paper, field: 'comment', 'error')}">
                     <label class="property-label">
                         <g:message code="paper.comment.label" />

@@ -197,6 +197,13 @@ class ParticipantSessionService {
             sessionInfo?.paper = Paper.findAllBySession(session).find { it.user?.id == user.id }
         }
 
+        sessionInformation.sort { ParticipantSessionInfo a, ParticipantSessionInfo b ->
+            if (a.paper && b.paper) {
+                return a.paper.sortOrder.compareTo(b.paper.sortOrder)
+            }
+            return 0
+        }
+
         sessionInformation
     }
 
