@@ -39,5 +39,6 @@ final class PlannedSession {
         String coAuthors
 	    boolean hasDownload = false
 	    String paperAbstract
+        int sortOrder
     }
 }

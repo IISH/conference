@@ -497,6 +497,7 @@ class SessionPlannerService {
                         participant.coAuthors = paper.coAuthors
                         participant.hasDownload = paper.hasPaperFile()
                         participant.paperAbstract = paper.abstr
+                        participant.sortOrder = paper.sortOrder
 
                         return participant
                     }
@@ -511,6 +512,13 @@ class SessionPlannerService {
                 return null
             } as ArrayList<PlannedSession.Participant>
             plannedSession.participants.removeAll(Collections.singleton(null))
+
+            plannedSession.participants.sort { PlannedSession.Participant a, PlannedSession.Participant b ->
+                if (a instanceof PlannedSession.ParticipantWithPaper && b instanceof PlannedSession.ParticipantWithPaper) {
+                    return a.sortOrder.compareTo(b.sortOrder)
+                }
+                return 0
+            }
 
             planning.add(plannedSession)
         }
