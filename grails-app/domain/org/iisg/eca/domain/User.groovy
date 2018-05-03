@@ -363,6 +363,14 @@ class User {
 			eq('papers.deleted', false)
 		}
 
+		allParticipantPapersSoft { date ->
+			allParticipantsSoftState(date)
+
+			createAlias('papers', 'papers')
+			eq('papers.date.id', date.id)
+			eq('papers.deleted', false)
+		}
+
 		paperAccepted { date ->
 			allParticipantPapers(date)
 			eq('papers.state.id', PaperState.PAPER_ACCEPTED)
@@ -371,6 +379,11 @@ class User {
 		paperAcceptedNotAnswered { date ->
 			paperAccepted(date)
 			eq('papers.mailPaperState', true)
+		}
+
+		paperAcceptedSoft { date ->
+			allParticipantPapersSoft(date)
+			eq('papers.state.id', PaperState.PAPER_ACCEPTED)
 		}
 
 		paperInConsideration { date ->
@@ -383,6 +396,11 @@ class User {
 			eq('papers.mailPaperState', true)
 		}
 
+		paperInConsiderationSoft { date ->
+			allParticipantPapersSoft(date)
+			eq('papers.state.id', PaperState.PAPER_IN_CONSIDERATION)
+		}
+
 		paperNotAccepted { date ->
 			allParticipantPapers(date)
 			eq('papers.state.id', PaperState.PAPER_NOT_ACCEPTED)
@@ -391,6 +409,11 @@ class User {
 		paperNotAcceptedNotAnswered { date ->
 			paperNotAccepted(date)
 			eq('papers.mailPaperState', true)
+		}
+
+		paperNotAcceptedSoft { date ->
+			allParticipantPapersSoft(date)
+			eq('papers.state.id', PaperState.PAPER_NOT_ACCEPTED)
 		}
 
 		studentLowerFee { date ->
