@@ -647,5 +647,43 @@ class MiscController {
                 export    : true
         ])
     }
+
+    def dietaryWishes() {
+        Sql sql = new Sql(dataSource)
+        List<GroovyRowResult> result = sql.rows("""
+            SELECT users.user_id, users.lastname, users.firstname, 
+            CASE
+                WHEN users.dietary_wishes = 1 THEN "Carnivore"
+                WHEN users.dietary_wishes = 2 THEN "Pescatarian"
+                WHEN users.dietary_wishes = 3 THEN "Vegetarian"
+                ELSE users.other_dietary_wishes
+            END AS dietary_wish
+            FROM users
+            INNER JOIN participant_date ON users.user_id = participant_date.user_id
+            WHERE users.deleted = 0
+            AND users.dietary_wishes IS NOT NULL
+            AND participant_date.deleted = 0
+            AND participant_date.date_id = :dateId
+        """, [dateId: pageInformation.date.id])
+
+        List<String> columns = ['lastname', 'firstname', 'dietary_wish'] as List<String>
+        List<String> headers = ["Last name", "First name", "Dietary wish"] as List<String>
+        String info = "Dietary wishes of the participants"
+
+        // If an export of the results is requested, try to delegate the request to the export service
+        if (params.format) {
+            exportService.getSQLExport(params.format, response, columns, result, info, headers, params.sep)
+            return
+        }
+
+        render(view: "list", model: [
+                data      : result,
+                headers   : headers,
+                controller: "participant",
+                action    : "show",
+                info      : info,
+                export    : true
+        ])
+    }
 }
 
