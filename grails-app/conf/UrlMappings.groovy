@@ -64,6 +64,10 @@ class UrlMappings {
             action = 'login'
         }
 
+        name apiAutoLogin: "/$event/$date/api/autoLogin" (controller: "api", parseRequest: true) {
+            action = 'autoLogin'
+        }
+
         name apiChangePassword: "/$event/$date/api/changePassword" (controller: "api", parseRequest: true) {
             action = 'changePassword'
         }

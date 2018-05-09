@@ -75,6 +75,7 @@ class Setting extends EventDomain {
 	static final String SHOW_LANGUAGE_COACH_PUPIL = 'show_language_coach_pupil'
 	static final String SHOW_LOWER_FEE = 'show_lower_fee'
 	static final String SHOW_NETWORK = 'show_network'
+	static final String SHOW_OPT_IN = 'show_opt_in'
 	static final String SHOW_OPTIONAL_PAPER_TYPE = 'show_optional_paper_type'
 	static final String SHOW_OPTIONAL_SESSION_TYPE = 'show_optional_session_type'
 	static final String SHOW_ORGANIZER_REGISTRATION = 'show_organizer_registration'

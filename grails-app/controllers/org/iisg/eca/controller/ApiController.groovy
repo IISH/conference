@@ -95,6 +95,27 @@ class ApiController {
 		render response as JSON
 	}
 
+	def autoLogin() {
+		String email = params.email?.toString()
+		String code = params.code?.toString()
+		Map response = ['status': User.USER_STATUS_NOT_FOUND] as Map<String, Object>
+
+		if (email && code) {
+			User.disableHibernateFilter('hideDeleted')
+			User user = User.findByEmail(email)
+			User.enableHibernateFilter('hideDeleted')
+
+			if (user) {
+				ParticipantDate participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
+				if (participant && participant.autoLoginCode == code) {
+					returnUserInfo(response, user)
+				}
+			}
+		}
+
+		render response as JSON
+	}
+
 	def userInfo() {
 		Map response = ['status': User.USER_STATUS_NOT_FOUND] as Map<String, Object>
 		Long userId = (params.userId?.toString()?.isLong()) ? params.userId.toString().toLong() : null

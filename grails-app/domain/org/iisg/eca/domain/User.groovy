@@ -72,6 +72,7 @@ class User {
 	String otherDietaryWishes
 	Date dateAdded = new Date()
 	boolean emailDiscontinued = false
+	boolean optIn = false
 	boolean enabled = true
 	boolean deleted = false
 	User addedBy
@@ -136,6 +137,7 @@ class User {
 		otherDietaryWishes		column: 'other_dietary_wishes'
         dateAdded               column: 'date_added'
         emailDiscontinued       column: 'email_discontinued'
+		optIn					column: 'opt_in'
 	    enabled                 column: 'enabled'
 	    deleted                 column: 'deleted'
 		addedBy                 column: 'added_by',     fetch: 'join'
@@ -206,6 +208,7 @@ class User {
 			'extraInfo',
 			'dietaryWishes',
 			'otherDietaryWishes',
+			'optIn',
 			'papers.id',
 			'daysPresent.day.id',
 			'addedBy.id'
@@ -227,6 +230,7 @@ class User {
 			'cv',
 			'dietaryWishes',
 			'otherDietaryWishes',
+			'optIn',
 			'country.id',
 			'daysPresent.day.id',
 			'addedBy.id'
