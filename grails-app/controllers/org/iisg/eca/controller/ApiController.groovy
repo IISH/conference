@@ -96,13 +96,13 @@ class ApiController {
 	}
 
 	def autoLogin() {
-		String email = params.email?.toString()
+		Long id = params.id?.toString()?.isLong() ? params.id.toString().toLong() : null
 		String code = params.code?.toString()
 		Map response = ['status': User.USER_STATUS_NOT_FOUND] as Map<String, Object>
 
-		if (email && code) {
+		if (id && code) {
 			User.disableHibernateFilter('hideDeleted')
-			User user = User.findByEmail(email)
+			User user = User.findById(id)
 			User.enableHibernateFilter('hideDeleted')
 
 			if (user) {
