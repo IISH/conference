@@ -9,6 +9,7 @@ import org.iisg.eca.domain.ParticipantDate
 import org.iisg.eca.domain.ParticipantState
 import org.iisg.eca.domain.Session
 import org.iisg.eca.domain.SessionParticipant
+import org.iisg.eca.domain.Setting
 import org.iisg.eca.domain.User
 
 import org.iisg.eca.export.Export
@@ -50,6 +51,8 @@ class MiscExportService {
 
 		List<String> columns = ['user_id', 'title', 'lastname', 'firstname', 'email', 'organisation', 'department',
 		                        'name_english', 'amount', 'name', 'day', 'network']
+		if (Setting.getSetting(Setting.SHOW_DIETARY_WISHES).booleanValue)
+			columns.add('dietary_wishes')
 		columns += extras.values()
 
 		List<String> columnNames = [
@@ -66,6 +69,9 @@ class MiscExportService {
 				messageSource.getMessage('day.label', null, LocaleContextHolder.locale),
 				messageSource.getMessage('network.label', null, LocaleContextHolder.locale)
 		]
+		if (Setting.getSetting(Setting.SHOW_DIETARY_WISHES).booleanValue)
+			columnNames.add(
+					messageSource.getMessage('user.dietaryWishes.label', null, LocaleContextHolder.locale))
 		columnNames += extras.values()
 
 		// Obtain results and transform them
@@ -125,6 +131,21 @@ class MiscExportService {
 			}
 			else {
 				row.put('network', null)
+			}
+
+			Integer dietaryWishes = row.dietary_wishes
+			String otherDietaryWishes = row.other_dietary_wishes
+			row.remove('dietary_wishes')
+			row.remove('other_dietary_wishes')
+			if (Setting.getSetting(Setting.SHOW_DIETARY_WISHES).booleanValue) {
+				if (dietaryWishes && (dietaryWishes != 0)) {
+					row.put('dietary_wishes',
+							messageSource.getMessage(
+									'user.dietaryWishes.' + dietaryWishes, null, LocaleContextHolder.locale))
+				}
+				else {
+					row.put('dietary_wishes', otherDietaryWishes)
+				}
 			}
 
 			row.put('amount', (row.get('amount') > 0) ? row.get('amount') / 100 : row.get('amount'))
@@ -367,7 +388,8 @@ class MiscExportService {
 
 	private static final String PARTICIPANTS_SQL = '''
 			SELECT u.user_id, u.title, u.lastname, u.firstname, u.email, u.organisation,
-			u.department, c.name_english, o.amount, fs.name, n.name AS network_name,
+			u.department, u.dietary_wishes, u.other_dietary_wishes, c.name_english, o.amount, 
+			fs.name, n.name AS network_name,
             CAST(GROUP_CONCAT(DISTINCT d.day_id ORDER BY d.day_number) AS CHAR) AS days,
             CAST(GROUP_CONCAT(DISTINCT e.extra_id ORDER BY e.extra) AS CHAR) AS extras
             
