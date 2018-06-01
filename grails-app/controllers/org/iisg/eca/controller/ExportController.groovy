@@ -87,7 +87,8 @@ class ExportController {
 					messageSource.getMessage('network.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('user.lastName.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('user.firstName.label', null, LocaleContextHolder.locale),
-					messageSource.getMessage('user.email.label', null, LocaleContextHolder.locale)
+					messageSource.getMessage('user.email.label', null, LocaleContextHolder.locale),
+					messageSource.getMessage('user.organisation.label', null, LocaleContextHolder.locale)
 			])
 		}
 	}
@@ -102,12 +103,14 @@ class ExportController {
 					messageSource.getMessage('user.lastName.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('user.firstName.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('user.email.label', null, LocaleContextHolder.locale),
+					messageSource.getMessage('user.organisation.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('session.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('session.state.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('participantType.multiple.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('paper.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('paper.abstr.label', null, LocaleContextHolder.locale),
-					messageSource.getMessage('paper.state.label', null, LocaleContextHolder.locale)
+					messageSource.getMessage('paper.state.label', null, LocaleContextHolder.locale),
+					messageSource.getMessage('paper.keywords.label', null, LocaleContextHolder.locale)
 			])
 		}
 	}
@@ -122,12 +125,14 @@ class ExportController {
 					messageSource.getMessage('user.lastName.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('user.firstName.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('user.email.label', null, LocaleContextHolder.locale),
+					messageSource.getMessage('user.organisation.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('session.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('session.state.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('participantType.multiple.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('paper.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('paper.abstr.label', null, LocaleContextHolder.locale),
-					messageSource.getMessage('paper.state.label', null, LocaleContextHolder.locale)
+					messageSource.getMessage('paper.state.label', null, LocaleContextHolder.locale),
+					messageSource.getMessage('paper.keywords.label', null, LocaleContextHolder.locale)
 			])
 		}
 	}
@@ -141,12 +146,35 @@ class ExportController {
 					messageSource.getMessage('user.lastName.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('user.firstName.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('user.email.label', null, LocaleContextHolder.locale),
+					messageSource.getMessage('user.organisation.label', null, LocaleContextHolder.locale),
 					'#',
 					messageSource.getMessage('paper.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('paper.coAuthors.label', null, LocaleContextHolder.locale),
                     messageSource.getMessage('paper.type.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('paper.state.label', null, LocaleContextHolder.locale),
-					messageSource.getMessage('paper.abstr.label', null, LocaleContextHolder.locale)
+					messageSource.getMessage('paper.abstr.label', null, LocaleContextHolder.locale),
+					messageSource.getMessage('paper.keywords.label', null, LocaleContextHolder.locale)
+			])
+		}
+	}
+
+	def allPapersInNetwork() {
+		onNetworkExport { Network network ->
+			String title = messageSource.getMessage('paper.multiple.label', null, LocaleContextHolder.locale) +
+					" ${network} ${pageInformation.date.getShortNameAndYear()}"
+			return miscExportService.getAllPapersInNetworkExport(network, title, [
+					messageSource.getMessage('network.label', null, LocaleContextHolder.locale),
+					messageSource.getMessage('user.lastName.label', null, LocaleContextHolder.locale),
+					messageSource.getMessage('user.firstName.label', null, LocaleContextHolder.locale),
+					messageSource.getMessage('user.email.label', null, LocaleContextHolder.locale),
+					messageSource.getMessage('user.organisation.label', null, LocaleContextHolder.locale),
+					'#',
+					messageSource.getMessage('paper.label', null, LocaleContextHolder.locale),
+					messageSource.getMessage('paper.coAuthors.label', null, LocaleContextHolder.locale),
+					messageSource.getMessage('paper.type.label', null, LocaleContextHolder.locale),
+					messageSource.getMessage('paper.state.label', null, LocaleContextHolder.locale),
+					messageSource.getMessage('paper.abstr.label', null, LocaleContextHolder.locale),
+					messageSource.getMessage('paper.keywords.label', null, LocaleContextHolder.locale)
 			])
 		}
 	}

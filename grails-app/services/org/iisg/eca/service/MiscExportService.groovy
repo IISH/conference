@@ -216,12 +216,13 @@ class MiscExportService {
 	 */
 	XlsMapExport getParticipantsInNetworkExport(Network network, String title, List<String> columnNames) {
 		return new XlsMapExport(
-				['network', 'lastname', 'firstname', 'email'],
+				['network', 'lastname', 'firstname', 'email', 'organisation'],
 				network.allUsersInNetwork.collect {
 					['network'  : network.name,
 					 'lastname' : it.lastName,
 					 'firstname': it.firstName,
-					 'email'    : it.emailDiscontinued ? null : it.email]
+					 'email'    : it.emailDiscontinued ? null : it.email,
+					 'organisation' : user.organisation]
 				},
 				title,
 				columnNames
@@ -259,8 +260,8 @@ class MiscExportService {
 				  'notFinished'    : ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
 
 		return new XlsMapExport(
-				['network', 'lastname', 'firstname', 'email', 'session', 'sessionstate', 'roles',
-				 'papertitle', 'paperstate', 'paperabstract'],
+				['network', 'lastname', 'firstname', 'email', 'organisation', 'session', 'sessionstate', 'roles',
+				 'papertitle', 'paperstate', 'paperabstract', 'paperkeywords'],
 				usersSessionsPapers.collect { userSessionPaper ->
 					User user = userSessionPaper[0] as User
 					Session session = userSessionPaper[1] as Session
@@ -270,12 +271,14 @@ class MiscExportService {
 							'lastname'     : user.lastName,
 							'firstname'    : user.firstName,
 							'email'        : user.emailDiscontinued ? null : user.email,
+							'organisation' : user.organisation,
 							'session'      : session.name,
 							'sessionstate' : session.state.description,
 							'roles'        : SessionParticipant.findAllByUserAndSession(user, session)*.type.join(', '),
 							'papertitle'   : paper?.title,
 							'paperabstract': paper?.abstr,
-							'paperstate'   : paper?.state?.description]
+							'paperstate'   : paper?.state?.description,
+							'paperkeywords': paper?.keywords]
 				},
 				title,
 				columnNames
@@ -311,8 +314,8 @@ class MiscExportService {
 				  'participant'    : ParticipantState.PARTICIPANT])
 
 		return new XlsMapExport(
-				['network', 'lastname', 'firstname', 'email', 'session', 'sessionstate', 'roles',
-				 'papertitle', 'paperstate', 'paperabstract'],
+				['network', 'lastname', 'firstname', 'email', 'organisation', 'session', 'sessionstate', 'roles',
+				 'papertitle', 'paperstate', 'paperabstract', 'paperkeywords'],
 				usersSessionsPapers.collect { userSessionPaper ->
 					User user = userSessionPaper[0] as User
 					Session session = userSessionPaper[1] as Session
@@ -322,11 +325,13 @@ class MiscExportService {
 							'lastname'    : user.lastName,
 							'firstname'   : user.firstName,
 							'email'        : user.emailDiscontinued ? null : user.email,
+							'organisation' : user.organisation,
 							'session'     : session.name,
 							'sessionstate': session.state.description,
 							'roles'       : SessionParticipant.findAllByUserAndSession(user, session)*.type.join(', '),
 							'papertitle'  : paper?.title, 'paperabstract': paper?.abstr,
-							'paperstate'  : paper?.state?.description]
+							'paperstate'  : paper?.state?.description,
+							'paperkeywords': paper?.keywords]
 				},
 				title,
 				columnNames
@@ -364,7 +369,8 @@ class MiscExportService {
 				  'notFinished'    : ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
 
 		return new XlsMapExport(
-				['network', 'lastname', 'firstname', 'email', 'paperid', 'papertitle', 'coauthors', 'papertype', 'paperstate', 'paperabstract'],
+				['network', 'lastname', 'firstname', 'email', 'organisation', 'paperid', 'papertitle', 'coauthors',
+				 'papertype', 'paperstate', 'paperabstract', 'paperkeywords'],
 				usersPapers.collect { userAndPaper ->
 					User user = userAndPaper[0] as User
 					Paper paper = userAndPaper[1] as Paper
@@ -374,12 +380,69 @@ class MiscExportService {
 							'lastname'     : user.lastName,
 							'firstname'    : user.firstName,
 							'email'        : user.emailDiscontinued ? null : user.email,
+							'organisation' : user.organisation,
 							'paperid'	   : paper.id,
 							'papertitle'   : paper.title,
 							'coauthors'    : paper.coAuthors,
 							'papertype'	   : type.type,
 							'paperstate'   : paper.state.description,
-							'paperabstract': paper.abstr]
+							'paperabstract': paper.abstr,
+							'paperkeywords': paper.keywords]
+				},
+				title,
+				columnNames
+		)
+	}
+
+	/**
+	 * Creates an export of all papers in a network set by the user
+	 * @param network The network
+	 * @param title The title
+	 * @param columnNames The column names
+	 * @return An Excel export of all matching participants
+	 */
+	XlsMapExport getAllPapersInNetworkExport(Network network, String title, List<String> columnNames) {
+		List usersPapers = ParticipantDate.executeQuery('''
+				SELECT DISTINCT u, p, t
+                FROM ParticipantDate AS pd
+				INNER JOIN pd.user AS u
+				INNER JOIN u.papers AS p
+				INNER JOIN p.type AS t
+                WHERE u.deleted = false
+				AND p.networkProposal.id = :networkId
+				AND pd.state.id IN (:newParticipant, :dataChecked, :participant, :notFinished)
+				AND p.deleted = false
+				AND p.date.id = :dateId
+				AND u.deleted = false
+				AND pd.deleted = false
+                ORDER BY u.lastName ASC, u.firstName ASC
+			''', ['dateId'         : pageInformation.date.id,
+				  'networkId'      : network.id,
+				  'newParticipant' : ParticipantState.NEW_PARTICIPANT,
+				  'dataChecked'    : ParticipantState.PARTICIPANT_DATA_CHECKED,
+				  'participant'    : ParticipantState.PARTICIPANT,
+				  'notFinished'    : ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
+
+		return new XlsMapExport(
+				['network', 'lastname', 'firstname', 'email', 'organisation', 'paperid', 'papertitle', 'coauthors',
+				 'papertype', 'paperstate', 'paperabstract', 'paperkeywords'],
+				usersPapers.collect { userAndPaper ->
+					User user = userAndPaper[0] as User
+					Paper paper = userAndPaper[1] as Paper
+					PaperType type = userAndPaper[2] as PaperType
+
+					return ['network'      : network.name,
+							'lastname'     : user.lastName,
+							'firstname'    : user.firstName,
+							'email'        : user.emailDiscontinued ? null : user.email,
+							'organisation' : user.organisation,
+							'paperid'	   : paper.id,
+							'papertitle'   : paper.title,
+							'coauthors'    : paper.coAuthors,
+							'papertype'	   : type.type,
+							'paperstate'   : paper.state.description,
+							'paperabstract': paper.abstr,
+							'paperkeywords': paper?.keywords]
 				},
 				title,
 				columnNames

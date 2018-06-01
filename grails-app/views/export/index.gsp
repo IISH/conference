@@ -63,6 +63,9 @@
                     <li>
                         <a href="#" class="network-export-open" data-submit="individualPapersInNetwork">Create Excel Export of individual paper proposals in a network</a>
                     </li>
+                    <li>
+                        <a href="#" class="network-export-open" data-submit="allPapersInNetwork">Create Excel Export of all paper proposals in a network</a>
+                    </li>
                 </ol>
             </li>
         </ul>
