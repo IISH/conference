@@ -67,39 +67,6 @@ class Network extends EventDateDomain {
 	void softDelete() {
 		deleted = true
 	}
-
-    /**
-     * Returns all the users that have been accepted as participants in accepted sessions that fall in this network
-     * @return A list of users
-     */
-    List<User> getAllUsersInNetwork() {
-        return User.executeQuery('''
-            SELECT DISTINCT u
-            FROM User AS u
-            INNER JOIN u.participantDates as pd
-            INNER JOIN u.sessionParticipants AS sp
-            INNER JOIN sp.session AS s
-            INNER JOIN s.networks AS n
-            WHERE pd.date.id = :dateId
-            AND s.date.id = :dateId
-            AND n.date.id = :dateId
-            AND pd.deleted = false
-            AND s.deleted = false
-            AND n.deleted = false
-            AND n.id = :networkId
-            AND s.state.id IN (:sessionNew, :sessionAccepted, :sessionInConsideration)
-            AND pd.state.id IN (:newParticipant, :dataChecked, :participant, :notFinished)
-            ORDER BY u.lastName, u.firstName, u.email
-        ''', [  dateId                 : pageInformation.date.id,
-                networkId              : this.id,
-                sessionNew             : SessionState.NEW_SESSION,
-                sessionAccepted        : SessionState.SESSION_ACCEPTED,
-                sessionInConsideration : SessionState.SESSION_IN_CONSIDERATION,
-                newParticipant         : ParticipantState.NEW_PARTICIPANT,
-                dataChecked            : ParticipantState.PARTICIPANT_DATA_CHECKED,
-                participant            : ParticipantState.PARTICIPANT,
-                notFinished            : ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
-    }
     
     @Override
     String toString() {

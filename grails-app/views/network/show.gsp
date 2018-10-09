@@ -122,14 +122,36 @@
 
                               <g:if test="${participant.paper}">
                                   <span class="participant-paper-value">
-                                      <span class="paper-text"><g:message code="paper.label" />: ${participant.paper} (${participant.paper.state})</span>
+                                      <span class="paper-text">
+                                          <span class="l"><g:message code="paper.authorOf.label" />:</span>
+                                          <span class="v">${participant.paper} (${participant.paper.state})</span>
+                                      </span>
                                       <input type="hidden" name="paper-id" class="paper-id" value="${participant.paper.id}" />
                                       <input type="hidden" name="paper-state-id" value="${participant.paper.state.id}" />
                                       <span class="ui-icon ui-icon-pencil edit-paper-icon"></span>
-                                  </span>                                  
+                                  </span>
                                   <g:if test="${participant.paper.coAuthors && !participant.paper.coAuthors.isEmpty()}">
-                                      <span class="participant-paper-value">
-                                          <g:message code="paper.coAuthors.label" />: <eca:formatText text="${participant.paper.coAuthors}" />
+                                      <span class="participant-paper-coauthor-value">
+                                          <span class="l"><g:message code="paper.allCoAuthors.label" />:</span>
+                                          <span class="v"><eca:formatText text="${participant.paper.coAuthors}" /></span>
+                                      </span>
+                                  </g:if>
+                              </g:if>
+
+                              <g:if test="${participant.paperCoAuthoring}">
+                                  <span class="participant-paper-coauthoring-value">
+                                      <span class="paper-text">
+                                          <span class="l"><g:message code="paper.coAuthorOf.label" />:</span>
+                                          <span class="v">${participant.paperCoAuthoring} (${participant.paperCoAuthoring.state})</span>
+                                      </span>
+                                      <input type="hidden" name="paper-id" class="paper-id" value="${participant.paperCoAuthoring.id}" />
+                                      <input type="hidden" name="paper-state-id" value="${participant.paperCoAuthoring.state.id}" />
+                                      <span class="ui-icon ui-icon-pencil edit-paper-icon"></span>
+                                  </span>
+                                  <g:if test="${participant.paperCoAuthoring.coAuthors && !participant.paperCoAuthoring.coAuthors.isEmpty()}">
+                                      <span class="participant-paper-coauthoring-coauthor-value">
+                                          <span class="l"><g:message code="paper.allCoAuthors.label" />:</span>
+                                          <span class="v"><eca:formatText text="${participant.paperCoAuthoring.coAuthors}" /></span>
                                       </span>
                                   </g:if>
                               </g:if>
@@ -147,13 +169,33 @@
                               </li>
                           </ul>
 
-                          <span class="participant-paper-value"> 
-                              <span class="paper-text"></span>
+                          <span class="participant-paper-value">
+                              <span class="paper-text">
+                                  <span class="l"><g:message code="paper.authorOf.label" />:</span>
+                                  <span class="v"></span>
+                              </span>
                               <input type="hidden" name="paper-id" class="paper-id" value="" />
                               <input type="hidden" name="paper-state-id" value="" />
                               <span class="ui-icon ui-icon-pencil edit-paper-icon"></span>
                           </span>
-                          <span class="participant-paper-value"> </span>
+                          <span class="participant-paper-coauthor-value">
+                              <span class="l"><g:message code="paper.allCoAuthors.label" />:</span>
+                              <span class="v"> </span>
+                          </span>
+
+                          <span class="participant-paper-coauthoring-value">
+                              <span class="paper-text">
+                                  <span class="l"><g:message code="paper.coAuthorOf.label" />:</span>
+                                  <span class="v"></span>
+                              </span>
+                              <input type="hidden" name="paper-id" class="paper-id" value="" />
+                              <input type="hidden" name="paper-state-id" value="" />
+                              <span class="ui-icon ui-icon-pencil edit-paper-icon"></span>
+                          </span>
+                          <span class="participant-paper-coauthoring-coauthor-value">
+                              <span class="l"><g:message code="paper.allCoAuthors.label" />:</span>
+                              <span class="v"> </span>
+                          </span>
                       </li>
                   </ul>
                 </li>

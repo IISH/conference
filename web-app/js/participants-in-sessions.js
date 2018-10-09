@@ -66,24 +66,44 @@ var setParticipants = function (data, container, clone) {
 		item.find('.participant-value a').attr("href", link).text(data[i].participant);
 		item.find('.participant-state-value').text("(" + data[i].state + ")");
 
-		if (data[i].paper.trim().length === 0) {
+		if (data[i].paper === null) {
 			item.find('.participant-paper-value').remove();
+            item.find('.participant-paper-coauthor-value').remove();
 		}
 		else {
-			var paperItems = item.find('.participant-paper-value');
+			var paperItem = item.find('.participant-paper-value');
+			paperItem.find('.paper-text .v').text(data[i].paper.label);
+			paperItem.find('input[name=paper-id]').val(data[i].paper.paperId);
+			paperItem.find('input[name=paper-state-id]').val(data[i].paper.paperStateId);
 
-			if (data[i].coauthors.trim().length === 0) {
-				paperItems.last().remove();
-			}
-			else {
-				paperItems.last().text(data[i].coauthors);
-			}
-
-			var paperItem = paperItems.first();
-			paperItem.find('.paper-text').text(data[i].paper);
-			paperItem.find('input[name=paper-id]').val(data[i].paperId);
-			paperItem.find('input[name=paper-state-id]').val(data[i].paperStateId);
+            var paperCoAuthorItem = item.find('.participant-paper-coauthor-value');
+            if (data[i].paper.coauthors == null) {
+                paperCoAuthorItem.remove();
+            }
+            else {
+                paperCoAuthorItem.find('.v').text(data[i].paper.coauthors);
+            }
 		}
+
+        if (data[i].paperCoAuthoring === null) {
+            item.find('.participant-paper-coauthoring-value').remove();
+            item.find('.participant-paper-coauthoring-coauthor-value').remove();
+        }
+        else {
+            var coauthoringPaperItem = item.find('.participant-paper-coauthoring-value');
+
+            coauthoringPaperItem.find('.paper-text .v').text(data[i].paperCoAuthoring.label);
+            coauthoringPaperItem.find('input[name=paper-id]').val(data[i].paperCoAuthoring.paperId);
+            coauthoringPaperItem.find('input[name=paper-state-id]').val(data[i].paperCoAuthoring.paperStateId);
+
+            var coauthoringPaperCoAuthorItem = item.find('.participant-paper-coauthoring-coauthor-value');
+            if (data[i].paperCoAuthoring.coauthors == null) {
+                coauthoringPaperCoAuthorItem.remove();
+            }
+            else {
+                coauthoringPaperCoAuthorItem.find('.v').text(data[i].paperCoAuthoring.coauthors);
+            }
+        }
 
 		setTypes(data[i].types, item);
 
@@ -101,6 +121,9 @@ var setTypes = function (data, item) {
 		typeItem = typeClone.clone(true);
 		typeItem.find('.type-id').val(data[j].id);
 		typeItem.find('.participant-type-val').text(data[j].type);
+		if (data[j].id === 9) {
+            typeItem.find('.ui-icon').remove();
+		}
 		typeContainer.append(typeItem);
 	}
 

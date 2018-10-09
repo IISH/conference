@@ -27,13 +27,13 @@ import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
  */
 class ApiController {
 	def grailsApplication
-	def passwordService
-	def emailService
-	def emailCreationService
 	def pageInformation
-	def sessionPlannerService
 	def apiService
+	def emailService
+	def passwordService
 	def miscExportService
+	def emailCreationService
+	def sessionPlannerService
 
 	/*
 	 * GENERAL CRUD API CALLS
@@ -338,7 +338,7 @@ class ApiController {
 				SELECT u, pd, p, t
 				FROM ParticipantDate AS pd
 				INNER JOIN pd.user AS u
-				INNER JOIN u.sessionParticipants AS sp
+				INNER JOIN u.combinedSessionParticipants AS sp
 				INNER JOIN sp.type AS t
 				LEFT JOIN u.papers AS p WITH (
 					(p.deleted = false OR p IS NULL)
@@ -348,7 +348,6 @@ class ApiController {
 				WHERE u.deleted = false
 				AND sp.session.id = :sessionId
 				AND pd.state.id IN (:newParticipant, :dataChecked, :participant, :notFinished)
-
 				ORDER BY t.importance DESC, u.lastName ASC, u.firstName ASC
 			''',
 					['dateId'         : pageInformation.date.id, 'sessionId' : sessionId,
@@ -361,18 +360,13 @@ class ApiController {
 			results = ParticipantDate.executeQuery('''
 				SELECT u, pd, p
 				FROM ParticipantDate AS pd
-					INNER JOIN pd.user AS u
-					INNER JOIN u.papers AS p
+                INNER JOIN pd.user AS u
+                INNER JOIN u.papers AS p
 				WHERE u.deleted = false
-					AND p.deleted = false
-					AND p.date.id = :dateId
-					AND p.session.id IS NULL
-					AND p.networkProposal.id = :networkId
-					AND pd.state.id IN (:newParticipant, :dataChecked, :participant)
-				AND p.deleted = false
-				AND p.date.id = :dateId
-				AND p.session.id IS NULL
-				AND p.networkProposal.id = :networkId
+                AND p.deleted = false
+                AND p.date.id = :dateId
+                AND p.session.id IS NULL
+                AND p.networkProposal.id = :networkId
 				AND pd.state.id IN (:newParticipant, :dataChecked, :participant, :notFinished)
 				ORDER BY u.lastName ASC, u.firstName ASC
 			''',

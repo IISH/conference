@@ -1,17 +1,17 @@
 package org.iisg.eca.service
 
+import org.iisg.eca.domain.CombinedSessionParticipant
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Paper
 import org.iisg.eca.domain.Session
 import org.iisg.eca.domain.Network
+import org.iisg.eca.domain.PaperCoAuthor
 import org.iisg.eca.domain.ParticipantType
 import org.iisg.eca.domain.ParticipantDate
 import org.iisg.eca.domain.SessionParticipant
 import org.iisg.eca.domain.ParticipantTypeRule
 
 import org.iisg.eca.utils.ParticipantSessionInfo
-
-import org.springframework.context.i18n.LocaleContextHolder
 
 /**
  * Service responsible for requesting participant data in order to allow them in a session
@@ -41,7 +41,7 @@ class ParticipantSessionService {
                 eq('deleted', false)
             }
 
-            sessionParticipants {
+            combinedSessionParticipants {
                 eq('session.id', session.id)
                 eq('type.id', type.id)
             }
@@ -103,6 +103,19 @@ class ParticipantSessionService {
     }
 
     /**
+     * Return all participating users in the given session
+     * @param session The session
+     * @return All participating users
+     */
+    List<User> getUsersInSession(Session session) {
+        CombinedSessionParticipant.executeQuery('''
+            SELECT DISTINCT sp.user 
+            FROM CombinedSessionParticipant AS sp 
+            WHERE sp.session.id = :sessionId
+        ''', [sessionId: session.id])
+    }
+
+    /**
      * Returns a list with information about every participant added to the given session
      * @param session The session in question
      * @return A list of <code>ParticipantSessionInfo</code> objects
@@ -112,12 +125,23 @@ class ParticipantSessionService {
         // then transform this into a list of <code>ParticipantSessionInfo</code> objects
         getParticipantSessionInfoList(
             SessionParticipant.executeQuery('''
-                SELECT sp.session, u, t
+                SELECT sp.session, u, t, p
                 FROM SessionParticipant AS sp
                 INNER JOIN sp.type AS t
                 INNER JOIN sp.user AS u
+                LEFT JOIN sp.sessionParticipantPapers AS spp
+                LEFT JOIN spp.paper AS p
                 WHERE sp.session.id = :sessionId
                 ORDER BY t.importance DESC, u.lastName, u.firstName
+            ''', [sessionId: session.id]),
+            PaperCoAuthor.executeQuery('''
+                SELECT pca
+                FROM PaperCoAuthor AS pca
+                INNER JOIN pca.paper AS p
+                INNER JOIN p.session AS s
+                INNER JOIN pca.user AS u
+                WHERE s.id = :sessionId
+                ORDER BY u.lastName, u.firstName
             ''', [sessionId: session.id])
         )
     }
@@ -132,15 +156,24 @@ class ParticipantSessionService {
         // then transform this into a list of <code>ParticipantSessionInfo</code> objects
         getParticipantSessionInfoList(
             SessionParticipant.executeQuery('''
-                SELECT s, sp.user, t
+                SELECT s, sp.user, t, p
                 FROM SessionParticipant AS sp
                 INNER JOIN sp.type AS t
                 INNER JOIN sp.session AS s
+                LEFT JOIN sp.sessionParticipantPapers AS spp
+                LEFT JOIN spp.paper AS p
                 WHERE sp.user.id = :userId
                 AND s.date.id = :dateId
                 AND s.deleted = false
                 ORDER BY s.code, s.name, t.importance DESC
-            ''', [userId: participant?.user?.id, dateId: pageInformation.date.id])
+            ''', [userId: participant?.user?.id, dateId: pageInformation.date.id]),
+            PaperCoAuthor.executeQuery('''
+                SELECT pca
+                FROM PaperCoAuthor AS pca
+                INNER JOIN pca.user AS u
+                WHERE u.id = :userId
+                ORDER BY u.lastName, u.firstName
+            ''', [userId: participant?.user?.id])
         )
     }
 
@@ -149,20 +182,22 @@ class ParticipantSessionService {
         // then transform this into a list of <code>ParticipantSessionInfo</code> objects
         getParticipantSessionInfoList(
             SessionParticipant.executeQuery('''
-                SELECT s, u, t
+                SELECT s, u, t, p
                 FROM SessionParticipant AS sp
                 INNER JOIN sp.session AS s
                 INNER JOIN sp.type AS t
                 INNER JOIN sp.user AS u
-                INNER JOIN u.papers AS p
+                LEFT JOIN sp.sessionParticipantPapers AS spp
+                LEFT JOIN spp.paper AS p
+                INNER JOIN u.papers AS up
                 INNER JOIN s.state AS st
                 WHERE s.id = :sessionId
                 AND t.withPaper = true
-                AND p.state <> st.correspondingPaperState
-                AND p.deleted = false
+                AND up.state <> st.correspondingPaperState
+                AND up.deleted = false
                 AND s.id = p.session.id
                 ORDER BY u.lastName, u.firstName
-            ''', [sessionId: session.id])
+            ''', [sessionId: session.id]), []
         )
     }
 
@@ -171,17 +206,20 @@ class ParticipantSessionService {
      * @param sessionParticipant An collection with the Session object, the User object and the ParticipantType object
      * @return A list of <code>ParticipantSessionInfo</code> objects
      */
-    private List<ParticipantSessionInfo> getParticipantSessionInfoList(Collection<Object[]> sessionParticipants) {
+    private List<ParticipantSessionInfo> getParticipantSessionInfoList(
+            Collection<Object[]> sessionParticipants, List<PaperCoAuthor> allCoAuthors) {
         List<ParticipantSessionInfo> sessionInformation = []
 
         sessionParticipants.each { sessionParticipant ->
-            Session session = sessionParticipant[0]
-            User user = sessionParticipant[1]
-            ParticipantType type = sessionParticipant[2]
+            Session session = (Session) sessionParticipant[0]
+            User user = (User) sessionParticipant[1]
+            ParticipantType type = (ParticipantType) sessionParticipant[2]
+            Paper paper = (Paper) sessionParticipant[3]
 
             // See if this user is already in the list somewhere, if so update that one with new information
             ParticipantSessionInfo sessionInfo = sessionInformation.find {
-                (it.participant?.user?.id == user?.id) && (it.session?.id == session?.id) }
+                (it.participant?.user?.id == user?.id) && (it.session?.id == session?.id)
+            }
 
             // This user is not in the list already, so create a new <code>ParticipantSessionInfo</code> object for this user
             if (!sessionInfo) {
@@ -194,12 +232,38 @@ class ParticipantSessionService {
 
             // Update the sessionInfo object with the new participant type and paper information
             sessionInfo?.addType(type)
-            sessionInfo?.paper = Paper.findAllBySession(session).find { it.user?.id == user.id }
+            sessionInfo?.paper = paper
+        }
+
+        allCoAuthors.each { coAuthor ->
+            User coAuthorUser = coAuthor.user
+
+            // See if this user is already in the list somewhere, if so update that one with new information
+            ParticipantSessionInfo sessionInfoCoAuthor = sessionInformation.find {
+                (it.participant?.user?.id == coAuthorUser?.id) && (it.session?.id == coAuthor.paper.session?.id) }
+
+            // This user is not in the list already, so create a new <code>ParticipantSessionInfo</code> object for this user
+            if (!sessionInfoCoAuthor) {
+                ParticipantDate coAuthorParticipant = ParticipantDate.findByUserAndDate(coAuthorUser, pageInformation.date)
+                if (coAuthorParticipant) {
+                    sessionInfoCoAuthor = new ParticipantSessionInfo(coAuthor.paper.session, coAuthorParticipant)
+                    sessionInformation.add(sessionInfoCoAuthor)
+                }
+            }
+
+            sessionInfoCoAuthor?.addType(ParticipantType.get(ParticipantType.CO_AUTHOR))
+            sessionInfoCoAuthor?.paperCoAuthoring = coAuthor.paper
         }
 
         sessionInformation.sort { ParticipantSessionInfo a, ParticipantSessionInfo b ->
+            if (a.types*.importance.max() != b.types*.importance.max()) {
+                return b.types*.importance.max().compareTo(a.types*.importance.max())
+            }
             if (a.paper && b.paper) {
                 return a.paper.sortOrder.compareTo(b.paper.sortOrder)
+            }
+            if (a.paperCoAuthoring && b.paperCoAuthoring) {
+                return a.paperCoAuthoring.sortOrder.compareTo(b.paperCoAuthoring.sortOrder)
             }
             return 0
         }
@@ -263,10 +327,18 @@ class ParticipantSessionService {
                 types:          it.types.collect { pType ->
                                     [id: pType.id, type:  pType.toString()]
                                 },
-                paper:          (it.paper) ? "${messageSource.getMessage('paper.label', null, LocaleContextHolder.locale)}: ${it.paper?.toString()} (${it.paper.state.toString()})" : "",
-                coauthors:      (it.paper?.coAuthors) ? "${messageSource.getMessage('paper.coAuthors.label', null, LocaleContextHolder.locale)}: ${it.paper.coAuthors}" : "",
-                paperId:        (it.paper) ? it.paper.id : "",
-                paperStateId:   (it.paper) ? it.paper.state.id : ""
+                paper:          (it.paper) ? [
+                    label:          "${it.paper?.toString()} (${it.paper.state.toString()})",
+                    coauthors:      it.paper.coAuthors,
+                    paperId:        it.paper.id,
+                    paperStateId:   it.paper.state.id
+                ] : null,
+                paperCoAuthoring: (it.paperCoAuthoring) ? [
+                    label:          "${it.paperCoAuthoring?.toString()} (${it.paperCoAuthoring.state.toString()})",
+                    coauthors:      it.paperCoAuthoring.coAuthors,
+                    paperId:        it.paperCoAuthoring.id,
+                    paperStateId:   it.paperCoAuthoring.state.id
+                ] : null
             ]
         }
     }

@@ -363,6 +363,7 @@ class ParticipantService {
         UserRole.executeUpdate('update UserRole set user = ? where user = ?', [userA, userB])
         Paper.executeUpdate('update Paper set user = ? where user = ?', [userA, userB])
         SessionParticipant.executeUpdate('update SessionParticipant set user = ? where user = ?', [userA, userB])
+        PaperCoAuthor.executeUpdate('update PaperCoAuthor set user = ? where user = ?', [userA, userB])
         SentEmail.executeUpdate('update SentEmail set user = ? where user = ?', [userA, userB])
         UserPage.executeUpdate('update UserPage set user = ? where user = ?', [userA, userB])
         ParticipantDay.executeUpdate('update ParticipantDay set user = ? where user = ?', [userA, userB])
@@ -370,6 +371,7 @@ class ParticipantService {
         Session.executeUpdate('update Session set addedBy = ? where addedBy = ?', [userA, userB])
         Paper.executeUpdate('update Paper set addedBy = ? where addedBy = ?', [userA, userB])
         SessionParticipant.executeUpdate('update SessionParticipant set addedBy = ? where addedBy = ?', [userA, userB])
+        PaperCoAuthor.executeUpdate('update PaperCoAuthor set addedBy = ? where addedBy = ?', [userA, userB])
 
         new ArrayList<>(userB.groups).each { Group group ->
             group.removeFromUsers(userB)

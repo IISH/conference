@@ -112,4 +112,4 @@ var disableWithLoading = function (enable) {
 	else {
 		overlay.hide();
 	}
-}
+};

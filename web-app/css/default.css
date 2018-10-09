@@ -946,10 +946,16 @@ span.avgReviewScore {
     font-weight: bold;
 }
 
-.participant-paper-value {
+.participant-paper-value, .participant-paper-coauthoring-value,
+.participant-paper-coauthor-value, .participant-paper-coauthoring-coauthor-value {
     display: block;
     color: [main_color_dark];
     font-style: italic;
+}
+
+.participant-paper-value .l, .participant-paper-coauthoring-value .l,
+.participant-paper-coauthor-value .l, .participant-paper-coauthoring-coauthor-value .l {
+    font-weight: bold;
 }
 
 .session-participants li ul, .session-participants li ul li {

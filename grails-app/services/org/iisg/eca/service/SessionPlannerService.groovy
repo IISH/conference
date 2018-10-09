@@ -14,6 +14,7 @@ import org.springframework.cache.annotation.Cacheable
  */
 class SessionPlannerService {
     def pageInformation
+    def participantSessionService
     
     /**
      * Finds out all possible combinations of equipment for the current event date
@@ -90,13 +91,12 @@ class SessionPlannerService {
      * @return A list of sessions that have the same participants scheduled as the given one
      */
     List<Session> getSessionsWithSameParticipants(Session session) {
-        (List<Session>) SessionParticipant.executeQuery('''
+        (List<Session>) CombinedSessionParticipant.executeQuery('''
             SELECT DISTINCT sp.session
-            FROM SessionParticipant AS sp
+            FROM CombinedSessionParticipant AS sp
             WHERE EXISTS (
-                FROM SessionParticipant AS sp2
+                FROM CombinedSessionParticipant AS sp2
                 WHERE sp.user.id = sp2.user.id
-                AND sp.session.id <> sp2.session.id
                 AND sp2.session.id = :sessionId
             )
             AND sp.session.id <> :sessionId
@@ -113,14 +113,14 @@ class SessionPlannerService {
         Session.executeQuery('''
             SELECT s, u, sdt
             FROM Session AS s
-            INNER JOIN s.sessionRoomDateTime AS srdt
-            INNER JOIN s.sessionParticipants AS sp
+            INNER JOIN s.combinedSessionParticipants AS sp
             INNER JOIN sp.user AS u
+            INNER JOIN s.sessionRoomDateTime AS srdt
             INNER JOIN srdt.sessionDateTime AS sdt 
             WHERE EXISTS (
                 FROM Session AS s2
                 INNER JOIN s2.sessionRoomDateTime AS srdt2
-                INNER JOIN s2.sessionParticipants AS sp2
+                INNER JOIN s2.combinedSessionParticipants AS sp2
                 WHERE s2.date.id = :dateId
                 AND s2.deleted = false
                 AND s.id <> s2.id	
@@ -147,14 +147,14 @@ class SessionPlannerService {
      * @return A list of time slots, where at least one of the participants from the given session is not present
      */
     List<SessionDateTime> getTimesParticipantsNotPresent(Session session) {
-        List<Long> userIds = SessionParticipant.findAllBySession(session)*.user.id
+        List<Long> userIds = participantSessionService.getUsersInSession(session)*.id
 
         // If there are no participants, then there is no point in executing the query
         if (userIds.isEmpty()) {
             return []
         }
 
-        (List<SessionDateTime>) SessionParticipant.executeQuery('''
+        (List<SessionDateTime>) ParticipantDate.executeQuery('''
             SELECT DISTINCT dt
             FROM ParticipantDate AS p
             INNER JOIN p.user AS u
@@ -175,9 +175,9 @@ class SessionPlannerService {
         Session.executeQuery(''' 
             SELECT DISTINCT s, u
             FROM Session AS s
-            INNER JOIN s.sessionRoomDateTime AS srdt
-            INNER JOIN s.sessionParticipants AS sp
+            INNER JOIN s.combinedSessionParticipants AS sp
             INNER JOIN sp.user AS u
+            INNER JOIN s.sessionRoomDateTime AS srdt
             INNER JOIN srdt.sessionDateTime AS sdt 
             WHERE EXISTS (
                 FROM ParticipantDate AS p
@@ -192,9 +192,9 @@ class SessionPlannerService {
         ''', [dateId: pageInformation.date.id]).each { conflict -> 
             Session session = conflict[0]
             User user = conflict[1]
-            
+
             List<Session> sessions = sessionMap.get(user, new ArrayList<Session>())
-            sessions.add(session)    
+            sessions.add(session)
         }
         
         sessionMap
@@ -321,7 +321,7 @@ class SessionPlannerService {
             if (networkId || (terms?.trim()?.size() > 0)) {
                 createAlias('s.networks', 'n')
                 if (terms?.trim()?.size() > 1) {
-                    createAlias('s.sessionParticipants', 'sp', CriteriaSpecification.LEFT_JOIN)
+                    createAlias('s.combinedSessionParticipants', 'sp', CriteriaSpecification.LEFT_JOIN)
                     createAlias('sp.user', 'u', CriteriaSpecification.LEFT_JOIN)
                     createAlias('s.papers', 'p', CriteriaSpecification.LEFT_JOIN)
                 }
@@ -431,7 +431,7 @@ class SessionPlannerService {
             }
         }
 
-        def sessionParticipants = SessionParticipant.withCriteria {
+        def sessionParticipants = CombinedSessionParticipant.withCriteria {
             createAlias('session', 's')
             createAlias('user', 'u')
             createAlias('type', 't')

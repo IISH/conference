@@ -138,21 +138,46 @@
                                     <li class="participant-type-value">
                                         <input type="hidden" name="set-index" value="false" />
                                         <input type="hidden" name="type-id" class="type-id" value="${type.id}" />
-                                        <span class="participant-type-val">${type}</span> <span class="ui-icon ui-icon-circle-minus"></span>
+                                        <span class="participant-type-val">${type}</span>
+                                        <g:if test="${type.id != ParticipantType.CO_AUTHOR}">
+                                            <span class="ui-icon ui-icon-circle-minus"></span>
+                                        </g:if>
                                     </li>
                                 </g:each>
                                 </ul>
 
                                 <g:if test="${participant.paper}">
                                     <span class="participant-paper-value">
-                                        <span class="paper-text"><g:message code="paper.label" />: ${participant.paper} (${participant.paper.state})</span>
+                                        <span class="paper-text">
+                                            <span class="l"><g:message code="paper.authorOf.label" />:</span>
+                                            <span class="v">${participant.paper} (${participant.paper.state})</span>
+                                        </span>
                                         <input type="hidden" name="paper-id" class="paper-id" value="${participant.paper.id}" />
                                         <input type="hidden" name="paper-state-id" value="${participant.paper.state.id}" />
                                         <span class="ui-icon ui-icon-pencil edit-paper-icon"></span>
                                     </span>
                                     <g:if test="${participant.paper.coAuthors && !participant.paper.coAuthors.isEmpty()}">
-                                        <span class="participant-paper-value">
-                                            <g:message code="paper.coAuthors.label" />: <eca:formatText text="${participant.paper.coAuthors}" />
+                                        <span class="participant-paper-coauthor-value">
+                                            <span class="l"><g:message code="paper.allCoAuthors.label" />:</span>
+                                            <span class="v"><eca:formatText text="${participant.paper.coAuthors}" /></span>
+                                        </span>
+                                    </g:if>
+                                </g:if>
+
+                                <g:if test="${participant.paperCoAuthoring}">
+                                    <span class="participant-paper-coauthoring-value">
+                                        <span class="paper-text">
+                                            <span class="l"><g:message code="paper.coAuthorOf.label" />:</span>
+                                            <span class="v">${participant.paperCoAuthoring} (${participant.paperCoAuthoring.state})</span>
+                                        </span>
+                                        <input type="hidden" name="paper-id" class="paper-id" value="${participant.paperCoAuthoring.id}" />
+                                        <input type="hidden" name="paper-state-id" value="${participant.paperCoAuthoring.state.id}" />
+                                        <span class="ui-icon ui-icon-pencil edit-paper-icon"></span>
+                                    </span>
+                                    <g:if test="${participant.paperCoAuthoring.coAuthors && !participant.paperCoAuthoring.coAuthors.isEmpty()}">
+                                        <span class="participant-paper-coauthoring-coauthor-value">
+                                            <span class="l"><g:message code="paper.allCoAuthors.label" />:</span>
+                                            <span class="v"><eca:formatText text="${participant.paperCoAuthoring.coAuthors}" /></span>
                                         </span>
                                     </g:if>
                                 </g:if>
@@ -170,17 +195,38 @@
                                 <li class="participant-type-value">
                                     <input type="hidden" name="set-index" value="false" />
                                     <input type="hidden" name="type-id" class="type-id" />
-                                    <span class="participant-type-val"> </span> <span class="ui-icon ui-icon-circle-minus"></span>
+                                    <span class="participant-type-val"> </span>
+                                    <span class="ui-icon ui-icon-circle-minus"></span>
                                 </li>
                             </ul>
 
                             <span class="participant-paper-value">
-                                <span class="paper-text"></span>
+                                <span class="paper-text">
+                                    <span class="l"><g:message code="paper.authorOf.label" />:</span>
+                                    <span class="v"></span>
+                                </span>
                                 <input type="hidden" name="paper-id" class="paper-id" value="" />
                                 <input type="hidden" name="paper-state-id" value="" />
                                 <span class="ui-icon ui-icon-pencil edit-paper-icon"></span>
                             </span>
-                            <span class="participant-paper-value"> </span>
+                            <span class="participant-paper-coauthor-value">
+                                <span class="l"><g:message code="paper.allCoAuthors.label" />:</span>
+                                <span class="v"> </span>
+                            </span>
+
+                            <span class="participant-paper-coauthoring-value">
+                                <span class="paper-text">
+                                    <span class="l"><g:message code="paper.coAuthorOf.label" />:</span>
+                                    <span class="v"></span>
+                                </span>
+                                <input type="hidden" name="paper-id" class="paper-id" value="" />
+                                <input type="hidden" name="paper-state-id" value="" />
+                                <span class="ui-icon ui-icon-pencil edit-paper-icon"></span>
+                            </span>
+                            <span class="participant-paper-coauthoring-coauthor-value">
+                                <span class="l"><g:message code="paper.allCoAuthors.label" />:</span>
+                                <span class="v"> </span>
+                            </span>
                         </li>
                     </ul>
                 </div>
@@ -188,37 +234,41 @@
                 <div id="tabs">
                     <ol>
                         <g:each in="${types}" var="type">
-                            <li><a href="#${type.toString().toLowerCase()}-tab"><g:message code="default.add.label" args="[type]" /></a></li>
+                            <g:if test="${type.id != ParticipantType.CO_AUTHOR}">
+                                <li><a href="#${type.toString().toLowerCase()}-tab"><g:message code="default.add.label" args="[type]" /></a></li>
+                            </g:if>
                         </g:each>
                     </ol>
 
                     <g:each in="${types}" var="type">
-                        <div id="${type.toString().toLowerCase()}-tab" class="form <g:if test="${type.type.equalsIgnoreCase('author')}">author</g:if>">
-                            <input type="hidden" name="type-id" value="${type.id}" class="type-id" />
-                            <input type="hidden" name="participant-id" class="participant-id" />
+                        <g:if test="${type.id != ParticipantType.CO_AUTHOR}">
+                            <div id="${type.toString().toLowerCase()}-tab" class="form <g:if test="${type.type.equalsIgnoreCase('author')}">author</g:if>">
+                                <input type="hidden" name="type-id" value="${type.id}" class="type-id" />
+                                <input type="hidden" name="participant-id" class="participant-id" />
 
-                            <div>
-                                <label class="property-label">
-                                    <g:message code="participantDate.label" />
-                                </label>
-                                <span class="property-value">
-                                    <input type="text" name="participant" class="select-participant" />
-                                </span>
-                            </div>
-                            <g:if test="${type.withPaper && (maxPapers == null || maxPapers > 1)}">
                                 <div>
                                     <label class="property-label">
-                                        <g:message code="paper.label" />
+                                        <g:message code="participantDate.label" />
                                     </label>
                                     <span class="property-value">
-                                        <select class="paper-id" name="paper-id"></select>
+                                        <input type="text" name="participant" class="select-participant" />
                                     </span>
                                 </div>
-                            </g:if>
-                            <div class="buttons">
-                                <input type="button" name="add-participant" class="property-value" value="${g.message(code: "default.add.label", args: [type])}" />
+                                <g:if test="${type.withPaper && (maxPapers == null || maxPapers > 1)}">
+                                    <div>
+                                        <label class="property-label">
+                                            <g:message code="paper.label" />
+                                        </label>
+                                        <span class="property-value">
+                                            <select class="paper-id" name="paper-id"></select>
+                                        </span>
+                                    </div>
+                                </g:if>
+                                <div class="buttons">
+                                    <input type="button" name="add-participant" class="property-value" value="${g.message(code: "default.add.label", args: [type])}" />
+                                </div>
                             </div>
-                        </div>
+                        </g:if>
                     </g:each>
                   </div>
                   <div id="loading">

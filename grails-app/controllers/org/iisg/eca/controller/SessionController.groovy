@@ -19,13 +19,12 @@ import org.iisg.eca.domain.ParticipantType
 import org.iisg.eca.domain.ParticipantDate
 import org.iisg.eca.domain.SessionParticipant
 import org.iisg.eca.domain.SessionRoomDateTime
+import org.iisg.eca.domain.CombinedSessionParticipant
 
 import org.iisg.eca.dynamic.DataContainer
 import org.iisg.eca.dynamic.DynamicPageResults
 
 import org.iisg.eca.utils.ParticipantSessionInfo
-
-import org.hibernate.FlushMode
 
 /**
  * Controller responsible for handling requests on sessions
@@ -45,11 +44,6 @@ class SessionController {
      * The session planner service is responsible for actions related to the planning of sessions
      */
     def sessionPlannerService
-    
-    /**
-     * Service taking care of participants
-     */
-    def participantService
 
     /**
      * Service taking care of participants and how they are added to a session
@@ -684,7 +678,7 @@ class SessionController {
                     Map<SessionDateTime, Set<User>> dateTimesSameParticipants = new TreeMap<>()
                     List<Session> sessionsSameParticipants = sessionPlannerService.getSessionsWithSameParticipants(session)
                     sessionsSameParticipants.each { Session sessionsSameParticipant ->
-                        sessionsSameParticipant.sessionParticipants.each { SessionParticipant sessionParticipant ->
+                        sessionsSameParticipant.combinedSessionParticipants.each { CombinedSessionParticipant sessionParticipant ->
                             if (users.contains(sessionParticipant.user)) {
                                 SessionDateTime plannedDateTime = sessionParticipant.session.plannedDateTime
                                 if (plannedDateTime) {

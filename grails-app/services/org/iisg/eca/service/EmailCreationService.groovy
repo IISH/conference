@@ -1,9 +1,5 @@
 package org.iisg.eca.service
 
-import org.iisg.eca.domain.PaperReview
-import org.iisg.eca.domain.ParticipantDate
-import org.iisg.eca.domain.ParticipantState
-
 import java.text.SimpleDateFormat
 
 import org.iisg.eca.domain.Day
@@ -12,9 +8,12 @@ import org.iisg.eca.domain.Order
 import org.iisg.eca.domain.Setting
 import org.iisg.eca.domain.SentEmail
 import org.iisg.eca.domain.FeeAmount
+import org.iisg.eca.domain.PaperReview
 import org.iisg.eca.domain.EmailTemplate
 import org.iisg.eca.domain.ParticipantDay
-import org.iisg.eca.domain.SessionParticipant
+import org.iisg.eca.domain.ParticipantDate
+import org.iisg.eca.domain.ParticipantState
+import org.iisg.eca.domain.CombinedSessionParticipant
 
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 
@@ -151,8 +150,8 @@ class EmailCreationService {
 		emails.add(email)
 
 		// Now for each created session also mail the session participants
-		SessionParticipant.findAllByAddedBy(user)*.session.unique().each { session ->
-			SessionParticipant.findAllBySessionAndAddedBy(session, user)*.user.unique().each { sessionParticipant ->
+		CombinedSessionParticipant.findAllByAddedBy(user)*.session.unique().each { session ->
+			CombinedSessionParticipant.findAllBySessionAndAddedBy(session, user)*.user.unique().each { sessionParticipant ->
 				// Make sure the participant state is updated as well
 				ParticipantDate pd = sessionParticipant.getParticipantForDate(pageInformation.date)
 				if (pd?.stateId == ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION) {

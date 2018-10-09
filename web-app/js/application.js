@@ -668,7 +668,7 @@ $(document).ready(function () {
 				var paperId = dialog.find('input[name=paper-id]').val();
 				var stateId = dialog.find('input[name=paper-state]:checked').val();
 
-				ajaxCall(this, 'participant/changePaperState', {paper_id: paperId, state_id: stateId},
+				ajaxCall(this, 'paper/changeState', {paper_id: paperId, state_id: stateId},
 					function (data) {
 						$('.paper-id[value=' + paperId + ']').parent().find('.paper-text').text(data.paper);
 						dialog.dialog("close");

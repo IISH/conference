@@ -3,7 +3,7 @@ package org.iisg.eca.domain
 /**
  * Domain class of table holding all possible participant types
  */
-class ParticipantType extends EventDomain {
+class ParticipantType extends EventDomain implements Comparable {
     static final long CHAIR = 6L
     static final long ORGANIZER = 7L
     static final long AUTHOR = 8L
@@ -14,11 +14,12 @@ class ParticipantType extends EventDomain {
     boolean withPaper = false
     int importance = 0
 
-    static hasMany = [  sessionParticipants:    SessionParticipant,
-                        rulesFirst:             ParticipantTypeRule,
-                        rulesSecond:            ParticipantTypeRule]
-    static mappedBy = [ rulesFirst:             'firstType',
-                        rulesSecond:            'secondType']
+    static hasMany = [  sessionParticipants:            SessionParticipant,
+                        combinedSessionParticipants:    CombinedSessionParticipant,
+                        rulesFirst:                     ParticipantTypeRule,
+                        rulesSecond:                    ParticipantTypeRule]
+
+    static mappedBy = [rulesFirst: 'firstType', rulesSecond: 'secondType']
 
     static mapping = {
         table 'participant_types'
@@ -30,9 +31,10 @@ class ParticipantType extends EventDomain {
         withPaper   column: 'with_paper'
         importance  column: 'importance',           sort: 'desc'
         
-        sessionParticipants cascade: 'all-delete-orphan'
-        rulesFirst          cascade: 'all-delete-orphan'
-        rulesSecond         cascade: 'all-delete-orphan'
+        sessionParticipants         cascade: 'all-delete-orphan'
+        rulesFirst                  cascade: 'all-delete-orphan'
+        rulesSecond                 cascade: 'all-delete-orphan'
+        combinedSessionParticipants cascade: 'none'
     }
 
     static constraints = {
@@ -62,6 +64,11 @@ class ParticipantType extends EventDomain {
 
 		return types
 	}
+
+    @Override
+    int compareTo(Object o) {
+        return ((ParticipantType) o).importance.compareTo(this.importance)
+    }
 
     @Override
     String toString() {

@@ -1,4 +1,4 @@
-<%@ page import="org.iisg.eca.domain.AgeRange; org.iisg.eca.domain.PaperState; org.iisg.eca.domain.Equipment; org.iisg.eca.domain.Network; org.iisg.eca.domain.Volunteering; org.iisg.eca.domain.Day; org.iisg.eca.domain.SessionDateTime; org.iisg.eca.domain.Setting; org.iisg.eca.domain.Title; org.iisg.eca.domain.FeeState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Extra; org.iisg.eca.domain.Country; org.iisg.eca.domain.SessionParticipant; org.iisg.eca.domain.Order; org.iisg.eca.domain.PaperReview; org.iisg.eca.domain.ReviewCriteria" %>
+<%@ page import="org.iisg.eca.domain.PaperCoAuthor; org.iisg.eca.domain.AgeRange; org.iisg.eca.domain.PaperState; org.iisg.eca.domain.Equipment; org.iisg.eca.domain.Network; org.iisg.eca.domain.Volunteering; org.iisg.eca.domain.Day; org.iisg.eca.domain.SessionDateTime; org.iisg.eca.domain.Setting; org.iisg.eca.domain.Title; org.iisg.eca.domain.FeeState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Extra; org.iisg.eca.domain.Country; org.iisg.eca.domain.SessionParticipant; org.iisg.eca.domain.Order; org.iisg.eca.domain.PaperReview; org.iisg.eca.domain.ReviewCriteria; org.iisg.eca.domain.PaperCoAuthor" %>
 <div id="papers-tab" class="columns copy">
     <input type="hidden" name="max-papers" value="${Setting.getSetting(Setting.MAX_PAPERS_PER_PERSON_PER_SESSION).value}" />
     <input type="hidden" name="to-be-deleted" class="to-be-deleted" />
@@ -218,19 +218,29 @@
                 </div>
                 <div>
                     <label class="property-label">
-                        <g:message code="participantType.function.label" />
+                        <g:message code="paper.sessionCoAuthors.label" />
                     </label>
-                    <span class="property-value">
-                        <span>
-                            <g:if test="${paper.session}">
-                                <g:set var="functionInSession" value="${SessionParticipant.findAllByUserAndSession(user, paper.session)}" />
-                                <g:if test="${functionInSession.size() > 0}">
-                                    ${functionInSession*.type.join(', ')}
-                                </g:if>
-                            </g:if>
-                            <g:else>-</g:else>
-                        </span>
-                    </span>
+                    <ul class="property-value">
+                        <g:set var="paperCoAuthors" value="${PaperCoAuthor.findAllByPaper(paper)}" />
+                        <g:each in="${paperCoAuthors}" var="instance" status="ipca">
+                            <li>
+                                <input type="hidden" name="PaperCoAuthor_${i}_${ipca}.id" value="${instance.id}" />
+                                <eca:link controller="participant" action="show" id="${instance.user.id}">
+                                    ${instance.user.toString()}
+                                </eca:link>
+                                <span class="ui-icon ui-icon-circle-minus"></span>
+                            </li>
+                        </g:each>
+                        <li class="add">
+                            <span class="ui-icon ui-icon-circle-plus"></span>
+                            <g:message code="default.add.label" args="[g.message(code: 'paper.coAuthor.label').toLowerCase()]" />
+                        </li>
+                        <li class="hidden">
+                            <input type="hidden" name="PaperCoAuthor_${i}_null.id" />
+                            <eca:usersAutoComplete name="PaperCoAuthor_${i}_null.user.id" labelValue="" idValue="" queryName="allParticipantUsers" required="required" />
+                            <span class="ui-icon ui-icon-circle-minus"></span>
+                        </li>
+                    </ul>
                 </div>
             </fieldset>
 

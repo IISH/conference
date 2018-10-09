@@ -35,6 +35,7 @@ class Paper extends EventDateDomain {
     static hasMany = [
 			equipment: Equipment,
 			reviews: PaperReview,
+			coAuthoringPapers: PaperCoAuthor,
 			sessionParticipantPapers: SessionParticipantPaper
 	]
 
@@ -70,6 +71,7 @@ class Paper extends EventDateDomain {
 
         equipment           		joinTable: 'paper_equipment'
 		reviews					    cascade: 'all-delete-orphan'
+		coAuthoringPapers			cascade: 'all-delete-orphan'
 		sessionParticipantPapers	cascade: 'none'
     }
 

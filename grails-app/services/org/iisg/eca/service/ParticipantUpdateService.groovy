@@ -221,6 +221,7 @@ class ParticipantUpdateService {
 		}
 
 		updatePaperReviews(paper, params, i)
+		updatePaperCoAuthors(paper, params, i)
 
 		paper.save(flush: true, failOnError: true)
 	}
@@ -266,5 +267,45 @@ class ParticipantUpdateService {
 
 		// Whatever is left should be deleted
 		toBeDeleted.each { paper.removeFromReviews(it) }
+	}
+
+	/**
+	 * Update the co authors of a specific paper of the user for the current event date
+	 * @param paper The paper of which the co authors should be updated
+	 * @param params The paper co authors data to update
+	 * @param i The counter, to identify the paper data from <code>params</code> to update the co authors with
+	 */
+	private void updatePaperCoAuthors(Paper paper, GrailsParameterMap params, int i) {
+		Set<PaperCoAuthor> toBeDeleted = []
+		if ((paper.coAuthoringPapers != null) && (paper.coAuthoringPapers.size() > 0)) {
+			toBeDeleted += paper.coAuthoringPapers
+		}
+
+		int j = 0
+		while (params["PaperCoAuthor_${i}_${j}"]) {
+			if (params["PaperCoAuthor_${i}_${j}.id"].toString().isLong()) {
+				Long id = params.long("PaperCoAuthor_${i}_${j}.id")
+				toBeDeleted.removeAll { it.id == id }
+			}
+			else {
+				PaperCoAuthor paperCoAuthor = new PaperCoAuthor()
+				bindData(paperCoAuthor, params, [include: ['user']], "PaperCoAuthor_${i}_${j}".toString())
+
+				// Make sure the reviewer is not already added before and is not the paper author
+				PaperCoAuthor doublePaperCoAuthor = paper.coAuthoringPapers.find { it.user.id == paperCoAuthor.user.id }
+				if (doublePaperCoAuthor) {
+					toBeDeleted.remove(doublePaperCoAuthor)
+				}
+				else {
+					paperCoAuthor.paper = paper
+					paper.addToCoAuthoringPapers(paperCoAuthor)
+				}
+			}
+
+			j++
+		}
+
+		// Whatever is left should be deleted
+		toBeDeleted.each { paper.removeFromCoAuthoringPapers(it) }
 	}
 }

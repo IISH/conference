@@ -21,6 +21,7 @@ class Session extends EventDateDomain {
 
     static belongsTo = [Network, SessionState, SessionType, User, ParticipantDate]
     static hasMany = [  sessionParticipants: SessionParticipant,
+                        combinedSessionParticipants: CombinedSessionParticipant,
                         papers: Paper,
                         sessionRoomDateTime: SessionRoomDateTime,
                         networks: Network,
@@ -43,10 +44,11 @@ class Session extends EventDateDomain {
         addedBy             column: 'added_by',         fetch: 'join'
 	    deleted             column: 'deleted'
 
-        networks                joinTable: 'session_in_network'
-        participantsFavorite    joinTable: 'participant_favorite_session'
-        sessionParticipants     cascade: 'all-delete-orphan'
-        sessionRoomDateTime     cascade: 'all-delete-orphan'  
+        networks                    joinTable: 'session_in_network'
+        participantsFavorite        joinTable: 'participant_favorite_session'
+        sessionParticipants         cascade: 'all-delete-orphan'
+        sessionRoomDateTime         cascade: 'all-delete-orphan'
+        combinedSessionParticipants cascade: 'none'
     }
 
     static constraints = {
@@ -172,7 +174,7 @@ class Session extends EventDateDomain {
         ParticipantType.executeQuery('''
             SELECT DISTINCT t
             FROM ParticipantType AS t
-            INNER JOIN t.sessionParticipants AS sp
+            INNER JOIN t.combinedSessionParticipants AS sp
             WHERE sp.session.id = :sessionId
         ''', [sessionId: this.id])
     }

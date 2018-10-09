@@ -11,8 +11,9 @@ import org.iisg.eca.domain.ParticipantType
 class ParticipantSessionInfo {
     Session session
     ParticipantDate participant
-    List<ParticipantType> types
+    Set<ParticipantType> types
     Paper paper
+    Paper paperCoAuthoring
 
     /**
      * Create information object on a participant in a session
@@ -23,7 +24,7 @@ class ParticipantSessionInfo {
         this.session = session
         this.participant = participant
         this.paper = paper
-        this.types = new ArrayList<ParticipantType>()
+        this.types = new TreeSet<ParticipantType>()
     }
 
     /**
@@ -32,12 +33,15 @@ class ParticipantSessionInfo {
      * @param participant The participant in question
      * @param types The participant types given to the participant in this session
      * @param paper If the participant also presents a paper in the session, the paper in question
+     * @param paperCoAuthoring If the participant also co-authored a paper in the session, the paper in question
      */
-    ParticipantSessionInfo(Session session, ParticipantDate participant, List<ParticipantType> types, Paper paper) {
+    ParticipantSessionInfo(Session session, ParticipantDate participant, Set<ParticipantType> types, Paper paper,
+                           Paper paperCoAuthoring) {
         this.session = session
         this.participant = participant
         this.types = types
         this.paper = paper
+        this.paperCoAuthoring = paperCoAuthoring
     }
 
     /**
@@ -60,7 +64,7 @@ class ParticipantSessionInfo {
      * Returns all the participant types of the participant in this session
      * @return A list of participant types
      */
-    List<ParticipantType> getTypes() {
+    Set<ParticipantType> getTypes() {
         types
     }
 
@@ -71,6 +75,15 @@ class ParticipantSessionInfo {
      */
     Paper getPaper() {
         paper
+    }
+
+    /**
+     * Returns the co-authoring paper in this session
+     * Returns null if there is no paper
+     * @return The paper
+     */
+    Paper getPaperCoAuthoring() {
+        return paperCoAuthoring
     }
 
     /**
@@ -87,5 +100,13 @@ class ParticipantSessionInfo {
      */
     void setPaper(Paper paper) {
         this.paper = paper
+    }
+
+    /**
+     * Set the paper co-authored by the participant during this session
+     * @param paper The paper
+     */
+    void setPaperCoAuthoring(Paper paperCoAuthoring) {
+        this.paperCoAuthoring = paperCoAuthoring
     }
 }

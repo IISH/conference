@@ -8,9 +8,9 @@ import org.iisg.eca.domain.PaperType
 import org.iisg.eca.domain.ParticipantDate
 import org.iisg.eca.domain.ParticipantState
 import org.iisg.eca.domain.Session
-import org.iisg.eca.domain.SessionParticipant
 import org.iisg.eca.domain.Setting
 import org.iisg.eca.domain.User
+import org.iisg.eca.domain.CombinedSessionParticipant
 
 import org.iisg.eca.export.Export
 import org.iisg.eca.export.XlsMapExport
@@ -241,9 +241,10 @@ class MiscExportService {
 				SELECT DISTINCT u, s, p
                 FROM ParticipantDate AS pd
                 INNER JOIN pd.user AS u
-                INNER JOIN u.sessionParticipants AS sp
-                INNER JOIN sp.session AS s
+                INNER JOIN u.combinedSessionParticipants AS csp
+                INNER JOIN csp.session AS s
                 INNER JOIN s.networks AS n
+                LEFT JOIN csp.sessionParticipant AS sp
                 LEFT JOIN sp.sessionParticipantPapers AS spp
                 LEFT JOIN spp.paper AS p
                 WHERE u.deleted = false
@@ -274,7 +275,7 @@ class MiscExportService {
 							'organisation' : user.organisation,
 							'session'      : session.name,
 							'sessionstate' : session.state.description,
-							'roles'        : SessionParticipant.findAllByUserAndSession(user, session)*.type.join(', '),
+							'roles'        : CombinedSessionParticipant.findAllByUserAndSession(user, session)*.type.join(', '),
 							'papertitle'   : paper?.title,
 							'paperabstract': paper?.abstr,
 							'paperstate'   : paper?.state?.description,
@@ -297,9 +298,10 @@ class MiscExportService {
 				SELECT DISTINCT u, s, p
                 FROM ParticipantDate AS pd
                 INNER JOIN pd.user AS u
-                INNER JOIN u.sessionParticipants AS sp
-                INNER JOIN sp.session AS s
+                INNER JOIN u.combinedSessionParticipants AS csp
+                INNER JOIN csp.session AS s
                 INNER JOIN s.networks AS n
+                LEFT JOIN csp.sessionParticipant AS sp
 			 	LEFT JOIN sp.sessionParticipantPapers AS spp
                 LEFT JOIN spp.paper AS p
                 WHERE u.deleted = false
@@ -328,7 +330,7 @@ class MiscExportService {
 							'organisation' : user.organisation,
 							'session'     : session.name,
 							'sessionstate': session.state.description,
-							'roles'       : SessionParticipant.findAllByUserAndSession(user, session)*.type.join(', '),
+							'roles'       : CombinedSessionParticipant.findAllByUserAndSession(user, session)*.type.join(', '),
 							'papertitle'  : paper?.title, 'paperabstract': paper?.abstr,
 							'paperstate'  : paper?.state?.description,
 							'paperkeywords': paper?.keywords]

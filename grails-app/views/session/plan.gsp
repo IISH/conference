@@ -163,9 +163,6 @@
                                         <span class="participant-type-val"> </span>
                                     </li>
                                 </ul>
-
-                                <span class="participant-paper-value"> </span>
-                                <span class="participant-paper-value"> </span>
                             </li>
                         </ul>
                     </li>

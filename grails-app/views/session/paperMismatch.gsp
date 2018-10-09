@@ -60,14 +60,18 @@
 
                               <g:if test="${participant.paper}">
                                   <span class="participant-paper-value">
-                                      <span class="paper-text"><g:message code="paper.label" />: ${participant.paper} (${participant.paper.state})</span>
+                                      <span class="paper-text">
+                                          <span class="l"><g:message code="paper.authorOf.label" />:</span>
+                                          <span class="v">${participant.paper} (${participant.paper.state})</span>
+                                      </span>
                                       <input type="hidden" name="paper-id" class="paper-id" value="${participant.paper.id}" />
                                       <input type="hidden" name="paper-state-id" value="${participant.paper.state.id}" />
                                       <span class="ui-icon ui-icon-pencil edit-paper-icon"></span>
                                   </span>
                                   <g:if test="${participant.paper.coAuthors && !participant.paper.coAuthors.isEmpty()}">
-                                      <span class="participant-paper-value">
-                                          <g:message code="paper.coAuthors.label" />: <eca:formatText text="${participant.paper.coAuthors}" />
+                                      <span class="participant-paper-coauthor-value">
+                                          <span class="l"><g:message code="paper.allCoAuthors.label" />:</span>
+                                          <span class="v"><eca:formatText text="${participant.paper.coAuthors}" /></span>
                                       </span>
                                   </g:if>
                               </g:if>

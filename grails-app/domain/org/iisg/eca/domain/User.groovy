@@ -79,30 +79,36 @@ class User {
 	User mergedWith
 
 	static belongsTo = [Country, Group]
-	static hasMany = [groups             : Group,
-					  networks           : NetworkChair,
-					  participantDates   : ParticipantDate,
-					  userRoles          : UserRole,
-					  papers             : Paper,
-					  sessionParticipants: SessionParticipant,
-					  sentEmails         : SentEmail,
-					  dateTimesNotPresent: SessionDateTime,
-					  userPages          : UserPage,
-					  daysPresent        : ParticipantDay,
-					  reviews    		 : PaperReview,
-				      reviewers			 : Reviewer,
-					  mergedWithUsers	 : User,
+	static hasMany = [groups             			: Group,
+					  networks           			: NetworkChair,
+					  participantDates   			: ParticipantDate,
+					  userRoles          			: UserRole,
+					  papers             			: Paper,
+			          papersCoAuthoring  			: PaperCoAuthor,
+					  sessionParticipants			: SessionParticipant,
+					  combinedSessionParticipants	: CombinedSessionParticipant,
+					  sentEmails         			: SentEmail,
+					  dateTimesNotPresent			: SessionDateTime,
+					  userPages          			: UserPage,
+				  	  daysPresent        			: ParticipantDay,
+					  reviews    		 			: PaperReview,
+					  reviewers			 			: Reviewer,
+					  mergedWithUsers	 			: User,
 
-					  sessionsAdded      		: Session,
-					  papersAdded		 		: Paper,
-					  participantsAdded  		: ParticipantDate,
-					  sessionParticipantsAdded	: SessionParticipant,
-					  usersAdded				: User]
+					  sessionsAdded      		 		: Session,
+					  papersAdded		 		 		: Paper,
+					  participantsAdded  		 		: ParticipantDate,
+					  coAuthorsAdded 			 		: PaperCoAuthor,
+					  sessionParticipantsAdded	 		: SessionParticipant,
+					  combinedSessionParticipantsAdded	: CombinedSessionParticipant,
+					  usersAdded				 		: User]
 
-	static mappedBy = [papers             : 'user', papersAdded: 'addedBy',
-					   participantDates   : 'user', participantsAdded: 'addedBy',
-					   sessionParticipants: 'user', sessionParticipantsAdded: 'addedBy',
-					   mergedWithUsers    : 'mergedWith', usersAdded: 'addedBy']
+	static mappedBy = [papers             	 		: 'user', 		 papersAdded						: 'addedBy',
+					   participantDates      		: 'user', 		 participantsAdded					: 'addedBy',
+					   sessionParticipants   		: 'user', 		 sessionParticipantsAdded			: 'addedBy',
+					   combinedSessionParticipants	: 'user',		 combinedSessionParticipantsAdded	: 'addedBy',
+					   papersCoAuthoring	 		: 'user', 		 coAuthorsAdded						: 'addedBy',
+					   mergedWithUsers       		: 'mergedWith',  usersAdded							: 'addedBy']
 
 	static mapping = {
 		table 'users'
@@ -143,14 +149,16 @@ class User {
 		addedBy                 column: 'added_by',     fetch: 'join'
 		mergedWith             	column: 'merged_with'
 
-        groups                  joinTable: 'users_groups'
-        dateTimesNotPresent     joinTable: 'participant_not_present'
-        userPages               cascade: 'all-delete-orphan'
-        papers                  cascade: 'all-delete-orphan'
-        sessionParticipants     cascade: 'all-delete-orphan'
-        daysPresent             cascade: 'all-delete-orphan'
-		reviews					cascade: 'all-delete-orphan'
-		reviewers				cascade: 'all-delete-orphan'
+        groups                  	joinTable: 'users_groups'
+        dateTimesNotPresent     	joinTable: 'participant_not_present'
+        userPages               	cascade: 'all-delete-orphan'
+        papers                  	cascade: 'all-delete-orphan'
+		papersCoAuthoring			cascade: 'all-delete-orphan'
+        sessionParticipants     	cascade: 'all-delete-orphan'
+        daysPresent             	cascade: 'all-delete-orphan'
+		reviews						cascade: 'all-delete-orphan'
+		reviewers					cascade: 'all-delete-orphan'
+		combinedSessionParticipants	cascade: 'none'
     }
 
     static constraints = {
@@ -210,6 +218,7 @@ class User {
 			'otherDietaryWishes',
 			'optIn',
 			'papers.id',
+			'papersCoAuthoring.id',
 			'daysPresent.day.id',
 			'addedBy.id'
 	]
@@ -489,7 +498,7 @@ class User {
 		allSessionParticipants { date ->
 			allParticipants(date)
 
-			createAlias('sessionParticipants', 'sp')
+			createAlias('combinedSessionParticipants', 'sp')
 			createAlias('sp.session', 'sessions')
 
 			eq('sessions.date.id', date.id)
@@ -724,7 +733,7 @@ class User {
 	 * @return Whether this user has this role in one or more sessions
 	 */
 	boolean hasRoleInASession(ParticipantType type) {
-		SessionParticipant sessionParticipant = SessionParticipant.findByUserAndType(this, type)
+		CombinedSessionParticipant sessionParticipant = CombinedSessionParticipant.findByUserAndType(this, type)
 		return (sessionParticipant != null)
 	}
 
