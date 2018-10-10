@@ -31,7 +31,7 @@ GROUP BY networks.name, dates.year_code, users.lastname, users.firstname, users.
 ORDER BY networks.name, dates.year_code, users.lastname, users.firstname, users.email;
 
 CREATE VIEW vw_session_participant_papers AS
-SELECT session_participant_id, session_participant_id, paper_id
+SELECT session_participant_id, paper_id
 FROM session_participant
 INNER JOIN papers
 ON session_participant.user_id = papers.user_id
