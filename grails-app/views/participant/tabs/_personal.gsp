@@ -122,6 +122,16 @@
                     <g:checkBox name="user.emailDiscontinued" value="${user.emailDiscontinued}" />
                 </span>
             </div>
+            <g:if test="${Setting.getSetting(Setting.SHOW_OPT_IN).booleanValue}">
+                <div class="${hasErrors(bean: user, field: 'optIn', 'error')}">
+                    <label class="property-label">
+                        <g:message code="user.optIn.label" />
+                    </label>
+                    <span class="property-value">
+                        <g:checkBox name="user.optIn" checked="${user.optIn}" />
+                    </span>
+                </div>
+            </g:if>
             <div class="${hasErrors(bean: user, field: 'address', 'error')} required">
                 <label class="property-label">
                     <g:message code="user.address.label" />
