@@ -125,6 +125,7 @@ class EmailRecipientsService {
      * @param filters The values for the filters set by the user
      */
     private static void extendCriteriaForEventDates(NamedCriteriaProxy criteria, GrailsParameterMap filters) {
+        criteria.eq('optIn', true)
         criteria.participantDates {
             if (filters.eventDates?.isLong()) {
                 EventDate date = EventDate.get(filters.long('eventDates'))
