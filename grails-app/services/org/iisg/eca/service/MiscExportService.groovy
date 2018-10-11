@@ -262,7 +262,7 @@ class MiscExportService {
 
 		return new XlsMapExport(
 				['network', 'lastname', 'firstname', 'email', 'organisation', 'session', 'sessionstate', 'roles',
-				 'papertitle', 'paperstate', 'paperabstract', 'paperkeywords'],
+				 'papertitle', 'paperstate', 'paperabstract'],
 				usersSessionsPapers.collect { userSessionPaper ->
 					User user = userSessionPaper[0] as User
 					Session session = userSessionPaper[1] as Session
@@ -278,8 +278,7 @@ class MiscExportService {
 							'roles'        : CombinedSessionParticipant.findAllByUserAndSession(user, session)*.type.join(', '),
 							'papertitle'   : paper?.title,
 							'paperabstract': paper?.abstr,
-							'paperstate'   : paper?.state?.description,
-							'paperkeywords': paper?.keywords]
+							'paperstate'   : paper?.state?.description]
 				},
 				title,
 				columnNames
@@ -317,7 +316,7 @@ class MiscExportService {
 
 		return new XlsMapExport(
 				['network', 'lastname', 'firstname', 'email', 'organisation', 'session', 'sessionstate', 'roles',
-				 'papertitle', 'paperstate', 'paperabstract', 'paperkeywords'],
+				 'papertitle', 'paperstate', 'paperabstract'],
 				usersSessionsPapers.collect { userSessionPaper ->
 					User user = userSessionPaper[0] as User
 					Session session = userSessionPaper[1] as Session
@@ -332,8 +331,7 @@ class MiscExportService {
 							'sessionstate': session.state.description,
 							'roles'       : CombinedSessionParticipant.findAllByUserAndSession(user, session)*.type.join(', '),
 							'papertitle'  : paper?.title, 'paperabstract': paper?.abstr,
-							'paperstate'  : paper?.state?.description,
-							'paperkeywords': paper?.keywords]
+							'paperstate'  : paper?.state?.description]
 				},
 				title,
 				columnNames
@@ -372,7 +370,7 @@ class MiscExportService {
 
 		return new XlsMapExport(
 				['network', 'lastname', 'firstname', 'email', 'organisation', 'paperid', 'papertitle', 'coauthors',
-				 'papertype', 'paperstate', 'paperabstract', 'paperkeywords'],
+				 'papertype', 'paperstate', 'paperabstract'],
 				usersPapers.collect { userAndPaper ->
 					User user = userAndPaper[0] as User
 					Paper paper = userAndPaper[1] as Paper
@@ -388,8 +386,7 @@ class MiscExportService {
 							'coauthors'    : paper.coAuthors,
 							'papertype'	   : type.type,
 							'paperstate'   : paper.state.description,
-							'paperabstract': paper.abstr,
-							'paperkeywords': paper.keywords]
+							'paperabstract': paper.abstr]
 				},
 				title,
 				columnNames
@@ -427,7 +424,7 @@ class MiscExportService {
 
 		return new XlsMapExport(
 				['network', 'lastname', 'firstname', 'email', 'organisation', 'paperid', 'papertitle', 'coauthors',
-				 'papertype', 'paperstate', 'paperabstract', 'paperkeywords'],
+				 'papertype', 'paperstate', 'paperabstract'],
 				usersPapers.collect { userAndPaper ->
 					User user = userAndPaper[0] as User
 					Paper paper = userAndPaper[1] as Paper
@@ -443,8 +440,7 @@ class MiscExportService {
 							'coauthors'    : paper.coAuthors,
 							'papertype'	   : type.type,
 							'paperstate'   : paper.state.description,
-							'paperabstract': paper.abstr,
-							'paperkeywords': paper?.keywords]
+							'paperabstract': paper.abstr]
 				},
 				title,
 				columnNames
