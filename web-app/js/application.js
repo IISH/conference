@@ -142,41 +142,43 @@ var createNewItem = function (item, lastItem) {
 
 	var clone = item.clone(true);
 
-	clone.find('input[name], select[name], textarea[name]').each(function () {
-		var name = $(this).attr("name");
+    if (!item.closest('ul').hasClass('no-auto-increment')) {
+        clone.find('input[name], select[name], textarea[name]').each(function () {
+            var name = $(this).attr("name");
 
-		if (name.indexOf("null") === -1) {
-			var nameSplit = name.split("_");
-			if (nameSplit.length > 1) {
-				$(this).attr("name", nameSplit[0] + "_" + i + nameSplit[1]);
-				$(this).attr("id", nameSplit[0] + "_" + i + nameSplit[1]);
-			}
-		}
-		else {
-			$(this).attr("name", name.replace("null", i));
-			$(this).attr("id", name.replace("null", i));
-		}
+            if (name.indexOf("null") === -1) {
+                var nameSplit = name.split("_");
+                if (nameSplit.length > 1) {
+                    $(this).attr("name", nameSplit[0] + "_" + i + nameSplit[1]);
+                    $(this).attr("id", nameSplit[0] + "_" + i + nameSplit[1]);
+                }
+            }
+            else {
+                $(this).attr("name", name.replace("null", i));
+                $(this).attr("id", name.replace("null", i));
+            }
 
-		if (name.match(/day$/)) {
-			$(this).val(lastItem.find('.datepicker').val());
-			if ($(this).val().trim() === "") {
-				var startDate = item.parents('.form').find('input[name$=startDate]');
-				$(this).val(startDate.val() + "sd");
-			}
-		}
-		if (name.match(/dayNumber$/)) {
-			var number = eval(lastItem.find('input[type=number]').val());
-			if (number) {
-				$(this).val(number + 1);
-			}
-			else {
-				$(this).val(1);
-			}
-		}
-	});
+            if (name.match(/day$/)) {
+                $(this).val(lastItem.find('.datepicker').val());
+                if ($(this).val().trim() === "") {
+                    var startDate = item.parents('.form').find('input[name$=startDate]');
+                    $(this).val(startDate.val() + "sd");
+                }
+            }
+            if (name.match(/dayNumber$/)) {
+                var number = eval(lastItem.find('input[type=number]').val());
+                if (number) {
+                    $(this).val(number + 1);
+                }
+                else {
+                    $(this).val(1);
+                }
+            }
+        });
+    }
 
 	clone.find('.datepicker').each(function () {
-		hasDate = ($(this).val().length > 0);
+		var hasDate = ($(this).val().length > 0);
 		setDatePicker(this, hasDate);
 	});
 
@@ -195,27 +197,29 @@ var removeAnItem = function (toBeRemoved, classToStop) {
 		return;
 	}
 
-	var next = toBeRemoved.next();
-	while (!next.hasClass(classToStop)) {
-		var elements = next.find('input[name], select[name], textarea[name]');
-		var nameSplit = elements.attr("name").split('.');
-        var idSplit = nameSplit[0].split('_');
-        var number = idSplit[idSplit.length - 1];
-		if ($.isNumeric(number)) {
-			var newNumber = number - 1;
-			elements.each(function () {
-				if ($(this).attr("name") !== undefined) {
-					$(this).attr("name", $(this).attr("name").replace(number, newNumber));
+    var next = toBeRemoved.next();
+    if (!next.closest('ul').hasClass('no-auto-increment')) {
+        while (!next.hasClass(classToStop)) {
+            var elements = next.find('input[name], select[name], textarea[name]');
+            var nameSplit = elements.attr("name").split('.');
+            var idSplit = nameSplit[0].split('_');
+            var number = idSplit[idSplit.length - 1];
+            if ($.isNumeric(number)) {
+                var newNumber = number - 1;
+                elements.each(function () {
+                    if ($(this).attr("name") !== undefined) {
+                        $(this).attr("name", $(this).attr("name").replace(number, newNumber));
 
-					var id = $(this).attr("id");
-					if (id !== undefined && id !== null && id.trim().length > 0) {
-						$(this).attr("id", id.replace(number, newNumber));
-					}
-				}
-			});
-		}
-		next = next.next();
-	}
+                        var id = $(this).attr("id");
+                        if (id !== undefined && id !== null && id.trim().length > 0) {
+                            $(this).attr("id", id.replace(number, newNumber));
+                        }
+                    }
+                });
+            }
+            next = next.next();
+        }
+    }
 
 	var idsToBeRemoved = toBeRemoved.parents('ul, .columns.copy').find('.to-be-deleted');
 	if (idsToBeRemoved.length > 0) {

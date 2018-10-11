@@ -109,8 +109,7 @@ class ExportController {
 					messageSource.getMessage('participantType.multiple.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('paper.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('paper.abstr.label', null, LocaleContextHolder.locale),
-					messageSource.getMessage('paper.state.label', null, LocaleContextHolder.locale),
-					messageSource.getMessage('paper.keywords.label', null, LocaleContextHolder.locale)
+					messageSource.getMessage('paper.state.label', null, LocaleContextHolder.locale)
 			])
 		}
 	}
@@ -131,8 +130,7 @@ class ExportController {
 					messageSource.getMessage('participantType.multiple.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('paper.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('paper.abstr.label', null, LocaleContextHolder.locale),
-					messageSource.getMessage('paper.state.label', null, LocaleContextHolder.locale),
-					messageSource.getMessage('paper.keywords.label', null, LocaleContextHolder.locale)
+					messageSource.getMessage('paper.state.label', null, LocaleContextHolder.locale)
 			])
 		}
 	}
@@ -152,8 +150,7 @@ class ExportController {
 					messageSource.getMessage('paper.coAuthors.label', null, LocaleContextHolder.locale),
                     messageSource.getMessage('paper.type.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('paper.state.label', null, LocaleContextHolder.locale),
-					messageSource.getMessage('paper.abstr.label', null, LocaleContextHolder.locale),
-					messageSource.getMessage('paper.keywords.label', null, LocaleContextHolder.locale)
+					messageSource.getMessage('paper.abstr.label', null, LocaleContextHolder.locale)
 			])
 		}
 	}
@@ -173,8 +170,7 @@ class ExportController {
 					messageSource.getMessage('paper.coAuthors.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('paper.type.label', null, LocaleContextHolder.locale),
 					messageSource.getMessage('paper.state.label', null, LocaleContextHolder.locale),
-					messageSource.getMessage('paper.abstr.label', null, LocaleContextHolder.locale),
-					messageSource.getMessage('paper.keywords.label', null, LocaleContextHolder.locale)
+					messageSource.getMessage('paper.abstr.label', null, LocaleContextHolder.locale)
 			])
 		}
 	}

@@ -1,5 +1,7 @@
 package org.iisg.eca.domain
 
+import grails.converters.JSON
+
 import java.math.RoundingMode
 
 /**
@@ -14,7 +16,6 @@ class Paper extends EventDateDomain {
     String abstr
 	PaperType type
 	String differentType
-	String keywords
 	String reviewComment
 	BigDecimal avgReviewScore
     String comment
@@ -33,6 +34,7 @@ class Paper extends EventDateDomain {
 
 	static belongsTo = [User, PaperState, PaperType, Session, Network]
     static hasMany = [
+			keywords: String,
 			equipment: Equipment,
 			reviews: PaperReview,
 			coAuthoringPapers: PaperCoAuthor,
@@ -52,7 +54,6 @@ class Paper extends EventDateDomain {
         abstr               column: 'abstract',             type: 'text'
 		type                column: 'paper_type_id'
 		differentType		column: 'different_type'
-		keywords			column: 'keywords',				type: 'text'
 		reviewComment		column: 'review_comment',		type: 'text'
 		avgReviewScore		column: 'avg_review_score'
         comment             column: 'comment',              type: 'text'
@@ -73,6 +74,9 @@ class Paper extends EventDateDomain {
 		reviews					    cascade: 'all-delete-orphan'
 		coAuthoringPapers			cascade: 'all-delete-orphan'
 		sessionParticipantPapers	cascade: 'none'
+		keywords					joinTable: [name: 'paper_keywords',
+												key: 'paper_id',
+												column: 'keyword']
     }
 
     static constraints = {
@@ -82,7 +86,6 @@ class Paper extends EventDateDomain {
         abstr               blank: false
 		type            	nullable: true
 		differentType		nullable: true,	maxSize: 100
-		keywords			nullable: true
 		reviewComment		nullable: true
 		avgReviewScore		nullable: true
         comment             nullable: true
@@ -193,6 +196,11 @@ class Paper extends EventDateDomain {
 						}
 					}
 				}
+				break
+			case 'keywords':
+				this.keywords?.clear()
+				this.save(flush: true)
+				this.keywords = JSON.parse(value)*.trim()
 				break
 		}
 	}

@@ -97,6 +97,28 @@
                         <input type="number" name="Paper_${i}.sortOrder" value="${paper?.sortOrder}" />
                     </span>
                 </div>
+                <div class="${hasErrors(bean: paper, field: 'keywords', 'error')} ">
+                    <label class="property-label">
+                        <g:message code="paper.keywords.label" />
+                    </label>
+                    <ul class="property-value no-auto-increment">
+                        <g:set var="keywords" value="${paper.keywords ? paper.keywords.sort() : []}" />
+                        <g:each in="${keywords}" var="instance">
+                            <li>
+                                <input type="text" name="Paper_${i}.keywords" value="${instance}" />
+                                <span class="ui-icon ui-icon-circle-minus"></span>
+                            </li>
+                        </g:each>
+                        <li class="add">
+                            <span class="ui-icon ui-icon-circle-plus"></span>
+                            <g:message code="default.add.label" args="[g.message(code: 'paper.keyword.label').toLowerCase()]" />
+                        </li>
+                        <li class="hidden">
+                            <input type="text" name="Paper_${i}.keywords" />
+                            <span class="ui-icon ui-icon-circle-minus"></span>
+                        </li>
+                    </ul>
+                </div>
                 <div class="${hasErrors(bean: paper, field: 'comment', 'error')}">
                     <label class="property-label">
                         <g:message code="paper.comment.label" />

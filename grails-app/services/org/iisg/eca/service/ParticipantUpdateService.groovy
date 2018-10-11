@@ -199,12 +199,18 @@ class ParticipantUpdateService {
 	 * @param i The counter, to identify the paper data from <code>params</code> to update the paper with
 	 */
 	private void updatePaper(Paper paper, User user, GrailsParameterMap params, int i) {
+		// If all keywords were deleted by the user, then actually delete them instead of doing nothing
+		if (!params["Paper_${i}.keywords"]) {
+			params["Paper_${i}.keywords"] = []
+		}
+
 		paper = (paper) ?: new Paper(date: pageInformation.date)
 		user.addToPapers(paper)
 
 		bindData(paper, params, [
 				include: ['title', 'abstr', 'type', 'differentType', 'coAuthors', 'state', 'reviewComment', 'comment',
-						  'sessionProposal', 'proposalDescription', 'networkProposal', 'equipmentComment', 'sortOrder']
+						  'sessionProposal', 'proposalDescription', 'networkProposal', 'equipmentComment', 'sortOrder',
+						  'keywords']
 		], "Paper_$i".toString())
 
 		CommonsMultipartFile file = (CommonsMultipartFile) params["Paper_${i}.file"]
