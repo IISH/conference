@@ -35,6 +35,8 @@ class Setting extends EventDomain {
 	static final String FINAL_REGISTRATION_LASTDATE = 'final_registration_lastdate'
 	static final String GENERAL_TERMS_CONDITIONS_LINK = 'general_terms_conditions_link'
 	static final String IP_AUTHENTICATION = 'ip_authentication'
+	static final String KEYWORD_NAME_PLURAL = 'keyword_name_plural'
+	static final String KEYWORD_NAME_SINGULAR = 'keyword_name_singular'
 	static final String LAST_UPDATED = 'last_updated'
 	static final String MAIL_INVITATION_LETTERS_TO = 'mail_invitation_letters_to'
 	static final String MAX_PAPERS_PER_PERSON_PER_SESSION = 'max_papers_per_person_per_session'
@@ -209,6 +211,20 @@ class Setting extends EventDomain {
 	 */
 	String[] getMultipleValues() {
 		return (value != null) ? value.split(';') as String[] : [] as String[]
+	}
+
+	/**
+	 * If the setting has multiple key values (split by ';' and keys and values split by ':'),
+	 * return a map with all key/values
+	 * @return A map with all key/values
+	 */
+	Map<String, String> getMapValues() {
+		Map<String, String> mapValues = new HashMap<>()
+		getMultipleValues().each { value ->
+			String[] keyValue = value.split(':') as String[]
+			mapValues.put(keyValue[0], keyValue[1])
+		}
+		return mapValues
 	}
 
 	/**

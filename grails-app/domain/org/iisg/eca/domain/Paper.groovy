@@ -1,6 +1,7 @@
 package org.iisg.eca.domain
 
 import grails.converters.JSON
+import org.codehaus.groovy.grails.web.json.JSONArray
 
 import java.math.RoundingMode
 
@@ -34,7 +35,7 @@ class Paper extends EventDateDomain {
 
 	static belongsTo = [User, PaperState, PaperType, Session, Network]
     static hasMany = [
-			keywords: String,
+			keywords: PaperKeyword,
 			equipment: Equipment,
 			reviews: PaperReview,
 			coAuthoringPapers: PaperCoAuthor,
@@ -74,9 +75,7 @@ class Paper extends EventDateDomain {
 		reviews					    cascade: 'all-delete-orphan'
 		coAuthoringPapers			cascade: 'all-delete-orphan'
 		sessionParticipantPapers	cascade: 'none'
-		keywords					joinTable: [name: 'paper_keywords',
-												key: 'paper_id',
-												column: 'keyword']
+		keywords					cascade: 'all-delete-orphan'
     }
 
     static constraints = {
@@ -116,7 +115,6 @@ class Paper extends EventDateDomain {
             'coAuthors',
             'abstr',
 			'differentType',
-			'keywords',
             'networkProposal.id',
             'sessionProposal',
             'proposalDescription',
@@ -198,10 +196,25 @@ class Paper extends EventDateDomain {
 				}
 				break
 			case 'keywords':
-				this.keywords?.clear()
+				Set<PaperKeyword> keywordsToDelete = new HashSet<>(this.keywords ? this.keywords : [])
+
+				JSONArray keywords = (JSONArray) JSON.parse(value)
+				keywords.each { JSONArray groupAndKeyword ->
+					String group = groupAndKeyword[0]
+					String keyword = groupAndKeyword[1]
+
+					PaperKeyword pk = keywordsToDelete.find { it.groupName == group && it.keyword == keyword }
+					if (pk) {
+						keywordsToDelete.remove(pk)
+					}
+					else {
+						pk = new PaperKeyword(paper: this, groupName: group, keyword: keyword)
+						addToKeywords(pk)
+					}
+				}
+
+				keywordsToDelete.each { removeFromKeywords(it) }
 				this.save(flush: true)
-				this.keywords = JSON.parse(value)*.trim()
-				break
 		}
 	}
 

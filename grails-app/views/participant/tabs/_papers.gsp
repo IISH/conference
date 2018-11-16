@@ -1,4 +1,4 @@
-<%@ page import="org.iisg.eca.domain.PaperCoAuthor; org.iisg.eca.domain.AgeRange; org.iisg.eca.domain.PaperState; org.iisg.eca.domain.Equipment; org.iisg.eca.domain.Network; org.iisg.eca.domain.Volunteering; org.iisg.eca.domain.Day; org.iisg.eca.domain.SessionDateTime; org.iisg.eca.domain.Setting; org.iisg.eca.domain.Title; org.iisg.eca.domain.FeeState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Extra; org.iisg.eca.domain.Country; org.iisg.eca.domain.SessionParticipant; org.iisg.eca.domain.Order; org.iisg.eca.domain.PaperReview; org.iisg.eca.domain.ReviewCriteria; org.iisg.eca.domain.PaperCoAuthor" %>
+<%@ page import="org.iisg.eca.domain.PaperCoAuthor; org.iisg.eca.domain.AgeRange; org.iisg.eca.domain.PaperState; org.iisg.eca.domain.Equipment; org.iisg.eca.domain.Network; org.iisg.eca.domain.Volunteering; org.iisg.eca.domain.Day; org.iisg.eca.domain.SessionDateTime; org.iisg.eca.domain.Setting; org.iisg.eca.domain.Title; org.iisg.eca.domain.FeeState; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Extra; org.iisg.eca.domain.Country; org.iisg.eca.domain.SessionParticipant; org.iisg.eca.domain.Order; org.iisg.eca.domain.PaperReview; org.iisg.eca.domain.ReviewCriteria; org.iisg.eca.domain.PaperCoAuthor; org.iisg.eca.domain.Keyword; org.iisg.eca.domain.PaperKeyword" %>
 <div id="papers-tab" class="columns copy">
     <input type="hidden" name="max-papers" value="${Setting.getSetting(Setting.MAX_PAPERS_PER_PERSON_PER_SESSION).value}" />
     <input type="hidden" name="to-be-deleted" class="to-be-deleted" />
@@ -97,28 +97,36 @@
                         <input type="number" name="Paper_${i}.sortOrder" value="${paper?.sortOrder}" />
                     </span>
                 </div>
-                <div class="${hasErrors(bean: paper, field: 'keywords', 'error')} ">
-                    <label class="property-label">
-                        <g:message code="paper.keywords.label" />
-                    </label>
-                    <ul class="property-value no-auto-increment">
-                        <g:set var="keywords" value="${paper.keywords ? paper.keywords.sort() : []}" />
-                        <g:each in="${keywords}" var="instance">
-                            <li>
-                                <input type="text" name="Paper_${i}.keywords" value="${instance}" />
+                <g:each in="${Keyword.getGroups()}" var="keywordGroup" status="gr">
+                    <div class="${hasErrors(bean: paper, field: 'keywords', 'error')} ">
+                        <label class="property-label">
+                            <g:message code="paper.keywords.label" args="${[keywordGroup]}" />
+                        </label>
+                        <ul class="property-value">
+                            <g:set var="keywords" value="${PaperKeyword.findAllByPaperAndGroupName(paper, keywordGroup).sort()}" />
+                            <g:each in="${keywords}" var="instance" status="x">
+                                <li>
+                                    <input type="hidden" name="PaperKeyword_${i}_${gr}_${x}.id" value="${instance.id}" />
+                                    <input type="hidden" name="PaperKeyword_${i}_${gr}_${x}.paper.id" value="${instance.paperId}" />
+                                    <input type="hidden" name="PaperKeyword_${i}_${gr}_${x}.groupName" value="${instance.groupName}" />
+                                    <input type="text" name="PaperKeyword_${i}_${gr}_${x}.keyword" value="${instance.keyword}" />
+                                    <span class="ui-icon ui-icon-circle-minus"></span>
+                                </li>
+                            </g:each>
+                            <li class="add">
+                                <span class="ui-icon ui-icon-circle-plus"></span>
+                                <g:message code="default.add.label" args="[g.message(code: 'paper.keyword.label').toLowerCase()]" />
+                            </li>
+                            <li class="hidden">
+                                <input type="hidden" name="PaperKeyword_${i}_${gr}_null.id" />
+                                <input type="hidden" name="PaperKeyword_${i}_${gr}_null.paper.id" value="${paper.id}" />
+                                <input type="hidden" name="PaperKeyword_${i}_${gr}_null.groupName" value="${keywordGroup}" />
+                                <input type="text" name="PaperKeyword_${i}_${gr}_null.keyword" />
                                 <span class="ui-icon ui-icon-circle-minus"></span>
                             </li>
-                        </g:each>
-                        <li class="add">
-                            <span class="ui-icon ui-icon-circle-plus"></span>
-                            <g:message code="default.add.label" args="[g.message(code: 'paper.keyword.label').toLowerCase()]" />
-                        </li>
-                        <li class="hidden">
-                            <input type="text" name="Paper_${i}.keywords" />
-                            <span class="ui-icon ui-icon-circle-minus"></span>
-                        </li>
-                    </ul>
-                </div>
+                        </ul>
+                    </div>
+                </g:each>
                 <div class="${hasErrors(bean: paper, field: 'comment', 'error')}">
                     <label class="property-label">
                         <g:message code="paper.comment.label" />

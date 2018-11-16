@@ -199,18 +199,12 @@ class ParticipantUpdateService {
 	 * @param i The counter, to identify the paper data from <code>params</code> to update the paper with
 	 */
 	private void updatePaper(Paper paper, User user, GrailsParameterMap params, int i) {
-		// If all keywords were deleted by the user, then actually delete them instead of doing nothing
-		if (!params["Paper_${i}.keywords"]) {
-			params["Paper_${i}.keywords"] = []
-		}
-
 		paper = (paper) ?: new Paper(date: pageInformation.date)
 		user.addToPapers(paper)
 
 		bindData(paper, params, [
 				include: ['title', 'abstr', 'type', 'differentType', 'coAuthors', 'state', 'reviewComment', 'comment',
-						  'sessionProposal', 'proposalDescription', 'networkProposal', 'equipmentComment', 'sortOrder',
-						  'keywords']
+						  'sessionProposal', 'proposalDescription', 'networkProposal', 'equipmentComment', 'sortOrder']
 		], "Paper_$i".toString())
 
 		CommonsMultipartFile file = (CommonsMultipartFile) params["Paper_${i}.file"]
@@ -228,6 +222,7 @@ class ParticipantUpdateService {
 
 		updatePaperReviews(paper, params, i)
 		updatePaperCoAuthors(paper, params, i)
+		updatePaperKeywords(paper, params, i)
 
 		paper.save(flush: true, failOnError: true)
 	}
@@ -313,5 +308,53 @@ class ParticipantUpdateService {
 
 		// Whatever is left should be deleted
 		toBeDeleted.each { paper.removeFromCoAuthoringPapers(it) }
+	}
+
+	/**
+	 * Update the keywords of a specific paper of the user for the current event date
+	 * @param paper The paper of which the keywords should be updated
+	 * @param params The paper keywords data to update
+	 * @param i The counter, to identify the paper data from <code>params</code> to update the keywords with
+	 */
+	private void updatePaperKeywords(Paper paper, GrailsParameterMap params, int i) {
+		Set<PaperKeyword> toBeDeleted = []
+		if ((paper.keywords != null) && (paper.keywords.size() > 0)) {
+			toBeDeleted += paper.keywords
+		}
+
+		int j = 0
+		int k = 0
+		while (params["PaperKeyword_${i}_${j}_${k}"]) {
+			while (params["PaperKeyword_${i}_${j}_${k}"]) {
+				if (params["PaperKeyword_${i}_${j}_${k}.id"].toString().isLong()) {
+					Long id = params.long("PaperKeyword_${i}_${j}_${k}.id")
+					PaperKeyword paperKeyword = toBeDeleted.find { it.id == id }
+					bindData(paperKeyword, params, [include: ['keyword']], "PaperKeyword_${i}_${j}_${k}".toString())
+					toBeDeleted.removeAll { it.id == id }
+				}
+				else {
+					PaperKeyword paperKeyword = new PaperKeyword()
+					bindData(paperKeyword, params, [include: ['paper', 'groupName', 'keyword']], "PaperKeyword_${i}_${j}_${k}".toString())
+
+					// Make sure the keyword is not already added before
+					PaperKeyword doublePaperKeyword = paper.keywords.find { it.keyword == paperKeyword.keyword }
+					if (doublePaperKeyword) {
+						toBeDeleted.remove(doublePaperKeyword)
+					}
+					else {
+						paperKeyword.paper = paper
+						paper.addToKeywords(paperKeyword)
+					}
+				}
+
+				k++
+			}
+
+			k = 0
+			j++
+		}
+
+		// Whatever is left should be deleted
+		toBeDeleted.each { paper.removeFromKeywords(it) }
 	}
 }
