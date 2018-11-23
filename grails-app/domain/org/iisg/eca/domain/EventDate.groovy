@@ -14,7 +14,7 @@ class EventDate  {
     String dateAsText
     String description
     String longDescription
-    boolean createStatistics = false
+    boolean createStatistics = true
     Event event
 
     static hasMany = [days: Day]
