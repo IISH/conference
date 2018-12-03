@@ -297,7 +297,7 @@ CREATE TABLE IF NOT EXISTS `dates` (
   `date_as_text` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `description` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `long_description` text COLLATE utf8_unicode_ci,
-  `create_statistics` tinyint(1) NOT NULL DEFAULT '0',
+  `create_statistics` tinyint(1) NOT NULL DEFAULT '1',
   `enabled` tinyint(1) NOT NULL DEFAULT '1',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`date_id`),
