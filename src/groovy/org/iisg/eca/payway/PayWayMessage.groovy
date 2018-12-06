@@ -107,8 +107,6 @@ class PayWayMessage extends TreeMap<String, Object> {
 
 		// Create the hash
 		List<String> keyValues = collect { k, v -> "$k=$v" }
-		// TODO: passPhrase is null ???
-		log.error('aaa789 ' + passPhrase)
 		String toBeHashed = keyValues.join(passPhrase) + passPhrase
 		String hash = toBeHashed.encodeAsSHA1()
 
