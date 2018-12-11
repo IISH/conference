@@ -37,6 +37,16 @@
               <eca:formatText text="${eventSession.abstr}" />
             </span>
           </li>
+          <g:if test="${Setting.getSetting(Setting.SHOW_SESSION_EXTRA_INFO).booleanValue}">
+             <li>
+              <span id="extra-info-label" class="property-label">
+                <g:message code="session.extraInfo.label" />
+              </span>
+              <span class="property-value" arial-labelledby="extra-info-label">
+                <eca:formatText text="${eventSession.extraInfo}" />
+              </span>
+              </li>
+          </g:if>
           <li>
             <span id="comment-label" class="property-label">
               <g:message code="session.comment.label" />

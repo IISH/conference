@@ -11,6 +11,7 @@ class Session extends EventDateDomain {
     String code
     String name
     String abstr
+    String extraInfo
     String comment
     SessionState state
     SessionType type
@@ -36,6 +37,7 @@ class Session extends EventDateDomain {
         code                column: 'session_code'
         name                column: 'session_name'
         abstr               column: 'session_abstract', type: 'text'
+        extraInfo           column: 'extra_info',       type: 'text'
         comment             column: 'session_comment',  type: 'text'
         state               column: 'session_state_id'
         type                column: 'session_type_id'
@@ -55,6 +57,7 @@ class Session extends EventDateDomain {
         code            nullable: true, maxSize: 10
         name            blank: false,   maxSize: 255
         abstr           nullable: true
+        extraInfo       nullable: true
         comment         nullable: true
         type            nullable: true
         differentType   nullable: true, maxSize: 100
@@ -72,6 +75,7 @@ class Session extends EventDateDomain {
             'id',
             'name',
             'abstr',
+            'extraInfo',
             'differentType',
             'state.id',
             'type.id',
@@ -83,6 +87,7 @@ class Session extends EventDateDomain {
 	static apiPostPut = [
 			'name',
 			'abstr',
+            'extraInfo',
             'differentType',
 			'state.id',
             'type.id',

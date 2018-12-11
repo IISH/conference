@@ -55,6 +55,16 @@
                         <textarea cols="40" rows="5" name="Session.abstr">${fieldValue(bean: eventSession, field: 'abstr')}</textarea>
                     </span>
                 </div>
+                <g:if test="${Setting.getSetting(Setting.SHOW_SESSION_EXTRA_INFO).booleanValue}">
+                    <div class="${hasErrors(bean: eventSession, field: 'extraInfo', 'error')}">
+                        <label class="property-label">
+                            <g:message code="session.extraInfo.label" />
+                        </label>
+                        <span class="property-value">
+                            <textarea cols="40" rows="5" name="Session.extraInfo">${fieldValue(bean: eventSession, field: 'extraInfo')}</textarea>
+                        </span>
+                    </div>
+                </g:if>
                 <div class="${hasErrors(bean: eventSession, field: 'comment', 'error')}">
                     <label class="property-label">
                         <g:message code="session.comment.label" />

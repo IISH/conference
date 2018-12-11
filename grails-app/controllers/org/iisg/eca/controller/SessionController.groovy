@@ -140,7 +140,8 @@ class SessionController {
         // The 'save' button was clicked, save all data
         if (request.post) {
             // Save all session related data
-            bindData(session, params, [include: ["code", "name", "abstr", "comment", "state", "type"]], "Session")
+            bindData(session, params,
+                    [include: ["code", "name", "abstr", "extraInfo", "comment", "state", "type"]], "Session")
 
             // Remove all networks from the session (one by one, cause we don't want to delete the networks themselves)
             List<Network> networks = []

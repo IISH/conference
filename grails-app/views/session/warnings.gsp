@@ -1,4 +1,4 @@
-<%@ page import="org.iisg.eca.domain.ParticipantType; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Order" %>
+<%@ page import="org.iisg.eca.domain.Setting; org.iisg.eca.domain.ParticipantType; org.iisg.eca.domain.ParticipantState; org.iisg.eca.domain.Order" %>
 <!doctype html>
 <html>
 <head>
@@ -20,6 +20,16 @@
                 </form>
             </span>
         </li>
+        <g:if test="${Setting.getSetting(Setting.SHOW_SESSION_EXTRA_INFO).booleanValue}">
+            <li>
+                <span id="extra-info-label" class="property-label">
+                    <g:message code="session.extraInfo.label" />
+                </span>
+                <span class="property-value" arial-labelledby="extra-info-label">
+                    <eca:formatText text="${session.extraInfo}" />
+                </span>
+            </li>
+        </g:if>
         <li>
             <span id="comment-label" class="property-label">
                 <g:message code="session.comment.label" />
