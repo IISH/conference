@@ -3,7 +3,7 @@ package org.iisg.eca.domain
 /**
  * Domain class of table holding all possible session types
  */
-class SessionType extends EventDomain {
+class SessionType extends EventDateDomain {
     String type
 
     static hasMany = [sessions: Session]

@@ -1,6 +1,5 @@
 package org.iisg.eca.controller
 
-import org.iisg.eca.domain.ParticipantType
 import org.iisg.eca.domain.SessionType
 
 /**
@@ -50,7 +49,7 @@ class SessionTypeController {
 	def delete() {
 		// Of course we need an id of the session type
 		if (params.id) {
-			SessionType sessionType = SessionType.findByIdAndEvent(params.id, pageInformation.date.event)
+			SessionType sessionType = SessionType.findByIdAndEventDate(params.id, pageInformation.date)
 
 			// Try to remove the session type, send back a success or failure message
 			if (sessionType?.delete(flush: true)) {
