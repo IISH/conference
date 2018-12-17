@@ -56,6 +56,7 @@ class User {
 	String language = 'en'
 	String password
 	String salt
+	String autoLoginCode = RandomStringUtils.randomAlphanumeric(50)
 	String requestCode
 	Date requestCodeValidUntil
 	Date newPasswordEmailed
@@ -127,6 +128,7 @@ class User {
         language                column: 'language'
         password                column: 'password'
         salt                    column: 'salt'
+		autoLoginCode           column: 'auto_login_code'
         requestCode             column: 'request_code'
         requestCodeValidUntil   column: 'request_code_valid_until'
         newPasswordEmailed      column: 'new_password_emailed'
@@ -173,6 +175,7 @@ class User {
         language                maxSize: 10,    blank: false
         password                maxSize: 128,   nullable: true, display: false, password: true
         salt                    maxSize: 26,    nullable: true, display: false
+		autoLoginCode           maxSize: 50
         requestCode             maxSize: 26,    nullable: true, display: false
         requestCodeValidUntil                   nullable: true, display: false
         newPasswordEmailed                      nullable: true, display: false

@@ -105,11 +105,8 @@ class ApiController {
 			User user = User.findById(id)
 			User.enableHibernateFilter('hideDeleted')
 
-			if (user) {
-				ParticipantDate participant = ParticipantDate.findByUserAndDate(user, pageInformation.date)
-				if (participant && participant.autoLoginCode == code) {
-					returnUserInfo(response, user)
-				}
+			if (user && user.autoLoginCode == code) {
+				returnUserInfo(response, user)
 			}
 		}
 

@@ -25,7 +25,6 @@ class ParticipantDate extends EventDateDomain {
     boolean studentConfirmed = false
     boolean award = false
     String extraInfo
-    String autoLoginCode = RandomStringUtils.randomAlphanumeric(50)
 	User addedBy
 	boolean deleted = false
 
@@ -60,7 +59,6 @@ class ParticipantDate extends EventDateDomain {
         studentConfirmed        column: 'student_confirmed'
         award                   column: 'award'
         extraInfo               column: 'extra_info',   type: 'text'
-        autoLoginCode           column: 'auto_login_code'
 	    addedBy                 column: 'added_by',     fetch: 'join'
 	    deleted                 column: 'deleted'
 
@@ -78,7 +76,6 @@ class ParticipantDate extends EventDateDomain {
         lowerFeeText    nullable: true, maxSize: 255
         extraInfo       nullable: true
 	    addedBy         nullable: true
-        autoLoginCode                   maxSize: 50
     }
 
 	static hibernateFilters = {
