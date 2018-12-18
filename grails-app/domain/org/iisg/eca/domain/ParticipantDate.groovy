@@ -1,7 +1,6 @@
 package org.iisg.eca.domain
 
 import grails.converters.JSON
-import org.apache.commons.lang.RandomStringUtils
 
 /**
  * Domain class of table holding all participants (users) who signed up for an event date
