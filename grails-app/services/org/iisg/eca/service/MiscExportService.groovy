@@ -222,7 +222,7 @@ class MiscExportService {
 					 'lastname' : it.lastName,
 					 'firstname': it.firstName,
 					 'email'    : it.emailDiscontinued ? null : it.email,
-					 'organisation' : user.organisation]
+					 'organisation' : it.organisation]
 				},
 				title,
 				columnNames
