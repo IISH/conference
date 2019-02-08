@@ -21,7 +21,7 @@ class CombinedSessionParticipant extends EventDateDomain {
         session             column: 'session_id',               fetch: 'join'
         type                column: 'participant_type_id',      fetch: 'join'
         sessionParticipant  column: 'session_participant_id'
-        addedBy             column: 'added_by',                 fetch: 'join'
+        addedBy             column: 'added_by'
 	}
 
     static apiActions = ['GET']
