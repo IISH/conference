@@ -1,5 +1,6 @@
 package org.iisg.eca.controller
 
+import org.iisg.eca.domain.PaperFile
 import org.iisg.eca.domain.User
 import org.iisg.eca.domain.Paper
 import org.iisg.eca.domain.Setting
@@ -46,7 +47,14 @@ class UserApiController {
                         paper.fileSize = file.size
                         paper.contentType = file.contentType
                         paper.fileName = file.originalFilename
-                        paper.file = file.bytes
+
+                        if (!paper.paperFile.isEmpty()) {
+                            paper.paperFile[0].file = file.bytes
+                        }
+                        else {
+                            paper.addToPaperFile(new PaperFile(file: file.bytes))
+                        }
+
                         paper.save(flush: true, failOnError: true)
                     }
                 }

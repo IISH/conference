@@ -259,7 +259,7 @@ class ApiController {
 	def participantsInNetwork() {
 		actionById(Network, 'networkId', params, ['success': false]) { Network network, Map response ->
 			XlsMapExport xls = miscExportService.getParticipantsInNetworkExport(network, 'Sheet 1',
-					[params.networkName, params.lastName, params.firstName, params.email] as List<String>)
+					[params.networkName, params.lastName, params.firstName, params.email, params.organisation] as List<String>)
 
 			response.put('success', true)
 			if (params.excel?.equalsIgnoreCase('true') || params.excel?.equalsIgnoreCase('1')) {
@@ -275,7 +275,7 @@ class ApiController {
 		actionById(Network, 'networkId', params, ['success': false]) { Network network, Map response ->
 			XlsMapExport xls = miscExportService.getSessionPapersInNetworkExport(network, 'Sheet 1',
 					[params.networkName, params.lastName, params.firstName,
-					 params.email, params.session, params.sessionState, params.roles,
+					 params.email, params.organisation, params.session, params.sessionState, params.roles,
 					 params.paperTitle, params.paperST, params.paperAbstract] as List<String>)
 
 			response.put('success', true)
@@ -292,8 +292,8 @@ class ApiController {
 		actionById(Network, 'networkId', params, ['success': false]) { Network network, Map response ->
 			XlsMapExport xls = miscExportService.getSessionPapersInNetworkAcceptedExport(network, 'Sheet 1',
 					[params.networkName, params.lastName, params.firstName,
-					 params.email, params.session, params.sessionState, params.roles,
-					 params.paperTitle, params.paperST, params.paperAbstract] as List<String>)
+					 params.email, params.organisation, params.session, params.sessionState, params.roles,
+					 params.paperTitle, params.paperAbstract, params.paperST] as List<String>)
 
 			response.put('success', true)
 			if (params.excel?.equalsIgnoreCase('true') || params.excel?.equalsIgnoreCase('1')) {
@@ -308,8 +308,9 @@ class ApiController {
 	def individualPapersInNetworkXls() {
 		actionById(Network, 'networkId', params, ['success': false]) { Network network, Map response ->
 			XlsMapExport xls = miscExportService.getIndividualPapersInNetworkExport(network, 'Sheet 1',
-					[params.networkName, params.lastName, params.firstName,
-					 params.email, params.paperTitle, params.paperST, params.paperAbstract] as List<String>)
+					[params.networkName, params.lastName, params.firstName,  params.email, params.organisation,
+					 params.paperId, params.paperTitle, params.coAuthors, params.paperType, 
+					 params.paperST, params.paperAbstract] as List<String>)
 
 			response.put('success', true)
 

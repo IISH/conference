@@ -96,12 +96,16 @@ class ExportService {
      * @param prepend The string that has to be prepended to the filename of the paper
      */
     void getPaper(Paper paper, HttpServletResponse response, String prepend = '') {
+		if (!paper.paperFile.isEmpty()) {
+			return
+		}
+
         response.contentType = paper.contentType
 	    response.contentLength = paper.fileSize
         response.setHeader("Content-disposition", "attachment;filename=\"${prepend + paper.fileName}\"")
 
 	    OutputStream outputStream = response.getOutputStream()
-	    outputStream << paper.file
+	    outputStream << paper.paperFile[0].file
 	    outputStream.flush()
     }
 }

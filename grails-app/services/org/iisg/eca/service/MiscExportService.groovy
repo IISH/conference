@@ -316,7 +316,7 @@ class MiscExportService {
 
 		return new XlsMapExport(
 				['network', 'lastname', 'firstname', 'email', 'organisation', 'session', 'sessionstate', 'roles',
-				 'papertitle', 'paperstate', 'paperabstract'],
+				 'papertitle', 'paperabstract', 'paperstate'],
 				usersSessionsPapers.collect { userSessionPaper ->
 					User user = userSessionPaper[0] as User
 					Session session = userSessionPaper[1] as Session
@@ -330,7 +330,8 @@ class MiscExportService {
 							'session'     : session.name,
 							'sessionstate': session.state.description,
 							'roles'       : CombinedSessionParticipant.findAllByUserAndSession(user, session)*.type.join(', '),
-							'papertitle'  : paper?.title, 'paperabstract': paper?.abstr,
+							'papertitle'  : paper?.title,
+							'paperabstract': paper?.abstr,
 							'paperstate'  : paper?.state?.description]
 				},
 				title,

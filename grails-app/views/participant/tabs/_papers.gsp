@@ -56,7 +56,7 @@
                         <g:message code="paper.file.label" />
                     </label>
                     <span class="property-value">
-                        <g:if test="${paper.file}">
+                        <g:if test="${paper.fileSize}">
                             <span>
                                 <a target="_blank" href="${eca.createLink(action: 'downloadPaper', id: paper.id)}">${paper.fileName}</a> - ${paper.getReadableFileSize()}
                             </span>
@@ -65,7 +65,7 @@
                         <g:else>-</g:else>
                     </span>
                 </div>
-                <div class="${hasErrors(bean: paper, field: 'file', 'error')}">
+                <div>
                     <label class="property-label">
                         <g:message code="paper.file.upload.label" />
                     </label>

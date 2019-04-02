@@ -423,11 +423,8 @@ class SessionPlannerService {
         }
 
         def papers = Paper.withCriteria {
-            createAlias('session', 's')
-            fetchMode('s', FetchMode.JOIN)
-
             if (sessionId) {
-                eq('s.id', sessionId)
+                eq('session.id', sessionId)
             }
         }
 
@@ -490,7 +487,7 @@ class SessionPlannerService {
                     participant.type = sp.type.toString()
                     participant.participantName = sp.user.toString()
 
-                    Paper paper = papers.find { (it.user.id == sp.user.id) && (it.session.id == result.session.id) }
+                    Paper paper = papers.find { (it.userId == sp.user.id) && (it.sessionId == result.session.id) }
                     if (paper) {
                         participant.paperId = paper.id
                         participant.paperName = paper.title

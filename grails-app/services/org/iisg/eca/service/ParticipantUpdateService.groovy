@@ -212,7 +212,13 @@ class ParticipantUpdateService {
 			paper.fileSize = file.size
 			paper.contentType = file.contentType
 			paper.fileName = file.originalFilename
-			paper.file = file.bytes
+
+			if (!paper.paperFile.isEmpty()) {
+				paper.paperFile[0].file = file.bytes
+			}
+			else {
+				paper.addToPaperFile(new PaperFile(file: file.bytes))
+			}
 		}
 
 		paper.equipment?.clear()

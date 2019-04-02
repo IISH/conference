@@ -26,7 +26,6 @@ class Paper extends EventDateDomain {
     String fileName
     String contentType
     Long fileSize
-    byte[] file
     String equipmentComment
     boolean mailPaperState = true
 	User addedBy
@@ -39,7 +38,8 @@ class Paper extends EventDateDomain {
 			equipment: Equipment,
 			reviews: PaperReview,
 			coAuthoringPapers: PaperCoAuthor,
-			sessionParticipantPapers: SessionParticipantPaper
+			sessionParticipantPapers: SessionParticipantPaper,
+			paperFile: PaperFile
 	]
 
     static mapping = {
@@ -64,7 +64,6 @@ class Paper extends EventDateDomain {
         fileName            column: 'filename'
         contentType         column: 'content_type'
         fileSize            column: 'filesize'
-        file                column: 'file',                 sqlType: 'mediumblob'
         equipmentComment    column: 'equipment_comment',    type: 'text'
         mailPaperState      column: 'mail_paper_state'
 	    addedBy             column: 'added_by'
@@ -76,6 +75,7 @@ class Paper extends EventDateDomain {
 		coAuthoringPapers			cascade: 'all-delete-orphan'
 		sessionParticipantPapers	cascade: 'none'
 		keywords					cascade: 'all-delete-orphan'
+		paperFile					cascade: 'all-delete-orphan'
     }
 
     static constraints = {
@@ -91,10 +91,10 @@ class Paper extends EventDateDomain {
         networkProposal     nullable: true
         sessionProposal     nullable: true, maxSize: 500
         proposalDescription nullable: true
+		paperFile			nullable: true
         fileName            nullable: true, maxSize: 500
         contentType         nullable: true, maxSize: 100
         fileSize            nullable: true
-        file                nullable: true
         equipmentComment    nullable: true
 	    addedBy             nullable: true
     }
@@ -241,11 +241,10 @@ class Paper extends EventDateDomain {
 	 * @return Whether the paper was successfully removed
 	 */
 	boolean removePaperFile() {
-		this.file = null
+		this.paperFile.clear()
 		this.fileName = null
 		this.fileSize = null
 		this.contentType = null
-
 		this.save()
 	}
 

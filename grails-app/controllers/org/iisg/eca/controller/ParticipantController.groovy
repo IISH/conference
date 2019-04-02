@@ -384,7 +384,7 @@ class ParticipantController {
 
 			// We found the paper, now just set everything to null
 			if (paper) {
-				paper.file = null
+				paper.paperFile.clear()
 				paper.fileName = null
 				paper.fileSize = null
 				paper.contentType = null
