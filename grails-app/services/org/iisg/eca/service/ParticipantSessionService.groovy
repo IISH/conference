@@ -236,23 +236,26 @@ class ParticipantSessionService {
         }
 
         allCoAuthors.each { coAuthor ->
-            User coAuthorUser = coAuthor.user
+            if (coAuthor.paper?.session) {
+                User coAuthorUser = coAuthor.user
 
-            // See if this user is already in the list somewhere, if so update that one with new information
-            ParticipantSessionInfo sessionInfoCoAuthor = sessionInformation.find {
-                (it.participant?.user?.id == coAuthorUser?.id) && (it.session?.id == coAuthor.paper.session?.id) }
-
-            // This user is not in the list already, so create a new <code>ParticipantSessionInfo</code> object for this user
-            if (!sessionInfoCoAuthor) {
-                ParticipantDate coAuthorParticipant = ParticipantDate.findByUserAndDate(coAuthorUser, pageInformation.date)
-                if (coAuthorParticipant) {
-                    sessionInfoCoAuthor = new ParticipantSessionInfo(coAuthor.paper.session, coAuthorParticipant)
-                    sessionInformation.add(sessionInfoCoAuthor)
+                // See if this user is already in the list somewhere, if so update that one with new information
+                ParticipantSessionInfo sessionInfoCoAuthor = sessionInformation.find {
+                    (it.participant?.user?.id == coAuthorUser?.id) && (it.session?.id == coAuthor.paper.session?.id)
                 }
-            }
 
-            sessionInfoCoAuthor?.addType(ParticipantType.get(ParticipantType.CO_AUTHOR))
-            sessionInfoCoAuthor?.paperCoAuthoring = coAuthor.paper
+                // This user is not in the list already, so create a new <code>ParticipantSessionInfo</code> object for this user
+                if (!sessionInfoCoAuthor) {
+                    ParticipantDate coAuthorParticipant = ParticipantDate.findByUserAndDate(coAuthorUser, pageInformation.date)
+                    if (coAuthorParticipant) {
+                        sessionInfoCoAuthor = new ParticipantSessionInfo(coAuthor.paper.session, coAuthorParticipant)
+                        sessionInformation.add(sessionInfoCoAuthor)
+                    }
+                }
+
+                sessionInfoCoAuthor?.addType(ParticipantType.get(ParticipantType.CO_AUTHOR))
+                sessionInfoCoAuthor?.paperCoAuthoring = coAuthor.paper
+            }
         }
 
         sessionInformation.sort { ParticipantSessionInfo a, ParticipantSessionInfo b ->
