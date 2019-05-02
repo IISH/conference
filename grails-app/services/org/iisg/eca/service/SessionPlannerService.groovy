@@ -465,7 +465,7 @@ class SessionPlannerService {
             plannedSession.sessionId = result.session.id
             plannedSession.sessionCode = result.session.code
             plannedSession.sessionName = result.session.name
-            plannedSession.sessionAbstract = result.session.abstract
+            plannedSession.sessionAbstract = result.session.abstr
 
             plannedSession.networks = networksBySession
                     .findAll { it[1] == result.session.id }
