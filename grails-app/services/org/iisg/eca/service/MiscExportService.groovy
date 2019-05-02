@@ -352,7 +352,7 @@ class MiscExportService {
                 FROM ParticipantDate AS pd
 				INNER JOIN pd.user AS u
 				INNER JOIN u.papers AS p
-				INNER JOIN p.type AS t
+				LEFT JOIN p.type AS t
                 WHERE u.deleted = false
 				AND p.networkProposal.id = :networkId
 				AND pd.state.id IN (:newParticipant, :dataChecked, :participant, :notFinished)
@@ -385,7 +385,7 @@ class MiscExportService {
 							'paperid'	   : paper.id,
 							'papertitle'   : paper.title,
 							'coauthors'    : paper.coAuthors,
-							'papertype'	   : type.type,
+							'papertype'	   : type?.type,
 							'paperstate'   : paper.state.description,
 							'paperabstract': paper.abstr]
 				},
