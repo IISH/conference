@@ -4,7 +4,7 @@
 
 example
 #!/bin/bash
-xsltproc XSLFILE.xslt SOURCEXML.xml > OUTPUT.HTML;
+xsltproc XSLFILE.xslt SOURCEXML.xml > OUTPUT.html
 
 3. open the output file in Word/Excel...
 and save it as a original Word/Excel file

@@ -18,6 +18,7 @@ final class PlannedSession {
     long sessionId
     String sessionCode
     String sessionName
+    String sessionAbstract
 
     List<Network> networks
     List<Participant> participants
