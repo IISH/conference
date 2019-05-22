@@ -27,13 +27,17 @@
 
 							<span class="sessionDiv">
 								<span class="sessionName">
-									Session name: <xsl:value-of select="sessionname" />
+									Name: <xsl:value-of select="sessionname" />
 								<br />
 								</span>
 								<span class="sessionCode">
                                     Session code: <xsl:value-of select="sessioncode" />
 								<br />
 								</span>
+                                <span class="sessionType">
+                                    Type: <xsl:value-of select="sessiontype" />
+                                    <br />
+                                </span>
 								<span class="sessionAbstract">
                                     Session abstract: <xsl:value-of select="sessionabstract" />
 								<br />
