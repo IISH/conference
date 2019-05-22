@@ -9,6 +9,7 @@ import org.iisg.eca.domain.Room
 import org.iisg.eca.domain.Session
 import org.iisg.eca.domain.SessionDateTime
 import org.iisg.eca.domain.SessionParticipant
+import org.iisg.eca.domain.SessionType
 import org.iisg.eca.domain.User
 
 import java.text.DateFormat
@@ -77,20 +78,22 @@ class SessionsXmlExport extends XmlExport {
         sessionsByDateTime = new HashMap<>()
 
         Session.executeQuery('''
-            SELECT s, r, sdt
+            SELECT s, r, t, sdt
             FROM Session AS s
             INNER JOIN s.sessionRoomDateTime AS srdt
             INNER JOIN srdt.room AS r
             INNER JOIN srdt.sessionDateTime AS sdt
+            LEFT JOIN s.type AS t
             WHERE r.deleted = false
             ORDER BY r.roomNumber
         ''').each { sessionResults ->
             Session session = (Session) sessionResults[0]
             Room room = (Room) sessionResults[1]
-            SessionDateTime sessionDateTime = (SessionDateTime) sessionResults[2]
+            SessionType sessionType = (SessionType) sessionResults[2]
+            SessionDateTime sessionDateTime = (SessionDateTime) sessionResults[3]
 
             List sessions = sessionsByDateTime.get(sessionDateTime, new ArrayList())
-            sessions.add([session, room])
+            sessions.add([session, room, sessionType])
         }
     }
 
@@ -144,19 +147,25 @@ class SessionsXmlExport extends XmlExport {
                     sessionsByDateTime.get(sdt)?.each { sessionResults ->
                         Session session = (Session) sessionResults[0]
                         Room room = (Room) sessionResults[1]
+                        SessionType sessionType = (SessionType) sessionResults[2]
 
-                        forEachSession(session, room, sdt, builder)
+                        forEachSession(session, room, sessionType, sdt, builder)
                     }
                 }
             }
         }
     }
 
-    private void forEachSession(Session session, Room room, SessionDateTime sdt, MarkupBuilder builder) {
+    private void forEachSession(Session session, Room room, SessionType sessionType, SessionDateTime sdt,
+                                MarkupBuilder builder) {
         builder.session {
             builder.sessioncode(session.code)
             builder.sessionname(session.name)
             builder.sessionabstract(session.abstr)
+
+            if (sessionType) {
+                builder.sessiontype(sessionType.type)
+            }
 
             builder.location {
                 builder.code("${room.roomNumber}-${sdt.indexNumber}")
