@@ -18,20 +18,21 @@
 			</head>
 			<body>
 				<span class="mainDescription">
-					Description: <xsl:value-of select="description" /> (<xsl:value-of select="exportDate" />)
+					Omschrijving: <xsl:value-of select="description" /> (<xsl:value-of select="exportDate" />)
 				<br />
 				</span>
 				<span>
 					<xsl:for-each select="sessions/session">
 						<hr />
+						<br />
 
 							<span class="sessionDiv">
 								<span class="sessionName">
-									Name: <xsl:value-of select="sessionname" />
+									Naam: <xsl:value-of select="sessionname" />
 								<br />
 								</span>
 								<span class="sessionCode">
-                                    Session code: <xsl:value-of select="sessioncode" />
+                                    Sessie code: <xsl:value-of select="sessioncode" />
 								<br />
 								</span>
                                 <span class="sessionType">
@@ -39,22 +40,22 @@
                                     <br />
                                 </span>
 								<span class="sessionAbstract">
-                                    Session abstract: <xsl:value-of select="sessionabstract" />
+                                    Sessie abstract: <xsl:value-of select="sessionabstract" />
 								<br />
 								</span>
 
 								<br />
 
 								<span class="sessionDate">
-									Date: <xsl:value-of select="../time/weekday" /> <xsl:text> </xsl:text> <xsl:value-of select="../time/day" /> <xsl:text> </xsl:text> <xsl:value-of select="../time/month" />
+									Datum: <xsl:value-of select="../time/weekday" /> <xsl:text> </xsl:text> <xsl:value-of select="../time/day" /> <xsl:text> </xsl:text> <xsl:value-of select="../time/month" />
 								<br />
 								</span>
 								<span class="sessionTime">
-									Time: <xsl:value-of select="../time/starttime" /> - <xsl:value-of select="../time/endtime" />
+									Tijd: <xsl:value-of select="../time/starttime" /> - <xsl:value-of select="../time/endtime" />
 								<br />
 								</span>
 								<span class="roomName">
-									Room: <xsl:value-of select="location/locationname" />
+									Zaal: <xsl:value-of select="location/locationname" />
 								<br />
 								</span>
 
@@ -62,7 +63,7 @@
 
 								<span class="sessionOrganizers">
 									<xsl:if test="count(organizers/organizer) = 1">
-										Organizer: 
+										Organisator:
 										<xsl:for-each select="organizers/organizer">
 											<xsl:value-of select="name" />
 											<xsl:if test="(organisation != '') and (organisation != 'null')">
@@ -72,7 +73,7 @@
 										<br />
 									</xsl:if>
 									<xsl:if test="count(organizers/organizer) > 1">
-										Organizers: 
+										Organisatoren:
 										<xsl:for-each select="organizers/organizer">
 											<xsl:value-of select="name" />
 											<xsl:if test="(organisation != '') and (organisation != 'null')">
@@ -119,13 +120,13 @@
 										<span class="paper">
 											<span class="paperAuthors">
 												<xsl:if test="string-length(normalize-space(copresenters)) = 0">
-													<xsl:text>Author: </xsl:text><xsl:value-of select="presenter" />
+													<xsl:text>Auteur: </xsl:text><xsl:value-of select="presenter" />
 													<xsl:if test="(organisation != '') and (organisation != 'null')">
 														<xsl:text> (</xsl:text><xsl:value-of select="organisation" /><xsl:text>)</xsl:text>
 													</xsl:if>
 												</xsl:if>
 												<xsl:if test="string-length(normalize-space(copresenters)) > 0">
-													<xsl:text>Authors: </xsl:text><xsl:value-of select="presenter" />
+													<xsl:text>Auteurs: </xsl:text><xsl:value-of select="presenter" />
 													<xsl:if test="(organisation != '') and (organisation != 'null')">
 														<xsl:text> (</xsl:text><xsl:value-of select="organisation" /><xsl:text>)</xsl:text>
 													</xsl:if>
@@ -134,7 +135,7 @@
 											<br />
 											</span>
 											<span class="paperSubject">
-												Paper title: <xsl:value-of select="subject" />
+												Paper titel: <xsl:value-of select="subject" />
 											<br />
 											</span>
 											<span class="paperAbstract">
