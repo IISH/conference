@@ -24,7 +24,7 @@ class DaysXmlExport extends XmlExport {
 					FROM Day AS d
 					INNER JOIN d.sessionDateTimes AS sdt
 					WHERE sdt.deleted = false
-					ORDER BY d.id, sdt.indexNumber
+					ORDER BY d.dayNumber, sdt.indexNumber
                 ''').each { results ->
                     builder.day {
                         Day d = results[0]
