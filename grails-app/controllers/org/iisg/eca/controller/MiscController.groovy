@@ -129,6 +129,27 @@ class MiscController {
         ])
     }
 
+    def listOrganisations() {
+        Sql sql = new Sql(dataSource)
+        List<GroovyRowResult> result = sql.rows("""
+           SELECT users.user_id, organisation, lastname, firstname 
+           FROM users INNER JOIN participant_date ON users.user_id=participant_date.user_id
+           WHERE users.enabled=1 AND users.deleted=0
+           AND participant_date.deleted=0
+           AND participant_date.participant_state_id IN (:new, :dataChecked, :participant, :notFinished)
+           AND participant_date.date_id = :date_id
+           ORDER BY organisation, lastname, firstname
+        """, [date_id: pageInformation.date.id, new: ParticipantState.NEW_PARTICIPANT, dataChecked: ParticipantState.PARTICIPANT_DATA_CHECKED,
+              participant: ParticipantState.PARTICIPANT, notFinished: ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
+
+        render(view: "list", model: [
+                data:       result,
+                headers:    ["Organisation", "Last Name", "First Name"],
+                controller: "participant",
+                action:     "show",
+                info:       "Overview of organisation and participants"
+        ])
+    }
     def sessionSameName() {
         Sql sql = new Sql(dataSource)
         List<GroovyRowResult> result = sql.rows("""
