@@ -47,3 +47,6 @@
 *.iml
 *.ipr
 .slcache
+
+/src/xslt/*.xml
+/src/xslt/*/*.xml
