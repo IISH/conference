@@ -541,6 +541,79 @@ class MiscController {
 		])
 	}
 
+    def notCancelledNotAccepted() {
+        Sql sql = new Sql(dataSource)
+        List<GroovyRowResult> result = sql.rows("""
+SELECT participant_date.user_id, users.lastname, users.firstname, users.email
+FROM participant_date
+    INNER JOIN users ON participant_date.user_id = users.user_id
+    INNER JOIN papers ON participant_date.user_id = papers.user_id
+WHERE participant_date.date_id = :dateId
+    AND papers.date_id = :dateId
+    AND participant_state_id IN (0,1,2,999)
+    AND papers.paper_state_id = 3
+    AND participant_date.deleted = 0
+    AND papers.deleted = 0
+    AND users.deleted = 0
+    AND participant_date.payment_id IS NULL
+
+    AND participant_date.user_id NOT IN (
+            SELECT participant_date.user_id
+            FROM participant_date
+                INNER JOIN papers ON participant_date.user_id = papers.user_id
+            WHERE participant_date.date_id = :dateId
+                AND papers.date_id = :dateId
+                AND participant_date.deleted = 0
+                AND papers.deleted = 0
+                AND participant_state_id IN (0,1,2,999)
+                AND papers.paper_state_id IN (1,2,4)
+            GROUP BY participant_date.user_id
+        )
+
+    AND participant_date.user_id NOT IN (
+            SELECT session_participant.user_id
+            FROM session_participant
+                INNER JOIN sessions ON session_participant.session_id = sessions.session_id
+                WHERE session_participant.date_id = :dateId
+                    AND sessions.date_id = :dateId
+                    AND session_participant.deleted = 0
+                    AND sessions.deleted = 0
+                GROUP BY session_participant.user_id
+        )
+
+    AND participant_date.user_id NOT IN (
+            SELECT user_id
+            FROM networks
+                INNER JOIN networks_chairs ON networks.network_id = networks_chairs.network_id
+            WHERE networks.deleted = 0
+                AND networks_chairs.deleted = 0
+                AND networks.date_id = :dateId
+            GROUP BY user_id
+        )
+
+ORDER BY participant_date.user_id
+        """, [dateId: pageInformation.date.id])
+
+        List<String> columns = ['lastname', 'firstname', 'email'] as List<String>
+        List<String> headers = ["Last name", "First name", "E-mail"] as List<String>
+        String info = "Not cancelled registrations with not accepted papers"
+
+        // If an export of the results is requested, try to delegate the request to the export service
+        if (params.format) {
+            exportService.getSQLExport(params.format, response, columns, result, info, headers, params.sep)
+            return
+        }
+
+        render(view: "list", model: [
+                data:       result,
+                headers:    headers,
+                controller: "participant",
+                action:     "show",
+                info:       info,
+                export:     true
+        ])
+    }
+
     def additionalEquipment() {
         Sql sql = new Sql(dataSource)
         List<GroovyRowResult> result = sql.rows("""
