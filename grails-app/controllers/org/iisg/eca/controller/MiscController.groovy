@@ -591,7 +591,7 @@ WHERE participant_date.date_id = :dateId
             GROUP BY user_id
         )
 
-ORDER BY participant_date.user_id
+ORDER BY users.lastname, users.firstname, participant_date.user_id
         """, [dateId: pageInformation.date.id])
 
         List<String> columns = ['lastname', 'firstname', 'email'] as List<String>
