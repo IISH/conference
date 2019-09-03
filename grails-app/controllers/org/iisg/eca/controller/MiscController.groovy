@@ -284,8 +284,9 @@ class MiscController {
           AND users.user_id IN (
             SELECT user_id FROM `papers` 
             WHERE papers.deleted=0 
+            AND papers.date_id = :date_id
             AND (
-              session_id IN (SELECT session_id FROM sessions WHERE deleted=1) 
+              session_id IN (SELECT session_id FROM sessions WHERE deleted=1 AND date_id = :date_id) 
               OR session_id NOT IN (SELECT session_id FROM sessions) 
             )
           );
