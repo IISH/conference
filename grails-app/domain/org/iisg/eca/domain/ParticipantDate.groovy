@@ -121,8 +121,7 @@ class ParticipantDate extends EventDateDomain {
 		    'feeState.id',
 		    'user.id',
             'favoriteSessions.id',
-		    'addedBy.id',
-            'allowLatePayment'
+		    'addedBy.id'
     ]
 
     def beforeInsert() {
