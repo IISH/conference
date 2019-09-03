@@ -353,14 +353,16 @@
                     </span>
                 </div>
 
-				<div class="${hasErrors(bean: participant, field: 'allowLatePayment', 'error')}">
-					<label class="property-label">
-						<g:message code="participantDate.allowLatePayment.label" />
-					</label>
-					<span class="property-value">
-						<g:checkBox name="participantDate.allowLatePayment" checked="${participant.allowLatePayment}" />
-					</span>
-				</div>
+				<g:if test="${Setting.getSetting(Setting.SHOW_ALLOW_LATE_PAYMENT, curDate?.event).value == '1'}">
+					<div class="${hasErrors(bean: participant, field: 'allowLatePayment', 'error')}">
+						<label class="property-label">
+							<g:message code="participantDate.allowLatePayment.label" />
+						</label>
+						<span class="property-value">
+							<g:checkBox name="participantDate.allowLatePayment" checked="${participant.allowLatePayment}" />
+						</span>
+					</div>
+				</g:if>
 
                 <g:if test="${Setting.getSetting(Setting.SHOW_ACCOMPANYING_PERSONS, curDate?.event).value == '1'}">
                     <div class="${hasErrors(bean: participant, field: 'accompanyingPersons', 'error')} ">

@@ -62,7 +62,8 @@ class Setting extends EventDomain {
 	// Show/hide settings
 	static final String HIDE_ALWAYS_IN_ONLINE_PROGRAMME = 'hide_always_in_online_programme'
 	static final String HIDE_IF_EMPTY_IN_ONLINE_PROGRAMME = 'hide_if_empty_in_online_programme'
-	static final String SHOW_ACCOMPANYING_PERSONS = 'show_accompanying_persons'
+    static final String SHOW_ACCOMPANYING_PERSONS = 'show_accompanying_persons'
+    static final String SHOW_ALLOW_LATE_PAYMENT = 'show_allow_late_payment'
 	static final String SHOW_AGE_RANGE = 'show_age_range'
 	static final String SHOW_AUTHOR_REGISTRATION = 'show_author_registration'
 	static final String SHOW_AWARD = 'show_award'
