@@ -334,6 +334,7 @@
 
             <fieldset class="form">
                 <legend><g:message code="participantDate.attendance.label" /></legend>
+
                 <div class="${hasErrors(bean: participant, field: 'state', 'error')} required">
                     <label class="property-label">
                         <g:message code="participantDate.state.label" />
@@ -342,6 +343,7 @@
                         <g:select name="participantDate.state.id" from="${ParticipantState.list()}" optionKey="id" optionValue="state" value="${participant.state.id}" />
                     </span>
                 </div>
+
                 <div class="${hasErrors(bean: participant, field: 'feeState', 'error')} required">
                     <label class="property-label">
                         <g:message code="participantDate.feeState.label" />
@@ -350,6 +352,16 @@
                         <g:select name="participantDate.feeState.id" from="${FeeState.sortedFeeStates.list()}" optionKey="id" optionValue="name" value="${participant.feeState.id}" />
                     </span>
                 </div>
+
+				<div class="${hasErrors(bean: participant, field: 'allowLatePayment', 'error')}">
+					<label class="property-label">
+						<g:message code="participantDate.allowLatePayment.label" />
+					</label>
+					<span class="property-value">
+						<g:checkBox name="participantDate.allowLatePayment" checked="${participant.allowLatePayment}" />
+					</span>
+				</div>
+
                 <g:if test="${Setting.getSetting(Setting.SHOW_ACCOMPANYING_PERSONS, curDate?.event).value == '1'}">
                     <div class="${hasErrors(bean: participant, field: 'accompanyingPersons', 'error')} ">
                         <label class="property-label">

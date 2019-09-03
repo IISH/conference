@@ -126,7 +126,7 @@ class ParticipantUpdateService {
 		bindData(participant, params, [
 				include: ['ageRange', 'invitationLetter', 'invitationLetterSent', 'lowerFeeRequested', 'lowerFeeAnswered',
 				          'lowerFeeText', 'student', 'studentConfirmed', 'award', 'state', 'feeState', 'extraInfo',
-				          'accompanyingPersons']
+				          'accompanyingPersons', 'allowLatePayment']
 		], "participantDate")
 
 		participant.extras?.clear()
