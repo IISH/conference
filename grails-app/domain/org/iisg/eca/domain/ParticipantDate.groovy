@@ -103,7 +103,8 @@ class ParticipantDate extends EventDateDomain {
             'extras.id',
             'participantVolunteering.id',
             'favoriteSessions.id',
-		    'addedBy.id'
+		    'addedBy.id',
+		    'allowLatePayment'
     ]
 
     static apiPostPut = [
@@ -120,7 +121,8 @@ class ParticipantDate extends EventDateDomain {
 		    'feeState.id',
 		    'user.id',
             'favoriteSessions.id',
-		    'addedBy.id'
+		    'addedBy.id',
+            'allowLatePayment'
     ]
 
     def beforeInsert() {
