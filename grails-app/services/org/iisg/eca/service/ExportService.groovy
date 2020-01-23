@@ -96,7 +96,7 @@ class ExportService {
      * @param prepend The string that has to be prepended to the filename of the paper
      */
     void getPaper(Paper paper, HttpServletResponse response, String prepend = '') {
-		if (!paper.paperFile.isEmpty()) {
+		if (paper.paperFile.isEmpty()) {
 			return
 		}
 
