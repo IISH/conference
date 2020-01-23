@@ -30,11 +30,14 @@ grails.project.dependency.resolution = {
         mavenCentral()
 
         // uncomment these to enable remote dependency resolution from public Maven repositories
-        mavenRepo "http://snapshots.repository.codehaus.org"
-        mavenRepo "http://repository.codehaus.org"
-        mavenRepo "http://download.java.net/maven/2/"
-        mavenRepo "http://repository.jboss.com/maven2/"
-        mavenRepo "http://repo.spring.io/milestone/"
+        mavenRepo "https://repo1.maven.org/maven2/"
+        mavenRepo "https://snapshots.repository.codehaus.org"
+        mavenRepo "https://repository.codehaus.org"
+        mavenRepo "https://download.java.net/maven/2/"
+        mavenRepo "https://repository.jboss.com/maven2/"
+        mavenRepo "https://repo.spring.io/milestone/"
+        mavenRepo "https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/"
+        mavenRepo "https://repo.adobe.com/nexus/content/repositories/public/"
     }
 
     dependencies {
