@@ -35,12 +35,12 @@ class CreateEmailJob {
             // If they are correctly send, we can start creating the emails
             if (recipients && template && date) {
                 try {
-                    // Successfully created the emails, send a notification email
-                    emailService.sendInfoMail("Started creating the emails for ${recipients.size()} participants", """\
-                        Started creating the emails for ${recipients.size()} participants.
-                        Email template: ${template.id} - ${template.toString()}
-                        The extra participant ids are: ${extraParticipantIds.join(', ')}
-                    """.stripIndent().toString(), date?.event)
+//                    // Successfully created the emails, send a notification email
+//                    emailService.sendInfoMail("Started creating the emails for ${recipients.size()} participants", """\
+//                        Started creating the emails for ${recipients.size()} participants.
+//                        Email template: ${template.id} - ${template.toString()}
+//                        The extra participant ids are: ${extraParticipantIds.join(', ')}
+//                    """.stripIndent().toString(), date?.event)
 
                     for (Long[] recipient : recipients) {
                         Map<String, Long> identifiers = template.getIdentifiersMap(recipient)
