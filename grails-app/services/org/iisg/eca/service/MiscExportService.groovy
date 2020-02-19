@@ -451,7 +451,8 @@ class MiscExportService {
 	private static final String PARTICIPANTS_SQL = '''
 			SELECT u.user_id, u.title, u.lastname, u.firstname, u.email, u.organisation,
 			u.department, u.dietary_wishes, u.other_dietary_wishes, c.name_english, o.amount, 
-			fs.name, n.name AS network_name,
+			fs.name, 
+            CAST(GROUP_CONCAT(DISTINCT n.name ORDER BY n.name) AS CHAR) AS network_name,
             CAST(GROUP_CONCAT(DISTINCT d.day_id ORDER BY d.day_number) AS CHAR) AS days,
             CAST(GROUP_CONCAT(DISTINCT e.extra_id ORDER BY e.extra) AS CHAR) AS extras
             
@@ -489,9 +490,9 @@ class MiscExportService {
             LEFT JOIN networks_chairs AS nc
             ON u.user_id = nc.user_id
             
-            INNER JOIN networks AS n
+            LEFT JOIN networks AS n
             ON nc.network_id = n.network_id
-            AND n.date_id = :dateId 
+            AND ( n.date_id = :dateId OR n.date_id IS NULL)  
             
             WHERE u.deleted = 0
             AND pd.date_id = :dateId
