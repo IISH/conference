@@ -491,6 +491,7 @@ class MiscExportService {
             
             LEFT JOIN networks AS n
             ON nc.network_id = n.network_id
+            AND (n.date_id = :dateId OR n.date_id IS NULL) 
             
             WHERE u.deleted = 0
             AND pd.date_id = :dateId

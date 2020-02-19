@@ -55,6 +55,8 @@ class CreateEmailJob {
                     // Successfully created the emails, send a notification email
                     emailService.sendInfoMail("Succesfully created the emails for ${recipients.size()} participants", """\
                         Succesfully created the emails for ${recipients.size()} participants.
+                        Email template: ${template.id} - ${template.toString()}
+                        The extra participant ids are: ${extraParticipantIds.join(', ')}
                         The emails will be emailed soon.
                     """.stripIndent().toString(), date?.event)
                 }
