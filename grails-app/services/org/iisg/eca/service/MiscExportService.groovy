@@ -489,9 +489,9 @@ class MiscExportService {
             LEFT JOIN networks_chairs AS nc
             ON u.user_id = nc.user_id
             
-            LEFT JOIN networks AS n
+            INNER JOIN networks AS n
             ON nc.network_id = n.network_id
-            AND (n.date_id = :dateId OR n.date_id IS NULL) 
+            AND n.date_id = :dateId 
             
             WHERE u.deleted = 0
             AND pd.date_id = :dateId
