@@ -479,6 +479,48 @@ class MiscController {
         ])
     }
 
+    def sessionsNoModerator() {
+        Sql sql = new Sql(dataSource)
+        List<GroovyRowResult> result = sql.rows("""
+            SELECT session_id, session_code, session_name, description
+            FROM sessions s
+            INNER JOIN session_states ss ON s.session_state_id = ss.session_state_id
+            WHERE s.deleted=0
+            AND date_id=:dateId
+            AND s.session_state_id IN (:accepted, :consideration)
+            AND session_id NOT IN (
+                SELECT session_participant.session_id
+                FROM session_participant
+                INNER JOIN vw_accepted_participants ON session_participant.user_id=vw_accepted_participants.user_id
+                WHERE session_participant.participant_type_id = :moderator
+                GROUP BY session_participant.session_id
+            )
+            ORDER BY s.session_state_id ASC, session_code ASC, session_name ASC
+        """, [  dateId: pageInformation.date.id,
+                accepted: SessionState.SESSION_ACCEPTED,
+                consideration: SessionState.SESSION_IN_CONSIDERATION,
+                moderator: ParticipantType.MODERATOR])
+
+        List<String> columns = ['session_code', 'session_name', 'description'] as List<String>
+        List<String> headers = ["Code", "Name", "Session state"] as List<String>
+        String info = "Sessions without a moderator"
+
+        // If an export of the results is requested, try to delegate the request to the export service
+        if (params.format) {
+            exportService.getSQLExport(params.format, response, columns, result, info, headers, params.sep)
+            return
+        }
+
+        render(view: "list", model: [
+                data:       result,
+                headers:    headers,
+                controller: "session",
+                action:     "show",
+                info:       info,
+                export:     true
+        ])
+    }
+
     def participantNoCountry() {
         Sql sql = new Sql(dataSource)
         List<GroovyRowResult> result = sql.rows("""

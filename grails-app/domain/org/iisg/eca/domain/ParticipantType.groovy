@@ -9,6 +9,7 @@ class ParticipantType extends EventDomain implements Comparable {
     static final long AUTHOR = 8L
     static final long CO_AUTHOR = 9L
     static final long DISCUSSANT = 10L
+    static final long MODERATOR = 12L
 
     String type
     boolean withPaper = false
