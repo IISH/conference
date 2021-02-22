@@ -1,2 +1,5 @@
 Conference 
 ======================
+
+COnference Management System
+
