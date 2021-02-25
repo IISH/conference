@@ -86,6 +86,7 @@ class ParticipantService {
                                         or {
                                             like('lastName', "%${w}%")
                                             like('firstName', "%${w}%")
+                                            like('email', "%${w}%")
                                         }
                                     }
                                 }

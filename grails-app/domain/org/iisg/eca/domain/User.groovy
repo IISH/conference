@@ -521,6 +521,14 @@ class User {
 			}
 		}
 
+		allAcceptedSessionAuthorsCoauthors { date ->
+			allAcceptedSessionParticipants(date)
+			or {
+				eq('sp.type.id', ParticipantType.AUTHOR)
+				eq('sp.type.id', ParticipantType.CO_AUTHOR)
+			}
+		}
+
 		allAcceptedSessionChairs { date ->
 			allAcceptedSessionParticipants(date)
 			eq('sp.type.id', ParticipantType.CHAIR)

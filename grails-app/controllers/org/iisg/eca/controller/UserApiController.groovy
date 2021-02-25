@@ -101,6 +101,7 @@ class UserApiController {
 
     def downloadPaper() {
 	    Date downloadPaperLastDate = Setting.getSetting(Setting.DOWNLOAD_PAPER_LASTDATE).getDateValue()
+        /* WARNING: has download_paper_lastdate expired? is this the last/latest date_id for this event_id? */
 	    if (pageInformation.date.isLastDate() && (downloadPaperLastDate.compareTo(new Date().clearTime()) >= 0)) {
 		    Paper paper = Paper.findById(params.id)
 
@@ -112,6 +113,6 @@ class UserApiController {
 		    }
 	    }
 
-	    render 'Paper not found!'
+	    render 'Paper not found! You can only download papers from the last/latest/current conference. Papers from previous conferences are not accessible any more.'
     }
 }
