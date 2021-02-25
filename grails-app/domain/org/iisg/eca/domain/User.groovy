@@ -529,6 +529,11 @@ class User {
 			}
 		}
 
+		allAcceptedSessionDiscussant { date ->
+			allAcceptedSessionParticipants(date)
+			eq('sp.type.id', ParticipantType.DISCUSSANT)
+		}
+
 		allAcceptedSessionChairs { date ->
 			allAcceptedSessionParticipants(date)
 			eq('sp.type.id', ParticipantType.CHAIR)
