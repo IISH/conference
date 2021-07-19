@@ -33,6 +33,33 @@ class MiscExportService {
 	def pageInformation
 
 	/**
+	 * Create an export of all participants
+	 * @return An export which can be used to create the XLS file
+	 */
+	Export getParticipants() {
+		List<String> columns = ['user_id', 'lastname', 'firstname', 'email']
+
+		List<String> columnNames = [
+				'ID',
+				messageSource.getMessage('title.label', null, LocaleContextHolder.locale),
+				messageSource.getMessage('user.lastName.label', null, LocaleContextHolder.locale),
+				messageSource.getMessage('user.firstName.label', null, LocaleContextHolder.locale),
+				messageSource.getMessage('user.email.label', null, LocaleContextHolder.locale),
+		]
+
+		// Obtain results and transform them
+		Sql sql = new Sql(dataSource)
+		String sqlQuery = ACTIVE_PARTICIPANTS_SQL
+
+		// Query the database and create the export
+		List<Map> results = sql.rows(sqlQuery, [dateId: pageInformation.date.id])
+
+		// Create XLS export
+		String title = messageSource.getMessage('participantDate.participants.label', null, LocaleContextHolder.locale)
+		return new XlsMapExport(columns, results, title, columnNames)
+	}
+
+	/**
 	 * Create a specific export for the creation of badges
 	 * @return An export which can be used to create the XLS file
 	 */
@@ -447,6 +474,22 @@ class MiscExportService {
 				columnNames
 		)
 	}
+
+	private static final String ACTIVE_PARTICIPANTS_SQL = '''
+			SELECT u.user_id, u.lastname, u.firstname, u.email
+            FROM users AS u
+            
+            INNER JOIN participant_date AS pd
+            ON u.user_id = pd.user_id
+            
+            WHERE u.deleted = 0
+            AND pd.date_id = :dateId
+            AND pd.deleted = 0
+            AND pd.participant_state_id IN (0, 1, 2, 999)
+           
+            GROUP BY u.user_id
+            ORDER BY u.lastname ASC, u.firstname ASC
+	'''
 
 	private static final String PARTICIPANTS_SQL = '''
 			SELECT u.user_id, u.title, u.lastname, u.firstname, u.email, u.organisation,
