@@ -41,7 +41,6 @@ class MiscExportService {
 
 		List<String> columnNames = [
 				'ID',
-				messageSource.getMessage('title.label', null, LocaleContextHolder.locale),
 				messageSource.getMessage('user.lastName.label', null, LocaleContextHolder.locale),
 				messageSource.getMessage('user.firstName.label', null, LocaleContextHolder.locale),
 				messageSource.getMessage('user.email.label', null, LocaleContextHolder.locale),
