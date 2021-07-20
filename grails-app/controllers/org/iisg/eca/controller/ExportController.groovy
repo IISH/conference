@@ -88,6 +88,15 @@ class ExportController {
 		response.outputStream << participants.parse()
 	}
 
+	def participantsWithParticipantState12() {
+		Export participants = miscExportService.getParticipants("1, 2")
+
+		response.contentType = participants.contentType
+		response.setHeader("Content-disposition",
+				"attachment;filename=\"${participants.getTitle()}.${participants.getExtension().toLowerCase()}\"")
+		response.outputStream << participants.parse()
+	}
+
 	def participants() {
 		Export participants = miscExportService.getParticipantsWithFilterExport(params)
 

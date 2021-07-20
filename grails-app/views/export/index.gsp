@@ -49,6 +49,9 @@
                         <eca:link action="participantsWithParticipantState012">Create Excel Export of participants with participant state new, checked and participant</eca:link>
                     </li>
                     <li>
+                        <eca:link action="participantsWithParticipantState12">Create Excel Export of participants with participant state checked and participant</eca:link>
+                    </li>
+                    <li>
                         <a href="#" class="participants-export-open">Create Excel Export of participants with filters</a>
                     </li>
                 </ol>
