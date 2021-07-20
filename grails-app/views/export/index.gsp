@@ -43,7 +43,10 @@
                 <h3>Participants export</h3>
                 <ol>
                     <li>
-                        <eca:link action="activeParticipants">Create Excel Export of active participants</eca:link>
+                        <eca:link action="participantsWithParticipantState012999">Create Excel Export of participants with participant state new, checked, participant and not finished</eca:link>
+                    </li>
+                    <li>
+                        <eca:link action="participantsWithParticipantState012">Create Excel Export of participants with participant state new, checked and participant</eca:link>
                     </li>
                     <li>
                         <a href="#" class="participants-export-open">Create Excel Export of participants with filters</a>
