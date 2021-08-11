@@ -51,7 +51,8 @@ class MiscExportService {
 		String sqlQuery = ACTIVE_PARTICIPANTS_SQL
 
 		// Query the database and create the export
-		List<Map> results = sql.rows(sqlQuery, [dateId: pageInformation.date.id, status: withStatus])
+//		List<Map> results = sql.rows(sqlQuery, [dateId: pageInformation.date.id, status: withStatus]) //
+		List<Map> results = sql.rows(sqlQuery.replace("[status]", withStatus), [dateId: pageInformation.date.id]) //
 
 		// Create XLS export
 		String title = messageSource.getMessage('participantDate.participants.label', null, LocaleContextHolder.locale)
@@ -484,7 +485,7 @@ class MiscExportService {
             WHERE u.deleted = 0
             AND pd.date_id = :dateId
             AND pd.deleted = 0
-            AND pd.participant_state_id IN ( :status )
+            AND pd.participant_state_id IN ( [status] )
            
             ORDER BY u.lastname ASC, u.firstname ASC
 	'''
