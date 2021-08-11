@@ -71,7 +71,7 @@ class ExportController {
 	}
 
 	def participantsWithParticipantState012999() {
-		Export participants = miscExportService.getParticipants("0, 1, 2, 999")
+		Export participants = miscExportService.getParticipants("0,1,2,999")
 
 		response.contentType = participants.contentType
 		response.setHeader("Content-disposition",
@@ -80,7 +80,7 @@ class ExportController {
 	}
 
 	def participantsWithParticipantState012() {
-		Export participants = miscExportService.getParticipants("0, 1, 2")
+		Export participants = miscExportService.getParticipants("0,1,2")
 
 		response.contentType = participants.contentType
 		response.setHeader("Content-disposition",
@@ -89,7 +89,7 @@ class ExportController {
 	}
 
 	def participantsWithParticipantState12() {
-		Export participants = miscExportService.getParticipants("1, 2")
+		Export participants = miscExportService.getParticipants("1,2")
 
 		response.contentType = participants.contentType
 		response.setHeader("Content-disposition",
