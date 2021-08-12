@@ -47,13 +47,15 @@ class MiscExportService {
 		]
 
 		// Transform the participant states into a map: [1,2] => {"0": 1, "1": 2}
-		participantStatesMap = participantStates.eachWithIndex().collectEntries { stateId, id -> [id.toString(), stateId] }
+//		participantStatesMap = participantStates.withIndex().collectEntries { stateId, id -> [id.toString(), stateId] }
+//		participantStatesMap = participantStates.eachWithIndex().collectEntries { stateId, id -> [id.toString(), stateId] }
 
 		// Obtain results and transform them
 		Sql sql = new Sql(dataSource)
 		String sqlQuery = ACTIVE_PARTICIPANTS_SQL.replace(':status',
-				participantStatesMap.keySet().collect { ":$it" }.join(',')
+				StringUtils.join(participantStates, ',')
 		)
+//				participantStatesMap.keySet().collect { ":$it" }.join(',')
 
 		// Query the database and create the export
 		List<Map> results = sql.rows(sqlQuery, [dateId: pageInformation.date.id] + participantStatesMap)
