@@ -20,6 +20,8 @@ import java.text.SimpleDateFormat
 import org.springframework.context.i18n.LocaleContextHolder
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 
+import java.util.stream.Collectors
+
 /**
  * Service that takes care of creating the export for various cases
  */
@@ -48,15 +50,23 @@ class MiscExportService {
 
 		// Transform the participant states into a map: [1,2] => {"0": 1, "1": 2}
 //		participantStatesMap = participantStates.withIndex().collectEntries { stateId, id -> [id.toString(), stateId] }
-		participantStatesMap = participantStates.eachWithIndex().collectEntries { stateId, id -> [id.toString(), stateId] }
+//		participantStatesMap = participantStates.eachWithIndex().collectEntries { stateId, id -> [id.toString(), stateId] }
+		String participantStatesJoined = participantStates.stream().map(Object::toString).collect(Collectors.joining(","));
 
 		// Obtain results and transform them
 		Sql sql = new Sql(dataSource)
+
+//		participantStates.forEach()
+
 		String sqlQuery = ACTIVE_PARTICIPANTS_SQL.replace(':status',
-				participantStatesMap.keySet().collect { ":$it" }.join(',')
+				participantStatesJoined
 		)
+//		participantStatesMap.keySet().collect { ":$it" }.join(',')
+
+		log.info( sqlQuery )
 
 		// Query the database and create the export
+//		List<Map> results = sql.rows(sqlQuery, [dateId: pageInformation.date.id]  + participantStatesMap )
 		List<Map> results = sql.rows(sqlQuery, [dateId: pageInformation.date.id])
 
 		// Create XLS export
