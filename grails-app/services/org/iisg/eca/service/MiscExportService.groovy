@@ -36,7 +36,7 @@ class MiscExportService {
 	 * Create an export of all participants
 	 * @return An export which can be used to create the XLS file
 	 */
-	Export getParticipants(String withStatus) {
+	Export getParticipants(List<Long> participantStates) {
 		List<String> columns = ['user_id', 'lastname', 'firstname', 'email']
 
 		List<String> columnNames = [
@@ -46,13 +46,16 @@ class MiscExportService {
 				messageSource.getMessage('user.email.label', null, LocaleContextHolder.locale),
 		]
 
+		// Transform the participant states into a map: [1,2] => {"0": 1, "1": 2}
+		participantStatesMap = participantStates.withIndex().collectEntries { stateId, id -> [id.toString(), stateId] }
+
 		// Obtain results and transform them
 		Sql sql = new Sql(dataSource)
-		String sqlQuery = ACTIVE_PARTICIPANTS_SQL
+		String sqlQuery = ACTIVE_PARTICIPANTS_SQL.replace(':status',
+				participantStatesMap.keySet().collect { ":$it" }.join(','))
 
 		// Query the database and create the export
-//		List<Map> results = sql.rows(sqlQuery, [dateId: pageInformation.date.id, status: withStatus]) //
-		List<Map> results = sql.rows(sqlQuery.replace("[status]", withStatus), [dateId: pageInformation.date.id]) //
+		List<Map> results = sql.rows(sqlQuery, [dateId: pageInformation.date.id] + participantStatesMap)
 
 		// Create XLS export
 		String title = messageSource.getMessage('participantDate.participants.label', null, LocaleContextHolder.locale)
@@ -485,7 +488,7 @@ class MiscExportService {
             WHERE u.deleted = 0
             AND pd.date_id = :dateId
             AND pd.deleted = 0
-            AND pd.participant_state_id IN ( [status] )
+            AND pd.participant_state_id IN ( :status )
            
             ORDER BY u.lastname ASC, u.firstname ASC
 	'''
