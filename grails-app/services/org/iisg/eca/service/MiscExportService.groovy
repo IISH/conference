@@ -19,6 +19,7 @@ import groovy.sql.Sql
 import java.text.SimpleDateFormat
 import org.springframework.context.i18n.LocaleContextHolder
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
+import org.apache.commons.lang3.StringUtils
 
 /**
  * Service that takes care of creating the export for various cases
