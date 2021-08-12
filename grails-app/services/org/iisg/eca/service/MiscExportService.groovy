@@ -50,18 +50,15 @@ class MiscExportService {
 
 		// Transform the participant states into a map: [1,2] => {"0": 1, "1": 2}
 //		participantStatesMap = participantStates.withIndex().collectEntries { stateId, id -> [id.toString(), stateId] }
-//		participantStatesMap = participantStates.eachWithIndex().collectEntries { stateId, id -> [id.toString(), stateId] }
-		String participantStatesJoined = participantStates.stream().map(Object::toString).collect(Collectors.joining(","));
+		participantStatesMap = participantStates.eachWithIndex().collectEntries { stateId, id -> [id.toString(), stateId] }
+//		String participantStatesJoined = participantStates.stream().map(Object::toString).collect(Collectors.joining(","));
 
 		// Obtain results and transform them
 		Sql sql = new Sql(dataSource)
 
-//		participantStates.forEach()
-
 		String sqlQuery = ACTIVE_PARTICIPANTS_SQL.replace(':status',
-				participantStatesJoined
+			participantStatesMap.keySet().collect { ":$it" }.join(',')
 		)
-//		participantStatesMap.keySet().collect { ":$it" }.join(',')
 
 		log.info( sqlQuery )
 
