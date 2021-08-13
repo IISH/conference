@@ -46,23 +46,20 @@ class MiscExportService {
 				messageSource.getMessage('user.email.label', null, LocaleContextHolder.locale),
 		]
 
-		// Transform the participant states into a map: [1,2] => {"0": 1, "1": 2}
-//		participantStatesMap = participantStates.withIndex().collectEntries { stateId, id -> [id.toString(), stateId] }
-		participantStatesMap = participantStates.eachWithIndex().collectEntries { stateId, id -> [id.toString(), stateId] }
-//		String participantStatesJoined = participantStates.stream().map(Object::toString).collect(Collectors.joining(","));
+		// Transform the participant states into a list of tuples with the index: [1,2] => [[1, 0], [2, 1]]
+		def index = 0
+		participantStatesWithIndex = participantStates.collect { [it, index++] }
+
+		// Transform the list of participant state tuples into a map: [[1, 0], [2, 1]] => {"0": 1, "1": 2}
+		participantStatesMap = participantStatesWithIndex.collectEntries { stateId, id -> [id.toString(), stateId] }
 
 		// Obtain results and transform them
 		Sql sql = new Sql(dataSource)
-
 		String sqlQuery = ACTIVE_PARTICIPANTS_SQL.replace(':status',
-			participantStatesMap.keySet().collect { ":$it" }.join(',')
-		)
-
-		log.info( sqlQuery )
+				participantStatesMap.keySet().collect { ":$it" }.join(','))
 
 		// Query the database and create the export
-//		List<Map> results = sql.rows(sqlQuery, [dateId: pageInformation.date.id]  + participantStatesMap )
-		List<Map> results = sql.rows(sqlQuery, [dateId: pageInformation.date.id])
+		List<Map> results = sql.rows(sqlQuery, [dateId: pageInformation.date.id] + participantStatesMap)
 
 		// Create XLS export
 		String title = messageSource.getMessage('participantDate.participants.label', null, LocaleContextHolder.locale)
