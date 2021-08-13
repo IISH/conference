@@ -48,7 +48,8 @@ class MiscExportService {
 
 		// Transform the participant states into a list of tuples with the index: [1,2] => [[1, 0], [2, 1]]
 		def index = 0
-		participantStatesWithIndex = participantStates.collect { [it, index++] }
+		//participantStatesWithIndex = participantStates.collect { [it, index++] }
+		List<Long> participantStatesWithIndex = participantStates.collect { [it, index++] }
 
 		// Transform the list of participant state tuples into a map: [[1, 0], [2, 1]] => {"0": 1, "1": 2}
 		participantStatesMap = participantStatesWithIndex.collectEntries { stateId, id -> [id.toString(), stateId] }
