@@ -53,7 +53,7 @@ class MiscExportService {
 
 		// Transform the list of participant state tuples into a map: [[1, 0], [2, 1]] => {"0": 1, "1": 2}
 		//participantStatesMap = participantStatesWithIndex.collectEntries { stateId, id -> [id.toString(), stateId] }
-		List<Map> participantStatesMap = participantStatesWithIndex.collectEntries { stateId, id -> [id.toString(), stateId] }
+		LinkedHashMap<String, Long> participantStatesMap = participantStatesWithIndex.collectEntries { stateId, id -> [id.toString(), stateId] }
 
 		// Obtain results and transform them
 		Sql sql = new Sql(dataSource)
