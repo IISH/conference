@@ -1,5 +1,4 @@
 #!/bin/bash
 
-chmod +x *.sh
+chmod -R ug+x *.sh
 dos2unix *.sh
-
