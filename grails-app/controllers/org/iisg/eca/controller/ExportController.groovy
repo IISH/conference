@@ -35,6 +35,12 @@ class ExportController {
         response.outputStream << bookExportService.getSessionsXml(false)
     }
 
+    def sessionsOrderedByCode() {
+        response.contentType = "application/xml"
+        response.setHeader("Content-disposition", "attachment;filename=\"sessionsOrderedByCode.xml\"")
+        response.outputStream << bookExportService.getSessionsOrderedByCodeXml(false)
+    }
+
     def badgesPayed() {
         Export badges = miscExportService.getParticipantsExport(miscExportService.BADGES_PAYED)
 

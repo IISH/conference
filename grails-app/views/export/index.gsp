@@ -19,6 +19,9 @@
                         <eca:link action="sessions">Create XML Export of Sessions for program book</eca:link>
                     </li>
                     <li>
+                        <eca:link action="sessionsOrderedByCode">Create XML Export of Sessions (ordered by code) for program book</eca:link>
+                    </li>
+                    <li>
                         <eca:link action="programAtAGlance">Create Excel Export of Program at a glance</eca:link>
                     </li>
                 </ol>

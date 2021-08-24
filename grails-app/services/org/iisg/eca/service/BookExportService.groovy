@@ -3,6 +3,7 @@ package org.iisg.eca.service
 import org.iisg.eca.export.ConcordanceXmlExport
 import org.iisg.eca.export.DaysXmlExport
 import org.iisg.eca.export.SessionsXmlExport
+import org.iisg.eca.export.SessionsOrderedByCodeXmlExport
 
 import org.iisg.eca.utils.EmailFilter
 
@@ -42,6 +43,17 @@ class BookExportService {
         SessionsXmlExport sessionsXmlExport =
                 new SessionsXmlExport("Export ${getEventCode()} Programbook (Sessions) (English)", printCoAuthors)
         sessionsXmlExport.toString()
+    }
+
+    /**
+     * Creates an XML with all the sessions
+     * @param printCoAuthors Whether to print the co-authors
+     * @return A string representing the XML
+     */
+    String getSessionsOrderedByCodeXml(boolean printCoAuthors) {
+        SessionsOrderedByCodeXmlExport sessionsOrderedByCodeXmlExport =
+                new SessionsOrderedByCodeXmlExport("Export ${getEventCode()} Programbook (Sessions ordered by code) (English)", printCoAuthors)
+        sessionsOrderedByCodeXmlExport.toString()
     }
 
     /**
