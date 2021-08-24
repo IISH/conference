@@ -23,7 +23,7 @@ class SessionsOrderedByCodeXmlExport extends XmlExport {
         this.printCoAuthors = printCoAuthors
         setNetworks()
         setSessionPapers()
-        setSessionsByDateTime()
+//        setSessionsByDateTime()
         setSessionParticipants()
         getSessionsXml()
     }
@@ -65,28 +65,28 @@ class SessionsOrderedByCodeXmlExport extends XmlExport {
         }
     }
 
-    private void setSessionsByDateTime() {
-        sessionsByDateTime = new HashMap<>()
-
-        Session.executeQuery('''
-            SELECT s, r, t, sdt
-            FROM Session AS s
-            INNER JOIN s.sessionRoomDateTime AS srdt
-            INNER JOIN srdt.room AS r
-            INNER JOIN srdt.sessionDateTime AS sdt
-            LEFT JOIN s.type AS t
-            WHERE r.deleted = false
-            ORDER BY r.roomNumber
-        ''').each { sessionResults ->
-            Session session = (Session) sessionResults[0]
-            Room room = (Room) sessionResults[1]
-            SessionType sessionType = (SessionType) sessionResults[2]
-            SessionDateTime sessionDateTime = (SessionDateTime) sessionResults[3]
-
-            List sessions = sessionsByDateTime.get(sessionDateTime, new ArrayList())
-            sessions.add([session, room, sessionType])
-        }
-    }
+//    private void setSessionsByDateTime() {
+//        sessionsByDateTime = new HashMap<>()
+//
+//        Session.executeQuery('''
+//            SELECT s, r, t, sdt
+//            FROM Session AS s
+//            LEFT JOIN s.sessionRoomDateTime AS srdt
+//            LEFT JOIN srdt.room AS r
+//            LEFT JOIN srdt.sessionDateTime AS sdt
+//            LEFT JOIN s.type AS t
+//            WHERE r.deleted = false
+//            ORDER BY s.code
+//        ''').each { sessionResults ->
+//            Session session = (Session) sessionResults[0]
+//            Room room = (Room) sessionResults[1]
+//            SessionType sessionType = (SessionType) sessionResults[2]
+//            SessionDateTime sessionDateTime = (SessionDateTime) sessionResults[3]
+//
+//            List sessions = sessionsByDateTime.get(sessionDateTime, new ArrayList())
+//            sessions.add([session, room, sessionType])
+//        }
+//    }
 
     private void setSessionParticipants() {
         sessionParticipantsBySession = new HashMap<>()
@@ -113,37 +113,66 @@ class SessionsOrderedByCodeXmlExport extends XmlExport {
 
     private void getSessionsXml() {
         getXml { builder ->
-            Day.executeQuery('''
-				SELECT d, sdt
-				FROM Day AS d
-				INNER JOIN d.sessionDateTimes AS sdt
-				WHERE sdt.deleted = false
-				ORDER BY d.dayNumber, sdt.indexNumber
-            ''').each { results ->
-                Day d = results[0]
-                SessionDateTime sdt = results[1]
+
+            Session.executeQuery('''
+            SELECT s, r, t, sdt
+            FROM Session AS s
+            LEFT JOIN s.sessionRoomDateTime AS srdt
+            LEFT JOIN srdt.room AS r
+            LEFT JOIN srdt.sessionDateTime AS sdt
+            LEFT JOIN s.type AS t
+            WHERE r.deleted = false
+            ORDER BY s.code
+        ''').each { sessionResults ->
+                //            Session session = (Session) sessionResults[0]
+                //          Room room = (Room) sessionResults[1]
+                //        SessionType sessionType = (SessionType) sessionResults[2]
+                //      SessionDateTime sessionDateTime = (SessionDateTime) sessionResults[3]
+
+//                List sessions = sessionsByDateTime.get(sessionDateTime, new ArrayList())
+                //              sessions.add([session, room, sessionType])
+                Session session = (Session) sessionResults[0]
+                Room room = (Room) sessionResults[1]
+                SessionType sessionType = (SessionType) sessionResults[2]
+                SessionDateTime sessionDateTime = (SessionDateTime) sessionResults[3]
 
                 builder.sessions {
-                    builder.time {
-                        builder.weekday(WEEKDAY_FORMATTER.format(d.day))
-                        builder.year(YEAR_FORMATTER.format(d.day))
-                        builder.month(MONTH_FORMATTER.format(d.day))
-                        builder.day(DAY_FORMATTER.format(d.day))
-
-                        String[] times = sdt.period.split('-')
-                        builder.starttime(times[0].trim())
-                        builder.endtime((times.length >= 2) ? times[1].trim() : null)
-                    }
-
-                    sessionsByDateTime.get(sdt)?.each { sessionResults ->
-                        Session session = (Session) sessionResults[0]
-                        Room room = (Room) sessionResults[1]
-                        SessionType sessionType = (SessionType) sessionResults[2]
-
-                        forEachSession(session, room, sessionType, sdt, builder)
-                    }
+                    forEachSession(session, room, sessionType, sessionDateTime, builder)
                 }
             }
+
+
+//            Day.executeQuery('''
+//				SELECT d, sdt
+//				FROM Day AS d
+//				INNER JOIN d.sessionDateTimes AS sdt
+//				WHERE sdt.deleted = false
+//				ORDER BY d.dayNumber, sdt.indexNumber
+//            ''').each { results ->
+//                Day d = results[0]
+//                SessionDateTime sdt = results[1]
+//
+//                builder.sessions {
+//                    builder.time {
+//                        builder.weekday(WEEKDAY_FORMATTER.format(d.day))
+//                        builder.year(YEAR_FORMATTER.format(d.day))
+//                        builder.month(MONTH_FORMATTER.format(d.day))
+//                        builder.day(DAY_FORMATTER.format(d.day))
+//
+//                        String[] times = sdt.period.split('-')
+//                        builder.starttime(times[0].trim())
+//                        builder.endtime((times.length >= 2) ? times[1].trim() : null)
+//                    }
+//
+//                    sessionsByDateTime.get(sdt)?.each { sessionResults ->
+//                        Session session = (Session) sessionResults[0]
+//                        Room room = (Room) sessionResults[1]
+//                        SessionType sessionType = (SessionType) sessionResults[2]
+//
+//                        forEachSession(session, room, sessionType, sdt, builder)
+//                    }
+//                }
+//            }
         }
     }
 
@@ -158,16 +187,16 @@ class SessionsOrderedByCodeXmlExport extends XmlExport {
                 builder.sessiontype(sessionType.type)
             }
 
-            builder.location {
-                builder.code("${room.roomNumber}-${sdt.indexNumber}")
-                builder.locationname(room.roomName)
-            }
+//            builder.location {
+//                builder.code("${room.roomNumber}-${sdt.indexNumber}")
+//                builder.locationname(room.roomName)
+//            }
 
-            builder.networks {
-                networksBySession.get(session)?.each { network ->
-                    builder.networkname(network.name)
-                }
-            }
+//            builder.networks {
+//                networksBySession.get(session)?.each { network ->
+//                    builder.networkname(network.name)
+//                }
+//            }
 
             sessionParticipantsBySession.get(session)?.each { type, users ->
                 // Co-authors are for internal use only

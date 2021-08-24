@@ -50,3 +50,5 @@
 
 /src/xslt/*.xml
 /src/xslt/*/*.xml
+
+/lib/*.jar

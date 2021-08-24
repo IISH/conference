@@ -30,6 +30,8 @@ grails.project.dependency.resolution = {
         mavenCentral()
 
         // uncomment these to enable remote dependency resolution from public Maven repositories
+        mavenRepo "https://grails.jfrog.io/artifactory/plugins/"
+        mavenRepo "https://repo.grails.org/artifactory/core/"
         mavenRepo "https://repo1.maven.org/maven2/"
         mavenRepo "https://snapshots.repository.codehaus.org"
         mavenRepo "https://repository.codehaus.org"
@@ -54,7 +56,7 @@ grails.project.dependency.resolution = {
 
     plugins {
         // plugins for the build system only
-	    build ':tomcat:7.0.50.1'
+        build ':tomcat:7.0.50.1'
 
         // plugins for the compile step
         compile ":hibernate-filter:0.3.2"
