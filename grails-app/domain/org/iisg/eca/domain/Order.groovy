@@ -219,6 +219,8 @@ class Order {
 
 				this.save(insert: insert, flush: true, failOnError: true)
 				return true
+			} else {
+				log.error("ERROR apiName orderDetails error getting payway data")
 			}
 
 			return false
