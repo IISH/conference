@@ -186,9 +186,14 @@ class Order {
 	 */
 	boolean refreshOrder(boolean insert = false) {
 		try {
+
+log.error("GCU START refreshOrder")
+
 			PayWayMessage message = new PayWayMessage()
 			message.put('orderid', this.id)
 			PayWayMessage result = message.send('orderDetails')
+
+log.error("GCU 111")
 
 			if (result != null) {
 				this.orderCode = result.get('ORDERCODE')
@@ -220,13 +225,13 @@ class Order {
 				this.save(insert: insert, flush: true, failOnError: true)
 				return true
 			} else {
-				log.error("ERROR apiName orderDetails error getting payway data")
+				log.error("GCU ERROR apiName orderDetails error getting payway data")
 			}
 
 			return false
 		}
 		catch (ValidationException ve) {
-			log.error("Failed to refresh order", ve)
+			log.error("GCU ERROR GCU Failed to refresh order", ve)
 			return false
 		}
 	}

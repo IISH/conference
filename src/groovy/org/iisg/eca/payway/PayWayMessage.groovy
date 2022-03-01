@@ -72,9 +72,9 @@ class PayWayMessage extends TreeMap<String, Object> {
 		addProject()
 		signTransaction()
 
-		error.log("Payway address: " + Setting.getSetting(Setting.PAYWAY_ADDRESS).value)
+		log.error("Payway address: " + Setting.getSetting(Setting.PAYWAY_ADDRESS).value)
 		AlwaysAllowHTTPBuilder http = new AlwaysAllowHTTPBuilder(Setting.getSetting(Setting.PAYWAY_ADDRESS).value)
-		error.log("HTTP request apiName: " + apiName)
+		log.error("HTTP request apiName: " + apiName)
 		http.request(POST, JSON) {
 			uri.path = apiName
 			body = this
