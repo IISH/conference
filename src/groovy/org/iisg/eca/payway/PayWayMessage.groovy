@@ -75,7 +75,7 @@ class PayWayMessage extends TreeMap<String, Object> {
 
 		log.error("GCU Payway address: " + Setting.getSetting(Setting.PAYWAY_ADDRESS).value)
 		AlwaysAllowHTTPBuilder http = new AlwaysAllowHTTPBuilder(Setting.getSetting(Setting.PAYWAY_ADDRESS).value)
-		http.ignoreSSLIssues() // "GCU
+//		http.ignoreSSLIssues() // "GCU new
 		log.error("GCU HTTP request apiName: " + apiName)
 		http.request(POST, JSON) {
 			uri.path = apiName
