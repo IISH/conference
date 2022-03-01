@@ -187,12 +187,9 @@ class Order {
 	boolean refreshOrder(boolean insert = false) {
 		try {
 
-log.error("GCU START refreshOrder")
-
 			PayWayMessage message = new PayWayMessage()
-log.error("GCU 111")
 			message.put('orderid', this.id)
-log.error("GCU 222")
+log.error("GCU START refreshOrder")
 			PayWayMessage result = message.send('orderDetails')
 log.error("GCU 333")
 
