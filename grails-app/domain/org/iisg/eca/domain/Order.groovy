@@ -190,10 +190,11 @@ class Order {
 log.error("GCU START refreshOrder")
 
 			PayWayMessage message = new PayWayMessage()
-			message.put('orderid', this.id)
-			PayWayMessage result = message.send('orderDetails')
-
 log.error("GCU 111")
+			message.put('orderid', this.id)
+log.error("GCU 222")
+			PayWayMessage result = message.send('orderDetails')
+log.error("GCU 333")
 
 			if (result != null) {
 				this.orderCode = result.get('ORDERCODE')
@@ -231,7 +232,7 @@ log.error("GCU 111")
 			return false
 		}
 		catch (ValidationException ve) {
-			log.error("GCU ERROR GCU Failed to refresh order", ve)
+			log.error("GCU ERROR Failed to refresh order", ve)
 			return false
 		}
 	}

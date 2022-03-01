@@ -67,14 +67,15 @@ class PayWayMessage extends TreeMap<String, Object> {
 	 * @return Returns a new PayWayMessage with the response, unless there is an error. In that case, null is returned
 	 */
 	PayWayMessage send(String apiName) {
+		log.error("GCU START send")
 		PayWayMessage returnMessage = null
 
 		addProject()
 		signTransaction()
 
-		log.error("Payway address: " + Setting.getSetting(Setting.PAYWAY_ADDRESS).value)
+		log.error("GCU Payway address: " + Setting.getSetting(Setting.PAYWAY_ADDRESS).value)
 		AlwaysAllowHTTPBuilder http = new AlwaysAllowHTTPBuilder(Setting.getSetting(Setting.PAYWAY_ADDRESS).value)
-		log.error("HTTP request apiName: " + apiName)
+		log.error("GCU HTTP request apiName: " + apiName)
 		http.request(POST, JSON) {
 			uri.path = apiName
 			body = this
@@ -89,6 +90,7 @@ class PayWayMessage extends TreeMap<String, Object> {
 			}
 		}
 
+		log.error("GCU END send")
 		return returnMessage
 	}
 
