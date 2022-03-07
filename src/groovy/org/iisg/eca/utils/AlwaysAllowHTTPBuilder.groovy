@@ -26,7 +26,7 @@ class AlwaysAllowHTTPBuilder extends HTTPBuilder {
 		sslContext.init(null, [new AllTrustManager()] as TrustManager[], new SecureRandom())
 
 		SSLSocketFactory sf = new SSLSocketFactory(sslContext, SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER)
-		Scheme httpsScheme = new Scheme('https', sf, 443)
+		Scheme httpsScheme = new Scheme('https',443, sf)
 
 		client.connectionManager.schemeRegistry.register(httpsScheme)
 	}
