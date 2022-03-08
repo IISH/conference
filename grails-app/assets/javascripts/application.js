@@ -1,8 +1,8 @@
 //= require jquery
 //= require jquery.cookie
-//= require jquery.placeholder
-//= require jquery-ui
-//= require jquery.easy-autocomplete
+//= require jquery.placeholder.min
+//= require jquery-ui.min
+//= require jquery.easy-autocomplete.min
 var content, body, navWidth, contentMargin, emailValue;
 
 var messageUrl = 'ajax/message';

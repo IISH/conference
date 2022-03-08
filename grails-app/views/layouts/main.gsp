@@ -18,7 +18,7 @@
 
         <link rel="stylesheet" href="${eca.createLink(controller: 'css', action: 'css', noPreviousInfo: true)}" type="text/css">
         <asset:stylesheet src="easy-autocomplete.css"/>
-        <asset:stylesheet src="jquery-ui.css"/>
+        <asset:stylesheet src="jquery-ui.min.css"/>
 
         <asset:javascript src="application.js" />
 
