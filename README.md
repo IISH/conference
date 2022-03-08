@@ -1,5 +1,4 @@
 Conference 
 ======================
 
-COnference Management System
-
+COnference Management System (CoMS)
