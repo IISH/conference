@@ -3,8 +3,8 @@
 <html>
     <head>
         <meta name="layout" content="main">
-        <g:javascript src="session.js" />
-        <g:javascript src="participants-in-sessions.js" />
+        <asset:javascript src="session.js" />
+        <asset:javascript src="participants-in-sessions.js" />
     </head>
     <body>
         <input type="hidden" name="id" value="${params.id}" />

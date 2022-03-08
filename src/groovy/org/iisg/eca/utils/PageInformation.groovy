@@ -1,11 +1,13 @@
 package org.iisg.eca.utils
 
+import groovy.transform.CompileStatic
 import org.iisg.eca.domain.Page
 import org.iisg.eca.domain.EventDate
 
 /**
  * A Spring bean providing information about the requested page
  */
+@CompileStatic
 class PageInformation {
     /**
      * A thread local to the request holding the Page domain class of the current page

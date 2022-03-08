@@ -1,8 +1,11 @@
 package org.iisg.eca.utils
 
+import groovy.transform.CompileStatic
+
 /**
  * Collection of all queries to obtain payment statistics
  */
+@CompileStatic
 interface PaymentQueries {
     public static final String PAYMENT_LIST_MAIN_PART_1 = """
         SELECT u.user_id, u.lastname, u.firstname, o.payed, o.payment_method, 

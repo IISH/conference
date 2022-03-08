@@ -1,5 +1,7 @@
 package org.iisg.eca.utils
 
+import groovy.transform.CompileStatic
+
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
 
@@ -14,12 +16,13 @@ import org.apache.http.conn.ssl.SSLSocketFactory
 /**
  * An HTTPBuilder that always allows connections, even though the certificate is not trusted
  */
+@CompileStatic
 class AlwaysAllowHTTPBuilder extends HTTPBuilder {
 
 	/**
 	 * @see groovyx.net.http.HTTPBuilder
 	 */
-	public AlwaysAllowHTTPBuilder() {
+	AlwaysAllowHTTPBuilder() {
 		super()
 
 		SSLContext sslContext = SSLContext.getInstance("SSL")
@@ -34,7 +37,7 @@ class AlwaysAllowHTTPBuilder extends HTTPBuilder {
 	/**
 	 * @see groovyx.net.http.HTTPBuilder
 	 */
-	public AlwaysAllowHTTPBuilder(java.lang.Object defaultURI) throws java.net.URISyntaxException {
+	AlwaysAllowHTTPBuilder(Object defaultURI) throws URISyntaxException {
 		this()
 		this.setUri(defaultURI)
 	}
@@ -42,8 +45,7 @@ class AlwaysAllowHTTPBuilder extends HTTPBuilder {
 	/**
 	 * @see groovyx.net.http.HTTPBuilder
 	 */
-	public AlwaysAllowHTTPBuilder(java.lang.Object defaultURI, java.lang.Object defaultContentType)
-			throws java.net.URISyntaxException {
+	AlwaysAllowHTTPBuilder(defaultURI, Object defaultContentType) throws URISyntaxException {
 		this()
 		this.setUri(defaultURI)
 		this.defaultContentType = defaultContentType
@@ -53,12 +55,12 @@ class AlwaysAllowHTTPBuilder extends HTTPBuilder {
 	 * Trust manager that trusts everything
 	 */
 	final class AllTrustManager implements X509TrustManager {
-		public X509Certificate[] getAcceptedIssuers() {
+		X509Certificate[] getAcceptedIssuers() {
 			return null
 		}
 
-		public void checkClientTrusted(X509Certificate[] certs, String authType) {}
+		void checkClientTrusted(X509Certificate[] certs, String authType) {}
 
-		public void checkServerTrusted(X509Certificate[] certs, String authType) {}
+		void checkServerTrusted(X509Certificate[] certs, String authType) {}
 	}
 }

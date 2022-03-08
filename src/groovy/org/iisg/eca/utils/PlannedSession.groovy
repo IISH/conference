@@ -1,8 +1,11 @@
 package org.iisg.eca.utils
 
+import groovy.transform.CompileStatic
+
 /**
  * Represents information about a planned session, purely for the API
  */
+@CompileStatic
 final class PlannedSession {
     long roomId
     String roomName

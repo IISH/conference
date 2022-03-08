@@ -2,8 +2,8 @@
 <html>
     <head>
         <meta name="layout" content="main">
-        <g:javascript src="plan.js" />
-        <g:javascript src="participants-in-sessions.js" />
+        <asset:javascript src="plan.js" />
+        <asset:javascript src="participants-in-sessions.js" />
     </head>
     <body>
         <div id="unschedule-session"> 

@@ -1,5 +1,6 @@
 package org.iisg.eca.utils
 
+import groovy.transform.CompileStatic
 import org.iisg.eca.domain.Paper
 import org.iisg.eca.domain.Session
 import org.iisg.eca.domain.ParticipantDate
@@ -8,6 +9,7 @@ import org.iisg.eca.domain.ParticipantType
 /**
  * Information about all the types a participant has in a session
  */
+@CompileStatic
 class ParticipantSessionInfo {
     Session session
     ParticipantDate participant

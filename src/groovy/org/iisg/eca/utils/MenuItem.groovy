@@ -1,10 +1,12 @@
 package org.iisg.eca.utils
 
+import groovy.transform.CompileStatic
 import org.iisg.eca.domain.Page
 
 /**
  * Represents a menu item
  */
+@CompileStatic
 class MenuItem {
     Page page
     List<MenuItem> children

@@ -16,17 +16,11 @@
             <g:layoutTitle default="${(curPage) ? curPage.getTitle(curLocale) : 'ECA'}" />
         </title>
 
-        <link rel="stylesheet" href="${resource(dir: 'css', file: 'jquery-ui.css')}" type="text/css">
-        <link rel="stylesheet" href="${resource(dir: 'css', file: 'easy-autocomplete.css')}" type="text/css">
         <link rel="stylesheet" href="${eca.createLink(controller: 'css', action: 'css', noPreviousInfo: true)}" type="text/css">
+        <asset:stylesheet src="easy-autocomplete.css"/>
+        <asset:stylesheet src="jquery-ui.css"/>
 
-        <g:javascript library="jquery" plugin="jquery" />
-        <r:layoutResources />
-        <g:javascript src="jquery.cookie.js" />
-        <g:javascript src="jquery.placeholder.js" />
-        <g:javascript src="jquery-ui.js" />
-        <g:javascript src="jquery.easy-autocomplete.min.js" />
-        <g:javascript src="application.js" />
+        <asset:javascript src="application.js" />
 
         <g:layoutHead />
     </head>
@@ -54,10 +48,10 @@
                     Language:
                     <ul>
                         <li><a href="?lang=nl">
-                            <g:img class="${(curLang == 'nl') ? 'selected' : ''}" dir="images/flags" file="nl.png" />
+                            <asset:image class="${(curLang == 'nl') ? 'selected' : ''}" src="flags/nl.png" />
                         </a></li>
                         <li><a href="?lang=en">
-                            <g:img class="${(curLang == 'en') ? 'selected' : ''}" dir="images/flags" file="us.png" />
+                            <asset:image class="${(curLang == 'en') ? 'selected' : ''}" src="flags/us.png" />
                         </a></li>
                     </ul>
                 </div>
@@ -68,7 +62,7 @@
                         <span class="roles">
                             <eca:roles />
                         </span>
-                        <g:img dir="images/skin" file="sorted_desc.png" />
+                        <asset:image src="skin/sorted_desc.png" />
                     </div>
                 </sec:ifLoggedIn>
             </div>
@@ -136,7 +130,5 @@
                 <li><eca:link controller="logout"><g:message code="menu.logout" /></eca:link></li>
             </ul>
         </div>
-
-        <r:layoutResources />
     </body>
 </html>

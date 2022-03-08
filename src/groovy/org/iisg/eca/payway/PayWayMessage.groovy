@@ -1,5 +1,6 @@
 package org.iisg.eca.payway
 
+import groovyx.net.http.HTTPBuilder
 import org.iisg.eca.domain.Setting
 import org.iisg.eca.utils.AlwaysAllowHTTPBuilder
 
@@ -75,6 +76,7 @@ class PayWayMessage extends TreeMap<String, Object> {
 
 		log.error("GCU Payway address: " + Setting.getSetting(Setting.PAYWAY_ADDRESS).value)
 		AlwaysAllowHTTPBuilder http = new AlwaysAllowHTTPBuilder(Setting.getSetting(Setting.PAYWAY_ADDRESS).value)
+		//HTTPBuilder http = new HTTPBuilder(Setting.getSetting(Setting.PAYWAY_ADDRESS).value)
 //		http.ignoreSSLIssues() // "GCU new
 		log.error("GCU HTTP request apiName: " + apiName)
 		http.request(POST, JSON) {

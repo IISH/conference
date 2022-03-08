@@ -1,5 +1,6 @@
 package org.iisg.eca.utils
 
+import groovy.transform.CompileStatic
 import org.iisg.eca.domain.Room
 import org.iisg.eca.domain.Session
 import org.iisg.eca.domain.Equipment
@@ -8,6 +9,7 @@ import org.iisg.eca.domain.SessionDateTime
 /**
  * Utility class for grouping all important information of a specific time slot together
  */
+@CompileStatic
 class TimeSlot {
     Room room
     SessionDateTime sessionDateTime
@@ -71,7 +73,7 @@ class TimeSlot {
             return -1
         }
 
-        equipmentCombos.findIndexOf {
+        equipmentCombos.findIndexOf { List<Equipment> it ->
             def intersect = it.intersect(equipment)
             def plus = it.plus(equipment)
             plus.removeAll(intersect)

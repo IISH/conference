@@ -2,6 +2,7 @@ package org.iisg.eca.controller
 import grails.converters.JSON
 import grails.plugin.springsecurity.SpringSecurityUtils
 import org.iisg.eca.domain.User
+import org.iisg.eca.payway.PayWayMessage
 import org.springframework.security.authentication.AccountExpiredException
 import org.springframework.security.authentication.CredentialsExpiredException
 import org.springframework.security.authentication.DisabledException
