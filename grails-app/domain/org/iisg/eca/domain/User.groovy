@@ -927,7 +927,7 @@ class User {
 	 * Creates a new password of the given length
 	 * @return A new password
 	 */
-	static String createPassword(int length = 8) {
+	static String createPassword(int length = 10) {
 		Set<Character> charSet = ('0'..'9') + ('a'..'z') + ('A'..'Z')
 		charSet.removeAll('0', 'O', '1', 'l', 'I')
 		RandomStringUtils.random(length, 0, charSet.size(), true, true, charSet as char[], new SecureRandom())
