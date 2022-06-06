@@ -46,13 +46,25 @@
                 <h3>Participants export</h3>
                 <ol>
                     <li>
-                        <eca:link action="participantsWithParticipantState012999">Create Excel Export of participants with participant state new, checked, participant and not finished</eca:link>
+                        <eca:link action="participantsWithParticipantState0">Create Excel Export of participants with participant state new</eca:link>
                     </li>
                     <li>
-                        <eca:link action="participantsWithParticipantState012">Create Excel Export of participants with participant state new, checked and participant</eca:link>
+                        <eca:link action="participantsWithParticipantState1">Create Excel Export of participants with participant state data checked</eca:link>
                     </li>
                     <li>
-                        <eca:link action="participantsWithParticipantState12">Create Excel Export of participants with participant state checked and participant</eca:link>
+                        <eca:link action="participantsWithParticipantState2">Create Excel Export of participants with participant state participant</eca:link>
+                    </li>
+                    <li>
+                        <eca:link action="participantsWithParticipantState999">Create Excel Export of participants with participant state not finished</eca:link>
+                    </li>
+                    <li>
+                        <eca:link action="participantsWithParticipantState012999">Create Excel Export of participants with participant state new, data checked, participant and not finished</eca:link>
+                    </li>
+                    <li>
+                        <eca:link action="participantsWithParticipantState012">Create Excel Export of participants with participant state new, data checked and participant</eca:link>
+                    </li>
+                    <li>
+                        <eca:link action="participantsWithParticipantState12">Create Excel Export of participants with participant state data checked and participant</eca:link>
                     </li>
                     <li>
                         <a href="#" class="participants-export-open">Create Excel Export of participants on fee state</a>

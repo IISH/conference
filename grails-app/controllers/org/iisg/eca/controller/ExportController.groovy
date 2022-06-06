@@ -77,6 +77,50 @@ class ExportController {
         response.outputStream << program.parse()
     }
 
+    def participantsWithParticipantState0() {
+        Export participants = miscExportService.getParticipants([
+                ParticipantState.NEW_PARTICIPANT
+        ])
+
+        response.contentType = participants.contentType
+        response.setHeader("Content-disposition",
+                "attachment;filename=\"${participants.getTitle()}.${participants.getExtension().toLowerCase()}\"")
+        response.outputStream << participants.parse()
+    }
+
+    def participantsWithParticipantState1() {
+        Export participants = miscExportService.getParticipants([
+                ParticipantState.PARTICIPANT_DATA_CHECKED
+        ])
+
+        response.contentType = participants.contentType
+        response.setHeader("Content-disposition",
+                "attachment;filename=\"${participants.getTitle()}.${participants.getExtension().toLowerCase()}\"")
+        response.outputStream << participants.parse()
+    }
+
+    def participantsWithParticipantState2() {
+        Export participants = miscExportService.getParticipants([
+                ParticipantState.PARTICIPANT
+        ])
+
+        response.contentType = participants.contentType
+        response.setHeader("Content-disposition",
+                "attachment;filename=\"${participants.getTitle()}.${participants.getExtension().toLowerCase()}\"")
+        response.outputStream << participants.parse()
+    }
+
+    def participantsWithParticipantState999() {
+        Export participants = miscExportService.getParticipants([
+                ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION
+        ])
+
+        response.contentType = participants.contentType
+        response.setHeader("Content-disposition",
+                "attachment;filename=\"${participants.getTitle()}.${participants.getExtension().toLowerCase()}\"")
+        response.outputStream << participants.parse()
+    }
+
     def participantsWithParticipantState012999() {
         Export participants = miscExportService.getParticipants([
                 ParticipantState.NEW_PARTICIPANT,
