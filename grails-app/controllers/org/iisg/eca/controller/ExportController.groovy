@@ -84,7 +84,7 @@ class ExportController {
 
         response.contentType = participants.contentType
         response.setHeader("Content-disposition",
-                "attachment;filename=\"${participants.getTitle()}.${participants.getExtension().toLowerCase()}\"")
+                "attachment;filename=\"participants_with_state_new.xls\"")
         response.outputStream << participants.parse()
     }
 
@@ -95,7 +95,7 @@ class ExportController {
 
         response.contentType = participants.contentType
         response.setHeader("Content-disposition",
-                "attachment;filename=\"${participants.getTitle()}.${participants.getExtension().toLowerCase()}\"")
+                "attachment;filename=\"participants_with_state_data_checked.xls\"")
         response.outputStream << participants.parse()
     }
 
@@ -106,7 +106,7 @@ class ExportController {
 
         response.contentType = participants.contentType
         response.setHeader("Content-disposition",
-                "attachment;filename=\"${participants.getTitle()}.${participants.getExtension().toLowerCase()}\"")
+                "attachment;filename=\"participants_with_state_participant.xls\"")
         response.outputStream << participants.parse()
     }
 
@@ -117,7 +117,7 @@ class ExportController {
 
         response.contentType = participants.contentType
         response.setHeader("Content-disposition",
-                "attachment;filename=\"${participants.getTitle()}.${participants.getExtension().toLowerCase()}\"")
+                "attachment;filename=\"participants_with_state_not_finished.xls\"")
         response.outputStream << participants.parse()
     }
 
@@ -131,7 +131,7 @@ class ExportController {
 
         response.contentType = participants.contentType
         response.setHeader("Content-disposition",
-                "attachment;filename=\"${participants.getTitle()}.${participants.getExtension().toLowerCase()}\"")
+                "attachment;filename=\"participants_with_state_new_data_checked_participant_and_not_finished.xls\"")
         response.outputStream << participants.parse()
     }
 
@@ -144,7 +144,7 @@ class ExportController {
 
         response.contentType = participants.contentType
         response.setHeader("Content-disposition",
-                "attachment;filename=\"${participants.getTitle()}.${participants.getExtension().toLowerCase()}\"")
+                "attachment;filename=\"participants_with_state_new_data_checked_and_participant.xls\"")
         response.outputStream << participants.parse()
     }
 
@@ -156,7 +156,7 @@ class ExportController {
 
         response.contentType = participants.contentType
         response.setHeader("Content-disposition",
-                "attachment;filename=\"${participants.getTitle()}.${participants.getExtension().toLowerCase()}\"")
+                "attachment;filename=\"participants_with_state_data_checked_and_participant.xls\"")
         response.outputStream << participants.parse()
     }
 
