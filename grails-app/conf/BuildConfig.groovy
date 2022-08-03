@@ -69,7 +69,7 @@ grails.project.dependency.resolution = {
         compile ":cache:1.1.8"
         compile ":csv:0.3.1"
         compile ":asset-pipeline:2.5.7"
-        compile ":commons-validator:1.4.1"
+        compile ":commons-validator:1.7"
 
         // plugins needed at runtime but not for compilation
 	    runtime(":hibernate:3.6.10.14") { // Hibernate 4 instead: ":hibernate4:4.3.1.2"
