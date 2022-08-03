@@ -10,6 +10,6 @@ xsltproc XSLFILE.xslt SOURCEXML.xml > OUTPUT.html
 and save it as a original Word/Excel file
 
 example:
-xsltproc glm2021.xslt glm2021.xml > glm2021.html
+xsltproc euroseas2022.xslt euroseas2022-sessions.xml > euroseas2022.html
 
 You can now open the html file in Word and save as a Word document.

@@ -83,8 +83,7 @@ class ExportController {
         ])
 
         response.contentType = participants.contentType
-        response.setHeader("Content-disposition",
-                "attachment;filename=\"participants_with_state_new.xls\"")
+        response.setHeader("Content-disposition", "attachment;filename=\"participants_with_state_new.xls\"")
         response.outputStream << participants.parse()
     }
 
@@ -94,8 +93,7 @@ class ExportController {
         ])
 
         response.contentType = participants.contentType
-        response.setHeader("Content-disposition",
-                "attachment;filename=\"participants_with_state_data_checked.xls\"")
+        response.setHeader("Content-disposition", "attachment;filename=\"participants_with_state_data_checked.xls\"")
         response.outputStream << participants.parse()
     }
 
@@ -105,8 +103,7 @@ class ExportController {
         ])
 
         response.contentType = participants.contentType
-        response.setHeader("Content-disposition",
-                "attachment;filename=\"participants_with_state_participant.xls\"")
+        response.setHeader("Content-disposition", "attachment;filename=\"participants_with_state_participant.xls\"")
         response.outputStream << participants.parse()
     }
 
@@ -116,8 +113,7 @@ class ExportController {
         ])
 
         response.contentType = participants.contentType
-        response.setHeader("Content-disposition",
-                "attachment;filename=\"participants_with_state_not_finished.xls\"")
+        response.setHeader("Content-disposition", "attachment;filename=\"participants_with_state_not_finished.xls\"")
         response.outputStream << participants.parse()
     }
 

@@ -35,4 +35,10 @@ class SecurityEventListener extends SavedRequestAwareAuthenticationSuccessHandle
         // Continue...
         super.onAuthenticationSuccess(request, response, authentication)
     }
+
+    // TODO GCU
+    // @Override
+    // void onAuthenticationFailure.....
+    //String clientIP = request.getHeader("X-Forwarded-For")?.trim()
+    //log.error("LOGINFAILED " + clientIP)
 }
