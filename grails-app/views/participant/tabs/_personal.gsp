@@ -396,6 +396,11 @@
                         <textarea name="participantDate.extraInfo" cols="40" rows="5">${fieldValue(bean: participant, field: 'extraInfo')}</textarea>
                     </span>
                 </div>
+
+                <legend><g:message code="participantDate.presence.label" /></legend>
+                <label>
+                    <g:message code="participantDate.presence.description.label" />
+                </label>
                 <div class="${hasErrors(bean: user, field: 'dateTimesNotPresent', 'error')}">
                     <table id="participant-present">
                         <g:each in="${SessionDateTime.getTableList(curDate)}" var="dateTimeRow">
