@@ -398,6 +398,7 @@
                 </div>
 
                 <legend><g:message code="participantDate.presence.label" /></legend>
+                <br />
                 <label>
                     <g:message code="participantDate.presence.description.label" />
                 </label>
