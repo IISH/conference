@@ -88,7 +88,7 @@ class Network extends EventDateDomain {
             AND n.deleted = false
             AND n.id = :networkId
             AND s.state.id IN (:sessionNew, :sessionAccepted, :sessionInConsideration)
-            AND pd.state.id IN (:newParticipant, :dataChecked, :participant, :notFinished)
+            AND pd.state.id IN (:newParticipant, :dataChecked, :participant, :notFinished, :onlineParticipant)
             ORDER BY u.lastName, u.firstName, u.email
         ''', [  dateId                 : pageInformation.date.id,
                 networkId              : this.id,
@@ -98,7 +98,9 @@ class Network extends EventDateDomain {
                 newParticipant         : ParticipantState.NEW_PARTICIPANT,
                 dataChecked            : ParticipantState.PARTICIPANT_DATA_CHECKED,
                 participant            : ParticipantState.PARTICIPANT,
-                notFinished            : ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
+                notFinished            : ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION,
+                onlineParticipant      : ParticipantState.ONLINE_PARTICIPANT
+        ])
     }
 
     @Override

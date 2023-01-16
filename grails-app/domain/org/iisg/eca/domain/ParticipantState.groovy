@@ -13,6 +13,7 @@ class ParticipantState extends EventDomain {
     static final long NO_SHOW = 6L
     static final long UNCLEAR = 7L
     static final long PARTICIPANT_DID_NOT_FINISH_REGISTRATION = 999L
+    static final long ONLINE_PARTICIPANT = 1003L
 
     String state
 

@@ -287,14 +287,15 @@ class MiscExportService {
                 AND s.deleted = false
                 AND s.date.id = :dateId
                 AND n.id = :networkId
-                AND pd.state.id IN (:newParticipant, :dataChecked, :participant, :notFinished)
+                AND pd.state.id IN (:newParticipant, :dataChecked, :participant, :notFinished, :onlineParticipant)
                 ORDER BY s.name ASC, u.lastName ASC, u.firstName ASC
 			''', ['dateId'         : pageInformation.date.id,
 				  'networkId'      : network.id,
 				  'newParticipant' : ParticipantState.NEW_PARTICIPANT,
 				  'dataChecked'    : ParticipantState.PARTICIPANT_DATA_CHECKED,
 				  'participant'    : ParticipantState.PARTICIPANT,
-				  'notFinished'    : ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
+				  'notFinished'    : ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION,
+                  'onlineParticipant' : ParticipantState.ONLINE_PARTICIPANT])
 
 		return new XlsMapExport(
 				['network', 'lastname', 'firstname', 'email', 'organisation', 'session', 'sessionstate', 'roles',
@@ -343,12 +344,13 @@ class MiscExportService {
                 AND s.deleted = false
                 AND s.date.id = :dateId
                 AND n.id = :networkId
-                AND pd.state.id IN (:dataChecked, :participant)
+                AND pd.state.id IN (:dataChecked, :participant, :onlineParticipant)
                 ORDER BY s.name ASC, u.lastName ASC, u.firstName ASC
 			''', ['dateId'         : pageInformation.date.id,
 				  'networkId'      : network.id,
 				  'dataChecked'    : ParticipantState.PARTICIPANT_DATA_CHECKED,
-				  'participant'    : ParticipantState.PARTICIPANT])
+				  'participant'    : ParticipantState.PARTICIPANT,
+                  'onlineParticipant' : ParticipantState.ONLINE_PARTICIPANT])
 
 		return new XlsMapExport(
 				['network', 'lastname', 'firstname', 'email', 'organisation', 'session', 'sessionstate', 'roles',
@@ -391,7 +393,7 @@ class MiscExportService {
 				LEFT JOIN p.type AS t
                 WHERE u.deleted = false
 				AND p.networkProposal.id = :networkId
-				AND pd.state.id IN (:newParticipant, :dataChecked, :participant, :notFinished)
+				AND pd.state.id IN (:newParticipant, :dataChecked, :participant, :notFinished, :onlineParticipant)
 				AND p.session.id IS NULL
 				AND p.deleted = false
 				AND p.date.id = :dateId
@@ -403,7 +405,8 @@ class MiscExportService {
 				  'newParticipant' : ParticipantState.NEW_PARTICIPANT,
 				  'dataChecked'    : ParticipantState.PARTICIPANT_DATA_CHECKED,
 				  'participant'    : ParticipantState.PARTICIPANT,
-				  'notFinished'    : ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
+				  'notFinished'    : ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION,
+                  'onlineParticipant' : ParticipantState.ONLINE_PARTICIPANT])
 
 		return new XlsMapExport(
 				['network', 'lastname', 'firstname', 'email', 'organisation', 'paperid', 'papertitle', 'coauthors',
@@ -446,7 +449,7 @@ class MiscExportService {
 				INNER JOIN p.type AS t
                 WHERE u.deleted = false
 				AND p.networkProposal.id = :networkId
-				AND pd.state.id IN (:newParticipant, :dataChecked, :participant, :notFinished)
+				AND pd.state.id IN (:newParticipant, :dataChecked, :participant, :notFinished, :onlineParticipant)
 				AND p.deleted = false
 				AND p.date.id = :dateId
 				AND u.deleted = false
@@ -457,7 +460,8 @@ class MiscExportService {
 				  'newParticipant' : ParticipantState.NEW_PARTICIPANT,
 				  'dataChecked'    : ParticipantState.PARTICIPANT_DATA_CHECKED,
 				  'participant'    : ParticipantState.PARTICIPANT,
-				  'notFinished'    : ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
+				  'notFinished'    : ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION,
+                  'onlineParticipant' : ParticipantState.ONLINE_PARTICIPANT])
 
 		return new XlsMapExport(
 				['network', 'lastname', 'firstname', 'email', 'organisation', 'paperid', 'papertitle', 'coauthors',

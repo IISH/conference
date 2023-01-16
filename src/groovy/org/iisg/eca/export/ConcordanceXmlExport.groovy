@@ -31,13 +31,14 @@ class ConcordanceXmlExport extends XmlExport {
                     INNER JOIN s.sessionRoomDateTime AS srdt
                     INNER JOIN srdt.sessionDateTime AS sdt
                     INNER JOIN srdt.room AS r
-                    WHERE pd.state.id IN ( :stateParticipantDataChecked, :stateParticipant )
+                    WHERE pd.state.id IN ( :stateParticipantDataChecked, :stateParticipant, :stateOnlineParticipant )
                     AND s.state.id = :sessionStateId
                     AND u.deleted = false AND s.deleted = false AND sdt.deleted = false AND r.deleted = false
                     ORDER BY u.lastName, u.firstName, r.roomNumber, sdt.indexNumber
                 ''', [
                         stateParticipantDataChecked: ParticipantState.PARTICIPANT_DATA_CHECKED,
                         stateParticipant           : ParticipantState.PARTICIPANT,
+                        stateOnlineParticipant     : ParticipantState.ONLINE_PARTICIPANT,
                         sessionStateId             : SessionState.SESSION_ACCEPTED
                 ]).each { concordance ->
                     User user = (User) concordance[0]

@@ -325,7 +325,7 @@ class User {
 			allParticipantUsers()
 
 			participantDates {
-				'in'('state.id', [ParticipantState.PARTICIPANT_DATA_CHECKED, ParticipantState.PARTICIPANT])
+				'in'('state.id', [ParticipantState.PARTICIPANT_DATA_CHECKED, ParticipantState.PARTICIPANT, ParticipantState.ONLINE_PARTICIPANT])
 				eq('date.id', date.id)
 			}
 		}
@@ -335,7 +335,7 @@ class User {
 
 			participantDates {
 				'in'('state.id', [ParticipantState.NEW_PARTICIPANT, ParticipantState.PARTICIPANT_DATA_CHECKED,
-								  ParticipantState.PARTICIPANT])
+								  ParticipantState.PARTICIPANT, ParticipantState.ONLINE_PARTICIPANT])
 				eq('date.id', date.id)
 			}
 		}
@@ -345,7 +345,7 @@ class User {
 
 			participantDates {
 				'in'('state.id', [ParticipantState.NEW_PARTICIPANT, ParticipantState.PARTICIPANT_DATA_CHECKED,
-								  ParticipantState.PARTICIPANT, ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION])
+								  ParticipantState.PARTICIPANT, ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION, ParticipantState.ONLINE_PARTICIPANT])
 				eq('date.id', date.id)
 			}
 		}

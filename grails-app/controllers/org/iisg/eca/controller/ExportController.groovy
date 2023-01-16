@@ -99,7 +99,8 @@ class ExportController {
 
     def participantsWithParticipantState2() {
         Export participants = miscExportService.getParticipants([
-                ParticipantState.PARTICIPANT
+                ParticipantState.PARTICIPANT,
+                ParticipantState.ONLINE_PARTICIPANT
         ])
 
         response.contentType = participants.contentType
@@ -122,7 +123,8 @@ class ExportController {
                 ParticipantState.NEW_PARTICIPANT,
                 ParticipantState.PARTICIPANT_DATA_CHECKED,
                 ParticipantState.PARTICIPANT,
-                ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION
+                ParticipantState.PARTICIPANT_DID_NOT_FINISH_REGISTRATION,
+                ParticipantState.ONLINE_PARTICIPANT
         ])
 
         response.contentType = participants.contentType
@@ -135,7 +137,8 @@ class ExportController {
         Export participants = miscExportService.getParticipants([
                 ParticipantState.NEW_PARTICIPANT,
                 ParticipantState.PARTICIPANT_DATA_CHECKED,
-                ParticipantState.PARTICIPANT
+                ParticipantState.PARTICIPANT,
+                ParticipantState.ONLINE_PARTICIPANT
         ])
 
         response.contentType = participants.contentType
@@ -147,7 +150,8 @@ class ExportController {
     def participantsWithParticipantState12() {
         Export participants = miscExportService.getParticipants([
                 ParticipantState.PARTICIPANT_DATA_CHECKED,
-                ParticipantState.PARTICIPANT
+                ParticipantState.PARTICIPANT,
+                ParticipantState.ONLINE_PARTICIPANT
         ])
 
         response.contentType = participants.contentType
