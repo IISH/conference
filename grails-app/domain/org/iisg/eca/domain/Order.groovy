@@ -194,6 +194,7 @@ log.error("GCU START refreshOrder")
 log.error("GCU 333")
 
 			if (result != null) {
+                log.error("GCU 333BBB")
 				this.orderCode = result.get('ORDERCODE')
 				this.amount = new Long(result.get('AMOUNT').toString())
 				this.refundedAmount = (result.get('REFUNDEDAMOUNT')?.isLong()) ? new Long(result.get('REFUNDEDAMOUNT').toString()) : 0L
@@ -204,10 +205,12 @@ log.error("GCU 333")
 				this.refundedAt = (result.get('REFUNDEDAT')) ? (Date) result.get('REFUNDEDAT', true) : null
 				this.description = result.get('COM')
 
+                log.error("GCU 333CCC")
 				// TODO: Is now deprecated:
 				EventDate date = pageInformation.date
 				Long userId = result.get('USERID')?.toString()?.isLong() ? new Long(result.get('USERID').toString()) : null
 				if (date && userId) {
+                    log.error("GCU 333CCC-222")
 					User user = User.get(userId)
 					ParticipantDate participant = ParticipantDate.findByUserAndDate(user, date)
 					if (participant) {
@@ -215,12 +218,16 @@ log.error("GCU 333")
 					}
 				}
 
+                log.error("GCU 333DDD")
+
 				if ((this.payed == PAYMENT_ACCEPTED) && (this.participantDate.stateId == ParticipantState.REMOVED_CANCELLED)) {
 					this.participantDate.state = ParticipantState.get(ParticipantState.PARTICIPANT)
 					this.participantDate.save()
 				}
 
+                log.error("GCU 333EEE")
 				this.save(insert: insert, flush: true, failOnError: true)
+                log.error("GCU 333FFF")
 				return true
 			} else {
 				log.error("GCU ERROR apiName orderDetails error getting payway data")
