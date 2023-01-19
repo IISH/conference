@@ -209,6 +209,8 @@ log.error("GCU 333")
 				// TODO: Is now deprecated:
 				EventDate date = pageInformation.date
 				Long userId = result.get('USERID')?.toString()?.isLong() ? new Long(result.get('USERID').toString()) : null
+                log.error(userId)
+                log.error(date)
 				if (date && userId) {
                     log.error("GCU 333CCC-222")
 					User user = User.get(userId)
@@ -225,9 +227,9 @@ log.error("GCU 333")
 					this.participantDate.save()
 				}
 
-                log.error("GCU 333EEE")
+                log.error("GCU 333EEE-try insert")
 				this.save(insert: insert, flush: true, failOnError: true)
-                log.error("GCU 333FFF")
+                log.error("GCU 333FFF-after insert")
 				return true
 			} else {
 				log.error("GCU ERROR apiName orderDetails error getting payway data")
