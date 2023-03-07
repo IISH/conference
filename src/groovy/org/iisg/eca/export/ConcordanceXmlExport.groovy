@@ -34,20 +34,17 @@ class ConcordanceXmlExport extends XmlExport {
                     
                     WHERE 
                     
-                    pd.date.id = :dateId AND
-                    sp.date.id = :dateId AND
-                    s.date.id = :dateId AND
-                    srdt.date.id = :dateId AND
-                    sdt.date.id = :dateId AND
-                    r.date.id = :dateId AND
+                    pd.date.id = sp.date.id AND
+                    sp.date.id = s.date.id AND
+                    s.date.id = srdt.date.id AND
+                    srdt.date.id = sdt.date.id AND
+                    sdt.date.id = r.date.id AND
                      
                     pd.state.id IN ( :stateParticipantDataChecked, :stateParticipant, :stateOnlineParticipant )
                     AND s.state.id = :sessionStateId
                     AND u.deleted = false AND s.deleted = false AND sdt.deleted = false AND r.deleted = false
                     ORDER BY u.lastName, u.firstName, r.roomNumber, sdt.indexNumber
                 ''', [
-                        'dateId'         : pageInformation.date.id,
-
                         stateParticipantDataChecked: ParticipantState.PARTICIPANT_DATA_CHECKED,
                         stateParticipant           : ParticipantState.PARTICIPANT,
                         stateOnlineParticipant     : ParticipantState.ONLINE_PARTICIPANT,
