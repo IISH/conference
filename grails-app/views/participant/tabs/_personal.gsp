@@ -12,7 +12,7 @@
                         <g:set var="link" value="${Setting.getSetting(Setting.CHANGE_USER).value}" />
                         <g:if test="${link}">
                             <span class="inline-link">
-                                <a href="${link.replace('[EMAIL]', user.email)}" target="_blank">
+                                <a href="${link.replace('[EMAIL]', user.id)}" target="_blank">
                                     <g:message code="participantDate.show.personal.page.message" />
                                 </a>
                             </span>
